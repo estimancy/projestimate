@@ -102,6 +102,9 @@ class Home < ActiveRecord::Base
     puts '   - Attribute Category'
     self.update_records(ExternalMasterDatabase::ExternalAttributeCategory, AttributeCategory, ['name', 'alias','uuid'])
 
+    puts '   - Factor'
+    self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'uuid'])
+
     puts '   - Projestimate Icons'
     #self.update_records(ExternalMasterDatabase::ExternalPeicon, Peicon, ['name', 'icon_file_name', 'icon_content_type', 'icon_updated_at', 'icon_file_size', 'uuid'])
     external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
@@ -580,6 +583,9 @@ class Home < ActiveRecord::Base
 
     puts '   - Auth Method'
     self.create_records(ExternalMasterDatabase::ExternalAuthMethod, AuthMethod, ['name', 'server_name', 'port', 'base_dn', 'uuid'])
+
+    puts '   - Factors...'
+    self.create_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'state', 'uuid'])
 
     puts '   - Admin user'
     #Create first user
