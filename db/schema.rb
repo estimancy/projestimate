@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140325155622) do
+ActiveRecord::Schema.define(:version => 20140403150417) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20140325155622) do
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
     t.integer  "organization_id"
+    t.integer  "factor_id"
   end
 
   create_table "acquisition_categories", :force => true do |t|
@@ -243,6 +244,22 @@ ActiveRecord::Schema.define(:version => 20140325155622) do
     t.datetime "updated_at"
   end
 
+  create_table "factors", :force => true do |t|
+    t.string   "name"
+    t.string   "alias"
+    t.text     "description"
+    t.string   "state"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+  end
+
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -281,6 +298,17 @@ ActiveRecord::Schema.define(:version => 20140325155622) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "input_cocomos", :force => true do |t|
+    t.integer  "factor_id"
+    t.integer  "organization_uow_complexity_id"
+    t.integer  "pbs_project_element_id"
+    t.integer  "project_id"
+    t.integer  "module_project_id"
+    t.float    "coefficient"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   create_table "inputs", :force => true do |t|
@@ -421,6 +449,9 @@ ActiveRecord::Schema.define(:version => 20140325155622) do
     t.datetime "updated_at",                    :null => false
     t.integer  "display_order"
     t.string   "state",           :limit => 20
+    t.integer  "factor_id"
+    t.integer  "unit_of_work_id"
+    t.float    "value"
   end
 
   create_table "organizations", :force => true do |t|
@@ -747,7 +778,7 @@ ActiveRecord::Schema.define(:version => 20140325155622) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email"
+    t.string   "email",                  :default => "", :null => false
     t.string   "password_hash"
     t.string   "password_salt"
     t.datetime "created_at"
@@ -768,10 +799,31 @@ ActiveRecord::Schema.define(:version => 20140325155622) do
     t.text     "ten_latest_projects"
     t.integer  "organization_id"
     t.integer  "object_per_page"
+    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0,  :null => false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.integer  "failed_attempts",        :default => 0,  :null => false
+    t.string   "unlock_token"
+    t.datetime "locked_at"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "avatar"
   end
 
+  add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login_name"], :name => "index_users_on_login_name", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
 
   create_table "versions", :force => true do |t|
     t.datetime "local_latest_update"

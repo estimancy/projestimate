@@ -204,6 +204,12 @@ module ExternalMasterDatabase
     include ExternalInclude
   end
 
+  class ExternalFactor < ActiveRecord::Base
+    attr_accessible
+    establish_connection HOST
+    include ExternalFactor
+  end
+
   class ExternalGroup < ActiveRecord::Base
     attr_accessible
     establish_connection HOST
