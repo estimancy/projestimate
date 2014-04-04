@@ -88,6 +88,12 @@ de:
       over_x_years:
         one: mehr als ein Jahr
         other: mehr als %{count} Jahre
+      x_months:
+        one: 1 monat
+        other: ! '%{count} monate'
+      x_weeks:
+        one: 1 woche
+        other: ! '%{count} woche'
       x_hours:
         one: 1 hour
         other: ! '%{count} hours'
@@ -110,6 +116,7 @@ de:
       month: Monat
       second: Sekunden
       year: Jahr
+      week: Woche
 
   time:
     formats:

@@ -88,6 +88,12 @@ fr:
       over_x_years:
         one:   "plus d'un an"
         other: "plus de %{count} ans"
+      x_months:
+        one: "1 mois"
+        other: ! '%{count} mois'
+      x_weeks:
+        one: "1 semaine"
+        other: ! '%{count} semaines'
       x_hours:
         one: 1 heure
         other: ! '%{count} heures'
@@ -110,6 +116,7 @@ fr:
       hour:   "Heure"
       minute: "Minute"
       second: "Seconde"
+      week:   "Semaine"
       
   time:
     formats:
