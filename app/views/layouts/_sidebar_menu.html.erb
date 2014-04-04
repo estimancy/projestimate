@@ -80,10 +80,10 @@
 <% if is_master_instance? and can? :access_master_menu, :all %>
     <ul class="nav nav-list">
       <li class="nav-header"><h5><%= I18n.t(:label_menu_master_admin) %></h5></li>
-      <% if can? :manage, MasterSetting %>
-          <li><a href="<%= main_app.master_settings_path %>">
-            <i class="icon-cog icon-large pull-left"></i><%= I18n.t(:master) %></a></li>
-      <% end %>
+      <%# if can? :manage, MasterSetting %>
+          <!--<li><a href="<%#= main_app.master_settings_path %>">-->
+            <!--<i class="icon-cog icon-large pull-left"></i><%#= I18n.t(:master) %></a></li>-->
+      <%# end %>
 
       <% if can? :manage, PeAttribute or can? :create_and_edit_attributes, PeAttribute %>
           <li><a href="<%= main_app.pe_attributes_path %>">
