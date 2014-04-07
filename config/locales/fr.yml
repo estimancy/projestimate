@@ -1093,3 +1093,4 @@ fr:
   audit_user: "Auteur"
 
   record_not_found_password_reset_token: "Aucun utilisateur ne correspond au token généré.\n\n Veuillez vérifier qu'il s'agit du dernier mail reçu."
+  select_at_least_one_project: "Vous devez sélectionner au moins un projet pour pouvoir exécuter une action sur ce projet."

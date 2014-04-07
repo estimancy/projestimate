@@ -4847,18 +4847,22 @@ function warn_me(message){
             get_function_url = "/find_use_project";
         }
 
-        return $.ajax({
-            url: get_function_url,
-            data: {
-                checked_node_ids: node_ids,
-                counter:  counter,
-                action_id: $(this).attr('id'),
-                project_id: node_ids[0],
-                project_ids: node_ids,
-                current_showed_project_id: $('#current_showed_project_id').val()
-            }
-        })
-
+        // if there is no selected project
+        if(node_ids[0] == null)
+            return alert($('#select_at_least_one_project').val()) ;
+        else{
+            return $.ajax({
+                url: get_function_url,
+                data: {
+                    checked_node_ids: node_ids,
+                    counter:  counter,
+                    action_id: $(this).attr('id'),
+                    project_id: node_ids[0],
+                    project_ids: node_ids,
+                    current_showed_project_id: $('#current_showed_project_id').val()
+                }
+            })
+        }
 
     });
 

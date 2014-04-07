@@ -1,6 +1,8 @@
 <div id="project_history_actions" style="margin-bottom: 50px;" xmlns="http://www.w3.org/1999/html">
   <div class="project_history">
     <h4>
+      <%= hidden_field_tag :select_at_least_one_project, I18n.t(:select_at_least_one_project) %>
+
       <span style="color:#23A4FF; float: left; margin-left: 0px; margin-right: 10px;">Project Actions : </span>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-pencil icon-border pull-left', :id => 'edit_node_path', :title => I18n.t('edit'), :remote => true %>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-star icon-border pull-left', :id => 'activate_node_path', :title => I18n.t('button_activate_project'), :remote => true %>

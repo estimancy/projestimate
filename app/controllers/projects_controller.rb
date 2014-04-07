@@ -979,8 +979,7 @@ public
   end
 
   def find_use_project
-    #@project = Project.find(params[:project_id])
-    @project = Project.find(params[:current_showed_project_id])
+    @project = Project.find(params[:project_id])
     authorize! :show_project, @project
 
     @related_projects = Array.new
