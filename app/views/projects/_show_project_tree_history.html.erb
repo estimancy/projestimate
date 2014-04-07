@@ -1,13 +1,15 @@
 <div id="project_history_actions" style="margin-bottom: 50px;" xmlns="http://www.w3.org/1999/html">
   <div class="project_history">
     <h4>
+      <%= hidden_field_tag :select_at_least_one_project, I18n.t(:select_at_least_one_project) %>
+
       <span style="color:#23A4FF; float: left; margin-left: 0px; margin-right: 10px;">Project Actions : </span>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-pencil icon-border pull-left', :id => 'edit_node_path', :title => I18n.t('edit'), :remote => true %>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-star icon-border pull-left', :id => 'activate_node_path', :title => I18n.t('button_activate_project'), :remote => true %>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-ok-circle icon-border pull-left', :id => 'promote_node_path', :title => I18n.t('button_commit_project'), :remote => true %>    <!-- :confirm => send_notice(project), -->
       <!--<h4><i class="icon-step-forward pull-left"></i><%#= link_to I18n.t('label_checkout_project'), '', :class => 'node_link_to button_attribute_tooltip', :id => 'checkout_node_path', :title => I18n.t('button_checkout_project'), :remote => true, :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?) %></h4>-->
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-step-forward icon-border pull-left', :id => 'checkout_node_path', :title => I18n.t('button_checkout_project'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-info icon-border pull-left', :id => 'find_use_projects_from_history', :title => I18n.t('button_find_use'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-info icon-border pull-left', :id => 'find_use_projects_from_history', :project_id => @project.id, :title => I18n.t('button_find_use'), :remote => true %>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-copy icon-border pull-left', :id => 'duplicate_node_path', :title => I18n.t('button_duplicate_project'), :remote => true %>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-remove icon-border pull-left', :style => 'color:red', :id => 'delete_node_path', :title => I18n.t('delete'), :remote => true %>
       <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-eraser icon-border pull-left', :style => 'color:red', :id => 'collapse_node_path', :title => I18n.t('button_collapse_project'), :confirm => I18n.t('label_collapse_project'), :remote => true %>
