@@ -122,6 +122,12 @@ gem 'devise'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 
+## Cron job gem management
+#gem 'whenever', :require => false
+#
+## Gem for getting the time difference
+#gem 'time_diff', '~> 0.3.0'
+
 
 # Gems used only for assets and not required
 # in production environments by default.

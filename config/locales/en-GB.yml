@@ -88,6 +88,12 @@ en-gb:
       over_x_years:
         one: over 1 year
         other: over %{count} years
+      x_months:
+        one: 1 month
+        other: ! '%{count} months'
+      x_weeks:
+        one: 1 week
+        other: ! '%{count} weeks'
       x_hours:
         one: 1 hour
         other: ! '%{count} hours'
@@ -110,6 +116,7 @@ en-gb:
       month: Month
       second: Seconds
       year: Year
+      week: Week
 
   time:
     formats:

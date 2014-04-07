@@ -69,17 +69,16 @@
                       <% end %>
                     </tr>
 
-                    <tr class="password_row">
+                    <!--<tr class="password_row">-->
+                      <!--<%# if @user.auth_method && @user.auth_method.name == 'Application' %>-->
+                        <!--<td><%#= f.input :password, :as => :password, :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => false, :type => 'text'} %></td>-->
+                        <!--<td><%#= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => false, :type => 'text'} %></td>-->
+                      <!--<%# else %>-->
+                        <!--<td><%#= f.input :password, :as => :password, :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => true } %></td>-->
+                        <!--<td><%#= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => true } %></td>-->
+                      <!--<%# end %>-->
+                    <!--</tr>-->
 
-                      <% if @user.auth_method && @user.auth_method.name == 'Application' %>
-                        <td><%= f.input :password, :as => :password, :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => false, :type => 'text'} %></td>
-                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => false, :type => 'text'} %></td>
-                      <% else %>
-                        <td><%= f.input :password, :as => :password, :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => true } %></td>
-                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => true } %></td>
-                      <% end %>
-
-                    </tr>
                     <script type="text/javascript">
                         $(document).ready(function () {
 

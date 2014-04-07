@@ -26,7 +26,7 @@
 
       <% if @pemodules.empty? %>
           <tr>
-            <td colspan="4"><%= I18n.t(:refers_to) %> <%= link_to I18n.t('official_documentation'), load_master_setting('url_wiki') %> <%= I18n.t(:to_install_module) %> </td>
+            <td colspan="4"><%= I18n.t(:refers_to) %> <%= link_to I18n.t('official_documentation'), load_admin_setting('url_wiki') %> <%= I18n.t(:to_install_module) %> </td>
           </tr>
       <% else %>
           <% @pemodules.each do |pemodule| %>

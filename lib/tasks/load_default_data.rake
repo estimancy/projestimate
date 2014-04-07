@@ -99,11 +99,6 @@ def load_data!
       rs.update_attribute(:record_status_id, rsid)
     end
 
-    puts '   - Master setting'
-    #Create master/admin setting
-    MasterSetting.create(:key => 'url_wiki', :value => 'http://forge.estimancy.com/projects/pe/wiki', :record_status_id => rsid)
-    MasterSetting.create(:key => 'url_service', :value => 'http://forge.estimancy.com/projects/pe/wiki/Community_Services', :record_status_id => rsid)
-
     puts '   - Project areas'
     #Default project area
     ProjectArea.create(:name => 'SW Project', :description => 'Software', :record_status_id => rsid)
@@ -228,12 +223,20 @@ def load_data!
     Language.create(:name => 'English (British)', :locale => 'en-gb', :record_status_id => rsid)
     Language.create(:name => 'Deutsch (Deutschland)', :locale => 'de', :record_status_id => rsid)
 
+  # The MasterSetting parameters are now added to the AdminSetting
+  #puts '   - Master setting'
+  ##Create master/admin setting
+  #MasterSetting.create(:key => 'url_wiki', :value => 'http://forge.estimancy.com/projects/pe/wiki', :record_status_id => rsid)
+  #MasterSetting.create(:key => 'url_service', :value => 'http://forge.estimancy.com/projects/pe/wiki/Community_Services', :record_status_id => rsid)
+
   puts ' Creating Admin Parameters ...'
     
-    puts '   - Admin setting'
-  AdminSetting.create(:key => 'welcome_message', :value => 'Welcome aboard !', :record_status_id => rsid)
+  puts '   - Admin setting'
+    AdminSetting.create(:key => 'welcome_message', :value => 'Welcome aboard !', :record_status_id => rsid)
     AdminSetting.create(:key => 'notifications_email', :value => 'AdminEmail@domaine.com', :record_status_id => rsid)
     AdminSetting.create(:key => 'password_min_length', :value => '4', :record_status_id => rsid)
+    AdminSetting.create(:key => 'url_wiki', :value => 'http://forge.estimancy.com/projects/pe/wiki', :record_status_id => rsid)
+    AdminSetting.create(:key => 'url_service', :value => 'http://forge.estimancy.com/projects/pe/wiki/Community_Services', :record_status_id => rsid)
     as = AdminSetting.new(:key => 'custom_status_to_consider', :value => nil, :record_status_id => rsid, :uuid => UUIDTools::UUID.random_create.to_s)
     as.save(:validate => false)
 
