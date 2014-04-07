@@ -9,13 +9,19 @@ namespace :projestimate do
       @defined_record_status = RecordStatus.find_by_name('Defined')
       # get the admin parameter
       audit_history_setting = AdminSetting.find_by_key_and_record_status_id('audit_history_lifetime', @defined_record_status.id)
-      if  audit_history_setting != 0 && audit_history_setting != I18n.t(:label_disabled)
+      if audit_history_setting && audit_history_setting != 0
+        audit_history_setting_value = audit_history_setting.value
+        time_unit = audit_history_setting_value.split(' ').last
 
-        # get all audit history data that feet the conditions
-        time_difference = TimeDifference.between(start_time, end_time).in_years
-        time_diff = Time.diff(start_date_time, end_date_time)
+        I18n.t("datetime.distance_in_words.x_#{setting_value.last.to_s.pluralize}", :count => value.to_i)
 
-        audit_histories = Audit.where('')
+        # get all audit history data that feet the conditions: to be deleted
+        audit_histories = Audit.where('(Time.now - created_at) >= ?', )
+
+
+
+        time_difference = Time.diff(Time.parse("#{start_date_time}"), Time.now)
+
       end
     rescue Exception => e
       puts "Error : #{e.message}"

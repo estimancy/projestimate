@@ -31,5 +31,4 @@ ActionMailer::Base.smtp_settings = {
     #:openssl_verify_mode => 'none'
 }
 
-
 Projestimate::Application.config.action_mailer.default_url_options = { :host => SETTINGS['HOST_URL'] }

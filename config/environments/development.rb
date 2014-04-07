@@ -17,6 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
+require 'openssl'
 
 Projestimate::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
@@ -56,8 +57,7 @@ Projestimate::Application.configure do
 
   #Default URL option
   config.action_mailer.default_url_options = { host: 'localhost:3000'}
-
-  ###config.action_mailer.smtp_settings = {:address => "localhost", :port => 1025}
-
+  #config.action_mailer.smtp_settings = {:address => "localhost", :port => 1025}
+  config.action_mailer.default :charset => "utf-8"
 
 end
