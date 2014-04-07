@@ -104,6 +104,7 @@ module CocomoBasic
       else
         nil
       end
+
       return @staffing
     end
 

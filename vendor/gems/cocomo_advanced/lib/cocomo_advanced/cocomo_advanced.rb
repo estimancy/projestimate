@@ -43,7 +43,7 @@ module CocomoAdvanced
     end
 
     # Return effort
-    def get_effort_man_hour(*args)
+    def get_effort_man_month(*args)
       coeff = Array.new
 
       Factor.all.each do |factor|

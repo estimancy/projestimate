@@ -1,29 +1,53 @@
-<h1>Listing factors</h1>
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= I18n.t(:factors) %></a></li>
+  </ul>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Alias</th>
-    <th>Description</th>
-    <th>State</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  <div id="tabs-1">
+    <table border="0" width="100%">
+      <tr>
+        <td style="text-align:right;">
+          <%= link_to I18n.t('new_factor'), new_factor_path, :class => 'btn' %>
+        </td>
+      </tr>
+    </table>
 
-<% @factors.each do |factor| %>
-  <tr>
-    <td><%= factor.name %></td>
-    <td><%= factor.alias %></td>
-    <td><%= factor.description %></td>
-    <td><%= factor.state %></td>
-    <td><%= link_to 'Show', factor %></td>
-    <td><%= link_to 'Edit', edit_factor_path(factor) %></td>
-    <td><%= link_to 'Destroy', factor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:local) %></th>
+        <th class="filter-select"><%= I18n.t(:record_status) %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @factors.each do |factor| %>
+        <tr>
+          <td><%= factor.name %></td>
+          <td><%= factor.alias %></td>
+          <td><%= factor.description %></td>
+          <td><%= factor.state %></td>
+          <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>
+          <td>
+            <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <% if is_master_instance? && !factor.is_local_record? %>
+              <% if factor.is_retired? %>
+                <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+              <% else %>
+                <% unless factor.is_defined? %>
+                  <%= link_to('', "factors/#{factor.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
 
-<br />
+      <%= render :partial => 'layouts/footer_table' %>
+    </table>
 
-<%= link_to 'New Factor', new_factor_path %>
+  </div>
+</div>

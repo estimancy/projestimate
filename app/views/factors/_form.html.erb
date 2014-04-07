@@ -1,14 +1,44 @@
-<%= simple_form_for(@factor) do |f| %>
-  <%= f.error_notification %>
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= I18n.t(:factors) %> </a></li>
+  </ul>
+  <div id="tabs-1">
+    <%= simple_form_for(@factor) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :alias %>
-    <%= f.input :description %>
-    <%= f.input :state %>
-  </div>
+      <div>
+        <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :alias, :label => I18n.t('alias') %>
+        <%= f.input :description, :label => I18n.t('description') %>
+        <%= f.input :state, :label => I18n.t('state') %>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+        <table>
+          <tr>
+            <td>
+              <%= f.association :record_status, :label => I18n.t('record_status'),
+                                :collection => @factor.record_status_collection,
+                                :input_html => {:class => 'record_status'},
+                                :selected => (@factor.is_defined_or_nil? ? @proposed_status.id : @factor.record_status_id),
+                                :disabled => (true if @factor.is_retired?) %>
+            </td>
+            <td>
+              <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @factor.is_custom?) %>
+            </td>
+          </tr>
+        </table>
+        <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+      </div>
+
+      <div class="actions-tabs">
+        <% if action_name == 'new' || action_name=="create" %>
+          <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+          <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <% elsif action_name == 'edit' || action_name=="update" %>
+          <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+        <% end %>
+        <%= link_to I18n.t('back'), factors_path, :class => 'btn' %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>

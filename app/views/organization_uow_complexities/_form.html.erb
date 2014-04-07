@@ -18,6 +18,25 @@
           <td><%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => OrganizationUowComplexity.aasm_states_for_select, :input_html => {:class => 'input-large'} %></td>
         </tr>
       </table>
+
+
+      <table>
+        <tr>
+          <td>
+            <%= f.association :record_status, :label => I18n.t('record_status'),
+                              :collection => @factor.record_status_collection,
+                              :input_html => {:class => 'record_status'},
+                              :selected => (@factor.is_defined_or_nil? ? @proposed_status.id : @factor.record_status_id),
+                              :disabled => (true if @factor.is_retired?) %>
+          </td>
+          <td>
+            <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @factor.is_custom?) %>
+          </td>
+        </tr>
+      </table>
+      <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+      </div>
+
       <% if can? :edit_organizations, Organization %>
         <div class="actions-tabs">
           <% if action_name == 'new' || action_name=='create' %>

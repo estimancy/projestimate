@@ -48,8 +48,7 @@ class OrganizationsController < ApplicationController
       @ot = @organization.organization_technologies.first
       @unitofworks = @ot.unit_of_works
     rescue
-      @ot = nil
-      @unitofworks = nil
+      @unitofworks = []
     end
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
   end

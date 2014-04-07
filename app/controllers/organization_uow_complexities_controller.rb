@@ -19,6 +19,11 @@
 ########################################################################
 
 class OrganizationUowComplexitiesController < ApplicationController
+
+  include DataValidationHelper #Module for master data changes validation
+
+  before_filter :get_record_statuses
+
   load_resource
 
   def index
