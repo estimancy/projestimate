@@ -22,9 +22,7 @@
 
         <%= f.input :value, :label => I18n.t('value')+" (True/False)", :as => 'boolean' if (@admin_setting.key=='allow_feedback') %>
 
-        <%= f.input :value, :label => I18n.t('value'), :collection => [[I18n.t(:label_disabled), 0]]+ [1, 2, 3, 4, 5, 6, 10].collect { |days| [I18n.t('datetime.distance_in_words.x_days', :count => days), (days).to_s] } + [1, 2, 3].collect { |weeks| [I18n.t('datetime.distance_in_words.x_weeks', :count => weeks), (weeks).to_s] } + [1, 2, 3, 6, 12].collect { |months| [I18n.t('datetime.distance_in_words.x_months', :count => months), (months).to_s] } if (@admin_setting.key=='audit_history_lifetime') %>
-
-        <%#= f.input :value, :label => I18n.t('value'), :collection => [[I18n.t(:label_disabled), 0]]+ [1, 2, 3, 4, 5, 6, 10].collect { |days| [I18n.t('datetime.distance_in_words.x_days', :count => days), (days).to_s] } if (@admin_setting.key=='audit_history_lifetime') %>
+        <%= f.input :value, :label => I18n.t('value'), :collection => [[I18n.t(:label_disabled), 0]]+ [1, 2, 3, 4, 5, 6, 10].collect { |days| [I18n.t('datetime.distance_in_words.x_days', :count => days), I18n.t('datetime.distance_in_words.x_days', :count => days, :locale => :en)] } + [1, 2, 3].collect { |weeks| [I18n.t('datetime.distance_in_words.x_weeks', :count => weeks), I18n.t('datetime.distance_in_words.x_weeks', :count => weeks, :locale => :en)] } + [1, 2, 3, 6, 12].collect { |months| [I18n.t('datetime.distance_in_words.x_months', :count => months), I18n.t('datetime.distance_in_words.x_months', :count => months, :locale => :en)] } if (@admin_setting.key=='audit_history_lifetime') %>
 
         <table>
           <tr>

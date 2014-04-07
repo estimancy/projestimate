@@ -100,5 +100,9 @@ module Projestimate
       g.test_framework :rspec, :fixture => true, :views => false, :fixture_replacement => :factory_girl, :view_specs => false
       g.fixture_replacement :factory_girl, :dir => 'spec/factories'
     end
+
+    # Global constante declaration
+    ALPHABETICAL = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
+    CAPITALIZATION = "capitalization"
   end
 end

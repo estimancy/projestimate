@@ -25,21 +25,7 @@
       <% @admin_settings.each do |admin_setting| %>
           <tr>
             <td><%= admin_setting.key %></td>
-
-            <% unless admin_setting.key=='session_maximum_lifetime' || admin_setting.key=='session_inactivity_timeout' || admin_setting.key=='allow_feedback' %>
-                <td><%= admin_setting.value %></td>
-            <% end %>
-            <% if admin_setting.key=='session_maximum_lifetime' %>
-                <td><%= I18n.t('datetime.distance_in_words.x_days', :count => admin_setting.value.to_i) %></td>
-            <% elsif admin_setting.key=='session_inactivity_timeout' %>
-                <% if admin_setting.value.to_i==30 %>
-                    <td><%= I18n.t('datetime.distance_in_words.x_minutes', :count => (admin_setting.value.to_i)) %></td>
-                <% else %>
-                    <td><%= I18n.t('datetime.distance_in_words.x_hours', :count => admin_setting.value.to_i) %></td>
-                <% end %>
-            <% elsif admin_setting.key=='allow_feedback'%>
-                <td><%= admin_setting.value== '1' ? true : false %></td>
-          <% end %>
+            <td><%= admin_setting.customize_admin_setting_value %></td>
 
             <td><%= admin_setting.record_status.name unless admin_setting.record_status.nil? %> <%= admin_setting.show_custom_value %></td>
 
