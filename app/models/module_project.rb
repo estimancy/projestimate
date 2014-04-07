@@ -171,4 +171,14 @@ class ModuleProject < ActiveRecord::Base
     list - [starting_node.id]
   end
 
+  # Show the module project project on dashbord
+  def show_module_project_positions
+    if self.pemodule.alias == Projestimate::Application::CAPITALIZATION
+      # nothing to show as the "Capitalization is always on the first position"
+      ""
+    else
+      "(#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
+    end
+  end
+
 end
