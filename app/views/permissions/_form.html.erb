@@ -9,7 +9,7 @@
 
       <%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
 
-      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge'} %>
 
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
