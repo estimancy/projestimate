@@ -1,4 +1,9 @@
 class FactorsController < ApplicationController
+
+  include DataValidationHelper #Module for master data changes validation
+
+  before_filter :get_record_statuses
+
   # GET /factors
   # GET /factors.json
   def index

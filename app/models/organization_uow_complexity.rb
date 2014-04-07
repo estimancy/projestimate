@@ -19,7 +19,9 @@
 ########################################################################
 
 class OrganizationUowComplexity < ActiveRecord::Base
-  attr_accessible :name, :description, :display_order, :state, :factor_id, :unit_of_work_id, :value
+  include MasterDataHelper
+
+  attr_accessible :name, :description, :display_order, :state, :factor_id, :unit_of_work_id, :value, :record_status_id, :organization_id, :state
 
   include AASM
   aasm :column => :state do # defaults to aasm_state
@@ -28,10 +30,9 @@ class OrganizationUowComplexity < ActiveRecord::Base
     state :retired
   end
 
-  attr_accessible :description, :name, :display_order, :organization_id, :state
-
+  belongs_to :record_status
+  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
   belongs_to :organization
-  validates :name, :presence => true
 
   has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :abacus_organizations, :dependent => :destroy
@@ -40,5 +41,22 @@ class OrganizationUowComplexity < ActiveRecord::Base
   belongs_to :unit_of_work
 
   default_scope order('display_order ASC')
+
+  validates :record_status, :presence => true
+  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
+  validates :name, :presence => true, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
+  validates :custom_value, :presence => true, :if => :is_custom?
+
+  amoeba do
+    enable
+    exclude_field [:users]
+
+    customize(lambda { |original_record, new_record|
+      new_record.reference_uuid = original_record.uuid
+      new_record.reference_id = original_record.id
+      new_record.record_status = RecordStatus.find_by_name('Proposed')
+    })
+  end
+
 
 end
