@@ -50,6 +50,7 @@ Projestimate::Application.routes.draw do
   resources :audits
 
   mount Uos::Engine, :at => '/uos'
+  mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
 
   resources :abacus_organizations
   match 'organizations/:id/export_abacus' => 'organizations#export_abacus', :as => 'export_abacus'
@@ -60,6 +61,8 @@ Projestimate::Application.routes.draw do
   resources :organization_uow_complexities
   resources :unit_of_works
   resources :attribute_categories
+
+
 
   resources :versions
 

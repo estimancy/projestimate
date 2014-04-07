@@ -8,9 +8,10 @@
       <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => @organization.id || params[:organization_id]} %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-      <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
+      <%= f.input :unit_of_work_id, as: :select, collection: UnitOfWork.all.map{|i|[i.name, i.id]} %>
       <%= f.input :factor_id, as: :select, collection: Factor.all.map{|i|[i.name, i.id]} %>
       <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge'} %>
+
       <table>
         <tr>
           <td><%= f.input :display_order, :label => I18n.t('display_order'), :input_html => {:class => 'input-small'} %></td>
@@ -19,18 +20,17 @@
         </tr>
       </table>
 
-
       <table>
         <tr>
           <td>
             <%= f.association :record_status, :label => I18n.t('record_status'),
-                              :collection => @factor.record_status_collection,
+                              :collection => @organization_uow_complexity.record_status_collection,
                               :input_html => {:class => 'record_status'},
-                              :selected => (@factor.is_defined_or_nil? ? @proposed_status.id : @factor.record_status_id),
-                              :disabled => (true if @factor.is_retired?) %>
+                              :selected => (@organization_uow_complexity.is_defined_or_nil? ? @proposed_status.id : @organization_uow_complexity.record_status_id),
+                              :disabled => (true if @organization_uow_complexity.is_retired?) %>
           </td>
           <td>
-            <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @factor.is_custom?) %>
+            <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @organization_uow_complexity.is_custom?) %>
           </td>
         </tr>
       </table>
