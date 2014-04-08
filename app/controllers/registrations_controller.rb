@@ -9,7 +9,11 @@ class RegistrationsController < Devise::RegistrationsController
     super do |resource|
       resource.initials = "your_initials"
       auth_type = AuthMethod.find_by_name('Application')
+      @defined_record_status = RecordStatus.find_by_name('Defined')
+      everyone_group = Group.find_by_name_and_record_status_id("Everyone", @defined_record_status)
+      # Add default Authentication method and group to user
       resource.auth_type = auth_type.nil? ? nil : auth_type.id
+      resource.groups << everyone_group
       is_an_automatic_account_activation? ? status = 'active' : status = 'pending'
 
       resource.user_status = status
