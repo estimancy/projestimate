@@ -80,7 +80,7 @@ module CocomoBasic
     #Return delay (in month)
     def get_delay(*args)
       #if @coef_kls && @complexity
-        @delay = (2.5*((get_effort_man_month/152)**@coef_c)).to_f
+        @delay = (2.5*((get_effort_man_month)**@coef_c)).to_f
       #else
       #  nil
       #end
@@ -91,7 +91,7 @@ module CocomoBasic
     #Return end date
     def get_end_date(*args)
       #if @coef_kls && @complexity
-        @end_date = (Time.now + (get_delay/152).to_i.months)
+        @end_date = (Time.now + (get_delay).to_i.months)
       #else
       #  nil
       #end
