@@ -105,6 +105,24 @@ class Home < ActiveRecord::Base
     puts '   - Factor'
     self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'uuid'])
 
+    puts '   - Complexity...'
+    self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
+
+    #Associate
+    ext_factors = ExternalMasterDatabase::ExternalFactor.all
+    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
+    ext_factors.each do |ext_factor|
+      ext_complexities.each do |ext_complexity|
+        if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
+          loc_factor = Factor.find_by_uuid(ext_factor.uuid)
+          loc_cplx = OrganizationUowComplexity.find_by_uuid(ext_complexity.uuid)
+          loc_cplx.factor_id = loc_factor.id
+          loc_cplx.value = ext_complexity.value
+          loc_cplx.save(validate: false)
+        end
+      end
+    end
+
     puts '   - Projestimate Icons'
     #self.update_records(ExternalMasterDatabase::ExternalPeicon, Peicon, ['name', 'icon_file_name', 'icon_content_type', 'icon_updated_at', 'icon_file_size', 'uuid'])
     external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)

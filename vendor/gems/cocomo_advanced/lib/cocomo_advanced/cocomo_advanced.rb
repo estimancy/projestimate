@@ -7,11 +7,11 @@ module CocomoAdvanced
 
     include ApplicationHelper
 
-    attr_accessor :coef_a, :coef_b, :coef_kls, :complexity
+    attr_accessor :coef_a, :coef_b, :coef_kls, :complexity, :effort
 
     #Constructor
     def initialize(elem)
-      @coef_kls = elem['ksloc'].to_f
+      @coef_kls = elem['size'].to_f
       case elem['complexity']
         when 'Organic'
           set_cocomo_organic
@@ -56,15 +56,13 @@ module CocomoAdvanced
       end
       coeff_total = coeff.inject(:*)
 
-      res = (@coef_a * (@coef_kls ** @coef_b))# * coeff_total
-
-      return res
+      return ((@coef_a * (@coef_kls ** @coef_b)) * coeff_total)
     end
 
     #Return delay (in hour)
     def get_delay(*args)
       #if @coef_kls && @complexity
-      @delay = 0
+      #@delay = (152 * 2.5*((@effort/152)**@coef_c)).to_f
       #else
       #  nil
       #end
@@ -75,7 +73,7 @@ module CocomoAdvanced
     #Return end date
     def get_end_date(*args)
       #if @coef_kls && @complexity
-      @end_date = 0
+      #@end_date = (Time.now + (get_delay/152).to_i.months)
       #else
       #  nil
       #end
@@ -86,7 +84,7 @@ module CocomoAdvanced
     #Return staffing
     def get_staffing(*args)
       #if @coef_kls && @complexity
-      @staffing = 0
+      #@staffing = (@effort / get_delay)
       #else
       #  nil
       #end
@@ -94,13 +92,17 @@ module CocomoAdvanced
       #return @staffing
     end
 
-    def get_cost(*args)
-      @cost = 0
-    end
-
     def get_complexity(*args)
       #if @complexity
-      @complexity
+      #@complexity
+      #else
+      #  nil
+      #end
+    end
+
+    def get_cost(*args)
+      #if @complexity
+      #@complexity
       #else
       #  nil
       #end
