@@ -1160,95 +1160,107 @@ public
   def checkout
     old_prj = Project.find(params[:project_id])
 
-    if (old_prj.checkpoint? || old_prj.released?) && ((can? :commit_project, old_prj)||(can? :manage, old_prj))
-      begin
-        authorize! :commit_project, old_prj
-        old_prj_copy_number = old_prj.copy_number
-        old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
-        old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
+    if old_prj.checkpoint? || old_prj.released?
+      if can?(:commit_project, old_prj) || can?(:manage, old_prj)
+        begin
+          authorize! :commit_project, old_prj
+          authorize!(:allow_to_create_branch, old_prj) if old_prj.has_children?
+
+          # If project is not childless, a new branch need to be created
+          # And user need have the "allow_to_create_branch" permission to create new branch
+          if old_prj.has_children? && (cannot? :allow_to_create_branch, old_prj)
+            redirect_to :back, :flash => {:warning => I18n.t('warning_not_allow_to_create_new_branch_of_project')} and return
+          end
+
+          old_prj_copy_number = old_prj.copy_number
+          old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
+          old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
 
 
-        new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
-        old_prj.copy_number = old_prj_copy_number
+          new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
+          old_prj.copy_number = old_prj_copy_number
 
-        new_prj.title = old_prj.title
-        new_prj.alias = old_prj.alias
-        new_prj.description = old_prj.description
-        new_prj.state = 'preliminary'
-        new_prj.version = set_project_version(old_prj)
-        new_prj.parent_id = old_prj.id
+          new_prj.title = old_prj.title
+          new_prj.alias = old_prj.alias
+          new_prj.description = old_prj.description
+          new_prj.state = 'preliminary'
+          new_prj.version = set_project_version(old_prj)
+          new_prj.parent_id = old_prj.id
 
-        if new_prj.save
-          old_prj.save #Original project copy number will be incremented to 1
+          if new_prj.save
+            old_prj.save #Original project copy number will be incremented to 1
 
-          #Managing the component tree : PBS
-          pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
-          pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
+            #Managing the component tree : PBS
+            pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
+            pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
-          pe_wbs_product.name = old_prj_pe_wbs_product_name
-          pe_wbs_activity.name = old_prj_pe_wbs_activity_name
+            pe_wbs_product.name = old_prj_pe_wbs_product_name
+            pe_wbs_activity.name = old_prj_pe_wbs_activity_name
 
-          pe_wbs_product.save
-          pe_wbs_activity.save
+            pe_wbs_product.save
+            pe_wbs_activity.save
 
-          # For PBS
-          new_prj_components = pe_wbs_product.pbs_project_elements
-          new_prj_components.each do |new_c|
-            unless new_c.is_root?
-              new_ancestor_ids_list = []
-              new_c.ancestor_ids.each do |ancestor_id|
-                ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
-                new_ancestor_ids_list.push(ancestor_id)
+            # For PBS
+            new_prj_components = pe_wbs_product.pbs_project_elements
+            new_prj_components.each do |new_c|
+              unless new_c.is_root?
+                new_ancestor_ids_list = []
+                new_c.ancestor_ids.each do |ancestor_id|
+                  ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
+                  new_ancestor_ids_list.push(ancestor_id)
+                end
+                new_c.ancestry = new_ancestor_ids_list.join('/')
+
+                # For PBS-Project-Element Links with modules
+                old_pbs = PbsProjectElement.find(new_c.copy_id)
+                new_c.module_projects = old_pbs.module_projects
+
+                new_c.save
               end
-              new_c.ancestry = new_ancestor_ids_list.join('/')
-
-              # For PBS-Project-Element Links with modules
-              old_pbs = PbsProjectElement.find(new_c.copy_id)
-              new_c.module_projects = old_pbs.module_projects
-
-              new_c.save
             end
-          end
 
-          # For WBS
-          new_prj_wbs = pe_wbs_activity.wbs_project_elements
-          new_prj_wbs.each do |new_wbs|
-            unless new_wbs.is_root?
-              new_ancestor_ids_list = []
-              new_wbs.ancestor_ids.each do |ancestor_id|
-                ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-                new_ancestor_ids_list.push(ancestor_id)
+            # For WBS
+            new_prj_wbs = pe_wbs_activity.wbs_project_elements
+            new_prj_wbs.each do |new_wbs|
+              unless new_wbs.is_root?
+                new_ancestor_ids_list = []
+                new_wbs.ancestor_ids.each do |ancestor_id|
+                  ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
+                  new_ancestor_ids_list.push(ancestor_id)
+                end
+                new_wbs.ancestry = new_ancestor_ids_list.join('/')
+                new_wbs.save
               end
-              new_wbs.ancestry = new_ancestor_ids_list.join('/')
-              new_wbs.save
             end
+
+            # For ModuleProject associations
+            old_prj.module_projects.group(:id).each do |old_mp|
+              new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
+              old_mp.associated_module_projects.each do |associated_mp|
+                new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
+                new_mp.associated_module_projects << new_associated_mp
+              end
+            end
+
+            flash[:success] = I18n.t(:notice_project_successful_checkout)
+            redirect_to (edit_project_path(new_prj)), :notice => I18n.t(:notice_project_successful_checkout)
+
+            #raise "#{RuntimeError}"
+          else
+            flash['Error'] = I18n.t(:error_project_checkout_failed)
+            redirect_to '/projects' and return
           end
 
-          # For ModuleProject associations
-          old_prj.module_projects.group(:id).each do |old_mp|
-            new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
-            old_mp.associated_module_projects.each do |associated_mp|
-              new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
-              new_mp.associated_module_projects << new_associated_mp
-            end
-          end
-
-          flash[:success] = I18n.t(:notice_project_successful_checkout)
-          redirect_to (edit_project_path(new_prj)), :notice => I18n.t(:notice_project_successful_checkout)
-
-          #raise "#{RuntimeError}"
-        else
+        rescue
           flash['Error'] = I18n.t(:error_project_checkout_failed)
-          redirect_to '/projects' and return
+          redirect_to '/projects', :flash => {:error => I18n.t(:error_project_checkout_failed)}
         end
-
-      rescue
-        flash['Error'] = I18n.t(:error_project_checkout_failed)
-        redirect_to '/projects', :flash => {:error => I18n.t(:error_project_checkout_failed)}
-      end
+      else
+        redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_checkout_unauthorized_action')}
+      end # END commit or manage permissions
     else
       redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
-    end
+    end  # END commit permission
 
   end
 
