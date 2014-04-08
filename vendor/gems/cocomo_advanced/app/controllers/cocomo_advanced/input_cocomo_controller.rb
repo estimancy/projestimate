@@ -4,7 +4,6 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
   end
 
   def cocomo_save
-
     params['factors'].each do |factor|
       cmplx = OrganizationUowComplexity.find(factor[1])
 

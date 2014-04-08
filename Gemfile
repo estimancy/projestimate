@@ -126,7 +126,7 @@ gem 'omniauth-google-oauth2'
 #gem 'whenever', :require => false
 #
 ## Gem for getting the time difference
-#gem 'time_diff', '~> 0.3.0'
+gem 'time_diff', '~> 0.3.0'
 
 
 # Gems used only for assets and not required
