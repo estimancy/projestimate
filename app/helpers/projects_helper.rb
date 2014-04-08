@@ -585,7 +585,7 @@ module ProjectsHelper
                                  project_id: current_project.id).first
 
           if ic.nil?
-            res << link_to('First, configure Cocomo Advanced setting', '/cocomo_advanced')
+            res << link_to('Configure Cocomo Advanced setting', '/cocomo_advanced')
           else
             res << link_to('Reconfigure Cocomo Advanced setting', '/cocomo_advanced')
           end

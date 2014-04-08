@@ -28,10 +28,10 @@ module CocomoBasic
 
     #Constructor
     def initialize(elem)
-      elem[:ksloc].blank? ?
-          @coef_kls = nil :
-          @coef_kls = elem[:ksloc].to_f
-      case elem[:complexity]
+      #elem['ksloc'].blank? ?
+      #    @coef_kls = nil :
+          @coef_kls = elem['ksloc'].to_f
+      case elem['complexity']
         when 'Organic'
           set_cocomo_organic
         when 'Semi-detached'
@@ -66,56 +66,64 @@ module CocomoBasic
     end
 
     #Getters
-    #Return effort (in man-hour)
-    def get_effort_man_hour(*args)
-      if @coef_kls && @complexity
-        @effort = (152 * @coef_a*(@coef_kls**@coef_b)).to_f
-      else
-        @effort = nil
-      end
+    #Return effort (in man-month)
+    def get_effort_man_month(*args)
+      #if @coef_kls && @complexity
+        @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
+      #else
+      #  @effort = nil
+      #end
 
-      return @effort
+      #return @effort
     end
 
-    #Return delay (in hour)
+    #Return delay (in month)
     def get_delay(*args)
-      if @coef_kls && @complexity
-        @delay = (152 * 2.5*((@effort/152)**@coef_c)).to_f
-      else
-        nil
-      end
+      #if @coef_kls && @complexity
+        @delay = (2.5*((get_effort_man_month)**@coef_c)).to_f
+      #else
+      #  nil
+      #end
 
-      return @delay
+      #return @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      if @coef_kls && @complexity
-        @end_date = (Time.now + (@delay/152).to_i.months)
-      else
-        nil
-      end
+      #if @coef_kls && @complexity
+        @end_date = (Time.now + (get_delay).to_i.months)
+      #else
+      #  nil
+      #end
 
-      return @end_date
+      #return @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      if @coef_kls && @complexity
-        @staffing = (@effort / @delay)
-      else
-        nil
-      end
+      #if @coef_kls && @complexity
+        @staffing = (get_effort_man_month / get_delay)
+      #else
+      #  nil
+      #end
 
-      return @staffing
+      #return @staffing
     end
 
     def get_complexity(*args)
-      if @complexity
+      #if @complexity
         @complexity
-      else
-        nil
-      end
+      #else
+      #  nil
+      #end
+    end
+
+    def get_cost(*args)
+      #if @complexity
+      get_effort_man_month * 3000
+      #else
+      #  nil
+      #end
     end
   end
 

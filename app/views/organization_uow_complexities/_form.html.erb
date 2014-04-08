@@ -5,10 +5,10 @@
 
   <div id="tabs-1">
     <%= simple_form_for(@organization_uow_complexity) do |f| %>
-      <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => @organization.id || params[:organization_id]} %>
+      <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => params[:organization_id]} %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-      <%= f.input :unit_of_work_id, as: :select, collection: UnitOfWork.all.map{|i|[i.name, i.id]} %>
+      <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
       <%= f.input :factor_id, as: :select, collection: Factor.all.map{|i|[i.name, i.id]} %>
       <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge'} %>
 

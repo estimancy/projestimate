@@ -863,10 +863,10 @@ public
 
       current_module = "#{current_mp_to_execute.pemodule.alias.camelcase.constantize}::#{current_mp_to_execute.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
 
-      inputs['pe_attribute_alias'.to_sym] = est_val.pe_attribute.alias
+      #inputs['pe_attribute_alias'.to_sym] = est_val.pe_attribute.alias
 
       # Normally, the input data is commonly from the Expert Judgment Module on PBS (when running estimation on its product)
-      cm = current_module.send(:new, inputs)
+      cm = current_module.send(:new, input_data)
 
       if est_val.in_out == 'output' or est_val.in_out=='both'
         #begin

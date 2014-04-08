@@ -11,8 +11,8 @@ module CocomoAdvanced
 
     #Constructor
     def initialize(elem)
-      elem[:ksloc].blank? ? @coef_kls = nil : @coef_kls = elem[:ksloc].to_f
-      case elem[:complexity]
+      @coef_kls = elem['ksloc'].to_f
+      case elem['complexity']
         when 'Organic'
           set_cocomo_organic
         when 'Semi-detached'
@@ -56,9 +56,54 @@ module CocomoAdvanced
       end
       coeff_total = coeff.inject(:*)
 
-      res = (@coef_a * (@coef_kls ** @coef_b)) * coeff_total
+      res = (@coef_a * (@coef_kls ** @coef_b))# * coeff_total
 
       return res
+    end
+
+    #Return delay (in hour)
+    def get_delay(*args)
+      #if @coef_kls && @complexity
+      @delay = 0
+      #else
+      #  nil
+      #end
+
+      #return @delay
+    end
+
+    #Return end date
+    def get_end_date(*args)
+      #if @coef_kls && @complexity
+      @end_date = 0
+      #else
+      #  nil
+      #end
+
+      #return @end_date
+    end
+
+    #Return staffing
+    def get_staffing(*args)
+      #if @coef_kls && @complexity
+      @staffing = 0
+      #else
+      #  nil
+      #end
+
+      #return @staffing
+    end
+
+    def get_cost(*args)
+      @cost = 0
+    end
+
+    def get_complexity(*args)
+      #if @complexity
+      @complexity
+      #else
+      #  nil
+      #end
     end
   end
 
