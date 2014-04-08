@@ -67,9 +67,9 @@ module CocomoBasic
 
     #Getters
     #Return effort (in man-hour)
-    def get_effort_man_hour(*args)
+    def get_effort_man_month(*args)
       #if @coef_kls && @complexity
-        @effort = (152 * @coef_a*(@coef_kls**@coef_b)).to_f
+        @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
       #else
       #  @effort = nil
       #end
@@ -80,7 +80,7 @@ module CocomoBasic
     #Return delay (in hour)
     def get_delay(*args)
       #if @coef_kls && @complexity
-        @delay = (152 * 2.5*((get_effort_man_hour/152)**@coef_c)).to_f
+        @delay = (152 * 2.5*((get_effort_man_month/152)**@coef_c)).to_f
       #else
       #  nil
       #end
@@ -102,7 +102,7 @@ module CocomoBasic
     #Return staffing
     def get_staffing(*args)
       #if @coef_kls && @complexity
-        @staffing = (get_effort_man_hour / get_delay)
+        @staffing = (get_effort_man_month / get_delay)
       #else
       #  nil
       #end
@@ -113,6 +113,14 @@ module CocomoBasic
     def get_complexity(*args)
       #if @complexity
         @complexity
+      #else
+      #  nil
+      #end
+    end
+
+    def get_cost(*args)
+      #if @complexity
+      get_effort_man_month * 3000
       #else
       #  nil
       #end
