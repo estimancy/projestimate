@@ -120,7 +120,13 @@ class ModuleProject < ActiveRecord::Base
   end
 
   def to_s
-    self.pemodule.title.humanize
+    #self.pemodule.title.humanize
+    if self.pemodule.alias == Projestimate::Application::CAPITALIZATION
+      # nothing to show for position as the "Capitalization is always on the first position"
+      self.pemodule.title.humanize
+    else
+      "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
+    end
   end
 
   def is_One_Activity_Element?

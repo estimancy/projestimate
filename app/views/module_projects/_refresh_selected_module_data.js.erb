@@ -22,7 +22,7 @@ $('.spiner').hide();
 
 $("#pbs_list").val(<%= @current_component.nil? ? '' : @current_component.id %>);
 
-$(".header_data").html("<h5><%= @current_component %> - <%= "#{current_module_project} #{current_module_project.show_module_project_positions}" %></h5>");
+$(".header_data").html("<h5><%= @current_component %> - <%= "#{current_module_project}" %></h5>");
 
 //Allow to copy value from one field to another
 $('.copyLib').css( 'cursor', 'pointer' );

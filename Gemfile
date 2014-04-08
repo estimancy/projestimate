@@ -128,6 +128,9 @@ gem 'omniauth-google-oauth2'
 ## Gem for getting the time difference
 gem 'time_diff', '~> 0.3.0'
 
+# Licence finder gem
+gem 'license_finder'
+
 
 # Gems used only for assets and not required
 # in production environments by default.

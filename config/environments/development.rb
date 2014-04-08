@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
-require 'openssl'
+#require 'openssl'
 
 Projestimate::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
