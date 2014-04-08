@@ -66,7 +66,7 @@ module CocomoBasic
     end
 
     #Getters
-    #Return effort (in man-hour)
+    #Return effort (in man-month)
     def get_effort_man_month(*args)
       #if @coef_kls && @complexity
         @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
@@ -77,10 +77,10 @@ module CocomoBasic
       #return @effort
     end
 
-    #Return delay (in hour)
+    #Return delay (in month)
     def get_delay(*args)
       #if @coef_kls && @complexity
-        @delay = (152 * 2.5*((get_effort_man_month/152)**@coef_c)).to_f
+        @delay = (2.5*((get_effort_man_month/152)**@coef_c)).to_f
       #else
       #  nil
       #end
