@@ -58,7 +58,7 @@
     <% if action_name.in?(%w(edit update)) %>
         <div id="tabs-2">
           <div class="well component_tree">
-            <%= raw h generate_activity_element_tree(@wbs_activity_elements.first, '') %>
+            <%= raw generate_activity_element_tree(@wbs_activity_elements.first, '') %>
           </div>
         </div>
 
