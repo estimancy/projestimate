@@ -210,6 +210,12 @@ module ExternalMasterDatabase
     include ExternalInclude
   end
 
+  class ExternalOrganizationUowComplexity < ActiveRecord::Base
+    attr_accessible
+    establish_connection HOST
+    include ExternalInclude
+  end
+
   class ExternalGroup < ActiveRecord::Base
     attr_accessible
     establish_connection HOST

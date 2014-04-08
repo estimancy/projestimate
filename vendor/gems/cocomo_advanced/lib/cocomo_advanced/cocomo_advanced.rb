@@ -11,7 +11,7 @@ module CocomoAdvanced
 
     #Constructor
     def initialize(elem)
-      elem[:ksloc].blank? ? @coef_kls = nil : @coef_kls = elem[:ksloc].to_f
+      @coef_kls = elem[:ksloc].to_f
       case elem[:complexity]
         when 'Organic'
           set_cocomo_organic

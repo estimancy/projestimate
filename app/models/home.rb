@@ -371,7 +371,7 @@ class Home < ActiveRecord::Base
     ext_custom_rsid = ExternalMasterDatabase::ExternalRecordStatus.find_by_name('Custom').id
 
     #get all records (ex : ExternalMasterDatabase::ExternalLanguage.all)
-    puts "Class = #{ExternalMasterDatabase::ExternalPemodule}"
+    #puts "Class = #{ExternalMasterDatabase::ExternalPemodule}"
     externals = external.send(:defined, ext_rsid).send(:all)
 
     #for each external records...
@@ -586,6 +586,24 @@ class Home < ActiveRecord::Base
 
     puts '   - Factors...'
     self.create_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'state', 'uuid'])
+
+    puts '   - Complexity...'
+    self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
+
+    #Associate
+    ext_factors = ExternalMasterDatabase::ExternalFactor.all
+    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
+    ext_factors.each do |ext_factor|
+      ext_complexities.each do |ext_complexity|
+        if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
+          loc_factor = Factor.find_by_uuid(ext_factor.uuid)
+          loc_cplx = OrganizationUowComplexity.find_by_uuid(ext_complexity.uuid)
+          loc_cplx.factor_id = loc_factor.id
+          loc_cplx.value = ext_complexity.value
+          loc_cplx.save(validate: false)
+        end
+      end
+    end
 
     puts '   - Admin user'
     #Create first user
