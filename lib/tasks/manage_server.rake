@@ -10,18 +10,16 @@ namespace :projestimate do
       # get the admin parameter
       audit_history_setting = AdminSetting.find_by_key_and_record_status_id('audit_history_lifetime', @defined_record_status.id)
       if audit_history_setting && audit_history_setting != 0
-        audit_history_setting_value = audit_history_setting.value
-        time_unit = audit_history_setting_value.split(' ').last
-
-        I18n.t("datetime.distance_in_words.x_#{setting_value.last.to_s.pluralize}", :count => value.to_i)
-
+        audit_history_setting_value = audit_history_setting.value.to_s.split(' ')
+        # Get the audit_history_lifetime unit : day(s), week(s) or month(s)
+        lifetime_value = audit_history_setting_value.first.to_i
+        lifetime_unit = audit_history_setting_value.last.to_s.singularize
+        histories_to_delete = Array.new
         # get all audit history data that feet the conditions: to be deleted
-        audit_histories = Audit.where('(Time.now - created_at) >= ?', )
-
-
-
-        time_difference = Time.diff(Time.parse("#{start_date_time}"), Time.now)
-
+        audit_histories_to_delete = Audit.all.reject { |history| Time.diff(Time.parse("#{history.created_at}"), Time.now)[:"#{lifetime_unit}"] < lifetime_value }
+        ids_to_delete = audit_histories_to_delete.collect(&:id)
+        # then delete all the histories data that have more than "audit_history_lifetime" value
+        Audit.where(:id => ids_to_delete).destroy_all
       end
     rescue Exception => e
       puts "Error : #{e.message}"
