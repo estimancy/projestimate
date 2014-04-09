@@ -1,12 +1,14 @@
 <ul class="nav nav-list" xmlns="http://www.w3.org/1999/html">
   <li class="nav-header"><h5><%= I18n.t(:label_menu_projects) %></h5></li>
-  <li><%= render 'layouts/recent_project' %>  </li>
   <li><a href="/dashboard"><i class="icon-home icon-large pull-left"></i><%= I18n.t('home') %></a></li>
 
   <% if current_project %>
     <% if can? :write_access_to_inreview_project, current_project %>
       <li>
-        <a href="<%= main_app.edit_project_path(current_project, :anchor => 'tabs-1') %>"><i class="icon-edit icon-large pull-left"></i> <%= I18n.t('edit') %> <%= current_project.title %>
+        <a href="<%= main_app.edit_project_path(current_project, :anchor => 'tabs-1') %>">
+          <i class="icon-edit icon-large pull-left"></i>
+          <%= I18n.t('edit') %>
+            <%= current_project.title %>
         </a>
       </li>
     <% end %>

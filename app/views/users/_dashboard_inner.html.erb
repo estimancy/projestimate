@@ -1,10 +1,4 @@
 <div class="row-fluid">
-  <h3>&nbsp;<%= I18n.t(:label_dashboard, :value => current_project.title) %>
-    <%= image_tag '/assets/ajax-loader.gif', :class => 'spiner hide' %>
-  </h3>
-</div>
-
-<div class="row-fluid">
   <div class="span6 pbs">
     <div class="widget-box collapsible">
       <div class="widget-title">
@@ -39,7 +33,7 @@
           - <%= current_module_project.nil? ? I18n.t(:notice_no_active_module) : current_module_project %></h5>
 
         <div class="buttons">
-          <a href="<%= edit_project_path(current_project.id, :anchor => 'tabs-4') %>" class="btn btn-mini btn-info">
+          <a href="<%= edit_project_path(current_project.id, :anchor => 'tabs-4') %>" class="btn btn-mini">
             <%= I18n.t(:button_estimation_plan) %>
           </a>
         </div>

@@ -1,5 +1,5 @@
 body {
-    font-size: 12px;
+    font-size: 13px;
     background-color: white;
 }
 th.action {
@@ -130,9 +130,10 @@ div.actions-tabs {
 /* Widgets */
 .widget-box {
     background: none repeat scroll 0 0 #F9F9F9;
-    border-top: 1px solid #CDCDCD;
-    border-left: 1px solid #CDCDCD;
-    border-right: 1px solid #CDCDCD;
+    border-top: 1px solid #74CAE3;
+    border-left: 1px solid #74CAE3;
+    border-right: 1px solid #74CAE3;
+    border-bottom: 1px solid #74CAE3;
     clear: both;
     margin-top: 16px;
     margin-bottom: 16px;
@@ -143,20 +144,16 @@ div.actions-tabs {
     overflow:hidden !important;
 }
 
-.widget-title, .modal-header, .table th, div.dataTables_wrapper .ui-widget-header, .ui-dialog .ui-dialog-titlebar {
-    background-color: lightblue;
-    background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#fdfdfd), to(#eaeaea));
-    background-image: -webkit-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -moz-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -ms-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -o-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    background-image: -linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdfdfd', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
-    border-bottom: 1px solid #CDCDCD;
+ .table th, div.dataTables_wrapper .ui-widget-header, .ui-dialog .ui-dialog-titlebar {
+    background-color: #eaeaea;
+    border-bottom: 1px solid #74CAE3;
     height: 36px;
+}
 
-
-
+.widget-title, .modal-header {
+    background-color: #1BA1E2;
+    border-bottom: 1px solid #74CAE3;
+    height: 36px;
 }
 
 .widget-title{
@@ -200,11 +197,10 @@ div.actions-tabs {
     opacity: .7;
 }
 .widget-title h5 {
-    color: #666666;
-    text-shadow: 0 1px 0 #ffffff;
+    color: white;
     float: left;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: normal;
     padding: 12px;
     line-height: 12px;
     margin: 0;
@@ -228,13 +224,12 @@ div.actions-tabs {
 }
 .widget-content {
     padding: 12px 15px;
-    border-bottom: 1px solid #cdcdcd;
 }
 .widget-box.widget-plain .widget-content {
     padding: 12px 0 0;
 }
 .widget-box.collapsible .collapse.in .widget-content {
-    border-bottom: 1px solid #CDCDCD;
+    /*border-bottom: 1px solid #CDCDCD;*/
 }
 .widget-content table td {
     text-align:center;
@@ -543,6 +538,34 @@ ul{
     margin-left: -15px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     color: #0088cc;
+    background-color: #f9f9f9;
+}
+
+#sidebar{
+    background-color: #f2f2f2;
+    margin-right: -20px;
+}
+
+.nav-list>li>a{
+    display: block;
+    height: 38px;
+    line-height: 36px;
+    padding: 0 16px 0 7px;
+    color: #585858;
+    text-shadow: none!important;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.nav-list>li>a>[class*="icon-"]:first-child {
+    display: inline-block;
+    vertical-align: middle;
+    min-width: 30px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-top: 10px;
 }
 
 .navbar {
@@ -717,11 +740,6 @@ div.block_label.selected_pbs {
     /*color: #000000;*/
 }
 
-.main{
-    background-color: white;
-}
-
-
 /* override the font-awesome.css*/
 @font-face {
     font-family: 'FontAwesome';
@@ -744,4 +762,17 @@ div.block_label.selected_pbs {
 .history_actions_margin{
     margin-right: 50px;
 }
+
+.table-bordered, .table-condensed{
+    border-collapse: separate;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.table-bordered thead:first-child tr:first-child > th:first-child, .table-bordered tbody:first-child tr:first-child > td:first-child, .table-bordered tbody:first-child tr:first-child > th:first-child {
+     -webkit-border-top-left-radius: 0px;
+     border-top-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+}
+
 
