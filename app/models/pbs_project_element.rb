@@ -44,6 +44,9 @@ class PbsProjectElement < ActiveRecord::Base
 
     customize(lambda { |original_pbs_project_elt, new_pbs_project_elt|
       new_pbs_project_elt.copy_id = original_pbs_project_elt.id
+      #if original_pbs_project_elt.is_root == true
+      #  new_pbs_project_elt.name = "Copy_#{ new_pbs_project_elt.pe_wbs_projects.first.project.copy_number.to_i+1} of #{original_pbs_project_elt.name}"
+      #end
     })
   end
 
