@@ -383,9 +383,15 @@ module ProjectsHelper
 
             res << '<td>'
             if level_estimation_values[pbs_project_element.id]
-              res << text_field_tag("", level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value],
-                                    :readonly => true, :class => "input-small #{level} #{est_val.id}",
-                                    "data-est_val_id" => est_val.id)
+              begin
+                res << text_field_tag("", level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value],
+                                      :readonly => true, :class => "input-small #{level} #{est_val.id}",
+                                      "data-est_val_id" => est_val.id)
+              rescue
+                res << text_field_tag("", level_estimation_values[pbs_project_element.id],
+                                      :readonly => true, :class => "input-small #{level} #{est_val.id}",
+                                      "data-est_val_id" => est_val.id)
+              end
             else
               res << '-'
             end

@@ -852,8 +852,8 @@ public
     @result_hash = Hash.new
     inputs = Hash.new
     #Need to add input for pbs_project_element and module_project
-    #inputs['pbs_project_element_id'.to_sym] = pbs_project_element_id
-    #inputs['module_project_id'.to_sym] = current_mp_to_execute.id
+    input_data['pbs_project_element_id'.to_sym] = pbs_project_element_id
+    input_data['module_project_id'.to_sym] = current_mp_to_execute.id
 
     #current_mp_to_execute.estimation_values.sort! { |a, b| a.in_out <=> b.in_out }.each do |est_val|
     current_mp_to_execute.estimation_values.each do |est_val|

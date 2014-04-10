@@ -27,21 +27,21 @@ module CocomoAdvanced
     def set_cocomo_organic
       @coef_a = 3.02
       @coef_b = 1.05
-      @coef_c = 1.05
+      @coef_c = 0.38
       @complexity = "Organic"
     end
 
     def set_cocomo_embedded
       @coef_a = 3
       @coef_b = 1.12
-      @coef_c = 1.20
+      @coef_c = 0.35
       @complexity = "Semi-detached"
     end
 
     def set_cocomo_semidetached
       @coef_a = 2.8
       @coef_b = 1.2
-      @coef_c = 1.12
+      @coef_c = 0.32
       @complexity = "Embedded"
     end
 
