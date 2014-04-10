@@ -75,7 +75,7 @@ module PeWbsProjectsHelper
     "<li>
         <div class='block_label #{ pbs_project_element == current_component ? 'selected_pbs' : '' }'>
           <div onClick='toggle_folder(this);' >
-              <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :is_project_show_view => is_project_show_view)} data-remote=true>
+              <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :is_project_show_view => is_project_show_view, project_id: @project.id)} data-remote=true>
                 <i class='icon-folder-open'></i>
                 #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
                 #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }

@@ -852,18 +852,18 @@ public
     @result_hash = Hash.new
     inputs = Hash.new
     #Need to add input for pbs_project_element and module_project
-    inputs['pbs_project_element_id'.to_sym] = pbs_project_element_id
-    inputs['module_project_id'.to_sym] = current_mp_to_execute.id
+    #inputs['pbs_project_element_id'.to_sym] = pbs_project_element_id
+    #inputs['module_project_id'.to_sym] = current_mp_to_execute.id
 
     #current_mp_to_execute.estimation_values.sort! { |a, b| a.in_out <=> b.in_out }.each do |est_val|
     current_mp_to_execute.estimation_values.each do |est_val|
-      if est_val.in_out == 'input' or est_val.in_out=='both'
-        inputs[est_val.pe_attribute.alias.to_sym] = input_data[est_val.pe_attribute.alias] #[current_mp_to_execute.id.to_s]
-      end
+      #if est_val.in_out == 'input' or est_val.in_out=='both'
+      #  inputs[est_val.pe_attribute.alias.to_sym] = input_data[est_val.pe_attribute.alias] #[current_mp_to_execute.id.to_s]
+      #end
 
       current_module = "#{current_mp_to_execute.pemodule.alias.camelcase.constantize}::#{current_mp_to_execute.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
 
-      #inputs['pe_attribute_alias'.to_sym] = est_val.pe_attribute.alias
+      input_data['pe_attribute_alias'.to_sym] = est_val.pe_attribute.alias
 
       # Normally, the input data is commonly from the Expert Judgment Module on PBS (when running estimation on its product)
       cm = current_module.send(:new, input_data)

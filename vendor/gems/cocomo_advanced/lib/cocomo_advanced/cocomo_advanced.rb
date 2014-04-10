@@ -7,11 +7,11 @@ module CocomoAdvanced
 
     include ApplicationHelper
 
-    attr_accessor :coef_a, :coef_b, :coef_kls, :complexity, :effort
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
 
     #Constructor
     def initialize(elem)
-      @coef_kls = elem['size'].to_f
+      @coef_kls = elem['ksloc'].to_f
       case elem['complexity']
         when 'Organic'
           set_cocomo_organic
@@ -27,18 +27,21 @@ module CocomoAdvanced
     def set_cocomo_organic
       @coef_a = 3.02
       @coef_b = 1.05
+      @coef_c = 1.05
       @complexity = "Organic"
     end
 
     def set_cocomo_embedded
       @coef_a = 3
       @coef_b = 1.12
+      @coef_c = 1.20
       @complexity = "Semi-detached"
     end
 
     def set_cocomo_semidetached
       @coef_a = 2.8
       @coef_b = 1.2
+      @coef_c = 1.12
       @complexity = "Embedded"
     end
 
@@ -61,51 +64,30 @@ module CocomoAdvanced
 
     #Return delay (in hour)
     def get_delay(*args)
-      #if @coef_kls && @complexity
-      #@delay = (152 * 2.5*((@effort/152)**@coef_c)).to_f
-      #else
-      #  nil
-      #end
-
-      #return @delay
+      @effort = get_effort_man_month(args[0], args[1], args[2])
+      @delay = (2.5*((@effort/152)**@coef_c)).to_f
+      @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      #if @coef_kls && @complexity
-      #@end_date = (Time.now + (get_delay/152).to_i.months)
-      #else
-      #  nil
-      #end
-
-      #return @end_date
+      @end_date = (Time.now + (get_delay(args[0], args[1], args[2])).to_i.months)
+      @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      #if @coef_kls && @complexity
-      #@staffing = (@effort / get_delay)
-      #else
-      #  nil
-      #end
-
-      #return @staffing
+      @staffing = (get_effort_man_month(args[0], args[1], args[2]) / get_delay(args[0], args[1], args[2]))
+      @staffing
     end
 
     def get_complexity(*args)
-      #if @complexity
-      #@complexity
-      #else
-      #  nil
-      #end
+      @complexity
     end
 
     def get_cost(*args)
-      #if @complexity
-      #@complexity
-      #else
-      #  nil
-      #end
+      @cost = 0
+      @cost
     end
   end
 

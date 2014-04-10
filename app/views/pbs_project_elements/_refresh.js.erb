@@ -1,7 +1,7 @@
 //Get the current_component first
 <% @current_component = current_component %>
 
-<% if controller_name == "users" %>
+<% if controller_name == "users" or controller_name == "pbs_project_elements" %>
   $("#project_wbs_product_section .tab-pane.active").html("<%=raw j generate_wbs_product(@project.root_component, @project, '', 5, params[:is_project_show_view]) %>");
 <% else %>
   $("#project_wbs_product_section").html("<%=raw j generate_wbs_product(@project.root_component, @project, '', 5, params[:is_project_show_view]) %>");

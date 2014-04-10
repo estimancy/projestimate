@@ -29,18 +29,20 @@ module Capitalization
       @module_input_data = module_input_data
       puts "module_input_data = #{@module_input_data}"
       @pe_attribute_alias = module_input_data[:pe_attribute_alias]
+      module_input_data[@pe_attribute_alias].blank? ? @output_result = nil : @output_result = module_input_data[@pe_attribute_alias]
 
-      module_input_data["#{@pe_attribute_alias}".to_sym].blank? ? @output_result = nil : @output_result = module_input_data["#{@pe_attribute_alias}".to_sym]
       unless @output_result.nil?
         if @output_result.valid_integer?
           @output_result = @output_result.to_i
         elsif @output_result.valid_float?
           @output_result = @output_result.to_f
+        else
+          @output_result = @output_result.to_s
         end
       end
 
       (class << self; self; end).class_eval do
-        define_method("get_#{module_input_data[:pe_attribute_alias]}".to_sym) do
+        define_method("get_#{module_input_data[:pe_attribute_alias]}".to_sym) do |*args|
           @output_result
         end
       end
