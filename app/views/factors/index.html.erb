@@ -27,7 +27,7 @@
         <tr>
           <td><%= factor.name %></td>
           <td><%= factor.alias %></td>
-          <td><%= factor.factor_type.humanize %></td>
+          <td><%= factor.factor_type.nil? ? '' : factor.factor_type.humanize %></td>
           <td><%= factor.description %></td>
           <td><%= factor.state %></td>
           <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>

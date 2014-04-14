@@ -103,7 +103,7 @@ class Home < ActiveRecord::Base
     self.update_records(ExternalMasterDatabase::ExternalAttributeCategory, AttributeCategory, ['name', 'alias','uuid'])
 
     puts '   - Factor'
-    self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'uuid'])
+    self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])
 
     puts '   - Complexity...'
     self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
