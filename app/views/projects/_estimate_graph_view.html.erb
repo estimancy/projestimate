@@ -1,0 +1,40 @@
+<%#= form_tag({:controller => 'projects', :action => 'show_estimation_graph', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :remote => true, :class => 'simple_form') do -%>
+
+<div class="row-fluid">
+  <div class="widget-box collapsible">
+    <div class="widget-title">
+      <a href="#collapseIn" data-toggle="collapse">
+              <span class="icon">
+                <i class="icon-bar-chart"></i>
+              </span>
+      </a>
+
+      <div class="header_data">
+        <h5><%= "Estimation graph" %> - <%= "#{current_module_project}" %></h5>
+      </div>
+
+      <div class="buttons">
+        <%= select_tag 'pbs_list', options_for_select(current_project.root_component.subtree.map { |i| [i.name, i.id] }, :selected => current_component.id), :class => 'pull-right', :prompt => 'Product Quick Access' %>
+      </div>
+    </div>
+
+    <div class="collapse in" id="collapseIn">
+      <div class="widget-content tab-content">
+        <div class="span6">
+          <div class="input">
+            <div class="input_data" id="estimation_graph_box">
+              <%= render :partial => "projects/estimation_graph", :locals => { :module_project => current_module_project, :project_modules => @project_modules } %>
+
+              <canvas id="lineChart" width="1000" height="600">
+              </canvas>
+              <canvas id="barChart" width="1000" height="600">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%# end %>
+

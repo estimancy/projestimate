@@ -198,6 +198,7 @@ Projestimate::Application.routes.draw do
   get 'append_pemodule' => 'projects#append_pemodule'
   get 'select_categories' => 'projects#select_categories', :as => 'select_categories'
   post 'run_estimation' => 'projects#run_estimation', :as => 'run_estimation'
+  get 'show_estimation_graph' => 'projects#show_estimation_graph', :as => 'show_estimation_graph'
   get 'load_security_for_selected_user' => 'projects#load_security_for_selected_user', :as => 'load_security_for_selected_user'
   get 'load_security_for_selected_group' => 'projects#load_security_for_selected_group', :as => 'load_security_for_selected_group'
   get 'update_project_security_level' => 'projects#update_project_security_level', :as => 'update_project_security_level'
