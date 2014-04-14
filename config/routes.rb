@@ -50,6 +50,7 @@ Projestimate::Application.routes.draw do
   resources :audits
 
   mount Uos::Engine, :at => '/uos'
+  mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
 
   resources :abacus_organizations

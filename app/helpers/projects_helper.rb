@@ -585,15 +585,15 @@ module ProjectsHelper
 
         if module_project.pemodule.alias == "uos"
           res << "#{ link_to 'Unit of Works Setting', '/uos?mp=' + module_project.id.to_s }"
-        elsif module_project.pemodule.alias == "cocomo_advanced"
+        elsif module_project.pemodule.alias == "cocomo_advanced" or module_project.pemodule.alias == "cocomo_expert"
           ic = InputCocomo.where(pbs_project_element_id: pbs_project_element.id,
                                  module_project_id: module_project.id,
                                  project_id: current_project.id).first
 
           if ic.nil?
-            res << link_to('Configure Cocomo Advanced setting', '/cocomo_advanced')
+            res << link_to("Configure Cocomo's setting", "/#{module_project.pemodule.alias}")
           else
-            res << link_to('Reconfigure Cocomo Advanced setting', '/cocomo_advanced')
+            res << link_to("Reconfigure Cocomo's setting", "/#{module_project.pemodule.alias}")
           end
         else
           ""

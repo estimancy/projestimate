@@ -1,0 +1,33 @@
+<h4><%= current_project.title %> - <%= current_component %></h4>
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">Cocomo Advanced</a>
+    </li>
+  </ul>
+
+  <div id="tabs-1" style="overflow-x: auto;">
+    <%= form_tag "/cocomo_expert/cocomo_save" do %>
+      <table class="table table-striped table-bordered table-condensed">
+        <tr>
+          <th>Nom</th>
+          <th>Description</th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <% @factors.each do |factor| %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <tr>
+            <td><%= factor.name %></td>
+            <td><%= factor.description %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td></td>
+          </tr>
+        <% end %>
+      </table>
+      <%= submit_tag "Save", class: 'btn' %>
+    <% end %>
+
+  </div>
+</div>
