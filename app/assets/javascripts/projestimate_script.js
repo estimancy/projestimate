@@ -145,6 +145,37 @@ $(document).ready(function() {
         $('.spiner').show();
     });
 
+    // Showing the estimation graph
+    $("#see_estimation_graph").bind('click', function() {
+        $('.icon-signal').toggle();
+        $('.icon-list').toggle();
+        $('.icon-align-left').toggle();
+        $('.spiner').show();
+
+        $.ajax({
+            url: "/show_estimation_graph",
+            method: "get",
+            data: {
+                module_project: $('#current_module_project').val(),
+                pbs_project_element_id: $(this).val(),
+                project_id: $("#project_id").val()
+            }
+        });
+    });
+
+
+    $("#select_pbs_project_elements").on('click', function() {
+        $.ajax({
+            url: "/select_pbs_project_elements",
+            method: "get",
+            data: {
+                pbs_project_element_id: $(this).val(),
+                project_id: $("#project_id").val()
+            }
+        });
+    });
+
+
 
      $('.component_tree ul li, .widget-content ul li').hover(
         function () {

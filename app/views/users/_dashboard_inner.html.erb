@@ -70,6 +70,7 @@
             <% if can? :execute_estimation_plan, current_project %>
               <%= submit_tag 'Run', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
             <% end %>
+            <%= link_to image_tag('icon-bar-chart.jpeg', :border => 0, :class => 'myicon-bar-chart', :title => "Estimation graph"), {:controller => 'projects', :action => 'show_estimation_graph'}, :id => 'see_estimation_graph', :remote => true  %>
           </div>
         </div>
 
@@ -94,6 +95,12 @@
       </div>
     </div>
 <% end %>
+
+<!-- The Estimation graph -->
+
+<div id="show_estimation_graph">
+
+</div>
 
 
 <script>

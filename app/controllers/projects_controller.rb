@@ -974,7 +974,7 @@ public
     if params[:from_tree_history_view]
      redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
     else
-      redirect_to '/projects'
+      redirect_to '/projects', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
     end
   end
 
@@ -1478,6 +1478,51 @@ public
       #format.json { render :json =>  Project.json_tree(@projects)}
       format.json { render :json => Hash[*@my_tree.flatten] }
     end
+  end
+
+  # Function that show the estimation graph
+  def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
+    @project = current_project
+    @project_module_projects = @project.module_projects
+    # get the all project modules for the charts labels
+    @project_modules = []
+    # contains all the modules attributes
+    @attributes_labels = []
+    @attributes = []
+
+    @project_module_projects.each do |mp|
+      @project_modules << mp.pemodule
+      @attributes << mp.pemodule.pe_attributes
+      @attributes_labels = @attributes_labels + mp.pemodule.pe_attributes.all.map(&:alias)
+    end
+    @attributes = @attributes.flatten.sort.uniq
+    @attributes_labels = @attributes_labels.flatten.sort.uniq
+
+    # generate the dataset for charts
+    @dataset = {}
+
+    # Dataset is get by attribute
+    # one dataset data correspond of all modules values for this attribute
+    @attributes.each do |attr|
+      attr_data = Array.new
+      @project_module_projects.each do |mp|
+        attr_estimation_value = mp.estimation_values.where('pe_attribute_id = ?', attr.id).last
+        if attr_estimation_value.nil?
+          attr_data << ""
+        else
+          attr_data << attr_estimation_value.string_data_probable
+        end
+      end
+      @dataset[:"#{attr.alias}"] = attr_data
+    end
+
+    # Get the attributes data for each dataset
+    @project_module_projects.each do |mp|
+      @dataset[:"#{mp.pemodule.alias}"] = {}
+      mp.estimation_values.each do |estimation|
+      end
+    end
+
   end
 
 end

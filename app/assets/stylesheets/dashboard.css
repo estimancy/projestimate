@@ -776,3 +776,11 @@ div.block_label.selected_pbs {
 }
 
 
+.myicon-bar-chart{
+   height: inherit;
+    width: inherit;
+    max-width: 6%;
+
+}
+
+
