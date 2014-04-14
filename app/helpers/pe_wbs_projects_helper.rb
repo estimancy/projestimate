@@ -52,41 +52,45 @@ module PeWbsProjectsHelper
     return tree
   end
 
-  def wbs_navigation_links(c, is_project_show_view)
-    "<li class=''>
-        <div class='block_label #{ c == current_component ? "selected_pbs" : '' }'>
-          #{  image_tag c.work_element_type.peicon.nil? ? '' : c.work_element_type.peicon.icon.url(:small)}
-          #{  content_tag('span', '', :class => "#{ c.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
-          #{  content_tag('span', '', :class => "#{ c.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
-          #{  link_to(c.link? ? (c.project_link.nil? ? '!! undefined link' : Project.find(c.project_link)) : c.name, {:controller => 'pbs_project_elements', :action => 'selected_pbs_project_element', :pbs_id => c.id, :project_id => @project.id, :is_project_show_view => is_project_show_view}, :remote => true, :confirm => ('You are going to modify a validated PBS, confirm to continue or abort to cancel ?' if c.is_validated)) }
+  def wbs_navigation_links(pbs_project_element, is_project_show_view)
+    "<li>
+        <div class='block_label #{ pbs_project_element == current_component ? "selected_pbs" : '' }'>
+          <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, project_id: @project.id, :is_project_show_view => is_project_show_view)} data-remote=true>
+            <i class='icon-file'></i>
+            #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
+            #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
+            #{pbs_project_element.link? ? (pbs_project_element.project_link.nil? ? '!! undefined link' : Project.find(pbs_project_element.project_link)) : pbs_project_element.name}
+          </a>
         </div>
         <div class='block_link'>
-          #{ link_to "", edit_pbs_project_element_path(c, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit icon-large ', :title => I18n.t('edit') unless is_project_show_view }
-          #{ link_to "", c, confirm: I18n.t('are_you_sur'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash icon-large ', :title => I18n.t('delete') unless is_project_show_view }
-          #{ link_to "", {:controller => 'pbs_project_elements', :action => 'up', :pbs_project_element_id => c.id, :pe_wbs_project_id => c.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-up icon-large ', :title => I18n.t('up') unless is_project_show_view }
-          #{ link_to "", {:controller => 'pbs_project_elements', :action => 'down', :pbs_project_element_id => c.id, :pe_wbs_project_id => c.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-down icon-large ', :title => I18n.t('down')  unless is_project_show_view }
+          #{ link_to "", edit_pbs_project_element_path(pbs_project_element, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit ', :title => I18n.t('edit') unless is_project_show_view }
+          #{ link_to "", pbs_project_element, confirm: I18n.t('are_you_sur'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash ', :title => I18n.t('delete') unless is_project_show_view }
+          #{ link_to "", up_path(:pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-arrow-up ', :title => I18n.t('up') unless is_project_show_view }
+          #{ link_to "", down_path(:pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-arrow-down ', :title => I18n.t('down')  unless is_project_show_view }
         </div>
       </li>"
   end
 
-  def wbs_folder_links(c, project, is_project_show_view)
-    "<li class='' >
-        <div class='block_label #{ c == current_component ? 'selected_pbs' : '' }'>
+  def wbs_folder_links(pbs_project_element, project, is_project_show_view)
+    "<li>
+        <div class='block_label #{ pbs_project_element == current_component ? 'selected_pbs' : '' }'>
           <div onClick='toggle_folder(this);' >
-            #{ image_tag c.work_element_type.peicon.nil? ? '' : c.work_element_type.peicon.icon.url(:small)}
-            #{  content_tag('span', '', :class => "#{ c.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
-            #{  content_tag('span', '', :class => "#{ c.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
-            #{ link_to(c.name, {:controller => 'pbs_project_elements', :action => 'selected_pbs_project_element', :pbs_id => c.id, :is_project_show_view => is_project_show_view}, :remote => true, :class => "") }
+              <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :is_project_show_view => is_project_show_view, project_id: @project.id)} data-remote=true>
+                <i class='icon-folder-open'></i>
+                #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
+                #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
+                #{pbs_project_element.name}
+              </a>
           </div>
         </div>
         <div class='block_link'>
-          #{ link_to "", edit_pbs_project_element_path(c, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit icon-large ', :title => I18n.t('edit') unless is_project_show_view }
-          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => c.id), :remote => true, :class => 'button_attribute_tooltip icon-folder-open icon-large ', :title => I18n.t('add_folder') unless is_project_show_view }
-          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => c.id), :remote => true, :class => 'button_attribute_tooltip icon-plus icon-large ', :title => I18n.t('add_component') unless is_project_show_view }
-          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => c.id), :remote => true, :class => 'button_attribute_tooltip icon-link icon-large ', :title => I18n.t('add_link') unless is_project_show_view }
-          #{ link_to "", c, confirm: I18n.t('are_you_sur'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash icon-large', :title => I18n.t('delete')}
-          #{ link_to "", {:controller => 'pbs_project_elements', :action => 'up', :pbs_project_element_id => c.id, :pe_wbs_project_id => c.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-up icon-large ', :title => I18n.t('up') unless is_project_show_view }
-          #{ link_to "", {:controller => 'pbs_project_elements', :action => 'down', :pbs_project_element_id => c.id, :pe_wbs_project_id => c.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-down icon-large ', :title => I18n.t('down') unless is_project_show_view }
+          #{ link_to "", edit_pbs_project_element_path(pbs_project_element, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit ', :title => I18n.t('edit') unless is_project_show_view }
+          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-folder-open ', :title => I18n.t('add_folder') unless is_project_show_view }
+          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-plus ', :title => I18n.t('add_component') unless is_project_show_view }
+          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-link ', :title => I18n.t('add_link') unless is_project_show_view }
+          #{ link_to "", pbs_project_element, confirm: I18n.t('are_you_sur'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t('delete')}
+          #{ link_to "", {:controller => 'pbs_project_elements', :action => 'up', :pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-up ', :title => I18n.t('up') unless is_project_show_view }
+          #{ link_to "", {:controller => 'pbs_project_elements', :action => 'down', :pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-down ', :title => I18n.t('down') unless is_project_show_view }
         </div>
     </li>"
   end
@@ -95,17 +99,19 @@ module PeWbsProjectsHelper
     "<li class=''>
         <div class='block_label #{ pbs_project_element == current_component ? 'selected_pbs' : '' }'>
           <div onClick='toggle_folder(this);' >
-            #{ image_tag pbs_project_element.work_element_type.peicon.nil? ? '' : pbs_project_element.work_element_type.peicon.icon.url(:small) }
-            #{ content_tag('span', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
-            #{ content_tag('span', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
-            #{ link_to(pbs_project_element.name, {:controller => 'pbs_project_elements', :action => 'selected_pbs_project_element', :pbs_id => pbs_project_element.id, :project_id => @project.id, :is_project_show_view => is_project_show_view}, :remote => true, :class => " ") }
+            <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :project_id => @project.id, :is_project_show_view => is_project_show_view)} data-remote=true>
+              <i class='icon-folder-open'></i>
+              #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
+              #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
+              #{pbs_project_element.name}
+            </a>
           </div>
         </div>
         <div class='block_link'>
-          #{ link_to "", edit_pbs_project_element_path(pbs_project_element, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit icon-large ', :title => I18n.t('edit') unless is_project_show_view }
-          #{ link_to("", new_pbs_project_element_path(:project_id => @project.id, :work_element_type => "folder", :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-folder-open icon-large ', :title => I18n.t('add_folder')) unless is_project_show_view }
-          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :work_element_type => "component", :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-plus icon-large ', :title => I18n.t('add_component') unless is_project_show_view }
-          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :work_element_type => "link", :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-link icon-large ', :title => I18n.t('add_link') unless is_project_show_view }
+          #{ link_to "", edit_pbs_project_element_path(pbs_project_element, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit ', :title => I18n.t('edit') unless is_project_show_view }
+          #{ link_to("", new_pbs_project_element_path(:project_id => @project.id, :work_element_type => "folder", :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-folder-open ', :title => I18n.t('add_folder')) unless is_project_show_view }
+          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :work_element_type => "component", :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-plus ', :title => I18n.t('add_component') unless is_project_show_view }
+          #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :work_element_type => "link", :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-link ', :title => I18n.t('add_link') unless is_project_show_view }
         </div>
       </li>"
   end

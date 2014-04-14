@@ -1,43 +1,61 @@
-  <ul class="nav">
-    <li>
-      <a href="#" id="toggle_button">
-        <i class="icon-double-angle-down icon-large pull-left" title="<%=I18n.t(:title_hide_show_menu) %>" style="margin-top: 1px;"></i>
-      </a>
-    </li>
+<ul class="nav">
+  <li>
+    <a href="#" id="toggle_button" title="<%= I18n.t 'title_hide_show_menu' %>">
+      <i class="icon-double-angle-down icon-large pull-left" style="margin-top: 1px;"></i>
+    </a>
+  </li>
 
-    <li>
-      <a href="<%= main_app.edit_user_path(current_user) %>">
-        <i class="icon-user"></i>
-        <%= I18n.t 'connected_as' %> <%= current_user %>
-      </a>
-    </li>
+  <li class="divider-vertical"></li>
 
-    <li>
-      <a href="<%= main_app.destroy_user_session_path %>#" data-method="delete" rel="nofollow">
-        <i class="icon-off"></i>
-        <%= I18n.t 'logout' %>
-      </a>
-    </li>
+  <li>
+    <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
+       <%= current_user %> > <%= current_project.title %>
+    </a>
+  </li>
 
-    <li>
-      <a href="<%= load_admin_setting('url_wiki') %>">
-        <i class="icon-file"></i>
-        <%= I18n.t 'help' %>
-      </a>
-    </li>
+  <li class="divider-vertical"></li>
 
-    <li>
-      <a href="<%= load_admin_setting('url_service') %>">
-        <i class="icon-eye-open"></i>
-        <%= I18n.t 'services' %>
-      </a>
-    </li>
+  <li>
+    <a href="<%= main_app.destroy_user_session_path %>#" data-method="delete" rel="nofollow" title="<%= I18n.t 'logout' %>">
+      <i class="icon-off"></i>
+    </a>
+  </li>
 
-    <li>
-      <a href="/about">
-        <i class="icon-asterisk"></i>
-        <%= I18n.t 'about' %>
-      </a>
-    </li>
+  <li class="divider-vertical"></li>
 
-  </ul>
+  <li>
+    <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'services' %>" >
+      <i class="icon-file"></i>
+    </a>
+  </li>
+
+  <li class="divider-vertical"></li>
+
+  <li>
+    <a href="<%= load_admin_setting('url_service') %>" title="<%= I18n.t 'services' %>">
+      <i class="icon-eye-open"></i>
+    </a>
+  </li>
+
+  <li class="divider-vertical"></li>
+
+  <li>
+    <a href="/about" title="<%= I18n.t 'about' %>">
+      <i class="icon-asterisk"></i>
+    </a>
+  </li>
+
+  <li class="divider-vertical"></li>
+
+  <li>
+
+  </li>
+
+  <li>
+    <%= image_tag '/assets/ajax-loader.gif', :class => 'spiner hide' %>
+  </li>
+
+  <li class="pull-right">
+    <%# render 'layouts/recent_project' %>
+  </li>
+</ul>

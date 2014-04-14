@@ -7,7 +7,7 @@ module CocomoAdvanced
 
     include ApplicationHelper
 
-    attr_accessor :coef_a, :coef_b, :coef_kls, :complexity
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
 
     #Constructor
     def initialize(elem)
@@ -27,18 +27,21 @@ module CocomoAdvanced
     def set_cocomo_organic
       @coef_a = 3.02
       @coef_b = 1.05
+      @coef_c = 0.38
       @complexity = "Organic"
     end
 
     def set_cocomo_embedded
       @coef_a = 3
       @coef_b = 1.12
+      @coef_c = 0.35
       @complexity = "Semi-detached"
     end
 
     def set_cocomo_semidetached
       @coef_a = 2.8
       @coef_b = 1.2
+      @coef_c = 0.32
       @complexity = "Embedded"
     end
 
@@ -56,54 +59,35 @@ module CocomoAdvanced
       end
       coeff_total = coeff.inject(:*)
 
-      res = (@coef_a * (@coef_kls ** @coef_b))# * coeff_total
-
-      return res
+      return ((@coef_a * (@coef_kls ** @coef_b)) * coeff_total)
     end
 
     #Return delay (in hour)
     def get_delay(*args)
-      #if @coef_kls && @complexity
-      @delay = 0
-      #else
-      #  nil
-      #end
-
-      #return @delay
+      @effort = get_effort_man_month(args[0], args[1], args[2])
+      @delay = (2.5*((@effort/152)**@coef_c)).to_f
+      @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      #if @coef_kls && @complexity
-      @end_date = 0
-      #else
-      #  nil
-      #end
-
-      #return @end_date
+      @end_date = (Time.now + (get_delay(args[0], args[1], args[2])).to_i.months)
+      @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      #if @coef_kls && @complexity
-      @staffing = 0
-      #else
-      #  nil
-      #end
+      @staffing = (get_effort_man_month(args[0], args[1], args[2]) / get_delay(args[0], args[1], args[2]))
+      @staffing
+    end
 
-      #return @staffing
+    def get_complexity(*args)
+      @complexity
     end
 
     def get_cost(*args)
       @cost = 0
-    end
-
-    def get_complexity(*args)
-      #if @complexity
-      @complexity
-      #else
-      #  nil
-      #end
+      @cost
     end
   end
 
