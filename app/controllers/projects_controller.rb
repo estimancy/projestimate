@@ -1513,7 +1513,8 @@ public
         if attr_estimation_value.nil?
           attr_data << ""
         else
-          attr_data << attr_estimation_value.string_data_probable["#{psb_root.id}"]
+          #attr_data << attr_estimation_value.string_data_probable["#{psb_root.id}"]
+          attr_data << attr_estimation_value.string_data_low[psb_root.id]
         end
       end
       @dataset[:"#{attr.alias}"] = attr_data

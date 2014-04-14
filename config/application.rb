@@ -106,5 +106,6 @@ module Projestimate
     # Global constante declaration
     ALPHABETICAL = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
     CAPITALIZATION = "capitalization"
+    EFFORT_MAN_MONTH = "effort_man_month"
   end
 end

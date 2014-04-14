@@ -43,23 +43,23 @@ module Sandbox
       @date_sandbox = input[:date_sandbox]
     end
 
-    def get_description_sandbox
+    def get_description_sandbox(*args)
       @description_sandbox
     end
 
-    def get_list_sandbox
+    def get_list_sandbox(*args)
       @list_sandbox
     end
 
-    def get_integer_sandbox
+    def get_integer_sandbox(*args)
       @integer_sandbox
     end
 
-    def get_float_sandbox
+    def get_float_sandbox(*args)
       @float_sandbox
     end
 
-    def get_date_sandbox
+    def get_date_sandbox(*args)
       @date_sandbox
     end
 

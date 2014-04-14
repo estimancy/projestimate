@@ -39,7 +39,7 @@ module EffortBalancing
       @wbs_project_element_root = pe_wbs_project_activity.wbs_project_elements.where('is_root = ?', true).first
     end
 
-    def get_effort_man_hour
+    def get_effort_man_hour(*args)
       new_effort_man_hour = Hash.new
       root_element_effort_man_hour = 0.0
 
@@ -64,7 +64,7 @@ module EffortBalancing
       new_effort_man_hour
     end
 
-    def get_note
+    def get_note(*args)
       new_note = Hash.new
       sorted_node_elements = @wbs_project_element_root.subtree.order('ancestry_depth desc')
       sorted_node_elements.each do |wbs_project_element|
