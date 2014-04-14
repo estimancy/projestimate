@@ -17,6 +17,7 @@
       <tr>
         <th><%= I18n.t(:name) %></th>
         <th><%= I18n.t(:local) %></th>
+        <th>Type</th>
         <th class="filter-select"><%= I18n.t(:record_status) %></th>
         <th class="action"><%= I18n.t(:actions) %></th>
       </tr>
@@ -26,6 +27,7 @@
         <tr>
           <td><%= factor.name %></td>
           <td><%= factor.alias %></td>
+          <td><%= factor.factor_type.nil? ? '' : factor.factor_type.humanize %></td>
           <td><%= factor.description %></td>
           <td><%= factor.state %></td>
           <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>

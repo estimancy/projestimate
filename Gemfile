@@ -109,6 +109,7 @@ gem 'axlsx'
 gem 'roo'
 
 gem 'cocomo_advanced', path: "vendor/gems/cocomo_advanced"
+gem 'cocomo_expert', path: "vendor/gems/cocomo_expert"
 gem 'uos', :path => 'vendor/gems/uos'
 
 # This gem provides the JavaScript InfoVis Toolkit for your rails application.

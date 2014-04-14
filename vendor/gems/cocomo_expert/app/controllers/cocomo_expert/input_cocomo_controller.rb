@@ -1,4 +1,4 @@
-class CocomoAdvanced::InputCocomoController < ApplicationController
+class CocomoExpert::InputCocomoController < ApplicationController
   def index
     @factors = Factor.where(factor_type: "early_design").all
   end

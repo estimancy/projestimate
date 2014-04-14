@@ -223,11 +223,10 @@
     <% @factors.each do |factor| %>
 
       <h4>
-        <%= factor.name %>
+        <%= factor.name %> - <%= factor.description %>
       </h4>
 
-      <table id="table_list_5" class="table table-bordered">
-        <thead>
+      <table class="table table-bordered">
         <tr>
           <th><%= I18n.t(:name) %></th>
           <th><%= I18n.t(:description) %></th>
@@ -235,8 +234,7 @@
           <th><%= I18n.t(:state) %></th>
           <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
-        </thead>
-        <tbody>
+
         <% factor.organization_uow_complexities.order('display_order ASC').each do |c| %>
           <% if c.state == 'retired' %>
             <tr style="font-style:italic; color:Red">
@@ -264,7 +262,6 @@
           </td>
           </tr>
         <% end %>
-        </tbody>
       </table>
     <% end %>
   </div>

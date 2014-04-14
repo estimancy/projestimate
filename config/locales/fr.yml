@@ -239,7 +239,7 @@ fr:
   project: "Projet"
   recent_project: "Projets récents"
   home: "Mon estimation"
-  all_projects: "Tous les estimations"
+  all_projects: "Toutes les estimations"
   create_new_project: "Créer une nouvelle estimation"
   label_user_security_resume: "Gestion des droits utilisateurs du projet"
   label_group_security_resume: "Gestion des groupes du projet"

@@ -1,7 +1,7 @@
 class Factor < ActiveRecord::Base
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
-  attr_accessible :alias, :description, :name, :state, :record_status_id
+  attr_accessible :alias, :description, :name, :state, :factor_type, :record_status_id
 
   has_many :organization_uow_complexities, :dependent => :destroy
 
