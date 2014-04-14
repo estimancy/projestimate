@@ -9,7 +9,7 @@
 
   <li>
     <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
-       <%= current_user %> > <%= current_project.title %>
+       <%= current_user %> > <%= current_project.nil? ? "" : current_project.title %>
     </a>
   </li>
 
