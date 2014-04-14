@@ -1486,7 +1486,7 @@ public
     @project_module_projects = @project.module_projects
     # get the all project modules for the charts labels
     @project_modules = []
-    # contains all the modules attributes
+    # contains all the modules attributes labels
     @attributes_labels = []
     @attributes = []
 
@@ -1497,6 +1497,9 @@ public
     end
     @attributes = @attributes.flatten.sort.uniq
     @attributes_labels = @attributes_labels.flatten.sort.uniq
+
+    # get the project PBS root
+    psb_root = @project.pbs_project_elements.first.root
 
     # generate the dataset for charts
     @dataset = {}
@@ -1510,11 +1513,13 @@ public
         if attr_estimation_value.nil?
           attr_data << ""
         else
-          attr_data << attr_estimation_value.string_data_probable
+          attr_data << attr_estimation_value.string_data_probable["#{psb_root.id}"]
         end
       end
       @dataset[:"#{attr.alias}"] = attr_data
     end
+
+    puts "DATASET = #{@dataset}"
 
     # Get the attributes data for each dataset
     @project_module_projects.each do |mp|
