@@ -47,19 +47,18 @@ module CocomoAdvanced
 
     # Return effort
     def get_effort_man_month(*args)
-      coeff = Array.new
+      sf = Array.new
 
-      Factor.all.each do |factor|
-        ic = InputCocomo.where(factor_id: factor.id,
+      aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
+      aliass.each do |a|
+        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
                                project_id: args[0]).first.coefficient
-
-        coeff << ic
+        sf << ic
       end
-      coeff_total = coeff.inject(:*)
 
-      return ((@coef_a * (@coef_kls ** @coef_b)) * coeff_total)
+      return ((@coef_a * (@coef_kls ** @coef_b)) * sf.inject(:*))
     end
 
     #Return delay (in hour)

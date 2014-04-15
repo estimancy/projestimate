@@ -432,7 +432,7 @@ module ProjectsHelper
   def display_inputs_with_activities(module_project, last_estimation_result=nil)
     pbs_project_element = @pbs_project_element || current_project.root_component
     res = String.new
-    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+    if module_proxject.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
       res << "<h4>#{ I18n.t(:label_input_data)}</h4>"
       res << "<table class='table table-condensed table-bordered'>"

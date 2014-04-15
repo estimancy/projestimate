@@ -5,8 +5,6 @@ module CocomoExpert
   #Definition of CocomoBasic
   class CocomoExpert
 
-    include ApplicationHelper
-
     attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
 
     #Constructor
@@ -16,65 +14,49 @@ module CocomoExpert
 
     # Return effort
     def get_effort_man_month(*args)
-      coeff = Array.new
-      Factor.where(factor_type: "early_design").all.each do |factor|
+      sf = Array.new
+      em = Array.new
 
-        ic = InputCocomo.where(factor_id: factor.id,
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
                                project_id: args[0]).first.coefficient
-        coeff << ic
+        sf << ic
       end
 
-
-      pers = InputCocomo.where( factor_id: Factor.where(alias: "pers").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      rcpx = InputCocomo.where( factor_id: Factor.where(alias: "rcpx").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      ruse = InputCocomo.where( factor_id: Factor.where(alias: "ruse").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      pdif = InputCocomo.where( factor_id: Factor.where(alias: "pdif").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      prex = InputCocomo.where( factor_id: Factor.where(alias: "prex").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      fcil = InputCocomo.where( factor_id: Factor.where(alias: "fcil").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      sced = InputCocomo.where( factor_id: Factor.where(alias: "sced").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
+      aliass = %w(pers rcpx ruse pdif prex fcil sced)
+      aliass.each do |a|
+        em << InputCocomo.where( factor_id: Factor.where(alias: a).first.id,
+                                 pbs_project_element_id: args[2],
+                                 module_project_id: args[1],
+                                 project_id: args[0]).first.coefficient
+      end
 
       a = 2.94
-      em = pers + rcpx + ruse + pdif + prex + fcil + sced
-      b = 0.91 + (1/100) * coeff.sum
-      pm = em * a * @coef_kls**b
+      b = 0.91 + (1/100) * sf.sum
+      pm = em.sum * a * @coef_kls**b
 
-      pm
+      return pm
     end
 
     #Return delay (in hour)
     def get_delay(*args)
       @effort = get_effort_man_month(args[0], args[1], args[2])
-      @delay = 1
-      #@delay = (2.5*((@effort/152)**@coef_c)).to_f
+
+      sf = Array.new
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
+                               pbs_project_element_id: args[2],
+                               module_project_id: args[1],
+                               project_id: args[0]).first.coefficient
+        sf << ic
+      end
+
+      f = 0.28 + 0.2 * (1/100) * sf.sum
+      @delay = 3.67 * (@effort ** f )
       @delay
     end
 
