@@ -31,7 +31,7 @@ module SampleModel
       @m = input[:methodology].blank? ? @m = nil : @m = input[:methodology].to_f
     end
 
-    def get_effort_man_hour
+    def get_effort_man_hour(*args)
       begin
         34.96*(450/(@p+@m))*(1 - Math.exp(((-1)*@k*@k*0.01)/32))
       rescue
@@ -39,7 +39,7 @@ module SampleModel
       end
     end
 
-    def get_delay
+    def get_delay(*args)
       begin
         152*(@k/2.5)*(1+(@r/10))
       rescue
@@ -47,7 +47,7 @@ module SampleModel
       end
     end
 
-    def get_defects
+    def get_defects(*args)
       begin
         (Math.sqrt(@k))*@k*(1/@m)
       rescue

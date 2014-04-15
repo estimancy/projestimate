@@ -279,6 +279,8 @@ module ProjectsHelper
             refer_module_potential_ids = module_project.associated_module_projects ###+ module_project.inverse_associated_module_projects
                                                                                    #unless refer_module.empty?
             refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_man_hour", @defined_status.id).first
+            #refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_man_month", @defined_status.id).first
+
             refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, current_project.id, pbs_project_element.id)
             refer_module_project = refer_modules_project.where(["module_project_id IN (?)", refer_module_potential_ids]).last
 

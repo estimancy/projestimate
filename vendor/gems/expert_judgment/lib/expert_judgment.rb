@@ -55,7 +55,7 @@ module ExpertJudgment
     end
 
     #GETTERS
-    def get_effort_man_hour
+    def get_effort_man_hour(*args)
       new_effort_man_hour = Hash.new
       root_element_effort_man_hour = 0.0
 
