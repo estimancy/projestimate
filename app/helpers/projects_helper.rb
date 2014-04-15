@@ -431,7 +431,7 @@ module ProjectsHelper
   def display_inputs_with_activities(module_project, last_estimation_result=nil)
     pbs_project_element = @pbs_project_element || current_project.root_component
     res = String.new
-    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+    if module_proxject.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
       res << "<h4>#{ I18n.t(:label_input_data)}</h4>"
       res << "<table class='table table-condensed table-bordered'>"
@@ -689,7 +689,7 @@ module ProjectsHelper
 
     if module_project.previous.empty? || !est_val["string_data_#{level}"][pbs_project_element.id].nil?
       text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                     level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
+                     level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id].round(2),
                      :class => "input-small #{level} #{est_val.id}",
                      "data-est_val_id" => est_val.id
     else

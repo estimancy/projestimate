@@ -5,8 +5,6 @@ module CocomoExpert
   #Definition of CocomoBasic
   class CocomoExpert
 
-    include ApplicationHelper
-
     attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
 
     #Constructor
@@ -17,32 +15,30 @@ module CocomoExpert
     # Return effort
     def get_effort_man_month(*args)
       sf = Array.new
-      Factor.where(factor_type: "early_design").all.each do |factor|
-        ic = InputCocomo.where(factor_id: factor.id,
+      em = Array.new
+
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
                                project_id: args[0]).first.coefficient
         sf << ic
       end
 
-
-      pers = InputCocomo.where( factor_id: Factor.where(alias: "pers").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
-
-      prex = InputCocomo.where( factor_id: Factor.where(alias: "prex").first.id,
-                                pbs_project_element_id: args[2],
-                                module_project_id: args[1],
-                                project_id: args[0]).first.coefficient
+      aliass = %w(pers rcpx ruse pdif prex fcil sced)
+      aliass.each do |a|
+        em << InputCocomo.where( factor_id: Factor.where(alias: a).first.id,
+                                 pbs_project_element_id: args[2],
+                                 module_project_id: args[1],
+                                 project_id: args[0]).first.coefficient
+      end
 
       a = 2.94
-      #todo : missing rcpx, ruse, pdif, sced (commun avec avancé)
-      em = pers + prex
       b = 0.91 + (1/100) * sf.sum
-      pm = em * a * @coef_kls**b
+      pm = em.sum * a * @coef_kls**b
 
-      pm
+      return pm
     end
 
     #Return delay (in hour)
@@ -50,8 +46,9 @@ module CocomoExpert
       @effort = get_effort_man_month(args[0], args[1], args[2])
 
       sf = Array.new
-      Factor.where(factor_type: "early_design").all.each do |factor|
-        ic = InputCocomo.where(factor_id: factor.id,
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
                                project_id: args[0]).first.coefficient

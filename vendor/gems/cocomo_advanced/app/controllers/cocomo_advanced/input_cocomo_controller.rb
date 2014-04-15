@@ -1,6 +1,10 @@
 class CocomoAdvanced::InputCocomoController < ApplicationController
   def index
-    @factors = Factor.where(factor_type: "early_design").all
+    @factors = Array.new
+    aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
+    aliass.each do |a|
+      @factors << Factor.where(alias: a).first
+    end
   end
 
   def cocomo_save
