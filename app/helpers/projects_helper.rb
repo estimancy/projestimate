@@ -363,6 +363,7 @@ module ProjectsHelper
       module_project.previous.each_with_index do |est, i|
         res << "<th>#{display_path([], module_project, i).reverse.join('<br>')}</th>"
       end
+
       module_project.estimation_values.each do |est_val|
         if (est_val.in_out == 'input' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
           res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span></th>"
