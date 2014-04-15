@@ -1,6 +1,10 @@
 <div class="tabs">
   <ul>
-    <li><a href="#tabs-1"><%= I18n.t(:text_organization_uow_complexity) %> </a></li>
+    <% if @organization %>
+      <li><a href="#tabs-1"><%= I18n.t(:text_organization_uow_complexity) %> </a></li>
+    <% else %>
+      <li><a href="#tabs-1">Complexity values used within Factor </a></li>
+    <% end %>
   </ul>
 
   <div id="tabs-1">
@@ -8,8 +12,11 @@
       <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => params[:organization_id]} %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-      <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
-      <%= f.input :factor_id, as: :select, collection: Factor.all.map{|i|[i.name, i.id]} %>
+      <% if @organization.nil? %>
+        <%= f.input :factor_id, as: :select, collection: Factor.all.map{|i|[i.name, i.id]} %>
+      <% else %>
+        <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
+      <% end %>
       <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge'} %>
 
       <table>
@@ -48,7 +55,11 @@
           <% end %>
       <% end %>
 
-      <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-5'), :class => 'btn' %>
+      <% if @organization %>
+        <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-5'), :class => 'btn' %>
+      <% else %>
+        <%= link_to I18n.t('back'), factors_path, :class => 'btn' %>
+      <% end %>
       </div>
 
     <% end %>
