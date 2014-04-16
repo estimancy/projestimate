@@ -59,7 +59,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_project
   helper_method :current_component
   helper_method :current_module_project
-  helper_method :load_master_setting
   helper_method :load_admin_setting
   helper_method :get_record_statuses
   helper_method :set_locale_from_browser
@@ -288,14 +287,6 @@ class ApplicationController < ActionController::Base
   def capitalization_module
     @defined_record_status = RecordStatus.where('name = ?', 'Defined').last
     @capitalization_module = Pemodule.where(alias: 'capitalization', record_status_id: @defined_record_status.id).first unless @defined_record_status.nil?
-  end
-
-  def load_master_setting(args)
-    ms = MasterSetting.find_by_key(args)
-    r = RecordStatus.find_by_name('Defined')
-    unless ms.nil?
-      MasterSetting.where(key: args, record_status_id: r.id).first.value
-    end
   end
 
   def load_admin_setting(args)

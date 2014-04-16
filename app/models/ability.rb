@@ -29,7 +29,7 @@ class Ability
     can :manage, :all
     can :edit, Project
     can :update, Project
-    cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, MasterSetting, ProjectArea, ProjectCategory, PlatformCategory, AcquisitionCategory, Peicon,
+    cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, ProjectArea, ProjectCategory, PlatformCategory, AcquisitionCategory, Peicon,
                      WorkElementType, Currency, AdminSetting, AuthMethod, Group, LaborCategory, ProjectSecurityLevel,
                      Permission], :record_status => {:name => 'Retired'}
 

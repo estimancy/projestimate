@@ -437,10 +437,6 @@ fr:
   new_language: "Créer un nouveau langage"
   local: "Local"
 
-  #master_settings
-  edit_master_setting: "Editer les paramètres maître \"%{value}\" ..."
-  new_master_setting: "Créer un nouveau paramètre maître"
-
   #estimation_values
   in_out: "Entrée / Sortie"
   input: "Entrée"
@@ -804,10 +800,6 @@ fr:
   notice_language_successful_updated: "Ce langage a été mis à jour avec succès."
   error_language_failed_update: "Erreur : la mise a jour a échoué,"
   notice_language_successful_deleted: "Ce langage a été supprimé avec succès."
-  warning_master_settings_cant_be_edit: "Ce réglage principal ne peut pas être modifié, les modifications précédentes n'ont pas encore été validé."
-  notice_master_settings_successful_created: "Ce réglage principal a été créé avec succès"
-  notice_master_settings_successful_updated: "Ce réglage principal a été mis à jour avec succès."
-  notice_master_settings_successful_deleted: "Ce réglage principal a été supprimé avec succès."
   notice_module_project_successful_created: "Module project a été créé avec succès"
   notice_module_project_successful_updated: "Module project a été mis à jour avec succès."
   notice_organization_labor_successful_created: "Organization labor category a été créé avec succès."

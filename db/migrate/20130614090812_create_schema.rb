@@ -301,24 +301,6 @@ class CreateSchema < ActiveRecord::Migration
       t.integer "module_project_attribute_id"
     end
 
-    create_table "master_settings", :force => true do |t|
-      t.string   "key"
-      t.text     "value"
-      t.string   "uuid"
-      t.integer  "record_status_id"
-      t.string   "custom_value"
-      t.integer  "owner_id"
-      t.text     "change_comment"
-      t.integer  "reference_id"
-      t.string   "reference_uuid"
-      t.datetime "created_at"
-      t.datetime "updated_at"
-    end
-
-    add_index "master_settings", ["record_status_id"], :name => "index_master_settings_on_record_status_id"
-    add_index "master_settings", ["reference_id"], :name => "index_master_settings_on_parent_id"
-    add_index "master_settings", ["uuid"], :name => "index_master_settings_on_uuid", :unique => true
-
     create_table "module_projects", :force => true do |t|
       t.integer "pemodule_id"
       t.integer "project_id"
