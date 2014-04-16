@@ -1,0 +1,61 @@
+<%= form_tag '/set_technology_uos_syntesis', :method => 'POST', :class => 'simple_form' do %>
+
+  <%= hidden_field_tag "organization", params[:id] %>
+
+    <table class="table table-striped table-bordered table-condensed permissions">
+      <tr>
+        <th style="text-align:left;"><%= I18n.t(:organization_abacus) %></th>
+        <% @technologies.each do |technology| %>
+            <th class="text-center">
+              <% if technology.state == 'retired' %>
+                <span class="attribute_tooltip" style="font-style:italic; color:Red" title='<%= technology.description %>'>
+                    <%= technology.name %>
+                </span>
+              <% elsif technology.state == 'draft' %>
+                <span class="attribute_tooltip" style="font-style:italic; color:DarkOrange " title='<%= technology.description %>'>
+                  <%= technology.name %>
+                </span>
+              <% else %>
+                <span class="attribute_tooltip" title='<%= technology.description %>'>
+                    <%= technology.name %>
+                </span>
+              <% end %>
+            </th>
+        <% end %>
+      </tr>
+
+      <% if @unitofworks %>
+          <% @unitofworks.each do |unit| %>
+              <tr>
+                <td style="text-align: right;">
+                  <% if unit.state == 'retired' %>
+                    <span class="attribute_tooltip" style="font-style:italic; color:Red" title='<%= unit.description %>'>
+                        <%= unit.name %>
+                    </span>
+                  <% elsif unit.state == 'draft' %>
+                    <span class="attribute_tooltip" style="font-style:italic; color:DarkOrange" title='<%= unit.description %>'>
+                        <%= unit.name %>
+                    </span>
+                  <% else %>
+                    <span class="attribute_tooltip" style="font-weight:bold" title='<%= unit.description %>'>
+                        <%= unit.name %>
+                    </span>
+                  <% end %>
+
+                </td>
+                <% @technologies.each do |t| %>
+                    <td style="text-align: center;">
+                      <%= check_box_tag "technology_uos_syntesis[#{t.id}]", "", (unit.organization_technologies.map(&:id).include?(t.id)) ? true : false %>
+                    </td>
+                <% end %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+    <% if can? :edit_organizations, Organization %>
+        <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+    <% end %>
+
+<% end %>
+

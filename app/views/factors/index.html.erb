@@ -91,6 +91,7 @@
           <td><%= c.value %></td>
           <td><%= c.record_status.name unless c.record_status.nil? %> <%= c.show_custom_value %></td>
           <td>
+            <%= link_to 'Edit', edit_organization_uow_complexity_path(c) %>
             <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             <% if is_master_instance? && !c.is_local_record? %>
               <% if c.is_retired? %>

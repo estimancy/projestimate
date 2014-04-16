@@ -7,7 +7,7 @@ class FactorsController < ApplicationController
   # GET /factors
   # GET /factors.json
   def index
-    @factors = Factor.all
+    @factors = Factor.group("factor_type").all
 
     respond_to do |format|
       format.html # index.html.erb

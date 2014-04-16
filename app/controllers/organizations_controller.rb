@@ -42,14 +42,14 @@ class OrganizationsController < ApplicationController
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
     @complexities = @organization.organization_uow_complexities
+
+    @technologies = OrganizationTechnology.all
+
     @factors = Factor.all
 
-    begin
-      @ot = @organization.organization_technologies.first
-      @unitofworks = @ot.unit_of_works
-    rescue
-      @unitofworks = []
-    end
+    @ot = @organization.organization_technologies.first
+    @unitofworks = @organization.unit_of_works
+
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
   end
 
