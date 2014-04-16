@@ -24,7 +24,7 @@ class Home < ActiveRecord::Base
   attr_accessible
   include ExternalMasterDatabase
 
-  EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalMasterSetting, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory, ExternalAcquisitionCategory, ExternalPeicon,
+  EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory, ExternalAcquisitionCategory, ExternalPeicon,
                     ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalLaborCategory, ExternalProjectSecurityLevel,
                     ExternalPermission]
   def self.connect_external_database
@@ -83,9 +83,6 @@ class Home < ActiveRecord::Base
 
     puts '   - Wbs Activity Ratio Elements'
     self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatioElement, WbsActivityRatioElement, ['ratio_value', 'simple_reference', 'multiple_references', 'uuid'])
-
-    puts '   - Master Settings'
-    self.update_records(ExternalMasterDatabase::ExternalMasterSetting, MasterSetting, ['key', 'value', 'uuid'])
 
     puts '   - Project areas'
     self.update_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])
@@ -528,9 +525,6 @@ class Home < ActiveRecord::Base
     #activities.each do |a|
     #  WbsActivityElement::build_ancestry(elements, a.id)
     #end
-
-    puts '   - Master Settings'
-    self.create_records(ExternalMasterDatabase::ExternalMasterSetting, MasterSetting, ['key', 'value', 'uuid'])
 
     puts '   - Project areas'
     self.create_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])

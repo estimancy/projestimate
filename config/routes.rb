@@ -102,8 +102,6 @@ Projestimate::Application.routes.draw do
 
   resources :admin_settings
 
-  resources :master_settings
-
   # searches controller routes
   post 'searches/results'
   get 'searches/results' => 'searches#results', :as => 'searches/results'

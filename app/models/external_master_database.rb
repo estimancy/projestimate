@@ -132,12 +132,6 @@ module ExternalMasterDatabase
     include ExternalInclude
   end
 
-  class ExternalMasterSetting < ActiveRecord::Base
-    attr_accessible
-    establish_connection HOST
-    include ExternalInclude
-  end
-
   class ExternalPeicon < ActiveRecord::Base
     attr_accessible
     establish_connection HOST

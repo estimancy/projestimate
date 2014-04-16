@@ -223,12 +223,6 @@ def load_data!
     Language.create(:name => 'English (British)', :locale => 'en-gb', :record_status_id => rsid)
     Language.create(:name => 'Deutsch (Deutschland)', :locale => 'de', :record_status_id => rsid)
 
-  # The MasterSetting parameters are now added to the AdminSetting
-  #puts '   - Master setting'
-  ##Create master/admin setting
-  #MasterSetting.create(:key => 'url_wiki', :value => 'http://forge.estimancy.com/projects/pe/wiki', :record_status_id => rsid)
-  #MasterSetting.create(:key => 'url_service', :value => 'http://forge.estimancy.com/projects/pe/wiki/Community_Services', :record_status_id => rsid)
-
   puts ' Creating Admin Parameters ...'
     
   puts '   - Admin setting'

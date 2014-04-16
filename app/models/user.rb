@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         #:confirmable, #we are waiting for email validation
+         :confirmable, # account confirmation
          :omniauthable, :omniauth_providers => [:google_oauth2]
 
   # Setup accessible (or protected) attributes for your model for Devise gem
@@ -62,7 +62,6 @@ class User < ActiveRecord::Base
   has_many :change_on_event_types, :foreign_key => 'owner_id', :class_name => 'EventType'
   has_many :change_on_labor_categories, :foreign_key => 'owner_id', :class_name => 'LaborCategory'
   has_many :change_on_languages, :foreign_key => 'owner_id', :class_name => 'Language'
-  has_many :change_on_master_settings, :foreign_key => 'owner_id', :class_name => 'MasterSetting'
   has_many :change_on_peicons, :foreign_key => 'owner_id', :class_name => 'Peicon'
   has_many :change_on_pemodules, :foreign_key => 'owner_id', :class_name => 'Pemodule'
   has_many :change_on_platform_categories, :foreign_key => 'owner_id', :class_name => 'PlatformCategory'

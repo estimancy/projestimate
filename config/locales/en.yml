@@ -437,10 +437,6 @@ en:
   new_language: "New language"
   local: "Local"
 
-  #master_settings
-  edit_master_setting: "Edit the \"%{value}\" master setting ..."
-  new_master_setting: "New master setting"
-
   #estimation_values
   in_out: "In / Out"
   input: "Input"
@@ -804,10 +800,6 @@ en:
   notice_language_successful_updated: "Language was successfully updated."
   error_language_failed_update: "Error : update failed,"
   notice_language_successful_deleted: "Language was successfully deleted."
-  warning_master_settings_cant_be_edit: "This master setting can not be edited, previous changes have not yet been validated."
-  notice_master_settings_successful_created: "Master setting was successfully created."
-  notice_master_settings_successful_updated: "Master setting was successfully updated."
-  notice_master_settings_successful_deleted: "Master setting was successfully deleted."
   notice_module_project_successful_created: "Module project was successfully created."
   notice_module_project_successful_updated: "Module project was successfully updated."
   notice_organization_labor_successful_created: "Organization labor category was successfully created."
@@ -1097,3 +1089,4 @@ en:
   select_at_least_one_project: "You have to select at least one project to execute action."
   warning_not_allow_to_create_new_branch_of_project: "You don't have permission to create new branch of this project"
   project_is_activated: "Project '%{project_title}' is successfully activated."
+  defined_language_not_deletable: "Defined language is not deletable"
