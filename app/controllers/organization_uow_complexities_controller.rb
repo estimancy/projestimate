@@ -84,7 +84,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     @organization_uow_complexity.delete
     respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(organization, :anchor => 'tabs-5')), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}" }
+      format.html { redirect_to redirect(organizations_path), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}" }
     end
   end
 end

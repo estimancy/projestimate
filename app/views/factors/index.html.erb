@@ -66,18 +66,10 @@
     <% @factors.each do |factor| %>
 
       <h4>
-        <%= factor.name %> - <%= factor.description %>
+        <%= factor.factor_type.humanize%> - <%= factor.name %> - <%= factor.description %>
       </h4>
 
-      <table class="table table-bordered">
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th><%= I18n.t(:description) %></th>
-          <th><%= I18n.t(:value) %></th>
-          <th><%= I18n.t(:state) %></th>
-          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
-        </tr>
-
+      <table class="table">
         <% factor.organization_uow_complexities.order('display_order ASC').each do |c| %>
           <% if c.state == 'retired' %>
             <tr style="font-style:italic; color:Red">
@@ -86,10 +78,9 @@
           <% else %>
             <tr>
           <% end %>
-          <td><%= c.name %></td>
-          <td><%= c.description %></td>
-          <td><%= c.value %></td>
-          <td><%= c.record_status.name unless c.record_status.nil? %> <%= c.show_custom_value %></td>
+          <td class="span2"><%= c.name %></td>
+          <td class="span2"><%= c.value %></td>
+          <td class="span2"><%= c.record_status.name unless c.record_status.nil? %> <%= c.show_custom_value %></td>
           <td>
             <%= link_to 'Edit', edit_organization_uow_complexity_path(c) %>
             <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>

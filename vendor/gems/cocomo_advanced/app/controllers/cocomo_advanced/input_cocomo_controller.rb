@@ -3,7 +3,7 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
     @factors = Array.new
     aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
     aliass.each do |a|
-      @factors << Factor.where(alias: a).first
+      @factors << Factor.where(alias: a, factor_type: "advanced").first
     end
   end
 

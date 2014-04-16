@@ -12,6 +12,7 @@ class Factor < ActiveRecord::Base
   validates :record_status, :presence => true
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :name, :presence => true
+  validates :factor_type, :presence => true
   validates :custom_value, :presence => true, :if => :is_custom?
 
   amoeba do
