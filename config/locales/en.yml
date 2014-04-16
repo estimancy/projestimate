@@ -1097,3 +1097,4 @@ en:
   select_at_least_one_project: "You have to select at least one project to execute action."
   warning_not_allow_to_create_new_branch_of_project: "You don't have permission to create new branch of this project"
   project_is_activated: "Project '%{project_title}' is successfully activated."
+  defined_language_not_deletable: "Defined language is not deletable"

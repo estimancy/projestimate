@@ -87,15 +87,19 @@ class LanguagesController < ApplicationController
   def destroy
     authorize! :manage, Language
     @language = Language.find(params[:id])
-    if @language.is_defined? || @language.is_custom?
+    #if @language.is_defined? || @language.is_custom?
+    if @language.is_custom?
       #logical deletion  delete don't have to suppress records anymore on Defined record
       @language.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
+      flash[:notice] = I18n.t (:notice_language_successful_deleted)
+    elsif @language.is_defined?
+      flash[:warning] = I18n.t(:defined_language_not_deletable)
     else
       @language.destroy
+      flash[:notice] = I18n.t (:notice_language_successful_deleted)
     end
 
     respond_to do |format|
-      flash[:notice] = I18n.t (:notice_language_successful_deleted)
       format.html { redirect_to languages_url }
     end
   end
