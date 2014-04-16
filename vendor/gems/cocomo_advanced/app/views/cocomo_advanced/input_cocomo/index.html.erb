@@ -16,7 +16,7 @@
           <th></th>
         </tr>
 
-        <% Factor.all.each do |factor| %>
+        <% @factors.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
           <tr>
             <td><%= factor.name %></td>
