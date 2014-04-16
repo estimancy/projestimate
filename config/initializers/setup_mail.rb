@@ -23,24 +23,10 @@ ActionMailer::Base.smtp_settings = {
     :address => SETTINGS['SMTP_ADDRESS'],
     :port => SETTINGS['SMTP_PORT'],
     :domain => SETTINGS['SMTP_DOMAIN'],
-    #:user_name => SETTINGS['SMTP_USER_NAME']
-#,
-#    :password => "", #SETTINGS['SMTP_PASSWORD'],
-#    :authentication => SETTINGS['SMTP_AUTHENTICATION'],
-#    #:ssl => true
-    :enable_starttls_auto => false
-#,
-    #:openssl_verify_mode => 'none'
+    :user_name => SETTINGS['SMTP_USER_NAME'],
+    :password => SETTINGS['SMTP_PASSWORD'],
+    :authentication => SETTINGS['SMTP_AUTHENTICATION'],
+    :enable_starttls_auto => true
 }
-
-#
-#ActionMailer::Base.smtp_settings = {
-#    :address => 'localhost',
-#    :port => 587,
-#    :domain => 'sfr.fr'
-##,
-##    :enable_starttls_auto => true,
-##    :openssl_verify_mode => 'none'
-#}
 
 Projestimate::Application.config.action_mailer.default_url_options = { :host => SETTINGS['HOST_URL'] }
