@@ -104,28 +104,33 @@ public
 
     set_page_title 'Edit user'
 
-      # Get the Application authType
-      application_auth_type = AuthMethod.where('name = ? AND record_status_id =?', 'Application', @defined_record_status.id).first
+    # Get the Application authType
+    application_auth_type = AuthMethod.where('name = ? AND record_status_id =?', 'Application', @defined_record_status.id).first
 
-      if application_auth_type && params[:user][:auth_type].to_i != application_auth_type.id
-        params[:user].delete :password
-        params[:user].delete :password_confirmation
-      end
-      @user.auth_type = params[:user][:auth_type]
-      @user.language_id = params[:user][:language_id]
-      @user.project_ids = params[:user][:project_ids]
-      @user.group_ids = params[:user][:group_ids]
-      @user.organization_ids = params[:user][:organization_ids]
-      @user.save
+    if application_auth_type && params[:user][:auth_type].to_i != application_auth_type.id
+      params[:user].delete :password
+      params[:user].delete :password_confirmation
+    end
+    @user.auth_type = params[:user][:auth_type]
+    @user.language_id = params[:user][:language_id]
+    @user.project_ids = params[:user][:project_ids]
+    @user.group_ids = params[:user][:group_ids]
+    @user.organization_ids = params[:user][:organization_ids]
+    #validation conditions
+    if @user.password.blank?
+      @user.updating_password = false
+    else
+      @user.updating_password = true
+    end
+    @user.save(validate: false)
 
-      if @user.update_attributes(params[:user])
-        set_user_language
-        flash[:notice] = I18n.t (:notice_account_successful_updated)
-        redirect_to redirect_apply(edit_user_path(@user, :anchor => session[:anchor]), nil, users_path)
-      else
-        render(:edit)
-      end
-
+    if @user.update_attributes(params[:user])
+      set_user_language
+      flash[:notice] = I18n.t (:notice_account_successful_updated)
+      redirect_to redirect_apply(edit_user_path(@user, :anchor => session[:anchor]), nil, users_path)
+    else
+      render(:edit)
+    end
   end
 
   #Dashboard of the application

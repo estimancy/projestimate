@@ -1090,3 +1090,4 @@ fr:
   warning_not_allow_to_create_new_branch_of_project: "Vous n'avez pas les droits nécessaires pour créer une nouvelle branche de ce projet"
   project_is_activated: "Le project '%{project_title}' a été activé avec succès."
   defined_language_not_deletable: "Impossible de supprimer un langage dans le statut Defined"
+  leave_it_blank_if_no_change: "Laisser le champ vide si vous ne voulez pas le modifier"
