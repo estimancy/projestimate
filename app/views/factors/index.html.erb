@@ -66,7 +66,7 @@
     <% @factors.each do |factor| %>
 
       <h4>
-        <%= factor.factor_type.humanize%> - <%= factor.name %> - <%= factor.description %>
+        <%= factor.factor_type.nil? ? "" : factor.factor_type.humanize %> - <%= factor.name %> - <%= factor.description %>
       </h4>
 
       <table class="table">

@@ -51,10 +51,11 @@ module CocomoAdvanced
 
       aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
       aliass.each do |a|
-        ic = InputCocomo.where(factor_id: Factor.where(alias: a, factor_type: "advanced").first.id,
+        input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a, factor_type: "advanced").first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
-                               project_id: args[0]).first.coefficient
+                               project_id: args[0]).first
+        ic = input_cocomo.nil? ? nil.to_f : input_cocomo.coefficient
         sf << ic
       end
 
@@ -76,7 +77,7 @@ module CocomoAdvanced
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort_man_month(args[0], args[1], args[2]) / get_delay(args[0], args[1], args[2]))
+      @staffing = ((get_effort_man_month(args[0], args[1], args[2])) / get_delay(args[0], args[1], args[2]))
       @staffing
     end
 
