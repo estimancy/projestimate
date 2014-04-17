@@ -1090,3 +1090,4 @@ en-gb:
   warning_not_allow_to_create_new_branch_of_project: "You don't have permission to create new branch of this project"
   project_is_activated: "Project '%{project_title}' is successfully activated."
   defined_language_not_deletable: "Defined language is not deletable"
+  leave_it_blank_if_no_change: "leave it blank if you don't want to change it"

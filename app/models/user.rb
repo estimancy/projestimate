@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :login_name, :id_connexion, :password, :password_confirmation, :remember_me, :provider, :uid, :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at, :updated_at, :auth_type#, :project_security_ids
 
   # Virtual attribute for authenticating by either login_name or email  # This is in addition to a real persisted field like 'login_name'
-  attr_accessor :id_connexion
+  attr_accessor :id_connexion, :updating_password
 
   include AASM
 
@@ -87,8 +87,11 @@ class User < ActiveRecord::Base
   #validates :email, :presence => true, :format => {:with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/i}, :uniqueness => {case_sensitive: false}
   validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}, :uniqueness => {case_sensitive: false}
 
-  validates :password, :presence => {:on => :create}, :confirmation => true, :if => 'auth_method_application'
-  validates :password_confirmation, :presence => {:on => :create}, :if => 'auth_method_application'
+  #validates :password, :presence => {:on => :create}, :confirmation => true, :if => :auth_method_application?
+  validates :password, :presence => true, :if => :should_validate_password?
+  validates :password, :confirmation => true, :if => :auth_method_application?
+
+  validates :password_confirmation, :presence => {:on => :create}, :if => :auth_method_application?
   validate :password_length, :on => :create, :if => 'password.present?'
 
   #Search fields
@@ -129,10 +132,25 @@ class User < ActiveRecord::Base
   }
 
 
+  def should_validate_password?
+    updating_password || new_record?
+  end
+
+
+  # Customize the devise password validations
+  protected
+  def password_required?
+    #false
+    updating_password || new_record?
+  end
+
+
+  public
+
   ####====================================== AUTHENTICATION METHODS ============================================================
 
   # Default auth_method is "Application"
-  def auth_method_application
+  def auth_method_application?
     begin
       self.auth_method.name == 'Application'
     rescue
@@ -538,6 +556,7 @@ class User < ActiveRecord::Base
       :en
     end
   end
+
 
 end
 
