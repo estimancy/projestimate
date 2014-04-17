@@ -8,7 +8,7 @@
       <li><a href="#tabs-5">Unit of Work's Complexity </a></li>
       <li><a href="#tabs-7"><%= I18n.t(:organization_unit_of_work) %> </a></li>
       <li><a href="#tabs-8"><%= I18n.t(:organization_subcontractor) %> </a></li>
-      <!--<li><a href="#tabs-9"><%= I18n.t(:organization_abacus) %> </a></li>-->
+      <li><a href="#tabs-9">Tech / UOS Synthesis </a></li>
       <!--<li><a href="#tabs-10">Abacus </a></li>-->
   <% end %>
 </ul>
@@ -96,7 +96,7 @@
             <% @attribute_settings.each_with_index do |ao, i| %>
                 <%= hidden_field_tag 'attributes[]', ao.pe_attribute_id %>
                 <tr>
-                  <td class="span3"><%= link_to ao.pe_attribute.nil? ? '-' : ao.pe_attribute.name, '#', :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(ao.pe_attribute) %></td>
+                  <td><%= link_to ao.pe_attribute.nil? ? '-' : ao.pe_attribute.name, '#', :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(ao.pe_attribute) %></td>
                   <td><%= select_tag 'is_mandatory[]', options_for_select([['yes', true], ['no', false]], :selected => ao.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small' %></td>
                 </tr>
             <% end %>
@@ -296,6 +296,10 @@
         <%= render :partial => 'layouts/footer_table' %>
         </tbody>
       </table>
+    </div>
+
+    <div id="tabs-9">
+      <%= render :partial => 'organization_technologies/technology_uos_synthesis' %>
     </div>
 
     <div id="tabs-9">

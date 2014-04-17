@@ -81,11 +81,27 @@ class OrganizationTechnologiesController < ApplicationController
     end
   end
 
-  def change_abacus
+  def set_technology_uos_syntesis
     authorize! :edit_organizations, Organization
-    @ot = OrganizationTechnology.find(params[:technology])
-    @organization = @ot.organization
-    @unitofworks = @ot.unit_of_works
-    @complexities = @ot.organization.organization_uow_complexities
+
+    @organization = Organization.find(params[:organization])
+    @technologies = @organization.organization_technologies
+    @unitofworks = @organization.unit_of_works
+
+    @unitofworks.each do |unit|
+      @technologies.each do |technology|
+        unit.organization_technology_ids << technology.id
+        unit.save
+      end
+    end
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-9'), nil, '/organizationals_params')
   end
+
+  #def change_abacus
+  #  authorize! :edit_organizations, Organization
+  #  @ot = OrganizationTechnology.find(params[:technology])
+  #  @organization = @ot.organization
+  #  @unitofworks = @ot.unit_of_works
+  #  @complexities = @ot.organization.organization_uow_complexities
+  #end
 end

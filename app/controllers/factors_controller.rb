@@ -7,7 +7,7 @@ class FactorsController < ApplicationController
   # GET /factors
   # GET /factors.json
   def index
-    @factors = Factor.all
+    @factors = Factor.order("factor_type")
 
     respond_to do |format|
       format.html # index.html.erb

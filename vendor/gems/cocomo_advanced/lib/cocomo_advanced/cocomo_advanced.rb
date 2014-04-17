@@ -51,7 +51,7 @@ module CocomoAdvanced
 
       aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
       aliass.each do |a|
-        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
+        ic = InputCocomo.where(factor_id: Factor.where(alias: a, factor_type: "advanced").first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
                                project_id: args[0]).first.coefficient
