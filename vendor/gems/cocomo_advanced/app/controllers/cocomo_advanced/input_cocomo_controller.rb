@@ -1,10 +1,30 @@
 class CocomoAdvanced::InputCocomoController < ApplicationController
   def index
-    @factors = Array.new
-    aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
+    @aprod = Array.new
+    aliass = %w(rely data cplx ruse docu)
     aliass.each do |a|
-      @factors << Factor.where(alias: a, factor_type: "advanced").first
+      @aprod << Factor.where(alias: a, factor_type: "advanced").first
     end
+
+    @aplat = Array.new
+    aliass = %w(time stor pvol)
+    aliass.each do |a|
+      @aplat << Factor.where(alias: a, factor_type: "advanced").first
+    end
+
+    @apers = Array.new
+    aliass = %w(acap aexp ltex pcap pexp pcon)
+    aliass.each do |a|
+      @apers << Factor.where(alias: a, factor_type: "advanced").first
+    end
+
+    @aproj = Array.new
+    aliass = %w(tool site sced)
+    aliass.each do |a|
+      @aproj << Factor.where(alias: a, factor_type: "advanced").first
+    end
+
+
   end
 
   def cocomo_save

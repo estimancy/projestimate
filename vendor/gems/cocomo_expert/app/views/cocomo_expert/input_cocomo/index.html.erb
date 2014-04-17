@@ -2,7 +2,7 @@
 <div class="tabs">
   <ul>
     <li>
-      <a href="#tabs-1">Cocomo Advanced</a>
+      <a href="#tabs-1">Cocomo Expert</a>
     </li>
   </ul>
 
@@ -12,19 +12,43 @@
         <tr>
           <th>Nom</th>
           <th>Description</th>
-          <th></th>
-          <th></th>
+          <th>Valeur</th>
         </tr>
 
-        <% @factors.each do |factor| %>
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <b>
+              Scale factor
+            </b>
+          </td>
+        </tr>
+
+        <% @sf.compact.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
-            <td></td>
           </tr>
         <% end %>
+
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <b>
+              Effort multiplier
+            </b>
+          </td>
+        </tr>
+
+        <% @em.compact.each do |factor| %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <tr>
+            <td><%= factor.name %></td>
+            <td><%= factor.description %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+          </tr>
+        <% end %>
+
       </table>
       <%= submit_tag "Save", class: 'btn' %>
     <% end %>
