@@ -142,6 +142,7 @@ class PbsProjectElementsController < ApplicationController
 
     @user = current_user
     @project = Project.find(params[:project_id])
+    @is_project_view = params[:is_project_show_view]
 
     if @project.nil?
       @project = current_project

@@ -30,7 +30,7 @@ module PeWbsProjectsHelper
     #Root is always display
     if !pbs_project_element.nil? && pbs_project_element.is_root?
       tree << "<ul>
-         #{wbs_root_links(pbs_project_element, project, is_project_show_view)}"
+         #{wbs_root_links(pbs_project_element, is_project_show_view)}"
     end
 
     if pbs_project_element.has_children?
@@ -38,7 +38,7 @@ module PeWbsProjectsHelper
       tree << "<ul class='sortable' style='margin-left:#{gap}px; border-left: 1px solid black; padding-left: 8px;''>"
       all_pbs_project_element.each do |c|
         if c.work_element_type.alias == "folder"
-          tree << wbs_folder_links(c, project, is_project_show_view)
+          tree << wbs_folder_links(c, is_project_show_view)
         else
           tree << wbs_navigation_links(c, is_project_show_view)
         end
@@ -55,7 +55,7 @@ module PeWbsProjectsHelper
   def wbs_navigation_links(pbs_project_element, is_project_show_view)
     "<li>
         <div class='block_label #{ pbs_project_element == current_component ? "selected_pbs" : '' }'>
-          <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, project_id: @project.id, :is_project_show_view => is_project_show_view)} data-remote=true>
+          <a href=#{ selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, project_id: @project.id, :is_project_show_view => is_project_show_view) } data-remote=true>
             <i class='icon-file'></i>
             #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
             #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
@@ -71,11 +71,11 @@ module PeWbsProjectsHelper
       </li>"
   end
 
-  def wbs_folder_links(pbs_project_element, project, is_project_show_view)
+  def wbs_folder_links(pbs_project_element, is_project_show_view)
     "<li>
         <div class='block_label #{ pbs_project_element == current_component ? 'selected_pbs' : '' }'>
-          <div onClick='toggle_folder(this);' >
-              <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :is_project_show_view => is_project_show_view, project_id: @project.id)} data-remote=true>
+          <div>
+              <a href=#{ selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :is_project_show_view => is_project_show_view, project_id: @project.id) } data-remote=true>
                 <i class='icon-folder-open'></i>
                 #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
                 #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
@@ -95,11 +95,11 @@ module PeWbsProjectsHelper
     </li>"
   end
 
-  def wbs_root_links(pbs_project_element, project, is_project_show_view)
+  def wbs_root_links(pbs_project_element, is_project_show_view)
     "<li class=''>
         <div class='block_label #{ pbs_project_element == current_component ? 'selected_pbs' : '' }'>
-          <div onClick='toggle_folder(this);' >
-            <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :project_id => @project.id, :is_project_show_view => is_project_show_view)} data-remote=true>
+          <div>
+            <a href=#{selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :project_id => @project.id)} data-remote=true>
               <i class='icon-folder-open'></i>
               #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
               #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
@@ -116,6 +116,9 @@ module PeWbsProjectsHelper
       </li>"
   end
 end
+
+#J'ai supprimer provisoirement
+#onClick='toggle_folder(this);'
 
 
 

@@ -4,7 +4,7 @@
     <th><%= I18n.t(:label_project_name) %></th>
     <th><%= I18n.t(:label_project_version) %></th>
     <th style="width: 100px"><%= I18n.t(:alias) %></th>
-    <th style="width: 100px" class="filter-select"> <%= I18n.t(:state) %></th>
+    <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
     <th style="width: 120px"><%= I18n.t(:start_date) %></th>
     <th class="filter-select"><%= I18n.t(:organizations) %></th>
     <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
@@ -24,34 +24,34 @@
 
           <tr>
             <td><%= sanitize project.title %></td>
-            <td><%= project.version %></td>
+            <td class="span2"><%= project.version %></td>
             <td><%= project.alias %></td>
             <td><%= project.state %></td>
             <td><%= I18n.l(project.start_date) unless project.start_date.nil? %></td>
             <td><%= project.organization %></td>
             <td><%= project.is_model %></td>
             <td>
-              <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit'), 'data-disable-with' => "test") %>
-              <%= link_to('', {:controller => 'projects', :action => 'activate', :project_id => project.id}, :class => 'button_attribute_tooltip icon-star icon-large icon-border pull-left', :title => I18n.t('button_activate_project')) %>
+              <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit'), 'data-disable-with' => "test") %>
+              <%= link_to('', {:controller => 'projects', :action => 'activate', :project_id => project.id}, :class => 'button_attribute_tooltip icon-star pull-left', :title => I18n.t('button_activate_project')) %>
               <% if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
-                  <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle icon-large icon-border pull-left', :title => I18n.t('button_commit_project')) %>
+                  <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
               <% end %>
               <% if (project.checkpoint? || project.released?) && ((can? :commit_project, project)||(can? :manage, project)) %>
-                  <%= link_to('', {:controller => 'projects', :action => 'checkout', :project_id => project.id}, :class => 'icon-step-forward icon-large icon-border pull-left button_attribute_tooltip', :title => I18n.t('button_checkout_project'), :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?)) %>
+                  <%= link_to('', {:controller => 'projects', :action => 'checkout', :project_id => project.id}, :class => 'icon-step-forward pull-left button_attribute_tooltip', :title => I18n.t('button_checkout_project'), :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?)) %>
               <% end %>
-              <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'button_attribute_tooltip icon-info icon-large icon-border pull-left', :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
+              <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'button_attribute_tooltip icon-info pull-left', :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
               <% if (can? :create_project_from_template, Project) || (can? :manage, project )%>
-                  <%= link_to('', "projects/#{project.id}/duplicate", :class => 'button_attribute_tooltip icon-copy icon-large icon-border pull-left', :title => I18n.t('button_duplicate_project')) %>
+                  <%= link_to('', "projects/#{project.id}/duplicate", :class => 'button_attribute_tooltip icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
               <% end %>
               <% if (can? :delete_project, project) || (can? :manage, project) %>
                 <% if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
-                  <%= (link_to('', "projects/#{project.id}/confirm_deletion", :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
+                  <%= (link_to('', "projects/#{project.id}/confirm_deletion", :class => 'button_attribute_tooltip icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
                 <% end %>
               <% end %>
 
-              <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart icon-border pull-left', :title => I18n.t('label_project_history')) %>
+              <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart pull-left', :title => I18n.t('label_project_history')) %>
               <% if is_collapsible?(project) %>
-                  <%= link_to('', collapse_project_version_path(:project_ids => [project.id]), :class => 'button_attribute_tooltip icon-eraser icon-border pull-left', :style => 'color:red', :title => I18n.t('button_collapse_project'), :confirm => I18n.t('label_collapse_project')) %>
+                  <%= link_to('', collapse_project_version_path(:project_ids => [project.id]), :class => 'button_attribute_tooltip icon-eraser pull-left', :style => 'color:red', :title => I18n.t('button_collapse_project'), :confirm => I18n.t('label_collapse_project')) %>
               <% end %>
             </td>
           </tr>
