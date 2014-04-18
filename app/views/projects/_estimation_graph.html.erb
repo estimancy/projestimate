@@ -108,10 +108,45 @@
             ]
         }
 
+
         <% data_array = []
-           fillColor_array = ["rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
+           input_data_array = []
+           #fillColor_array = ["rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
+           #fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb((255,255,0)", "rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
+           fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb((255,255,0)", "rgb(151,187,205)", "rgb(151,187,205)"]
            iteration = -1
+           input_iter = -1
         %>
+
+
+        //============== dataset for input data radar chart =======================
+        //Complexities name
+        var complexities = [];
+
+        // Data for input data radar chart
+        <% @input_dataset.keys.each do |attr_alias|
+            attr_data_hash =
+            {
+                fillColor: fillColor_array[input_iter+=1],
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                data: @input_dataset[:"#{attr_alias}"],
+                title: attr_alias
+            }
+
+            input_data_array << attr_data_hash
+         end
+        %>
+
+        var cocomo_advanced_input_data = {
+            //labels: <%#= @input_dataset.keys.to_json.html_safe %>,
+            labels: <%= @all_cocomo_advanced_factors.map(&:name).to_json.html_safe %>,
+            datasets: <%= input_data_array.to_json.html_safe %>
+        }
+
+
+        //========================= dataset for others=============================
 
         // create de data
         <% @attributes_labels.each do |attr|
@@ -135,10 +170,16 @@
         }
 
         //Get the context of the canvas element we want to select
-        var ctx = $('#lineChart').get(0).getContext("2d");    //var ctx = document.getElementById("myChart").getContext("2d");
-        var barCtx = $('#barChart').get(0).getContext("2d");
+        //var ctx = document.getElementById("myChart").getContext("2d");
 
-        var lineChart = new Chart(ctx).Line(data, options);
-        var barChart = new Chart(barCtx).Bar(data, options);
+        var line_ctx = $('#canvas_line').get(0).getContext("2d");
+        var bar_ctx = $('#canvas_bar').get(0).getContext("2d");
+        // Radar chart for input data
+        //var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
+
+        var lineChart = new Chart(line_ctx).Line(data, options);
+        var barChart = new Chart(bar_ctx).Bar(data, options);
+        //var barChart = new Chart(radar_ctx).Radar(input_data, options);
+
     });
 </script>
