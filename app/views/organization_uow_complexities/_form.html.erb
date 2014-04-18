@@ -13,7 +13,7 @@
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
       <% if @organization.nil? %>
-        <%= f.input :factor_id, as: :select, collection: Factor.order("factor_type").map{|i|["#{i.name} - #{i.factor_type.humanize}", i.id]} %>
+        <%= f.input :factor_id, as: :select, collection: Factor.order("factor_type").map{|i|["#{i.name} - #{i.factor_type.humanize}", i.id]}, selected: params[:factor].nil? ? @organization_uow_complexity.factor_id : params[:factor] %>
       <% else %>
         <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
       <% end %>
