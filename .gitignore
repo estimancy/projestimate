@@ -20,10 +20,3 @@ config/gemnasium.yml
 /config/license_finder.yml
 config/license_finder_SAVE.yml
 
-#added by me
-.coveralls_SAVE.rb
-.sass-cache/
-/app/controllers/confirmation_controller_SAVE.rb
-/config/license_finder.yml
-doc/
-/public/dependencies_SAVE.html
