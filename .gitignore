@@ -17,3 +17,6 @@ Gemfile.local
 /solr/*
 # Gemnasium gem configuration file
 config/gemnasium.yml
+/config/license_finder.yml
+config/license_finder_SAVE.yml
+

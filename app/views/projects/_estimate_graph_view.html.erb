@@ -21,11 +21,15 @@
         <div class="" id="estimation_graph_box">
         <%= render :partial => "projects/estimation_graph", :locals => { :module_project => current_module_project, :project_modules => @project_modules } %>
         <div class="span6">
-          <canvas id="lineChart" width="600" height="500">
+          <canvas id="canvas_line" width="600" height="500">
           </canvas>
         </div>
         <div class="span6">
-          <canvas id="barChart" width="600" height="500">
+          <canvas id="canvas_bar" width="600" height="500">
+          </canvas>
+        </div>
+        <div class="span6" id="input_data_chart">
+          <canvas id="canvas_radar" width="600" height="500">
           </canvas>
         </div>
       </div>

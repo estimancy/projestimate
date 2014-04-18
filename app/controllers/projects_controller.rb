@@ -822,6 +822,7 @@ private
     result_with_consistency
   end
 
+
   # After estimation, need to know if node value are consistent or not for WBS-Completion modules
   def set_wbs_completion_node_consistency(estimation_result, wbs_project_element)
     @project = current_project
@@ -1485,12 +1486,62 @@ public
   def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
     @project = current_project
     @project_module_projects = @project.module_projects
+
+    #========= Current module_project, current_component data  ===============
+
+    # the current activated component (PBS)
+    @current_component = current_component
+    #get the current activated module project
+    @current_module_project = current_module_project
+    @current_mp_attributes = []
+    @input_dataset = {}
+    @all_cocomo_advanced_factors = []
+    @complexities_name = []
+    @organization_uow_complexities = []
+
+    #====================== CocomoAdvanced module data ========================
+    if @current_module_project.pemodule.alias == "cocomo_advanced"
+      # get the factors for the CocomoAdvanced estimation module: the data are stored in the "input_cocomos" table that make links between the factors and the CocomoAdvanced module
+      @all_cocomo_advanced_factors = @current_module_project.factors
+      #organization_uow_complexities
+    end
+
+
+    # get all current module_project attributes
+    #mp_attribute_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?)', %w(input both))
+    #mp_attribute_modules.each do |attr_module|
+    #  @current_mp_attributes << attr_module.pe_attribute
+    #end
+
+    # get all current module_project attribute value
+    @current_module_project.pemodule.pe_attributes.each do |attr|
+      attr_data = Array.new
+      attr_estimation_value = @current_module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', attr.id, "input").last
+      unless attr_estimation_value.nil?
+        # on estimation, we have four (4) levels : (string_data_low, string_data_most_likely, string_data_high, string_data_probable)
+        ["low", "most_likely", "high"].each do |level|
+          #@current_mp_attributes << attr_estimation_value.pe_attribute
+          string_data_level = attr_estimation_value.send("string_data_#{level}")
+          if string_data_level.nil?
+            attr_data << ""
+          else
+            attr_data << string_data_level[@current_component.id]
+          end
+          #@input_dataset["#{attr.alias}"] = attr_data
+          @input_dataset["#{attr_estimation_value.pe_attribute.alias}"] = attr_data
+        end
+      end
+    end
+    puts "INPUT DATA = #{@input_dataset}"
+
+
+    #========= All project data (modules, attributes, ...) ===============
+
     # get the all project modules for the charts labels
     @project_modules = []
     # contains all the modules attributes labels
     @attributes_labels = []
     @attributes = []
-
     @project_module_projects.each do |mp|
       @project_modules << mp.pemodule
       @attributes << mp.pemodule.pe_attributes
@@ -1504,7 +1555,6 @@ public
 
     # generate the dataset for charts
     @dataset = {}
-
     # Dataset is get by attribute
     # one dataset data correspond of all modules values for this attribute
     @attributes.each do |attr|
@@ -1520,15 +1570,7 @@ public
       end
       @dataset[:"#{attr.alias}"] = attr_data
     end
-
     puts "DATASET = #{@dataset}"
-
-    # Get the attributes data for each dataset
-    @project_module_projects.each do |mp|
-      @dataset[:"#{mp.pemodule.alias}"] = {}
-      mp.estimation_values.each do |estimation|
-      end
-    end
 
   end
 

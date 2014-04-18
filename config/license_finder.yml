@@ -1,9 +1,14 @@
 ---
 whitelist:
-#- MIT
-#- Apache 2.0
-ignore_groups:
-#- test
-#- development
-dependencies_file_dir: './doc/'
-project_name: # project name
+- MIT
+- Apache 2.0
+- ruby
+- GPL-2
+- LGPL-3
+- GPLv3
+- BSD
+- Apache-2.0
+- Ruby
+ignore_groups: []
+dependencies_file_dir: ./doc/
+project_name: Estimancy
