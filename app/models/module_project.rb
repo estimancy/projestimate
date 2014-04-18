@@ -27,6 +27,7 @@ class ModuleProject < ActiveRecord::Base
   has_many :inputs
   has_many :input_cocomos
   has_many :factors, :through => :input_cocomos
+  has_many :organization_uow_complexities, :through => :factors
 
   has_and_belongs_to_many :pbs_project_elements
 

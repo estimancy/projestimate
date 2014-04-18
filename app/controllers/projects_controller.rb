@@ -1495,15 +1495,31 @@ public
     @current_module_project = current_module_project
     @current_mp_attributes = []
     @input_dataset = {}
-    @all_cocomo_advanced_factors = []
+    @all_cocomo_advanced_factors_names = []
     @complexities_name = []
     @organization_uow_complexities = []
+    @cocomo_advanced_input_dataset = {}
 
     #====================== CocomoAdvanced module data ========================
     if @current_module_project.pemodule.alias == "cocomo_advanced"
       # get the factors for the CocomoAdvanced estimation module: the data are stored in the "input_cocomos" table that make links between the factors and the CocomoAdvanced module
-      @all_cocomo_advanced_factors = @current_module_project.factors
-      #organization_uow_complexities
+      @complexities_name = mp.organization_uow_complexities.map(&:name).uniq
+      @all_cocomo_advanced_factors_names = @current_module_project.factors.map(&:name)
+      factor_data = {}
+      @current_module_project.factors.each do |factor|
+        factor_data["#{factor.name}"] = {}
+        # after we will have an architecture like the following : {:Factor_name => { "Very low" => [1,3,5,2,9], "Low" => [0.5,2,8,],"Very low" => [1,3,5,4,3],... }}
+        @complexities_name.each do |complexity|
+          factor_data["#{factor.name}"]["#{complexity}"] = Array.new
+        end
+        factor.organization_uow_complexities.each do |uow_complexity|
+
+        end
+      end
+
+      @current_module_project.organization_uow_complexities.each do |uow_complexity|
+
+      end
     end
 
 
