@@ -18,7 +18,7 @@
 #
 ########################################################################
 
-# Module that contains all generic methods for Projestimate modules estimations calculation
+# Module that contains all generic methods for Estimancy modules estimations calculation
 module PemoduleEstimationMethods
 
   # method that compute not leaf node estimation value by aggregation

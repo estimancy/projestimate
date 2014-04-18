@@ -680,6 +680,7 @@ public
     current_pbs_estimations.each do |est_val|
       est_val_attribute_alias = est_val.pe_attribute.alias
       est_val_attribute_type = est_val.pe_attribute.attribute_type
+
       if est_val.in_out == 'output'
         out_result = Hash.new
         @my_results.each do |res|

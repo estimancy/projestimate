@@ -14,12 +14,13 @@ $(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr 
 
 $(".component_name").html("<%=raw @current_component %>");
 
-$('.component_tree > ul li').hover(
+$('.component_tree ul li, .widget-content ul li').hover(
         function () {
-            $(this.children).css('display', 'inline');
+          $(this.children).css('display', 'block');
         },
         function () {
-            $('.block_link').hide();
+          $('.block_link').hide();
+
         }
 );
 
@@ -69,7 +70,3 @@ $(".date-picker").datepicker({
         });
 
 $('.attribute_tooltip').tooltip({'html' : true });
-
-
-
-

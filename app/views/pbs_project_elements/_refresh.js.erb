@@ -2,9 +2,9 @@
 <% @current_component = current_component %>
 
 <% if controller_name == "users" or controller_name == "pbs_project_elements" %>
-  $("#project_wbs_product_section .tab-pane.active").html("<%=raw j generate_wbs_product(@project.root_component, @project, '', 5, params[:is_project_show_view]) %>");
+  $("#project_wbs_product_section .tab-pane.active").html("<%=raw j generate_wbs_product(@project.root_component, @project, '', 5, @is_project_view) %>");
 <% else %>
-  $("#project_wbs_product_section").html("<%=raw j generate_wbs_product(@project.root_component, @project, '', 5, params[:is_project_show_view]) %>");
+  $("#project_wbs_product_section").html("<%=raw j generate_wbs_product(@project.root_component, @project, '', 5, @is_project_view) %>");
 <% end %>
 
 $(".input_data").html("<%=raw j(display_input) %>");
@@ -22,7 +22,6 @@ $('.component_tree ul li').hover(
     }
 );
 
-
 $('.block_label, div.block_link').hover(
     function () {
         $('div.block_label.selected_pbs').css('width', 'inherit');
@@ -31,7 +30,6 @@ $('.block_label, div.block_link').hover(
         $('div.block_label.selected_pbs').css('width', '100%');
     }
 );
-
 
 $('.spiner').hide();
 

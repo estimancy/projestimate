@@ -8,21 +8,78 @@
 
   <div id="tabs-1" style="overflow-x: auto;">
     <%= form_tag "/cocomo_advanced/cocomo_save" do %>
-      <table class="table table-striped table-bordered table-condensed">
+      <table class="table table-bordered table-condensed">
         <tr>
           <th>Nom</th>
           <th>Description</th>
-          <th></th>
-          <th></th>
+          <th>Valeur</th>
         </tr>
 
-        <% @factors.each do |factor| %>
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <b>
+              Attribut produit
+            </b>
+          </td>
+        </tr>
+
+        <% @aprod.compact.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
-            <td></td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <b>
+              Attribut plateforme
+            </b>
+          </td>
+        </tr>
+
+        <% @aplat.compact.each do |factor| %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <tr>
+            <td><%= factor.name %></td>
+            <td><%= factor.description %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <b>
+              Attribut personnel
+            </b>
+          </td>
+        </tr>
+
+        <% @apers.compact.each do |factor| %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <tr>
+            <td><%= factor.name %></td>
+            <td><%= factor.description %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td colspan="3" style="text-align: center">
+            <b>
+              Attribut projet
+            </b>
+          </td>
+        </tr>
+
+        <% @aproj.compact.each do |factor| %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <tr>
+            <td><%= factor.name %></td>
+            <td><%= factor.description %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
           </tr>
         <% end %>
       </table>

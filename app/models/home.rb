@@ -47,7 +47,7 @@ class Home < ActiveRecord::Base
     ext_defined_rs_id = ExternalMasterDatabase::ExternalRecordStatus.find_by_name('Defined').id
     local_defined_rs_id = RecordStatus.find_by_name('Defined').id
 
-    puts '   - Projestimate Module'
+    puts '   - Estimancy Module'
     self.update_records(ExternalMasterDatabase::ExternalPemodule, Pemodule, ['title', 'alias', 'description', 'compliant_component_type', 'with_activities', 'uuid'])
 
     puts '   - Attribute...'
@@ -120,7 +120,7 @@ class Home < ActiveRecord::Base
       end
     end
 
-    puts '   - Projestimate Icons'
+    puts '   - Estimancy Icons'
     #self.update_records(ExternalMasterDatabase::ExternalPeicon, Peicon, ['name', 'icon_file_name', 'icon_content_type', 'icon_updated_at', 'icon_file_size', 'uuid'])
     external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
 
@@ -425,7 +425,7 @@ class Home < ActiveRecord::Base
     puts '   - Version'
     Version.create :comment => 'No update data has been save'
 
-    puts '   - Projestimate Module'
+    puts '   - Estimancy Module'
     self.create_records(ExternalMasterDatabase::ExternalPemodule, Pemodule, ['title', 'alias', 'description', 'compliant_component_type', 'with_activities', 'uuid'])
 
     puts '   - Attribute...'
@@ -540,7 +540,7 @@ class Home < ActiveRecord::Base
     puts '   - Acquisition categories'
     self.create_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
 
-    puts '   - Projestimate Icons'
+    puts '   - Estimancy Icons'
     #Need to have same UUID as Master Instance Icons
     external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
 
@@ -619,7 +619,7 @@ class Home < ActiveRecord::Base
 
     puts '   - Admin user'
     #Create first user
-    user = User.new(:first_name => 'Administrator', :last_name => 'Projestimate', :login_name => 'admin', :initials => 'ad', :email => 'youremail@yourcompany.net', :auth_type => AuthMethod.first.id, :user_status => 'active', :language_id => Language.first.id, :time_zone => 'GMT')
+    user = User.new(:first_name => 'Administrator', :last_name => 'Estimancy', :login_name => 'admin', :initials => 'ad', :email => 'youremail@yourcompany.net', :auth_type => AuthMethod.first.id, :user_status => 'active', :language_id => Language.first.id, :time_zone => 'GMT')
     user.password = user.password_confirmation = 'projestimate'
     user.save(:validate => false)
 
