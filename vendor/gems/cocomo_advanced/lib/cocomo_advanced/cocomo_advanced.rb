@@ -25,24 +25,24 @@ module CocomoAdvanced
     end
 
     def set_cocomo_organic
-      @coef_a = 3.02
+      @coef_a = 3.2
       @coef_b = 1.05
       @coef_c = 0.38
       @complexity = "Organic"
     end
 
-    def set_cocomo_embedded
+    def set_cocomo_semidetached
       @coef_a = 3
       @coef_b = 1.12
-      @coef_c = 0.35
-      @complexity = "Semi-detached"
-    end
-
-    def set_cocomo_semidetached
-      @coef_a = 2.8
-      @coef_b = 1.2
       @coef_c = 0.32
       @complexity = "Embedded"
+    end
+
+    def set_cocomo_embedded
+      @coef_a = 2.8
+      @coef_b = 1.2
+      @coef_c = 0.35
+      @complexity = "Semi-detached"
     end
 
     # Return effort
@@ -65,7 +65,7 @@ module CocomoAdvanced
     #Return delay (in hour)
     def get_delay(*args)
       @effort = get_effort_man_month(args[0], args[1], args[2])
-      @delay = (2.5*((@effort/152)**@coef_c)).to_f
+      @delay = (2.5*(@effort**@coef_c)).to_f
       @delay
     end
 

@@ -33,14 +33,14 @@
           <td><%= factor.state %></td>
           <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>
           <td>
-            <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             <% if is_master_instance? && !factor.is_local_record? %>
               <% if factor.is_retired? %>
-                <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
               <% else %>
                 <% unless factor.is_defined? %>
-                  <%= link_to('', "factors/#{factor.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                  <%= link_to('', "factors/#{factor.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
                 <% end %>
               <% end %>
             <% end %>
@@ -82,14 +82,17 @@
           <td class="span2"><%= c.value %></td>
           <td class="span2"><%= c.record_status.name unless c.record_status.nil? %> <%= c.show_custom_value %></td>
           <td>
-            <%= link_to 'Edit', edit_organization_uow_complexity_path(c) %>
-            <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <% if can? :edit_organizations, Organization %>
+              <%= link_to '', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => 'icon-plus-sign icon-large pull-left' %>
+            <% end %>
+            <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+            <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             <% if is_master_instance? && !c.is_local_record? %>
               <% if c.is_retired? %>
-                <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
               <% else %>
                 <% unless c.is_defined? %>
-                  <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                  <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
                 <% end %>
               <% end %>
             <% end %>

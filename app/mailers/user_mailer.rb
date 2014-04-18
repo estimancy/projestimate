@@ -20,7 +20,7 @@
 ########################################################################
 
 class UserMailer < ActionMailer::Base
-  default :from => 'no-reply@spirula.fr'
+  default :from => 'no-reply@projestimate.com'
   OLD_LOCALE = I18n.locale
 
 

@@ -75,7 +75,11 @@ module ProjectsHelper
               res << "#{total.compact.sum.round(2)}"
             elsif est_val_pe_attribute.attr_type == "date"
               pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id] }
-              res << "#{total.compact.max.strftime("%d/%m/%Y")}"
+              if total.compact.max.nil?
+                res << "-"
+              else
+                res << "#{total.compact.max.strftime("%d/%m/%Y")}"
+              end
             end
           end
         else
