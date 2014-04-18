@@ -67,11 +67,25 @@ module ProjectsHelper
         res << '<td>'
         level_estimation_values = Hash.new
         level_estimation_values = est_val.send("string_data_#{level}")
-        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
-          res << '-'
+        total = []
+        if pbs_project_element.folder?
+          if !pbs_project_element.descendants.empty?
+            if est_val_pe_attribute.attr_type == "float" or est_val_pe_attribute.attr_type == "integer"
+              pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id].to_f }
+              res << "#{total.compact.sum.round(2)}"
+            elsif est_val_pe_attribute.attr_type == "date"
+              pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id] }
+              res << "#{total.compact.max.strftime("%d/%m/%Y")}"
+            end
+          end
         else
-          res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
+          if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
+            res << '-'
+          else
+            res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
+          end
         end
+
         res << '</td>'
       end
       res << '</tr>'
@@ -686,6 +700,7 @@ module ProjectsHelper
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                        res.compact.sum,
                        :class => "input-small #{level} #{est_val.id}",
+                       :readonly => true,
                        "data-est_val_id" => est_val.id
       end
     else
@@ -712,7 +727,6 @@ module ProjectsHelper
       end
     end
   end
-
 
   #Display rule and options of an attribute in a bootstrap tooltip
   def display_rule(est_val)
