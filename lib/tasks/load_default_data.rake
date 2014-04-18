@@ -191,7 +191,7 @@ def load_data!
   # Get the Capitalization Module
   capitalization_module = Pemodule.find_by_alias_and_record_status_id("capitalization", rsid)
 
-    puts '   - Projestimate Icons'
+    puts '   - Estimancy Icons'
 
     folder = Peicon.create(:name => 'Folder', :icon => File.new("#{Rails.root}/public/folder.png"), :record_status_id => rsid)
     link = Peicon.create(:name => 'Link', :icon => File.new("#{Rails.root}/public/link.png", 'r'), :record_status_id => rsid)
