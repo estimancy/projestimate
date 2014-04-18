@@ -21,7 +21,7 @@ config/gemnasium.yml
 #added by me
 .coveralls_SAVE.rb
 .sass-cache/
-app/controllers/confirmation_controller_SAVE.rb
+/app/controllers/confirmation_controller_SAVE.rb
 /config/license_finder.yml
 doc/
-public/dependencies_SAVE.html
+/public/dependencies_SAVE.html
