@@ -26,7 +26,12 @@
                 <% end %>
               </td>
               <td style="padding-left: <%= element.depth + 2 %>em;">
-                <%= element.work_element_type.peicon.nil? ? '?' : image_tag(element.work_element_type.peicon.icon.url) %>&nbsp;
+                <% if element.folder? %>
+                  <span class="icon icon-folder-open"></span>
+                <% else %>
+                  <span class="icon icon-file"></span>
+                <% end %>
+
                 <%= element.name %>
               </td>
               <% @module_projects.each do |mp| %>
