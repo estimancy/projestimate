@@ -79,18 +79,12 @@
           </td>
         </tr>
 
-        <% if @inputs.empty? %>
-          <%= render :partial => 'initial_row' %>
-        <% else %>
-          <%= render :partial => 'row' %>
-        <% end %>
-
-
-
+        <%= render :partial => 'row' %>
       </table>
 
       <%= submit_tag I18n.t(:save), :class => "btn" %>
       <%= submit_tag I18n.t(:apply), :class => "btn" %>
+      <%= link_to I18n.t(:back), main_app.root_url, :class => "btn" %>
       <%= submit_tag "Mettre à jour les données brutes", :class => "btn pull-right" %>
 
     </div>

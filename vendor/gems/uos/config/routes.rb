@@ -4,6 +4,6 @@ Uos::Engine.routes.draw do
   get 'load_gross' => 'inputs#load_gross', :as => 'load_gross'
   get 'update_complexity_select_box' => 'inputs#update_complexity_select_box', :as => 'update_complexity_select_box'
 
-  get 'new_item/:mp' => 'inputs#new_item', :as => 'new_item'
-  get 'remove_item' => 'inputs#new_item', :as => 'remove_item'
+  get 'new_item/:mp/:pbs_id' => 'inputs#new_item', :as => 'new_item'
+  get 'remove_item/:input_id' => 'inputs#remove_item', :as => 'remove_item'
 end

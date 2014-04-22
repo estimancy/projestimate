@@ -2,7 +2,8 @@ class Uos::InputsController < ApplicationController
 
   def index
     @module_project = ModuleProject.find(params[:mp])
-    @inputs = @module_project.inputs
+    @pbs = current_component
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
     @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
     @complexities = current_project.organization.unit_of_works.first.organization_uow_complexities.map{|i| [i.name, i.id]}
@@ -21,7 +22,15 @@ class Uos::InputsController < ApplicationController
 
     def new_item
       @module_project = ModuleProject.find(params[:mp])
-      input = Input.create(module_project_id: @module_project.id)
+      @pbs = PbsProjectElement.find(params[:pbs_id])
+      input = Input.create(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
+      redirect_to redirect_apply("/uos?mp=#{@module_project.id}", "/uos?mp=#{@module_project.id}",  "/dashboard")
+    end
+
+    def remove_item
+      input = Input.find(params[:input_id])
+      @module_project = input.module_project
+      input.delete
       redirect_to redirect_apply("/uos?mp=#{@module_project.id}", "/uos?mp=#{@module_project.id}",  "/dashboard")
     end
 
@@ -54,8 +63,7 @@ class Uos::InputsController < ApplicationController
       end
 
       @module_project.pemodule.attribute_modules.each do |am|
-        @in_ev = EstimationValue.where(:module_project_id => @module_project.id,
-                                       :pe_attribute_id => am.pe_attribute.id).first
+        @in_ev = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
 
         ["low", "most_likely", "high"].each do |level|
           if am.pe_attribute.alias == "size"
