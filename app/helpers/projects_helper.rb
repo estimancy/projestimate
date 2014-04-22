@@ -154,7 +154,6 @@ module ProjectsHelper
 
       #For wbs-activity-completion node consistency
       completion_consistency = ""
-      title = ""
       if module_project.pemodule.alias == "wbs_activity_completion"
         current_wbs_consistency = true
         pbs_level_data_for_consistency.each do |level, level_value|

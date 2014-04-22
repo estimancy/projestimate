@@ -3,8 +3,8 @@
   <%= hidden_field_tag "input_id[1]", nil, :class => "input_id" %>
 
   <td class="span3">
-    <%= link_to "", "#", :class => "icon icon-plus" %>
-    <%= link_to "", "#", :class => "icon icon-trash" %>
+    <%= link_to "", new_item_path(mp: params[:mp]), :class => "icon icon-plus" %>
+    <%= link_to "", remove_item_path, :class => "icon icon-trash" %>
   </td>
   <td>
     <i class="icon icon-star icon-center black-question-mark"></i>

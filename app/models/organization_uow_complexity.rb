@@ -45,6 +45,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
   validates :record_status, :presence => true
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :name, :presence => true
+  validates :value, :presence => true
   validates :custom_value, :presence => true, :if => :is_custom?
 
   amoeba do
