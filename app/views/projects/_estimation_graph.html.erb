@@ -252,28 +252,29 @@
             }
 
             var attr_options = {
-                //Boolean - If we show the scale above the chart data
-                scaleOverlay: true,
-                //Boolean - Whether grid lines are shown across the chart
-                scaleShowGridLines: true,
-                //Boolean - If we want to override with a hard coded scale
-                scaleOverride: true,
-                //** Required if scaleOverride is true **
-                //Number - The number of steps in a hard coded scale
-                scaleSteps: 4,
-                //Number - The value jump in the hard coded scale
-                scaleStepWidth: 10,
-                //Number - The scale starting value
-                scaleStartValue: 0,
-                //String - Colour of the scale line
-                scaleLineColor: "rgba(0,0,0,.1)",
-                //Number - Pixel width of the scale line
-                scaleLineWidth: 1,
-                //Boolean - Whether to show labels on the scale
-                scaleShowLabels: true,
-                //Number - Scale label font size in pixels
-                scaleFontSize: 12,
-                scaleFontColor: "#000",
+//                //Boolean - If we show the scale above the chart data
+//                scaleOverlay: true,
+//                //Boolean - Whether grid lines are shown across the chart
+//                scaleShowGridLines: true,
+//                //Boolean - If we want to override with a hard coded scale
+//                scaleOverride: true,
+//                //** Required if scaleOverride is true **
+//                //Number - The number of steps in a hard coded scale
+//                scaleSteps: 4,
+//                //Number - The value jump in the hard coded scale
+//                scaleStepWidth: 10,
+//                //Number - The scale starting value
+//                scaleStartValue: 0,
+//                //String - Colour of the scale line
+//                scaleLineColor: "rgba(0,0,0,.1)",
+//                //Number - Pixel width of the scale line
+//                scaleLineWidth: 1,
+//                //Boolean - Whether to show labels on the scale
+//                scaleShowLabels: true,
+//                //Number - Scale label font size in pixels
+//                scaleFontSize: 12,
+//                scaleFontColor: "#000",
+
                 annotateLabel: true,
 
                 // new attribute for the CharNew.js library
@@ -309,7 +310,7 @@
                 graphSubTitleFontSize : 18,
                 graphSubTitleFontStyle : "normal",
                 graphSubTitleFontColor : "#666",
-                footNote : "Test",
+                footNote : ''+value,
                 footNoteFontFamily : "'Arial'",
                 footNoteFontSize : 16,
                 footNoteFontStyle : "bold",
@@ -329,7 +330,7 @@
             };
 
             //generate Bar chart for current output attribute
-            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(attr_data);
+            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(attr_data, attr_options);
         });
 
         //========================================= dataset for output data ===============================================
@@ -369,13 +370,6 @@
         var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
         var radarChart = new Chart(radar_ctx).Radar(cocomo_advanced_input_data, radarOptions);
         //var radarChart = new Chart(radar_ctx).Radar(data_test);
-
-//        var js_current_mp_outputs_attributes_aliases = <%#= @current_mp_outputs_attributes_aliases.to_json.html_safe %> ;
-//        $.each( js_current_mp_outputs_attributes_aliases, function( key, value ) {
-//            //var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(all_attribute_data);
-//            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
-//        });
-
 
     });
 </script>
