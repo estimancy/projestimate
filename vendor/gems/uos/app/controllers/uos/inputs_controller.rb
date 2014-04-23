@@ -34,6 +34,16 @@ class Uos::InputsController < ApplicationController
       redirect_to redirect_apply("/uos?mp=#{@module_project.id}", "/uos?mp=#{@module_project.id}",  "/dashboard")
     end
 
+    def export
+      csv_string = Input::export(params[:mp], params[:pbs_id])
+      send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=uo.csv")
+    end
+
+    def import
+      csv_string = Input::import(params[:file], params[:separator], params[:encoding])
+      redirect_to root_url
+    end
+
     def save_uos
       @module_project = ModuleProject.find(params[:module_project_id])
       @organization_technologies = current_project.organization.organization_technologies.defined.map{|i| [i.name, i.id]}

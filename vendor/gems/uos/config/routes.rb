@@ -6,4 +6,7 @@ Uos::Engine.routes.draw do
 
   get 'new_item/:mp/:pbs_id' => 'inputs#new_item', :as => 'new_item'
   get 'remove_item/:input_id' => 'inputs#remove_item', :as => 'remove_item'
+
+  get 'export/:mp/:pbs_id' => 'inputs#export', :as => 'export'
+  post 'import/:mp/:pbs_id' => 'inputs#import', :as => 'import'
 end
