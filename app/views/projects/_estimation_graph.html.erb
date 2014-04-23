@@ -81,11 +81,9 @@
             //  ADDED PARAMETERS
             graphMin : "DEFAULT",
             graphMax : "DEFAULT"
-
         }
 
         var data1 = {
-            //labels : ["January","February","March","April","May","June","July"],
             labels : module_labels,
             datasets : [
                 {
@@ -114,62 +112,227 @@
            cocomo_advanced_input_data_array = []
            #fillColor_array = ["rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
            #fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb((255,255,0)", "rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
-           fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb((255,255,0)", "rgb(151,187,205)", "rgb(151,187,205)"]
+           fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb(151,187,205)", "rgb(151,187,205)"]
            iteration = -1
            input_iter = -1
            cocomo_ad_iter = -1
         %>
+        var js_fillColor_array = fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb(151,187,205)", "rgb(151,187,205)"];
 
 
-        //============== dataset for input data radar chart for Cocomo_Advanced =======================
-        //Complexities name
-        var complexities = [];
-        var factors_names = <%= @all_cocomo_advanced_factors_names.to_json.html_safe %> ;
+        //============== datasets for input data Radar chart for Cocomo_Advanced =======================
+        //Radar option
+        var radarOptions = {
+            //Boolean - If we show the scale above the chart data
+            scaleOverlay: true,
+            //Boolean - Whether grid lines are shown across the chart
+            scaleShowGridLines: true,
+            //Boolean - If we want to override with a hard coded scale
+            scaleOverride: true,
+            //** Required if scaleOverride is true **
+            //Number - The number of steps in a hard coded scale
+            scaleSteps: 7,
+            //Number - The value jump in the hard coded scale
+            scaleStepWidth: 1,
+            //Number - The scale starting value
+            scaleStartValue: 0,
+            //String - Colour of the scale line
+            scaleLineColor: "rgba(0,0,0,.1)",
+            //Number - Pixel width of the scale line
+            scaleLineWidth: 1,
+            //Boolean - Whether to show labels on the scale
+            scaleShowLabels: true,
+            //Number - Scale label font size in pixels
+            scaleFontSize: 12,
+            scaleFontColor: "#000",
+            annotateLabel: true,
 
-        <% @all_cocomo_advanced_factors_names.each do |factor_name|
-            factor_data_hash =
-           {
-               fillColor: fillColor_array[cocomo_ad_iter+=1],
-               strokeColor: "rgba(220,220,220,1)",
-               pointColor: "rgba(220,220,220,1)",
-               pointStrokeColor: "#fff",
-               data: @cocomo_advanced_input_dataset[:"#{factor_name}"],
-               title: factor_name
-           }
-
-           cocomo_advanced_input_data_array << factor_data_hash
-           end
-        %>
-
-
-        var cocomo_advanced_input_data = {
-            //labels: <%#= @input_dataset.keys.to_json.html_safe %>,
-            labels: factors_names,
-            datasets: <%= input_data_array.to_json.html_safe %>
+            // new attribute for the CharNew.js library
+            annotateDisplay : true,
+            savePng : true,
+            canvasBorders : true,
+            canvasBordersWidth : 2,
+            canvasBordersColor : "black",
+            yAxisLeft : true,
+            yAxisRight : true,
+            yAxisLabel : "Y axis",
+            yAxisFontFamily : "'Arial'",
+            yAxisFontSize : 14,
+            yAxisFontStyle : "normal",
+            yAxisFontColor : "#666",
+            xAxisLabel : "",
+            xAxisFontFamily : "'Arial'",
+            xAxisFontSize : 14,
+            xAxisFontStyle : "normal",
+            xAxisFontColor : "#666",
+            yAxisUnit : "UNIT",
+            yAxisUnitFontFamily : "'Arial'",
+            yAxisUnitFontSize : 12,
+            yAxisUnitFontStyle : "normal",
+            yAxisUnitFontColor : "#666",
+            graphTitle : "",
+            graphTitleFontFamily : "'Arial'",
+            graphTitleFontSize : 24,
+            graphTitleFontStyle : "bold",
+            graphTitleFontColor : "#666",
+            graphSubTitle : "",
+            graphSubTitleFontFamily : "'Arial'",
+            graphSubTitleFontSize : 18,
+            graphSubTitleFontStyle : "normal",
+            graphSubTitleFontColor : "#666",
+            footNote : "Cocomo-advanced input data factors",
+            footNoteFontFamily : "'Arial'",
+            footNoteFontSize : 16,
+            footNoteFontStyle : "bold",
+            footNoteFontColor : "#666",
+            legend : true,
+            legendFontFamily : "'Arial'",
+            legendFontSize : 14,
+            legendFontStyle : "normal",
+            legendFontColor : "#666",
+            legendBlockSize : 12,
+            legendBorders : true,
+            legendBordersWidth : 2,
+            legendBordersColor : "#666",
+            //  ADDED PARAMETERS
+            graphMin : "DEFAULT",
+            graphMax : "DEFAULT"
         }
 
+        // Cocomo-Advanced input data
+        <% @cocomo_advanced_input_dataset.each do |corresponding_graph_name, array_value|
+            factor_data_hash =
+                {
+                   fillColor: fillColor_array[cocomo_ad_iter+=1],
+                   strokeColor: "rgba(220,220,220,1)",
+                   pointColor: "rgba(220,220,220,1)",
+                   pointStrokeColor: "#fff",
+                   data: array_value,
+                   title: corresponding_graph_name
+                }
+           cocomo_advanced_input_data_array << factor_data_hash
+           puts "JS_COCOMO_DATA = #{cocomo_advanced_input_data_array}"
+        end %>
 
-        //=========================
+        var cocomo_advanced_input_data = {
+            labels: <%= @cocomo_advanced_factor_corresponding.to_json.html_safe %>,
+            datasets: <%= cocomo_advanced_input_data_array.to_json.html_safe %>
+        };
 
 
-        // Data for input data radar chart
-        <% @input_dataset.keys.each do |attr_alias|
-            attr_data_hash =
-            {
-                fillColor: fillColor_array[input_iter+=1],
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                data: @input_dataset[:"#{attr_alias}"],
-                title: attr_alias
+        //========================================= DATASET FOR THE CURRENT MODULE AND CURRENT COMPONENT ===========================================
+
+        //create dynamique div and canvas for each output attribute graph
+//        var current_mp_outputs_attributes_aliases = <%#= @current_mp_outputs_attributes_aliases.to_json.html_safe %>;
+//        $.each(current_mp_outputs_attributes_aliases, function( index, value ) {
+////            $("#estimation_graph_box").append('<div class="span4"><canvas id="bar_canvas_'+value+'" width="300" height="500"></canvas></div>');
+//            $("#estimation_graph_box").append('<div class="span4"><canvas id="'+value+'" width="300" height="500"></canvas></div>');
+//        });
+
+        var outputs_data_levels = ["Low", "High", "Most Likely", "probable"];
+        var output_iter = -1;
+
+        //generate data for each attribute
+        var js_current_mp_outputs_dataset = <%= @current_mp_outputs_dataset.to_json.html_safe %> ;
+        var js_current_mp_outputs_attributes_aliases = <%= @current_mp_outputs_attributes_aliases.to_json.html_safe %> ;
+
+        $.each( js_current_mp_outputs_attributes_aliases, function( key, value ) {
+            var attr_data = {
+                labels : outputs_data_levels,
+                datasets : [
+                    {
+                        fillColor : js_fillColor_array[output_iter+=1],
+                        strokeColor : "rgba(220,220,220,1)",
+                        pointColor : "rgba(220,220,220,1)",
+                        pointStrokeColor : "#fff",
+                        data : js_current_mp_outputs_dataset[value],
+                        title : value
+                    }
+                ]
             }
 
-            input_data_array << attr_data_hash
-         end
-        %>
+            var attr_options = {
+                //Boolean - If we show the scale above the chart data
+                scaleOverlay: true,
+                //Boolean - Whether grid lines are shown across the chart
+                scaleShowGridLines: true,
+                //Boolean - If we want to override with a hard coded scale
+                scaleOverride: true,
+                //** Required if scaleOverride is true **
+                //Number - The number of steps in a hard coded scale
+                scaleSteps: 4,
+                //Number - The value jump in the hard coded scale
+                scaleStepWidth: 10,
+                //Number - The scale starting value
+                scaleStartValue: 0,
+                //String - Colour of the scale line
+                scaleLineColor: "rgba(0,0,0,.1)",
+                //Number - Pixel width of the scale line
+                scaleLineWidth: 1,
+                //Boolean - Whether to show labels on the scale
+                scaleShowLabels: true,
+                //Number - Scale label font size in pixels
+                scaleFontSize: 12,
+                scaleFontColor: "#000",
+                annotateLabel: true,
 
+                // new attribute for the CharNew.js library
+                annotateDisplay : true,
+                savePng : true,
+                canvasBorders : true,
+                canvasBordersWidth : 2,
+                canvasBordersColor : "black",
+                yAxisLeft : true,
+                yAxisRight : true,
+                yAxisLabel : "Y axis",
+                yAxisFontFamily : "'Arial'",
+                yAxisFontSize : 14,
+                yAxisFontStyle : "normal",
+                yAxisFontColor : "#666",
+                xAxisLabel : "",
+                xAxisFontFamily : "'Arial'",
+                xAxisFontSize : 14,
+                xAxisFontStyle : "normal",
+                xAxisFontColor : "#666",
+                yAxisUnit : "UNIT",
+                yAxisUnitFontFamily : "'Arial'",
+                yAxisUnitFontSize : 12,
+                yAxisUnitFontStyle : "normal",
+                yAxisUnitFontColor : "#666",
+                graphTitle : "",
+                graphTitleFontFamily : "'Arial'",
+                graphTitleFontSize : 24,
+                graphTitleFontStyle : "bold",
+                graphTitleFontColor : "#666",
+                graphSubTitle : "",
+                graphSubTitleFontFamily : "'Arial'",
+                graphSubTitleFontSize : 18,
+                graphSubTitleFontStyle : "normal",
+                graphSubTitleFontColor : "#666",
+                footNote : "Test",
+                footNoteFontFamily : "'Arial'",
+                footNoteFontSize : 16,
+                footNoteFontStyle : "bold",
+                footNoteFontColor : "#666",
+                legend : true,
+                legendFontFamily : "'Arial'",
+                legendFontSize : 14,
+                legendFontStyle : "normal",
+                legendFontColor : "#666",
+                legendBlockSize : 12,
+                legendBorders : true,
+                legendBordersWidth : 2,
+                legendBordersColor : "#666",
+                //  ADDED PARAMETERS
+                graphMin : "DEFAULT",
+                graphMax : "DEFAULT"
+            };
 
-        //========================= dataset for others=============================
+            //generate Bar chart for current output attribute
+            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(attr_data);
+        });
+
+        //========================================= dataset for output data ===============================================
 
         // create de data
         <% @attributes_labels.each do |attr|
@@ -182,12 +345,11 @@
                 data: @dataset[:"#{attr}"],
                 title: attr
             }
-
             data_array << attr_data_hash
         end %>
 
         // get the data
-        var data = {
+        var all_attribute_data = {
             labels : module_labels,
             datasets : <%= data_array.to_json.html_safe %>
         }
@@ -195,14 +357,25 @@
         //Get the context of the canvas element we want to select
         //var ctx = document.getElementById("myChart").getContext("2d");
 
-        var line_ctx = $('#canvas_line').get(0).getContext("2d");
-        var bar_ctx = $('#canvas_bar').get(0).getContext("2d");
-        // Radar chart for input data
-        //var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
+        //Line chart
+//        var line_ctx = $('#canvas_line').get(0).getContext("2d");
+//        var lineChart =  new Chart(line_ctx).Line(all_attribute_data, options);
+//
+//        //Bar chart
+//        var bar_ctx = $('#canvas_bar').get(0).getContext("2d");
+//        var barChart =   new Chart(bar_ctx).Bar(all_attribute_data, options);
 
-        var lineChart = new Chart(line_ctx).Line(data, options);
-        var barChart = new Chart(bar_ctx).Bar(data, options);
-        //var barChart = new Chart(radar_ctx).Radar(input_data, options);
+        // Radar chart for input data
+        var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
+        var radarChart = new Chart(radar_ctx).Radar(cocomo_advanced_input_data, radarOptions);
+        //var radarChart = new Chart(radar_ctx).Radar(data_test);
+
+//        var js_current_mp_outputs_attributes_aliases = <%#= @current_mp_outputs_attributes_aliases.to_json.html_safe %> ;
+//        $.each( js_current_mp_outputs_attributes_aliases, function( key, value ) {
+//            //var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(all_attribute_data);
+//            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
+//        });
+
 
     });
 </script>

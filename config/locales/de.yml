@@ -1089,5 +1089,6 @@ de:
   project_is_activated: "Project '%{project_title}' is successfully activated."
   defined_language_not_deletable: "Defined language is not deletable"
   leave_it_blank_if_no_change: "leave it blank if you don't want to change it"
+  sign_in_with_google: "Sign in with Google"
 
 
