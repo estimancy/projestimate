@@ -29,7 +29,7 @@
     </li>
   </ul>
 
-  <%= form_tag "/uos/save_uos" do %>
+  <%= form_tag uos.save_uos_path do %>
 
     <%= hidden_field_tag "module_project_id", @module_project.id %>
     <div id="tabs-1" style="overflow-x: auto;">
@@ -85,7 +85,7 @@
       <%= submit_tag I18n.t(:save), :class => "btn" %>
       <%= submit_tag I18n.t(:apply), :class => "btn" %>
       <a href="#myWBSModal" role="button" class="btn" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal">Importer</a>
-      <%= link_to "Exporter", export_path(current_module_project.id, current_component.id), :class => "btn" %>
+      <%= link_to "Exporter", uos.export_path(current_module_project.id, current_component.id), :class => "btn" %>
       <%= link_to I18n.t(:back), main_app.root_url, :class => "btn" %>
 
       <%= submit_tag "Mettre à jour les données brutes", :class => "btn pull-right" %>
@@ -94,7 +94,7 @@
   <% end %>
 
   <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <%= form_tag import_path(current_module_project.id, current_component.id), :multipart => true, :class => 'simple_form' do %>
+    <%= form_tag uos.import_path(current_module_project.id, current_component.id), :multipart => true, :class => 'simple_form' do %>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel"><%= I18n.t(:import) %> UO Estimation Module</h3>

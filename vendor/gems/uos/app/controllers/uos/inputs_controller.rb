@@ -41,7 +41,7 @@ class Uos::InputsController < ApplicationController
 
     def import
       csv_string = Input::import(params[:file], params[:separator], params[:encoding])
-      redirect_to root_url
+      redirect_to main_app.root_url
     end
 
     def save_uos
