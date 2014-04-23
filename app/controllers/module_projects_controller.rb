@@ -30,7 +30,7 @@ class ModuleProjectsController < ApplicationController
     @module_projects = @project.module_projects
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
   end
 
   def associate
@@ -54,7 +54,7 @@ class ModuleProjectsController < ApplicationController
     authorize! :alter_estimation_plan, @project
 
     @module_projects = @project.module_projects
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @module_projects.find_by_pemodule_id(@initialization_module.id)
 
     # Get the max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -80,7 +80,7 @@ class ModuleProjectsController < ApplicationController
     # Get the project's max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
     redirect_to redirect(edit_module_project_path(@module_project)), notice: "#{I18n.t (:notice_module_project_successful_updated)}"
   end
@@ -92,7 +92,7 @@ class ModuleProjectsController < ApplicationController
     @module_projects = @project.module_projects
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
   end
 
   def associate_modules_projects
@@ -100,7 +100,7 @@ class ModuleProjectsController < ApplicationController
     authorize! :alter_estimation_plan, @project
 
     @module_projects = @project.module_projects
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
     @module_projects.each do |mp|
       mp.update_attribute('associated_module_project_ids', params[:module_projects][mp.id.to_s])
     end
@@ -116,16 +116,16 @@ class ModuleProjectsController < ApplicationController
 
     #re-set positions
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
     position_x = @module_project.position_x
 
     #...finally, destroy object module_project
     @module_project.destroy
 
-    #Update column module_projects link with capitalization module
-    unless @capitalization_module_project.nil?
+    #Update column module_projects link with initialization module
+    unless @initialization_module_project.nil?
       mp = @project.module_projects.where('position_x = ?', position_x).order('position_y ASC').first
-      mp.update_attribute('associated_module_project_ids', @capitalization_module_project.id) unless mp.nil?
+      mp.update_attribute('associated_module_project_ids', @initialization_module_project.id) unless mp.nil?
     end
     redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
   end
@@ -160,8 +160,8 @@ class ModuleProjectsController < ApplicationController
     @module_projects ||= @project.module_projects
     @pbs_project_element = current_component
 
-    #Get the capitalization module_project
-    @capitalization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @capitalization_module.id, @project.id).first  unless @capitalization_module.nil?
+    #Get the initialization module_project
+    @initialization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @initialization_module.id, @project.id).first  unless @initialization_module.nil?
 
     # Get the max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1

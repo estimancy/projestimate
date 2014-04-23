@@ -118,10 +118,10 @@ public
           wbs_project_element.save!
 
 
-          #Get the capitalization module from ApplicationController
-          #When creating project, we need to create module_projects for created capitalization
-          unless @capitalization_module.nil?
-            cap_module_project = @project.module_projects.build(:pemodule_id => @capitalization_module.id, :position_x => 0, :position_y => 0)
+          #Get the initialization module from ApplicationController
+          #When creating project, we need to create module_projects for created initialization
+          unless @initialization_module.nil?
+            cap_module_project = @project.module_projects.build(:pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0)
             if cap_module_project.save!
               #Create the corresponding EstimationValues
               unless @project.organization.nil? || @project.organization.attribute_organizations.nil?
@@ -167,7 +167,7 @@ public
       redirect_to(:action => 'show')
     end
 
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -207,7 +207,7 @@ public
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
       @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
       @wbs_activity_elements = []
-      @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+      @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
       @wbs_activity_ratios = []
 
       @project.users.each do |u|
@@ -251,14 +251,14 @@ public
         end
 
         # Capitalization Module
-        unless @capitalization_module.nil?
-          # Get the project capitalization module_project or create if it doesn't exist
-          cap_module_project = @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+        unless @initialization_module.nil?
+          # Get the project initialization module_project or create if it doesn't exist
+          cap_module_project = @project.module_projects.find_by_pemodule_id(@initialization_module.id)
           if cap_module_project.nil?
-            cap_module_project = @project.module_projects.create(:pemodule_id => @capitalization_module.id, :position_x => 0, :position_y => 0)
+            cap_module_project = @project.module_projects.create(:pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0)
           end
 
-          # Create the project capitalization module estimation_values if project organization has changed and not nil
+          # Create the project initialization module estimation_values if project organization has changed and not nil
           if project_organization.nil? && !@project.organization.nil?
 
             #Create the corresponding EstimationValues
@@ -327,7 +327,7 @@ public
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @wbs_activity_elements = []
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
     @wbs_activity_ratios = []
 
     # Get the max X and Y positions of modules
@@ -484,7 +484,7 @@ public
     @project = Project.find(params[:project_id])
     authorize! :alter_estimation_plan, @project
 
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
     if params[:pbs_project_element_id] && params[:pbs_project_element_id] != ''
       @pbs_project_element = PbsProjectElement.find(params[:pbs_project_element_id])
@@ -538,9 +538,9 @@ public
         end
       end
 
-      #Link capitalization module to other modules
-      unless @capitalization_module.nil?
-        my_module_project.update_attribute('associated_module_project_ids', @capitalization_module_project.id) unless @capitalization_module_project.nil?
+      #Link initialization module to other modules
+      unless @initialization_module.nil?
+        my_module_project.update_attribute('associated_module_project_ids', @initialization_module_project.id) unless @initialization_module_project.nil?
       end
     end
   end
@@ -549,7 +549,7 @@ public
     #No authorize required
     @project = Project.find(params[:project_id])
     @module_projects = @project.module_projects
-    @capitalization_module_project = @capitalization_module.nil? ? nil : @module_projects.find_by_pemodule_id(@capitalization_module.id)
+    @initialization_module_project = @initialization_module.nil? ? nil : @module_projects.find_by_pemodule_id(@initialization_module.id)
 
     if params[:pbs_project_element_id] && params[:pbs_project_element_id] != ''
       @pbs_project_element = PbsProjectElement.find(params[:pbs_project_element_id])

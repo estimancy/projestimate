@@ -479,7 +479,7 @@ en-gb:
   new_organization: "New organisation"
   inflation: "Inflation"
   organizationals_labors_categories: "Organisational labours categories"
-  text_organization_attributes: "Attributes on which the organisation intends to capitalize (its will be automatically added to the 'capitalization' module)"
+  text_organization_attributes: "Attributes on which the organisation intends to capitalize (its will be automatically added to the 'initialization' module)"
   text_organization_attributes_settings: 'Settings for attributes selected on the "Attributes" tab'
   organization_technology: "Technologies"
   new_organization_technology: "New Technology"

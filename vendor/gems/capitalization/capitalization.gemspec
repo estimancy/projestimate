@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'capitalization/version'
+require 'initialization/version'
 
 Gem::Specification.new do |gem|
-  gem.name = 'capitalization'
+  gem.name = 'initialization'
   gem.version = Capitalization::VERSION
   gem.authors = 'Spirula'
   gem.email = 'contact@estimancy.com'

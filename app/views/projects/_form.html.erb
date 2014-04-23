@@ -123,7 +123,7 @@
             <tr>
               <td>
                 <%= I18n.t(:label_add_a_module_to_project) %>
-                <%= select_tag 'select_module', options_for_select(Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'capitalization').all.map { |i| [i.title, i.id] }), :prompt => '' %>
+                <%= select_tag 'select_module', options_for_select(Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }), :prompt => '' %>
               </td>
               <td class="pull-right">
                 <%= I18n.t(:label_filter_on_pbs_element) %>

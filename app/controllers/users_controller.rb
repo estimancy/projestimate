@@ -158,8 +158,8 @@ public
 
       if @project
         @module_projects ||= @project.module_projects
-        #Get the capitalization module_project
-        @capitalization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @capitalization_module.id, @project.id).first unless @capitalization_module.nil?
+        #Get the initialization module_project
+        @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
 
         @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
         @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.count
