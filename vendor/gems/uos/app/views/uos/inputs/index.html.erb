@@ -14,7 +14,7 @@
   .blue-info-mark { color:blue; }
   .orange-exclamation-mark { color:orange; }
   .red-star { color:red; }
-        
+
   .compressed{
     width: 30px;
     margin-left: 11px;
@@ -29,7 +29,7 @@
     </li>
   </ul>
 
-  <%= form_tag "/uos/save_uos" do %>
+  <%= form_tag uos.save_uos_path do %>
 
     <%= hidden_field_tag "module_project_id", @module_project.id %>
     <div id="tabs-1" style="overflow-x: auto;">
@@ -59,157 +59,150 @@
         <tr>
           <th colspan="6">Overall</th>
           <td>
-            <%= text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed" %>
+            <%= text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td>
-            <%= text_field_tag "overall_size_most_likely", @size.nil? ? '' : @size.string_data_most_likely[current_component.id], :class => "overall compressed"%>
+            <%= text_field_tag "overall_size_most_likely", @size.nil? ? '' : @size.string_data_most_likely[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td>
-            <%= text_field_tag "overall_size_high", @size.nil? ? '' : @size.string_data_high[current_component.id], :class => "overall compressed" %>
+            <%= text_field_tag "overall_size_high", @size.nil? ? '' : @size.string_data_high[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
-          <td> - </td>
+          <td> </td>
           <td >
-            <%= text_field_tag "overall_gross_low", @gross_size.nil? ? '' : @gross_size.string_data_low[current_component.id], :class => "overall compressed" %>
+            <%= text_field_tag "overall_gross_low", @gross_size.nil? ? '' : @gross_size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td>
-            <%= text_field_tag "overall_gross_most_likely", @gross_size.nil? ? '' : @gross_size.string_data_most_likely[current_component.id], :class => "overall compressed" %>
+            <%= text_field_tag "overall_gross_most_likely", @gross_size.nil? ? '' : @gross_size.string_data_most_likely[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td >
-            <%= text_field_tag "overall_gross_high", @gross_size.nil? ? '' : @gross_size.string_data_high[current_component.id], :class => "overall compressed" %>
+            <%= text_field_tag "overall_gross_high", @gross_size.nil? ? '' : @gross_size.string_data_high[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
         </tr>
 
-        <% if @inputs.empty? %>
-          <%= render :partial => 'initial_row' %>
-        <% else %>
-          <%= render :partial => 'row' %>
-        <% end %>
-
-
+        <%= render :partial => 'row' %>
       </table>
 
       <%= submit_tag I18n.t(:save), :class => "btn" %>
       <%= submit_tag I18n.t(:apply), :class => "btn" %>
+      <a href="#myWBSModal" role="button" class="btn" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal">Importer</a>
+      <%= link_to "Exporter", uos.export_path(current_module_project.id, current_component.id), :class => "btn" %>
+      <%= link_to I18n.t(:back), main_app.root_url, :class => "btn" %>
+
+      <%= submit_tag "Mettre à jour les données brutes", :class => "btn pull-right" %>
 
     </div>
-
   <% end %>
+
+  <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <%= form_tag uos.import_path(current_module_project.id, current_component.id), :multipart => true, :class => 'simple_form' do %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel"><%= I18n.t(:import) %> UO Estimation Module</h3>
+      </div>
+      <div class="modal-body">
+        <label><%= I18n.t(:file_csv) %></label>
+        <%= file_field_tag :file %>
+
+        <label><%= I18n.t(:separator) %> '<%= I18n.t(:general_csv_separator) %>') </label>
+        <%= text_field_tag :separator %>
+
+        <label><%= I18n.t(:encoding) %></label>
+        <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:close) %></button>
+        <%= submit_tag 'Import', :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+      </div>
+      <div class="loading span11 hide">
+        <h4><%= I18n.t(:please_wait_import) %> <%= image_tag 'ajax-loader.gif' %> </h4>
+      </div>
+    <% end %>
+  </div>
 
 </div>
 
 <script>
-  function load_uos(){
-    var classes = ["name","size_low","size_most_likely","size_high","weight","gross_low","gross_most_likely","gross_high","input_id"];
-
-    $("#myTable").find("tr").each(function(index){
-      initialize_gross_behaviour(index);
+  function initialize_gross_behaviour(index){
+    $(".icon-star").click(function(){
+      switch(true) {
+        case ($(this).hasClass('black-question-mark')):
+          $(this).removeClass('black-question-mark').addClass('purple-exclamation-mark');
+          $(this).next().val("purple");
+          break;
+        case ($(this).hasClass('purple-exclamation-mark')):
+          $(this).removeClass('purple-exclamation-mark').addClass('yellow-exclamation-mark');
+          $(this).next().val("yellow");
+          break;
+        case ($(this).hasClass('yellow-exclamation-mark')):
+          $(this).removeClass('yellow-exclamation-mark').addClass('green-check-mark');
+          $(this).next().val("green");
+          break;
+        case ($(this).hasClass('green-check-mark')):
+          $(this).removeClass('green-check-mark').addClass('blue-info-mark');
+          $(this).next().val("blue");
+          break;
+        case ($(this).hasClass('blue-info-mark')):
+          $(this).removeClass('blue-info-mark').addClass('orange-exclamation-mark');
+          $(this).next().val("orange");
+          break;
+        case ($(this).hasClass('orange-exclamation-mark')):
+          $(this).removeClass('orange-exclamation-mark').addClass('red-star');
+          $(this).next().val("red");
+          break;
+        case ($(this).hasClass('red-star')):
+          $(this).removeClass('red-star').addClass('black-question-mark');
+          $(this).next().val("black");
+      }
     });
 
-    $(".icon-plus").click(function() {
-      var template = $(this).closest('tr');
-      var row = template.clone();
-      row.find("input").val("")
-      template.before(row);
-      $("#myTable").find("tr").each(function(index){
+    var selector = "#size_low_" + index +
+            ", #size_most_likely_" + index +
+            ", #size_high_" + index +
+            ", #weight_" + index
 
-        for (var i=0; i < classes.length ; i++){
-          alter_input($(this), classes[i], index-2)
-        }
-
-        $(this).find("select[class='complexity']").attr('id', 'complexity_' + (index-2));
-        $(this).find("select[class='uow']").attr('id', 'uow_' + (index-2));
-        $(this).find("select[class='technology']").attr('id', 'technology_' + (index-2));
-
-        $(this).find("select[class='complexity']").attr('name', 'complexity[' + (index-2) + ']');
-        $(this).find("select[class='uow']").attr('name', 'uow[' + (index-2) + ']');
-        $(this).find("select[class='technology']").attr('name', 'technology[' + (index-2) + ']');
-
-        initialize_gross_behaviour(index-2);
+    $(selector).on("blur change", function(e){
+      $.ajax({ url:'/uos/load_gross',
+        data: 'size_low=' + $('#size_low_' + index).val()
+                + '&size_most_likely=' + $('#size_most_likely_' + index).val()
+                + '&size_high=' + $('#size_high_' + index).val()
+                + '&weight=' + $('#weight_' + index).val()
+                + '&technology=' + $('#technology_' + index).val()
+                + '&uow=' + $('#uow_' + index).val()
+                + '&complexity=' + $('#complexity_' + index).val()
+                + '&index=' + $(this).closest('tr').index()
       });
-
     });
 
-    function alter_input(elem, classname, index){
-      elem.find("input[class=" + classname + "]").attr('name', classname + '[' + (index) + ']');
-      elem.find("input[class=" +  classname + "]").attr('id', classname + '_' + (index));
-    }
+    $(", #uow_" + index +
+      ", #technology_" + index +
+      ", #complexity_" + index).on("change", function(e){
 
-    function initialize_gross_behaviour(index){
+      $.ajax({ url:'/uos/load_gross',
+        data: 'size_low=' + $('#size_low_' + index).val()
+                + '&size_most_likely=' + $('#size_most_likely_' + index).val()
+                + '&size_high=' + $('#size_high_' + index).val()
+                + '&weight=' + $('#weight_' + index).val()
+                + '&technology=' + $('#technology_' + index).val()
+                + '&uow=' + $('#uow_' + index).val()
+                + '&complexity=' + $('#complexity_' + index).val()
+                + '&index=' + $(this).closest('tr').index()
 
-      $(".icon-star").click(function(){
-        switch(true) {
-          case ($(this).hasClass('black-question-mark')):
-            $(this).removeClass('black-question-mark').addClass('purple-exclamation-mark');
-            $(this).next().val("purple");
-            break;
-          case ($(this).hasClass('purple-exclamation-mark')):
-            $(this).removeClass('purple-exclamation-mark').addClass('yellow-exclamation-mark');
-            $(this).next().val("yellow");
-            break;
-          case ($(this).hasClass('yellow-exclamation-mark')):
-            $(this).removeClass('yellow-exclamation-mark').addClass('green-check-mark');
-            $(this).next().val("green");
-            break;
-          case ($(this).hasClass('green-check-mark')):
-            $(this).removeClass('green-check-mark').addClass('blue-info-mark');
-            $(this).next().val("blue");
-            break;
-          case ($(this).hasClass('blue-info-mark')):
-            $(this).removeClass('blue-info-mark').addClass('orange-exclamation-mark');
-            $(this).next().val("orange");
-            break;
-          case ($(this).hasClass('orange-exclamation-mark')):
-            $(this).removeClass('orange-exclamation-mark').addClass('red-star');
-            $(this).next().val("red");
-            break;
-          case ($(this).hasClass('red-star')):
-            $(this).removeClass('red-star').addClass('black-question-mark');
-            $(this).next().val("black");
-        }
       });
+    });
 
-      $(".icon-trash").click(function(){
-        $(this).closest('tr').remove();
-        $("#myTable").find("tr").each(function(index){
-          initialize_gross_behaviour(index);
-        });
+    $("#uow_" + index).on("change", function(e){
+      $.ajax({ url:'/uos/update_complexity_select_box',
+        data: 'uow_id=' + $(this).val()
+            + "&index=" + index
       });
-
-      var selector = "#size_low_" + index +
-              ", #size_most_likely_" + index +
-              ", #size_high_" + index +
-              ", #weight_" + index +
-              ", #uow_" + index +
-              ", #technology_" + index +
-              ", #complexity_" + index
-
-      $(selector).on("blur change", function(e){
-        $.ajax({ url:'/uos/load_gross',
-          data: 'size_low=' + $('#size_low_' + index).val()
-                  + '&size_most_likely=' + $('#size_most_likely_' + index).val()
-                  + '&size_high=' + $('#size_high_' + index).val()
-                  + '&weight=' + $('#weight_' + index).val()
-                  + '&technology=' + $('#technology_' + index).val()
-                  + '&uow=' + $('#uow_' + index).val()
-                  + '&complexity=' + $('#complexity_' + index).val()
-                  + '&index=' + $(this).closest('tr').index()
-        });
-        e.preventDefault();
-      });
-
-      var selector = "#uow_" + index
-      $(selector).on("blur change", function(e){
-        $.ajax({ url:'/uos/update_complexity_select_box',
-          data: 'uow_id=' + $(this).val()
-                  + "&index=" + index
-        });
-        e.preventDefault();
-      });
-    }
+    });
   }
 
   $(document).ready(function(e){
-    load_uos();
+    $("#myTable").find("tr").each(function(index){
+      initialize_gross_behaviour(index);
+    });
   });
 
 </script>

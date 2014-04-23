@@ -180,7 +180,7 @@ def load_data!
 
   puts '   - Modules'
   modules=[
-      ['capitalization', 'capitalization', 'The Capitalization module.', 'no',]
+      ['initialization', 'initialization', 'The Capitalization module.', 'no',]
   ]
 
   modules.each do |i|
@@ -189,7 +189,7 @@ def load_data!
   end
 
   # Get the Capitalization Module
-  capitalization_module = Pemodule.find_by_alias_and_record_status_id("capitalization", rsid)
+  initialization_module = Pemodule.find_by_alias_and_record_status_id("initialization", rsid)
 
     puts '   - Estimancy Icons'
 
@@ -312,9 +312,9 @@ def load_data!
     #Create root pbs_project_element
     WbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :description => 'WBS-Activity Root Element', :name => "Root Element - #{project.title} WBS-Activity)")
     #wbs_project_element = wbsProjectElement.first
-  #create the capitalization project module
-  unless capitalization_module.nil?
-    cap_module_project = project.module_projects.build(:pemodule_id => capitalization_module.id, :position_x => 0, :position_y => 0)
+  #create the initialization project module
+  unless initialization_module.nil?
+    cap_module_project = project.module_projects.build(:pemodule_id => initialization_module.id, :position_x => 0, :position_y => 0)
     if cap_module_project.save
       #Create the corresponding EstimationValues
       unless project.organization.nil? || project.organization.attribute_organizations.nil?

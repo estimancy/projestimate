@@ -1,11 +1,19 @@
+<% if @inputs.empty? %>
+  <tr>
+    <td colspan="13">
+      <%= link_to "", new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus" %>
+    </td>
+  </tr>
+<% end %>
+
 <% @inputs.each_with_index do |input, i| %>
   <tr>
     <%= hidden_field_tag "module_project_id", params[:mp] %>
     <%= hidden_field_tag "input_id[#{i+1}]", input.id, :class => "input_id" %>
 
     <td class="span1">
-      <%= link_to "", "#", :class => "icon icon-plus" %>
-      <%= link_to "", "#", :class => "icon icon-trash" %>
+      <%= link_to "", new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus" %>
+      <%= link_to "", remove_item_path(input_id: input.id), :class => "icon icon-trash" %>
     </td>
     <td>
       <i class="icon icon-star icon-center <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></i>

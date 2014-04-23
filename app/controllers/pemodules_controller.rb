@@ -184,28 +184,28 @@ class PemodulesController < ApplicationController
 
   def update_link_between_modules(project, module_project, last_position_x=nil)
     #TODO opi define authorize!
-    return if @capitalization_module.nil?
-    capitalization_mod_proj = project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+    return if @initialization_module.nil?
+    initialization_mod_proj = project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
-    unless capitalization_mod_proj.nil?
+    unless initialization_mod_proj.nil?
       #We have to get first module in each col
       if last_position_x.nil?
         mps = project.module_projects.where('position_x = ?', module_project.position_x)
         mps.each do |mp|
-          ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{mp.id} AND associated_module_project_id = #{capitalization_mod_proj.id}")
+          ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{mp.id} AND associated_module_project_id = #{initialization_mod_proj.id}")
         end
         mp = project.module_projects.where('position_x = ?', module_project.position_x).order('position_y ASC').first
-        mp.update_attribute('associated_module_project_ids', capitalization_mod_proj.id) unless mp.nil?
+        mp.update_attribute('associated_module_project_ids', initialization_mod_proj.id) unless mp.nil?
       else
         positions_x = [last_position_x, module_project.position_x]
         positions_x.each do |pos_x|
           mps = project.module_projects.where('position_x = ?', pos_x).order('position_y ASC')
           mps.each do |mp|
             #Delete association for the Capitalization module
-            ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{mp.id} AND associated_module_project_id = #{capitalization_mod_proj.id}")
+            ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{mp.id} AND associated_module_project_id = #{initialization_mod_proj.id}")
           end
           first_mp = mps.first
-          first_mp.update_attribute('associated_module_project_ids', capitalization_mod_proj.id) unless first_mp.nil?
+          first_mp.update_attribute('associated_module_project_ids', initialization_mod_proj.id) unless first_mp.nil?
         end
       end
 
@@ -229,7 +229,7 @@ class PemodulesController < ApplicationController
       #Remove existing links between modules (for impacted modules only)
       ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{@project_module.id} OR associated_module_project_id = #{@project_module.id}")
 
-      #Update column module_projects link with capitalization module
+      #Update column module_projects link with initialization module
       update_link_between_modules(@project, @project_module)
     end
     redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
@@ -253,7 +253,7 @@ class PemodulesController < ApplicationController
     #Remove existing links between modules (for impacted modules only)
     ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{@project_module.id} OR associated_module_project_id = #{@project_module.id} ")
 
-    #Update column module_projects link with capitalization module
+    #Update column module_projects link with initialization module
     update_link_between_modules(@project, @project_module)
     redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
   end

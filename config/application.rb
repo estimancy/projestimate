@@ -45,7 +45,7 @@ module Projestimate
     config.autoload_paths += Dir["#{config.root}/vendor/gems/sample_model/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/sandbox/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/effort_balancing/lib"]
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/capitalization/lib"]
+    config.autoload_paths += Dir["#{config.root}/vendor/gems/initialization/lib"]
 
     config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_basic/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_advanced/lib)
@@ -58,7 +58,7 @@ module Projestimate
     config.autoload_paths += %W(#{config.root}/vendor/gems/sandbox/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/effort_balancing/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/effort_balancing/app)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/capitalization/lib)
+    config.autoload_paths += %W(#{config.root}/vendor/gems/initialization/lib)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -107,7 +107,7 @@ module Projestimate
 
     # Global constante declaration
     ALPHABETICAL = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
-    CAPITALIZATION = "capitalization"
+    CAPITALIZATION = "initialization"
     EFFORT_MAN_MONTH = "effort_man_month"
   end
 end

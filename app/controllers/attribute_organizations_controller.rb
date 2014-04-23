@@ -26,15 +26,15 @@ class AttributeOrganizationsController < ApplicationController
     authorize! :manage_organizations, Organization
     @organization = Organization.find(params[:organization_id])
     @organization_projects = @organization.projects
-    # Get the Capitalization module. It is set in the ApplicationController : @capitalization_module = Pemodule.find_by_alias("capitalization")
+    # Get the Capitalization module. It is set in the ApplicationController : @initialization_module = Pemodule.find_by_alias("initialization")
     attributes_ids = params[:organization][:pe_attribute_ids]
 
     @organization.attribute_organizations.each do |m|
       unless attributes_ids.include?(m.pe_attribute_id.to_s)
-        unless @capitalization_module.nil?
+        unless @initialization_module.nil?
           #Delete all estimations of its related projects
           @organization_projects.each do |project|
-            project_cap_module_projects = project.module_projects.where("pemodule_id = ?", @capitalization_module.id)
+            project_cap_module_projects = project.module_projects.where("pemodule_id = ?", @initialization_module.id)
             project_cap_module_projects.each do |module_project|
               project_est_values = module_project.estimation_values.where("pe_attribute_id = ?", m.pe_attribute_id)
               project_est_values.destroy_all
@@ -50,10 +50,10 @@ class AttributeOrganizationsController < ApplicationController
     attributes_ids.reject(&:empty?).each do |g|
       @organization.attribute_organizations.create(:pe_attribute_id => g.to_i)
       #Update de Capitalization's estimation_values
-      unless @capitalization_module.nil?
+      unless @initialization_module.nil?
         attr_org = @organization.attribute_organizations.where("pe_attribute_id = ?", g).first
         @organization_projects.each do |project|
-          module_project = project.module_projects.where("pemodule_id = ?", @capitalization_module.id).first
+          module_project = project.module_projects.where("pemodule_id = ?", @initialization_module.id).first
           unless module_project.nil?
             #Create corresponding Estimation_value
             ['input', 'output'].each do |in_out|
@@ -93,10 +93,10 @@ class AttributeOrganizationsController < ApplicationController
       attribute = AttributeOrganization.first(:conditions => {:pe_attribute_id => attr.to_i, :organization_id => params[:organization_id]})
       attribute.update_attribute('is_mandatory', params[:is_mandatory][i])
 
-      unless @capitalization_module.nil?
+      unless @initialization_module.nil?
         #Get Capitalization corresponding EstimationValues for each project of this organization
         organization_projects.each do |project|
-          cap_module_project = project.module_projects.find_by_pemodule_id(@capitalization_module.id)
+          cap_module_project = project.module_projects.find_by_pemodule_id(@initialization_module.id)
           unless cap_module_project.nil?
             cap_estimation_values = cap_module_project.estimation_values.where("pe_attribute_id = ?", attr.to_i)
             cap_estimation_values.each do |est_val|

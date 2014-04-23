@@ -24,8 +24,8 @@
         <td><%= text_field_tag 'default_low[]', ma.default_low, :class => "input-mini low #{ma.id} #{(ma.pe_attribute.attr_type == 'date') ? 'date-picker' : '' }" %></td>
         <td><%= text_field_tag 'default_most_likely[]', ma.default_most_likely, :class => "input-mini ml #{ma.id}" %></td>
         <td><%= text_field_tag 'default_high[]', ma.default_high, :class => "input-mini high #{ma.id}" %></td>
-        <td><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => ma.in_out), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small', :disabled => (@pemodule == @capitalization_module) %> </td>
-        <td><%= select_tag 'is_mandatory[]', options_for_select([['yes', true], ['no', false]], :selected => ma.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-mini', :disabled => ((@pemodule == @capitalization_module) && ma.is_mandatory?) %></td>
+        <td><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => ma.in_out), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small', :disabled => (@pemodule == @initialization_module) %> </td>
+        <td><%= select_tag 'is_mandatory[]', options_for_select([['yes', true], ['no', false]], :selected => ma.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-mini', :disabled => ((@pemodule == @initialization_module) && ma.is_mandatory?) %></td>
         <td><%= select_tag 'display_order[]', options_for_select((1..25).to_a, :selected => ma.display_order), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-mini' %></td>
         <td><%= select_tag 'custom_attribute[]', options_for_select([['By user', 'user'], ['By module', 'module'], ['By project', 'project']], :selected => ma.custom_attribute), :onchange => "toggleProject(this.value, #{i});", :class => 'input-small' %></td>
         <td><%= select_tag 'project_value[]', options_for_select(Project.attribute_names, :selected => ma.project_value), :style => ma.project_value.blank? ? 'display:none;' : '', :class => "input-small project_attribute_#{i}", :include_blank => true %></td>

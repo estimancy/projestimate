@@ -1,0 +1,17 @@
+<% pmod = @initialization_module_project %>
+<% unless current_module_project.nil? or pmod.nil? %>
+  <% (current_module_project.id == pmod.id) ? select_pemodule = 'selected_module_project' : 'unselected_module_project' %>
+<% end %>
+
+<% unless @initialization_module_project.nil? %>
+  <tr>
+    <td class="line_number">
+      <h6 class="text-center">0</h6>
+    </td>
+    <td colspan="<%= @module_positions_x %>">
+      <div class="<%= select_pemodule %> module_project_min <%= "#{@initialization_module.alias}_#{@initialization_module_project.position_x}_#{@initialization_module_project.position_y}" %> text-center">
+        <%= link_to @initialization_module.title, activate_module_project_path(pmod), :remote => true %>
+      </div>
+    </td>
+  </tr>
+<% end %>

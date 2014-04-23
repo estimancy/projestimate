@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
-require 'capitalization/version'
+require 'initialization/version'
 require 'date'
 
 module Capitalization

@@ -154,7 +154,6 @@ module ProjectsHelper
 
       #For wbs-activity-completion node consistency
       completion_consistency = ""
-      title = ""
       if module_project.pemodule.alias == "wbs_activity_completion"
         current_wbs_consistency = true
         pbs_level_data_for_consistency.each do |level, level_value|
@@ -279,7 +278,7 @@ module ProjectsHelper
   def display_input
     res = String.new
     unless current_project.nil?
-      pbs_project_element = @pbs_project_element || current_project.root_component
+      pbs_project_element = current_component
 
       current_project = current_module_project.project
       current_module_project_pemodule = current_module_project.pemodule
@@ -369,7 +368,7 @@ module ProjectsHelper
 
   #Display the Effort Balancing Input
   def display_effort_balancing_input(module_project, last_estimation_result)
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = current_component
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
@@ -448,7 +447,7 @@ module ProjectsHelper
 
   #Display the Effort Balancing Output
   def display_inputs_with_activities(module_project, last_estimation_result=nil)
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = current_component
     res = String.new
     if module_proxject.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
@@ -564,7 +563,7 @@ module ProjectsHelper
 
   # Display th inputs parameters view
   def display_inputs_without_activities(module_project)
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = current_component
     res = String.new
 
     #if module_project.pemodule.alias == "uos"

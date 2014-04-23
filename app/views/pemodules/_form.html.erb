@@ -2,7 +2,7 @@
 
   <ul>
     <li><a href="#tabs-1"><%= I18n.t(:pemodule_global_parameters) %></a></li>
-    <% unless @pemodule.is_typed || @pemodule.alias.eql?(@capitalization_module.alias) %>
+    <% unless @pemodule.is_typed || @pemodule.alias.eql?(@initialization_module.alias) %>
         <li><a href="#tabs-2"><%= I18n.t(:pe_attributes) %></a></li>
         <li><a href="#tabs-3"><%= I18n.t(:attributes_settings) %></a></li>
     <% end %>
@@ -73,7 +73,7 @@
     <% end -%>
   </div>
 
-  <% unless @pemodule.is_typed || @pemodule.alias.eql?(@capitalization_module.alias) %>
+  <% unless @pemodule.is_typed || @pemodule.alias.eql?(@initialization_module.alias) %>
 
       <div id="tabs-2">
         <%= form_tag('/update_selected_attributes', :method => 'get', :class => 'simple_form') do -%>
@@ -99,7 +99,7 @@
                       <span class="hidden">
                         <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
                       </span>
-                      <%= check_box_tag 'pemodule[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id), :disabled => @pemodule == @capitalization_module %>
+                      <%= check_box_tag 'pemodule[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id), :disabled => @pemodule == @initialization_module %>
                     <td><%= attr.attribute_category %></td>
                     <td><%= attr.description %></td>
                   </tr>
