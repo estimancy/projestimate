@@ -154,6 +154,7 @@ module ProjectsHelper
 
       #For wbs-activity-completion node consistency
       completion_consistency = ""
+      title = ""
       if module_project.pemodule.alias == "wbs_activity_completion"
         current_wbs_consistency = true
         pbs_level_data_for_consistency.each do |level, level_value|
@@ -176,7 +177,7 @@ module ProjectsHelper
         end
       end
 
-      res << "<tr> <td> <span class='tree_element_in_out  #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
+      res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
 
       ['low', 'most_likely', 'high', 'probable'].each do |level|
         res << '<td>'

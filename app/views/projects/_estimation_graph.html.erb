@@ -223,11 +223,11 @@
         //========================================= DATASET FOR THE CURRENT MODULE AND CURRENT COMPONENT ===========================================
 
         //create dynamique div and canvas for each output attribute graph
-//        var current_mp_outputs_attributes_aliases = <%#= @current_mp_outputs_attributes_aliases.to_json.html_safe %>;
-//        $.each(current_mp_outputs_attributes_aliases, function( index, value ) {
-////            $("#estimation_graph_box").append('<div class="span4"><canvas id="bar_canvas_'+value+'" width="300" height="500"></canvas></div>');
-//            $("#estimation_graph_box").append('<div class="span4"><canvas id="'+value+'" width="300" height="500"></canvas></div>');
-//        });
+        var current_mp_outputs_attributes_aliases = <%= @current_mp_outputs_attributes_aliases.to_json.html_safe %>;
+        $.each(current_mp_outputs_attributes_aliases, function( index, value ) {
+//            $("#estimation_graph_box").append('<div class="span4"><canvas id="bar_canvas_'+value+'" width="300" height="500"></canvas></div>');
+            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" width="400" height="400"></canvas></div>');
+        });
 
         var outputs_data_levels = ["Low", "High", "Most Likely", "probable"];
         var output_iter = -1;
@@ -370,6 +370,13 @@
         var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
         var radarChart = new Chart(radar_ctx).Radar(cocomo_advanced_input_data, radarOptions);
         //var radarChart = new Chart(radar_ctx).Radar(data_test);
+
+//        var js_current_mp_outputs_attributes_aliases = <%#= @current_mp_outputs_attributes_aliases.to_json.html_safe %> ;
+//        $.each( js_current_mp_outputs_attributes_aliases, function( key, value ) {
+//            //var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(all_attribute_data);
+//            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
+//        });
+
 
     });
 </script>
