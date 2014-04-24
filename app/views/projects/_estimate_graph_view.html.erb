@@ -25,7 +25,6 @@
             <canvas id="canvas_radar" width="400" height="400">
             </canvas>
           </div>
-
           <!-- Create Div dynamically for each output attribute -->
           <%# @current_mp_outputs_attributes_aliases.each do |attr_alias| %>
               <!--<div class="span4">-->
@@ -33,17 +32,7 @@
                 <!--</canvas>-->
               <!--</div>-->
           <%# end %>
-
           <%= render :partial => "projects/estimation_graph", :locals => { :module_project => current_module_project, :project_modules => @project_modules } %>
-
-          <!--<div class="span4">-->
-            <!--<canvas id="canvas_line" width="300" height="500">-->
-            <!--</canvas>-->
-          <!--</div>-->
-          <!--<div class="span4">-->
-            <!--<canvas id="canvas_bar" width="400" height="500">-->
-            <!--</canvas>-->
-          <!--</div>-->
         </div>
       </div>
     </div>
