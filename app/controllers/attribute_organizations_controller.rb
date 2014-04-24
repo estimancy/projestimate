@@ -26,7 +26,7 @@ class AttributeOrganizationsController < ApplicationController
     authorize! :manage_organizations, Organization
     @organization = Organization.find(params[:organization_id])
     @organization_projects = @organization.projects
-    # Get the Capitalization module. It is set in the ApplicationController : @initialization_module = Pemodule.find_by_alias("initialization")
+    # Get the Initialization module. It is set in the ApplicationController : @initialization_module = Pemodule.find_by_alias("initialization")
     attributes_ids = params[:organization][:pe_attribute_ids]
 
     @organization.attribute_organizations.each do |m|
@@ -49,7 +49,7 @@ class AttributeOrganizationsController < ApplicationController
 
     attributes_ids.reject(&:empty?).each do |g|
       @organization.attribute_organizations.create(:pe_attribute_id => g.to_i)
-      #Update de Capitalization's estimation_values
+      #Update de Initialization module 's estimation_values
       unless @initialization_module.nil?
         attr_org = @organization.attribute_organizations.where("pe_attribute_id = ?", g).first
         @organization_projects.each do |project|
@@ -94,7 +94,7 @@ class AttributeOrganizationsController < ApplicationController
       attribute.update_attribute('is_mandatory', params[:is_mandatory][i])
 
       unless @initialization_module.nil?
-        #Get Capitalization corresponding EstimationValues for each project of this organization
+        #Get Initialization corresponding EstimationValues for each project of this organization
         organization_projects.each do |project|
           cap_module_project = project.module_projects.find_by_pemodule_id(@initialization_module.id)
           unless cap_module_project.nil?

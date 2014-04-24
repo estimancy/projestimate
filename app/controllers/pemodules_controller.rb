@@ -126,8 +126,8 @@ class PemodulesController < ApplicationController
 
     #Attribute module record_status is according to the Pemodule record_status
     attributes_ids.each do |g|
-      #For Capitalization module : all attributes are input/output (both)
-      if @pemodule.alias == 'Capitalization'
+      #For Initialization module : all attributes are input/output (both)
+      if @pemodule.alias == Projestimate::Application::INITIALIZATION
         @pemodule.attribute_modules.create(:pe_attribute_id => g, :in_out => 'both', :record_status_id => @pemodule.record_status_id) unless g.blank?
       else
         @pemodule.attribute_modules.create(:pe_attribute_id => g, :record_status_id => @pemodule.record_status_id) unless g.blank?
@@ -201,7 +201,7 @@ class PemodulesController < ApplicationController
         positions_x.each do |pos_x|
           mps = project.module_projects.where('position_x = ?', pos_x).order('position_y ASC')
           mps.each do |mp|
-            #Delete association for the Capitalization module
+            #Delete association for the Initialization module
             ActiveRecord::Base.connection.execute("DELETE FROM associated_module_projects WHERE module_project_id = #{mp.id} AND associated_module_project_id = #{initialization_mod_proj.id}")
           end
           first_mp = mps.first

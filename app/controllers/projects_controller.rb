@@ -250,7 +250,7 @@ public
           @project.start_date = Time.now.to_date
         end
 
-        # Capitalization Module
+        # Initialization Module
         unless @initialization_module.nil?
           # Get the project initialization module_project or create if it doesn't exist
           cap_module_project = @project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -872,7 +872,11 @@ public
 
       if est_val.in_out == 'output' or est_val.in_out=='both'
         #begin
-          @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+          if @result_hash.nil?
+            @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
+          else
+            @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+          end
         #rescue => e
         #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
         #  puts e.message
@@ -1540,7 +1544,11 @@ public
         #  attr_data = [attr_estimation_value.string_data_low[@current_component.id], attr_estimation_value.string_data_most_likely[@current_component.id], attr_estimation_value.string_data_high[@current_component.id], attr_estimation_value.string_data_probable[@current_component.id]]
         ["low", "most_likely", "high", "probable"].each do |level|
           level_value = attr_estimation_value.send("string_data_#{level}")
-          level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
+          if @current_module_project.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio))
+            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id])
+          else
+            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
+          end
           attr_data << pbs_level_value
         end
       end
