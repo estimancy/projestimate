@@ -1,4 +1,4 @@
-require 'cocomo_advanced/version'
+require 'uos/version'
 
 module Uos
 
@@ -17,9 +17,9 @@ module Uos
     # Return effort
     #project.id, current_mp_to_execute.id, pbs_project_element_id)
     def get_effort_man_hour(*args)
-      #EstimationValue.where(:module_project_id => args[1]).first.gross_low
-      1212
+      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).first.gross_low
     end
+
   end
 
 end

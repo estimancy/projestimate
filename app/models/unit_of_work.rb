@@ -19,7 +19,7 @@
 ########################################################################
 
 class UnitOfWork < ActiveRecord::Base
-  attr_accessible :alias, :description, :name, :organization_id, :organization_technology_ids, :state
+  attr_accessible :alias, :description, :name, :organization_id, :organization_technology_ids, :state, :display_order
 
   include AASM
 
@@ -39,6 +39,6 @@ class UnitOfWork < ActiveRecord::Base
 
   validates :name, :alias, :presence => true
 
-  default_scope order('alias ASC')
+  default_scope { order('display_order ASC') }
 
 end

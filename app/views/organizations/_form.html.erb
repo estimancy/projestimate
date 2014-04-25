@@ -227,7 +227,7 @@
         </tr>
         </thead>
         <tbody>
-        <% @organization.unit_of_works.each do |uow| %>
+        <% @unitofworks.each do |uow| %>
             <% if uow.state == 'retired' %>
                 <tr style="font-style:italic; color:Red">
             <% elsif uow.state == 'draft' %>
