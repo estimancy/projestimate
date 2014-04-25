@@ -1562,7 +1562,20 @@ public
         ["low", "most_likely", "high", "probable"].each do |level|
           level_value = attr_estimation_value.send("string_data_#{level}")
           if @current_module_project.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio))
-            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id])
+            # module with activities
+            if level_value.nil?
+              pbs_level_value=nil.to_i
+            else
+              # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
+              pbs_level_with_activities = level_value[@current_component.id]
+              sum_of_value = 0.0
+              if !pbs_level_with_activities.nil?
+                pbs_level_with_activities.each do |wbs_activity_id, hash_value|
+                  sum_of_value = sum_of_value + hash_value[:value]
+                end
+              end
+              pbs_level_value = sum_of_value
+            end
           else
             level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
           end
