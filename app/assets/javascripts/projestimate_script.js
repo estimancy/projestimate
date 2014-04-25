@@ -146,8 +146,8 @@ $(document).ready(function() {
     });
 
     // Showing the estimation graph onclick on the graph button, or when component or module are changed
-    //$("#see_estimation_graph, .change_component, .change_module_project").bind('click', function() {
-//    $("#see_estimation_graph").bind('click', function() {
+    //$("#see_estimation_graph, .change_component_graph, .change_module_project_graph").bind('click', function() {
+//    $(".change_component_graph").bind('click', function() {
 //        $('.icon-signal').toggle();
 //        $('.icon-list').toggle();
 //        $('.icon-align-left').toggle();
