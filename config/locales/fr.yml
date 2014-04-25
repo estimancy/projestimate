@@ -494,7 +494,7 @@ fr:
   #Pbs_project_elements
   ancestry: "Ancêtre"
   work_element_type: "Type de l'élément de travail"
-  project_link: "Liens vers le projet"
+  project_link: "Liens vers une estimation"
   add_folder: "Ajouter une dossier"
   add_link: "Ajouter un lien"
   add_component: "Ajouter un composant"

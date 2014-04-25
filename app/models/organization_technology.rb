@@ -36,5 +36,5 @@ class OrganizationTechnology < ActiveRecord::Base
 
   validates :name, :alias, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
-  default_scope order('alias ASC')
+  default_scope { order('alias DESC') }
 end

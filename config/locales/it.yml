@@ -1,0 +1,1080 @@
+it:
+#  #standard local format
+#  # Text direction: Left-to-Right (ltr) or Right-to-Left (rtl)
+#  direction: ltr
+#  date:
+#    abbr_day_names:
+#    - Sun
+#    - Mon
+#    - Tue
+#    - Wed
+#    - Thu
+#    - Fri
+#    - Sat
+#    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+#    abbr_month_names:
+#    - ~
+#    - Jan
+#    - Feb
+#    - Mar
+#    - Apr
+#    - May
+#    - Jun
+#    - Jul
+#    - Aug
+#    - Sep
+#    - Oct
+#    - Nov
+#    - Dec
+#    day_names:
+#    - Sunday
+#    - Monday
+#    - Tuesday
+#    - Wednesday
+#    - Thursday
+#    - Friday
+#    - Saturday
+#    formats:
+#      # Use the strftime parameters for formats.
+#      # When no format has been given, it uses default.
+#      # You can provide other formats here if you like!
+#      default: ! '%d-%m-%Y'
+#      long: ! '%d %B, %Y'
+#      short: ! '%d %b'
+#    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+#    month_names:
+#    - ~
+#    - January
+#    - February
+#    - March
+#    - April
+#    - May
+#    - June
+#    - July
+#    - August
+#    - September
+#    - October
+#    - November
+#    - December
+#    # Used in date_select and datime_select.
+#    order:
+#    - :day
+#    - :month
+#    - :year
+#
+#  datetime:
+#    distance_in_words:
+#      about_x_hours:
+#        one: about 1 hour
+#        other: about %{count} hours
+#      about_x_months:
+#        one: about 1 month
+#        other: about %{count} months
+#      about_x_years:
+#        one: about 1 year
+#        other: about %{count} years
+#      almost_x_years:
+#        one: almost 1 year
+#        other: almost %{count} years
+#      half_a_minute: half a minute
+#      less_than_x_minutes:
+#        zero: "less than a minute"
+#        one: less than a minute
+#        other: less than %{count} minutes
+#      less_than_x_seconds:
+#        zero: less than 1 second
+#        one: less than 1 second
+#        other: less than %{count} seconds
+#      over_x_years:
+#        one: over 1 year
+#        other: over %{count} years
+#      x_months:
+#        one: 1 month
+#        other: ! '%{count} months'
+#      x_weeks:
+#        one: 1 week
+#        other: ! '%{count} weeks'
+#      x_hours:
+#        one: 1 hour
+#        other: ! '%{count} hours'
+#      x_days:
+#        one: 1 day
+#        other: ! '%{count} days'
+#      x_minutes:
+#        one: 1 minute
+#        other: ! '%{count} minutes'
+#      x_months:
+#        one: 1 month
+#        other: ! '%{count} months'
+#      x_seconds:
+#        one: 1 second
+#        other: ! '%{count} seconds'
+#    prompts:
+#      day: Day
+#      hour: Hour
+#      minute: Minute
+#      month: Month
+#      second: Seconds
+#      year: Year
+#      week: Week
+#
+#  time:
+#    formats:
+#      default: "%d/%m/%Y %I:%M %p"
+#      time: "%I:%M %p"
+#      short: ! "%d %b %H:%M"
+#      long: ! '%d %B, %Y %H:%M'
+#    am: "am"
+#    pm: "pm"
+#
+#  number:
+#    format:
+#      separator: .
+#      delimiter: ! ','
+#      precision: 3
+#      significant: false
+#      strip_insignificant_zeros: false
+#    currency:
+#      format:
+#        format: ! '%u%n'
+#        unit: £
+#        separator: .
+#        delimiter: ! ','
+#        precision: 2
+#        significant: false
+#        strip_insignificant_zeros: false
+#    percentage:
+#      format:
+#        delimiter: ''
+#    precision:
+#      format:
+#        delimiter: ''
+#    human:
+#      decimal_units:
+#        format: ! '%n %u'
+#        units:
+#          billion: Billion
+#          million: Million
+#          quadrillion: Quadrillion
+#          thousand: Thousand
+#          trillion: Trillion
+#          unit: ''
+#      format:
+#        delimiter: ''
+#        precision: 3
+#        significant: true
+#        strip_insignificant_zeros: true
+#      storage_units:
+#        format: ! '%n %u'
+#        units:
+#          byte:
+#            one: Byte
+#            other: Bytes
+#          gb: GB
+#          kb: KB
+#          mb: MB
+#          tb: TB
+#
+#  support:
+#    array:
+#      last_word_connector: ! ', and '
+#      two_words_connector: ! ' and '
+#      words_connector: ! ', '
+#
+#  errors: &errors
+#    format: ! '%{attribute} %{message}'
+#    messages:
+#      accepted: must be accepted
+#      blank: can't be blank
+#      confirmation: doesn't match confirmation
+#      empty: can't be empty
+#      equal_to: must be equal to %{count}
+#      even: must be even
+#      exclusion: is reserved
+#      greater_than: must be greater than %{count}
+#      greater_than_or_equal_to: must be greater than or equal to %{count}
+#      inclusion: is not included in the list
+#      invalid: is invalid
+#      less_than: must be less than %{count}
+#      less_than_or_equal_to: must be less than or equal to %{count}
+#      not_a_number: is not a number
+#      not_an_integer: must be an integer
+#      odd: must be odd
+#      record_invalid: ! 'Validation failed: %{errors}'
+#      taken: has already been taken
+#      too_long:
+#        one: is too long (maximum is 1 character)
+#        other: is too long (maximum is %{count} characters)
+#      too_short:
+#        one: is too short (minimum is 1 character)
+#        other: is too short (minimum is %{count} characters)
+#      wrong_length:
+#        one: is the wrong length (should be 1 character)
+#        other: is the wrong length (should be %{count} characters)
+#    template:
+#      body: ! 'There were problems with the following fields:'
+#      header:
+#        one: 1 error prohibited this %{model} from being saved
+#        other: ! '%{count} errors prohibited this %{model} from being saved'
+#
+#  helpers:
+#    select:
+#      prompt: Please select
+#    submit:
+#      create: Create %{model}
+#      submit: Save %{model}
+#      update: Update %{model}
+#
+#  # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
+#  activemodel:
+#    errors:
+#      <<: *errors
+#  activerecord:
+#    errors:
+#      <<: *errors
+# #  Menu
+#  projects: "progetti"
+#  label_menu_projects: " progetti "
+#  project: " progetto "
+#  recent_project: " progetti recenti"
+#  home: " mia stima "
+#  all_projects: " Tutte le stime "
+#  create_new_project: " Crei una nuova stima "
+#  label_user_security_resume: " Riprendere di titoli utilizzatori "
+#  label_group_security_resume: " Riprender di titoli di gruppo "
+#
+#  label_menu_library: " Biblioteca "
+#  project_global_setting: " Settings Progetto globali "
+#  estimation_setting: " Setting di preventivo "
+#  organization_setting: " Setting di organizzativo "
+#  wbs_activities: " WBS-attività "
+#  template: " Maschera "
+#
+#  label_menu_admin: "Admin"
+#  administration: " Setting di Admin "
+#  user: " Utente "
+#  groups: " Gruppi "
+#  label_role: " Ruoli "
+#  global_permissions: " Permessi global "
+#  text_global_permission: " Usi questa pagina per assegnare "
+#  all_permissions: " Permessi "
+#  project_permissions: " Proietti permessi "
+#  master_permissions: " Domini permessi "
+#  auth_methods: " Metodi di autenticazione "
+#  events: " Eventi "
+#
+#  master: " Domini parametri "
+#  label_menu_master_admin: " Domini Admin "
+#  project_global_parameters: " Progetto parametri globali "
+#  pemodule_global_parameters: " Modulo parametri globali "
+#  pe_attributes: " Attributi "
+#  attribute_categories: " Categorie di attributi "
+#  labor_categories: " Categorie di lavoro "
+#  projestimate_module: " Moduli "
+#  work_element: " Lavori elementi "
+#  security_level: " Livelli di titoli "
+#  languages: " Lingue "
+#  label_language: "Lingua"
+#  translations: " traduzione "
+#  community: "comunità "
+#
+#  connected_as: " Connesso come "
+#  logout: "Logout ; Chiusare session"
+#  help: " aiutare "
+#  services: "servizi"
+#  about: "circa"
+#
+#  #attributes
+#  name: "nome"
+#  category: "Categoria"
+#  description: " descrizione "
+#  alias: "Alias"
+#  change_comment: "Commento (spieghi e giustifichi la Sua richiesta di cambio)"
+#  record_status: " Status record "
+#  label_object_status: "Status"
+#  custom_value: "Custom value (if status=custom)"
+#  notice_no_module_use_current_attribute: " Non c'è nessun modulo che usa il \"%{value}\" attributo "
+#  text_finduse_attribute: " Elenco di oggetti che usano i \"%{value}\" attributo "
+#  text_module_name: " Moduli "
+#  text_attribute_specification_in_current_module: " Come l'attributo è usato in questo modulo "
+#  text_use_as: " Usi come "
+#  text_organization_name: " Organizzazioni "
+#  text_attribute_specification_in_current_organization: " Come l'attributo è usato in organizzazione corrente "
+#
+#  wbs_activity_elements: " Elementi di WBS-attività "
+#
+#  #CRUD
+#  save: "salvare "
+#  apply: "applicare"
+#  save_and_create: "Salvi e crei un nuovo "
+#  edit: ""
+#  delete: "cancellare "
+#  cancel: "cancellare "
+#  show: "mostrare "
+#  restore: "ripristinare "
+#  validate: "validare "
+#  update: "ristrutturare "
+#  empty: "nessuno" ou " vuoto "
+#  are_you_sur: "è Lei sicuro?"
+#  back: "Indietro "
+#  restore_title: "Ripristini cambi "
+#  validate_title: "Convalida cambi "
+#  previous: "< Prima"
+#  next: "Prossimo >"
+#  of: "di" ou " da "
+#  display: "Monitor"
+#  record_per_page: "record per pagina "
+#  quick_search: "Cercare rapida "
+#  search: "Cercare"
+#  search_action: "Cercare scelta"
+#  search_all_words: "tutto parole"
+#  search_any_words: "del parole"
+#  search_phrase: "frase "
+#  search_query: "quesito"
+#  import: " importare "
+#  export: " esportare "
+#  up: "Si muova su"
+#  down: "Si muova in giù"
+#
+#  #Project settings
+#  activity_categories: "Categorie di attività "
+#  acquisition_categories: "Categorie di acquisizione "
+#  platform_categories: "piattaforma di categorie"
+#  project_categories: "Progetto categorie "
+#  project_areas: " Progetto aree "
+#  acquisition_category: "Categoria di acquisizione "
+#  platform_category: "piattaforma della categoria "
+#  project_category: "Progetto della categoria"
+#  project_area: "area di progetto"
+#
+#  #Project areas
+#  edit_project_area: " Compili il \"%{value}\" progetto area ..."
+#  new_project_area: " Nuova area di progetto"
+#
+#  #Project categories
+#  edit_project_category: "Compili il \"%{value}\" progetto della categoria..."
+#  new_project_category: " Nuova categoria di progetto"
+#
+#  #Platform categories
+#  edit_platform_category: "Compili il \"%{value}\" piattaforma della categoria..."
+#  new_platform_category: "nuova categoria di piattaforma"
+#
+#  #Acquisition categories
+#  edit_acquisition_category: "Compili il \"%{value}\" categoria di acquisizione..."
+#  new_acquisition_category: " Nuova categoria di acquisizione"
+#  notice_acquisition_category_successful_created: " La categoria di acquisizione fu creata con successo."
+#  notice_acquisition_category_successful_destroyed: " La categoria di acquisizione fu cancellata con successo."
+#  warning_acquisition_category_cannot_be_updated: " Questa categoria di Acquisizione non può essere compilata, cambi precedenti non sono stati convalidati ancora "
+#  notice_acquisition_category_successful_updated: " La categoria di acquisizione fu aggiornata con successo."
+#
+#  #Admin_settings
+#  edit_admin_settings: " Compili i setting di admin \"%{value}\" ..."
+#  new_admin_settings: " Nuovo Setting di admin "
+#  key: " Chiave "
+#  value: "Valore"
+#
+#  #attributes
+#  aggregation: " aggregazione "
+#  validation_options: " Convalide e le opzioni "
+#  attributes_type: "Tipo"
+#  edit_pe_attribute: "Compili il \"%{value}\" attributo ..."
+#  edit_attribute_category: "Compili el \"%{value}\" categoria ..."
+#  new_pe_attribute: "Nuovo attributo"
+#  new_attribute_category: "Nuova categoria diattributi"
+#
+#  #auth_method
+#  server_name: " Nome di sistema di servizio "
+#  port: "Porto"
+#  certificate: " Certificato "
+#  base_dn: "LDAP Base DN"
+#  user_name_attribute: " nome comune (i.e. common name)"
+#  ldap_attributes: " LDAP attribuisce per l'utente "
+#  ldap_bind_dn: " LDAP lega conto DN "
+#  ldap_bind_encrypted_password: "LDAP bind Password"
+#  on_the_fly_user_creation: "Creazione di utente rapida "
+#  warning_on_the_fly_user_creation: " Non può essere bianco se 'la creazione di utente rapida' è attivato "
+#  first_name_attribute: "nome"
+#  last_name_attribute: "Cognome"
+#  email_attribute: "Email"
+#  initials_attribute: "Sigla"
+#  priority_order: " Ordine prioritario"
+#  edit_auth_method: "Compili el\"%{value}\" metodo di autenticazione..."
+#  new_auth_method: "Nuovo methode di autenticazione"
+#  encryption: " Metodo di cifratura "
+#
+#  #currencies
+#  currencies: "Valute"
+#  edit_currency: "Compili valuta "
+#  new_currency: "Nuova valuta"
+#
+#  #event_types
+#  icon_url: "Url icon"
+#  edit_event_type: " Compili un tipo di evento "
+#  new_event_type: "nuovo typo di evento"
+#  event_types: "Typo di evento"
+#
+#  #events
+#  start_date: "Iniziare data"
+#  end_date: " Fine di data "
+#  event_type_id: " Id di evento "
+#  project_id: "Progetto id"
+#  edit_event: "Compili un evento "
+#  new_event: "Nuovo envento"
+#
+#  #groups
+#  global: "Globale"
+#  text_group_associated_users: "Utenti associati (membro di utenti del gruppo)"
+#  edit_group: " Compili il gruppo \"%{value}\" ..."
+#  new_group: "Nuovo gruppo"
+#
+#  #Labor categories
+#  edit_labor_category: "Compili il \"%{value}\" Categoria di lavoro..."
+#  new_labor_category: "Nuova categoria di lavaro"
+#
+#  #languages
+#  edit_language: "Compili il \"%{value}\" lingua ..."
+#  new_language: "Nuova lingua"
+#  local: "Locale"
+#
+#  #estimation_values
+#  in_out: " In / fuori "
+#  input: "Contributo"
+#  output: "uscita"
+#  both: "Contributo e uscita"
+#  edit_estimation_value: "Compili un attributo di progetto di modulo"
+#  new_estimation_value: "Nuovo modelo de attributo di progetto"
+#
+#  #module_project
+#  edit_module_project: "Compili un modelo di progetto"
+#  new_module_project: "Nuovo modelo di progetto"
+#  related_attributes: "Attributi riferiti "
+#  module_ratio_settings: "Setting di rapporto "
+#  module_links_settings: "Collegamenti di moduli "
+#  mandatory: "obbligatorio"
+#  links_to: "Collegamenti a"
+#  current_link: "Collegamento corrente"
+#  edit_link: "Compili un collegamento"
+#  module_name: "Nome del modulo"
+#  pe_module: "Pe-Modulo"
+#  position: "Posizione "
+#  associate_Product_element_module_project: "Associato un prodotto-elemento con corrento modelo di progetto"
+#  ratio_settings_message: "Non c'è nessun parametro di Rapporto per mettere per questo modulo."
+#  select_unselect_all: "Selezioni / Unselect tutto"
+#
+#  #organization_labor_categories
+#  labor_category: "Categoria di lavoro"
+#  level: "piatto"
+#  cost_per_hour: " Costi per ora "
+#  base_year: "Anno vile"
+#  currency: "Valuta"
+#  hour_per_day: "Ora al giorno"
+#  days_per_year: "Giorni per anno"
+#  edit_organization_labor_category: "Compili el \"%{value}\" organizzazione della categoria di lavoro..."
+#  new_organization_labor_category: "Nuova organizzazione della categoria di lavoro"
+#
+#  #Organization
+#  organizations: "Organizazzione"
+#  edit_organization: "Compili le \"%{value}\" organizazzione ..."
+#  new_organization: "Nuove organizazzione"
+#  inflation: "Inflazione"
+#  organizationals_labors_categories: "Organizzativi di categorie di lavaro"
+#  text_organization_attributes: "Attributi sui quali l’organizzazione intende di capitalizzare (suo sarà aggiunto automaticamente al 'la capitalizzazione' il modulo)"
+#  text_organization_attributes_settings: 'Settings for attributes selected on the "attributo" tab'
+#  organization_technology: "Tecnologica"
+#  new_organization_technology: "Nuova tecnologica "
+#  text_organization_technology: "Tecnologie usato nell'organizzazione (usato maneggiare unità di lavori da tecnologia)"
+#  organization_subcontractor: " appaltatore "
+#  text_organization_subcontractor: " Subappaltatori dell'organizzazione "
+#  new_subcontractor: "Nuovo subappaltatore "
+#  edit_subcontractor: "Compili el subappaltatore\"%{value}\" ..."
+#  text_subcontractor: " Maneggi i subappaltatori della Sua organizzazione"
+#  productivity_ratio: " Rapporto di produttività "
+#
+#  #Pbs_project_elements
+#  ancestry: "stirpe"
+#  work_element_type: " Lavori tipo di elemento "
+#  project_link: " Collegamento di progetto "
+#  add_folder: " Aggiunga un depliant"
+#  add_link: "Aggiunga un collegamento"
+#  add_component: "Aggiunga un componente"
+#
+#  #peicons
+#  icon: "Icona"
+#  text_icon_message: " Lei può telecaricare alcun archivio di immagine di PNG più piccolo di 10 kilobyte dalla Sua passeggiata dura.Noi ridimensioneremo immagini automaticamente grandi a 16x16 pixel."
+#
+#  edit_icon: "Compili un \"%{value}\" icona ..."
+#  new_icon: "Aggiungia un icon"
+#  choose_icon: "Scelga / cambio un icona"
+#  icons: "Icone"
+#  actions: " Azioni "
+#
+#  #pemodules
+#  low: " Valore predefinito (In basso)"
+#  likely: "Valore predefinito (più Più Probabilmente)"
+#  high: "Valore predefinito (In alto)"
+#  custom_attribute: "Attributo di costume"
+#  attributes_settings: "Setting di attributi"
+#  label_compatibility: "Elemento di PBS compatibile (per contributo di dati)"
+#  pe_attribute_name: "Nome di attributo"
+#  attribute_category_name: "Nome della categoria"
+#  selected: "Selezionato "
+#  edit_pemodule: "Compili el \"%{value}\" modulo ..."
+#  new_pemodule: "Nuovo modulo "
+#
+#  #permissions
+#  is_permission_project: " È un permesso di progetto "
+#  is_permission_master: "È un permesso di padrone"
+#  label_associated_object: "Oggetto associato"
+#  edit_permission: "Compili el  \"%{value}\" permesso ..."
+#  new_permission: "Nuovo permesso "
+#  permissions: "Permessi"
+#
+#  #project_securities
+#  edit_project_security: "Compili progetto sicurezz "
+#
+#  new_project_security: "Nuovo progetto sicurezza"
+#  full_control: "Pieno controllo"
+#  define: "Definisca"
+#  modify: "Cambi"
+#  comment: "Commento"
+#  read_only: "Legga solamente"
+#
+#  #project_security_levels
+#  edit_project_security_level: "Compili el  \"%{value}\" progetto di livello sicurezza..."
+#  new_project_security_level: "Nuovo progetto di livello sicurezza"
+#
+#  #projects
+#  edit_project: "Compili el progetto \"%{value}\" ..."
+#  new_project: "Nuvo progetto "
+#  new_project_from: "Nuovo progetto da maschera "
+#  wbs_product: "WBS Prodotto"
+#  wbs_activity: "WBS Attività "
+#  available_wbs_activity: "Le WBS-attività disponibili dalla biblioteca, col loro tables\n di rapporto associato (la tavola di rapporto Selezionata sarà usata come tavola di rapporto predefinita)"
+#  button_add: "Aggiunga"
+#  label_wbs_activity_ratio: "Tavola di rapporto"
+#  estimation_plan: "Piano di preventivo"
+#  button_estimation_plan: "Compili piano di preventivo"
+#  securities: " Titoli " ou " sicurezze "
+#  calendar: "Calendario"
+#  resources: "Risorse"
+#  analyse: "Analizzi"
+#  state: "stato"
+#  hidden_element: " mostrare elemento ignoto"
+#  associate_pbs_element: "associato PBS-elemento"
+#  user_securities_resume: "Resume di titoli di utente"
+#  group_securities_resume: "Resume di titoli di gruppo"
+#  group_name: "nome del gruppo"
+#  global_properties: "Proprietà globali"
+#  text_confirm_project_deletion: "È Sicuro Lei vuole cancellare questo progetto e tutti i dati relativi?"
+#  warning_need_check_box_confirmation: "Lei ha bisogno di confermare cancellatura di progetto con controllare-scatola"
+#  label_project_is_model: "È una maschera di progetto"
+#  is_model: "Maschera"
+#
+#
+#  #Record_statuses
+#  edit_record_status: "Compili el \"%{value}\" status record..."
+#  new_record_status: " nuovo status record "
+#
+#  #Reference_value
+#  edit_reference_value: "Compili el \"%{value}\" referenza della valore..."
+#  new_reference_value: "Nova referenza della valore"
+#
+#  #searches
+#  search_results: "Cercare resultati "
+#  no_results: "No resultati fondo per "
+#
+#  #sessions
+#  button_ask_account: "Richieda un conto"
+#  send_request: "Sottoponga"
+#  login_name_or_email: "Login nome or email"
+#  button_forgotten_password: "Perduta el password?"
+#  open_url_id: "Open Url Id"
+#  ldap_account_or_application_account: "User's login id or email (or LDAP account id)."
+#  not_yet_supported: "Non ancora sostenne"  ldap_account_password_or_application_account_password: "User's password (or LDAP account password)"
+#  text_ask_new_account: "Richiedere un conto, clicchi 'Richieda un conto' poi segua istruzioni."
+#  text_forgotten_password: "Clicchi to 'perduta password' poi segue gli istruzioni. "
+#  additional_guidance: "Lei può trovare guida supplementare"
+#  here: " qui "
+#  or: " o "
+#  contact: "contatto"
+#  administrators: " gli amministratori"
+#  button_need_help: "Il bisogno aiuta?"
+#  connect: "Login"
+#  connect_me: "registrarsi "
+#  remember_me: "Mi ricordi"
+#  edit_password: " Aggioni el suo password "
+#  text_forgotten_password_help: "Lei riceverà un e-mail con un collegamento che permette a Lei di cambiare el suo password."
+#  ask_new_account_help: "Lei riceverà un e-mail di conferma, ma Lei deve aspettare finché un amministratore abilita il Suo conto.\nWhen che il Suo conto è attivato dall'amministratore, Lei riceve un secondo e-mail di conferma."
+#  ask_new_account_help2: "Lei riceverà un e-mail di conferma col Suo login e el suo password "
+#
+#  #translations
+#  choose_locale: "Scelga un locale"
+#  save_translations: "Salvi traduzioni"
+#
+#  #user_mailer
+#  considered_message: "La Sua richiesta di creazione di conto è stata presa pienamente in considerazione."
+#  your_identifiants_message: "Le Sue credenziali sono "
+#  not_active_message: "Il vostro conto non è ancora attivo."
+#  cordialy_message: " sinceramente"
+#
+#  projestimate_equipe_message: "The ProjEstimate team"
+#  hello: "Buongiorno"
+#
+#  #users
+#  identity: "L'identità di utente"
+#  first_name: "Nome "
+#  last_name: "Cognome "
+#  login_name: "Login nome"
+#  email: "Email"
+#  initials: "Sigla "
+#  text_user_associated_groups: "I gruppi Associati di utente (raggruppa l'utente è un membro)"
+#  text_user_associated_organizations: "Gli organizzazioni Associate di utente (organizzazioni alle quali l'utente è un membro)"
+#  text_group_associated_projects: "Progetti associati (progetti nei quali il gruppo ha accesso)"
+#  text_user_associated_projects: "Progetti associati (progetti nei quali l'utente ha accesso)"
+#  settings: "Preferenze"
+#  authentication: "L'Autenticazione di utenti"
+#  password: "Password"
+#  password_confirmation: "Conferma del Password"
+#  auth_type: "Autenticazione di utente"
+#  informations: "Le Informazioni di utente"
+#  user_status: "Status di utente"
+#  created_at: " Creato a"
+#  updated_at: "Aggiornato a"
+#  last_login: "Ultimo login"
+#  previous_login: "Prima login"
+#  time_zone: " Zona di tempo"
+#  object_per_page: " Oggetti per pagina"
+#  assistance: " Assistenza"
+#  notifications: " Notificazioni"
+#  display_format: "Configurazione di mostra"
+#  decimal: "Decimale"
+#  thousands: " Migliaia"
+#  first_day: "Prima giorno di settimana"
+#  first_week: "Prima settimana di anno"
+#  export_preferences: "Esporti preferenze"
+#  execute_estimation: " Esegua processo di preventivo"
+#  edit_user: " Compili utente \"%{value}\" ..."
+#  new_user: "Nuovo utente  ..."
+#  users: "Utente"
+#  filters: "Filtri "
+#
+#  #wbs activities
+#  edit_wbs_activity: "Compilando el \"%{value}\" wbs attivite..."
+#  new_wbs_activity: "Nuove wbs activite"
+#  import_wbs_activity: "Nueve wbs activite dall'archivio di CSV "
+#  guide_import_wbs_activity: "Crei un nuova WBS-attività da un elenco delle attività contenuto in un archivio di CSV (<outline_number>;<element_name>;<element_description>)"
+#  guide_create_wbs_activity: "Crei un nuovo WBS-activities manulatmente"
+#  sum_of_ratio_values: "Somma di valori di rapporto :"
+#  one_activity_element: "Un Attività-elemento "
+#  all_activity_elements: "tutti gli Attività-elementi"
+#  set_of_activity_elements: "Un set di attività-elementi"
+#  new_activities: "Nuove activite"
+#  general: "Generale"
+#  file_csv: "Archivio (csv solamente)"
+#  file_xls: "Eccella archivio"
+#  separator: " Separatore (la contumacia:"
+#  encoding: "Codificando"
+#  please_wait_import: "Per favore aspetti durante importazione..."
+#  close: "Vicino"
+#  select_ratio_table: "Selezioni la tavola di rapporto per esporre "
+#  wbs_elements: "Elementi (vista di albero) di Wbs"
+#  ratios: "Rapporti"
+#  ratios_elements: "Elementi di rapporto"
+#  change_ratio: " Cambi rapporto "
+#
+#  #wbs activity elements
+#  edit_wbs_activity_element: "Compili un elemento di attività di wbs"
+#  new_wbs_activity_element: "Nuovo elemento di attività di wbs "
+#  parent: "Genitore"
+#
+#  #wbs activity ratio element
+#  edit_wbs_activity_ratio_element: "Compili un rapporto di elemento di attività di wbs"
+#  new_wbs_activity_ratio_element: "Nuevo rapporto di elemento wbs actività"
+#  one_reference_value: " Solo valore di referenza"
+#  set_of_reference_value: "Un set di valori di referenza"
+#
+#  # wbs activity ratios
+#  edit_wbs_activity_ratio: "Compili un rapporto di wbs actività " 
+#  new_wbs_activity_ratio: "Nuevo rapporto di wbs actività"
+#
+#  #wbs project elements
+#  edit_wbs_project_element: "Compili un elemento di progetto"
+#  new_wbs_project_element: "Nuevo elemento di wbs progetto"
+#  additional_description: " Descrizione supplementare "
+#  exclude: " Escluda "
+#  author: " Autore"
+#  warning_wbs_not_complete: "\"%{value}\" non è completo : tutti i valori (in basso, più probabile ed alto) devono essere messi correttamente."  warning_wbs_not_consistent: " Somma di sforzi di bambini è diversa dallo sforzo di nodo."
+#  warning_caution: "Cautela"
+#
+#  #work element type
+#  edit_work_element_type: "Compili el \"%{value}\" lavoro tipo di elemento..."
+#  new_work_element_type: "Nuevo tipo di elemento del lavoro"
+#
+#  #messages
+#  restoring: " Conferma ripristinando questo record come definito?"
+#  validation: "Conferma convalidazione di cambi su questo record?"
+#  global_settings_updated: " Setting globali sono stati aggiornati."  attributes_settings_updated: " Attributti setting sono stati aggiornati "
+#  refers_to: " Nessuno moduli di ProjEstimate sono stati installati. Per favore assegni a "
+#  official_documentation: "Documentazione ufficiale"
+#  to_install_module: "installare i moduli di ProjEstimate."
+#  notice_no_estimation_plan_defined: "Nessun piano che valuta è stato definito."
+#  select_module: "Selezioni un modulo dall'elenco. I cambi sono salvati automaticamente."
+#  step: "Passo"
+#
+#  general_csv_separator: ','
+#  general_csv_decimal_separator: '.'
+#  general_csv_encoding: ISO-8859-1
+#
+#  simple_form:
+#    "si": 'Yes'
+#    "no": 'No'
+#    required:
+#      text: 'required'
+#      mark: '*'
+#    error_notification:
+#      default_message: " Per favore riveda i problemi sotto:"
+#    options:
+#      pemodule:
+#        with_activities:
+#          "no": 'No'
+#          yes_for_input: 'Yes for input'
+#          yes_for_output_with_ratio: 'Yes for output with ratio'
+#          yes_for_output_without_ratio: 'Yes for output without ratio'
+#          yes_for_input_output_with_ratio: 'Yes for input/output with ratio'
+#          yes_for_input_output_without_ratio: 'Yes for input/output without ratio'
+#
+#  #Error, warning, notice messages
+#  warning_wbs_activity_ratio_elt_value_range: " Per favore, entri valore fra] 0 - 100]"
+#  text_master_force_edit: Noi non offriamo alcun flusso di lavoro per cambiare questa tavola, se Lei continua Lei compilerà il 'definito' record stesso. Per favore confermi Lei accetta continuare"
+#
+#  text_checking_new_release: " Controllando per liberazione nuova"  text_projestimate_open_source: " ProjEstimate è fonte aperta e rilasciò sotto le condizioni del"
+#  text_projestimate_open_source_references: " Del componente esterno o contributi legati in un fascio con ProjEstimate possono essere pubblicati le altre licenze AGPLv3-compatibili sotto. Per questi, per favore si riferisca agli archivi di fonte attinenti e/o archivi di licenza, nell'albero di codice origine e/o al rapporto di dipendenze "
+#  text_latest_update: "Latest update"
+#  text_latest_masterData_repository_update: " Ultimo aggiornamento di Ricettacolo di MasterData"
+#  text_download_master_data: "Scarichi ed applichi l'aggiornamento di MasterData"
+#  text_please_wait: " Per favore aspetti. Ci potrebbe prendere tempo"  edit_project_element: "Compili el \"%{value}\" elemento del WBS-Actività ..."
+#  warning_administration_setting_cant_be_edited: " Questa amministrazione che mette record non può essere compilata, cambi precedenti non sono stati convalidati ancora."
+#  notice_administration_setting_successful_created: "Admin setting fu creato con successo."
+#  notice_administration_setting_successful_updated: "Admin setting fu aggiornato con successo."
+#  error_administration_setting_failed_update: " Un errore è accaduto durante l'aggiornamento."  notice_administration_setting_successful_deleted: "Admin setting fu cancellato con successo."
+#  warning_masterdata_record_cant_delete: "Lei non può cancellare record di dati di padrone"
+#  unselectable: "unselectable"
+#  error_access_denied: "L'accesso negò."
+#  error_connection_refused: " Il collegamento rifiutò - Tenti di ricominciare SOLR"
+#  warning_attribute_cant_be_edit: "Questo Attributo non può essere compilato, perché i cambi precedenti non sono stati convalidati ancora."
+#  warning_auth_method_cant_be_edit: "Questo metodo di Autenticazione non può essere compilato, perché i cambi precedenti non sono stati convalidati ancora."
+#  warning_master_record_cant_be_edit: " Il record di padrone non può essere compilato, che funziona della domanda è richiesto per il corretto"  warning_master_record_cant_be_delete: "Il record di padrone non può essere cancellato, che funziona della domanda è richiesto per il corretto"  notice_auth_method_successful_deleted: "Il metodo di autenticazione fu cancellato con successo."
+#  notice_auth_method_successful_updated: " Il metodo di autenticazione fu aggiornato con successo."
+#  notice_auth_method_successful_created: "Il metodo di autenticazione fu creato con successo."
+#  warning_currency_cant_be_edit: "Questa valuta non può essere compilata, cambi precedenti non sono stati convalidati ancora."
+#  notice_currency_successful_updated: "La valuta fu aggiornata con successo."
+#  notice_currency_successful_deleted: "Cancellata di fu di valuta di La governano il successo."
+#  notice_estimation_value_successful_updated: " Il Valore di preventivo fu aggiornato con successo."
+#  warning_event_type_cant_be_edit: "Questo tipo di evento non può essere compilato, cambi precedenti non sono stati convalidati ancora."
+#  notice_event_type_successful_updated: "Il tipo di evento fu aggiornato con successo."
+#  notice_event_type_successful_deleted: "Il tipo di evento fu cancellato con successo."
+#  notice_event_successful_updated: "L'evento fu aggiornato con successo."
+#  notice_event_successful_created: "L'evento fu creato con successo."
+#  warning_group_cant_be_edit: "Questo Gruppo non può essere compilato, perché i cambi precedenti non sono stati convalidati ancora."
+#  notice_group_successful_deleted: "Il gruppo fu cancellato con successo."
+#  notice_group_successful_updated: "Il gruppo fu aggiornato con successo."
+#  warning_cant_update_yourself: "Lei non può aggiornarsi, come Lei già è su Esempio di Padrone"
+#  same_schema_version: "Stessa versione di schema"
+#  notice_projestimate_data_successful_updated: "I dati di Projestimate sono stati aggiornati con successo."
+#  repository_up_to_date: " Il vostro ricettacolo deve essere insieme su"  notice_masterdata_already_latest: " Lei già ha l'ultimo MasterData."
+#  warning_db_schema_differ_to_masterdata: "Il vostro schema di DB locale differisce al MasterData uno, per favore controlli per modifiche o corsa 'db:migrate di rastrello' il comando "
+#  error_default_data_failed_update: "!!! Avvertendo - l'Errore: Dati predefiniti non furono caricati, per favore investighi. Forse corra exec in blocco rastrellano sunspot:solr:start RAILS_ENV=your_environment"
+#  error_default_data_exception_update: "!!! Avvertendo - l'Eccezione: Dati predefiniti non furono caricati, per favore investighi... Forse gestisca db:create e compiti di db:migrate."
+#  warning_labor_category_cant_be_edit: "Questa categoria di lavoro non può essere compilata, cambi precedenti non sono stati convalidati ancora."
+#  notice_labor_category_successful_created: " La categoria di lavoro fu creata con successo."
+#  notice_labor_category_successful_updated: "La categoria di lavoro fu aggiornata con successo."
+#  notice_labor_category_successful_deleted: " La categoria di lavoro fu cancellata con successo."
+#  warning_language_cant_be_edit: " Questa lingua non può essere compilata, cambi precedenti non sono stati convalidati ancora"
+#  notice_language_successful_created: "La lingua fu creata con successo."
+#  error_update_retired_language: "Unable to update 'Retired' language""Creata di fu di lingua di La governano il successo."
+#  notice_language_successful_updated: "La lingua fu aggiornata con successo."
+#  error_language_failed_update: " Errore: aggiorni fallito,"
+#  notice_language_successful_deleted: "La lingua fu cancellata con successo."
+#  notice_module_project_successful_created: "Il progetto di modulo fu creato con successo."
+#  notice_module_project_successful_updated: "Il progetto di modulo fu aggiornato con successo."
+#  notice_organization_labor_successful_created: "La categoria di lavoro di organizzazione fu creata con successo."
+#  notice_organization_labor_successful_updated: " La categoria di lavoro di organizzazione fu aggiornata con successo."
+#  notice_organization_labor_successful_deleted: " La categoria di lavoro di organizzazione fu cancellata con successo."  notice_organization_successful_created: "L'organizzazione fu creata con successo."
+#  notice_organization_successful_updated: "L'organizzazione fu aggiornata con successo."
+#  notice_organization_successful_deleted: "L'organizzazione fu cancellata con successo."
+#  warning_reset_password_expired: "Azzeri processo scaduto."
+#  notice_password_successful_reset: "La Sua parola d'ordine è stata ripristinata con successo. Un e-mail di conferma è stato spedito."
+#  error_pbs_project_element_failed_update: "Per favore verifichi valore di pbs_project_elements"
+#  warning_icon_cant_be_edit: " Questa Icona di Projestimate non può essere compilata, cambi precedenti non sono stati convalidati ancora."
+#  notice_icon_successful_deleted: "L'icona fu cancellata con successo."
+#  #and: "e"
+#  warning_pemodule_cant_be_edit: " Questo modulo di projestimate non può essere compilato, cambi precedenti non sono stati convalidati ancora."
+#  notice_pemodule_successful_updated: "I cambi sono stati salvati correttamente"
+#  notice_pemodule_successful_deleted: "Il modulo fu cancellato con successo."
+#  warning_permission_cant_be_edit: "Questo permesso non può essere compilato, cambi precedenti non sono stati convalidati ancora."
+#  notice_permission_successful_created: "Il permesso fu creato con successo."
+#  notice_function_successful_updated: "La funzione fu aggiornata con successo."
+#  notice_permission_successful_deleted: "Il permesso fu cancellato con successo."
+#  notice_permission_successful_saved: "I permessi salvarono con successo"
+#  notice_permission_successful_cancelled: "I vostro cambi furono annullati"
+#  warning_platform_category_cant_be_edit: "Questa categoria di piattaforma non può essere compilata, cambi precedenti non sono stati convalidati ancora."
+#  notice_platform_category_successful_created: "La categoria di piattaforma fu creata con successo."
+#  notice_platform_category_successful_updated: "La categoria di piattaforma fu aggiornata con successo."
+#  notice_platform_category_successful_deleted: " La categoria di piattaforma fu cancellata con successo."
+#  warning_project_area_cant_be_edit: "This project area can not be edited, previous changes have not yet been validated."
+#  notice_project_area_successful_created: "Project area was successfully created."
+#  notice_project_area_successful_updated: "Project area was successfully updated."
+#  notice_project_area_successful_deleted: "Project area was successfully deleted."
+#  warning_project_categories_cant_be_edit: "Questa area di progetto non può essere compilata, cambi precedenti non sono stati convalidati ancora."
+#  notice_project_categories_successful_created: "La categoria di progetto fu creata con successo."
+#  notice_project_categories_successful_updated: "La categoria di progetto fu aggiornata con successo."
+#  notice_project_categories_successful_deleted: "La categoria di progetto fu cancellata con successo."
+#  notice_project_securities_successful_created: "La sicurezza di progetto fu creata con successo."
+#  notice_project_securities_successful_updated: "La sicurezza di progetto fu aggiornata con successo."
+#  warning_project_securities_level_cant_be_edit: "Questo livello di sicurezza non può essere compilato, cambi precedenti non sono stati convalidati ancora."
+#  notice_project_securities_level_successful_created: "Proietti il livello di sicurezza fu creato con successo."  notice_project_securities_level_successful_updated: "Proietti il livello di sicurezza fu aggiornato con successo."
+#  notice_project_securities_level_successful_deleted: " Proietti il livello di sicurezza fu cancellato con successo."
+#  notice_project_successful_created: "Il progetto fu creato con successo."
+#  error_project_failed_create: "Errore: La creazione di progetto andò a vuoto,"
+#  project_successful_updated: "Il progetto fu aggiornato con successo."
+#  notice_project_successful_duplicated: "Il progetto fu duplicato con successo"
+#  error_project_failed_duplicate: "La duplicazione andò a vuoto: All'errore accadde su duplicazione di Progetto"
+#  confirm_new_branch_project_checkout: "Lei è in viaggio di creare un ramo. Nonostante le difficoltà la fusione causerà, può confermare questo?"
+#  notice_project_successful_checkout: "Il progetto era con successo controllo"
+#  notice_wbs_activity_successful_added: "La Wbs-attività fu aggiunta con successo al progetto. "
+#  warning_record_status_cant_be_edit: "Questo status non può essere compilato, cambi precedenti non sono stati convalidati ancora."
+#  notice_record_status_successful_created: "Lo status di record fu creato con successo."
+#  notice_record_status_successful_updated: "Lo status di record fu aggiornato con successo."
+#  notice_reference_value_successful_deleted: "Il valore di referenza fu cancellato con successo."
+#  error_record_status_failed_update: "Il valore di referenza fu cancellato con successo."
+#  text_welcome: "Benvenuto"
+#  warning_account_black_listed: "Il vostro conto è nero-elencato"
+#  warning_invalid_username_password: " Nome di utente nullo o password "
+#  notice_session_password_reset_instruction: " Password azzerò le istruzioni sono state spedite."
+#  warning_session_account_not_active: "Il vostro conto non è attivo"
+#  error_account_ldap_association: "Il vostro conto è associato con l'elenco / LDAP sociale. Per favore contatti il vostro amministratore di sistema per sapere i Suoi id."
+#  warning_session_bad_username: "Noi non abbiamo alcun conto che usa questo nome di login o e-mail"
+#  application: "Domanda"
+#  notice_translation_successful_added: "La traduzione fu aggiunto con successo."
+#  notice_account_successful_created: "Il conto fu creato con successo"
+#  notice_account_successful_updated: "Il conto fu aggiornato con successo."
+#  warning_email_or_username_already_exist: "E-mail o nome di utente già esistono nel database."
+#  warning_invalid_import_from_ldap: "Questo utente non può essere importato :"
+#  warning_ldap_attribute_missing:  "L'attributo \"%{value}\" è vuoto."
+#  notice_account_demand_send: "Spinta dell'onda di richiesta di conto con successo."
+#  warning_check_all_fields: "Per favore controlli tutti i campi."
+#  notice_version_successful_created: "La versione fu creata con successo."
+#  notice_version_successful_updated: "La versione fu aggiornata con successo."
+#  notice_wbs_activity_element_import_successful: "Importazione riuscito."  error_wbs_activity_failed_file_integrity: "Per favore verifichi l'integrità di archivio. Lei usa carattere illegale come ritorno a capo o quote di sosia nei Suoi archivi di csv."  notice_wbs_activity_successful_created: "La WBS-attività era crei con successo."
+#  notice_wbs_activity_successful_deleted: "La WBS-attività fu cancellata con successo."
+#  notice_wbs_activity_successful_duplicated: " La WBS-attività fu duplicata con successo"
+#  error_wbs_activity_failed_duplicate: " La duplicazione andò a vuoto: All'errore accadde su duplicazione di Wbs-attività,"
+#  notice_wbs_activity_successful_updated: "Cambi su WBS-attività furono convalidati con successo."
+#  error_wbs_activity_failed_update: "La convalidazione di cambi andò a vuoto:"
+#  notice_wbs_activity_element_successful_created: "L'elemento di attività di Wbs fu creato con successo."
+#  notice_wbs_activity_element_successful_updated: "L'elemento di attività di Wbs fu aggiornato con successo."
+#  warning_sum_ratio_different_100: "Avvertendo - i Rapporti salvò con successo, ma la somma è diversa di 100%"
+#  notice_ratio_successful_saved: "I rapporti salvarono con successo"
+#  error_wbs_activity_failed_import: "Non riuscito ad importare dell'elemento che guarda fuori della WBS-attività."
+#  warning_import_sum_ratio_different_100: "Avvertendo - i Rapporti importò con successo, ma la somma è diversa di 100%."
+#  notice_ratio_successful_imported: "I rapporti importarono con successo."
+#  notice_wbs_activity_ratio_successful_validated: " Il Wbs-attività-rapporto fu convalidato con successo"
+#  notice_wbs_project_element_successful_created: "Wbs progetto elemento fu creato con successo."
+#  notice_wbs_project_element_successful_updated: "Wbs progetto elemento fu aggiornato con successo."
+#  notice_wbs_project_element_successful_deleted: " Il Wbs-progetto-elemento fu cancellato con successo."
+#  notice_ratio_successful_changed: "Il rapporto fu cambiato con successo"
+#  error_wbs_project_element_ratio_failed_update: "Errore quando cambiando rapporto di attività di Wbs"
+#  warning_work_element_type_cant_be_edit: "Questo tipo di elemento di lavoro non può essere compilato, cambi precedenti non sono stati convalidati ancora."
+#  notice_work_element_type_successful_updated: "Lavori il tipo di elemento fu aggiornato con successo."
+#  notice_attribute_module_successful_created: ""Il modulo di attributo fu creato con successo."
+#  notice_master_data_successful_validated: "Cambi su record furono convalidati con successo."
+#  error_master_data_failed_validate: "La convalidazione di cambi andò a vuoto: %{value}"
+#  error_master_data_failed_restore: " Ripristini fallito."
+#  notice_master_data_successful_restored: "Ripristini è stato convalidato con successo."
+#  warning_master_data_unauthorized_action: "azione non autorizzata: Lei sta tentando di ripristinare un non record pensionato! "
+#  notice_project_successful_updated: "Il progetto fu aggiornato con successo"
+#  notice_project_successful_deleted: " Project was successfully deleted "
+#  error_project_creation_failed: " An error has occurred during the creation of project"
+#  notice_project_successful_duplicated: " Progetto duplicato con successo"
+#  error_project_duplication_failed: " Un errore è accaduto durante la duplicazione di progetto"
+#  error_project_checkout_failed: "Un errore è accaduto durante il controllo di progetto"
+#  notice_module_project_successful_updated: "Il progetto di modulo fu aggiornato con successo"
+#  notice_module_project_successful_created: "Il Progetto di modulo fu creato con successo"
+#  notice_attribute_module_successful_created: " Il modulo di attributo fu creato con successo."
+#
+#  #mail
+#  mail_salutation: "Caro %{value},"
+#  mail_complimentary_close: " Sinceramente,\nProjEstimate"
+#  mail_footer: "\n-----------------------------------------------\ n Questo e-mail è stato spedito automaticamente attraverso il sistema di servizio di ProjEstimate.\n\n"
+#  mail_subject_lost_password: "[ProjEstimate] Nuevo password"
+#  mail_body_lost_password: 'To change your password, click on the following link (or copy it into your browser): '
+#  mail_body_lost_password_token_delay: 'Warning, this link is valid for a period of 2 hours. Beyond that, you must restart the process'
+#  mail_subject_account_activation_request: "[ProjEstimate] Richiesta di attivazione di conto"
+#  mail_body_account_activation_request: "Un utente nuovo ha registrato. Il conto è pendente la Sua approvazione.\n\n"
+#  mail_subject_account_activation: "[ProjEstimate] Il vostro conto è attivato"
+#  mail_body_account_activation: "Noi siamo lieti di confermare l'attivazione del Suo conto di ProjEstimate.\n\n"
+#  mail_body_account_information: "Per favore ricordi i vostri dettagli di login:\n<ul><li>Login: <b>%{user}</b></li>\n<li>Password: <b>%{pwd}</b></li></ul>\n\n"
+#  mail_body_account_information_no_pwd: " Le vostre credenziali non sono cambiate."
+#  mail_subject_account_created: "[ProjEstimate] Il vostro conto è creato"
+#  mail_body_account_created: "La vostra richiesta di creazione di conto è stata presa pienamente in considerazione.\n\n"
+#  mail_body_account_not_yet_activated: "Il vostro conto non è ancora attivo.\nOnce che un amministratore ha attivato, Lei riceverà una seconda notificazione da e-mail.\n\n"
+#  mail_subject_new_password: "[ProjEstimate] vostro password è cambiata"
+#  mail_password_unchanged: " El vostro password è immutata (noi La raccomandiamo per cambiarlo come dal Suo profilo utente)"
+#  mail_password_from_ldap: " El password del Suo elenco sociale"
+#  mail_subject_account_suspended: "[ProjEstimate]Il vostro conto è sospeso "
+#  mail_body_account_suspended: " Gradiremmo informar La che il Suo cont (%{value}) di ProjEstimate sia stato sospeso.\nYou possono chiedere a riattivarlo spedendo un e-mail all'amministratore% {l'adm} il \n\n"
+#  text_warn_on_leaving_unsaved: "La pagina corrente contiene testo di unsaved che sarà perso se Lei lascia questa pagina."
+#  label_module_with_activities: " Il modulo sta usando le Attività?"
+#  label_add_a_module_to_project: "Aggiunga il modulo selezionato"
+#  label_filter_on_pbs_element: "Si concentri su un PBS-elemento"
+#  button_build_estimation_path: "Stabilisca percorsi di preventivo "
+#  button_configure_module_pbs_element: "Configuri PBS-elementi"
+#  label_show_hidden_elements: "Show elementi ignoti"
+#  label_ratio_value: " Valore di rapporto "
+#  label_is_completed: " È completato "
+#  label_is_validated: " È convalidato "
+#  text_overloading_default_ratio_table: "Per avere la priorità (per questo componente) la tavola di rapporto predefinita, selezioni un WBS-attività e la sua tavola di rapporto associata"
+#  text_no_icon: " nessuna icona selezionò "
+#  tooltip_run_estimation: " Esegua la stima "
+#  notice_no_estimation_saved: " Nessuno risultati sono stati salvi su nel database del progetto"
+#  error_session_expired: " La vostra sessione è scaduta. Per favore il login di nuovo."
+#  label_disabled: " Inseto "
+#  label_pbs_element_matrix: "Elementi di PBS associati con moduli di progetto (\ "% {value} \")"
+#  label_module_projects_matrix: "Stabilisca percorsi di preventivo per progetto \ "% {value}\""
+#  tooltip_attribute_rules: "Regole di convalidazione"
+#  error_invalid_date: "Tempo di data nullo"
+#  no_mandatory: "Nessuno obbligatorio"
+#  label_precision: "Precisione"
+#  text_help_list_attribute: "(list of values ‚Äã‚Äãseparated by semicolons)"
+#  text_select_page_size: "Scegliere la dimenzione della pagina"
+#  text_select_page_number: "Scegliere el nombre della pagina"
+#  text_first_page: "prima pagina"
+#  text_last_page: "ultima pagina"
+#  text_next_page: "seguente pagina"
+#  text_previous_page: "precedente pagina"
+#  text_result_index: " indice di risultato / conti di risultato filtrato (conto totale di crudo)"
+#  label_dashboard: " Cruscotto per \"%{value}\""
+#  label_estimation_modules: " Moduli di preventivo"
+#  label_input_data: "Forme di contributo di dati"
+#  label_output_data: " Risultati di preventivo"
+#  button_activate_user_account: "Attivi conto di utente"
+#  button_find_use: "Trovare dove è usato e sa l'impatto di cambi"
+#  button_commit_project: ""Promuovere il progetto in ciclo di vita suo"
+#  button_checkout_project: " Progetto per la verifica"
+#  button_activate_project: " Attivi il progetto, vederlo su cruscotto"
+#  button_duplicate_project: " Progetto duplice "
+#  button_duplicate_model: " Crei progetto da questa maschera "
+#  label_environment: " Ambiente "
+#  notice_attribute_organization_successful_updated: " L'attributo organizzativo fu aggiornato con successo."
+#  display_order: "Display order"
+#  tablesorter_date_format: "mmddyyyy"
+#  notice_no_organization_use_current_attribute: " Non c'è nessuna organizzazione che usa il \ "% {value} \" l'attributo"  text_project_name: "Link to other projects (sub-projects)"
+#  text_project_name_inverse: " i genitori Pprogetti (i.e. proeitti con un link su el selezionato)"
+#  text_user_name: " Utenti associati"
+#  text_group_name: "Gruppi associati "
+#  text_associated_project: "Progetto associato"
+#  notice_user_finduse_no_project: " Non c'è nessun progetto associato all'utente \ "% {value}\""
+#  text_finduse_project: "Elencare di oggetti associò con progetto \ "% {value}\""
+#  text_finduse_user: "Elencare di oggetti associò con utente \"%{value}\""
+#  text_finduse_pemodule: "Elencare di oggetti associò con modulo \"%{value}\""
+#  notice_pemodule_finduse_no_project: " Non c'è nessun progetto associato al modulo \"%{value}\""
+#  notice_project_finduse_no_project: " Non c'è nessun progetto collegato (i.e. il supplire-progetto) al \"%{value}\" progetto"
+#  notice_project_finduse_no_parent_project: "El \"%{value}\" progetto project non è collegato ad alcun altro progetto (mai non usò come supplire-progetto)"
+#  notice_project_finduse_no_user: "Non c'è nessun utente associato al \ "% {value} \" il progetto"
+#  notice_project_finduse_no_group: "C'è nessuno di gruppo associarono il \ "% {value} \" il progetto"
+#  notice_no_active_module: " Nessun modulo di progetto selezionato"
+#  title_hide_show_menu: " Nascondere/show menu "
+#  notice_attribute_category_successful_created: "La categoria di attributo fu creata con successo"
+#  notice_attribute_category_successful_updated: "La categoria di attributo fu aggiornata con successo"
+#  error_attribute_category_failed_update: "Un errore è accaduto durante l'aggiornamento."
+#  text_create_project_from_template: "Dall'elenco sotto, clicchi sull'icona di Copia della maschera desiderata per creare un progetto basato su lui."
+#  notice_pe_attribute_successful_created: " L'attributo fu creato con successo."
+#  notice_pe_attribute_successful_updated: " L'attributo fu aggiornato con successo."
+#  text_index_permissions_guidance: "Elencare tutti i permessi (globale e progetto)"
+#  notice_end_of_estimation_execution: " Finire di eseguire moduli"
+#  label_project_name: "Nome del progetto"
+#  label_project_version: "Versione"
+#  label_permission_access: "Accesso"
+#  error_group_failed_update: " È accaduto un errore quando durante l'aggiornamento"
+#  organization_uow_complexity: " Unità Di Complessità di Lavoro "
+#  text_organization_uow_complexity: " I possibili valori di Complessità usarono all'interno dell'Unità Di Lavoro"
+#  new_organization_uow_complexity: "Nuova Unità di organizzazione della complessità di lavoro (UOW)"  notice_organization_uow_complexity_successful_updated: " Unità di organizzazione Della Complessità di Lavoro (UOW) fu aggiornata con successo"
+#  notice_organization_uow_complexity_successful_created: " Unità di organizzazione della Complessità di Lavoro (UOW) fu creata con successo"
+#  notice_organization_uow_complexity_successful_deleted: " Unità di organizzazione Della Complessità di Lavoro (UOW) fu cancellata con successo"
+#  notice_organization_technology_successful_updated: " L’organizzazione de Tecnologia fu aggiornata con successo"
+#  notice_organization_technology_successful_created: "L’organizzazione de tecnologica fu creata con successo"
+#  notice_organization_technology_successful_deleted: "L’Organizzazione de tecnologica fu cancellata con successo"
+#  organization_unit_of_work: "Unità di lavoro"
+#  text_organization_unit_of_work: "Unità Di Lavoro usato nell'organizzazione"
+#  notice_unit_of_work_successful_updated: " Unità di Lavoro fu aggiornata con successo"
+#  notice_unit_of_work_successful_created: " Unità di Lavoro fu creata con successo"
+#  notice_unit_of_work_successful_deleted: "Unità di Lavoro fu cancellata con successo"
+#  new_unit_of_work: " Nuova unità di lavoro (UOW)"
+#  organization_abacus: "Abbaco"
+#  text_organization_abacus: "Abbaco dell'organizzazione per la tecnologia"
+#  notice_subcontractor_successfully_created: "Il subappaltatore fu creato con successo"
+#  notice_subcontractor_successfully_updated: " Il subappaltatore fu aggiornato con successo"
+#  notice_subcontractor_successfully_deleted: "Il subappaltatore fu cancellato con successo"
+#
+#  label_Project: "Progetto"
+#  label_filter_on_projects_version: " Filtri su versioni di progetto"
+#  label_filter_on_project_version_1: " Mostrare solamente foglie "
+#  label_filter_on_project_version_2: "Mostrare tutto"
+#  label_filter_on_project_version_3: "Mostrare solamente el radice "
+#  label_filter_on_project_version_4: " Mostrare solamente il più recente"
+#  label_ProjectArea: "area del progetto"
+#  label_PlatformCategory: "Piattaforma della categoria"
+#  label_ProjectCategory: "La categoria del progetto "
+#  label_AcquisitionCategory: " La categoria di acquisizione"
+#  label_WbsActivity: "Wbs Attività"
+#  label_Pemodule: "Modulo"
+#  label_PeAttribute: "Attributo"
+#  label_WorkElementType: " Lavori tipo di elemento"
+#  label_Organization: " Organizzazione "
+#  label_User: "Utente"
+#  label_Group: "Gruppo"
+#  send_feedback: " Spedisca reazione"
+#  label_feedback_type: "Tipo di reazione"
+#  notice_send_feedback: "Per favore entri un piccole informazioni sul problema che gradirebbe dire di noi circa:"
+#  error_send_feedback_empty: "Per favore riempia tutti i campi della forma"
+#  notice_send_feedback_success: "La vosta richiesta è stata considerata"
+#  error_send_feedback_failed: "Accadde un errore mentre spediva la vostra richiesta"
+#  error_validation_project: "i paia 'name/version' e 'alias/version' deve essere unico"
+#  tooltip_state: "\"Definito \ " i record sono esposti in nero, \ la "Cambiale \" nell'arancia, \ "Pensionato \" in rosso"
+#  warning_project_state_to_rejected: "se Lei continua questa versione di progetto diverrà non modificabile (% {il value_b}) e non derivabile."
+#  warning_project_state_to_released: "se Lei continua questa versione di progetto diverrà non modificabile (% {value_b})."
+#  warning_project_state_to_checkpoint: "se Lei continua questa versione di progetto diverrà non modificabile (% {il value_b}) ma pieghevole."  warning_project_state_to_inreview: "se Lei continua (% { value_b}) solamente utenti con write_access_to_inreview_project privilegi sarà capace di cambiare questa versione di progetto."
+#  warning_project_state_unusual: "Questo è insolito per commettere da stato% {value_a} affermare% {value_b}."
+#  warning_project_state_unnormal: " Questo non è normale per commettere da stato% {value_a} affermare% {value_b}."
+#  confirm: "Lei conferma...?"
+#  error_project_state: "Spiacente... questa operazione non è possibile!"
+#  warning_project_cannot_be_deleted: " Proietti con questo stato non può essere cancellato"
+#  label_project_history: "Storia"
+#  label_activate_project: " avviare "
+#  label_find_use_project: " Trovi uso "
+#  label_promote_project: " promuovere "
+#  label_checkout_project: "cassa"
+#  label_duplicate_project: "Duplicato"
+#  label_collapse_project: "Crollato versione sarà rimosso. Gradirebbe crollare versione selezionata del progetto?"
+#  button_collapse_project: "Versione di progetto di crollo"
+#  warning_project_cannot_be_checkout: "Solamente proietti in 'Checkpoint' e 'Rilasciò' statuses possono essere controllo"
+#  warning_project_state_from_checkpoint_release_rejected: "El progetto in '%{state} non può essere cambiato da questa vista. Compili il progetto proprietà globali per promuovere gli stati di progetto."
+#  notice_successful_collapse_project_version: " Il progetto di versione selezionato fu cancellato con successo"
+#  project_is_not_collapsible: "Il progetto '%{project_title_version}' non è pieghevole.\n\n"
+#  collapsible_project_only: " Solamente proietti in 'CHECKPOINT' lo stato potrebbe essere crollato."
+#
+#  #new added translations
+#  audit_users_activities: " Attività di utenti "
+#  audit_element_type: " Tipo di elemento "
+#  audit_element_id: "Elemento id"
+#  audit_action: " azione "
+#  audit_changes: " Cambia"
+#  audit_user: "scrittore"
+#
+#  warning_checkout_unauthorized_action: "Azione non autorizzata: Lei sta tentando a progetto di controllo che Lei non ha permessi necessari."
+#  record_not_found_password_reset_token: "Non poteva trovare Utente con la parola d'ordine generata azzeri gettone.\n\n Per favore controllano l'ultimo e-mail ricevuto"
+#  select_at_least_one_project: " Lei deve selezionare almeno un progetto per eseguire azione."
+#  warning_not_allow_to_create_new_branch_of_project: " Lei non ha permesso per creare ramo nuovo di questo progetto"
+#  project_is_activated: "El progetto '%{project_title}' è attivato con successo. "
+#  defined_language_not_deletable: ""La lingua definita non è deletable""
+#  leave_it_blank_if_no_change: "lasci che esso cancelli se Lei non vuole cambiarlo"
