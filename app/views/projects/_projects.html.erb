@@ -23,7 +23,7 @@
           <%# end %>
 
           <tr>
-            <td><%= sanitize project.title %></td>
+            <td><%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %></td>
             <td class="span2"><%= project.version %></td>
             <td><%= project.alias %></td>
             <td><%= project.state.humanize %></td>

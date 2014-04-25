@@ -180,7 +180,7 @@ def load_data!
 
   puts '   - Modules'
   modules=[
-      ['initialization', 'initialization', 'The Capitalization module.', 'no',]
+      ['initialization', 'initialization', 'The Initialization module.', 'no',]
   ]
 
   modules.each do |i|

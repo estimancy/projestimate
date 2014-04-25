@@ -154,6 +154,7 @@ module ProjectsHelper
 
       #For wbs-activity-completion node consistency
       completion_consistency = ""
+      title = ""
       if module_project.pemodule.alias == "wbs_activity_completion"
         current_wbs_consistency = true
         pbs_level_data_for_consistency.each do |level, level_value|
@@ -176,7 +177,7 @@ module ProjectsHelper
         end
       end
 
-      res << "<tr> <td> <span class='tree_element_in_out  #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
+      res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
 
       ['low', 'most_likely', 'high', 'probable'].each do |level|
         res << '<td>'
@@ -449,7 +450,7 @@ module ProjectsHelper
   def display_inputs_with_activities(module_project, last_estimation_result=nil)
     pbs_project_element = current_component
     res = String.new
-    if module_proxject.compatible_with(current_component.work_element_type.alias) || current_component
+    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
       res << "<h4>#{ I18n.t(:label_input_data)}</h4>"
       res << "<table class='table table-condensed table-bordered'>"

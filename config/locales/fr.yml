@@ -1091,3 +1091,4 @@ fr:
   project_is_activated: "Le project '%{project_title}' a été activé avec succès."
   defined_language_not_deletable: "Impossible de supprimer un langage dans le statut Defined"
   leave_it_blank_if_no_change: "Laisser le champ vide si vous ne voulez pas le modifier"
+  sign_in_with_google: "S'authentifier avec votre compte Google"

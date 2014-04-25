@@ -165,7 +165,7 @@ class ModuleProjectsController < ApplicationController
 
     # Get the max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-    @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.max
+    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
     @results = nil
 

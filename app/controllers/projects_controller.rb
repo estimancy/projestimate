@@ -250,7 +250,7 @@ public
           @project.start_date = Time.now.to_date
         end
 
-        # Capitalization Module
+        # Initialization Module
         unless @initialization_module.nil?
           # Get the project initialization module_project or create if it doesn't exist
           cap_module_project = @project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -872,7 +872,7 @@ public
 
       if est_val.in_out == 'output' or est_val.in_out=='both'
         #begin
-          @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+            @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
         #rescue => e
         #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
         #  puts e.message
@@ -1462,33 +1462,10 @@ public
     end
   end
 
-
-  #Function that show project history graphically
-  def show_project_history_SAVE
-    #Project graphical history
-    project = Project.find(304)
-    project_root = project.root
-    project_tree = project_root.subtree
-
-    #@projects = @project.siblings.arrange
-    @projects = project_tree.arrange
-    @my_tree = Project.json_tree(@projects)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @projects }
-      #format.json { render :json =>  Project.json_tree(@projects)}
-      format.json { render :json => Hash[*@my_tree.flatten] }
-    end
-  end
-
   # Function that show the estimation graph
   def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
     @project = current_project
     @project_module_projects = @project.module_projects
-
-    #========= Current module_project, current_component data  ===============
-
     # the current activated component (PBS)
     @current_component = current_component
     #get the current activated module project
@@ -1499,35 +1476,85 @@ public
     @complexities_name = []
     @organization_uow_complexities = []
     @cocomo_advanced_input_dataset = {}
+    @cocomo_advanced_factor_corresponding = []
 
-    #====================== CocomoAdvanced module data ========================
+    #========================================== CocomoAdvanced module data =============================================
+
     if @current_module_project.pemodule.alias == "cocomo_advanced"
       # get the factors for the CocomoAdvanced estimation module: the data are stored in the "input_cocomos" table that make links between the factors and the CocomoAdvanced module
-      @complexities_name = mp.organization_uow_complexities.map(&:name).uniq
-      @all_cocomo_advanced_factors_names = @current_module_project.factors.map(&:name)
+      @complexities_name = @current_module_project.organization_uow_complexities.map(&:name).uniq
+      @cocomo_advanced_factors =  @current_module_project.factors   #Factor.where('factor_type = ?', "advanced") #
+      @all_cocomo_advanced_factors_names = @cocomo_advanced_factors.map(&:name)
+
+      coefficients_hash = {"Extra Low" => 1, "Very Low" => 2, "Low" => 3, "Normal" => 4, "High" => 5, "Very High" => 6, "Extra High" => 7}
+      # Median value correspond to the "Normal"
+      @cocomo_advanced_input_dataset["median"] = Array.new
+      @cocomo_advanced_input_dataset["cocomo_advanced"] = Array.new
+
       factor_data = {}
-      @current_module_project.factors.each do |factor|
-        factor_data["#{factor.name}"] = {}
-        # after we will have an architecture like the following : {:Factor_name => { "Very low" => [1,3,5,2,9], "Low" => [0.5,2,8,],"Very low" => [1,3,5,4,3],... }}
-        @complexities_name.each do |complexity|
-          factor_data["#{factor.name}"]["#{complexity}"] = Array.new
-        end
-        factor.organization_uow_complexities.each do |uow_complexity|
-
-        end
+      @complexities_name.each do |complexity_name|
+        factor_data["#{complexity_name}"] = Array.new
       end
 
-      @current_module_project.organization_uow_complexities.each do |uow_complexity|
-
+      # dataset for the Radar chart about Factors
+      @current_module_project.input_cocomos.where('pbs_project_element_id = ?', @current_component.id).each do |input_cocomo|
+        @cocomo_advanced_factor_corresponding << input_cocomo.factor.name
+        @cocomo_advanced_input_dataset["median"] << coefficients_hash["Normal"]
+        @cocomo_advanced_input_dataset["cocomo_advanced"] << coefficients_hash[input_cocomo.organization_uow_complexity.name]
       end
+      puts "ALL FACTOR_DATA LAST = #{@cocomo_advanced_input_dataset}"
+
+      #@current_module_project.factors.each do |factor|
+      #  factor_data["#{factor.name}"] = {}
+      #  # after we will have an architecture like the following : {"factor_name" => { "Very low" => [1,3,5,2,9], "Low" => [0.5,2,8,],"Very low" => [1,3,5,4,3],... }}
+      #  @complexities_name.each do |complexity|
+      #    factor_data["#{factor.name}"]["#{complexity}"] = Array.new
+      #  end
+      #  factor.organization_uow_complexities.each do |uow_complexity|
+      #    factor_data["#{factor.name}"]["#{uow_complexity.name}"] << uow_complexity.value
+      #  end
+      #  puts "FACTOR_DATA #{factor.name} = #{factor_data}"
+      #end
     end
 
 
-    # get all current module_project attributes
-    #mp_attribute_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?)', %w(input both))
-    #mp_attribute_modules.each do |attr_module|
-    #  @current_mp_attributes << attr_module.pe_attribute
-    #end
+    #======================================== CURRENT MODULE OUTPUTS DATA ==============================================
+
+    @current_mp_outputs_dataset = {}
+    # get all current module_project attributes for outputs data
+    @current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?)', %w(output both))
+    # Outputs attributes array
+    @current_mp_outputs_attributes = []
+    @current_mp_outputs_attr_modules.each do |attr_module|
+      @current_mp_outputs_attributes << attr_module.pe_attribute
+    end
+    # get all Attributes aliases
+    @current_mp_outputs_attributes_aliases = @current_mp_outputs_attributes.map(&:alias)
+    puts "@current_mp_outputs_attributes_aliases = #{@current_mp_outputs_attributes_aliases}"
+
+    # generate output attributes values
+    @current_mp_outputs_attributes.each do |output_attr|
+      attr_data = [] # [low_value, most_likely_value, high_value]
+      attr_estimation_value = @current_module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', output_attr.id, "output").last
+      if !attr_estimation_value.nil?
+        #  attr_data = [attr_estimation_value.string_data_low[@current_component.id], attr_estimation_value.string_data_most_likely[@current_component.id], attr_estimation_value.string_data_high[@current_component.id], attr_estimation_value.string_data_probable[@current_component.id]]
+        ["low", "most_likely", "high", "probable"].each do |level|
+          level_value = attr_estimation_value.send("string_data_#{level}")
+          if @current_module_project.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio))
+            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id])
+          else
+            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
+          end
+          attr_data << pbs_level_value
+        end
+      end
+      #update the attribute array in dataset
+      @current_mp_outputs_dataset["#{output_attr.alias}"] = attr_data
+    end
+    puts "OUTOUT_DATASET = #{@current_mp_outputs_dataset}"
+
+    #======================================== END CURRENT MODULE OUTPUTS DATA ==============================================
+
 
     # get all current module_project attribute value
     @current_module_project.pemodule.pe_attributes.each do |attr|
@@ -1551,7 +1578,8 @@ public
     puts "INPUT DATA = #{@input_dataset}"
 
 
-    #========= All project data (modules, attributes, ...) ===============
+
+    #================================ All project data (modules, attributes, ...) ======================================
 
     # get the all project modules for the charts labels
     @project_modules = []

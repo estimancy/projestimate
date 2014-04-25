@@ -124,8 +124,8 @@ class ModuleProject < ActiveRecord::Base
 
   def to_s
     #self.pemodule.title.humanize
-    if self.pemodule.alias == Projestimate::Application::CAPITALIZATION
-      # nothing to show for position as the "Capitalization is always on the first position"
+    if self.pemodule.alias == Projestimate::Application::INITIALIZATION
+      # nothing to show for position as the "Initialization is always on the first position"
       self.pemodule.title.humanize
     else
       "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
@@ -182,8 +182,8 @@ class ModuleProject < ActiveRecord::Base
 
   # Show the module project project on dashbord
   def show_module_project_positions
-    if self.pemodule.alias == Projestimate::Application::CAPITALIZATION
-      # nothing to show as the "Capitalization is always on the first position"
+    if self.pemodule.alias == Projestimate::Application::INITIALIZATION
+      # nothing to show as the "Initialization is always on the first position"
       ""
     else
       "(#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"

@@ -20,9 +20,9 @@
 require 'initialization/version'
 require 'date'
 
-module Capitalization
+module Initialization
 
-  class Capitalization
+  class Initialization
     attr_accessor :project_id, :pbs_project_element_id, :pe_attribute_alias, :module_input_data, :output_result
 
     def initialize(module_input_data)
