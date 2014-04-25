@@ -1480,7 +1480,7 @@ public
 
     #========================================== CocomoAdvanced module data =============================================
 
-    if @current_module_project.pemodule.alias == "cocomo_advanced"
+    if @current_module_project.pemodule.alias == Projestimate::Application::COCOMO_ADVANCED
       # get the factors for the CocomoAdvanced estimation module: the data are stored in the "input_cocomos" table that make links between the factors and the CocomoAdvanced module
       @complexities_name = @current_module_project.organization_uow_complexities.map(&:name).uniq
       @cocomo_advanced_factors =  @current_module_project.factors   #Factor.where('factor_type = ?', "advanced") #

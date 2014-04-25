@@ -109,5 +109,6 @@ module Projestimate
     ALPHABETICAL = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
     INITIALIZATION = "initialization"
     EFFORT_MAN_MONTH = "effort_man_month"
+    COCOMO_ADVANCED = "cocomo_advanced"
   end
 end
