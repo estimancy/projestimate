@@ -2,8 +2,8 @@
 <script>
     $(document).ready(function() {
         // Get the current module estimation results
-        <% attributes_array = module_project.pemodule.pe_attributes.all.map(&:alias).to_json.html_safe %>
-        <% modules = project_modules.map(&:alias).to_json.html_safe %>
+        <% attributes_array = current_module_project.pemodule.pe_attributes.all.map(&:alias).to_json.html_safe %>
+        <% modules = current_project.pemodules.map(&:alias).to_json.html_safe %>
         var module_labels = <%= modules %>;
 
         var options = {
@@ -91,8 +91,8 @@
                     strokeColor : "rgba(220,220,220,1)",
                     pointColor : "rgba(220,220,220,1)",
                     pointStrokeColor : "#fff",
-                    //data : [65,59,90,81,56,55,40],
-                    data : <%= @dataset[:size].to_json.html_safe %>,
+                    data : [65,59,90,81,56,55,40],
+                    //data : [] <%#= @dataset[:size].to_json.html_safe %>,
                     title: "effort_man_hour"
                 },
                 {

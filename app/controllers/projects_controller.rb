@@ -1478,6 +1478,27 @@ public
     @cocomo_advanced_input_dataset = {}
     @cocomo_advanced_factor_corresponding = []
 
+
+    #========================================== Factors module data for thr RADAR CHART ================================
+    #if @current_module_project.pemodule.alias.in?(%w(cocomo_advanced uos))
+    #  @radar_input_dataset = {}
+    #
+    #  #corresponding value fir each factor level
+    #  coefficients_hash = {"Extra Low" => 1, "Very Low" => 2, "Low" => 3, "Normal" => 4, "High" => 5, "Very High" => 6, "Extra High" => 7}
+    #
+    #  @radar_input_dataset["median"] = Array.new
+    #  @radar_input_dataset["#{@current_module_project.pemodule.alias}"] = Array.new
+    #  @complexities_name = @current_module_project.organization_uow_complexities.map(&:name).uniq
+    #
+    #  # dataset for the Radar chart about Factors
+    #  @current_module_project.input_cocomos.where('pbs_project_element_id = ?', @current_component.id).each do |input_cocomo|
+    #    @cocomo_advanced_factor_corresponding << input_cocomo.factor.name
+    #    @radar_input_dataset["median"] << coefficients_hash["Normal"]
+    #    @radar_input_dataset["cocomo_advanced"] << coefficients_hash[input_cocomo.organization_uow_complexity.name]
+    #  end
+    #end
+
+
     #========================================== CocomoAdvanced module data =============================================
 
     if @current_module_project.pemodule.alias == Projestimate::Application::COCOMO_ADVANCED

@@ -6,7 +6,11 @@ class Uos::InputsController < ApplicationController
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
     @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
-    @complexities = current_project.organization.unit_of_works.first.organization_uow_complexities.map{|i| [i.name, i.id]}
+    @complexities = []
+    organization_unit_of_works = current_project.organization.unit_of_works.first
+    if !organization_unit_of_works.nil?
+      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| [i.name, i.id]}
+    end
 
     @module_project.pemodule.attribute_modules.each do |am|
       if am.pe_attribute.alias ==  "size"

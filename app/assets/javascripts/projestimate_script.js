@@ -145,23 +145,24 @@ $(document).ready(function() {
         $('.spiner').show();
     });
 
-    // Showing the estimation graph
-    $("#see_estimation_graph").bind('click', function() {
-        $('.icon-signal').toggle();
-        $('.icon-list').toggle();
-        $('.icon-align-left').toggle();
-        $('.spiner').show();
-
-        $.ajax({
-            url: "/show_estimation_graph",
-            method: "get",
-            data: {
-                module_project: $('#current_module_project').val(),
-                pbs_project_element_id: $(this).val(),
-                project_id: $("#project_id").val()
-            }
-        });
-    });
+    // Showing the estimation graph onclick on the graph button, or when component or module are changed
+    //$("#see_estimation_graph, .change_component, .change_module_project").bind('click', function() {
+//    $("#see_estimation_graph").bind('click', function() {
+//        $('.icon-signal').toggle();
+//        $('.icon-list').toggle();
+//        $('.icon-align-left').toggle();
+//        $('.spiner').show();
+//
+//        $.ajax({
+//            url: "/show_estimation_graph",
+//            method: "get",
+//            data: {
+//                module_project: $('#current_module_project').val(),
+//                pbs_project_element_id: $(this).val(),
+//                project_id: $("#project_id").val()
+//            }
+//        });
+//    });
 
 
     $("#select_pbs_project_elements").on('click', function() {
