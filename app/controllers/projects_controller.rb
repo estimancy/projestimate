@@ -872,11 +872,7 @@ public
 
       if est_val.in_out == 'output' or est_val.in_out=='both'
         #begin
-          if @result_hash.nil?
-            @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
-          else
             @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
-          end
         #rescue => e
         #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
         #  puts e.message

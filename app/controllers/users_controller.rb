@@ -162,7 +162,7 @@ public
         @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
 
         @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-        @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.count
+        @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
       end
     else
       render :layout => 'login'
