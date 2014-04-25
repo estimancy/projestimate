@@ -976,7 +976,7 @@ public
     if params[:from_tree_history_view]
      redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
     else
-      redirect_to '/projects', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
+      redirect_to '/dashboard', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
     end
   end
 
