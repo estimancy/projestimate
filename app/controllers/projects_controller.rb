@@ -1542,6 +1542,7 @@ public
     #======================================== CURRENT MODULE OUTPUTS DATA ==============================================
 
     @current_mp_outputs_dataset = {}
+    @current_mp_effort_per_activity = Hash.new
     # get all current module_project attributes for outputs data
     @current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?)', %w(output both))
     # Outputs attributes array
@@ -1563,6 +1564,7 @@ public
           level_value = attr_estimation_value.send("string_data_#{level}")
           if @current_module_project.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio))
             # module with activities
+            @current_mp_effort_per_activity = { "low" => {}, "most_likely" => {}, "high" => {}, "probable" => {} }
             if level_value.nil?
               pbs_level_value=nil.to_i
             else
@@ -1570,8 +1572,12 @@ public
               pbs_level_with_activities = level_value[@current_component.id]
               sum_of_value = 0.0
               if !pbs_level_with_activities.nil?
-                pbs_level_with_activities.each do |wbs_activity_id, hash_value|
+                pbs_level_with_activities.each do |wbs_activity_elt_id, hash_value|
                   sum_of_value = sum_of_value + hash_value[:value]
+                  wbs_project_elt = WbsProjectElement.find(wbs_activity_elt_id)
+                  unless wbs_project_elt.is_root
+                    @current_mp_effort_per_activity[level]["#{wbs_project_elt.name}"] = hash_value[:value]
+                  end
                 end
               end
               pbs_level_value = sum_of_value
