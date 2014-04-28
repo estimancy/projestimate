@@ -221,6 +221,9 @@
                 datasets: <%= cocomo_advanced_input_data_array.to_json.html_safe %>
             };
 
+            //create the radar char div for the Cocomo-Advanced inputs factors
+            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="canvas_radar" width="400" height="400"></canvas></div>');
+
             // Radar chart for input data
             var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
             var radarChart = new Chart(radar_ctx).Radar(cocomo_advanced_input_data, radarOptions);

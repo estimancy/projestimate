@@ -54,7 +54,7 @@ module PeWbsProjectsHelper
 
   def wbs_navigation_links(pbs_project_element, is_project_show_view)
     "<li>
-        <div class='block_label #{ pbs_project_element == current_component ? "selected_pbs" : '' }'>
+        <div class='block_label #{ pbs_project_element == current_component ? "selected_pbs" : '' } change_component_graph'>
           <a href=#{ selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, project_id: @project.id, :is_project_show_view => is_project_show_view) } data-remote=true>
             <i class='icon-file'></i>
             #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
