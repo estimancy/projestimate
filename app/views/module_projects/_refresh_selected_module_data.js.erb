@@ -65,6 +65,11 @@ $(".date-picker").datepicker({
 
 $('.attribute_tooltip').tooltip({'html' : true });
 
+//Regenerate the estimation graph according to the current selected component
+$.ajax({
+    url: "/show_estimation_graph",
+    method: "get"
+});
 
 
 
