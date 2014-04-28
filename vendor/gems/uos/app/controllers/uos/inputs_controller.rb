@@ -45,11 +45,11 @@ class Uos::InputsController < ApplicationController
 
     def import
       csv_string = Input::import(params[:file], params[:separator], params[:encoding])
-      redirect_to main_app.root_url
+      redirect_to "/uos?mp=#{current_module_project.id}"
     end
 
     def save_uos
-      @module_project = ModuleProject.find(params[:module_project_id])
+      @module_project = current_module_project
       @organization_technologies = current_project.organization.organization_technologies.defined.map{|i| [i.name, i.id]}
       @unit_of_works = current_project.organization.unit_of_works.defined.map{|i| [i.name, i.id]}
       @complexities = current_project.organization.unit_of_works.first.organization_uow_complexities.map{|i| [i.name, i.id]}
@@ -65,7 +65,7 @@ class Uos::InputsController < ApplicationController
         input.size_low = params[:size_low]["#{r}"]
         input.size_most_likely = params[:size_most_likely]["#{r}"]
         input.size_high = params[:size_high]["#{r}"]
-        input.weight = params[:weight]["#{r}"]
+        input.weight = (params[:weight]["#{r}"].blank? ? 1 : params[:weight]["#{r}"])
         input.gross_low = params[:gross_low]["#{r}"]
         input.gross_most_likely = params[:gross_most_likely]["#{r}"]
         input.gross_high = params[:gross_high]["#{r}"]
@@ -113,7 +113,7 @@ class Uos::InputsController < ApplicationController
       productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
       abacus_value = OrganizationUowComplexity.find(params[:complexity]).value
 
-      weight = params[:"weight"].nil? ? 1 : params[:"weight"]
+      weight = params[:"weight"].blank? ? 1 : params[:"weight"]
 
       @result[:"gross_low_#{@index.to_s}"] = params[:size_low].to_i * abacus_value.to_f * weight.to_f * productivity_ratio.to_f
       @result[:"gross_most_likely_#{@index.to_s}"] = params[:size_most_likely].to_i * abacus_value * weight.to_f * productivity_ratio.to_f

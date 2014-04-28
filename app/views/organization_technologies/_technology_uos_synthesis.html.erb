@@ -45,7 +45,7 @@
                 </td>
                 <% @technologies.each do |t| %>
                     <td style="text-align: center;">
-                      <%= check_box_tag "technology_uos_syntesis[#{t.id}]", "", (unit.organization_technologies.map(&:id).include?(t.id)) ? true : false %>
+                      <%= check_box_tag "technology_uos_synthesis[#{t.id}][#{unit.id}]", "", (unit.organization_technologies.map(&:id).include?(t.id)) ? true : false %>
                     </td>
                 <% end %>
               </tr>

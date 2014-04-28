@@ -85,15 +85,19 @@ class OrganizationTechnologiesController < ApplicationController
     authorize! :edit_organizations, Organization
 
     @organization = Organization.find(params[:organization])
-    @technologies = @organization.organization_technologies
+    @technologies = OrganizationTechnology.where(id: params[:technology_uos_synthesis].keys)
     @unitofworks = @organization.unit_of_works
 
-    @unitofworks.each do |unit|
-      @technologies.each do |technology|
-        unit.organization_technology_ids << technology.id
-        unit.save
-      end
+    array = []
+    @technologies.each do |technology|
+
+      array << technology.id
+
+      unit = UnitOfWork.find(params[:technology_uos_synthesis]["#{technology.id}".to_sym].keys.first)
+      unit.organization_technology_ids = array
+      unit.save
     end
+
     redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-9'), nil, '/organizationals_params')
   end
 
