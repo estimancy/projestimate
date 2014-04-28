@@ -41,7 +41,7 @@
       <%= text_field_tag "size_high[#{i+1}]", input.size_high, :class => "size_high compressed" %>
     </td>
     <td>
-      <%= text_field_tag "weight[#{i+1}]", input.weight, :class => "weight compressed" %>
+      <%= text_field_tag "weight[#{i+1}]", input.weight.nil? ? 1 : input.weight, :class => "weight compressed" %>
     </td>
     <td>
       <%= text_field_tag "gross_low[#{i+1}]", input.gross_low, :class => "gross_low compressed", readonly: true %>

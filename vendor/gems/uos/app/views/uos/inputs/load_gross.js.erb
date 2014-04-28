@@ -1,4 +1,5 @@
 <% @result.keys.each do |k| %>
   $("#<%= k %>").val(<%= @result[k] %>);
+  initialize_gross_behaviour(<%= k %>);
 <% end %>
 
