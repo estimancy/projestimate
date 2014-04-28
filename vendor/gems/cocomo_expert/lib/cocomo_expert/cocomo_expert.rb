@@ -35,8 +35,9 @@ module CocomoExpert
       end
 
       a = 2.94
-      b = 0.91 + (1/100) * sf.sum
-      pm = em.sum * a * @coef_kls**b
+      b = 0.91 + 0.01 * sf.sum
+
+      pm = em.sum * a * (0.01 * @coef_kls)**b
 
       return pm
     end
@@ -56,7 +57,7 @@ module CocomoExpert
       end
 
       f = 0.28 + 0.2 * (1/100) * sf.sum
-      @delay = 3.67 * (@effort ** f )
+      @delay = 3.76 * (@effort ** f)
       @delay
     end
 
