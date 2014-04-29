@@ -602,7 +602,7 @@ module ProjectsHelper
             # Note to justify each estimation attribute
             add_notes_title = I18n.t(:label_add_notes)
             icon_class = ""
-            unless est_val.notes.empty?
+            unless est_val.notes.to_s.empty?
               add_notes_title = est_val.notes
               icon_class = "icon-green"
             end
