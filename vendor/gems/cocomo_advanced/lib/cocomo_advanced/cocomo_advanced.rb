@@ -59,7 +59,7 @@ module CocomoAdvanced
         sf << ic
       end
 
-      return ((@coef_a * (@coef_kls ** @coef_b)) * sf.inject(:*))
+      return (@coef_a * @coef_kls ** @coef_b) * sf.inject(:*)
     end
 
     #Return delay (in hour)
@@ -86,7 +86,7 @@ module CocomoAdvanced
     end
 
     def get_cost(*args)
-      @cost = 0
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * 3000
       @cost
     end
   end

@@ -34,14 +34,15 @@ module CocomoExpert
                                  project_id: args[0]).first.coefficient
       end
 
-      a = 2.94
-      b = 0.91 + (1/100) * sf.sum
-      pm = em.sum * a * @coef_kls**b
+      b = 0.91 + 0.01 * sf.sum
+
+      #on ne gere pas BRAK
+      pm = 2.94 * em.inject(:*) * 1 * (@coef_kls)**b
 
       return pm
     end
 
-    #Return delay (in hour)
+    #Return delay (in month)
     def get_delay(*args)
       @effort = get_effort_man_month(args[0], args[1], args[2])
 
@@ -56,7 +57,7 @@ module CocomoExpert
       end
 
       f = 0.28 + 0.2 * (1/100) * sf.sum
-      @delay = 3.67 * (@effort ** f )
+      @delay = 3.76 * (@effort ** f)
       @delay
     end
 
@@ -73,7 +74,7 @@ module CocomoExpert
     end
 
     def get_cost(*args)
-      @cost = 0
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * 3000
       @cost
     end
   end

@@ -372,7 +372,7 @@ public
           render :template => 'projects/confirm_deletion'
         end
       when I18n.t('cancel')
-        redirect_to (params[:from_tree_history_view].nil? ?  projects_path : edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'))
+        redirect_to projects_path
       else
         render :template => 'projects/confirm_deletion'
     end
