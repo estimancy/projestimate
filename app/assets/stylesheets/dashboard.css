@@ -788,5 +788,13 @@ div.block_label.selected_pbs {
     height: 255px;
 }
 
-.icon-green {color: green;}
+.icon-green {
+    color: green;
+}
+
+.note_input_with_activities{
+    margin-left: 20px;
+    /*background-color: white;*/
+}
+
 

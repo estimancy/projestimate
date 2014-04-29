@@ -1,6 +1,8 @@
 $("#notifications").html("");
 $(".modal-body-inner").html("<%= j render(:partial => "estimation_values/add_attribute_note") %>");
 
+$(".modal-header h3").css({ color: 'white', 'font-size': '16px', 'text-shadow': 'none' });
+
 $("#myModalLabel").html("Edit attribute notes");
 
 $("#edit_component").modal({

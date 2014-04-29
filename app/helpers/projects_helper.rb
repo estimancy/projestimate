@@ -275,6 +275,21 @@ module ProjectsHelper
     end
   end
 
+  # Display link to add notes to attribute
+  def add_attribute_notes_link(estimation_value)
+    res = ""
+    add_notes_title = I18n.t(:label_add_notes)
+    icon_class = ""
+    unless estimation_value.notes.to_s.empty?
+      add_notes_title = estimation_value.notes
+      icon_class = "icon-green"
+    end
+    #res << '<td>'
+    res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
+    #res << '</td>'
+
+  end
+
   # Display Estimations output results according to the module behavior
   def display_input
     res = String.new
@@ -294,8 +309,10 @@ module ProjectsHelper
           effort_breakdown_module = Pemodule.where("alias = ? AND record_status_id = ?", "effort_breakdown", @defined_status.id).first
 
           unless effort_breakdown_module.nil?
-            refer_module_potential_ids = module_project.associated_module_projects ###+ module_project.inverse_associated_module_projects
+            #refer_module_potential_ids = module_project.associated_module_projects ###+ module_project.inverse_associated_module_projects
                                                                                    #unless refer_module.empty?
+
+            refer_module_potential_ids = current_module_project.associated_module_projects
             refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_man_hour", @defined_status.id).first
             #refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_man_month", @defined_status.id).first
 
@@ -384,7 +401,12 @@ module ProjectsHelper
 
       module_project.estimation_values.each do |est_val|
         if (est_val.in_out == 'input' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
-          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span></th>"
+          res << "<th>"
+            res << "<span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span>"
+            res << "<span class='note_input_with_activities'>"
+              res << add_attribute_notes_link(est_val)
+            res << '</span>'
+          res << '</th>'
         end
       end
 
@@ -460,7 +482,11 @@ module ProjectsHelper
         est_val_pe_attribute = est_val.pe_attribute
         est_val_in_out = est_val.in_out
         if (est_val_in_out == 'output' or est_val_in_out=='both') and est_val.module_project.id == module_project.id
-          res << "<th colspan=4><span class='attribute_tooltip' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val_pe_attribute.name}</span></th>"
+          res << "<th colspan=4><span class='attribute_tooltip' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val_pe_attribute.name}</span>"
+          res << "<span class='note_input_with_activities'>"
+          res << add_attribute_notes_link(est_val)
+          res << '</span>'
+          res << '</th>'
         end
       end
       res << '</tr>'
@@ -600,14 +626,18 @@ module ProjectsHelper
               end
             end
             # Note to justify each estimation attribute
-            add_notes_title = I18n.t(:label_add_notes)
-            icon_class = ""
-            unless est_val.notes.to_s.empty?
-              add_notes_title = est_val.notes
-              icon_class = "icon-green"
-            end
+            # Add link to add attribute Note to justify each estimation attribute
             res << '<td>'
-            res << link_to('', add_note_to_attribute_path(:estimation_value_id => est_val.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
+            res << add_attribute_notes_link(est_val)
+            res << '</td>'
+            #add_notes_title = I18n.t(:label_add_notes)
+            #icon_class = ""
+            #unless est_val.notes.to_s.empty?
+            #  add_notes_title = est_val.notes
+            #  icon_class = "icon-green"
+            #end
+            #res << '<td>'
+            #res << link_to('', add_note_to_attribute_path(:estimation_value_id => est_val.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
             res << '</td>'
           end
           res << '</tr>'
