@@ -1,0 +1,17 @@
+$("#notifications").html("");
+$(".modal-body-inner").html("<%= j render(:partial => "estimation_values/add_attribute_note") %>");
+
+$("#myModalLabel").html("Edit attribute notes");
+
+$("#edit_component").modal({
+    keyboard: false,
+    backdrop: "static"
+});
+
+$("#notifications").html("<%= j(render "layouts/notifications") %>");
+
+$('#add_notes').click(function() {
+    //$('form').submit();
+    $(this).form.submit();
+    $('#myModalLabel').modal('hide');
+});

@@ -19,6 +19,10 @@
 ########################################################################
 Projestimate::Application.routes.draw do
 
+
+  resources :estimation_values
+  get 'add_note_to_attribute' => 'estimation_values#add_note_to_attribute', :as => 'add_note_to_attribute'
+
   resources :factors
 
   devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"} #, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }

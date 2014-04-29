@@ -578,7 +578,7 @@ module ProjectsHelper
         res << "<table class='table table-condensed table-bordered'>
                         <tr>
                           <th></th>"
-        ['low', '', 'most_likely', 'high'].each do |level|
+        ['low', '', 'most_likely', 'high', ''].each do |level|
           res << "<th>#{level.humanize}</th>"
         end
         res << '</tr>'
@@ -599,6 +599,16 @@ module ProjectsHelper
                 res << '</td>'
               end
             end
+            # Note to justify each estimation attribute
+            add_notes_title = I18n.t(:label_add_notes)
+            icon_class = ""
+            unless est_val.notes.empty?
+              add_notes_title = est_val.notes
+              icon_class = "icon-green"
+            end
+            res << '<td>'
+            res << link_to('', add_note_to_attribute_path(:estimation_value_id => est_val.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
+            res << '</td>'
           end
           res << '</tr>'
         end
@@ -809,6 +819,5 @@ module ProjectsHelper
     gv = module_graph.vertices.select {|v| v.to_s.match(/GRATR/)}
     #module_graph.induced_subgraph(gv).write_to_graphic_file('jpg','module_graph_project')
     module_graph.write_to_graphic_file('jpg','graph_project_history')
-
   end
 end

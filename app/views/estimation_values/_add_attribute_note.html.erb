@@ -1,0 +1,8 @@
+<%= simple_form_for(@estimation_value) do |f| %>
+    <%= f.input :notes, :as => :text, :input_html => { :class => 'attribute_note_area'} %>
+
+    <div class="modal-footer-left">
+      <%= f.submit I18n.t('save'), :class => 'btn', :id => 'add_notes' %>
+      <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
+    </div>
+<% end %>
