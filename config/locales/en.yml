@@ -1094,3 +1094,8 @@ en:
   defined_language_not_deletable: "Defined language is not deletable"
   leave_it_blank_if_no_change: "leave it blank if you don't want to change it"
   sign_in_with_google: "Sign in with Google"
+
+  label_edit_attribute_notes: "Edit \"%{attribute_name}\" notes"
+  notes_updated_by: "Notes updated by"
+  label_add_notes: "Add notes to attribute"
+  notice_notes_successfully_updated: "Notes on attribute is successfully updated"

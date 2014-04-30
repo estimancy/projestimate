@@ -783,4 +783,22 @@ div.block_label.selected_pbs {
     color: #ffffff;
 }
 
+.attribute_note_area{
+    width: 515px;
+    height: 255px;
+}
+
+.icon-green {
+    color: green;
+}
+
+.note_input_with_activities{
+    margin-left: 20px;
+}
+
+/* Override default backdrop opacity option*/
+/*.modal-backdrop{*/
+    /*opacity: 0;*/
+/*}*/
+
 

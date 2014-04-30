@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140425082853) do
+ActiveRecord::Schema.define(:version => 20140428161109) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(:version => 20140425082853) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "display_order"
+    t.text     "notes"
   end
 
   add_index "estimation_values", ["links"], :name => "index_attribute_projects_on_links"

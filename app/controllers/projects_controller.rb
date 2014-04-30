@@ -1575,7 +1575,7 @@ public
                 pbs_level_with_activities.each do |wbs_activity_elt_id, hash_value|
                   sum_of_value = sum_of_value + hash_value[:value]
                   wbs_project_elt = WbsProjectElement.find(wbs_activity_elt_id)
-                  unless wbs_project_elt.is_root
+                  unless wbs_project_elt.is_root || wbs_project_elt.has_children?
                     @current_mp_effort_per_activity[level]["#{wbs_project_elt.name}"] = hash_value[:value]
                   end
                 end
