@@ -490,6 +490,7 @@ en:
   edit_subcontractor: "Edit the subcontractor \"%{value}\" ..."
   text_subcontractor: "Manage your organization's subcontractors"
   productivity_ratio: "Productivity ratio"
+  new_uow_complexity: "Créer une complexité pour les unités d'oeuvres"
 
   #Pbs_project_elements
   ancestry: "Ancestry"
@@ -568,6 +569,7 @@ en:
   warning_need_check_box_confirmation: "You need to confirm project deletion with check-box"
   label_project_is_model: "Is a project template"
   is_model: "Template"
+  estimate: "Estimations"
 
   #Record_statuses
   edit_record_status: "Edit the \"%{value}\" record status ..."

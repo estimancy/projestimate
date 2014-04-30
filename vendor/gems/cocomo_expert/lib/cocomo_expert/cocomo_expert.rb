@@ -58,6 +58,7 @@ module CocomoExpert
 
       f = 0.28 + 0.2 * (1/100) * sf.sum
       @delay = 3.76 * (@effort ** f)
+      @delay = @delay * 152
       @delay
     end
 

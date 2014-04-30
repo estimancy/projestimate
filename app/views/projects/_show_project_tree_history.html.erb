@@ -159,7 +159,7 @@
 
                 var state = document.createElement('Label');
                 state.type = 'text';
-                state.innerText = node.data.state;
+                state.innerText = capitaliseFirstLetter(node.data.state).replace('_', ' ');
 
                 display += "<br>";
                 label.innerHTML = display;
@@ -351,6 +351,11 @@
        function getToolTip(node){
            return node.data.title + "-" + node.name;
        }
+
+        function capitaliseFirstLetter(string)
+        {
+          return string.charAt(0).toUpperCase() + string.slice(1);
+        }
 
 </script>
 

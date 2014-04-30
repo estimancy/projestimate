@@ -490,6 +490,7 @@ fr:
   edit_subcontractor: "Editer le sous-traitant \"%{value}\" ..."
   text_subcontractor: "Gérer les sous-traitants de votre organisation"
   productivity_ratio: "Ratio de productivité"
+  new_uow_complexity: "Créer une complexité pour les unités d'oeuvres"
 
   #Pbs_project_elements
   ancestry: "Ancêtre"
@@ -568,6 +569,7 @@ fr:
   warning_need_check_box_confirmation: "Vous devez confirmer la suppression du projet avec la case à cocher"
   label_project_is_model: "Est un modèle de projet"
   is_model: "Modèle"
+  estimate: "Estimations"
 
   #Record_statuses
   edit_record_status: "Editer le statut d'enregistrement \"%{value}\" ..."
