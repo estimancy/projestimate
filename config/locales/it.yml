@@ -1079,6 +1079,7 @@ it:
 #  defined_language_not_deletable: ""La lingua definita non è deletable""
 #  leave_it_blank_if_no_change: "lasci che esso cancelli se Lei non vuole cambiarlo"
 
+  label_edit_attribute_notes: "Edit \"%{attribute_name}\" notes"
   notes_updated_by: "Notes updated by"
   label_add_notes: "Add notes to attribute"
   notice_notes_successfully_updated: "Notes on attribute is successfully updated"

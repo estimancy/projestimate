@@ -1092,7 +1092,9 @@ fr:
   defined_language_not_deletable: "Impossible de supprimer un langage dans le statut Defined"
   leave_it_blank_if_no_change: "Laisser le champ vide si vous ne voulez pas le modifier"
   sign_in_with_google: "S'authentifier avec votre compte Google"
+
+  label_edit_attribute_notes: "Editer notes sur \"%{attribute_name}\" "
   notes_updated_by: "Notes modifiées par"
   label_add_notes: "Ajouter une note"
-  notice_notes_successfully_updated: "La note ajoutée à l\'attribut a été mise à jour avec success"
+  notice_notes_successfully_updated: "La note ajoutée à l'attribut a été mise à jour avec success"
 

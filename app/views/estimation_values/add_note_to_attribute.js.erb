@@ -1,13 +1,14 @@
 $("#notifications").html("");
+$(".modal-header h3").css({ color: 'white', 'font-size': '14px', 'text-shadow': 'none' });
+
 $(".modal-body-inner").html("<%= j render(:partial => "estimation_values/add_attribute_note") %>");
 
-$(".modal-header h3").css({ color: 'white', 'font-size': '16px', 'text-shadow': 'none' });
-
-$("#myModalLabel").html("Edit attribute notes");
+$("#myModalLabel").html('<%= I18n.t(:label_edit_attribute_notes, :attribute_name => "#{@estimation_value.pe_attribute.name}") %>');
 
 $("#edit_component").modal({
     keyboard: false,
-    backdrop: "static"
+    backdrop: "static",
+    backdrop: false
 });
 
 $("#notifications").html("<%= j(render "layouts/notifications") %>");

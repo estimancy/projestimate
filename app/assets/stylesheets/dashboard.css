@@ -794,7 +794,11 @@ div.block_label.selected_pbs {
 
 .note_input_with_activities{
     margin-left: 20px;
-    /*background-color: white;*/
 }
+
+/* Override default backdrop opacity option*/
+/*.modal-backdrop{*/
+    /*opacity: 0;*/
+/*}*/
 
 
