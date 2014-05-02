@@ -60,19 +60,19 @@ public
 
   def index
     #No authorize required since everyone can access the list (permission will be managed project per project)
-    set_page_title 'Projects'
+    set_page_title 'Estimations'
     @projects = Project.all.reject { |i| !i.is_childless? }
   end
 
   def new
     authorize! :create_project_from_scratch, Project
-    set_page_title 'New project'
+    set_page_title 'New estimation'
   end
 
   #Create a new project
   def create
     authorize! :create_project_from_scratch, Project
-    set_page_title 'Create project'
+    set_page_title 'Create estimation'
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
     @project.users << current_user
@@ -157,7 +157,7 @@ public
 
   #Edit a selected project
   def edit
-    set_page_title 'Edit project'
+    set_page_title 'Edit estimation'
 
     @project = Project.find(params[:id])
 
@@ -197,7 +197,7 @@ public
   end
 
   def update
-    set_page_title 'Edit project'
+    set_page_title 'Edit estimation'
     @project = Project.find(params[:id])
 
     unless (cannot? :edit_project, @project) || # No write access to project
@@ -322,7 +322,7 @@ public
   def show
     @project = Project.find(params[:id])
     authorize! :show_project, @project
-    set_page_title 'Show project'
+    set_page_title 'Show estimation'
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first

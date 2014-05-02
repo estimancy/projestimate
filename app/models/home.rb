@@ -103,7 +103,7 @@ class Home < ActiveRecord::Base
     self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])
 
     puts '   - Complexity...'
-    self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
+    self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'state', 'uuid'])
 
     #Associate
     ext_factors = ExternalMasterDatabase::ExternalFactor.all
@@ -600,7 +600,7 @@ class Home < ActiveRecord::Base
     self.create_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'state', 'factor_type', 'uuid'])
 
     puts '   - Complexity...'
-    self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
+    self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid', 'state'])
 
     #Associate
     ext_factors = ExternalMasterDatabase::ExternalFactor.all

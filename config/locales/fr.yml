@@ -1100,3 +1100,8 @@ fr:
   label_add_notes: "Ajouter une note"
   notice_notes_successfully_updated: "La note ajoutée à l'attribut a été mise à jour avec success"
 
+  new_factor: "Nouveau facteur d'ajustement"
+  new_factor_complexity: "Nouveau facteur d'ajustement"
+  complexity_by_factor: "Complexité par facteurs"
+  factors: "Facteurs d'ajustement"
+

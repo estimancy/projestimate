@@ -1099,3 +1099,8 @@ en:
   notes_updated_by: "Notes updated by"
   label_add_notes: "Add notes to attribute"
   notice_notes_successfully_updated: "Notes on attribute is successfully updated"
+
+  new_factor: "New factor"
+  new_factor_complexity: "New factor"
+  complexity_by_factor: "Complexities by factors"
+  factors: "Factors"
