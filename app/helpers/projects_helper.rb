@@ -289,11 +289,6 @@ module ProjectsHelper
     res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
   end
 
-  # Customize input view for the single entry attributes
-  def single_entry_attribute_view(estimation_value)
-
-  end
-
   # Display Estimations output results according to the module behavior
   def display_input
     res = String.new
