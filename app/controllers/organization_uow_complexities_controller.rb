@@ -49,13 +49,11 @@ class OrganizationUowComplexitiesController < ApplicationController
     authorize! :edit_organizations, Organization
     @organization_uow_complexity = OrganizationUowComplexity.new(params[:organization_uow_complexity])
     @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
+
     if @organization_uow_complexity.save
       flash[:notice] = I18n.t(:notice_organization_uow_complexity_successful_created)
 
-      redirect_to redirect_apply(nil,
-                                 new_organization_uow_complexity_path(params[:organization_uow_complexity]),
-                                 edit_organization_path(params[:organization_uow_complexity][:organization_id],
-                                                        :anchor => 'tabs-5'))
+      redirect_to redirect_apply(nil, new_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-5'))
     else
       render action: 'new', :organization_id => @organization
     end

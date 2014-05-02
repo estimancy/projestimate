@@ -16,16 +16,6 @@
 
 $(document).ready(function() {
 
-//    $('.icon-check').click(function() {
-//        var position = $(this).parent().index() ;
-//        var table = $(this).closest("table")
-//        var table_length = table.find("tr").length;
-//        for(var i=2 ; i < 3 ; i++){
-//            table.find("tr:nth-child(" + i + ") > td:nth-child(" + position + ") input").prop("checked", true);
-//            console.log(i);
-//            console.log(position);
-//        }
-//    });
 
     $("form.send_feedback input[type=submit]").click(function() {
         var error=false;

@@ -87,6 +87,8 @@ module CocomoBasic
     def get_delay(*args)
       #if @coef_kls && @complexity
         @delay = (2.5*((get_effort_man_month)**@coef_c)).to_f
+        @delay = @delay * 152
+        @delay
       #else
       #  nil
       #end

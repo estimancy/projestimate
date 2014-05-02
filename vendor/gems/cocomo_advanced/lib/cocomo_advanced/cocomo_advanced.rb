@@ -66,6 +66,7 @@ module CocomoAdvanced
     def get_delay(*args)
       @effort = get_effort_man_month(args[0], args[1], args[2])
       @delay = (2.5*(@effort**@coef_c)).to_f
+      @delay = @delay * 152
       @delay
     end
 

@@ -284,6 +284,8 @@ module ProjectsHelper
       add_notes_title = estimation_value.notes
       icon_class = "icon-green"
     end
+
+    #res << '<td>'
     res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
   end
 
