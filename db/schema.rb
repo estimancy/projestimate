@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140428161109) do
+ActiveRecord::Schema.define(:version => 20140430094018) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -513,6 +513,7 @@ ActiveRecord::Schema.define(:version => 20140428161109) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "attribute_category_id"
+    t.boolean  "single_entry_attribute"
   end
 
   add_index "pe_attributes", ["record_status_id"], :name => "index_attributes_on_record_status_id"

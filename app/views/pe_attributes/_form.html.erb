@@ -13,6 +13,13 @@
               <td><%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></td>
               <td><%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-medium'} %></td>
             </tr>
+
+            <tr>
+              <td><p><%= label_tag :single_entry_attribute, I18n.t('label_single_entry_attribute') %></td>
+              <td><i class="icon-info-sign" rel="tooltip" title="<%= I18n.t(:help_single_entry_attribute) %>" style="cursor: help;"></i></td>
+            </tr>
+
+            <tr><td> <%= f.input :single_entry_attribute, :label => false, :as => :select %></td></tr>
           </table>
 
           <%= f.input :attribute_category_id, :label => I18n.t('category'), :as => :select, :collection => @attribute_categories %>

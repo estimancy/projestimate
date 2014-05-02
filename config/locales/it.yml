@@ -1079,6 +1079,8 @@ it:
 #  defined_language_not_deletable: ""La lingua definita non è deletable""
 #  leave_it_blank_if_no_change: "lasci che esso cancelli se Lei non vuole cambiarlo"
 
+  label_single_entry_attribute: "Single entry attribute"
+  help_single_entry_attribute: "Attribute can have single entry or multiple entries values (low, most likely, high)"
   label_edit_attribute_notes: "Edit \"%{attribute_name}\" notes"
   notes_updated_by: "Notes updated by"
   label_add_notes: "Add notes to attribute"

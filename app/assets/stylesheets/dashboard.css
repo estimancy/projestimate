@@ -796,6 +796,10 @@ div.block_label.selected_pbs {
     margin-left: 20px;
 }
 
+.hide-content{
+    visibility: hidden
+}
+
 /* Override default backdrop opacity option*/
 /*.modal-backdrop{*/
     /*opacity: 0;*/
