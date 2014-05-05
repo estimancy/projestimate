@@ -280,7 +280,6 @@ module ProjectsHelper
     res = ""
     add_notes_title = I18n.t(:label_add_notes)
     icon_class = ""
-
     unless estimation_value.notes.to_s.empty?
       add_notes_title = estimation_value.notes
       icon_class = "icon-green"
@@ -288,8 +287,6 @@ module ProjectsHelper
 
     #res << '<td>'
     res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
-    #res << '</td>'
-
   end
 
   # Display Estimations output results according to the module behavior
@@ -515,6 +512,18 @@ module ProjectsHelper
               level_estimation_values = nil
               level_estimation_values = est_val.send("string_data_#{level}")
 
+              # customize the single attribute entry
+              # this class will only be applied on the low level, as most_likely and high values are read_only
+              attribute_type = ""
+              read_only_attribute_level = false
+              if est_val.pe_attribute.single_entry_attribute
+                if level == "low"
+                  attribute_type = "single_entry_attribute"
+                else  # for otheres level(most-likely, high)
+                  read_only_attribute_level = true
+                end
+              end
+
               # For Wbs_Activity Complemention module, input data are from last executed module
               if module_project.pemodule.alias == 'wbs_activity_completion'
                 pbs_last_result = nil
@@ -526,27 +535,28 @@ module ProjectsHelper
                 if pbs_last_result.nil?
                   res << "#{text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id.to_s}][#{wbs_project_elt.id.to_s}]",
                                            nil,
-                                           :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id}",
-                                           "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id}"
+                                           :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id} #{attribute_type}",
+                                           "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id, :readonly => read_only_attribute_level}"
 
                 elsif wbs_project_elt.wbs_activity_element.nil?
                   if wbs_project_elt.is_root? || wbs_project_elt.has_children?
                     res << "#{text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id.to_s}][#{wbs_project_elt.id.to_s}]",
                                              pbs_last_result[wbs_project_elt.id][:value],
-                                             :readonly => true, :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id}",
+                                             :readonly => true,
+                                             :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id} #{attribute_type}",
                                              "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id}"
                     readonly_option = true
                   else
                     # If element is not from library
                     res << "#{text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id.to_s}][#{wbs_project_elt.id.to_s}]",
                                              pbs_last_result[wbs_project_elt.id].nil? ? nil : pbs_last_result[wbs_project_elt.id][:value],
-                                             :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id}",
+                                             :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id} #{attribute_type}",
                                              "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id}"
                   end
                 else
                   res << "#{text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id.to_s}][#{wbs_project_elt.id.to_s}]",
                                            pbs_last_result[wbs_project_elt.id][:value],
-                                           :readonly => true, :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id}",
+                                           :readonly => true, :class => "input-small #{level} #{est_val.id} #{wbs_project_elt.id} #{attribute_type}",
                                            "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id}"
                   readonly_option = true
                 end
@@ -557,12 +567,14 @@ module ProjectsHelper
                 if wbs_project_elt.is_root? || wbs_project_elt.has_children?
                   res << "#{ text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id.to_s}][#{wbs_project_elt.id.to_s}]",
                                             nullity_condition ? nil : level_estimation_values[pbs_project_element.id][wbs_project_elt.id],
-                                            :readonly => readonly_option, :class => "input-small #{level}  #{est_val.id} #{wbs_project_elt.id}",
+                                            :readonly => readonly_option || read_only_attribute_level,
+                                            :class => "input-small #{level}  #{est_val.id} #{wbs_project_elt.id} #{attribute_type}",
                                             "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id }"
                 else
                   res << "#{ text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id.to_s}][#{wbs_project_elt.id.to_s}]",
                                             nullity_condition ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id][wbs_project_elt.id],
-                                            :readonly => readonly_option, :class => "input-small #{level}  #{est_val.id} #{wbs_project_elt.id}",
+                                            :readonly => readonly_option || read_only_attribute_level,
+                                            :class => "input-small #{level}  #{est_val.id} #{wbs_project_elt.id} #{attribute_type}",
                                             "data-est_val_id" => est_val.id, "data-wbs_project_elt_id" => wbs_project_elt.id }"
                 end
               end
@@ -601,6 +613,7 @@ module ProjectsHelper
     #  link_to "Cocomo Advanced", "/cocomo_advanced"
     #else
       if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+
         pemodule = Pemodule.find(module_project.pemodule.id)
         res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
         res << "<table class='table table-condensed table-bordered'>
@@ -617,29 +630,37 @@ module ProjectsHelper
             res << '<tr>'
             res << "<td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name}</span></td>"
             level_estimation_values = Hash.new
+
             ['low', 'most_likely', 'high'].each do |level|
+
+              attribute_type = ""
+              read_only_attribute = false
+              disable_attribute_level = false
+              # customize the single attribute entry
+              # this class will only be applied on the low level, as most_likely and high values are read_only
+              if est_val.pe_attribute.single_entry_attribute
+                if level == "low"
+                  attribute_type = "single_entry_attribute"
+                else
+                  read_only_attribute = true
+                  disable_attribute_level = true
+                end
+              end
+
               level_estimation_values = est_val.send("string_data_#{level}")
-              res << "<td>#{pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element)}</td>"
+              res << "<td>#{pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type, read_only_attribute)}</td>"
               if level == 'low'
                 input_id = "_#{est_val_pe_attribute.alias}_#{module_project.id}"
-                res << '<td>'
+                res << "<td>"
                 res << "<span id='#{input_id}' class='copyLib icon  icon-chevron-right' data-effort_input_id='#{input_id}' title='Copy value in other fields' onblur='this.style.cursor='default''></span>"
                 res << '</td>'
               end
             end
-            # Note to justify each estimation attribute
+
             # Add link to add attribute Note to justify each estimation attribute
             res << '<td>'
             res << add_attribute_notes_link(est_val)
             res << '</td>'
-            #add_notes_title = I18n.t(:label_add_notes)
-            #icon_class = ""
-            #unless est_val.notes.to_s.empty?
-            #  add_notes_title = est_val.notes
-            #  icon_class = "icon-green"
-            #end
-            #res << '<td>'
-            #res << link_to('', add_note_to_attribute_path(:estimation_value_id => est_val.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
             res << '</td>'
           end
           res << '</tr>'
@@ -659,13 +680,13 @@ module ProjectsHelper
   end
 
 
-  def pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element)
+  def pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type="", read_only_value=false)
 
     est_val_pe_attribute = est_val.pe_attribute
 
     if est_val_pe_attribute.attr_type == 'integer' or est_val_pe_attribute.attr_type == 'float'
 
-      display_text_field_tag(level, est_val, module_project, level_estimation_values, pbs_project_element)
+      display_text_field_tag(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type, read_only_value)
 
     elsif est_val_pe_attribute.attr_type == 'list'
 
@@ -673,23 +694,26 @@ module ProjectsHelper
                  options_for_select(
                      est_val_pe_attribute.options[2].split(';'),
                      :selected => (level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id])),
-                 :class => "input-small #{level} #{est_val.id}",
+                 :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                  :prompt => "Unset",
-                 "data-est_val_id" => est_val.id
+                 "data-est_val_id" => est_val.id,
+                 :readonly => read_only_value, :disabled => read_only_value
 
     elsif est_val_pe_attribute.attr_type == 'date'
 
       text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                      level_estimation_values[pbs_project_element.id].nil? ? display_date(level_estimation_values["default_#{level}".to_sym]) : display_date(level_estimation_values[pbs_project_element.id]),
-                     :class => "input-small #{level} #{est_val.id} date-picker",
-                     "data-est_val_id" => est_val.id
+                     :class => "input-small #{level} #{est_val.id} date-picker #{attribute_type}",
+                     "data-est_val_id" => est_val.id,
+                     :readonly => read_only_value
 
     else #type = text
 
       text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                      (level_estimation_values[pbs_project_element.id].nil?) ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
-                     :class => "input-small #{level} #{est_val.id}",
-                     "data-est_val_id" => est_val.id
+                     :class => "input-small #{level} #{est_val.id} #{attribute_type}",
+                     "data-est_val_id" => est_val.id,
+                     :readonly => read_only_value
     end
   end
 
@@ -736,7 +760,8 @@ module ProjectsHelper
 
   #Display text field tag depending of estimation plan.
   #Some pemodules can take previous and computed values
-  def display_text_field_tag(level, est_val, module_project, level_estimation_values, pbs_project_element)
+  # attribute_type parameter will be aqual to "single_attribute_entry" if single_attribute_entry
+  def display_text_field_tag(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type="", read_only_value=false)
 
     est_val_pe_attribute = est_val.pe_attribute
     res = []
@@ -753,22 +778,25 @@ module ProjectsHelper
       if module_project.previous.empty? || !est_val["string_data_#{level}"][pbs_project_element.id].nil?
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                        level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
-                       :class => "input-small #{level} #{est_val.id}",
-                       "data-est_val_id" => est_val.id
+                       :class => "input-small #{level} #{est_val.id} #{attribute_type}",
+                       "data-est_val_id" => est_val.id,
+                       :readonly => read_only_value
       else
         comm_attr = ModuleProject::common_attributes(module_project.previous.first, module_project)
         if comm_attr.empty?
           text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                          level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
-                         :class => "input-small #{level} #{est_val.id}",
-                         "data-est_val_id" => est_val.id
+                         :class => "input-small #{level} #{est_val.id} #{attribute_type}",
+                         "data-est_val_id" => est_val.id,
+                         :readonly => read_only_value
         else
           estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id, :module_project_id => module_project.previous.first.id).first
           new_level_estimation_values = estimation_value.send("string_data_#{level}")
           text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                          new_level_estimation_values[pbs_project_element.id],
-                         :class => "input-small #{level} #{est_val.id}",
-                         "data-est_val_id" => est_val.id
+                         :class => "input-small #{level} #{est_val.id} #{attribute_type}",
+                         "data-est_val_id" => est_val.id,
+                         :readonly => read_only_value
         end
       end
     end

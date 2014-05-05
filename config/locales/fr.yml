@@ -1095,6 +1095,8 @@ fr:
   leave_it_blank_if_no_change: "Laisser le champ vide si vous ne voulez pas le modifier"
   sign_in_with_google: "S'authentifier avec votre compte Google"
 
+  label_single_entry_attribute: "Attribut avec une seule valeur d'entrée"
+  help_single_entry_attribute: "Un attribut peut avoir une seule valeur d'entrée ou plusieurs valeurs d'entrée (basse, vraisemblable, haute)"
   label_edit_attribute_notes: "Editer notes sur \"%{attribute_name}\" "
   notes_updated_by: "Notes modifiées par"
   label_add_notes: "Ajouter une note"

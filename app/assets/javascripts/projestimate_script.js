@@ -133,6 +133,9 @@ $(document).ready(function() {
         $('.icon-list').toggle();
         $('.icon-align-left').toggle();
         $('.spiner').show();
+
+        // Remove the disabled attribute for submit (if single_entry_attribute)
+        $('select').removeAttr('disabled');
     });
 
     // Showing the estimation graph onclick on the graph button, or when component or module are changed
@@ -384,6 +387,23 @@ $(document).ready(function() {
         document.getElementById(high_level).value = first_value;
         return false;
     });
+
+    // If single_attribute_value, data if low = most_likely=high
+    $(".single_entry_attribute").change(function(){
+        var effort_input_id = $(this).attr('id');
+        var first_value = $("#"+effort_input_id).val();
+
+        var common_on_id = effort_input_id.split("_low")[1];
+        var low_level =         "_low"+common_on_id;
+        var most_likely_level = "_most_likely"+common_on_id;
+        var high_level =        "_high"+common_on_id;
+
+        document.getElementById(low_level).value = first_value;
+        document.getElementById(most_likely_level).value = first_value;
+        document.getElementById(high_level).value = first_value;
+        return false;
+    });
+
 
     //Find use Attribute in Module: which module is using such attribute
     //ADD selected WBS-Activity to Project
@@ -4850,20 +4870,14 @@ function warn_me(message){
     $('.node_link_to').live('click', function(){
         var counter = 0,
             i = 0,
-            node_ids = new Array(),
-            input_obj = document.getElementsByTagName('input');
-
+            node_ids = new Array();
         var get_function_url = "/show_project_history";
 
-        // loop through all collected objects
-        for (i = 0; i < input_obj.length; i++) {
-            // if input object is checkbox and checkbox is checked then ...
-            if (input_obj[i].type === 'checkbox' && input_obj[i].checked === true) {
-                // ... increase counter and update the nodes Array
-                counter++;
-                node_ids.push(input_obj[i].value);
-            }
-        }
+        $('.infovis_project_history input:checked').each(function() {
+            // ... increase counter and update the nodes Array
+            counter++;
+            node_ids.push($(this).attr('value'));
+        });
 
         if($(this).attr('id') === "find_use_projects_from_history"){
             get_function_url = "/find_use_project";

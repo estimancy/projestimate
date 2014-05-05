@@ -22,7 +22,7 @@
 #Global attributes of project. Ex : size, cost, result, date etc...
 #Those attributes are used into AttributeModule
 class PeAttribute < ActiveRecord::Base
-  attr_accessible :name, :alias, :attribute_category_id, :aggregation, :attr_type, :options, :precision, :description, :record_status_id, :custom_value, :change_comment
+  attr_accessible :name, :alias, :attribute_category_id, :aggregation, :attr_type, :options, :precision, :description, :record_status_id, :custom_value, :change_comment, :single_entry_attribute
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
