@@ -1,0 +1,1429 @@
+es:
+#  #standard local format
+#  # Text direction: Left-to-Right (ltr) or Right-to-Left (rtl)
+#  direction: ltr
+#  date:
+#    abbr_day_names:
+#    - Sun
+#    - Mon
+#    - Tue
+#    - Wed
+#    - Thu
+#    - Fri
+#    - Sat
+#    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+#    abbr_month_names:
+#    - ~
+#    - Jan
+#    - Feb
+#    - Mar
+#    - Apr
+#    - May
+#    - Jun
+#    - Jul
+#    - Aug
+#    - Sep
+#    - Oct
+#    - Nov
+#    - Dec
+#    day_names:
+#    - Sunday
+#    - Monday
+#    - Tuesday
+#    - Wednesday
+#    - Thursday
+#    - Friday
+#    - Saturday
+#    formats:
+#      # Use the strftime parameters for formats.
+#      # When no format has been given, it uses default.
+#      # You can provide other formats here if you like!
+#      default: '%m/%d/%Y'
+#      long: '%B %d, %Y'
+#      short: '%b %d'
+#    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+#    month_names:
+#    - ~
+#    - January
+#    - February
+#    - March
+#    - April
+#    - May
+#    - June
+#    - July
+#    - August
+#    - September
+#    - October
+#    - November
+#    - December
+#    # Used in date_select and datime_select.
+#    order:
+#    - :year
+#    - :month
+#    - :day
+#
+#  datetime:
+#    distance_in_words:
+#      about_x_hours:
+#        one: about 1 hour
+#        other: about %{count} hours
+#      about_x_months:
+#        one: about 1 month
+#        other: about %{count} months
+#      about_x_years:
+#        one: about 1 year
+#        other: about %{count} years
+#      almost_x_years:
+#        one: almost 1 year
+#        other: almost %{count} years
+#      half_a_minute: half a minute
+#      less_than_x_minutes:
+#        zero: "less than a minute"
+#        one: less than a minute
+#        other: less than %{count} minutes
+#      less_than_x_seconds:
+#        zero: less than 1 second
+#        one: less than 1 second
+#        other: less than %{count} seconds
+#      over_x_years:
+#        one: over 1 year
+#        other: over %{count} years
+#      x_months:
+#        one: 1 month
+#        other: ! '%{count} months'
+#      x_weeks:
+#        one: 1 week
+#        other: ! '%{count} weeks'
+#      x_hours:
+#        one: 1 hour
+#        other: ! '%{count} hours'
+#      x_days:
+#        one: 1 day
+#        other: ! '%{count} days'
+#      x_minutes:
+#        one: 1 minute
+#        other: ! '%{count} minutes'
+#      x_months:
+#        one: 1 month
+#        other: ! '%{count} months'
+#      x_seconds:
+#        one: 1 second
+#        other: ! '%{count} seconds'
+#    prompts:
+#      day: Day
+#      hour: Hour
+#      minute: Minute
+#      month: Month
+#      second: Seconds
+#      year: Year
+#      week: Week
+#
+#  time:
+#    formats:
+#      default: "%m/%d/%Y %I:%M %p"
+#      time: "%I:%M %p"
+#      short: "%d %b %H:%M"
+#      long: "%B %d, %Y %H:%M"
+#    am: "am"
+#    pm: "pm"
+#
+#  number:
+#    format:
+#      separator: .
+#      delimiter: ! ','
+#      precision: 3
+#      significant: false
+#      strip_insignificant_zeros: false
+#    currency:
+#      format:
+#        format: ! '%u%n'
+#        unit: $
+#        separator: .
+#        delimiter: ! ','
+#        precision: 2
+#        significant: false
+#        strip_insignificant_zeros: false
+#    percentage:
+#      format:
+#        delimiter: ''
+#    precision:
+#      format:
+#        delimiter: ''
+#    human:
+#      decimal_units:
+#        format: ! '%n %u'
+#        units:
+#          billion: Billion
+#          million: Million
+#          quadrillion: Quadrillion
+#          thousand: Thousand
+#          trillion: Trillion
+#          unit: ''
+#      format:
+#        delimiter: ''
+#        precision: 3
+#        significant: true
+#        strip_insignificant_zeros: true
+#      storage_units:
+#        format: ! '%n %u'
+#        units:
+#          byte:
+#            one: Byte
+#            other: Bytes
+#          gb: GB
+#          kb: KB
+#          mb: MB
+#          tb: TB
+#
+#  support:
+#    array:
+#      last_word_connector: ! ', and '
+#      two_words_connector: ! ' and '
+#      words_connector: ! ', '
+#
+#  errors: &errors
+#    format: ! '%{attribute} %{message}'
+#    messages:
+#      accepted: must be accepted
+#      blank: can't be blank
+#      confirmation: doesn't match confirmation
+#      empty: can't be empty
+#      equal_to: must be equal to %{count}
+#      even: must be even
+#      exclusion: is reserved
+#      greater_than: must be greater than %{count}
+#      greater_than_or_equal_to: must be greater than or equal to %{count}
+#      inclusion: is not included in the list
+#      invalid: is invalid
+#      less_than: must be less than %{count}
+#      less_than_or_equal_to: must be less than or equal to %{count}
+#      not_a_number: is not a number
+#      not_an_integer: must be an integer
+#      odd: must be odd
+#      record_invalid: ! 'Validation failed: %{errors}'
+#      taken: has already been taken
+#      too_long:
+#        one: is too long (maximum is 1 character)
+#        other: is too long (maximum is %{count} characters)
+#      too_short:
+#        one: is too short (minimum is 1 character)
+#        other: is too short (minimum is %{count} characters)
+#      wrong_length:
+#        one: is the wrong length (should be 1 character)
+#        other: is the wrong length (should be %{count} characters)
+#    template:
+#      body: ! 'There were problems with the following fields:'
+#      header:
+#        one: 1 error prohibited this %{model} from being saved
+#        other: ! '%{count} errors prohibited this %{model} from being saved'
+#
+#  helpers:
+#    select:
+#      prompt: Please select
+#    submit:
+#      create: Create %{model}
+#      submit: Save %{model}
+#      update: Update %{model}
+#
+#  # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
+#  activemodel:
+#    errors:
+#      <<: *errors
+#  activerecord:
+#    errors:
+#      <<: *errors
+#
+# #  Menu
+#  projects: "Proyectos"
+#  label_menu_projects: "Proyectos"
+#  project: "Proyectos"
+#  recent_project: "Proyectos recientes"
+#  home: "Mi estimaci�n"
+#  all_projects: "Todas estimaci�nes"
+#  create_new_project: "Crear une nueva estimaci�n"
+#  label_user_security_resume: "Recuperar los valores del usuario"
+#  label_group_security_resume: "Recuperar los valores del grupo"
+#
+#  label_menu_library: "Biblioteca"
+#  project_global_setting: "Ajustes globales del proyecto"
+#  estimation_setting: "Ajustes de la estimaci�n"
+#  organization_setting: "Ajustes de la organizaci�n"
+#  wbs_activities: "WBS-Actividades"
+#  template: "Plantilla"
+#
+#  label_menu_admin: "Admin"
+#  administration: "Admin Ajustes"
+#  user: "Usuario"
+#  groups: "Groupos"
+#  label_role: "Papeles"
+#  global_permissions: "Autorizaci�nes globales"
+#  text_global_permission: "Usar esta p�gina para asignar"
+#  all_permissions: "Autorizaci�nes"
+#  project_permissions: "Autorizaci�nes del proyecto"
+#  master_permissions: "Autorizaci�nes del maestro"
+#  auth_methods: "Autenticaci�n de los metodos"
+#  events: "Eventos"
+#
+#  master: "Parametros del maestro"
+#  label_menu_master_admin: "Maestro Admin"
+#  project_global_parameters: "Parametros globales del proyecto"
+#  pemodule_global_parameters: "Parametros globales del m�dulo"
+#  pe_attributes: "Atributos"
+#  attribute_categories: "Categor�as de atributos"
+#  labor_categories: "Categor�as de mano de obra"
+#  projestimate_module: "M�dulos"
+#  work_element: "Elementos de trabajo"
+#  security_level: "Nivel de valores"
+#  languages: "Idiomas"
+#  label_language: "Idioma"
+#  translations: "Traducci�n"
+#  community: "Comunidad"
+#
+#  connected_as: "Conectado como"
+#  logout: "Cerrar sessi�n"
+#  help: "Ayuda"
+#  services: "Servicios"
+#  about: "Sobre"
+#
+#  #attributes
+#  name: "Nombre"
+#  category: "Categor�a"
+#  description: "Descripti�n"
+#  alias: "Alias"
+#  change_comment: "Commentar (explica y justifica tu cambio de solicitud)"
+#  record_status: " Cr�nica de los estados"
+#  label_object_status: "Estados"
+#  custom_value: "Valor de uso (si estado=uso)"
+#  notice_no_module_use_current_attribute: "No hay m�dulo usando el atributo \"%{value}\" "
+#  text_finduse_attribute: "Lista de objetos usando el atributo \"%{value}\" "
+#  text_module_name: "M�dulos"
+#  text_attribute_specification_in_current_module: "Como el atributo esta usando en este m�dulo"
+#  text_use_as: "Usar como"
+#  text_organization_name: "organizaci�nes"
+#  text_attribute_specification_in_current_organization: "Como el atributo esta usando en el actual organizaci�n"
+#
+#  wbs_activity_elements: "Elementos del WBS-Actividad"
+#
+#  #CRUD
+#  save: "Guardar"
+#  apply: "Aplicar"
+#  save_and_create: "Guardar y crear un nuevo"
+#  edit: "editar"
+#  delete: "eliminar"
+#  cancel: "Anular"
+#  show: "Mostrar"
+#  restore: "Restaurar"
+#  validate: "Validar"
+#  update: "actualizaci�n"
+#  empty: "Ninguno"
+#  are_you_sur: "Est� seguro?"
+#  back: "Vuelta"
+#  restore_title: "Restaura cambios"
+#  validate_title: "Validar cambios"
+#  previous: "< Anterior"
+#  next: "Siguiente >"
+#  of: "De"
+#  display: "Fijar"
+#  record_per_page: "Cr�nica por p�gina"
+#  quick_search: "R�pida b�squeda"
+#  search: "b�squeda"
+#  search_action: "Opci�nes de b�squeda"
+#  search_all_words: "Todas palabras"
+#  search_any_words: "Ninguna palabra"
+#  search_phrase: "frase"
+#  search_query: "pregunta"
+#  import: "Importar"
+#  export: "Exportar"
+#  up: "Subir"
+#  down: "Bajar"
+#
+#  #Project settings
+#  activity_categories: "Categor�as de actividades"
+#  acquisition_categories: "Categor�as de adquisici�n"
+#  platform_categories: "Categor�as de plataforma"
+#  project_categories: "Categor�as de proyecto"
+#  project_areas: "Project Areas"
+#  acquisition_category: "Categor�as de adquisici�n"
+#  platform_category: "Categor�as de plataforma"
+#  project_category: "Categor�as de proyecto"
+#  project_area: "�rea del proyecto"
+#
+#  #Project areas
+#  edit_project_area: "Editar la �rea del proyecto... \"%{value}\" "
+#  new_project_area: "Nueva �rea del proyecto"
+#
+#  #Project categories
+#  edit_project_category: "Editar la categor�a del proyecto...\"%{value}\" "
+#  new_project_category: "Nueva categor�a del proyecto"
+#
+#  #Platform categories
+#  edit_platform_category: "Editar la categor�a de la plataforma... \"%{value}\""
+#  new_platform_category: "Nueva categor�a de la plataforma"
+#
+#  #Acquisition categories
+#  edit_acquisition_category: "Editar la categor�a de adquisici�n...\"%{value}\" "
+#  new_acquisition_category: "Nueva categor�a de adquisici�n"
+#  notice_acquisition_category_successful_created: "La categor�a de adquisici�n fue creado con �xito."
+#  notice_acquisition_category_successful_destroyed: "La categor�a de adquisici�n fue eliminado con �xito."
+#  warning_acquisition_category_cannot_be_updated: "Esta categor�a de adquisici�n no puede estar editado, ultimos cambios ya no se han sido validados"
+#  notice_acquisition_category_successful_updated: "La categor�a de adquisici�n fue actualizado con �xito."
+#
+#  #Admin_settings
+#  edit_admin_settings: "Editar los ajustes del admin  \"%{value}\" ..."
+#  new_admin_settings: "Nuevos ajustes del admin"
+#  key: "Llave"
+#  value: "Valor"
+#
+#  #attributes
+#  aggregation: "Conjuto"
+#  validation_options: "validaci�n y opci�nes"
+#  attributes_type: "Tipo"
+#  edit_pe_attribute: "Editar el atributo ...\"%{value}\"  ..."
+#  edit_attribute_category: "Editar la categor�a del atributo \"%{value}\" "
+#  new_pe_attribute: "Nuevo atributo"
+#  new_attribute_category: "Nueva categor�a de atributo"
+#
+#  #auth_method
+#  server_name: "Nombre de servidor"
+#  port: "Puerto"
+#  certificate: "Certificado"
+#  base_dn: "LDAP Base DN"
+#  user_name_attribute: "Nombre de login (i.e. nombre com�n)"
+#  ldap_attributes: "LDAP atributo del usuario"
+#  ldap_bind_dn: "LDAP unir cuentas DN"
+#  ldap_bind_encrypted_password: "LDAP unir clave"
+#  on_the_fly_user_creation: "creaci�n del usuario por el camino"
+#  warning_on_the_fly_user_creation: "No puede ser en blanco si la 'creaci�n del usuario por el camino' est� activada"
+#  first_name_attribute: "Nombre"
+#  last_name_attribute: "Apellido"
+#  email_attribute: "Email"
+#  initials_attribute: "Iniciales"
+#  priority_order: "Orden prioritaria"
+#  edit_auth_method: "Editar el m�todo de autenticaci�n... \"%{value}\" "
+#  new_auth_method: "nuevo m�todo de autenticaci�n"
+#  encryption: "m�todo de criptograf�a"
+#
+#  #currencies
+#  currencies: "Monedas"
+#  edit_currency: "Editar moneda"
+#  new_currency: "Nuevas moneda"
+#
+#  #event_types
+#  icon_url: "icono del Url"
+#  edit_event_type: "Editar un tipo de evento"
+#  new_event_type: "Nuevo tipo de evento"
+#  event_types: "Tipo de evento"
+#
+#  #events
+#  start_date: "Fecha de principio"
+#  end_date: "Fecha de fin"
+#  event_type_id: "id del evento "
+#  project_id: "id del proyecto"
+#  edit_event: "Editar un evento"
+#  new_event: "Nuevo evento"
+#
+#  #groups
+#  global: "Global"
+#  text_group_associated_users: "Usuarios associados (miembros usuarios del groupo)"
+#  edit_group: "Editar el groupo \"%{value}\" ..."
+#  new_group: "Nuevo groupo"
+#
+#  #Labor categories
+#  edit_labor_category: "Editar la categor�a de la mano de obra...\"%{value}\" "
+#  new_labor_category: "Nueva categor�a de la mano de obra"
+#
+#  #languages
+#  edit_language: "Editar la idioma... \"%{value}\" "
+#  new_language: "Nueva idioma"
+#  local: "Local"
+#
+#  #estimation_values
+#  in_out: "Dentro / Fuera"
+#  input: "Entrada"
+#  output: "Salida"
+#  both: "Entrada y Salida"
+#  edit_estimation_value: "Editar atributo de proyecto de  m�dulo"
+#  new_estimation_value: "Nuevo atributo de proyecto de  m�dulo"
+#
+#
+#  #module_project
+#  edit_module_project: "Editar un proyecto de m�dulo"
+#  new_module_project: "New proyecto de m�dulo"
+#  related_attributes: "Atributos relacionados"
+#  module_ratio_settings: "Ajustes de ratio "
+#  module_links_settings: "enlaces de m�dulos"
+#  mandatory: "Obligatorio"
+#  links_to: "Enlaces para"
+#  current_link: "Actuales enlaces"
+#  edit_link: "Edit a link"
+#  module_name: "Nombre de m�dulo"
+#  pe_module: "Pe-M�dulo"
+#  position: "posici�n"
+#  associate_Product_element_module_project: "Conectar Producto-Elemento con actual proyecto de m�dulo "
+#  ratio_settings_message: "No hay parametros de ratio a fijar para este modulo."
+#  select_unselect_all: "Seleccionar/Inseleccionar todo"
+#
+#  #organization_labor_categories
+#  labor_category: "Categor�a de la mano de obra"
+#  level: "Nivel"
+#  cost_per_hour: "Costo por hora"
+#  base_year: "Base del a�o"
+#  currency: "Moneda"
+#  hour_per_day: "Hora por d�a"
+#  days_per_year: "D�as por a�o"
+#  edit_organization_labor_category: "Editar la organizaci�n de la categor�a de la mano de obra... \"%{value}\" "
+#  new_organization_labor_category: "Nueva organizaci�n de la categor�a de la mano de obra"
+#
+#  #Organization
+#  organizations: "organizaci�n"
+#  edit_organization: "Editar la organizaci�n...\"%{value}\" "
+#  new_organization: "Nueva organizaci�n"
+#  inflation: "inflaci�n"
+#  organizationals_labors_categories: "categor�a de mano de obra organizativa"
+#  text_organization_attributes: "Atributos por la cual la organizaci�n planifica de capitalizar (Va a ser autom�ticamente 	a�adado en el 'capitalizati�n' m�dulo)"
+#  text_organization_attributes_settings: 'Ajustes para atributos elegidos en "Atributos" pesta�a'
+#  organization_technology: "Technolog�as"
+#  new_organization_technology: "Nueva Technolog�a"
+#  text_organization_technology: "Technolog�as usados en la organizaci�n (usados para dirigir unidad de trabajo por technolog�a)"
+#  organization_subcontractor: "Subcontratistas"
+#  text_organization_subcontractor: "Subcontratistas de la organizaci�n"
+#  new_subcontractor: "Nuevo subcontratista"
+#  edit_subcontractor: "Editar el subcontratista \"%{value}\" ..."
+#  text_subcontractor: "Dirigir los subcontratistas de tu organizati�n"
+#  productivity_ratio: "Ratio de productividad"
+#
+#  #Pbs_project_elements
+#  ancestry: "Ascendencia"
+#  work_element_type: "Tipo de elmento de trabajo"
+#  project_link: "Enlace de proyecto"
+#  add_folder: "A�adir una carpeta"
+#  add_link: "A�adir un enlace"
+#  add_component: "A�adir un componente"
+#
+#  #peicons
+#  icon: "Icono"
+#  text_icon_message: "Puedes subir cualquier imagen PNG archivo m�s peque�o que 10 kilobytes desde tu hard drive. Redimensionaramos autom�ticamente grandes imagenes en 16x16 pixels."
+#  edit_icon: "Editar el icono...\"%{value}\" "
+#  new_icon: "A�adir un icono"
+#  choose_icon: "Elegir / Cambiar icono"
+#  icons: "Iconos"
+#  actions: "acci�nes"
+#
+#  #pemodules
+#  low: "Valor est�ndar (bajo)"
+#  likely: "Valor est�ndar(m�s propbable)"
+#  high: "Valor est�ndar(alto)"
+#  custom_attribute: "Atributo de costumbre"
+#  attributes_settings: "Ajustes de atributo"
+#  label_compatibility: "Elemento PBS compatible(para datos entrados)"
+#  pe_attribute_name: "Nombre de atributo"
+#  attribute_category_name: "Nombre de categor�a"
+#  selected: "escogido"
+#  edit_pemodule: "Editar el m�dulo... \"%{value}\" "
+#  new_pemodule: "Nuevo m�dulo"
+#
+#  #permissions
+#  is_permission_project: "Es una autorizaci�n de proyecto"
+#  is_permission_master: "Es una autorizaci�n de maestro"
+#  label_associated_object: "Objeto relacionado"
+#  edit_permission: "Editar la autorizaci�n... \"%{value}\" "
+#  new_permission: "Nueva autorizaci�n "
+#  permissions: "Autorizaci�n "
+#
+#  #project_securities
+#  edit_project_security: "Editar valores del proyecto"
+#  new_project_security: "Nuevos valores del proyecto"
+#  full_control: "Control completo"
+#  define: "Definir"
+#  modify: "Modificar"
+#  comment: "Comentar"
+#  read_only: "Leer s�lo"
+#
+#  #project_security_levels
+#  edit_project_security_level: "Editar el nivel de securidad del pryecto... \"%{value}\" "
+#  new_project_security_level: "Nuevo nivel de proyecto"
+#
+#  #projects
+#  edit_project: "Editar el proyecto \"%{value}\" "
+#  new_project: "Nuevo proyecto"
+#  new_project_from: "Nuevo proyecto desde la plantilla"
+#  wbs_product: "Producto WBS"
+#  wbs_activity: "Activitad WBS"
+#  available_wbs_activity: "WBS actividad disponible desde la biblioteca, con los ratios de tablas relacionados\n(El ratio de tablas eligido ser� utilisado como ratio de tablas est�ndar)"
+#  button_add: "A�adir"
+#  label_wbs_activity_ratio: "ratio de tablas"
+#  estimation_plan: "Plan de estimaci�n"
+#  button_estimation_plan: "Editar el plan de estimaci�n"
+#  securities: "Valores"
+#  calendar: "Calendario"
+#  resources: "Recursos"
+#  analyse: "Analizar"
+#  state: "estado"
+#  hidden_element: "Mostrar elementos ocultos"
+#  associate_pbs_element: "Relacionarse elementos-PBS"
+#  user_securities_resume: "Recuperar los valores del usuario"
+#  group_securities_resume: "Recuperar los valores del grupo"
+#  group_name: "Nombre del grupo"
+#  global_properties: "Propriedades globales"
+#  text_confirm_project_deletion: "Est� seguro de suprimir este proyecto y todos datos relacionados?"
+#  warning_need_check_box_confirmation: "Tiene que confimar la supresi�n del proyecto con el check-box"
+#  label_project_is_model: "Es un proyecto de plantilla"
+#  is_model: "Plantilla"
+#
+#  #Record_statuses
+#  edit_record_status: "Editar la cr�nica de los estados \"%{value}\" "
+#  new_record_status: "Nueva cr�nica de los estados"
+#
+#  #Reference_value
+#  edit_reference_value: "Editar el valor de referencia \"%{value}\" "
+#  new_reference_value: "Nuevo valor de referencia"
+#
+#  #searches
+#  search_results: "Resulatados de b�squedas"
+#  no_results: "No resultado encontrado para"
+#
+#  #sessions
+#  button_ask_account: "Solicitar una cuenta"
+#  send_request: "Enviar"
+#  login_name_or_email: "Login apellido o email"
+#  button_forgotten_password: "Clave perdido?"
+#  open_url_id: "Abrir el Url Id"
+#  ldap_account_or_application_account: "Login id o email del usuario(o id de la cuenta LDAP)."
+#  not_yet_supported: "Ya no soportado"
+#  ldap_account_password_or_application_account_password: "Clave del usuario (o clave de la cuenta LDAP)"
+#  text_ask_new_account: "Para slocitar una cuenta, clic 'Solicitar una cuenta' despu�s seguir a las instrucciones."
+#  text_forgotten_password: "Clic en 'Clave perdido' despu�s seguir a las instrucciones."
+#  additional_guidance: "You can find additional guidance"
+#  here: "aqu�"
+#  or: "o"
+#  contact: "contacto"
+#  administrators: "los administradores."
+#  button_need_help: "Necesita ayuda?"
+#  connect: "Login"
+#  connect_me: "Registrarse"
+#  remember_me: "Recordar me"
+#  edit_password: "Actualisar su clave"
+#  text_forgotten_password_help: "Recibira un email con un enlace qui te permite de cambiar tu clave."
+#  ask_new_account_help: "Recibira un email de confirmaci�n, pero tiene que esparar hasta que un administrador active su cuenta.\nCuando su cuenta est� activada por el administrador, recibira un segundo email de confirmaci�n."
+#  ask_new_account_help2: "Recibira un email de confirmaci�n con su login y su clave"
+#
+#  #translations
+#  choose_locale: "Eligir un local"
+#  save_translations: "Gardar traducci�nes"
+#
+#  #user_mailer
+#  considered_message: "La solicitud de la creaci�n de su cuenta fue tenido en cuenta completamente."
+#  your_identifiants_message: "Sus credenciales son"
+#  not_active_message: "Su cuenta ya na esta activada."
+#  cordialy_message: "Saludos, "
+#  projestimate_equipe_message: "El equipo ProjEstimate"
+#  hello: "Hola"
+#
+#  #users
+#  identity: "Identidad del usuario"
+#  first_name: "Apellido"
+#  last_name: "Nombre"
+#  login_name: "Nombre de Login"
+#  email: "Email"
+#  initials: "Iniciales"
+#  text_user_associated_groups: "Grupos asociados de los usarios (grupos the usuario es un miembro)"
+#  text_user_associated_organizations: "Organizaci�nes asociades de los usuarios (Organizaci�nes cuyos los usuarios es un miembro)"
+#  text_group_associated_projects: "Proyectos asociados (Proyectos cuyo el grupo tiene acceso)"
+#  text_user_associated_projects: "Proyectos asociados (Proyectos cuyo el usuario tiene acceso)"
+#  settings: "Preferencias"
+#  authentication: "Autenticaci�n del usuario"
+#  password: "Clave"
+#  password_confirmation: "Confirmaci�n del clave"
+#  auth_type: "Autenticaci�n del usuario"
+#  informations: "Informaci�nes del usuario"
+#  user_status: "Estado del usuario"
+#  created_at: "Creado en"
+#  updated_at: "Actualizada en"
+#  last_login: "�ltimo login"
+#  previous_login: "Anteriorlogin"
+#  time_zone: "Zona horaria"
+#  object_per_page: "Objetos por p�gina"
+#  assistance: "Ayuda"
+#  notifications: "Notificaci�nes"
+#  display_format: "Formato de exposici�n"
+#  decimal: "Decimal"
+#  thousands: "Miles"
+#  first_day: "Primero d�a de la semana"
+#  first_week: "Primero semana del a�o"
+#  export_preferences: "preferencias de la exportaci�n"
+#  execute_estimation: "Ejecutar el proceso de la estimaci�n"
+#  edit_user: "Editar el usuario \"%{value}\" ..."
+#  new_user: "Nuevo usuario ..."
+#  users: "Usuarios"
+#  filters: "Filtros"
+#
+#  #wbs activities
+#  edit_wbs_activity: "Edici�n de los actividades wbs... \"%{value}\" "
+#  new_wbs_activity: "Nuevas actividades wbs"
+#  import_wbs_activity: "Nuevas actividades wbs desde archivo CSV"
+#  guide_import_wbs_activity: "Crear un nueva actividad wbs desede una lista contenido en un archivo CSV (<outline_number>;<element_name>;<element_description>)"
+#  guide_create_wbs_activity: "Crear un nueva actividad wbs  manualmente"
+#  sum_of_ratio_values: "Suma de los valores de ratio :"
+#  one_activity_element: "Una actividades_elemento"
+#  all_activity_elements: "Tadas actividades_elementos"
+#  set_of_activity_elements: "Un grupo de actividades_elementos"
+#  new_activities: "Nuevas actividades"
+#  general: "General"
+#  file_csv: "Archivo (csv solo)"
+#  file_xls: "Archivo Excel"
+#  separator: "Separador (default:"
+#  encoding: "Codificaci�n"
+#  please_wait_import: "Por favor espera durante la importaci�n..."
+#  close: "Cerrar"
+#  select_ratio_table: "Eligir el ratio de table a desplegar"
+#  wbs_elements: "Elementos wbs (Vista �rbol)"
+#  ratios: "Ratios"
+#  ratios_elements: "Elementos del ratio"
+#  change_ratio: "Cambiar el ratio"
+#
+#  #wbs activity elements
+#  edit_wbs_activity_element: "Editar un elmento de una actividad wbs"
+#  new_wbs_activity_element: "Nuevo elemento de una actividad wbs"
+#  parent: "Padre"
+#
+#  #wbs activity ratio element
+#  edit_wbs_activity_ratio_element: "Editar el ratio de un elemento de una actividad wbs"
+#  new_wbs_activity_ratio_element: "Nuevo ratio de un elemento de una actividad wbs"
+#  one_reference_value: "Uno solo valor de referencia"
+#  set_of_reference_value: "Un grupo de valores de referencia"
+#
+#  # wbs activity ratios
+#  edit_wbs_activity_ratio: "Editar un ratio de una actividad wbs"
+#  new_wbs_activity_ratio: "Nuevo ratio de una actividad wbs"
+#
+#  #wbs project elements
+#  edit_wbs_project_element: "Editar un elemento de un proyecto"
+#  new_wbs_project_element: "Nuevo elemento de un proyecto wbs"
+#  additional_description: "Adicional descripci�n"
+#  exclude: "Excluir"
+#  author: "Escritor"
+#  warning_wbs_not_complete: "\"%{value}\" no es completo: tados valores (bajo, m�s probable y alto) hay que clavar correctamente."
+#  warning_wbs_not_consistent: "Suma del resultado de las ni�os son diferentes del resultado del n�dulo."
+#  warning_caution: "Peligro"
+#
+#  #work element type
+#  edit_work_element_type: "Editar el tipo de elemento de trabajo \"%{value}\" "
+#  new_work_element_type: "Nuevo tipo de elemento de trabajo"
+#
+#  #messages
+#  restoring: "Confirma restaurando esta cr�nica como definido?"
+#  validation: "Confirma cambiar validaci�n en esta cronica?"
+#  global_settings_updated: "Ajustes globales fue actualizados."
+#  attributes_settings_updated: "Ajustes atributos fue actualizados."
+#  refers_to: "No ProjEstimate m�dulos fue instalados. Por favor hacer referencia a�"
+#  official_documentation: "Documentaci�n oficial"
+#  to_install_module: "para instalar ProjEstimate m�dulos."
+#  notice_no_estimation_plan_defined: "No plan de estiamacion fue definido."
+#  select_module: "Elige un modulo desde la lista. Cambios est�n salvados autom�ticamente."
+#  step: "paso"
+#
+#  general_csv_separator: ','
+#  general_csv_decimal_separator: '.'
+#  general_csv_encoding: ISO-8859-1
+#
+#  simple_form:
+#    "yes": 'Yes'
+#    "no": 'No'
+#    required:
+#      text: 'required'
+#      mark: '*'
+#    error_notification:
+#      default_message: "Por favor revisa los problemas debajo:"
+#    options:
+#      pemodule:
+#        with_activities:
+#          "no": 'No'
+#          yes_for_input: 'Yes for input'
+#          yes_for_output_with_ratio: 'Yes for output with ratio'
+#          yes_for_output_without_ratio: 'Yes for output without ratio'
+#          yes_for_input_output_with_ratio: 'Yes for input/output with ratio'
+#          yes_for_input_output_without_ratio: 'Yes for input/output without ratio'
+#
+#  #Error, warning, notice messages
+#  warning_wbs_activity_ratio_elt_value_range: "Por favor, entra valor entre ]0 - 100]"
+#  text_master_force_edit: "Nosotros no proporcionamos ning�n tipo de flujo de trabajo para modificar esta tabla, si contin�a usted va a editar el registro 'definido' en s�. Por favor confirma que acepta continuar."
+#  text_checking_new_release: " Comprobaci�n de la nueva versi�n"
+#  text_projestimate_open_source: " ProjEstimate es de c�digo abierto y liberado bajo los t�rminos de la"
+#  text_projestimate_open_source_references: "Algunos componentes o contribuciones incluidos con ProjEstimate externa podr�n ser publicados bajo otras licencias compatibles con AGPLv3. Para estos, por favor refi�rase a los archivos de origen pertinentes y / o archivos de licencia, en el �rbol de c�digo fuente y / o el informe dependencias."
+#  text_latest_update: "Ultimo actualizaci�n"
+#  text_latest_masterData_repository_update: "Ultimo actualizaci�n del almac�n MasterData"
+#  text_download_master_data: "Descarga y aplica la actualizaci�n de MasterData"
+#  text_please_wait: "Espera por favor. Podr�a tomar tiempo"
+#  edit_project_element: "Editar el element de la activida wbs \"%{value}\" "
+#  warning_administration_setting_cant_be_edited: " Este registro configuraci�n de administraci�n no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_administration_setting_successful_created: "Ajustes del adm�n. sido creados con �xito."
+#  notice_administration_setting_successful_updated: "Ajustes del adm�n. sido actualizados con �xito."
+#  error_administration_setting_failed_update: "Se ha producido un error durante la actualizaci�n."
+#  notice_administration_setting_successful_deleted: "Ajustes del adm�n. sido suprimidos con �xito."
+#  warning_masterdata_record_cant_delete: "No se puede eliminar el registro de datos maestros"
+#  unselectable: "no seleccionable "
+#  error_access_denied: "Acceso negado."
+#  error_connection_refused: "Conexi�n rechazada � Intenta de reinicio SOLR"
+#  warning_attribute_cant_be_edit: "Este atributo no se puede modificar, porque los cambios anteriores no han sido validados."
+#  warning_auth_method_cant_be_edit: "Este m�todo de autenticaci�n no se puede modificar, porque los cambios anteriores no han sido validados."
+#  warning_master_record_cant_be_edit: "Registro maestro no puede ser editada, es necesario para el correcto funcionamiento de la aplicaci�n"
+#  warning_master_record_cant_be_delete: "Registro maestro no puede ser eliminado, es necesario para el correcto funcionamiento de la aplicaci�n"
+#  notice_auth_method_successful_deleted: "M�todo de autenticaci�n se ha eliminado correctamente."
+#  notice_auth_method_successful_updated: "M�todo de autenticaci�n se ha actualizado correctamente."
+#  notice_auth_method_successful_created: "M�todo de autenticaci�n sido creado con �xito."
+#  warning_currency_cant_be_edit: "Esta moneda no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_currency_successful_updated: "Moneda se ha actualizado correctamente."
+#  notice_currency_successful_deleted: "Moneda se ha eliminado correctamente."
+#  notice_estimation_value_successful_updated: "Valor de la estimaci�n se ha actualizado correctamente."
+#  warning_event_type_cant_be_edit: "Este tipo de evento no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_event_type_successful_updated: "Tipo de evento se ha actualizado correctamente."
+#  notice_event_type_successful_deleted: " Tipo de evento se ha eliminado correctamente."
+#  notice_event_successful_updated: "Evento se ha actualizado correctamente."
+#  notice_event_successful_created: " Evento sido creado con �xito."
+#  warning_group_cant_be_edit: "Este grupo no se puede modificar, porque los cambios anteriores no han sido validados."
+#  notice_group_successful_deleted: "Grupo se ha eliminado correctamente."
+#  notice_group_successful_updated: "Grupo se ha actualizado correctamente."
+#  warning_cant_update_yourself: " No se puede actualizar a ti mismo, como usted ya est� en Master Instance"
+#  same_schema_version: "Misma versi�n del esquema"
+#  notice_projestimate_data_successful_updated: " Datos Projestimate se han actualizado correctamente."
+#  repository_up_to_date: " Su almac�n est� actualizado "
+#  notice_masterdata_already_latest: " Ya tiene la �ltima MasterData."
+#  warning_db_schema_differ_to_masterdata: "Su esquema de base de datos local difiere de la MasterData uno, por favor, compruebe si las modificaciones o run 'rake db: migrate' comando"
+#  error_default_data_failed_update: "!!! PELIGRO - Error: Los datos por defecto no se cargaron, por favor investiguen. Quiz�s opera bundle exec rake sunspot:solr:start RAILS_ENV=your_environment"
+#  error_default_data_exception_update: "!!! PELIGRO - Excepci�n: Los datos por defecto no se cargaron, por favor investiguen... Quiz�s opera db:create and db:migrate tasks."
+#  warning_labor_category_cant_be_edit: "Esta categor�a de trabajo no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_labor_category_successful_created: "La categor�a fuerza de trabajo sido creado con �xito."
+#  notice_labor_category_successful_updated: "La categor�a fuerza de trabajo sido actualizada con �xito."
+#  notice_labor_category_successful_deleted: "La categor�a fuerza de trabajo sido suprimido con �xito."
+#  warning_language_cant_be_edit: "Este lenguaje no puede ser editada, los cambios anteriores no han sido validados"
+#  notice_language_successful_created: "Idioma sido creado con �xito."
+#  error_update_retired_language: "No se puede actualizar una idioma 'jubilado'"
+#  notice_language_successful_updated: "Idioma se ha actualizado correctamente."
+#  error_language_failed_update: "Error : actualizaci�n err�nea,"
+#  notice_language_successful_deleted: "Idioma se ha eliminado correctamente."
+#  notice_module_project_successful_created: "Proyecto de m�dulo sido creado con �xito."
+#  notice_module_project_successful_updated: " Proyecto de m�dulo sido actualizado con �xito."
+#  notice_organization_labor_successful_created: "La categor�a organizaci�n fuerza laboral sido creado con �xito."
+#  notice_organization_labor_successful_updated: " La categor�a organizaci�n fuerza laboral sido actualizado con �xito. "
+#  notice_organization_labor_successful_deleted: " La categor�a organizaci�n fuerza laboral sido suprimido con �xito."
+#  notice_organization_successful_created: "Organizaci�n sido creado con �xito."
+#  notice_organization_successful_updated: "Organizaci�n se ha actualizado correctamente."
+#  notice_organization_successful_deleted: " Organizaci�n se ha eliminado correctamente."
+#  warning_reset_password_expired: "Restablecer proceso expir�."
+#  notice_password_successful_reset: "Su clave ha sido restablecido correctamente. Un correo electr�nico de confirmaci�n ha sido enviado."
+#  error_pbs_project_element_failed_update: "Por favor verifica el valor de pbs_project_elements"
+#  warning_icon_cant_be_edit: "Este icono Projestimate no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_icon_successful_deleted: "Icono se ha eliminado correctamente."
+#  #and: "y"
+#  warning_pemodule_cant_be_edit: "Este m�dulo projestimate no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_pemodule_successful_updated: "Los cambios se han guardado correctamente"
+#  notice_pemodule_successful_deleted: "M�dulo se ha eliminado correctamente."
+#  warning_permission_cant_be_edit: "Este permiso no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_permission_successful_created: "El permiso fue creado con �xito."
+#  notice_function_successful_updated: "Funci�n se ha actualizado correctamente."
+#  notice_permission_successful_deleted: "El permiso se ha eliminado correctamente."
+#  notice_permission_successful_saved: " Permisos salvados con �xito"
+#  notice_permission_successful_cancelled: "Se cancelaron los cambios"
+#  warning_platform_category_cant_be_edit: "Esta categor�a de la plataforma no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_platform_category_successful_created: "La categor�a plataforma sido creado con �xito."
+#  notice_platform_category_successful_updated: " La categor�a plataforma sido actualizado con �xito."
+#  notice_platform_category_successful_deleted: " La categor�a plataforma sido eliminado con �xito."
+#  warning_project_area_cant_be_edit: "Esta �rea del proyecto no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_project_area_successful_created: "�rea del proyecto se cre� correctamente."
+#  notice_project_area_successful_updated: "�rea del proyecto se ha actualizado correctamente."
+#  notice_project_area_successful_deleted: "�rea del proyecto se ha eliminado correctamente."
+#  warning_project_categories_cant_be_edit: "Esta categor�a de proyecto no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_project_categories_successful_created: "Categor�a de proyecto fue creado con �xito."
+#  notice_project_categories_successful_updated: "Categor�a de proyecto se ha actualizado correctamente."
+#  notice_project_categories_successful_deleted: "Categor�a de proyectos se ha eliminado correctamente."
+#  notice_project_securities_successful_created: "Seguridad en el proyecto se ha creado con �xito."
+#  notice_project_securities_successful_updated: "Seguridad en el proyecto se ha actualizado correctamente."
+#  warning_project_securities_level_cant_be_edit: "Este nivel de seguridad no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_project_securities_level_successful_created: "Nivel de seguridad del proyecto se ha creado con �xito."
+#  notice_project_securities_level_successful_updated: "Nivel de seguridad del proyecto se ha actualizado correctamente."
+#  notice_project_securities_level_successful_deleted: "Nivel de seguridad del proyecto se ha eliminado correctamente."
+#  notice_project_successful_created: "Proyecto sido creado con �xito."
+#  error_project_failed_create: "Error: Creacion del proyecto sido fallido,"
+#  project_successful_updated: "Proyecto se ha actualizado correctamente."
+#  notice_project_successful_duplicated: "Proyecto se duplica correctamente"
+#  error_project_failed_duplicate: "Duplicaci�n fallido: Se produjo un error en la duplicaci�n de proyectos"
+#  confirm_new_branch_project_checkout: "Est� en el camino de crear una rama. A pesar de las dificultades de la fusi�n causar�, �puede confirmar esto?"
+#  notice_project_successful_checkout: " Proyecto fue verificado con �xito"
+#  notice_wbs_activity_successful_added: "Wbs-Activity ha sido a�adido al proyecto."
+#  warning_record_status_cant_be_edit: "Este estado no se puede editar, los cambios anteriores no han sido validados."
+#  notice_record_status_successful_created: "Estado del registro fue creado con �xito."
+#  notice_record_status_successful_updated: "Estado del registro se ha actualizado correctamente."
+#  notice_reference_value_successful_deleted: "El valor de referencia se ha eliminado correctamente."
+#  error_record_status_failed_update: "Error: Error al guardar el estado de registro."
+#  text_welcome: "Bienvenido"
+#  warning_account_black_listed: "Su cuenta es en lista negra"
+#  warning_invalid_username_password: "Nombre de usuario o clave no v�lidos"
+#  notice_session_password_reset_instruction: "Instrucciones para restablecer la clave han sido enviado."
+#  warning_session_account_not_active: "Su cuenta no est� activa"
+#  error_account_ldap_association: "Su cuenta est� asociada a la empresa / directorio LDAP. Por favor, p�ngase en contacto con el administrador del sistema que conozcan sus identificadores."
+#  warning_session_bad_username: "Nosotros no tenemos en cuenta el uso de este nombre de usuario o correo electr�nico"
+#  application: "Aplicaci�n"
+#  notice_translation_successful_added: "Traducci�n agregado con �xito."
+#  notice_account_successful_created: "La cuenta ha sido creada"
+#  notice_account_successful_updated: "La cuenta se ha actualizado correctamente."
+#  warning_email_or_username_already_exist: "Correo electr�nico o nombre de usuario ya existe en la base de datos."
+#  warning_invalid_import_from_ldap: "Este usuario no se puede importar:"
+#  warning_ldap_attribute_missing: "El atributo est� vac�o \"%{value}\" "
+#  notice_account_demand_send: "Solicitud de cuenta pedido con �xito."
+#  warning_check_all_fields: " Por favor, compruebe todos los campos."
+#  notice_version_successful_created: "Versi�n sido creado con �xito."
+#  notice_version_successful_updated: "Versi�n se ha actualizado correctamente."
+#  notice_wbs_activity_element_import_successful: " Importaci�n exitosa."
+#  error_wbs_activity_failed_file_integrity: " Por favor, verifique la integridad del archivo. Se utiliza el car�cter ilegal como retorno de carro o comillas dobles en los archivos csv."
+#  notice_wbs_activity_successful_created: "La actividad WBS fue creado con �xito."
+#  notice_wbs_activity_successful_deleted: "La actividad WBS fue eliminado con �xito."
+#  notice_wbs_activity_successful_duplicated: "La actividad WBS fue duplicado con �xito."
+#  error_wbs_activity_failed_duplicate: "Duplicaci�n fallido: Error ocurri� en el WBS-Actividad duplicaci�n,"
+#  notice_wbs_activity_successful_updated: " Cambios en la actividad WBS fue validado con �xito."
+#  error_wbs_activity_failed_update: " Validaci�n Cambios fallado:"
+#  notice_wbs_activity_element_successful_created: "Elemento de la actividad wbs sido creado con �xito."
+#  notice_wbs_activity_element_successful_updated: " Elemento de la actividad wbs sido actualizado con �xito."
+#  warning_sum_ratio_different_100: "Peligro - Ratios guardado correctamente, pero la suma es diferente de 100%"
+#  notice_ratio_successful_saved: " Ratios guardado correctamente"
+#  error_wbs_activity_failed_import: " No se pudo importar alg�n elemento que se ve fuera de la actividad WBS."
+#  warning_import_sum_ratio_different_100: " Peligro - Ratios guardado correctamente, pero la suma es diferente de 100%."
+#  notice_ratio_successful_imported: " Ratios importados con �xito."
+#  notice_wbs_activity_ratio_successful_validated: "El ratio de la actividad Wbs ha sido validada"
+#  notice_wbs_project_element_successful_created: "Elemento del proyecto Wbs sido creado con �xito."
+#  notice_wbs_project_element_successful_updated: " Elemento del proyecto Wbs se ha actualizado correctamente."
+#  notice_wbs_project_element_successful_deleted: "El Elemento del proyecto WBS se ha eliminado correctamente."
+#  notice_ratio_successful_changed: "Ratio se cambi� con �xito "
+#  error_wbs_project_element_ratio_failed_update: "Error al cambiar de relaci�n de actividad Wbs"
+#  warning_work_element_type_cant_be_edit: "Este tipo de elemento de trabajo no puede ser editada, los cambios anteriores no han sido validados."
+#  notice_work_element_type_successful_updated: "Tipo de elemento de trabajo se ha actualizado correctamente."
+#  notice_attribute_module_successful_created: "M�dulo Atributo sido creado con �xito."
+#  notice_master_data_successful_validated: "Cambios en el registro ha sido validada."
+#  error_master_data_failed_validate: "Validaci�n Cambios fallado: %{value}"
+#  error_master_data_failed_restore: "Error en la restauraci�n."
+#  notice_master_data_successful_restored: "Restaurar se ha validado con �xito."
+#  warning_master_data_unauthorized_action: " acci�n no autorizada: usted est� tratando de restaurar un registro no se retir�!"
+#  notice_project_successful_updated: "Proyecto se ha actualizado correctamente"
+#  notice_project_successful_deleted: "Proyecto fue eliminado con �xito"
+#  error_project_creation_failed: " Un error ha ocurrido durante la creaci�n de proyecto "
+#  notice_project_successful_duplicated: "Proyecto duplicado con �xito"
+#  error_project_duplication_failed: " Un error ha ocurrido durante la duplicaci�n del proyecto "
+#  error_project_checkout_failed: " Un error ha ocurrido durante la comprobaci�n del proyecto "
+#  notice_module_project_successful_updated: " El proyecto de M�dulo fue puesto al d�a con �xito "
+#  notice_module_project_successful_created: " El proyecto de M�dulo fue creado con �xito "
+#  notice_attribute_module_successful_created: " El m�dulo de atributo  fue creado con �xito. "
+#
+#  #mail
+#  mail_salutation: " Querido %{value},"
+#  mail_complimentary_close: " Sinceramente,\nProjEstimate"
+#  mail_footer: "\n-----------------------------------------------\ nEste el correo electr�nico han sido enviados autom�ticamente por el servidor ProjEstimate\n\n "
+#  mail_subject_lost_password: "[ProjEstimate] Nueva contrase�a "
+#  mail_body_lost_password: 'To change your password, click on the following link (or copy it into your browser): '
+#  mail_body_lost_password_token_delay: 'Warning, this link is valid for a period of 2 hours. Beyond that, you must restart the process'
+#  mail_subject_account_activation_request: "[ProjEstimate] La activaci�n de cuenta solicita(ruega) "
+#  mail_body_account_activation_request: " Un nuevo usuario se ha registrado. La cuenta est� pendiente su aprobaci�n.\n\n"
+#  mail_subject_account_activation: "[ProjEstimate] v
+#  mail_body_account_activation: "Estamos contentos de confirmar la activaci�n de tu cuenta ProjEstimate.\n\n"
+#  mail_body_account_information: "Recordar los detalles de tu login por favor:\n<ul><li>Login: <b>%{user}</b></li>\n<li>contrase�a: <b>%{pwd}</b></li></ul>\n\n"
+#  mail_body_account_information_no_pwd: "Sus cartas credenciales no se han cambiado."
+#  mail_subject_account_created: "[ProjEstimate] Su cuenta es creado"
+#  mail_body_account_created: "Su petici�n de creaci�n de cuenta se ha sido tomado completamente.\n\n"
+#  mail_body_account_not_yet_activated: "Su cuenta ya no es activado \nOnce un administrador ha activado, recibir� un otra notificaci�n por email.\n\n"
+#  mail_subject_new_password: "[ProjEstimate] Su contrase�a ha cambiado"
+#  mail_password_unchanged: " Su contrase�a no ha cambiado (Se aconsejamos que cambie lo  as desde tu usuario perfil)"
+#  mail_password_from_ldap: "El contrase�a de tu direcci�n corporativo"
+#  mail_subject_account_suspended: "[ProjEstimate] Su cuenta es suspendido"
+#  mail_body_account_suspended: "Querr�amos de informarse de su cuenta ProjEstimate (%{valor}) ha sido suspendido.\nPuede preguntar de reactivarlo por el envi� de un email al administrador %{adm}\n\n"
+#
+#  text_warn_on_leaving_unsaved: "La pagina actual contiene texto no guardado qu� ser� perdido si deja esta pagina."
+#  label_module_with_activities: "Es el modulo usando Actividades ?"
+#  label_add_a_module_to_project: "Anadir el modulo seleccionado"
+#  label_filter_on_pbs_element: "Focus en el PBS-elemento"
+#  button_build_estimation_path: "Crear una estimaci�n vereda"
+#  button_configure_module_pbs_element: "Configurar PBS-elementos"
+#  label_show_hidden_elements: "Mostrar escogidos elementos"
+#  label_ratio_value: "Valor de ratio"
+#  label_is_completed: "Es completo"
+#  label_is_validated: "Es validado"
+#  text_overloading_default_ratio_table: "Para ignorar (este componente) la tabla del ratio est�ndar, selecciona un WBS-actividad y sus tablas de ratio asociadas"
+#  text_no_icon: "no icono seleccionado"
+#  tooltip_run_estimation: "Ejecutar el estimaci�n"
+#  notice_no_estimation_saved: "No resulto ha sido guardado en la basa de datos del proyecto"
+#  error_session_expired: "Tu cuenta ha expirado. Login de nuevo por favor."
+#  label_disabled: "A�adido"
+#  label_pbs_element_matrix: "Asociar PBS elementos con m�dulos del proyecto (\"%{value}\")"
+#  label_module_projects_matrix: "Establecer veredas de estimaci�n para el proyecto \"%{value}\""
+#  tooltip_attribute_rules: "Validaci�n de normas"
+#  error_invalid_date: "Tiempo de fecha Invalido"
+#  no_mandatory: "No obligatorio"
+#  label_precision: "Precisi�n"
+#  text_help_list_attribute: "(lista de valores ​​separados por semicolones)"
+#  text_select_page_size: "Selecciona la magnitud de la pagina"
+#  text_select_page_number: "Selecciona el numero de pagina"
+#    text_first_page: " primera p�gina "
+#  text_last_page: " �ltima p�gina "
+#  text_next_page: " p�gina proxima"
+#  text_previous_page: " p�gina anterior "
+#  text_result_index: " pase el �ndice / la cuenta de resultado filtrado (la cuenta total de materia prima)"
+#  label_dashboard: " Tablero de mandos para \ " % {valor} \ " "  label_estimation_modules: " M�dulos de Valoraci�n "
+#  label_input_data: " Los datos introducen formas "
+#  label_output_data: " Resultados de valoraci�n "
+#  button_activate_user_account: " Active al usuario consideran "
+#  button_find_use: " Encuentre donde esto es usado y saber(conocer) el impacto de cambios "
+#  button_commit_project: " Promueva el proyecto en su ciclo de vida "
+#  button_checkout_project: "Checkout proyecto"
+#  button_activate_project: " Active el proyecto, verlo sobre el tablero de mandos "
+#  button_duplicate_project: " Proyecto doble "
+#  button_duplicate_model: " Cree el proyecto de esta plantilla "
+#  label_environment: "Environment"
+#  notice_attribute_organization_successful_updated: " El atributo de organizaci�n satisfactoriamente fue puesto al d�a. "
+#  display_order: " Orden(Pedido) de demostraci�n "
+#  tablesorter_date_format: "mmddyyyy"
+#  notice_no_organization_use_current_attribute: " No hay ninguna organizaci�n que usa el \ " el % {el valor} \ " el atributo "
+#  text_project_name: " Vinc�lese a otros proyectos (subproyectos)"
+#  text_project_name_inverse: " Los padres proyectan (p. ej. proyectan con un eslab�n hasta el seleccionado)"
+#  text_user_name: " Usuario asociado "
+#  text_group_name: " Grupo asociado "
+#  text_associated_project: " Proyecto asociado "
+#  notice_user_finduse_no_project: " No hay ning�n proyecto asociado al usuario \ " el % {el valor} \ ""
+#  text_finduse_project: " Lista de objetos asociados con proyecto \ " % {valor} \ ""
+#  text_finduse_user: " Lista de objetos asociados con usuario \ " % {valor} \ ""
+#  text_finduse_pemodule: " Lista de objetos asociados con m�dulo \ " % {valor} \ " "  notice_pemodule_finduse_no_project: " No hay ning�n proyecto asociado al m�dulo \ " el % {el valor} \""
+#  notice_project_finduse_no_project: " No hay ning�n proyecto unido (p. ej. el subproyecto) al \ " el % {el valor} \ " el proyecto "
+#  notice_project_finduse_no_parent_project: " El \ " el % {el valor} \ " el proyecto no es vinculado a ning�n otro proyecto (nunca usado como el subproyecto)"
+#  notice_project_finduse_no_user: " No hay ning�n usuario asociado al \ " el % {el valor} \ " el proyecto "
+#  notice_project_finduse_no_group: " No hay ning�n grupo asociado al \ " el % {el valor} \ " el proyecto "
+#  notice_no_active_module: " Ning�n m�dulo seleccionado de proyecto "
+#  title_hide_show_menu: "Escoger/Mostrar menu"
+#  notice_attribute_category_successful_created: " La categor�a de atributo satisfactoriamente fue creado"
+#  notice_attribute_category_successful_updated: " La categor�a de atributo satisfactoriamente fue puesta al d�a "
+#  error_attribute_category_failed_update: " Un error ha ocurrido durante la actualizaci�n."
+#  text_create_project_from_template: " De la lista debajo, pulse sobre el icono de Copia de la plantilla deseada para crear un proyecto basado en ello."
+#  notice_pe_attribute_successful_created: " Atributo satisfactoriamente fue creado."
+#  notice_pe_attribute_successful_updated: " Atributo satisfactoriamente puesto al d�a."
+#  text_index_permissions_guidance: " Catalogue todos los permisos (global y de proyecto)"
+#  notice_end_of_estimation_execution: " Fin para ejecutar m�dulos "
+#  label_project_name: "Nombre del proyecto"
+#  label_project_version: "Version"
+#  label_permission_access: "Acceso"
+#  error_group_failed_update: " Un error ha ocurrido cuando durante la actualizaci�n "
+#  organization_uow_complexity: "Complejo del Unidad de Trabajo "
+#  text_organization_uow_complexity: " Valores de Complejidad Posibles usados dentro de la Unidad de Trabajo "
+#  new_organization_uow_complexity: " Nueva Unidad de Organizaci�n de Complejidad de Trabajo"
+#  notice_organization_uow_complexity_successful_updated: " Unidad de Organizaci�n de Trabajo Complejidad satisfactoriamente fue puesta al d�a "
+#  notice_organization_uow_complexity_successful_created: " Unidad de Organizaci�n de Trabajo Complejidad satisfactoriamente fue creado "
+#  notice_organization_uow_complexity_successful_deleted: "Organisazion de Unidad de Trabajo complejo fue suprimido con exito "
+#  notice_organization_technology_successful_updated: " Technologia del Organisazion fue puesto al d�a con exito "
+#  notice_organization_technology_successful_created: " Technologia del Organisazion fue creado con exito "
+#  notice_organization_technology_successful_deleted: " Technologia del Organisazion fue suprimido con exito "
+#  organization_unit_of_work: " Unidad de Trabajo  "
+#  text_organization_unit_of_work: " Unidades de Trabajo utilisadas en la organisazion"
+#  notice_unit_of_work_successful_updated: " Nueva Unidad de Trabajo  fue puesto al d�a con exito "
+#  notice_unit_of_work_successful_created: " Nueva Unidad de Trabajo fue creado con exito "
+#  notice_unit_of_work_successful_deleted: " Nueva Unidad de Trabajo fue suprimido con exito"
+#  new_unit_of_work: " Nueva Unidad de Trabajo (NUT)"
+#  organization_abacus: " �baco "
+#  text_organization_abacus: " �baco de la organizaci�n por tecnolog�a "
+#  notice_subcontractor_successfully_created: " El subcontratista satisfactoriamente fue creado "
+#  notice_subcontractor_successfully_updated: " El subcontratista satisfactoriamente fue puesto al d�a "
+#  notice_subcontractor_successfully_deleted: " El subcontratista satisfactoriamente fue suprimido "
+#
+#  label_Project: "Proyecto"
+#  label_filter_on_projects_version: " Filtro sobre versiones de proyecto "
+#  label_filter_on_project_version_1: " Muestre s�lo hojas "
+#  label_filter_on_project_version_2: "Muestre todo"
+#  label_filter_on_project_version_3: " Muestre s�lo la ra�z "
+#  label_filter_on_project_version_4: " Muestre s�lo lo m�s reciente "
+#  label_ProjectArea: " �rea De proyecto "
+#  label_PlatformCategory: " Categor�a de Plataforma "
+#  label_ProjectCategory: " Categor�a De proyecto "
+#  label_AcquisitionCategory: " Categor�a de Adquisici�n "
+#  label_WbsActivity: "Activitad Wbs"
+#  label_Pemodule: " M�dulo"
+#  label_PeAttribute: "Atributo"
+#  label_WorkElementType: " Tipo de Elemento de Trabajo "
+#  label_Organization: " Organisation "
+#  label_User: "Usuario"
+#  label_Group: "Grupo"
+#  send_feedback: " Enviar Regeneraci�n "
+#  label_feedback_type: " Tipo de regeneraci�n "
+#  notice_send_feedback: " Por favor entre en una peque�a informaci�n sobre la cuesti�n sobre los que gustar�a decirnos:"
+#  error_send_feedback_empty: " Por favor llene todos los campos de la forma "
+#  notice_send_feedback_success: " Su petici�n ha sido considerada "
+#  error_send_feedback_failed: " Un error ocurri� enviando a su petici�n "
+#  error_validation_project: " los pares 'nombre/version' y 'alias/version' debe ser �nico "
+#  tooltip_state: "\"Definido\" anotaciones son mostrados en negro, \"Borrador\" en naranja, \"Jubilado\" en rojo "
+#  warning_project_state_to_rejected: " Si continua la version de este proyecto no sera mofidicable (%{value_b}) y no derivable."
+#  warning_project_state_to_released: " Si continua la version de este proyecto no sera mofidicable (%{value_b})."
+#  warning_project_state_to_checkpoint: " Si continua la version de este proyecto puede llegar a ser no mofidicable(%{value_b}) pero destruictible."
+#  warning_project_state_to_inreview: "Si continua (%{value_b}) solo usuario con write_access_to_inreview_project privilegio puede modificar la version del proyecto."
+#  warning_project_state_unusual: "Es inusual to cometer de estado  %{value_a} } a estado %{value_b}."
+#  warning_project_state_unnormal: "No es normal para cometer de estado  %{value_a} a estado%{value_b}."
+#  confirm: "Puede confirmar...?"
+#  error_project_state: "Perdon... esta transaccion no es posible!"
+#  warning_project_cannot_be_deleted: "Project with this state cannot be deleted"
+#  label_project_history: "Historia"
+#  label_activate_project: "Activar"
+#  label_find_use_project: "Encontrar uso"
+#  label_promote_project: "Promover"
+#  label_checkout_project: "Checkout"
+#  label_duplicate_project: "Duplicar"
+#  label_collapse_project: "Versiones derrumbadas seran borradas. Quisiera usted destruir las versions seleccionadas del proyecto?"
+#  button_collapse_project: "Proyecto derrumbado version"
+#  warning_project_cannot_be_checkout: " S�lo proyecto en 'Checkpoint' y 'Released' estatutos pueden ser checkout"
+#  warning_project_state_from_checkpoint_release_rejected: "Proyecto en '%{state}' no puede ser modificado por esta vista. Editar las propriedades globales del proyecto para promover los estados del proyecto."
+#  notice_successful_collapse_project_version: "Las versiones seleccionadas del proyecto han sido borradas con exito"
+#  project_is_not_collapsible: "Proyecto '%{project_title_version}' no  es derrumbable.\n\n"
+#  collapsible_project_only: "S�lo proyecto en 'CHECKPOINT' estado pueder ser derrumbado."
+#
+#  #new added translations
+#  audit_users_activities: "Actividades del usuario"
+#  audit_element_type: "Tipo de elementos"
+#  audit_element_id: "Id elementos"
+#  audit_action: "Acciones"
+#  audit_changes: "Cambios"
+#  audit_user: "Autor"
+#
+#  warning_checkout_unauthorized_action: "Accion no autorizada: intenta de checkout el proyecto que no tiene los permisos necesarios."
+#  record_not_found_password_reset_token: "No podria encontrar usuario con el contrasigna simbulo reset generada.\n\n Please check the last received email"
+#  select_at_least_one_project: "Debe seleccionar por lo menos un proyecto para realisar un accion."
+#  warning_not_allow_to_create_new_branch_of_project: "No tiene permiso para crear una nueva rama del proyecto"
+#  project_is_activated: "Proyecto '%{project_title}' es activado con exito."
+#  defined_language_not_deletable: "Idioma definido no es deletable"
+#  leave_it_blank_if_no_change: "Deja lo vacio si no quiere que cambie"
+#  mail_body_account_information: "Recordar los detalles de tu login por favor:\n<ul><li>Login: <b>%{user}</b></li>\n<li>contrase�a: <b>%{pwd}</b></li></ul>\n\n"
+#  mail_body_account_information_no_pwd: "Sus cartas credenciales no se han cambiado."
+#  mail_subject_account_created: "[ProjEstimate] Su cuenta es creado"
+#  mail_body_account_created: "Su petici�n de creaci�n de cuenta se ha sido tomado completamente.\n\n"
+#  mail_body_account_not_yet_activated: "Su cuenta ya no es activado \nOnce un administrador ha activado, recibir� un otra notificaci�n por email.\n\n"
+#  mail_subject_new_password: "[ProjEstimate] Su contrase�a ha cambiado"
+#  mail_password_unchanged: " Su contrase�a no ha cambiado (Se aconsejamos que cambie lo  as desde tu usuario perfil)"
+#  mail_password_from_ldap: "El contrase�a de tu direcci�n corporativo"
+#  mail_subject_account_suspended: "[ProjEstimate] Su cuenta es suspendido"
+#  mail_body_account_suspended: "Querr�amos de informarse de su cuenta ProjEstimate (%{valor}) ha sido suspendido.\nPuede preguntar de reactivarlo por el envi� de un email al administrador %{adm}\n\n"
+#
+#  text_warn_on_leaving_unsaved: "La pagina actual contiene texto no guardado qu� ser� perdido si deja esta pagina."
+#  label_module_with_activities: "Es el modulo usando Actividades ?"
+#  label_add_a_module_to_project: "Anadir el modulo seleccionado"
+#  label_filter_on_pbs_element: "Focus en el PBS-elemento"
+#  button_build_estimation_path: "Crear una estimaci�n vereda"
+#  button_configure_module_pbs_element: "Configurar PBS-elementos"
+#  label_show_hidden_elements: "Mostrar escogidos elementos"
+#  label_ratio_value: "Valor de ratio"
+#  label_is_completed: "Es completo"
+#  label_is_validated: "Es validado"
+#  text_overloading_default_ratio_table: "Para ignorar (este componente) la tabla del ratio est�ndar, selecciona un WBS-actividad y sus tablas de ratio asociadas"
+#  text_no_icon: "no icono seleccionado"
+#  tooltip_run_estimation: "Ejecutar el estimaci�n"
+#  notice_no_estimation_saved: "No resulto ha sido guardado en la basa de datos del proyecto"
+#  error_session_expired: "Tu cuenta ha expirado. Login de nuevo por favor."
+#  label_disabled: "A�adido"
+#  label_pbs_element_matrix: "Asociar PBS elementos con m�dulos del proyecto (\"%{value}\")"
+#  label_module_projects_matrix: "Establecer veredas de estimaci�n para el proyecto \"%{value}\""
+#  tooltip_attribute_rules: "Validaci�n de normas"
+#  error_invalid_date: "Tiempo de fecha Invalido"
+#  no_mandatory: "No obligatorio"
+#  label_precision: "Precisi�n"
+#  text_help_list_attribute: "(lista de valores ​​separados por semicolones)"
+#  text_select_page_size: "Selecciona la magnitud de la pagina"
+#  text_select_page_number: "Selecciona el numero de pagina"
+#  text_first_page: " primera p�gina "
+#  text_last_page: " �ltima p�gina "
+#  text_next_page: " p�gina proxima"
+#  text_previous_page: " p�gina anterior "
+#  text_result_index: " pase el �ndice / la cuenta de resultado filtrado (la cuenta total de materia prima)"
+#  label_dashboard: " Tablero de mandos para \ " % {valor} \ " "  label_estimation_modules: " M�dulos de Valoraci�n "
+#  label_input_data: " Los datos introducen formas "
+#  label_output_data: " Resultados de valoraci�n "
+#  button_activate_user_account: " Active al usuario consideran "
+#  button_find_use: " Encuentre donde esto es usado y saber(conocer) el impacto de cambios "
+#  button_commit_project: " Promueva el proyecto en su ciclo de vida "
+#  button_checkout_project: "Checkout proyecto"
+#  button_activate_project: " Active el proyecto, verlo sobre el tablero de mandos "
+#  button_duplicate_project: " Proyecto doble "
+#  button_duplicate_model: " Cree el proyecto de esta plantilla "
+#  label_environment: "Environment"
+#  notice_attribute_organization_successful_updated: " El atributo de organizaci�n satisfactoriamente fue puesto al d�a. "
+#  display_order: " Orden(Pedido) de demostraci�n "
+#  tablesorter_date_format: "mmddyyyy"
+#  notice_no_organization_use_current_attribute: " No hay ninguna organizaci�n que usa el \ " el % {el valor} \ " el atributo "
+#  text_project_name: " Vinc�lese a otros proyectos (subproyectos)"
+#  text_project_name_inverse: " Los padres proyectan (p. ej. proyectan con un eslab�n hasta el seleccionado)"
+#  text_user_name: " Usuario asociado "
+#  text_group_name: " Grupo asociado "
+#  text_associated_project: " Proyecto asociado "
+#  notice_user_finduse_no_project: " No hay ning�n proyecto asociado al usuario \ " el % {el valor} \ ""
+#  text_finduse_project: " Lista de objetos asociados con proyecto \ " % {valor} \ ""
+#  text_finduse_user: " Lista de objetos asociados con usuario \ " % {valor} \ ""
+#  text_finduse_pemodule: " Lista de objetos asociados con m�dulo \ " % {valor} \ " "  notice_pemodule_finduse_no_project: " No hay ning�n proyecto asociado al m�dulo \ " el % {el valor} \""
+#  notice_project_finduse_no_project: " No hay ning�n proyecto unido (p. ej. el subproyecto) al \ " el % {el valor} \ " el proyecto "
+#  notice_project_finduse_no_parent_project: " El \ " el % {el valor} \ " el proyecto no es vinculado a ning�n otro proyecto (nunca usado como el subproyecto)"
+#  notice_project_finduse_no_user: " No hay ning�n usuario asociado al \ " el % {el valor} \ " el proyecto "
+#  notice_project_finduse_no_group: " No hay ning�n grupo asociado al \ " el % {el valor} \ " el proyecto "
+#  notice_no_active_module: " Ning�n m�dulo seleccionado de proyecto "
+#  title_hide_show_menu: "Escoger/Mostrar menu"
+#  notice_attribute_category_successful_created: " La categor�a de atributo satisfactoriamente fue creado"
+#  notice_attribute_category_successful_updated: " La categor�a de atributo satisfactoriamente fue puesta al d�a "
+#  error_attribute_category_failed_update: " Un error ha ocurrido durante la actualizaci�n."
+#  text_create_project_from_template: " De la lista debajo, pulse sobre el icono de Copia de la plantilla deseada para crear un proyecto basado en ello."
+#  notice_pe_attribute_successful_created: " Atributo satisfactoriamente fue creado."
+#  notice_pe_attribute_successful_updated: " Atributo satisfactoriamente puesto al d�a."
+#  text_index_permissions_guidance: " Catalogue todos los permisos (global y de proyecto)"
+#  notice_end_of_estimation_execution: " Fin para ejecutar m�dulos "
+#  label_project_name: "Nombre del proyecto"
+#  label_project_version: "Version"
+#  label_permission_access: "Acceso"
+#  error_group_failed_update: " Un error ha ocurrido cuando durante la actualizaci�n "
+#  organization_uow_complexity: "Complejo del Unidad de Trabajo "
+#  text_organization_uow_complexity: " Valores de Complejidad Posibles usados dentro de la Unidad de Trabajo "
+#  new_organization_uow_complexity: " Nueva Unidad de Organizaci�n de Complejidad de Trabajo"
+#  notice_organization_uow_complexity_successful_updated: " Unidad de Organizaci�n de Trabajo Complejidad satisfactoriamente fue puesta al d�a "
+#  notice_organization_uow_complexity_successful_created: " Unidad de Organizaci�n de Trabajo Complejidad satisfactoriamente fue creado "
+#  notice_organization_uow_complexity_successful_deleted: "Organisazion de Unidad de Trabajo complejo fue suprimido con exito "
+#  notice_organization_technology_successful_updated: " Technologia del Organisazion fue puesto al d�a con exito "
+#  notice_organization_technology_successful_created: " Technologia del Organisazion fue creado con exito "
+#  notice_organization_technology_successful_deleted: " Technologia del Organisazion fue suprimido con exito "
+#  organization_unit_of_work: " Unidad de Trabajo  "
+#  text_organization_unit_of_work: " Unidades de Trabajo utilisadas en la organisazion"
+#  notice_unit_of_work_successful_updated: " Nueva Unidad de Trabajo  fue puesto al d�a con exito "
+#  notice_unit_of_work_successful_created: " Nueva Unidad de Trabajo fue creado con exito "
+#  notice_unit_of_work_successful_deleted: " Nueva Unidad de Trabajo fue suprimido con exito"
+#  new_unit_of_work: " Nueva Unidad de Trabajo (NUT)"
+#  organization_abacus: " �baco "
+#  text_organization_abacus: " �baco de la organizaci�n por tecnolog�a "
+#  notice_subcontractor_successfully_created: " El subcontratista satisfactoriamente fue creado "
+#  notice_subcontractor_successfully_updated: " El subcontratista satisfactoriamente fue puesto al d�a "
+#  notice_subcontractor_successfully_deleted: " El subcontratista satisfactoriamente fue suprimido "
+#
+#  label_Project: "Proyecto"
+#  label_filter_on_projects_version: " Filtro sobre versiones de proyecto "
+#  label_filter_on_project_version_1: " Muestre s�lo hojas "
+#  label_filter_on_project_version_2: "Muestre todo"
+#  label_filter_on_project_version_3: " Muestre s�lo la ra�z "
+#  label_filter_on_project_version_4: " Muestre s�lo lo m�s reciente "
+#  label_ProjectArea: " �rea De proyecto "
+#  label_PlatformCategory: " Categor�a de Plataforma "
+#  label_ProjectCategory: " Categor�a De proyecto "
+#  label_AcquisitionCategory: " Categor�a de Adquisici�n "
+#  label_WbsActivity: "Activitad Wbs"
+#  label_Pemodule: " M�dulo"
+#  label_PeAttribute: "Atributo"
+#  label_WorkElementType: " Tipo de Elemento de Trabajo "
+#  label_Organization: " Organisation "
+#  label_User: "Usuario"
+#  label_Group: "Grupo"
+#  send_feedback: " Enviar Regeneraci�n "
+#  label_feedback_type: " Tipo de regeneraci�n "
+#  notice_send_feedback: " Por favor entre en una peque�a informaci�n sobre la cuesti�n sobre los que gustar�a decirnos:"
+#  error_send_feedback_empty: " Por favor llene todos los campos de la forma "
+#  notice_send_feedback_success: " Su petici�n ha sido considerada "
+#  error_send_feedback_failed: " Un error ocurri� enviando a su petici�n "
+#  error_validation_project: " los pares 'nombre/version' y 'alias/version' debe ser �nico "
+#  tooltip_state: "\"Definido\" anotaciones son mostrados en negro, \"Borrador\" en naranja, \"Jubilado\" en rojo "
+#  warning_project_state_to_rejected: " Si continua la version de este proyecto no sera mofidicable (%{value_b}) y no derivable."
+#  warning_project_state_to_released: " Si continua la version de este proyecto no sera mofidicable (%{value_b})."
+#  warning_project_state_to_checkpoint: " Si continua la version de este proyecto puede llegar a ser no mofidicable(%{value_b}) pero destruictible."
+#  warning_project_state_to_inreview: "Si continua (%{value_b}) solo usuario con write_access_to_inreview_project privilegio puede modificar la version del proyecto."
+#  warning_project_state_unusual: "Es inusual to cometer de estado  %{value_a} } a estado %{value_b}."
+#  warning_project_state_unnormal: "No es normal para cometer de estado  %{value_a} a estado%{value_b}."
+#  confirm: "Puede confirmar...?"
+#  error_project_state: "Perdon... esta transaccion no es posible!"
+#  warning_project_cannot_be_deleted: "Project with this state cannot be deleted"
+#  label_project_history: "Historia"
+#  label_activate_project: "Activar"
+#  label_find_use_project: "Encontrar uso"
+#  label_promote_project: "Promover"
+#  label_checkout_project: "Checkout"
+#  label_duplicate_project: "Duplicar"
+#  label_collapse_project: "Versiones derrumbadas seran borradas. Quisiera usted destruir las versions seleccionadas del proyecto?"
+#  button_collapse_project: "Proyecto derrumbado version"
+#  warning_project_cannot_be_checkout: " S�lo proyecto en 'Checkpoint' y 'Released' estatutos pueden ser checkout"
+#  warning_project_state_from_checkpoint_release_rejected: "Proyecto en '%{state}' no puede ser modificado por esta vista. Editar las propriedades globales del proyecto para promover los estados del proyecto."
+#  notice_successful_collapse_project_version: "Las versiones seleccionadas del proyecto han sido borradas con exito"
+#  project_is_not_collapsible: "Proyecto '%{project_title_version}' no  es derrumbable.\n\n"
+#  collapsible_project_only: "S�lo proyecto en 'CHECKPOINT' estado pueder ser derrumbado."
+#
+#  #new added translations
+#  audit_users_activities: "Actividades del usuario"
+#  audit_element_type: "Tipo de elementos"
+#  audit_element_id: "Id elementos"
+#  audit_action: "Acciones"
+#  audit_changes: "Cambios"
+#  audit_user: "Autor"
+#
+#  warning_checkout_unauthorized_action: "Accion no autorizada: intenta de checkout el proyecto que no tiene los permisos necesarios."
+#  record_not_found_password_reset_token: "No podria encontrar usuario con el contrasigna simbulo reset generada.\n\n Please check the last received email"
+#  select_at_least_one_project: "Debe seleccionar por lo menos un proyecto para realisar un accion."
+#  warning_not_allow_to_create_new_branch_of_project: "No tiene permiso para crear una nueva rama del proyecto"
+#  project_is_activated: "Proyecto '%{project_title}' es activado con exito."
+#  defined_language_not_deletable: "Idioma definido no es deletable"
+#  leave_it_blank_if_no_change: "Deja lo vacio si no quiere que cambie"
+#
+#  mail_body_account_information: "Recordar los detalles de tu login por favor:\n<ul><li>Login: <b>%{user}</b></li>\n<li>contrase�a: <b>%{pwd}</b></li></ul>\n\n"
+#  mail_body_account_information_no_pwd: "Sus cartas credenciales no se han cambiado."
+#  mail_subject_account_created: "[ProjEstimate] Su cuenta es creado"
+#  mail_body_account_created: "Su petici�n de creaci�n de cuenta se ha sido tomado completamente.\n\n"
+#  mail_body_account_not_yet_activated: "Su cuenta ya no es activado \nOnce un administrador ha activado, recibir� un otra notificaci�n por email.\n\n"
+#  mail_subject_new_password: "[ProjEstimate] Su contrase�a ha cambiado"
+#  mail_password_unchanged: " Su contrase�a no ha cambiado (Se aconsejamos que cambie lo  as desde tu usuario perfil)"
+#  mail_password_from_ldap: "El contrase�a de tu direcci�n corporativo"
+#  mail_subject_account_suspended: "[ProjEstimate] Su cuenta es suspendido"
+#  mail_body_account_suspended: "Querr�amos de informarse de su cuenta ProjEstimate (%{valor}) ha sido suspendido.\nPuede preguntar de reactivarlo por el envi� de un email al administrador %{adm}\n\n"
+#
+#  text_warn_on_leaving_unsaved: "La pagina actual contiene texto no guardado qu� ser� perdido si deja esta pagina."
+#  label_module_with_activities: "Es el modulo usando Actividades ?"
+#  label_add_a_module_to_project: "Anadir el modulo seleccionado"
+#  label_filter_on_pbs_element: "Focus en el PBS-elemento"
+#  button_build_estimation_path: "Crear una estimaci�n vereda"
+#  button_configure_module_pbs_element: "Configurar PBS-elementos"
+#  label_show_hidden_elements: "Mostrar escogidos elementos"
+#  label_ratio_value: "Valor de ratio"
+#  label_is_completed: "Es completo"
+#  label_is_validated: "Es validado"
+#  text_overloading_default_ratio_table: "Para ignorar (este componente) la tabla del ratio est�ndar, selecciona un WBS-actividad y sus tablas de ratio asociadas"
+#  text_no_icon: "no icono seleccionado"
+#  tooltip_run_estimation: "Ejecutar el estimaci�n"
+#  notice_no_estimation_saved: "No resulto ha sido guardado en la basa de datos del proyecto"
+#  error_session_expired: "Tu cuenta ha expirado. Login de nuevo por favor."
+#  label_disabled: "A�adido"
+#  label_pbs_element_matrix: "Asociar PBS elementos con m�dulos del proyecto (\"%{value}\")"
+#  label_module_projects_matrix: "Establecer veredas de estimaci�n para el proyecto \"%{value}\""
+#  tooltip_attribute_rules: "Validaci�n de normas"
+#  error_invalid_date: "Tiempo de fecha Invalido"
+#  no_mandatory: "No obligatorio"
+#  label_precision: "Precisi�n"
+#  text_help_list_attribute: "(lista de valores ​​separados por semicolones)"
+#  text_select_page_size: "Selecciona la magnitud de la pagina"
+#  text_select_page_number: "Selecciona el numero de pagina"
+#  text_first_page: " primera p�gina "
+#  text_last_page: " �ltima p�gina "
+#  text_next_page: " p�gina proxima"
+#  text_previous_page: " p�gina anterior "
+#  text_result_index: " pase el �ndice / la cuenta de resultado filtrado (la cuenta total de materia prima)"
+#  label_dashboard: " Tablero de mandos para \ " % {valor} \ " "  label_estimation_modules: " M�dulos de Valoraci�n "
+#  label_input_data: " Los datos introducen formas "
+#  label_output_data: " Resultados de valoraci�n "
+#  button_activate_user_account: " Active al usuario consideran "
+#  button_find_use: " Encuentre donde esto es usado y saber(conocer) el impacto de cambios "
+#  button_commit_project: " Promueva el proyecto en su ciclo de vida "
+#  button_checkout_project: "Checkout proyecto"
+#  button_activate_project: " Active el proyecto, verlo sobre el tablero de mandos "
+#  button_duplicate_project: " Proyecto doble "
+#  button_duplicate_model: " Cree el proyecto de esta plantilla "
+#  label_environment: "Environment"
+#  notice_attribute_organization_successful_updated: " El atributo de organizaci�n satisfactoriamente fue puesto al d�a. "
+#  display_order: " Orden(Pedido) de demostraci�n "
+#  tablesorter_date_format: "mmddyyyy"
+#  notice_no_organization_use_current_attribute: " No hay ninguna organizaci�n que usa el \ " el % {el valor} \ " el atributo "
+#  text_project_name: " Vinc�lese a otros proyectos (subproyectos)"
+#  text_project_name_inverse: " Los padres proyectan (p. ej. proyectan con un eslab�n hasta el seleccionado)"
+#  text_user_name: " Usuario asociado "
+#  text_group_name: " Grupo asociado "
+#  text_associated_project: " Proyecto asociado "
+#  notice_user_finduse_no_project: " No hay ning�n proyecto asociado al usuario \ " el % {el valor} \ ""
+#  text_finduse_project: " Lista de objetos asociados con proyecto \ " % {valor} \ ""
+#  text_finduse_user: " Lista de objetos asociados con usuario \ " % {valor} \ ""
+#  text_finduse_pemodule: " Lista de objetos asociados con m�dulo \ " % {valor} \ " "  notice_pemodule_finduse_no_project: " No hay ning�n proyecto asociado al m�dulo \ " el % {el valor} \""
+#  notice_project_finduse_no_project: " No hay ning�n proyecto unido (p. ej. el subproyecto) al \ " el % {el valor} \ " el proyecto "
+#  notice_project_finduse_no_parent_project: " El \ " el % {el valor} \ " el proyecto no es vinculado a ning�n otro proyecto (nunca usado como el subproyecto)"
+#  notice_project_finduse_no_user: " No hay ning�n usuario asociado al \ " el % {el valor} \ " el proyecto "
+#  notice_project_finduse_no_group: " No hay ning�n grupo asociado al \ " el % {el valor} \ " el proyecto "
+#  notice_no_active_module: " Ning�n m�dulo seleccionado de proyecto "
+#  title_hide_show_menu: "Escoger/Mostrar menu"
+#  notice_attribute_category_successful_created: " La categor�a de atributo satisfactoriamente fue creado"
+#  notice_attribute_category_successful_updated: " La categor�a de atributo satisfactoriamente fue puesta al d�a "
+#  error_attribute_category_failed_update: " Un error ha ocurrido durante la actualizaci�n."
+#  text_create_project_from_template: " De la lista debajo, pulse sobre el icono de Copia de la plantilla deseada para crear un proyecto basado en ello."
+#  notice_pe_attribute_successful_created: " Atributo satisfactoriamente fue creado."
+#  notice_pe_attribute_successful_updated: " Atributo satisfactoriamente puesto al d�a."
+#  text_index_permissions_guidance: " Catalogue todos los permisos (global y de proyecto)"
+#  notice_end_of_estimation_execution: " Fin para ejecutar m�dulos "
+#  label_project_name: "Nombre del proyecto"
+#  label_project_version: "Version"
+#  label_permission_access: "Acceso"
+#  error_group_failed_update: " Un error ha ocurrido cuando durante la actualizaci�n "
+#  organization_uow_complexity: "Complejo del Unidad de Trabajo "
+#  text_organization_uow_complexity: " Valores de Complejidad Posibles usados dentro de la Unidad de Trabajo "
+#  new_organization_uow_complexity: " Nueva Unidad de Organizaci�n de Complejidad de Trabajo"
+#  notice_organization_uow_complexity_successful_updated: " Unidad de Organizaci�n de Trabajo Complejidad satisfactoriamente fue puesta al d�a "
+#  notice_organization_uow_complexity_successful_created: " Unidad de Organizaci�n de Trabajo Complejidad satisfactoriamente fue creado "
+#  notice_organization_uow_complexity_successful_deleted: "Organisazion de Unidad de Trabajo complejo fue suprimido con exito "
+#  notice_organization_technology_successful_updated: " Technologia del Organisazion fue puesto al d�a con exito "
+#  notice_organization_technology_successful_created: " Technologia del Organisazion fue creado con exito "
+#  notice_organization_technology_successful_deleted: " Technologia del Organisazion fue suprimido con exito "
+#  organization_unit_of_work: " Unidad de Trabajo  "
+#  text_organization_unit_of_work: " Unidades de Trabajo utilisadas en la organisazion"
+#  notice_unit_of_work_successful_updated: " Nueva Unidad de Trabajo  fue puesto al d�a con exito "
+#  notice_unit_of_work_successful_created: " Nueva Unidad de Trabajo fue creado con exito "
+#  notice_unit_of_work_successful_deleted: " Nueva Unidad de Trabajo fue suprimido con exito"
+#  new_unit_of_work: " Nueva Unidad de Trabajo (NUT)"
+#  organization_abacus: " �baco "
+#  text_organization_abacus: " �baco de la organizaci�n por tecnolog�a "
+#  notice_subcontractor_successfully_created: " El subcontratista satisfactoriamente fue creado "
+#  notice_subcontractor_successfully_updated: " El subcontratista satisfactoriamente fue puesto al d�a "
+#  notice_subcontractor_successfully_deleted: " El subcontratista satisfactoriamente fue suprimido "
+#
+#  label_Project: "Proyecto"
+#  label_filter_on_projects_version: " Filtro sobre versiones de proyecto "
+#  label_filter_on_project_version_1: " Muestre s�lo hojas "
+#  label_filter_on_project_version_2: "Muestre todo"
+#  label_filter_on_project_version_3: " Muestre s�lo la ra�z "
+#  label_filter_on_project_version_4: " Muestre s�lo lo m�s reciente "
+#  label_ProjectArea: " �rea De proyecto "
+#  label_PlatformCategory: " Categor�a de Plataforma "
+#  label_ProjectCategory: " Categor�a De proyecto "
+#  label_AcquisitionCategory: " Categor�a de Adquisici�n "
+#  label_WbsActivity: "Activitad Wbs"
+#  label_Pemodule: " M�dulo"
+#  label_PeAttribute: "Atributo"
+#  label_WorkElementType: " Tipo de Elemento de Trabajo "
+#  label_Organization: " Organisation "
+#  label_User: "Usuario"
+#  label_Group: "Grupo"
+#  send_feedback: " Enviar Regeneraci�n "
+#  label_feedback_type: " Tipo de regeneraci�n "
+#  notice_send_feedback: " Por favor entre en una peque�a informaci�n sobre la cuesti�n sobre los que gustar�a decirnos:"
+#  error_send_feedback_empty: " Por favor llene todos los campos de la forma "
+#  notice_send_feedback_success: " Su petici�n ha sido considerada "
+#  error_send_feedback_failed: " Un error ocurri� enviando a su petici�n "
+#  error_validation_project: " los pares 'nombre/version' y 'alias/version' debe ser �nico "
+#  tooltip_state: "\"Definido\" anotaciones son mostrados en negro, \"Borrador\" en naranja, \"Jubilado\" en rojo "
+#  warning_project_state_to_rejected: " Si continua la version de este proyecto no sera mofidicable (%{value_b}) y no derivable."
+#  warning_project_state_to_released: " Si continua la version de este proyecto no sera mofidicable (%{value_b})."
+#  warning_project_state_to_checkpoint: " Si continua la version de este proyecto puede llegar a ser no mofidicable(%{value_b}) pero destruictible."
+#  warning_project_state_to_inreview: "Si continua (%{value_b}) solo usuario con write_access_to_inreview_project privilegio puede modificar la version del proyecto."
+#  warning_project_state_unusual: "Es inusual to cometer de estado  %{value_a} } a estado %{value_b}."
+#  warning_project_state_unnormal: "No es normal para cometer de estado  %{value_a} a estado%{value_b}."
+#  confirm: "Puede confirmar...?"
+#  error_project_state: "Perdon... esta transaccion no es posible!"
+#  warning_project_cannot_be_deleted: "Project with this state cannot be deleted"
+#  label_project_history: "Historia"
+#  label_activate_project: "Activar"
+#  label_find_use_project: "Encontrar uso"
+#  label_promote_project: "Promover"
+#  label_checkout_project: "Checkout"
+#  label_duplicate_project: "Duplicar"
+#  label_collapse_project: "Versiones derrumbadas seran borradas. Quisiera usted destruir las versions seleccionadas del proyecto?"
+#  button_collapse_project: "Proyecto derrumbado version"
+#  warning_project_cannot_be_checkout: " S�lo proyecto en 'Checkpoint' y 'Released' estatutos pueden ser checkout"
+#  warning_project_state_from_checkpoint_release_rejected: "Proyecto en '%{state}' no puede ser modificado por esta vista. Editar las propriedades globales del proyecto para promover los estados del proyecto."
+#  notice_successful_collapse_project_version: "Las versiones seleccionadas del proyecto han sido borradas con exito"
+#  project_is_not_collapsible: "Proyecto '%{project_title_version}' no  es derrumbable.\n\n"
+#  collapsible_project_only: "S�lo proyecto en 'CHECKPOINT' estado pueder ser derrumbado."
+#
+#  #new added translations
+#  audit_users_activities: "Actividades del usuario"
+#  audit_element_type: "Tipo de elementos"
+#  audit_element_id: "Id elementos"
+#  audit_action: "Acciones"
+#  audit_changes: "Cambios"
+#  audit_user: "Autor"
+#
+#  warning_checkout_unauthorized_action: "Accion no autorizada: intenta de checkout el proyecto que no tiene los permisos necesarios."
+#  record_not_found_password_reset_token: "No podria encontrar usuario con el contrasigna simbulo reset generada.\n\n Please check the last received email"
+#  select_at_least_one_project: "Debe seleccionar por lo menos un proyecto para realisar un accion."
+#  warning_not_allow_to_create_new_branch_of_project: "No tiene permiso para crear una nueva rama del proyecto"
+#  project_is_activated: "Proyecto '%{project_title}' es activado con exito."
+#  defined_language_not_deletable: "Idioma definido no es deletable"
+#  leave_it_blank_if_no_change: "Deja lo vacio si no quiere que cambie"
+#
+#

@@ -1105,3 +1105,12 @@ fr:
   complexity_by_factor: "Complexité par facteurs"
   factors: "Facteurs d'ajustement"
 
+  preliminary: "Préliminaire"
+  in_progress: "En cours"
+  in_review: "Relecture"
+  checkpoint: "Controle"
+  released: "Confirmé"
+  rejected: "Rejeté"
+
+
+

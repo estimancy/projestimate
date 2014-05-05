@@ -1104,3 +1104,10 @@ en:
   new_factor_complexity: "New factor"
   complexity_by_factor: "Complexities by factors"
   factors: "Factors"
+
+  preliminary: "Preliminary"
+  in_progress: "In progress"
+  in_review: "in review"
+  checkpoint: "Checkpoint"
+  released: "Released"
+  rejected: "Rejected"

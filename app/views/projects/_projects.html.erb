@@ -26,12 +26,12 @@
             <td><%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %></td>
             <td class="span2"><%= project.version %></td>
             <td><%= project.alias %></td>
-            <td><%= project.state.humanize %></td>
+            <td><%= I18n.t(project.state) %></td>
             <td><%= I18n.l(project.start_date) unless project.start_date.nil? %></td>
             <td><%= project.organization %></td>
             <td><%= project.is_model %></td>
             <td>
-              <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit'), 'data-disable-with' => "test") %>
+              <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
               <%= link_to('', {:controller => 'projects', :action => 'activate', :project_id => project.id}, :class => 'button_attribute_tooltip icon-star pull-left', :title => I18n.t('button_activate_project')) %>
               <% if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
                   <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
