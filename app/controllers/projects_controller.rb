@@ -1245,7 +1245,7 @@ public
             end
 
             flash[:success] = I18n.t(:notice_project_successful_checkout)
-            redirect_to (edit_project_path(new_prj)), :notice => I18n.t(:notice_project_successful_checkout)
+            redirect_to (edit_project_path(new_prj, :anchor => "tabs-history")), :notice => I18n.t(:notice_project_successful_checkout)
 
             #raise "#{RuntimeError}"
           else

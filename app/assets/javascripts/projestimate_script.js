@@ -4870,20 +4870,14 @@ function warn_me(message){
     $('.node_link_to').live('click', function(){
         var counter = 0,
             i = 0,
-            node_ids = new Array(),
-            input_obj = document.getElementsByTagName('input');
-
+            node_ids = new Array();
         var get_function_url = "/show_project_history";
 
-        // loop through all collected objects
-        for (i = 0; i < input_obj.length; i++) {
-            // if input object is checkbox and checkbox is checked then ...
-            if (input_obj[i].type === 'checkbox' && input_obj[i].checked === true) {
-                // ... increase counter and update the nodes Array
-                counter++;
-                node_ids.push(input_obj[i].value);
-            }
-        }
+        $('.infovis_project_history input:checked').each(function() {
+            // ... increase counter and update the nodes Array
+            counter++;
+            node_ids.push($(this).attr('value'));
+        });
 
         if($(this).attr('id') === "find_use_projects_from_history"){
             get_function_url = "/find_use_project";
