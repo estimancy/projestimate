@@ -71,11 +71,11 @@
 
                     <tr class="password_row">
                       <% if @user.auth_method && @user.auth_method.name == 'Application' %>
-                        <td><%= f.input :password, :as => :password, :required => false, :autocomplete => "off", :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => false, :type => 'text'}, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
-                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => false, :type => 'text'} %></td>
+                        <td><%= f.input :password, :as => :password, :required => false, :autocomplete => "off", :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => false }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
+                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => false } %></td>
                       <% else %>
                         <td><%= f.input :password, :as => :password, :autocomplete => "off", :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => true }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
-                        <td><%= f.input :password_confirmation, :as => password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => true } %></td>
+                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => true } %></td>
                       <% end %>
                     </tr>
 
