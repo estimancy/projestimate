@@ -87,7 +87,7 @@ class EstimationValue < ActiveRecord::Base
             val.to_i.between?(v1, v2)
           else
             #ex : eval('val <= 42')
-            str = array[1] + array[2]
+            str = array[1].to_s + array[2].to_s
             str_to_eval = val + str.to_s
             begin
               eval(str_to_eval)
