@@ -10,7 +10,7 @@ $("#project_wbs_product_section .tab-pane.active").html("<%=raw j generate_wbs_p
 
 $(".input_data").html("<%=raw j(display_input) %>");
 
-$(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr th td span title h4), :attributes => %w(id class style title))) %>");
+$(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr th td span title h4 strong), :attributes => %w(id class style title colspan rowspan))) %>");
 
 $(".component_name").html("<%=raw @current_component %>");
 
