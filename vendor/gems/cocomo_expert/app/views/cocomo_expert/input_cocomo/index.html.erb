@@ -16,7 +16,7 @@
         </tr>
 
         <tr>
-          <td colspan="3" style="text-align: center">
+          <td colspan="4" style="text-align: center">
             <b>
               Scale factor
             </b>
@@ -29,11 +29,14 @@
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td>
+              <%= link_to "Help", help_path(factor.id), remote: true %>
+            </td>
           </tr>
         <% end %>
 
         <tr>
-          <td colspan="3" style="text-align: center">
+          <td colspan="4" style="text-align: center">
             <b>
               Effort multiplier
             </b>
@@ -46,6 +49,9 @@
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td>
+              <%= link_to "Help", help_path(factor.id), remote: true %>
+            </td>
           </tr>
         <% end %>
 
@@ -53,5 +59,24 @@
       <%= submit_tag "Save", class: 'btn' %>
     <% end %>
 
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><%= I18n.t :help %></h4>
+      </div>
+      <div class="modal-body">
+        <span id="help"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t :close %></button>
+      </div>
+    </div>
   </div>
 </div>
