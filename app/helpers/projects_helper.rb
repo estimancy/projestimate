@@ -122,7 +122,7 @@ module ProjectsHelper
     module_project.estimation_values.order('display_order ASC').each do |est_val|
       if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
         probable_est_value_for_consistency = est_val.send("string_data_probable")
-        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'>#{est_val.pe_attribute.name}</span></th>"
+        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name}</span></th>"
 
         # For is_consistent purpose
         ['low', 'most_likely', 'high', 'probable'].each do |level|
@@ -206,18 +206,18 @@ module ProjectsHelper
     res << '</tr>'
 
     # Show the probable values
-    res << "<tr><td><strong> #{pbs_project_element.name} Probable Value </strong> </td>"
+    #res << "<tr><td colspan='4'><strong> #{pbs_project_element.name} (Probable Value) </strong> </td>"
+    res << "<tr><td colspan='4'><strong> #{current_component.name} (Probable Value) </strong> </td>"
     module_project.estimation_values.each do |est_val|
       if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project_id == module_project.id
-        res << "<td colspan='3'>"
+        res << "<td>"
         level_probable_value = est_val.send('string_data_probable')
         if level_probable_value.nil? || level_probable_value[pbs_project_element.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value].nil?
           res << '-'
         else
-          res << "<div align='center'>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], est_val)}</div>"
+          res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], est_val)}</strong></div>"
         end
         res << '</td>'
-        res << '<td></td>'
       end
     end
     res << '</tr>'

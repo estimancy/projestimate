@@ -266,29 +266,34 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
+  # Get the current activated module project
   def current_module_project
     @defined_record_status = RecordStatus.find_by_name('Defined')
     pemodule = Pemodule.find_by_alias_and_record_status_id('initialization', @defined_record_status)
-    default_current_module_project = ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
-
-    if current_project.module_projects.map(&:id).include?(session[:module_project_id].to_i)
-      session[:module_project_id].nil? ? default_current_module_project : ModuleProject.find(session[:module_project_id])
-    else
-      begin
-        pemodule = Pemodule.find_by_alias('initialization')
-        ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
-      rescue
-        current_project.module_projects.first
+    begin
+      default_current_module_project = ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
+      if current_project.module_projects.map(&:id).include?(session[:module_project_id].to_i)
+        session[:module_project_id].nil? ? default_current_module_project : ModuleProject.find(session[:module_project_id])
+      else
+        begin
+          pemodule = Pemodule.find_by_alias('initialization')
+          ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
+        rescue
+          current_project.module_projects.first
+        end
       end
+    rescue
+      nil
     end
   end
 
+  # Get the initialization module (module that get attribute values from the project organization)
   def initialization_module
     @defined_record_status = RecordStatus.where('name = ?', 'Defined').last
     @initialization_module = Pemodule.where(alias: 'initialization', record_status_id: @defined_record_status.id).first unless @defined_record_status.nil?
   end
 
+  # Get all the adminSetting parameters
   def load_admin_setting(args)
     as = AdminSetting.find_by_key(args)
     r = RecordStatus.find_by_name('Defined')
@@ -297,6 +302,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Get the user according to the user preferences settings or use the default one
   def set_user_language
     unless current_user.nil? || current_user.language.nil?
       session[:current_locale] = current_user.language.locale.downcase
@@ -337,7 +343,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale_from_browser
-
     if  request.env['HTTP_ACCEPT_LANGUAGE'].nil?
       I18n.locale= 'en'
     else

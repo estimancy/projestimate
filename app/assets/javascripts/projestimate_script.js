@@ -5067,7 +5067,24 @@ function submit_search_form(){
             .attr('value', search_option)
             .appendTo('#search_form');
     });
+}
 
+//function to manage a single entry attribute
+function manage_single_entry_attribute(){
+    $(".single_entry_attribute").change(function(){
+        var effort_input_id = $(this).attr('id');
+        var first_value = $("#"+effort_input_id).val();
+
+        var common_on_id = effort_input_id.split("_low")[1];
+        var low_level =         "_low"+common_on_id;
+        var most_likely_level = "_most_likely"+common_on_id;
+        var high_level =        "_high"+common_on_id;
+
+        document.getElementById(low_level).value = first_value;
+        document.getElementById(most_likely_level).value = first_value;
+        document.getElementById(high_level).value = first_value;
+        //return false;
+    });
 }
 
 jQuery.fn.submitWithAjax = function () {
