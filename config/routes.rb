@@ -66,6 +66,8 @@ Projestimate::Application.routes.draw do
   post '/set_technology_uos_syntesis' => 'organization_technologies#set_technology_uos_syntesis', :as => 'set_technology_uos_syntesis'
 
   resources :organization_uow_complexities
+  match 'organization_uow_complexities/set_default/:id' => 'organization_uow_complexities#set_default', :as => 'set_default'
+
   resources :unit_of_works
   resources :attribute_categories
 

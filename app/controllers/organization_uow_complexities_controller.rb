@@ -75,6 +75,20 @@ class OrganizationUowComplexitiesController < ApplicationController
     end
   end
 
+  def set_default
+    cplx = OrganizationUowComplexity.find(params[:id])
+
+    cplx.factor.organization_uow_complexities.each do |o|
+      o.is_default = false
+      o.save(validate: false)
+    end
+
+    cplx.is_default = true
+    cplx.save(validate: false)
+
+    redirect_to "/organizationals_params"
+  end
+
   def destroy
     authorize! :manage, Organization
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
