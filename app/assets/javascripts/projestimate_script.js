@@ -16,7 +16,6 @@
 
 $(document).ready(function() {
 
-
     $("form.send_feedback input[type=submit]").click(function() {
         var error=false;
         if($("#send_feedback_user_name").val() == "") {
@@ -53,8 +52,7 @@ $(document).ready(function() {
         }
 
         if (error==true)
-        {
-            return false
+        {   return false
         }
         else
         {
@@ -70,7 +68,6 @@ $(document).ready(function() {
             data: "technology=" + $(this).val()
         });
     });
-
 
     $(".accordion").on("show", function (e) {
        $(e.target).parent().find(".icon-caret-right").removeClass("icon-caret-right").addClass("icon-caret-down");
@@ -120,7 +117,6 @@ $(document).ready(function() {
                 data: {
                     anchor_value: anchor_value
                 }
-
             });
         }
     });
@@ -138,26 +134,6 @@ $(document).ready(function() {
         $('select').removeAttr('disabled');
     });
 
-    // Showing the estimation graph onclick on the graph button, or when component or module are changed
-    //$("#see_estimation_graph, .change_component_graph, .change_module_project_graph").bind('click', function() {
-//    $(".change_component_graph").bind('click', function() {
-//        $('.icon-signal').toggle();
-//        $('.icon-list').toggle();
-//        $('.icon-align-left').toggle();
-//        $('.spiner').show();
-//
-//        $.ajax({
-//            url: "/show_estimation_graph",
-//            method: "get",
-//            data: {
-//                module_project: $('#current_module_project').val(),
-//                pbs_project_element_id: $(this).val(),
-//                project_id: $("#project_id").val()
-//            }
-//        });
-//    });
-
-
     $("#select_pbs_project_elements").on('click', function() {
         $.ajax({
             url: "/select_pbs_project_elements",
@@ -168,8 +144,6 @@ $(document).ready(function() {
             }
         });
     });
-
-
 
      $('.component_tree ul li, .widget-content ul li').hover(
         function () {
@@ -5069,7 +5043,7 @@ function submit_search_form(){
     });
 }
 
-//function to manage a single entry attribute
+//function to manage a single entry attribute on dashbord
 function manage_single_entry_attribute(){
     $(".single_entry_attribute").change(function(){
         var effort_input_id = $(this).attr('id');

@@ -24,10 +24,18 @@
         <% @module_projects.each_with_index do |j, k| %>
           <td>
             <% if  k<l && i.position_y!=j.position_y.to_i %>
-              <%= check_box_tag("module_projects[#{i.id}][]", j.id, (i.associated_module_projects.map(&:id).include?(j.id)) )%>
-            <% puts "test" %>
+              <% if i.pemodule.alias == Projestimate::Application::BALANCING_MODULE %>
+                <!-- For the EffortBalancing and SizeBalancing modules can follow a module if only they have common attributes -->
+                <% if !(i.pemodule.pe_attributes & j.pemodule.pe_attributes).empty? %>
+                    <%= check_box_tag("module_projects[#{i.id}][]", j.id, (i.associated_module_projects.map(&:id).include?(j.id)) )%>
+                <% else %>
+                    -
+                <% end %>
+              <% else %>
+                <%= check_box_tag("module_projects[#{i.id}][]", j.id, (i.associated_module_projects.map(&:id).include?(j.id)) )%>
+              <% end %>
             <% else %>
-              -
+                -
             <% end %>
           </td>
         <% end %>

@@ -133,10 +133,6 @@ module CocomoBasic
       #  nil
       #end
     end
-
-    def get_test
-      10
-    end
   end
 
 end
