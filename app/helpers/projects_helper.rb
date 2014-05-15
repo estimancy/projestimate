@@ -291,17 +291,18 @@ module ProjectsHelper
   end
 
   # Display link to add notes to attribute
-  def add_attribute_notes_link(estimation_value, pbs_id=nil, wbs_id=nil)
+  def add_attribute_notes_link(estimation_value, pbs_id)
     res = ""
     add_notes_title = I18n.t(:label_add_notes)
     icon_class = ""
-    unless estimation_value.notes.to_s.empty?
-      add_notes_title = estimation_value.notes
-      icon_class = "icon-green"
+    unless estimation_value.notes.nil?
+      add_notes_title_est_val = estimation_value.notes
+      if !estimation_value.notes["#{pbs_id}"].nil? && !estimation_value.notes["#{pbs_id}"].empty?
+        add_notes_title = estimation_value.notes["#{pbs_id}"]
+        icon_class = "icon-green"
+      end
     end
-
-    #res << '<td>'
-    res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
+    res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id, :pbs_project_elt_id => pbs_id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
   end
 
   # Display Estimations output results according to the module behavior
@@ -510,7 +511,7 @@ module ProjectsHelper
       res << '</td>'
       # Notes to justify value
       res << '<td>'
-      res << add_attribute_notes_link(balancing_attr_est_val)
+      res << add_attribute_notes_link(balancing_attr_est_val, pbs_project_element.id)
       res << '</td>'
 
       res << "</tr>"
@@ -539,7 +540,7 @@ module ProjectsHelper
           res << "<th>"
             res << "<span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span>"
             res << "<span class='note_input_with_activities'>"
-              res << add_attribute_notes_link(est_val)
+              res << add_attribute_notes_link(est_val, pbs_project_element.id)
             res << '</span>'
           res << '</th>'
         end
@@ -619,7 +620,7 @@ module ProjectsHelper
         if (est_val_in_out == 'output' or est_val_in_out=='both') and est_val.module_project.id == module_project.id
           res << "<th colspan=4><span class='attribute_tooltip' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val_pe_attribute.name}</span>"
           res << "<span class='note_input_with_activities'>"
-          res << add_attribute_notes_link(est_val)
+          res << add_attribute_notes_link(est_val, pbs_project_element.id)
           res << '</span>'
           res << '</th>'
         end
@@ -795,7 +796,7 @@ module ProjectsHelper
 
             # Add link to add attribute Note to justify each estimation attribute
             res << '<td>'
-            res << add_attribute_notes_link(est_val)
+            res << add_attribute_notes_link(est_val, pbs_project_element.id)
             res << '</td>'
             res << '</td>'
           end
