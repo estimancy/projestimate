@@ -26,10 +26,11 @@
 
         <% @aprod.compact.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
             <td>
               <%= link_to "Help", help_path(factor.id), remote: true %>
             </td>
@@ -46,10 +47,11 @@
 
         <% @aplat.compact.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
             <td>
               <%= link_to "Help", help_path(factor.id), remote: true %>
             </td>
@@ -66,10 +68,11 @@
 
         <% @apers.compact.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
             <td>
               <%= link_to "Help", help_path(factor.id), class: "", remote: true %>
             </td>
@@ -86,16 +89,18 @@
 
         <% @aproj.compact.each do |factor| %>
           <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
             <td>
               <%= link_to "Help", help_path(factor.id), remote: true %>
             </td>
           </tr>
         <% end %>
       </table>
+
       <%= submit_tag "Save", class: 'btn' %>
     <% end %>
 
