@@ -294,11 +294,11 @@ $(document).ready(function() {
     );
 
     $(".pbs").resizable({
-        alsoResizeReverse: ".estimation_plan"
+        alsoResizeReverse: ".estimation_plan",
     });
 
     $(".i").resizable({
-        alsoResizeReverse: ".o"
+        alsoResizeReverse: ".o",
     });
 
 //Need to disable or enable the custom_value field according to the record_status value

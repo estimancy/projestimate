@@ -291,7 +291,7 @@ module ProjectsHelper
   end
 
   # Display link to add notes to attribute
-  def add_attribute_notes_link(estimation_value)
+  def add_attribute_notes_link(estimation_value, pbs_id=nil, wbs_id=nil)
     res = ""
     add_notes_title = I18n.t(:label_add_notes)
     icon_class = ""
