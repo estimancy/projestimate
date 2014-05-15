@@ -1,7 +1,23 @@
-#########################################################################
+#encoding: utf-8
+#############################################################################
+#
+# Estimancy, Open Source project estimation web application
+# Copyright (c) 2014 Estimancy (http://www.estimancy.com)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    ======================================================================
 #
 # ProjEstimate, Open Source project estimation web application
-# Copyright (c) 2012-2013 Spirula (http://www.spirula.fr)
+# Copyright (c) 2013 Spirula (http://www.spirula.fr)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -16,7 +32,8 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-########################################################################
+#############################################################################
+
 Projestimate::Application.routes.draw do
 
 
@@ -56,6 +73,7 @@ Projestimate::Application.routes.draw do
   mount Uos::Engine, :at => '/uos'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
+  ###mount BalancingModule::Engine, at: "/balancing_module"
 
   resources :abacus_organizations
   match 'organizations/:id/export_abacus' => 'organizations#export_abacus', :as => 'export_abacus'
@@ -128,6 +146,7 @@ Projestimate::Application.routes.draw do
   match 'module_projects/associate_module_project_to_ratios' => 'module_projects#associate_module_project_to_ratios', :as => 'associate_module_project_to_ratios'
   post 'module_projects/associate'
   match 'module_projects/:module_project_id/activate_module_project' => 'module_projects#activate_module_project', :as => 'activate_module_project'
+  get 'selected_balancing_attribute' => 'module_projects#selected_balancing_attribute', :as => 'selected_balancing_attribute'
 
   resources :languages
 

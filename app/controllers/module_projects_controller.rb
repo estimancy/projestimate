@@ -1,4 +1,20 @@
-#########################################################################
+#encoding: utf-8
+#############################################################################
+#
+# Estimancy, Open Source project estimation web application
+# Copyright (c) 2014 Estimancy (http://www.estimancy.com)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    ===================================================================
 #
 # ProjEstimate, Open Source project estimation web application
 # Copyright (c) 2012-2013 Spirula (http://www.spirula.fr)
@@ -16,7 +32,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-########################################################################
+#############################################################################
 
 class ModuleProjectsController < ApplicationController
 
@@ -172,6 +188,32 @@ class ModuleProjectsController < ApplicationController
     respond_to do |format|
       format.js { render :partial => "module_projects/refresh_selected_module_data"}
     end
+  end
+
+
+  # Set the current balancing attribute for the Balancing-Module
+  def selected_balancing_attribute
+    session[:balancing_attribute_id] = params[:attribute_id]
+    @project = current_project
+
+    authorize! :alter_estimation_plan, @project
+
+    @module_projects ||= @project.module_projects
+    @pbs_project_element = current_component
+
+    #Get the initialization module_project
+    @initialization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @initialization_module.id, @project.id).first  unless @initialization_module.nil?
+
+    # Get the max X and Y positions of modules
+    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+
+    @results = nil
+
+    #respond_to do |format|
+    #  format.js { render :partial => "module_projects/refresh_selected_module_data"}
+    #end
+    render :partial => "pbs_project_elements/refresh"
   end
 
 end

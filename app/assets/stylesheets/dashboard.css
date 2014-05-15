@@ -800,9 +800,7 @@ div.block_label.selected_pbs {
     visibility: hidden
 }
 
-/* Override default backdrop opacity option*/
-/*.modal-backdrop{*/
-    /*opacity: 0;*/
-/*}*/
-
+.balancing_attribute {
+    padding-bottom: 20px;
+}
 

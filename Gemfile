@@ -108,9 +108,11 @@ gem 'rubyzip', '~> 0.9'
 gem 'axlsx'
 gem 'roo'
 
+# Including
 gem 'cocomo_advanced', path: "vendor/gems/cocomo_advanced"
 gem 'cocomo_expert', path: "vendor/gems/cocomo_expert"
 gem 'uos', :path => 'vendor/gems/uos'
+###gem 'balancing_module', path: "vendor/gems/balancing_module"
 
 # This gem provides the JavaScript InfoVis Toolkit for your rails application.
 gem "jit-rails", "~> 0.0.2"

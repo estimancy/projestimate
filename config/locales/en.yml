@@ -1101,6 +1101,9 @@ en:
   notes_updated_by: "Notes updated by"
   label_add_notes: "Add notes to attribute"
   notice_notes_successfully_updated: "Notes on attribute is successfully updated"
+  label_balancing_attribute: "Select balancing attribute"
+  text_select_attribute: "Select attribute"
+  text_balancing_value: "Balancing value"
 
   new_factor: "New factor"
   new_factor_complexity: "New factor"

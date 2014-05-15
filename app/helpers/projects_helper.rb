@@ -1,8 +1,23 @@
 #encoding: utf-8
-##########################################################################
+#############################################################################
+#
+# Estimancy, Open Source project estimation web application
+# Copyright (c) 2014 Estimancy (http://www.estimancy.com)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    ======================================================================
 #
 # ProjEstimate, Open Source project estimation web application
-# Copyright (c) 2012-2013 Spirula (http://www.spirula.fr)
+# Copyright (c) 2013 Spirula (http://www.spirula.fr)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,7 +32,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-########################################################################
+#############################################################################
 
 
 module ProjectsHelper
@@ -276,7 +291,7 @@ module ProjectsHelper
   end
 
   # Display link to add notes to attribute
-  def add_attribute_notes_link(estimation_value)
+  def add_attribute_notes_link(estimation_value, pbs_id=nil, wbs_id=nil)
     res = ""
     add_notes_title = I18n.t(:label_add_notes)
     icon_class = ""
@@ -375,6 +390,10 @@ module ProjectsHelper
         else
           res << display_inputs_with_activities(current_module_project)
         end
+
+        # For effort balancing module without activities (only for component)
+      elsif current_module_project_pemodule.alias == Projestimate::Application::BALANCING_MODULE
+        res << display_balancing_input(current_module_project, last_estimation_result)
         # For others modules that don't use WSB-Activities values in input
       elsif current_module_project_pemodule.no? || current_module_project_pemodule.yes_for_output_with_ratio? || current_module_project_pemodule.yes_for_output_without_ratio?
         res << display_inputs_without_activities(current_module_project)
@@ -382,6 +401,123 @@ module ProjectsHelper
     end
     res
   end
+
+  # Display the Effort Balancing Input without activity
+  def display_balancing_input(module_project, last_estimation_result)
+    pbs_project_element = current_component
+    @current_balancing_attribute = current_balancing_attribute
+
+    res = String.new
+    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+      pemodule = Pemodule.find(module_project.pemodule.id)
+      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
+      # Add a select box for attributes selection
+      res << "<span class='balancing_attribute' style='padding-bottom:10px;'>#{I18n.t(:label_balancing_attribute)} :"
+        res << "#{select_tag('select_balancing_attribute', options_for_select(module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]}), :prompt => I18n.t(:text_select_attribute), :selected => current_balancing_attribute.id, :remote => true)}"
+      res << "</span> <br />"
+
+      # render view according to the selected attribute
+      res << "<div class='attribute_balancing_input' style='margin-bottom:15px;'>"
+      res << "</div>"
+
+      res << "<table class='table table-condensed table-bordered'>"
+      res << "<tr><th colspan='#{module_project.previous.size+2}'> #{@current_balancing_attribute.name} </th></tr>"
+      res << '<tr>'
+      # Get the balancing attribute
+      #module_project.estimation_values.each do |est_val|
+      #  ####if est
+      #  if (est_val.in_out == 'input' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
+      #  end
+      #end
+      # Only the module_project that have the @current_balancing_attribute attribute as OUTPUT attribute are compatibles
+      compatible_previous_mp = []
+      module_project.previous.each_with_index do |est_mp, i|
+        compatible_attribute_module = est_mp.pemodule.attribute_modules.where('pe_attribute_id = ?', @current_balancing_attribute)
+        if !compatible_attribute_module.nil?
+          if !compatible_attribute_module.last.nil? && compatible_attribute_module.last.in_out.in?(%w(output both))
+            compatible_previous_mp << compatible_attribute_module.last
+          end
+        end
+        res << "<th>#{est_mp.pemodule.title}</th>"
+      end
+      res << "<th>#{I18n.t(:text_balancing_value)}</td>"
+      res << "<th>Notes</th>"
+
+      #module_project.estimation_values.each do |est_val|
+      #  if (est_val.in_out == 'input' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
+      #    res << "<th>"
+      #    res << "<span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span>"
+      #    res << "<span class='note_input_with_activities'>"
+      #    res << add_attribute_notes_link(est_val)
+      #    res << '</span>'
+      #    res << '</th>'
+      #  end
+      #end
+      res << '</tr>'
+
+      res << "<tr>"
+      module_project.previous.each do |mp|
+        res << "<td>"
+          level = "probable"
+          # Get estimation_value of previous mp for same attribute
+          mp_attr_est_values = mp.estimation_values.where('in_out = ? AND pe_attribute_id = ?', "output", @current_balancing_attribute)
+          if mp_attr_est_values == nil || mp_attr_est_values.length==0
+            res << "-"
+          else
+            corresponding_est_val = mp_attr_est_values.last
+            # Get probable value : value of output attributes of previous pemodule_projects
+            level_estimation_values = Hash.new
+            level_estimation_values = corresponding_est_val.send("string_data_probable")
+            if level_estimation_values[pbs_project_element.id]
+              begin
+                res << text_field_tag("", level_estimation_values[pbs_project_element.id],
+                                      :readonly => true, :class => "input-small #{level} #{corresponding_est_val.id}",
+                                      "data-est_val_id" => corresponding_est_val.id)
+              rescue
+                res << "-"
+              end
+            else
+              res << '-'
+            end
+          end
+        res << "</td>"
+      end
+
+      # Text_field the balancing value
+      balancing_attr_est_values = module_project.estimation_values.where('in_out = ? AND pe_attribute_id = ?', "output", @current_balancing_attribute)
+      res << '<td>'
+      balancing_attr_est_val = EstimationValue.new
+      if !balancing_attr_est_values.nil? && balancing_attr_est_values.length !=0
+        balancing_attr_est_val = balancing_attr_est_values.last
+        level_estimation_values = Hash.new
+        level_estimation_values = balancing_attr_est_val.send("string_data_most_likely")
+
+        if level_estimation_values[pbs_project_element.id].nil? or level_estimation_values[pbs_project_element.id].blank?
+          res << "#{text_field_tag "[#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
+                                   nil,
+                                   :class => "input-small #{balancing_attr_est_val.id}",
+                                   "data-est_val_id" => balancing_attr_est_val.id}"
+        else
+          res << "#{text_field_tag "[#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
+                                   level_estimation_values[pbs_project_element.id],
+                                   :class => "input-small #{balancing_attr_est_val.id}",
+                                   "data-est_val_id" => balancing_attr_est_val.id}"
+        end
+      else
+        res << "-"
+        # Need to create estimation_value record for the balancing attribute if it doesn't exist
+      end
+      res << '</td>'
+      # Notes to justify value
+      res << '<td>'
+      res << add_attribute_notes_link(balancing_attr_est_val)
+      res << '</td>'
+
+      res << "</tr>"
+      res << '</table>'
+    end
+  end
+
 
   #Display the Effort Balancing Input
   def display_effort_balancing_input(module_project, last_estimation_result)
@@ -394,7 +530,7 @@ module ProjectsHelper
 
       res << '<tr>
                 <th></th>'
-      module_project.previous.each_with_index do |est, i|
+      module_project.previous.each_with_index do |est_mp, i|
         res << "<th>#{display_path([], module_project, i).reverse.join('<br>')}</th>"
       end
 
@@ -463,8 +599,8 @@ module ProjectsHelper
       end
       res << '</table>'
     end
-
   end
+
 
 
   #Display the Effort Balancing Output
