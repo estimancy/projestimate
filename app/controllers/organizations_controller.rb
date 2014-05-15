@@ -61,7 +61,7 @@ class OrganizationsController < ApplicationController
 
     @technologies = OrganizationTechnology.all
 
-    @factors = Factor.all
+    @factors = Factor.order("factor_type")
 
     @ot = @organization.organization_technologies.first
     @unitofworks = @organization.unit_of_works

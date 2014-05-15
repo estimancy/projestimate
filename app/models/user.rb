@@ -147,11 +147,9 @@ class User < ActiveRecord::Base
     where('email >= ? OR login_name < ?', login, login)
   }
 
-
   def should_validate_password?
     updating_password || new_record?
   end
-
 
   # Customize the devise password validations
   protected
@@ -572,7 +570,4 @@ class User < ActiveRecord::Base
       :en
     end
   end
-
-
 end
-
