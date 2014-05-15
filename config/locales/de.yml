@@ -1091,3 +1091,7 @@ de:
 #  project_is_activated: "Projekt '% {project_title}' erfolgreich aktiviert."
 #  defined_language_not_deletable: "Definierte Sprache ist nicht l�schbar"
 #  leave_it_blank_if_no_change: "leer lassen, wenn Sie nicht wollen es �ndern"
+
+  label_balancing_attribute: "Select balancing attribute"
+  text_select_attribute: "Select attribute"
+  text_balancing_value: "Balancing value"

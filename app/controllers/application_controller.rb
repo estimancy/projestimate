@@ -75,6 +75,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_project
   helper_method :current_component
   helper_method :current_module_project
+  helper_method :current_balancing_attribute
   helper_method :load_admin_setting
   helper_method :get_record_statuses
   helper_method :set_locale_from_browser
@@ -297,6 +298,21 @@ class ApplicationController < ActionController::Base
         rescue
           current_project.module_projects.first
         end
+      end
+    rescue
+      nil
+    end
+  end
+
+  # Get the current selected attribute for the Balancing Module
+  def current_balancing_attribute
+    @defined_record_status = RecordStatus.find_by_name('Defined')
+    begin
+      @default_balancing_attribute = current_module_project.pemodule.pe_attributes.where('alias = ?', Projestimate::Application::EFFORT_MAN_HOUR).defined.first
+      if current_module_project.pemodule.alias == Projestimate::Application::BALANCING_MODULE
+        @current_balancing_attribute = session[:balancing_attribute_id].nil? ? @default_balancing_attribute : PeAttribute.find(session[:balancing_attribute_id])
+      else
+        nil
       end
     rescue
       nil

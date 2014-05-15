@@ -145,6 +145,16 @@ $(document).ready(function() {
         });
     });
 
+    $("#select_balancing_attribute").change(function() {
+        return $.ajax({
+            url: "/selected_balancing_attribute",
+            method: "GET",
+            data: {
+                attribute_id: $(this).val()
+            }
+        });
+    });
+
      $('.component_tree ul li, .widget-content ul li').hover(
         function () {
           $(this.children).css('display', 'block');
@@ -284,11 +294,11 @@ $(document).ready(function() {
     );
 
     $(".pbs").resizable({
-        alsoResizeReverse: ".estimation_plan",
+        alsoResizeReverse: ".estimation_plan"
     });
 
     $(".i").resizable({
-        alsoResizeReverse: ".o",
+        alsoResizeReverse: ".o"
     });
 
 //Need to disable or enable the custom_value field according to the record_status value

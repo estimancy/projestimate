@@ -1427,3 +1427,6 @@ es:
 #  leave_it_blank_if_no_change: "Deja lo vacio si no quiere que cambie"
 #
 #
+  label_balancing_attribute: "Select balancing attribute"
+  text_select_attribute: "Select attribute"
+  text_balancing_value: "Balancing value"

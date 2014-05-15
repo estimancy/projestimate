@@ -190,4 +190,30 @@ class ModuleProjectsController < ApplicationController
     end
   end
 
+
+  # Set the current balancing attribute for the Balancing-Module
+  def selected_balancing_attribute
+    session[:balancing_attribute_id] = params[:attribute_id]
+    @project = current_project
+
+    authorize! :alter_estimation_plan, @project
+
+    @module_projects ||= @project.module_projects
+    @pbs_project_element = current_component
+
+    #Get the initialization module_project
+    @initialization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @initialization_module.id, @project.id).first  unless @initialization_module.nil?
+
+    # Get the max X and Y positions of modules
+    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+
+    @results = nil
+
+    #respond_to do |format|
+    #  format.js { render :partial => "module_projects/refresh_selected_module_data"}
+    #end
+    render :partial => "pbs_project_elements/refresh"
+  end
+
 end
