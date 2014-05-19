@@ -47,6 +47,7 @@ class EstimationValue < ActiveRecord::Base
   serialize :string_data_most_likely, Hash
   serialize :string_data_high, Hash
   serialize :string_data_probable, Hash
+  serialize :notes, Hash
 
   #Metaprogrammation
   #input or output

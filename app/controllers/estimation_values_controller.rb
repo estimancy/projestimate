@@ -39,11 +39,22 @@ class EstimationValuesController < ApplicationController
 
   def add_note_to_attribute
     @estimation_value = EstimationValue.find(params[:estimation_value_id])
+    @text_notes = ""
+    if !@estimation_value.notes.nil?
+      # show notes for PBS
+      @text_notes = @estimation_value.notes["#{params[:pbs_project_elt_id]}"]
+    end
   end
 
+  # update notes for pbs
   def update
     @estimation_value = EstimationValue.find(params[:id])
-    @estimation_value.notes =  show_notes(params["estimation_value"]["notes"], @estimation_value.notes.to_s.length)
+    pbs_project_elt_id = params[:pbs_project_elt_id]
+    current_notes = ""
+    # Add notes for PBS
+    current_notes = @estimation_value.notes.nil? ? "" : @estimation_value.notes["#{pbs_project_elt_id}"]
+    @estimation_value.notes["#{pbs_project_elt_id}"] =  show_notes(params["estimation_value"]["notes"], current_notes.to_s.length)
+
     if @estimation_value.save
       flash[:notice] = I18n.t(:notice_notes_successfully_updated)
     else
