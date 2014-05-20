@@ -75,17 +75,17 @@
                 yAxisUnitFontColor : "#666",
                 graphTitle : "",
                 graphTitleFontFamily : "'Arial'",
-                graphTitleFontSize : 24,
+                graphTitleFontSize : 18,
                 graphTitleFontStyle : "bold",
                 graphTitleFontColor : "#666",
                 graphSubTitle : "",
                 graphSubTitleFontFamily : "'Arial'",
-                graphSubTitleFontSize : 18,
+                graphSubTitleFontSize : 16,
                 graphSubTitleFontStyle : "normal",
                 graphSubTitleFontColor : "#666",
                 footNote : "Cocomo-advanced input data factors",
                 footNoteFontFamily : "'Arial'",
-                footNoteFontSize : 16,
+                footNoteFontSize : 14,
                 footNoteFontStyle : "bold",
                 footNoteFontColor : "#666",
                 legend : true,
@@ -95,7 +95,7 @@
                 legendFontColor : "#666",
                 legendBlockSize : 12,
                 legendBorders : true,
-                legendBordersWidth : 2,
+                legendBordersWidth : 1,
                 legendBordersColor : "#666",
                 //  ADDED PARAMETERS
                 graphMin : "DEFAULT",
@@ -123,7 +123,8 @@
             };
 
             //create the radar char div for the Cocomo-Advanced inputs factors
-            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="canvas_radar" width="400" height="400"></canvas></div>');
+//            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="canvas_radar" width="400" height="400"></canvas></div>');
+            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="canvas_radar" class="canvas" width="350" height="300"></canvas></div>');
 
             // Radar chart for input data
             var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
@@ -139,8 +140,7 @@
         //create dynamique div and canvas for each output attribute graph
         var current_mp_outputs_attributes_aliases = <%= @current_mp_outputs_attributes_aliases.to_json.html_safe %>;
         $.each(current_mp_outputs_attributes_aliases, function( index, value ) {
-//            $("#estimation_graph_box").append('<div class="span4"><canvas id="bar_canvas_'+value+'" width="300" height="500"></canvas></div>');
-            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" class="canvas" width="400" height="400"></canvas></div>');
+            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" class="canvas" width="350" height="300"></canvas></div>');
         });
 
         var outputs_data_levels = ["Low", "High", "Most Likely", "probable"];
@@ -161,7 +161,7 @@
                 }
 
                 //create div for the Pie chart
-                $("#estimation_graph_box").append('<div class="span8" style="margin-left: 0px"><canvas id="canvas_pie_effort_per_activity" width="800" height="400"></canvas></div>');
+                $("#estimation_graph_box").append('<div class="span8" style="margin-left: 0px"><canvas id="canvas_pie_effort_per_activity" class="canvas" width="700" height="300"></canvas></div>');
 
                 // only get the Probable value for the Pie chart
                 <% r_pie_chart_effort_per_activity = []
@@ -227,12 +227,12 @@
                 graphTitle : graph_title,
                 graphTitleFontFamily : "'Arial'",
                 graphTitleFontSize : 24,
-                graphTitleFontStyle : "bold",
+                graphTitleFontStyle : "normal",
                 graphTitleFontColor : "#666",
                 graphSubTitle : "",
                 graphSubTitleFontFamily : "'Arial'",
-                graphSubTitleFontSize : 18,
-                graphSubTitleFontStyle : "normal",
+                graphSubTitleFontSize : 16,
+                graphSubTitleFontStyle : "normal", //"bold"
                 graphSubTitleFontColor : "#666",
                 footNote : ''+value,
                 footNoteFontFamily : "'Arial'",
@@ -301,20 +301,6 @@
 //            //var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(all_attribute_data);
 //            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
 //        });
-
-
-        //==========
-//        canvas = document.getElementById(value);
-//
-//        window.addEventListener('resize', resize, false);
-//
-//        function resize() {
-//            canvas.width = window.innerWidth;
-//            canvas.height = window.innerHeight;
-//            //Do Something
-//            stage.update();
-//        }
-        //===========
 
     });
 </script>
