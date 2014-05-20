@@ -264,7 +264,7 @@ module ProjectsHelper
       res << '</tr>'
       # Attribute Balancing résult
       res << "<tr>"
-      res << "<td> #{pbs_project_element.name} </td>"
+      res << "<td> #{current_component.name} </td>"
       res << "<td>"
       if est_val.nil?
         res << "-"
