@@ -120,7 +120,7 @@ class Home < ActiveRecord::Base
     self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])
 
     puts '   - Complexity...'
-    self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'state', 'uuid'])
+    self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
     #Associate
     ext_factors = ExternalMasterDatabase::ExternalFactor.all
@@ -617,7 +617,7 @@ class Home < ActiveRecord::Base
     self.create_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'state', 'factor_type', 'uuid'])
 
     puts '   - Complexity...'
-    self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid', 'state'])
+    self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
     #Associate
     ext_factors = ExternalMasterDatabase::ExternalFactor.all
@@ -629,7 +629,8 @@ class Home < ActiveRecord::Base
           loc_cplx = OrganizationUowComplexity.find_by_uuid(ext_complexity.uuid)
           loc_cplx.factor_id = loc_factor.id
           loc_cplx.value = ext_complexity.value
-          loc_cplx.save(validate: false)
+          loc_cplx.record_status_id = local_defined_rs_id
+          loc_cplx.save
         end
       end
     end

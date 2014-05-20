@@ -1,15 +1,217 @@
 <ul class="nav">
-  <li>
-    <a href="#" id="toggle_button" title="<%= I18n.t 'title_hide_show_menu' %>">
-      <i class="icon-double-angle-down icon-large pull-left" style="margin-top: 1px;"></i>
+  <!--<li>-->
+    <!--<a href="#" id="toggle_button" title="<%= I18n.t 'title_hide_show_menu' %>">-->
+      <!--<i class="icon-double-angle-down icon-large pull-left" style="margin-top: 1px;"></i>-->
+    <!--</a>-->
+  <!--</li>-->
+
+  <!--<li class="divider-vertical"></li>-->
+
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <i class="icon-home icon-large pull-left"></i>&nbsp;
+      Estimations
+      <b class="caret"></b>
     </a>
+    <ul class="dropdown-menu">
+      <li class="dropdown"><a href="/dashboard">
+        <!--<i class="icon-home icon-large pull-left"></i>-->
+        <%= I18n.t('home') %></a></li>
+
+      <% if current_project %>
+        <% if can? :write_access_to_inreview_project, current_project %>
+          <li class="dropdown">
+            <a href="<%= main_app.edit_project_path(current_project, :anchor => 'tabs-1') %>">
+              <!--<i class="icon-edit icon-large pull-left"></i>-->
+              <%= I18n.t('edit') %>
+              <%= current_project.title %>
+            </a>
+          </li>
+        <% end %>
+      <% end %>
+      <li class="dropdown">
+        <a href="<%= main_app.projects_url %>">
+          <!--<i class=" icon-list icon-large pull-left"></i> -->
+          <%= I18n.t('all_projects') %>
+        </a></li>
+      <% if (can? :create_project_from_scratch, Project) or (can? :create_project_from_template, Project) %>
+        <li class="dropdown">
+          <a href="<%= main_app.new_project_path %>">
+            <!--<i class="icon-plus icon-large pull-left"></i>-->
+            <%= I18n.t('create_new_project') %></a>
+        </li>
+      <% end %>
+    </ul>
   </li>
 
   <li class="divider-vertical"></li>
 
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <i class="icon-tasks icon-large pull-left"></i>&nbsp;
+      Library
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="dropdown">
+        <a href="/projects_global_params">
+          <!--<i class="icon-tasks icon-large pull-left"></i>-->
+          <%= I18n.t(:project_global_setting) %>
+        </a>
+      </li>
+      <li class="dropdown"><a href="/organizationals_params">
+        <!--<i class="icon-globe icon-large pull-left"></i>-->
+        <%= I18n.t(:organization_setting) %></a>
+      </li>
+      <li class="dropdown"><a href="<%= main_app.wbs_activities_path %>">
+        <!--<i class="icon-sitemap icon-large pull-left"></i>-->
+        <%= I18n.t(:wbs_activities) %></a>
+      </li>
+    </ul>
+  </li>
+
+  <li class="divider-vertical"></li>
+
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <i class="icon-cog icon-large pull-left"></i>&nbsp;
+      Administration
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <% if can? :manage, AdminSetting or can? :edit_admin_settings, AdminSetting %>
+        <li class="dropdown">
+          <a href="<%= main_app.admin_settings_path %>">
+            <!--<i class="icon-cog icon-large pull-left"></i>-->
+            <%= I18n.t(:administration) %>
+          </a></li>
+      <% end %>
+
+      <% if can? :manage, User %>
+        <li class="dropdown">
+          <a href="<%= main_app.users_path %>">
+            <!--<i class="icon-user icon-large pull-left"></i>-->
+            <%= I18n.t(:users) %>
+          </a></li>
+      <% end %>
+
+      <% if can? :manage, User or can? :create_and_edit_groups, Group %>
+        <li class="dropdown"><a href="<%= main_app.groups_path %>">
+          <!--<i class="icon-group icon-large pull-left"></i>-->
+          <%= I18n.t(:groups) %></a>
+        </li>
+      <% end %>
+
+      <% if can? :manage_roles, :All %>
+        <li class="dropdown"><a href="/globals_permissions">
+          <!--<i class="icon-check-sign icon-large pull-left"></i>-->
+          Roles</a></li>
+      <% end %>
+
+      <% if can? :manage, :organizations %>
+        <li class="dropdown"><a href="/factors">
+          <!--<i class="icon-check-sign icon-large pull-left"></i>-->
+          Factors</a></li>
+      <% end %>
+
+      <% if can? :manage, AuthMethod %>
+        <li class="dropdown"><a href="<%= main_app.auth_methods_path %>">
+          <!--<i class="icon-signin icon-large pull-left"></i>-->
+          <%= I18n.t(:auth_methods) %></a></li>
+      <% end %>
+
+      <% if can? :manage, Event %>
+        <li class="dropdown"><a href="<%= main_app.events_path %>">
+          <!--<i class="icon-calendar icon-large pull-left"></i>-->
+          <%= I18n.t(:events) %></a></li>
+      <% end %>
+    </ul>
+  </li>
+
+  <li class="divider-vertical"></li>
+
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <i class="icon-cog icon-large pull-left"></i>
+      &nbsp;
+      Master Administration
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <% if can? :manage, PeAttribute or can? :create_and_edit_attributes, PeAttribute %>
+        <li class="dropdown"><a href="<%= main_app.pe_attributes_path %>">
+          <!--<i class="icon-list-ol icon-large pull-left"></i>-->
+          <%= I18n.t(:pe_attributes) %></a></li>
+        <li class="dropdown"><a href="<%= main_app.attribute_categories_path %>">
+          <!--<i class="icon-list-alt icon-large pull-left"></i>-->
+          <%= I18n.t(:attribute_categories) %></a></li>
+      <% end %>
+
+      <% if can? :manage, Pemodule or can? :create_and_edit_modules, Pemodule %>
+        <li class="dropdown"><a href="<%= main_app.pemodules_path %>">
+          <!--<i class="icon-th icon-large pull-left"></i>-->
+          <%= I18n.t(:projestimate_module) %></a></li>
+      <% end %>
+
+      <% if can? :manage, LaborCategory or can? :create_and_edit_labor_categories, LaborCategory %>
+        <li class="dropdown"><a href="<%= main_app.labor_categories_path %>">
+          <!--<i class="icon-user-md icon-large pull-left"></i>-->
+          <%= I18n.t(:labor_categories) %></a></li>
+      <% end %>
+
+      <% if can? :manage, WorkElementType or can? :create_and_edit_work_element_type, WorkElementType %>
+        <li class="dropdown"><a href="<%= main_app.work_element_types_path %>">
+          <!--<i class="icon-sitemap icon-large pull-left"></i>-->
+          <%= I18n.t(:work_element) %></a></li>
+      <% end %>
+
+      <% if can? :manage, Peicon or can? :create_and_edit_projestimate_icons, Peicon %>
+        <li class="dropdown">
+          <a href="<%= main_app.peicons_path %>">
+            <!--<i class="icon-paper-clip icon-large pull-left"></i> -->
+            Estimancy Icons</a></li>
+      <% end %>
+
+      <% if can? :manage, ProjectSecurityLevel %>
+        <li class="dropdown"><a href="<%= main_app.project_security_levels_path %>">
+          <!--<i class="icon-check icon-large pull-left"></i>-->
+          <%= I18n.t(:security_level) %></a></li>
+      <% end %>
+
+      <% if can? :manage, Permission %>
+        <li class="dropdown"><a href="<%= main_app.permissions_path %>">
+          <!--<i class="icon-check icon-large pull-left"></i>-->
+          <%= I18n.t(:all_permissions) %></a></li>
+      <% end %>
+
+      <% if can? :manage, Language or can? :create_and_edit_languages, Language %>
+        <li class="dropdown"><a href="<%= main_app.languages_path %>">
+          <!--<i class="icon-comments icon-large pull-left"></i>-->
+          <%= I18n.t(:languages) %></a></li>
+      <% end %>
+
+      <!-- TODO add manage permission for translation (and replace Language per Translation -->
+      <% if can? :manage_translations, Language %>
+        <li class="dropdown"><a href="/translations">
+          <!--<i class="icon-comments-alt icon-large pull-left"></i>-->
+          <%= I18n.t(:translations) %></a></li>
+      <% end %>
+      <% if can? :manage, RecordStatus %>
+        <li class="dropdown"><a href="<%= main_app.record_statuses_path %>">
+          <!--<i class="icon-legal icon-large pull-left"></i>-->
+          <%= I18n.t(:record_status) %></a></li>
+      <% end %>
+    </ul>
+  </li>
+</ul>
+
+
+<ul class="nav pull-right">
+  <li class="divider-vertical"></li>
+
   <li>
     <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
-       <%= current_user %> > <%= current_project.nil? ? "" : current_project.title %>
+      <%= current_user %> > <%= current_project.nil? ? "" : current_project.title %>
     </a>
   </li>
 
@@ -45,17 +247,15 @@
     </a>
   </li>
 
-  <li class="divider-vertical"></li>
-
-  <li>
-
-  </li>
-
   <li>
     <%= image_tag '/assets/ajax-loader.gif', :class => 'spiner hide' %>
   </li>
 
-  <li class="pull-right">
-    <%# render 'layouts/recent_project' %>
-  </li>
 </ul>
+
+
+<!--<div class="span3">-->
+  <%# if user_signed_in? %>
+    <%# render 'layouts/sidebar_menu' %>
+  <%# end %>
+<!--</div>-->

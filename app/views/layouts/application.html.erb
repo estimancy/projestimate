@@ -52,17 +52,14 @@
 </div>
 
 
-<div class="row-fluid">
-  <div id="sidebar" class="span2">
-    <% if user_signed_in? %>
-        <%= render 'layouts/sidebar_menu' %>
-    <% end %>
-  </div>
 
-  <div id="mycontent" class="span10 main">
-    <%= yield %>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <%= yield %>
+      </div>
+    </div>
   </div>
-</div>
 
 
 </body>

@@ -37,16 +37,6 @@
 #Some helper for the app...
 module ApplicationHelper
   include InputsHelper
-  def pop_up(id, title, to_container=true, &block)
-		content_tag(:div, { :class => 'pop_up', :style => 'display: none;', :id => id }) do
-			res = content_tag(:div, { :class => 'pop_up_title_bar'}) do
-				content_tag(:h1, title) + link_to_function('X', "hide_popup('#{id}')", :class => 'pop_up_close_button')
-			end
-
-			res += capture(&block) if block_given?
-			res
-		end
-  end
 
   def javascript_heads
     tags =javascript_tag("$(window).load(function(){ warn_me('#{escape_javascript I18n.t (:text_warn_on_leaving_unsaved)}'); });")

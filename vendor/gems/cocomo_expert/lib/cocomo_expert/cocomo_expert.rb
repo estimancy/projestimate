@@ -85,7 +85,7 @@ module CocomoExpert
 
     #Return end date
     def get_end_date(*args)
-      @end_date = (Time.now + (get_delay(args[0], args[1], args[2])).to_i.months)
+      @end_date = (Time.now + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 
