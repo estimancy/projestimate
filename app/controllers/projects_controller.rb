@@ -605,6 +605,7 @@ public
       rest_of_module_projects = crawl_module_project(current_module_project, pbs_project_element)
       set_attributes = {'low' => {}, 'most_likely' => {}, 'high' => {}}
 
+
       ['low', 'most_likely', 'high'].each do |level|
         params[level].each do |key, hash|
           set_attributes[level][key] = hash[current_module_project.id.to_s]
@@ -873,28 +874,47 @@ public
     input_data['pbs_project_element_id'.to_sym] = pbs_project_element_id
     input_data['module_project_id'.to_sym] = current_mp_to_execute.id
 
-    #current_mp_to_execute.estimation_values.sort! { |a, b| a.in_out <=> b.in_out }.each do |est_val|
-    current_mp_to_execute.estimation_values.each do |est_val|
-      #if est_val.in_out == 'input' or est_val.in_out=='both'
-      #  inputs[est_val.pe_attribute.alias.to_sym] = input_data[est_val.pe_attribute.alias] #[current_mp_to_execute.id.to_s]
-      #end
-
+    # For Balancing-Module : Estimation will be calculated only for the current selected balancing attribute
+    if current_mp_to_execute.pemodule.alias.to_s == Projestimate::Application::BALANCING_MODULE
+      balancing_attr_est_values = current_mp_to_execute.estimation_values.where('in_out = ? AND pe_attribute_id = ?', "output", current_balancing_attribute).last
       current_module = "#{current_mp_to_execute.pemodule.alias.camelcase.constantize}::#{current_mp_to_execute.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
-
-      input_data['pe_attribute_alias'.to_sym] = est_val.pe_attribute.alias
+      input_data['pe_attribute_alias'.to_sym] = balancing_attr_est_values.pe_attribute.alias
 
       # Normally, the input data is commonly from the Expert Judgment Module on PBS (when running estimation on its product)
       cm = current_module.send(:new, input_data)
+      #begin
+        @result_hash["#{balancing_attr_est_values.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{balancing_attr_est_values.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+      #rescue => e
+      #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
+      #  puts e.message
+      #end
 
-      if est_val.in_out == 'output' or est_val.in_out=='both'
-        #begin
-            @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
-        #rescue => e
-        #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
-        #  puts e.message
+    # For others modules
+    else
+      #current_mp_to_execute.estimation_values.sort! { |a, b| a.in_out <=> b.in_out }.each do |est_val|
+      current_mp_to_execute.estimation_values.each do |est_val|
+        #if est_val.in_out == 'input' or est_val.in_out=='both'
+        #  inputs[est_val.pe_attribute.alias.to_sym] = input_data[est_val.pe_attribute.alias] #[current_mp_to_execute.id.to_s]
         #end
+
+        current_module = "#{current_mp_to_execute.pemodule.alias.camelcase.constantize}::#{current_mp_to_execute.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
+
+        input_data['pe_attribute_alias'.to_sym] = est_val.pe_attribute.alias
+
+        # Normally, the input data is commonly from the Expert Judgment Module on PBS (when running estimation on its product)
+        cm = current_module.send(:new, input_data)
+
+        if est_val.in_out == 'output' or est_val.in_out=='both'
+          #begin
+              @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+          #rescue => e
+          #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
+          #  puts e.message
+          #end
+        end
       end
     end
+
     @result_hash
   end
 
@@ -989,6 +1009,8 @@ public
     u = current_user
     u.add_recent_project(params[:project_id])
     session[:current_project_id] = params[:project_id]
+    session[:pbs_project_element_id] = project.root_component
+
     if params[:from_tree_history_view]
      redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
     else

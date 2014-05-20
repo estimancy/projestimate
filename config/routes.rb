@@ -73,7 +73,7 @@ Projestimate::Application.routes.draw do
   mount Uos::Engine, :at => '/uos'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
-  ###mount BalancingModule::Engine, at: "/balancing_module"
+  mount BalancingModule::Engine, at: "/balancing_module"
 
   resources :abacus_organizations
   match 'organizations/:id/export_abacus' => 'organizations#export_abacus', :as => 'export_abacus'

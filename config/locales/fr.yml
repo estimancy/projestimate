@@ -1102,8 +1102,9 @@ fr:
   label_add_notes: "Ajouter une note"
   notice_notes_successfully_updated: "La note ajoutée à l'attribut a été mise à jour avec success"
   label_balancing_attribute: "Sélectionnez l'attribut d'équilibrage"
-  text_select_attribute: "Sélectionner un attribut"
+  text_select_balancing_attribute: "Sélectionner un attribut d'équilibrage"
   text_balancing_value: "Valeur d'équilibrage"
+  text_please_select_balancing_attribute: "Vous devez sélectionner un attribut d'équilibrage"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"
