@@ -242,7 +242,9 @@ module ProjectsHelper
 
   # The Balancing module output
   def display_balancing_output(module_project)
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    #pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = current_component
+
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)

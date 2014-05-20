@@ -1088,3 +1088,4 @@ it:
   text_select_balancing_attribute: "Select balancing attribute"
   text_balancing_value: "Balancing value"
   text_please_select_balancing_attribute: "Please select a balancing attribute"
+  measuring_units: "measuring units"

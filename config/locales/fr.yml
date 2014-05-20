@@ -1092,7 +1092,7 @@ fr:
   warning_not_allow_to_create_new_branch_of_project: "Vous n'avez pas les droits nécessaires pour créer une nouvelle branche de ce projet"
   project_is_activated: "Le project '%{project_title}' a été activé avec succès."
   defined_language_not_deletable: "Impossible de supprimer un langage dans le statut Defined"
-  leave_it_blank_if_no_change: "Laisser le champ vide si vous ne voulez pas le modifier"
+  leave_it_blank_if_no_change: "Laisser vide si pas de modification"
   sign_in_with_google: "S'authentifier avec votre compte Google"
 
   label_single_entry_attribute: "Attribut avec une seule valeur d'entrée"
@@ -1105,6 +1105,7 @@ fr:
   text_select_balancing_attribute: "Sélectionner un attribut d'équilibrage"
   text_balancing_value: "Valeur d'équilibrage"
   text_please_select_balancing_attribute: "Vous devez sélectionner un attribut d'équilibrage"
+  measuring_units: "Unités de mesure"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"
