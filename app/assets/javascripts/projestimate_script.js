@@ -145,15 +145,32 @@ $(document).ready(function() {
         });
     });
 
-    $("#select_balancing_attribute").change(function() {
-        return $.ajax({
-            url: "/selected_balancing_attribute",
-            method: "GET",
+    // Refresh the balancing module input data after change
+    $("#select_balancing_attribute").change(function(){
+        $('.spiner').show();
+        $.ajax({
+            url:'/selected_balancing_attribute',
             data: {
-                attribute_id: $(this).val()
+                attribute_id: this.value,
+                project_id: $('#project_id').val(),
+                is_project_show_view:  $('#is_project_show_view').val()
+            }
+        }).done(function() {
+            if($("#select_balancing_attribute").val() == "") {
+                $("#select_balancing_attribute").css("border-color", "red");
             }
         });
     });
+
+    // Add red border-color to the select_tag
+    if($("#select_balancing_attribute").val() == "") {
+        $("#select_balancing_attribute").css("border-color", "red");
+    }
+
+    // For the Balancing-Module, We need to copy current text_field value in high and most_likely text_field
+//    $("#").change(function(){
+//        //_low_effort_man_hour_76
+//    });
 
      $('.component_tree ul li, .widget-content ul li').hover(
         function () {
@@ -5068,6 +5085,26 @@ function manage_single_entry_attribute(){
         document.getElementById(most_likely_level).value = first_value;
         document.getElementById(high_level).value = first_value;
         //return false;
+    });
+}
+
+//Function to update BalancingModule input data when it changes
+function update_balancing_module_input(){
+    // Refresh input data according to the selected balancing attribute
+    $("#select_balancing_attribute").change(function(){
+        $('.spiner').show();
+        $.ajax({
+            url:'/selected_balancing_attribute',
+            data: {
+                attribute_id: this.value,
+                project_id: $('#project_id').val(),
+                is_project_show_view:  $('#is_project_show_view').val()
+            }
+        }).done(function() {
+            if($("#select_balancing_attribute").val() == "") {
+                $("#select_balancing_attribute").css("border-color", "red");
+            }
+        });
     });
 }
 

@@ -24,8 +24,12 @@ $('.block_label, div.block_link').hover(
 );
 
 $("#pbs_list").val(<%= @current_component.nil? ? '' : @current_component.id %>);
+$("#select_balancing_attribute").val(<%= current_balancing_attribute.nil? ? '' : current_balancing_attribute.id %>);
 
 $(".header_data").html("<h5><%= @current_component %> - <%= current_module_project %></h5>");
+<% if current_module_project.pemodule.alias.to_s == Projestimate::Application::BALANCING_MODULE %>
+    $(".header_data h5").append("<%= escape_javascript( select_tag('select_balancing_attribute', options_for_select(current_module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]}, :selected => (current_balancing_attribute.id unless current_balancing_attribute.nil?)), :class => 'balancing_attribute', :prompt => I18n.t(:text_select_balancing_attribute)) ).html_safe %> ");
+<% end %>
 
 $('#edit_component').modal('hide');
 
@@ -46,4 +50,12 @@ $('.button_attribute_tooltip').tooltip({'html' : true });
 
 // If single_attribute_value, data if low = most_likely=high
 manage_single_entry_attribute();
+
+// Refresh input data according to the selected balancing attribute
+update_balancing_module_input();
+
+// Add red border-color to the select_tag
+if($("#select_balancing_attribute").val() == "") {
+    $("#select_balancing_attribute").css("border-color", "red");
+}
 

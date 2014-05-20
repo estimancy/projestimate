@@ -62,7 +62,20 @@
           </a>
 
           <div class="header_data">
-            <h5><%= current_component %> - <%= "#{current_module_project}" %></h5>
+            <h5>
+              <%= current_component %> - <%= "#{current_module_project}" %>
+              <% if current_module_project.pemodule.alias.to_s == Projestimate::Application::BALANCING_MODULE %>
+                  <% red_color = ""
+                     selected_attr = nil
+                  %>
+                  <% if !current_balancing_attribute.nil? %>
+                    <% red_color = "red_class"
+                       selected_attr = current_balancing_attribute.id
+                    %>
+                  <% end %>
+                  <%= select_tag('select_balancing_attribute', options_for_select(current_module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]},  :selected => selected_attr), :class => "balancing_attribute #{red_color}", :prompt => I18n.t(:text_select_balancing_attribute)) %>
+              <% end %>
+            </h5>
           </div>
 
           <div class="buttons">

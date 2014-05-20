@@ -52,7 +52,11 @@ module ProjectsHelper
           res << display_results_with_activities(module_project_to_display)
         end
       else
-        res << display_results_without_activities(module_project_to_display)
+        if module_project_to_display.pemodule.alias == Projestimate::Application::BALANCING_MODULE
+          res << display_balancing_output(module_project_to_display)
+        else
+          res << display_results_without_activities(module_project_to_display)
+        end
       end
       res
     end
@@ -77,7 +81,6 @@ module ProjectsHelper
     module_project.estimation_values.where('in_out = ?', 'output').order('display_order ASC').each do |est_val|
       est_val_pe_attribute = est_val.pe_attribute
       res << "<tr><td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name}</span></td>"
-
       ['low', 'most_likely', 'high', 'probable'].each do |level|
         res << '<td>'
         level_estimation_values = Hash.new
@@ -104,14 +107,11 @@ module ProjectsHelper
             res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
           end
         end
-
         res << '</td>'
       end
       res << '</tr>'
     end
-
     res << '</table>'
-
     res
   end
 
@@ -221,7 +221,6 @@ module ProjectsHelper
     res << '</tr>'
 
     # Show the probable values
-    #res << "<tr><td colspan='4'><strong> #{pbs_project_element.name} (Probable Value) </strong> </td>"
     res << "<tr><td colspan='4'><strong> #{current_component.name} (Probable Value) </strong> </td>"
     module_project.estimation_values.each do |est_val|
       if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project_id == module_project.id
@@ -240,6 +239,50 @@ module ProjectsHelper
 
     res
   end
+
+  # The Balancing module output
+  def display_balancing_output(module_project)
+    pbs_project_element = @pbs_project_element || current_project.root_component
+    res = String.new
+    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+      pemodule = Pemodule.find(module_project.pemodule.id)
+      res << "<h4>#{ I18n.t(:label_output_data) }</h4>"
+      res << "<table class='table table-condensed table-bordered'>"
+
+      # Get the current balancing attribute
+      @current_balancing_attribute = current_balancing_attribute
+      mp_attr_est_values = module_project.estimation_values.where('in_out = ? AND pe_attribute_id = ?', "output", @current_balancing_attribute)
+      est_val = nil
+      res << '<tr>
+                <th></th>'
+        if !mp_attr_est_values.nil? && !mp_attr_est_values.empty?
+          est_val = mp_attr_est_values.last
+          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span></th>"
+        else
+          res << "<th><span class='red_color'> #{I18n.t(:text_please_select_balancing_attribute)} </span></td>"
+        end
+      res << '</tr>'
+      # Attribute Balancing résult
+      res << "<tr>"
+      res << "<td> #{pbs_project_element.name} </td>"
+      res << "<td>"
+      if est_val.nil?
+        res << "-"
+      else
+        level_estimation_values = Hash.new
+        level_estimation_values = est_val.send("string_data_probable")
+        if !level_estimation_values[pbs_project_element.id].nil? && !level_estimation_values[pbs_project_element.id].blank?
+          res << "#{ display_value(level_estimation_values[pbs_project_element.id], est_val) }"
+        else
+          res << "-"
+        end
+      end
+      res << "</td>"
+      res << "</tr>"
+      res << '</table>'
+    end
+  end
+
 
   def display_effort_balancing_output(module_project)
     pbs_project_element = @pbs_project_element || current_project.root_component
@@ -395,6 +438,7 @@ module ProjectsHelper
         # For effort balancing module without activities (only for component)
       elsif current_module_project_pemodule.alias == Projestimate::Application::BALANCING_MODULE
         res << display_balancing_input(current_module_project, last_estimation_result)
+
         # For others modules that don't use WSB-Activities values in input
       elsif current_module_project_pemodule.no? || current_module_project_pemodule.yes_for_output_with_ratio? || current_module_project_pemodule.yes_for_output_without_ratio?
         res << display_inputs_without_activities(current_module_project)
@@ -412,24 +456,19 @@ module ProjectsHelper
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
       res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
-      # Add a select box for attributes selection
-      res << "<span class='balancing_attribute' style='padding-bottom:10px;'>#{I18n.t(:label_balancing_attribute)} :"
-        res << "#{select_tag('select_balancing_attribute', options_for_select(module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]}), :prompt => I18n.t(:text_select_attribute), :selected => current_balancing_attribute.id, :remote => true)}"
-      res << "</span> <br />"
 
       # render view according to the selected attribute
       res << "<div class='attribute_balancing_input' style='margin-bottom:15px;'>"
       res << "</div>"
 
       res << "<table class='table table-condensed table-bordered'>"
-      res << "<tr><th colspan='#{module_project.previous.size+2}'> #{@current_balancing_attribute.name} </th></tr>"
+      if @current_balancing_attribute.nil?
+        res << "<tr><th colspan='#{module_project.previous.size+2}'> <span class='red_color'> #{ I18n.t(:text_please_select_balancing_attribute) } </span> </th></tr>"
+      else
+        res << "<tr><th colspan='#{module_project.previous.size+2}'> #{ @current_balancing_attribute.name } </th></tr>"
+      end
       res << '<tr>'
       # Get the balancing attribute
-      #module_project.estimation_values.each do |est_val|
-      #  ####if est
-      #  if (est_val.in_out == 'input' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
-      #  end
-      #end
       # Only the module_project that have the @current_balancing_attribute attribute as OUTPUT attribute are compatibles
       compatible_previous_mp = []
       module_project.previous.each_with_index do |est_mp, i|
@@ -443,17 +482,6 @@ module ProjectsHelper
       end
       res << "<th>#{I18n.t(:text_balancing_value)}</td>"
       res << "<th>Notes</th>"
-
-      #module_project.estimation_values.each do |est_val|
-      #  if (est_val.in_out == 'input' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
-      #    res << "<th>"
-      #    res << "<span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span>"
-      #    res << "<span class='note_input_with_activities'>"
-      #    res << add_attribute_notes_link(est_val)
-      #    res << '</span>'
-      #    res << '</th>'
-      #  end
-      #end
       res << '</tr>'
 
       res << "<tr>"
@@ -471,7 +499,7 @@ module ProjectsHelper
             level_estimation_values = corresponding_est_val.send("string_data_probable")
             if level_estimation_values[pbs_project_element.id]
               begin
-                res << text_field_tag("", level_estimation_values[pbs_project_element.id],
+                res << text_field_tag("", display_value(level_estimation_values[pbs_project_element.id], corresponding_est_val),
                                       :readonly => true, :class => "input-small #{level} #{corresponding_est_val.id}",
                                       "data-est_val_id" => corresponding_est_val.id)
               rescue
@@ -485,24 +513,36 @@ module ProjectsHelper
       end
 
       # Text_field the balancing value
-      balancing_attr_est_values = module_project.estimation_values.where('in_out = ? AND pe_attribute_id = ?', "output", @current_balancing_attribute)
+      balancing_attr_est_values = module_project.estimation_values.where('in_out = ? AND pe_attribute_id = ?', "input", @current_balancing_attribute)
       res << '<td>'
       balancing_attr_est_val = EstimationValue.new
       if !balancing_attr_est_values.nil? && balancing_attr_est_values.length !=0
         balancing_attr_est_val = balancing_attr_est_values.last
         level_estimation_values = Hash.new
-        level_estimation_values = balancing_attr_est_val.send("string_data_most_likely")
+        level_estimation_values = balancing_attr_est_val.send("string_data_low")  #balancing_attr_est_val.send("string_data_most_likely")
 
         if level_estimation_values[pbs_project_element.id].nil? or level_estimation_values[pbs_project_element.id].blank?
-          res << "#{text_field_tag "[#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
-                                   nil,
-                                   :class => "input-small #{balancing_attr_est_val.id}",
-                                   "data-est_val_id" => balancing_attr_est_val.id}"
+          #res << "#{text_field_tag "['low'][#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
+          #                         nil,
+          #                         :class => "input-small #{balancing_attr_est_val.id}",
+          #                         "data-est_val_id" => balancing_attr_est_val.id}"
+          res << pemodule_input("low", balancing_attr_est_val, module_project, level_estimation_values, pbs_project_element, attribute_type="", read_only_value=false)
         else
-          res << "#{text_field_tag "[#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
-                                   level_estimation_values[pbs_project_element.id],
-                                   :class => "input-small #{balancing_attr_est_val.id}",
+          #res << "#{text_field_tag "[#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
+          #                         #level_estimation_values[pbs_project_element.id],
+          #                         display_value(level_estimation_values[pbs_project_element.id], balancing_attr_est_val),
+          #                         :class => "input-small #{balancing_attr_est_val.id}",
+          #                         "data-est_val_id" => balancing_attr_est_val.id}"
+          res << pemodule_input("low", balancing_attr_est_val, module_project, level_estimation_values, pbs_project_element, attribute_type="", read_only_value=false)
+        end
+
+        # As the estimation result is calculated today, we need to have
+        ["high", "most_likely"].each do |level|
+          res << "#{hidden_field_tag "[#{level}][#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
+                                   nil,
+                                   :class => "input_high_most_likely",
                                    "data-est_val_id" => balancing_attr_est_val.id}"
+
         end
       else
         res << "-"
@@ -834,6 +874,7 @@ module ProjectsHelper
                  :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                  :prompt => "Unset",
                  "data-est_val_id" => est_val.id,
+                 "data-module_project_id" => module_project.id,
                  :readonly => read_only_value, :disabled => read_only_value
 
     elsif est_val_pe_attribute.attr_type == 'date'
@@ -842,6 +883,7 @@ module ProjectsHelper
                      level_estimation_values[pbs_project_element.id].nil? ? display_date(level_estimation_values["default_#{level}".to_sym]) : display_date(level_estimation_values[pbs_project_element.id]),
                      :class => "input-small #{level} #{est_val.id} date-picker #{attribute_type}",
                      "data-est_val_id" => est_val.id,
+                     "data-module_project_id" => module_project.id,
                      :readonly => read_only_value
 
     else #type = text
@@ -850,6 +892,7 @@ module ProjectsHelper
                      (level_estimation_values[pbs_project_element.id].nil?) ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
                      :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                      "data-est_val_id" => est_val.id,
+                     "data-module_project_id" => module_project.id,
                      :readonly => read_only_value
     end
   end
@@ -909,6 +952,7 @@ module ProjectsHelper
                        res.compact.sum,
                        :class => "input-small #{level} #{est_val.id}",
                        :readonly => true,
+                       "data-module_project_id" => module_project.id,
                        "data-est_val_id" => est_val.id
       end
     else
@@ -917,6 +961,7 @@ module ProjectsHelper
                        level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
                        :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                        "data-est_val_id" => est_val.id,
+                       "data-module_project_id" => module_project.id,
                        :readonly => read_only_value
       else
         comm_attr = ModuleProject::common_attributes(module_project.previous.first, module_project)
@@ -925,6 +970,7 @@ module ProjectsHelper
                          level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
                          :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                          "data-est_val_id" => est_val.id,
+                         "data-module_project_id" => module_project.id,
                          :readonly => read_only_value
         else
           estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id, :module_project_id => module_project.previous.first.id).first
@@ -933,6 +979,7 @@ module ProjectsHelper
                          new_level_estimation_values[pbs_project_element.id],
                          :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                          "data-est_val_id" => est_val.id,
+                         "data-module_project_id" => module_project.id,
                          :readonly => read_only_value
         end
       end

@@ -140,7 +140,7 @@
         var current_mp_outputs_attributes_aliases = <%= @current_mp_outputs_attributes_aliases.to_json.html_safe %>;
         $.each(current_mp_outputs_attributes_aliases, function( index, value ) {
 //            $("#estimation_graph_box").append('<div class="span4"><canvas id="bar_canvas_'+value+'" width="300" height="500"></canvas></div>');
-            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" width="400" height="400"></canvas></div>');
+            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" class="canvas" width="400" height="400"></canvas></div>');
         });
 
         var outputs_data_levels = ["Low", "High", "Most Likely", "probable"];
@@ -302,6 +302,19 @@
 //            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
 //        });
 
+
+        //==========
+//        canvas = document.getElementById(value);
+//
+//        window.addEventListener('resize', resize, false);
+//
+//        function resize() {
+//            canvas.width = window.innerWidth;
+//            canvas.height = window.innerHeight;
+//            //Do Something
+//            stage.update();
+//        }
+        //===========
 
     });
 </script>

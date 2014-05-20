@@ -792,6 +792,11 @@ div.block_label.selected_pbs {
     color: green;
 }
 
+.red_color {
+    color: red;
+}
+
+
 .note_input_with_activities{
     margin-left: 20px;
 }
@@ -801,6 +806,11 @@ div.block_label.selected_pbs {
 }
 
 .balancing_attribute {
-    padding-bottom: 20px;
+    margin-left: 10px;
+    height: 20px;
 }
 
+.canvas {
+    max-width: 100%;
+    height: auto;
+}
