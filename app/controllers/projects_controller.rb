@@ -1009,6 +1009,8 @@ public
     u = current_user
     u.add_recent_project(params[:project_id])
     session[:current_project_id] = params[:project_id]
+    session[:pbs_project_element_id] = project.root_component
+
     if params[:from_tree_history_view]
      redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
     else
