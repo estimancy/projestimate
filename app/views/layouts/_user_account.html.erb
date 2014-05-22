@@ -108,11 +108,11 @@
           Roles</a></li>
       <% end %>
 
-      <% if can? :manage, :organizations %>
-        <li class="dropdown"><a href="/factors">
+      <%# if can? :manage, :organizations %>
+        <!--<li class="dropdown"><a href="/factors">-->
           <!--<i class="icon-check-sign icon-large pull-left"></i>-->
-          Factors</a></li>
-      <% end %>
+          <!--Factors</a></li>-->
+      <%# end %>
 
       <% if can? :manage, AuthMethod %>
         <li class="dropdown"><a href="<%= main_app.auth_methods_path %>">

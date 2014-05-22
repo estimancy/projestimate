@@ -254,7 +254,7 @@
   </div>
 
   <div id="tabs-7">
-    <b>Factors Complexities</b>
+    <b>Factor's Complexities</b>
     <br>
 
     <% if can? :edit_organizations, Organization %>
@@ -268,15 +268,21 @@
       </h4>
 
       <table class="table">
-        <% factor.organization_uow_complexities.order('display_order ASC').each do |c| %>
+        <tr>
+          <th>
+            <% if can? :edit_organizations, Organization %>
+              <%= link_to 'Ajouter un niveau', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => '' %>
+            <% end %>
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+        <% factor.organization_uow_complexities.where(organization_id: @organization.id).order('display_order ASC').each do |c| %>
           <tr style="<%= (c.is_default == true) ? 'color: blue;' : '' %>">
             <td class="span2"><%= c.name %></td>
             <td class="span2"><%= c.value %></td>
             <td>
               <%= link_to '', set_default_path(c), :class => 'icon-exclamation icon-large pull-left', :title => I18n.t('edit') %>
-              <% if can? :edit_organizations, Organization %>
-                <%= link_to '', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => 'icon-plus-sign icon-large pull-left' %>
-              <% end %>
               <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
               <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !c.is_local_record? %>
@@ -292,6 +298,7 @@
           </tr>
         <% end %>
       </table>
+
     <% end %>
   </div>
 
