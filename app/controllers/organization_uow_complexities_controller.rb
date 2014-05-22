@@ -50,6 +50,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     authorize! :edit_organizations, Organization
     @organization_uow_complexity = OrganizationUowComplexity.new(params[:organization_uow_complexity])
     @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
+    @organization_uow_complexity.organization_id = @organization.id
 
     if @organization_uow_complexity.save
       flash[:notice] = I18n.t(:notice_organization_uow_complexity_successful_created)
@@ -63,8 +64,11 @@ class OrganizationUowComplexitiesController < ApplicationController
 
   def update
     authorize! :edit_organizations, Organization
+
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
     @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
+    @organization_uow_complexity.organization_id = @organization.id
+
     if @organization_uow_complexity.update_attributes(params[:organization_uow_complexity])
       flash[:notice] = I18n.t (:notice_organization_uow_complexity_successful_updated)
       redirect_to redirect_apply(edit_organization_uow_complexity_path(params[:organization_uow_complexity]),
