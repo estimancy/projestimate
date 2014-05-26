@@ -283,7 +283,7 @@
             <td class="span2"><%= c.value %></td>
             <td>
               <%= link_to '', set_default_path(c), :class => 'icon-exclamation icon-large pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', edit_organization_uow_complexity_path(c, organization_id: @organization.id), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
               <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !c.is_local_record? %>
                 <% if c.is_retired? %>

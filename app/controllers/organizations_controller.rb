@@ -128,7 +128,7 @@ class OrganizationsController < ApplicationController
     set_page_title 'Organizational Parameters'
     #No authorize required since everyone can list
     @organizations = Organization.all
-    @factors = Factor.all
+    @factors = Factor.order("factor_type")
     @organizations_labor_categories = OrganizationLaborCategory.all || []
   end
 
