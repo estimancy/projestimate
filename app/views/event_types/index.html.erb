@@ -18,7 +18,7 @@
     <td><%= event_type.icon_url %></td>
     <td><%= event_type.record_status.name unless event_type.record_status.nil? %>  <%= event_type.show_custom_value %></td>
     <td><%= link_to '', edit_event_type_path(event_type), :class => 'icn_edit', :title => I18n.t('edit') %></td>
-    <td><%= link_to '', event_type, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icn_trash', :title => I18n.t('delete') %></td>
+    <td><%= link_to '', event_type, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icn_trash', :title => I18n.t('delete') %></td>
     <td>
       <% if is_master_instance? && !event_type.is_local_record? %>
           <% if event_type.is_retired? %>

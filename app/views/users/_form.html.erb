@@ -1,4 +1,6 @@
 <%= simple_form_for @user do |f| %>
+<%#= simple_form_for(@user, as: "user", url: registration_path("user"), html: { method: :put }) do |f| %>
+<%#= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
 
     <%= hidden_field_tag :current_tab, '', :class => 'current_tab' %>
 
@@ -18,7 +20,8 @@
               <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
                   <i class="icon-caret-down"></i>
-                  <b><%= I18n.t 'identity' %></b>
+                    <b><%= I18n.t 'identity' %></b>
+                    <%= link_to 'Change Password', edit_user_registration_path %>
                 </a>
               </div>
               <div id="collapseOne" class="accordion-body in collapse">
@@ -69,15 +72,19 @@
                       <% end %>
                     </tr>
 
-                    <tr class="password_row">
-                      <% if @user.auth_method && @user.auth_method.name == 'Application' %>
-                        <td><%= f.input :password, :as => :password, :required => false, :autocomplete => "off", :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => false }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
-                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => false }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
-                      <% else %>
-                        <td><%= f.input :password, :as => :password, :autocomplete => "off", :label => I18n.t('password'), :input_html => {:class => 'input-xlarge', :disabled => true }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
-                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:class => 'input-xlarge', :disabled => true }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
-                      <% end %>
-                    </tr>
+
+                    <% if @user.new_record? %>
+                      <tr class="password_row">
+                        <td><%= f.input :password, :as => :password, :autocomplete => "off", :label => I18n.t('password'), :input_html => {:value => (@user_password if @user_password), :class => 'input-xlarge', :disabled => !(@user.auth_method && @user.auth_method.name == 'Application') }, :required => false %></td>
+                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('password_confirmation'), :input_html => {:value => (@user_password_confirmation if @user_password_confirmation), :class => 'input-xlarge', :disabled => !(@user.auth_method && @user.auth_method.name == 'Application') } %></td>
+                      </tr>
+                    <% else %>
+                      <tr><td><%= f.input :current_password, :label => I18n.t(:current_password), required: false, :input_html => {:value => (@user_current_password if @user_current_password), :class => 'input-xlarge', :disabled => !(@user.auth_method && @user.auth_method.name == 'Application') }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td></tr>
+                      <tr class="password_row">
+                        <td><%= f.input :password, :as => :password, :autocomplete => "off", :label => I18n.t('new_password'), :input_html => {:value => (@user_password if @user_password), :class => 'input-xlarge', :disabled => !(@user.auth_method && @user.auth_method.name == 'Application') }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
+                        <td><%= f.input :password_confirmation, :as => :password, :label => I18n.t('confirm_new_password'), :input_html => {:value => (@user_password_confirmation if @user_password_confirmation), :class => 'input-xlarge', :disabled => !(@user.auth_method && @user.auth_method.name == 'Application') }, :placeholder => I18n.t(:leave_it_blank_if_no_change) %></td>
+                      </tr>
+                    <% end %>
 
                     <script type="text/javascript">
                         $(document).ready(function () {

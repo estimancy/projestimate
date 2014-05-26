@@ -15,21 +15,6 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
 #
-#    ======================================================================
-#
-# ProjEstimate, Open Source project estimation web application
-# Copyright (c) 2013 Spirula (http://www.spirula.fr)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -275,7 +260,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   ###config.omniauth :google_oauth2, "504921486051.apps.googleusercontent.com", "AIzaSyDBsz9qmhKS8oalbkJwTqKsBi8yKAnfwmw", { access_type: "offline", approval_prompt: "Acceptez-vous de vous connecter à ProjEstimate via votre compte Google" }
-  config.omniauth :google_oauth2, "504921486051-vb2gi8tfaff5hqgnnosamjto3sv5gabp.apps.googleusercontent.com", "wLnNbhyZGrdkcjnxWe95SRr7", { access_type: "offline", approval_prompt: "Acceptez-vous de vous connecter à ProjEstimate via votre compte Google" }
+  config.omniauth :google_oauth2, "504921486051-vb2gi8tfaff5hqgnnosamjto3sv5gabp.apps.googleusercontent.com", "wLnNbhyZGrdkcjnxWe95SRr7", { access_type: "offline", approval_prompt: I18n.t(:text_ask_connect_to_estimancy_via_google) }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

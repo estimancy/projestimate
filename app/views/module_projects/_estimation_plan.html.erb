@@ -47,7 +47,7 @@
                       <%= link_to '', pemodules_right_path(pmod.id), :class => 'icon-arrow-right' %>
                       <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip" %>
                       <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-edit" %>
-                      <%= link_to '', pmod, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-trash' %>
+                      <%= link_to '', pmod, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash' %>
                     <% end %>
                 </div>
 

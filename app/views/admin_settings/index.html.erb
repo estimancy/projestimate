@@ -33,7 +33,7 @@
               <%= link_to '', edit_admin_setting_path(admin_setting), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
 
               <% if is_master_instance? || admin_setting.is_local_record? %>
-                  <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
               <% if is_master_instance? && !admin_setting.is_local_record? %>
                   <% if admin_setting.is_retired? && (can? :restore, :all) %>

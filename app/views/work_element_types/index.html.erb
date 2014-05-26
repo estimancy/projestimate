@@ -33,7 +33,7 @@
             <td><%= work_element_type.record_status.name unless work_element_type.record_status.nil? %> <%= work_element_type.show_custom_value %> </td>
             <td>
               <%= link_to '', edit_work_element_type_path(work_element_type), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', work_element_type, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', work_element_type, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
 
               <% if work_element_type.is_retired? %>
                   <%= link_to('', "work_element_types/#{work_element_type.id}/restore_change", confirm: I18n.t(:restoring), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t(:restore_title)) %>

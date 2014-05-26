@@ -34,7 +34,7 @@
           <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>
           <td>
             <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', factor, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             <% if is_master_instance? && !factor.is_local_record? %>
               <% if factor.is_retired? %>
                 <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
@@ -86,7 +86,7 @@
               <%= link_to '', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => 'icon-plus-sign icon-large pull-left' %>
             <% end %>
             <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-            <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', c, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             <% if is_master_instance? && !c.is_local_record? %>
               <% if c.is_retired? %>
                 <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>

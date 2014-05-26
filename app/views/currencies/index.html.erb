@@ -30,7 +30,7 @@
             <td><%= currency.description %></td>
             <td><%= currency.record_status.name unless currency.record_status.nil? %> <%= currency.show_custom_value %></td>
             <td><%= link_to '', edit_currency_path(currency), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', currency, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', currency, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !currency.is_local_record? %>
                   <% if currency.is_retired? %>
                       <%= link_to('', "currencies/#{currency.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>

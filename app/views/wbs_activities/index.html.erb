@@ -41,7 +41,7 @@
                   <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy icon-large icon-border pull-left', :title => 'Duplicate') %>
               <% end %>
               <% if can? :manage, WbsActivity %>
-                  <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sur), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t(:delete) %>
+                  <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t(:delete) %>
                   <% if is_master_instance? && !wbs_activity.is_local_record? %>
                       <% if wbs_activity.is_retired? and can? :restore, :all %>
                           <%= link_to('', "wbs_activities/#{wbs_activity.id}/restore_change", confirm: I18n.t(:actions), :title => I18n.t(:restore_title), :class => 'button_attribute_tooltip icon-undo icon-large icon-border pull-left', :style => 'color:orange') %>
