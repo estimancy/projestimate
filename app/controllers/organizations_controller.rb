@@ -85,6 +85,11 @@ class OrganizationsController < ApplicationController
         @organization.subcontractors.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
       end
 
+      OrganizationUowComplexity.where(organization_id: nil).each do |o|
+        ouc = OrganizationUowComplexity.new(name: o.name , organization_id: @organization.id, description: o.description, value: o.value, factor_id: o.factor_id, is_default: o.is_default, :state => 'defined')
+        ouc.save(validate: false)
+      end
+
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
     else
       render action: 'new'
@@ -123,6 +128,7 @@ class OrganizationsController < ApplicationController
     set_page_title 'Organizational Parameters'
     #No authorize required since everyone can list
     @organizations = Organization.all
+    @factors = Factor.order("factor_type")
     @organizations_labor_categories = OrganizationLaborCategory.all || []
   end
 

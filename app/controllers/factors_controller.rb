@@ -70,8 +70,8 @@ class FactorsController < ApplicationController
 
     respond_to do |format|
       if @factor.save
-        format.html { redirect_to @factor, notice: 'Factor was successfully created.' }
-        format.json { render json: @factor, status: :created, location: @factor }
+        format.html { redirect_to "/organizationals_params", notice: 'Factor was successfully created.' }
+        format.json { render json: "/organizationals_params", status: :created, location: @factor }
       else
         format.html { render action: "new" }
         format.json { render json: @factor.errors, status: :unprocessable_entity }
@@ -86,7 +86,7 @@ class FactorsController < ApplicationController
 
     respond_to do |format|
       if @factor.update_attributes(params[:factor])
-        format.html { redirect_to @factor, notice: 'Factor was successfully updated.' }
+        format.html { redirect_to "/organizationals_params", notice: 'Factor was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -102,7 +102,7 @@ class FactorsController < ApplicationController
     @factor.destroy
 
     respond_to do |format|
-      format.html { redirect_to factors_url }
+      format.html { redirect_to "/organizationals_params" }
       format.json { head :no_content }
     end
   end
