@@ -48,7 +48,7 @@
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
               <%= link_to "Help", help_path(factor.id), remote: true %>
             </td>
