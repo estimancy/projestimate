@@ -29,7 +29,7 @@
             <td><%= record_status.record_status.name unless record_status.record_status.nil? %><%= record_status.show_custom_value %></td>
             <td>
               <%= link_to '', edit_record_status_path(record_status), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', record_status, method: :delete, data: {confirm: I18n.t('are_you_sur')}, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', record_status, method: :delete, data: {confirm: I18n.t('are_you_sure')}, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !record_status.is_local_record? %>
                   <% if record_status.is_retired? %>
                       <%= link_to('', "record_statuses/#{record_status.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>

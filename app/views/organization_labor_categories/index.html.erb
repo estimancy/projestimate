@@ -30,7 +30,7 @@
     <td><%= organization_labor_category.hour_per_day %></td>
     <td><%= organization_labor_category.days_per_year %></td>
     <td><%= link_to '', edit_organization_labor_category_path(organization_labor_category), :class => 'icn_edit', :title => I18n.t('edit') %></td>
-    <td><%= link_to '', organization_labor_category, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icn_trash', :title =>I18n.t('delete') %></td>
+    <td><%= link_to '', organization_labor_category, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icn_trash', :title =>I18n.t('delete') %></td>
   </tr>
 <% end %>
 </table>

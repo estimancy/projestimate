@@ -51,10 +51,10 @@ class User < ActiveRecord::Base
   audited # audit the users (comptes utilisateurs)
 
   #attr_accessible :email, :login_name, :first_name, :last_name, :initials, :auth_type, :auth_method_id, :user_status, :time_zone, :language_id, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token,:created_at,:updated_at, :organization_ids, :group_ids, :project_ids, :password, :password_confirmation, :project_security_ids
-  attr_accessible :email, :login_name, :id_connexion, :password, :password_confirmation, :remember_me, :provider, :uid, :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at, :updated_at, :auth_type#, :project_security_ids
+  attr_accessible :current_password, :email, :login_name, :id_connexion, :password, :password_confirmation, :remember_me, :provider, :uid, :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at, :updated_at, :auth_type#, :project_security_ids
 
   # Virtual attribute for authenticating by either login_name or email  # This is in addition to a real persisted field like 'login_name'
-  attr_accessor :id_connexion, :updating_password
+  attr_accessor :id_connexion, :updating_password, :current_password
 
   include AASM
 
@@ -176,6 +176,7 @@ class User < ActiveRecord::Base
     as = AdminSetting.where(:record_status_id => RecordStatus.find_by_name('Defined').id, :key => 'self-registration').first.value
     as == 'automatic account activation'
   end
+
 
   #Check password minimum length value
   def password_length

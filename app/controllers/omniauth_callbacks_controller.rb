@@ -28,7 +28,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect user, :event => :authentication
     else
       session["devise.user_attributes"] = user.attributes
-      flash.notice = "You are almost Done! Please provide a password to finish setting up your account"
+      flash.notice = I18n.t(:text_almost_done_provide_password_to_finish)
       redirect_to new_user_registration_url
     end
   end

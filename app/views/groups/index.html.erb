@@ -30,7 +30,7 @@
             <td><%= group.record_status.name unless group.record_status.nil? %> <%= group.show_custom_value %></td>
             <td>
               <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', group, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !group.is_local_record? %>
                 <% if group.is_retired? and can? :restore, :all %>
                   <%= link_to(' ', "groups/#{group.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>

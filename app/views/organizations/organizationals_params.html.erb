@@ -38,7 +38,7 @@
             <td>
               <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>
           </tr>
@@ -83,7 +83,7 @@
                 <td><%= i.description %></td>
                 <td>
                   <%= link_to '', edit_organization_labor_category_path(i), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
                 </td>
               </tr>
           <% end %>

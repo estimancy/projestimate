@@ -39,7 +39,7 @@
           <td>
             <%= link_to '', edit_project_area_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
             <% if can? :manage, ProjectArea %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
                 <% if is_master_instance? && !i.is_local_record? %>
                     <% if i.is_retired? and can? :restore, :all %>
                         <%= link_to('', "project_areas/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'button_attribute_tooltip icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
@@ -89,7 +89,7 @@
           <td>
             <%= link_to '', edit_project_category_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
             <% if can? :manage, ProjectCategory %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
                 <% if is_master_instance? && !i.is_local_record? %>
                     <% if i.is_retired? and can? :restore, :all %>
                         <%= link_to('', "project_categories/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'button_attribute_tooltip icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
@@ -140,7 +140,7 @@
           <td>
             <%= link_to '', edit_platform_category_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
             <% if can? :manage, PlatformCategory %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
 
                 <% if is_master_instance? && !i.is_local_record? %>
                     <% if i.is_retired? and can? :restore, :all %>
@@ -192,7 +192,7 @@
           <td>
             <%= link_to '', edit_acquisition_category_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
             <% if can? :manage, AcquisitionCategory %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
                 <% if is_master_instance? && !i.is_local_record? %>
                     <% if i.is_retired? and can? :restore, :all %>
                         <%= link_to('', "acquisition_categories/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'button_attribute_tooltip icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>

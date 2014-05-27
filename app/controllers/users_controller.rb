@@ -131,21 +131,36 @@ public
     @user.project_ids = params[:user][:project_ids]
     @user.group_ids = params[:user][:group_ids]
     @user.organization_ids = params[:user][:organization_ids]
+
     #validation conditions
-    if @user.password.blank?
+    if params[:user][:password].blank?
+      # User is not updating his password
       @user.updating_password = false
     else
+      # User is updating his password
       @user.updating_password = true
     end
-    @user.save(validate: false)
 
-    if @user.update_attributes(params[:user])
+    successfully_updated = if @user.updating_password
+                             @user.update_with_password(params[:user])
+                           else
+                             params[:user].delete(:current_password)
+                             @user.update_without_password(params[:user])
+                           end
+    if successfully_updated
       set_user_language
       flash[:notice] = I18n.t (:notice_account_successful_updated)
+      sign_in @user, :bypass => true
+
+      #session[:current_password] = nil;  session[:password] = nil; session[:password_confirmation] = nil
+      @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
       redirect_to redirect_apply(edit_user_path(@user, :anchor => session[:anchor]), nil, users_path)
     else
+      #session[:current_password] = params[:user][:current_password];  session[:password] = params[:user][:password]; session[:password_confirmation] = params[:user][:password_confirmation]
+      @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]
       render(:edit)
     end
+
   end
 
   #Dashboard of the application

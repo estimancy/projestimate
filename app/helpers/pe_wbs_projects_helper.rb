@@ -80,7 +80,7 @@ module PeWbsProjectsHelper
         </div>
         <div class='block_link'>
           #{ link_to "", edit_pbs_project_element_path(pbs_project_element, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-edit ', :title => I18n.t('edit') unless is_project_show_view }
-          #{ link_to "", pbs_project_element, confirm: I18n.t('are_you_sur'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash ', :title => I18n.t('delete') unless is_project_show_view }
+          #{ link_to "", pbs_project_element, confirm: I18n.t('are_you_sure'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash ', :title => I18n.t('delete') unless is_project_show_view }
           #{ link_to "", up_path(:pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-arrow-up ', :title => I18n.t('up') unless is_project_show_view }
           #{ link_to "", down_path(:pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id), :remote => true, :class => 'button_attribute_tooltip icon-arrow-down ', :title => I18n.t('down')  unless is_project_show_view }
         </div>
@@ -104,7 +104,7 @@ module PeWbsProjectsHelper
           #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-folder-open ', :title => I18n.t('add_folder') unless is_project_show_view }
           #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-plus ', :title => I18n.t('add_component') unless is_project_show_view }
           #{ link_to "", new_pbs_project_element_path(:project_id => @project.id, :parent_id => pbs_project_element.id), :remote => true, :class => 'button_attribute_tooltip icon-link ', :title => I18n.t('add_link') unless is_project_show_view }
-          #{ link_to "", pbs_project_element, confirm: I18n.t('are_you_sur'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t('delete')}
+          #{ link_to "", pbs_project_element, confirm: I18n.t('are_you_sure'), method: :delete, :remote => true, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t('delete')}
           #{ link_to "", {:controller => 'pbs_project_elements', :action => 'up', :pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-up ', :title => I18n.t('up') unless is_project_show_view }
           #{ link_to "", {:controller => 'pbs_project_elements', :action => 'down', :pbs_project_element_id => pbs_project_element.id, :pe_wbs_project_id => pbs_project_element.pe_wbs_project_id, :project_id => @project.id}, :remote => true, :class => 'button_attribute_tooltip icon-arrow-down ', :title => I18n.t('down') unless is_project_show_view }
         </div>

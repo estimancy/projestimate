@@ -11,18 +11,17 @@
       <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
     <% end %>
 
-    <%= f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false %>
+    <%= f.input :current_password, hint: I18n.t(:text_need_current_password_to_confirm_change), required: true %>
+    <%= f.input :password, autocomplete: "off", required: false %>
     <%= f.input :password_confirmation, required: false %>
-    <%= f.input :current_password, hint: "we need your current password to confirm your changes", required: true %>
   </div>
 
   <div>
-    <%= f.button :submit, "Update", :class => 'btn btn-danger' %>
+    <%= f.button :submit, I18n.t(:update), :class => 'btn btn-danger' %>
   </div>
 <% end %>
 
-<h3>Cancel my account</h3>
-
 <!--<p>Unhappy? <%#= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>-->
+<p><%= link_to I18n.t(:label_cancel_my_account), registration_path(resource_name), data: { confirm: I18n.t(:are_you_sure) }, method: :delete %></p>
 
 <%= link_to I18n.t(:back), :back %>
