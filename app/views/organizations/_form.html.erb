@@ -269,7 +269,7 @@
       </h4>
 
       <table class="table">
-        <% factor.organization_uow_complexities.order('display_order ASC').each do |c| %>
+        <% factor.organization_uow_complexities.where(organization_id: @organization.id).order('display_order ASC').each do |c| %>
           <tr style="<%= (c.is_default == true) ? 'color: blue;' : '' %>">
             <td class="span2"><%= c.name %></td>
             <td class="span2"><%= c.value %></td>
