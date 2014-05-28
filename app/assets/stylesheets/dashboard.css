@@ -16,9 +16,9 @@ div.actions-tabs {
     overflow-y: auto;
 }
 
-.container-fluid .row-fluid:first-child {
-    margin-top: 20px;
-}
+/*.container-fluid .row-fluid:first-child {*/
+    /*margin-top: 20px;*/
+/*}*/
 /* Widgets */
 .widget-box {
     background: none repeat scroll 0 0 #F9F9F9;
@@ -294,6 +294,7 @@ ul{
     margin-top: 0;
     display:none;
     overflow: hidden;
+    margin-top: -1px;
 }
 
 .block_link a{
