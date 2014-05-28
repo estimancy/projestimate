@@ -36,7 +36,7 @@
 
 #Organization of the User
 class Organization < ActiveRecord::Base
-  attr_accessible :name, :description
+  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :cost_unit
 
   has_and_belongs_to_many :users
   has_many :wbs_activities, :dependent => :destroy
@@ -52,9 +52,19 @@ class Organization < ActiveRecord::Base
 
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
+  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }, on: :update, if: :updating_measuring_units?
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
+
+  def updating_measuring_units?
+    if !number_hours_per_day.blank? || !number_hours_per_day.blank? || !cost_per_hour.blank?
+      true
+    else
+      false
+    end
+  end
+
 
   #Override
   def to_s

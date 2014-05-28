@@ -1127,6 +1127,13 @@ fr:
   text_ask_connect_to_estimancy_via_google: "Acceptez-vous de vous connecter à Estimancy via votre compte Google?"
   text_sign_in_with: "Se connecter avec"
   text_almost_done_provide_password_to_finish: "Vous avez presque fini! Merci de fournir un mot de passe pour terminer la configuration de votre compte."
+  text_measuring_units: "Unités de mesure"
+  number_hours_per_day: "Nombre d'heures par jour"
+  number_hours_per_month: "Nombre d'heures par mois"
+  cost_unit: "Unité de coût"
+  cost_per_hour: "Coût horaire"
+  notice_measuring_units_successfully_updated: "Les unités de mesure de l'organisation ont été mises à jour avec succès"
+  notice_errors_on_measuring_units_update: "Erreur lors de la mise à jour des unités de mesures de l'organisation"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

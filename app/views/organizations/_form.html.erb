@@ -4,6 +4,7 @@
     <% if action_name.in?(%w(edit update)) %>
         <li><a href="#tabs-2"><%= I18n.t(:pe_attributes) %> </a></li>
         <li><a href="#tabs-3"><%= I18n.t(:attributes_settings) %> </a></li>
+        <li><a href="#tabs-12"><%= I18n.t(:text_measuring_units) %> </a></li>
         <li><a href="#tabs-4"><%= I18n.t(:organization_technology) %> </a></li>
         <li><a href="#tabs-5"><%= I18n.t(:organization_unit_of_work) %> </a></li>
         <li><a href="#tabs-6">Unit of Work's Complexity </a></li>
@@ -351,5 +352,13 @@
   <div id="tabs-11">
     <%# render :partial => 'organization_technologies/factors_abacus' %>
   </div>
+
+  <div id="tabs-12">
+    <b><%= I18n.t(:text_measuring_units) %></b>
+    <br><br>
+    <%= render :partial => 'organizations/measuring_units' %>
+    <br>
+  </div>
+
 <% end %>
 </div>

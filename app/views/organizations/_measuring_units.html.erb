@@ -1,0 +1,35 @@
+<%#= form_tag '/set_organization_measuring_units', :method => 'POST', :class => 'simple_form' do %>
+<%#= simple_form_for :measuring_units, { url: '/set_organization_measuring_units' } do |f| %>
+<%= simple_form_for @organization, { url: '/set_organization_measuring_units' } do |f| %>
+
+    <%= hidden_field_tag "organization_id", params[:id] %>
+
+    <%= f.input :number_hours_per_day, :label => I18n.t('number_hours_per_day'), :required => false, :input_html => {:class => 'input-xxlarge'} %>
+    <%= f.input :number_hours_per_month, :label => I18n.t('number_hours_per_month'), :required => false, :input_html => {:class => 'input-xxlarge'} %>
+    <%= f.input :cost_unit, collection: [['Euros', 'euros'], ['Dollars', 'dollars']], :label => I18n.t(:cost_unit), :required => false %>
+    <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => false, :input_html => {:class => 'input-xxlarge'} %>
+
+    <div class="actions-tabs">
+      <% if can? :edit_organizations, Organization %>
+          <% if action_name == 'edit' %>
+              <%= submit_tag I18n.t('save'), :class => 'btn submitButtonId' %>
+          <% end %>
+          <%= submit_tag I18n.t('apply'), :class => 'btn submitButtonId' %>
+      <% end %>
+      <%= link_to I18n.t('back'), organizationals_params_path, :class => 'btn' %>
+    </div>
+<% end %>
+
+<script>
+//    if($('#text_field').val() ==  "")
+//        $('#submitButtonId').attr('disabled', true);
+//
+//    $('#organization_number_hours_per_day, #organization_number_hours_per_month, #organization_cost_per_hour').each.keyup()(function(){
+//        if($(this).val() !=  ""){
+//            $(this).css("border-color", "red");
+//            $('.submitButtonId').attr('disabled', false);
+//        }
+//        else
+//            $('.submitButtonId').attr('disabled', true);
+//    });
+</script>
