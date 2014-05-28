@@ -99,7 +99,7 @@ module CocomoBasic
     #Return end date
     def get_end_date(*args)
       #if @coef_kls && @complexity
-        @end_date = (Time.now + (get_delay).to_i.months)
+        @end_date = (Time.now + (get_delay).to_i.hours)
       #else
       #  nil
       #end
