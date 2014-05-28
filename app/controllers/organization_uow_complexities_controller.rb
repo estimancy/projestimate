@@ -50,6 +50,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     authorize! :edit_organizations, Organization
     @organization_uow_complexity = OrganizationUowComplexity.new(params[:organization_uow_complexity])
     @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
+
     if params[:organization_uow_complexity][:organization_id].present?
       @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
       @organization_uow_complexity.organization_id = @organization.id
@@ -69,6 +70,8 @@ class OrganizationUowComplexitiesController < ApplicationController
     authorize! :edit_organizations, Organization
 
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
+    @organization = @organization_uow_complexity.organization
+
     if params[:organization_uow_complexity][:organization_id].present?
       @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
       @organization_uow_complexity.organization_id = @organization.id
@@ -80,6 +83,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     else
       render action: 'edit', :organization_id => @organization.id
     end
+
   end
 
   def set_default
