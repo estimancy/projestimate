@@ -50,6 +50,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     authorize! :edit_organizations, Organization
     @organization_uow_complexity = OrganizationUowComplexity.new(params[:organization_uow_complexity])
     @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
+
     if params[:organization_uow_complexity][:organization_id].present?
       @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
       @organization_uow_complexity.organization_id = @organization.id
@@ -69,6 +70,8 @@ class OrganizationUowComplexitiesController < ApplicationController
     authorize! :edit_organizations, Organization
 
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
+    @organization = @organization_uow_complexity.organization
+
     if params[:organization_uow_complexity][:organization_id].present?
       @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
       @organization_uow_complexity.organization_id = @organization.id
@@ -80,6 +83,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     else
       render action: 'edit', :organization_id => @organization.id
     end
+
   end
 
   def set_default
@@ -93,7 +97,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     cplx.is_default = true
     cplx.save(validate: false)
 
-    redirect_to "/organizationals_params"
+    redirect_to edit_organization_path(cplx.organization, anchor: "tabs-7")
   end
 
   def destroy
@@ -103,7 +107,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     @organization_uow_complexity.delete
     respond_to do |format|
-      format.html { redirect_to redirect(organizations_path), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}" }
+      format.html { redirect_to redirect(edit_organization_path(cplx.organization, anchor: "tabs-7")), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}" }
     end
   end
 end

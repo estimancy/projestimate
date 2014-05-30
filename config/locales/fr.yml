@@ -1065,7 +1065,7 @@ fr:
   error_project_state: "Désolé... mais cette transaction n'est pas possible!"
   warning_project_cannot_be_deleted: "Les projets se trouvant dans ce état ne peuvent être supprimés"
   label_project_history: "Historique"
-  label_activate_project: "Activer"
+  label_activate_project: "Activer le projet"
   label_find_use_project: "Trouver où il est utilisé"
   label_promote_project: "Promouvoir le projet dans son cycle de vie"
   label_checkout_project: "Créer une nouvelle version du projet"

@@ -8,10 +8,12 @@
 
       <div>
         <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-        <%= f.input :alias, :label => I18n.t('alias') %>
-        <%= f.input :factor_type, :label => I18n.t('alias'), collection: ["advanced", "early_design", "post_architecture"] %>
-        <%= f.input :description, :label => I18n.t('description') %>
-        <%= f.input :state, :label => I18n.t('state') %>
+        <%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-xxlarge'} %>
+        <%= f.input :factor_type, :label => I18n.t('alias'), :input_html => {:class => 'input-xxlarge'}, collection: ["advanced", "early_design", "post_architecture"] %>
+        <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge'} %>
+        <%= tinymce %>
+        <%= f.input :helps, :label => "Help text", :input_html => {class: 'tinymce', rows: 15, cols: 20 } %>
+        <%= f.input :state, :label => I18n.t('state'), :input_html => {:class => 'input-xxlarge'} %>
         <table>
           <tr>
             <td>
