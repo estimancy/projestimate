@@ -1521,11 +1521,6 @@ public
     # The CocomoII = Cocomo_Expert factors
     @cocomo2_factors_corresponding = []
 
-
-    #========================================== Initialization module data for all estimations chart (per attribute) ================================
-    # When user selects the Initialization module from the Dashbord, chart will be displayed for all estimations
-
-
     #========================================== CocomoIntermediate (CocomoAdvanced) AND CocomoII (CocomoExpert) modules data =============================================
 
     #if @current_module_project.pemodule.alias == Projestimate::Application::COCOMO_ADVANCED
@@ -1653,42 +1648,69 @@ public
 
 
 
-    #================================ All project data (modules, attributes, ...) ======================================
+
+    #=============================================  All project data (modules, attributes, ...)  ==========================================
+    #================================ Initialization module data for all estimations chart (per attribute) ================================
+
+    # When user selects the Initialization module from the Dashbord, chart will be displayed for all estimations
 
     # get the all project modules for the charts labels
     @project_modules = []
     # contains all the modules attributes labels
-    @attributes_labels = []
+    @init_attributes_labels = []
     @attributes = []
     @project_module_projects.each do |mp|
       @project_modules << mp.pemodule
       @attributes << mp.pemodule.pe_attributes
-      @attributes_labels = @attributes_labels + mp.pemodule.pe_attributes.all.map(&:alias)
+      #@attributes_labels = @attributes_labels + mp.pemodule.pe_attributes.all.map(&:alias)
     end
     @attributes = @attributes.flatten.sort.uniq
-    @attributes_labels = @attributes_labels.flatten.sort.uniq
+    @init_attributes_labels = @attributes.map(&:alias).flatten.sort.uniq
+    @init_project_modules = @project_modules.map(&:title)
 
     # get the project PBS root
     psb_root = @project.pbs_project_elements.first.root
 
     # generate the dataset for charts
-    @dataset = {}
+    @init_module_dataset = {}
     # Dataset is get by attribute
     # one dataset data correspond of all modules values for this attribute
     @attributes.each do |attr|
       attr_data = Array.new
       @project_module_projects.each do |mp|
-        attr_estimation_value = mp.estimation_values.where('pe_attribute_id = ?', attr.id).last
-        if attr_estimation_value.nil?
-          attr_data << ""
-        else
-          #attr_data << attr_estimation_value.string_data_probable["#{psb_root.id}"]
-          attr_data << attr_estimation_value.string_data_low[psb_root.id]
+        attr_estimation_value = mp.estimation_values.where('pe_attribute_id = ? AND in_out = ?', attr.id, 'output').last
+        pbs_level_value = nil.to_i
+        ###==================
+        if !attr_estimation_value.nil?
+          #attr_data << attr_estimation_value.string_data_low[psb_root.id]
+          #attr_data << attr_estimation_value.string_data_probable[@current_component.id]
+          level_value = attr_estimation_value.send("string_data_probable")
+          if mp.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio))
+            # module with activities
+            mp_value_per_activity = { "low" => {}, "most_likely" => {}, "high" => {}, "probable" => {} }
+            if !level_value.nil?
+              # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
+              pbs_level_with_activities = level_value[@current_component.id]
+              sum_of_value = 0.0
+              if !pbs_level_with_activities.nil?
+                pbs_level_with_activities.each do |wbs_activity_elt_id, hash_value|
+                  sum_of_value = sum_of_value + hash_value[:value]
+                end
+              end
+              pbs_level_value = sum_of_value
+            end
+          else
+            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
+          end
         end
+        attr_data << pbs_level_value
+
+
+        #========================
       end
-      @dataset[:"#{attr.alias}"] = attr_data
+      @init_module_dataset[:"#{attr.alias}"] = attr_data
     end
-    puts "DATASET = #{@dataset}"
+    puts "DATASET = #{@init_module_dataset}"
 
   end
 
