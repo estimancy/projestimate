@@ -83,9 +83,9 @@
             <% if can? :execute_estimation_plan, current_project %>
               <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
             <% end %>
-              <a href="<%= show_estimation_graph_path %>" class="btn btn-mini" title="Estimation graph" data-remote="true">
-                Display charts
-              </a>
+            <a href="<%= show_estimation_graph_path %>" class="btn btn-mini" title="Estimation graph" data-remote="true"  id="see_estimation_graph">
+              Display charts
+            </a>
           </div>
         </div>
 
