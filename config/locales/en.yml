@@ -1134,6 +1134,13 @@ en:
   cost_per_hour: "Cost per hour"
   notice_measuring_units_successfully_updated: "Organization measuring units were successfully updated"
   notice_errors_on_measuring_units_update: "Error when updating organization measuring units"
+  unit_effort_man_month: "Man/Month"
+  unit_effort_man_hour: "Man/Hour"
+  unit_end_date: "Date"
+  unit_delay: "Hour(s)"
+  unit_staffing: "Person(s)"
+  unit_ksloc: "Lines of code(kilo)"
+  unit_sloc: "Lines of code"
 
   new_factor: "New factor"
   new_factor_complexity: "New factor"

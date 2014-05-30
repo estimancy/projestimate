@@ -107,9 +107,14 @@ class OrganizationsController < ApplicationController
       @attributes = PeAttribute.defined.all
       @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
-      @complexities = OrganizationUowComplexity.all
-      @unitofworks = UnitOfWork.all
+      #@complexities = OrganizationUowComplexity.all
+      #@unitofworks = UnitOfWork.all
+      @complexities = @organization.organization_uow_complexities
+      @ot = @organization.organization_technologies.first
+      @unitofworks = @organization.unit_of_works
       @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
+      @factors = Factor.order("factor_type")
+      @technologies = OrganizationTechnology.all
 
       render action: 'edit'
     end
@@ -143,10 +148,9 @@ class OrganizationsController < ApplicationController
       redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-12'), nil, '/organizationals_params')
     else
       flash[:error] = I18n.t(:notice_errors_on_measuring_units_update)
-      #render "edit"
+      #render action: 'edit'
       redirect_to(edit_organization_path(@organization, :anchor => "tabs-12"))
     end
-    #redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-12'), nil, '/organizationals_params')
   end
 
 

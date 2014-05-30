@@ -1134,6 +1134,13 @@ fr:
   cost_per_hour: "Coût horaire"
   notice_measuring_units_successfully_updated: "Les unités de mesure de l'organisation ont été mises à jour avec succès"
   notice_errors_on_measuring_units_update: "Erreur lors de la mise à jour des unités de mesures de l'organisation"
+  unit_effort_man_month: "Mois/Homme"
+  unit_effort_man_hour: "Heure/Homme"
+  unit_end_date: "Date"
+  unit_delay: "Heure(s)"
+  unit_staffing: "Personne(s)"
+  unit_ksloc: "Lignes de code (kilo)"
+  unit_sloc: "Lignes de code"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

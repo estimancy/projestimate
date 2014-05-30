@@ -126,10 +126,18 @@ module Projestimate
     INITIALIZATION = "initialization"
     EFFORT_MAN_HOUR = "effort_man_hour"
     EFFORT_MAN_MONTH = "effort_man_month"
+
+    # Modules with Factors
     COCOMO_ADVANCED = "cocomo_advanced"
+    COCOMO_INTERMEDIATE = "cocomo_advanced"
+    COCOMO_EXPERT = "cocomo_expert"
+    COCOMO_II = "cocomo_expert"
+    MODULES_WITH_FACTORS = [COCOMO_INTERMEDIATE, COCOMO_ADVANCED, COCOMO_II, COCOMO_EXPERT]
+
     EFFORT_BALANCING = "effort_balancing"
     SIZE_BALANCING = "size_balancing"
     BALANCING_MODULE = "balancing_module"
-    BALANCING_MODULES_NAME = [ EFFORT_BALANCING, SIZE_BALANCING  ]
+    BALANCING_MODULES_NAME = [ EFFORT_BALANCING, SIZE_BALANCING ]
+
   end
 end

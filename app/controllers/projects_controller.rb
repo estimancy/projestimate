@@ -37,11 +37,12 @@
 class ProjectsController < ApplicationController
   include WbsActivityElementsHelper
   include ModuleProjectsHelper
+  include ProjectsHelper
   include PemoduleEstimationMethods
 
   load_resource
 
-  helper_method :sort_direction, :is_collapsible?
+  helper_method :sort_direction, :is_collapsible?, :set_attribute_unit
 
   before_filter :load_data, :only => [:update, :edit, :new, :create, :show]
   before_filter :get_record_statuses
@@ -1503,6 +1504,7 @@ public
   # Function that show the estimation graph
   def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
     @project = current_project
+    @project_organization = @project.organization
     @project_module_projects = @project.module_projects
     # the current activated component (PBS)
     @current_component = current_component
@@ -1514,39 +1516,27 @@ public
     @complexities_name = []
     @organization_uow_complexities = []
     @cocomo_advanced_input_dataset = {}
+    # the Cocomo_advanced = Cocomo_Intermediate factors
     @cocomo_advanced_factor_corresponding = []
+    # The CocomoII = Cocomo_Expert factors
+    @cocomo2_factors_corresponding = []
 
 
-    #========================================== Factors module data for thr RADAR CHART ================================
-    #if @current_module_project.pemodule.alias.in?(%w(cocomo_advanced uos))
-    #  @radar_input_dataset = {}
-    #
-    #  #corresponding value fir each factor level
-    #  coefficients_hash = {"Extra Low" => 1, "Very Low" => 2, "Low" => 3, "Normal" => 4, "High" => 5, "Very High" => 6, "Extra High" => 7}
-    #
-    #  @radar_input_dataset["median"] = Array.new
-    #  @radar_input_dataset["#{@current_module_project.pemodule.alias}"] = Array.new
-    #  @complexities_name = @current_module_project.organization_uow_complexities.map(&:name).uniq
-    #
-    #  # dataset for the Radar chart about Factors
-    #  @current_module_project.input_cocomos.where('pbs_project_element_id = ?', @current_component.id).each do |input_cocomo|
-    #    @cocomo_advanced_factor_corresponding << input_cocomo.factor.name
-    #    @radar_input_dataset["median"] << coefficients_hash["Normal"]
-    #    @radar_input_dataset["cocomo_advanced"] << coefficients_hash[input_cocomo.organization_uow_complexity.name]
-    #  end
-    #end
+    #========================================== Initialization module data for all estimations chart (per attribute) ================================
+    # When user selects the Initialization module from the Dashbord, chart will be displayed for all estimations
 
 
-    #========================================== CocomoAdvanced module data =============================================
+    #========================================== CocomoIntermediate (CocomoAdvanced) AND CocomoII (CocomoExpert) modules data =============================================
 
-    if @current_module_project.pemodule.alias == Projestimate::Application::COCOMO_ADVANCED
-      # get the factors for the CocomoAdvanced estimation module: the data are stored in the "input_cocomos" table that make links between the factors and the CocomoAdvanced module
+    #if @current_module_project.pemodule.alias == Projestimate::Application::COCOMO_ADVANCED
+    if @current_module_project.pemodule.alias.in? Projestimate::Application::MODULES_WITH_FACTORS
+      # get the factors for the CocomoAdvanced and CocomoII estimation modules: the data are stored in the "input_cocomos" table that make links between the factors and the CocomoAdvanced module
       @complexities_name = @current_module_project.organization_uow_complexities.map(&:name).uniq
       @cocomo_advanced_factors =  @current_module_project.factors   #Factor.where('factor_type = ?', "advanced") #
       @all_cocomo_advanced_factors_names = @cocomo_advanced_factors.map(&:name)
 
       coefficients_hash = {"Extra Low" => 1, "Very Low" => 2, "Low" => 3, "Normal" => 4, "High" => 5, "Very High" => 6, "Extra High" => 7}
-      # Median value correspond to the "Normal"
+      # Median value correspond to the "Default" value defined by the Organization
       @cocomo_advanced_input_dataset["median"] = Array.new
       @cocomo_advanced_input_dataset["cocomo_advanced"] = Array.new
 
@@ -1555,34 +1545,35 @@ public
         factor_data["#{complexity_name}"] = Array.new
       end
 
+      project_organization =
       # dataset for the Radar chart about Factors
       @current_module_project.input_cocomos.where('pbs_project_element_id = ?', @current_component.id).each do |input_cocomo|
         @cocomo_advanced_factor_corresponding << input_cocomo.factor.name
-        @cocomo_advanced_input_dataset["median"] << coefficients_hash["Normal"]
         @cocomo_advanced_input_dataset["cocomo_advanced"] << coefficients_hash[input_cocomo.organization_uow_complexity.name]
+
+        ###@cocomo_advanced_input_dataset["median"] << coefficients_hash["Normal"]
+        # The Median value will be the value defined in the project's organization default factors values
+        #org_factor_with_default_cplex = input_cocomo.factor.organization_uow_complexities.where('organization_id=? AND is_default = ?', @project_organization.id, true)
+        org_factor_uow_with_default_cplex = input_cocomo.factor.organization_uow_complexities.where('organization_id=? AND is_default = ?', @project_organization.id, true).first
+        if org_factor_uow_with_default_cplex.nil?
+          # Median value will be set to 0
+          @cocomo_advanced_input_dataset["median"] << 0
+        else
+          @cocomo_advanced_input_dataset["median"] << coefficients_hash[org_factor_uow_with_default_cplex.name]
+        end
       end
+
       puts "ALL FACTOR_DATA LAST = #{@cocomo_advanced_input_dataset}"
-
-      #@current_module_project.factors.each do |factor|
-      #  factor_data["#{factor.name}"] = {}
-      #  # after we will have an architecture like the following : {"factor_name" => { "Very low" => [1,3,5,2,9], "Low" => [0.5,2,8,],"Very low" => [1,3,5,4,3],... }}
-      #  @complexities_name.each do |complexity|
-      #    factor_data["#{factor.name}"]["#{complexity}"] = Array.new
-      #  end
-      #  factor.organization_uow_complexities.each do |uow_complexity|
-      #    factor_data["#{factor.name}"]["#{uow_complexity.name}"] << uow_complexity.value
-      #  end
-      #  puts "FACTOR_DATA #{factor.name} = #{factor_data}"
-      #end
     end
-
 
     #======================================== CURRENT MODULE OUTPUTS DATA ==============================================
 
     @current_mp_outputs_dataset = {}
     @current_mp_effort_per_activity = Hash.new
     # get all current module_project attributes for outputs data
-    @current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?)', %w(output both))
+    end_date_attribute = PeAttribute.find_by_alias_and_record_status_id("end_date", @defined_status.id)
+    #@current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?)', %w(output both))
+    @current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?) AND pe_attribute_id != ?', %w(output both), end_date_attribute)
     # Outputs attributes array
     @current_mp_outputs_attributes = []
     @current_mp_outputs_attr_modules.each do |attr_module|
@@ -1621,7 +1612,12 @@ public
               pbs_level_value = sum_of_value
             end
           else
-            level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
+            # Attribute for Date and Datetime need to be customized for the chart
+            #if output_attr.attr_type == "date"
+              #level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_i)
+            #else
+              level_value.nil? ? (pbs_level_value=nil.to_i) : (pbs_level_value=level_value[@current_component.id].to_f)
+            #end
           end
           attr_data << pbs_level_value
         end

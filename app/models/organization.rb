@@ -52,19 +52,10 @@ class Organization < ActiveRecord::Base
 
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }, on: :update, if: :updating_measuring_units?
+  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
-
-  def updating_measuring_units?
-    if !number_hours_per_day.blank? || !number_hours_per_day.blank? || !cost_per_hour.blank?
-      true
-    else
-      false
-    end
-  end
-
 
   #Override
   def to_s
