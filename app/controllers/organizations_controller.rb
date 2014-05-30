@@ -107,9 +107,14 @@ class OrganizationsController < ApplicationController
       @attributes = PeAttribute.defined.all
       @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
-      @complexities = OrganizationUowComplexity.all
-      @unitofworks = UnitOfWork.all
+      #@complexities = OrganizationUowComplexity.all
+      #@unitofworks = UnitOfWork.all
+      @complexities = @organization.organization_uow_complexities
+      @ot = @organization.organization_technologies.first
+      @unitofworks = @organization.unit_of_works
       @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
+      @factors = Factor.order("factor_type")
+      @technologies = OrganizationTechnology.all
 
       render action: 'edit'
     end
@@ -131,6 +136,23 @@ class OrganizationsController < ApplicationController
     @factors = Factor.order("factor_type")
     @organizations_labor_categories = OrganizationLaborCategory.all || []
   end
+
+
+  def set_organization_measuring_units
+    set_page_title "Organization measuring units"
+    authorize! :edit_organizations, Organization
+    @organization = Organization.find(params[:organization_id])
+
+    if @organization.update_attributes(params[:organization])
+      flash[:notice] = I18n.t(:notice_measuring_units_successfully_updated)
+      redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-12'), nil, '/organizationals_params')
+    else
+      flash[:error] = I18n.t(:notice_errors_on_measuring_units_update)
+      #render action: 'edit'
+      redirect_to(edit_organization_path(@organization, :anchor => "tabs-12"))
+    end
+  end
+
 
   def set_abacus
     authorize! :edit_organizations, Organization
