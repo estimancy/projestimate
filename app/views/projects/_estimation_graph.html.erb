@@ -289,43 +289,11 @@
             var init_attribute_iter = -1;
 
             //generate data for each attribute
-            var js_init_outputs_dataset = <%= @current_mp_outputs_dataset.to_json.html_safe %> ;
+            var js_init_outputs_dataset = <%= @init_module_dataset.to_json.html_safe %> ;
             var js_init_attributes_aliases = <%= @init_attributes_labels.to_json.html_safe %> ;
             var graph_title = "";
-            var pie_chart_effort_per_activity;
 
             $.each( js_init_attributes_aliases, function( key, value ) {
-
-                <%# if @current_module_project.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio)) %>
-                <% if !@current_mp_effort_per_activity.empty? %>
-                if((value == "effort_man_month") || (value == "effort_man_hour")){
-                    graph_title = "Effort per activity (probable)";
-                }
-
-                //create div for the Pie chart
-                $("#estimation_graph_box").append('<div class="span8" style="margin-left: 0px"><canvas id="canvas_pie_effort_per_activity" class="canvas" width="700" height="300"></canvas></div>');
-
-                // only get the Probable value for the Pie chart
-                <% r_pie_chart_effort_per_activity = []
-                   pie_chart_iter = -1
-                   hue = 0
-                   effort_per_activity_probable_value = @current_mp_effort_per_activity["probable"]
-                   if !effort_per_activity_probable_value.nil?
-                        effort_per_activity_probable_value.each do |key, value|
-                            activity_data = {
-                                value: value,
-                                color: "hsla(#{hue}, 75%, 50%, 0.5)", #"%06x" % (rand * 0xffffff), #pie_fillColor_array[pie_chart_iter+=1],
-                                title: key
-                            }
-                            r_pie_chart_effort_per_activity << activity_data
-                            hue += 222.5
-                        end
-                   end
-                %>
-
-                //create the Pie chart data
-                pie_chart_effort_per_activity = <%= r_pie_chart_effort_per_activity.to_json.html_safe %> ;
-                <% end %>
 
                 var attr_data = {
                     labels : <%= @init_project_modules.to_json.html_safe %>,
@@ -336,7 +304,6 @@
                             pointColor : "rgba(220,220,220,1)",
                             pointStrokeColor : "#fff",
                             data : js_init_outputs_dataset[value],
-                            //data : (value === 'end_date') ? (new Date(js_init_outputs_dataset[value] * 1000)) : js_init_outputs_dataset[value], //js_init_outputs_dataset[value],
                             title : value
                         }
                     ]
@@ -403,10 +370,9 @@
 
 
 
-
         //========================================= DATASET FOR OUTPUT DATA  ===============================================
         // create de data
-        <% @attributes_labels.each do |attr|
+        <%# @attributes_labels.each do |attr|
             attr_data_hash =
             {
                 fillColor: fillColor_array[iteration+=1],

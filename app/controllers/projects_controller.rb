@@ -1656,12 +1656,13 @@ public
 
     # get the all project modules for the charts labels
     @project_modules = []
+    @corresponding_attributes_alises_for_init = %w(effort_man_month effort_man_hour effort_man_week cost delay staffing sloc)
     # contains all the modules attributes labels
     @init_attributes_labels = []
     @attributes = []
     @project_module_projects.each do |mp|
       @project_modules << mp.pemodule
-      @attributes << mp.pemodule.pe_attributes
+      @attributes << mp.pemodule.pe_attributes.where('alias IN (?)', @corresponding_attributes_alises_for_init)
       #@attributes_labels = @attributes_labels + mp.pemodule.pe_attributes.all.map(&:alias)
     end
     @attributes = @attributes.flatten.sort.uniq
