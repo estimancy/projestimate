@@ -40,7 +40,7 @@
           </tr>
           <tr>
             <td>
-                <%= f.input :start_date, :as => :string, :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %>
+                <%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %>
             </td>
 
             <script>
