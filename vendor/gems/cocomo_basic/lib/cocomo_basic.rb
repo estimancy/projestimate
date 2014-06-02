@@ -110,7 +110,7 @@ module CocomoBasic
     #Return staffing
     def get_staffing(*args)
       #if @coef_kls && @complexity
-        @staffing = (get_effort_man_month / get_delay)
+        @staffing = (get_effort_man_month*152 / get_delay)
       #else
       #  nil
       #end

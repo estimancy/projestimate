@@ -91,7 +91,7 @@ module CocomoExpert
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort_man_month(args[0], args[1], args[2]) / get_delay(args[0], args[1], args[2]))
+      @staffing = (get_effort_man_month(args[0], args[1], args[2])*152 / get_delay(args[0], args[1], args[2]))
       @staffing
     end
 
