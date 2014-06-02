@@ -947,8 +947,8 @@ module ProjectsHelper
 
     est_val_pe_attribute = est_val.pe_attribute
     res = []
-    if pbs_project_element.folder?
-      if !pbs_project_element.descendants.empty?
+    if pbs_project_element.folder? && !pbs_project_element.descendants.empty?
+      #if !pbs_project_element.descendants.empty?
         pbs_project_element.descendants.map{|i| res << level_estimation_values[i.id].to_i }
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                        res.compact.sum,
@@ -956,8 +956,11 @@ module ProjectsHelper
                        :readonly => true,
                        "data-module_project_id" => module_project.id,
                        "data-est_val_id" => est_val.id
-      end
+      #end
     else
+      if pbs_project_element.is_root?
+        read_only_value = true
+      end
       if module_project.previous.empty? || !est_val["string_data_#{level}"][pbs_project_element.id].nil?
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                        level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
