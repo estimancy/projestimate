@@ -85,7 +85,8 @@ module CocomoExpert
 
     #Return end date
     def get_end_date(*args)
-      @end_date = (Time.now + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      p = Project.find(args[0].to_i)
+      @end_date = (p.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 

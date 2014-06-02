@@ -5,61 +5,61 @@
 
   <div id="tabs-1">
     <%= simple_form_for(@unit_of_work) do |f| %>
-        <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => @organization.id || params[:organization_id]} %>
-        <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-        <%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-xxlarge'} %>
-        <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-        <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => UnitOfWork.aasm_states_for_select, :input_html => {:class => 'input-large'} %>
-        <%= f.input :display_order, :label => I18n.t('display_order'), :input_html => {:class => 'input-large'} %>
+      <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => @organization.id || params[:organization_id]} %>
+      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-xxlarge'} %>
+      <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => UnitOfWork.aasm_states_for_select, :input_html => {:class => 'input-large'} %>
+      <%= f.input :display_order, :label => I18n.t('display_order'), :input_html => {:class => 'input-large'} %>
 
-        <div class="accordion" id="accordion1">
-          <div class="accordion-group accordion-caret">
-            <div class="accordion-heading">
-              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-                <i class="icon-caret-down"></i>
-                <b><%= I18n.t 'text_organization_technology' %></b>
-              </a>
-            </div>
-            <div id="collapseOne" class="accordion-body in collapse">
-              <div class="accordion-inner">
-                <%= f.association :organization_technologies, :collection => @organization.organization_technologies, :as => :check_boxes, :input_html => {:class => 'input-xxlarge'} %>
-              </div>
+      <div class="accordion" id="accordion1">
+        <div class="accordion-group accordion-caret">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+              <i class="icon-caret-down"></i>
+              <b><%= I18n.t 'text_organization_technology' %></b>
+            </a>
+          </div>
+          <div id="collapseOne" class="accordion-body in collapse">
+            <div class="accordion-inner">
+              <%= f.association :organization_technologies, :collection => @organization.organization_technologies, :as => :check_boxes, :input_html => {:class => 'input-xxlarge'} %>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="accordion" id="accordion1">
-          <div class="accordion-group accordion-caret">
-            <div class="accordion-heading">
-              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-                <i class="icon-caret-down"></i>
-                <b>Complexities</b>
-              </a>
-            </div>
-            <div id="collapseOne" class="accordion-body in collapse">
-              <div class="accordion-inner">
-                <%= f.association :organization_uow_complexities, :collection => @unit_of_work.organization_uow_complexities, :as => :check_boxes, :input_html => {:class => 'input-xxlarge'} %>
-              </div>
+      <div class="accordion" id="accordion1">
+        <div class="accordion-group accordion-caret">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+              <i class="icon-caret-down"></i>
+              <b>Complexities</b>
+            </a>
+          </div>
+          <div id="collapseOne" class="accordion-body in collapse">
+            <div class="accordion-inner">
+              <%= f.association :organization_uow_complexities, :collection => @unit_of_work.organization_uow_complexities, :as => :check_boxes, :input_html => {:class => 'input-xxlarge'} %>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="actions-tabs">
+      <div class="actions-tabs">
 
-          <% if can? :edit_organizations, Organization %>
-            <% if action_name.in?(%w(new create)) %>
-                <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-                <%= submit_tag I18n.t('save'), :class => 'btn' %>
-            <% elsif action_name == 'edit' || action_name=='update' %>
-                <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-            <% end %>
+        <% if can? :edit_organizations, Organization %>
+          <% if action_name.in?(%w(new create)) %>
+              <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <% elsif action_name == 'edit' || action_name=='update' %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
+        <% end %>
 
-          <%= link_to "Create a new complexity", new_organization_uow_complexity_path(organization_id: @organization || params[:organization_id]), :class => 'btn' %>
-          <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-6'), :class => 'btn' %>
+        <%= link_to "Create a new complexity", new_organization_uow_complexity_path(organization_id: @organization || params[:organization_id]), :class => 'btn' %>
+        <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-6'), :class => 'btn' %>
 
-        </div>
+      </div>
 
     <% end %>
   </div>
