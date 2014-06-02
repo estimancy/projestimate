@@ -92,13 +92,14 @@ module CocomoExpert
 
     #Return end date
     def get_end_date(*args)
-      @end_date = (Time.now + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      p = Project.find(args[0].to_i)
+      @end_date = (p.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort_man_month(args[0], args[1], args[2]) / get_delay(args[0], args[1], args[2]))
+      @staffing = (get_effort_man_month(args[0], args[1], args[2])*152 / get_delay(args[0], args[1], args[2]))
       @staffing
     end
 

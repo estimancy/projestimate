@@ -1153,3 +1153,7 @@ en:
   checkpoint: "Checkpoint"
   released: "Released"
   rejected: "Rejected"
+
+  configure_cocomo: "Configure Cocomo's setting"
+  configure_uow: "Unit of Works Setting"
+
