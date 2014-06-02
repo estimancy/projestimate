@@ -40,25 +40,30 @@ module CocomoExpert
 
       aliass = %w(prec flex resl team pmat)
       aliass.each do |a|
-        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
-                               pbs_project_element_id: args[2],
-                               module_project_id: args[1],
-                               project_id: args[0]).first.coefficient
-        sf << ic
+        input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
+                                        pbs_project_element_id: args[2],
+                                        module_project_id: args[1],
+                                        project_id: args[0])
+        if !input_cocomo.nil? && !input_cocomo.empty?
+          sf << input_cocomo.first.coefficient
+        end
       end
 
       aliass = %w(pers rcpx ruse pdif prex fcil sced)
       aliass.each do |a|
-        em << InputCocomo.where( factor_id: Factor.where(alias: a).first.id,
-                                 pbs_project_element_id: args[2],
-                                 module_project_id: args[1],
-                                 project_id: args[0]).first.coefficient
+        input_cocomo = InputCocomo.where( factor_id: Factor.where(alias: a).first.id,
+                                          pbs_project_element_id: args[2],
+                                          module_project_id: args[1],
+                                          project_id: args[0])
+        if !input_cocomo.nil? && !input_cocomo.empty?
+          em << input_cocomo.first.coefficient
+        end
       end
 
-      b = 0.91 + 0.01 * sf.sum
+      b = 0.91 + 0.01 * sf.sum.to_f
 
       #on ne gere pas BRAK
-      pm = 2.94 * em.inject(:*) * 1 * (@coef_kls)**b
+      pm = 2.94 * em.inject(:*).to_f * 1 * (@coef_kls)**b
 
       return pm
     end
@@ -70,16 +75,18 @@ module CocomoExpert
       sf = Array.new
       aliass = %w(prec flex resl team pmat)
       aliass.each do |a|
-        ic = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
-                               pbs_project_element_id: args[2],
-                               module_project_id: args[1],
-                               project_id: args[0]).first.coefficient
-        sf << ic
+        input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
+                                         pbs_project_element_id: args[2],
+                                         module_project_id: args[1],
+                                         project_id: args[0])
+        if !input_cocomo.nil? && !input_cocomo.empty?
+          sf << input_cocomo.first.coefficient
+        end
       end
 
-      f = 0.28 + 0.2 * (1/100) * sf.sum
+      f = 0.28 + 0.2 * (1/100) * sf.sum.to_f
       @delay = 3.76 * (@effort ** f)
-      @delay = @delay * 152
+      @delay = @delay.to_f * 152
       @delay
     end
 
