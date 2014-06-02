@@ -40,7 +40,7 @@ class PemodulesController < ApplicationController
   load_resource
 
   before_filter :get_record_statuses
-  before_filter :project_locked?,  :only => [:pemodules_right, :pemodules_left, :pemodules_up, :pemodules_down]
+  #before_filter :project_locked?,  :only => [:pemodules_right, :pemodules_left, :pemodules_up, :pemodules_down] #TODO : remplacer par un droit de debloquer/bloquer
 
   def index
     authorize! :create_and_edit_modules, Pemodule
