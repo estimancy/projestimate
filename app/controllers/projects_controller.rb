@@ -1520,6 +1520,21 @@ public
     @cocomo_advanced_factor_corresponding = []
     # The CocomoII = Cocomo_Expert factors
     @cocomo2_factors_corresponding = []
+    # Contains all attribute name according to their aliases
+    @all_attributes_names = {"effort_man_hour" => "Effort Man Hour", "effort_man_month" => "Effort Man Month", "effort_man_week" => "Effort Man Week", "cost" => "Cost",
+                            "delay" => "Delay", "end_date" => "End Date", "staffing" => "Staffing", "staffing_complexity" => "Staffing complexity", "duration" => "Duration",
+                            "effective_technology"=>"Effective technology", "schedule"=>"Schedule", "defects"=>"Defects", "note"=>"Note", "methodology"=>"Methodology",
+                            "real_time_constraint"=>"Real-time Constraint", "platform_maturity"=>"Platform Maturity", "list_sandbox"=>"Sandbox List", "date_sandbox"=>"Sandbox Date",
+                            "description_sandbox"=>"Sandbox Description", "float_sandbox"=>"Sandbox Float", "integer_sandbox"=>"Sandbox Integer", "complexity"=>"Complexity",
+                            "ksloc"=>"KSLOC", "sloc"=>"SLOC", "size"=>"Size"}
+
+    # Attributes Unit : Table of Attributes units according to their aliases
+    @attribute_yAxisUnit_array =  {
+        'cost' => (@project_organization.cost_unit.nil? ? "Unit" : @project_organization.cost_unit.capitalize),
+        'effort_man_month' => I18n.t(:unit_effort_man_month), 'effort_man_hour' =>  I18n.t(:unit_effort_man_hour),
+        'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
+        'ksloc' => I18n.t(:unit_ksloc), 'sloc' => I18n.t(:unit_sloc)
+    }
 
     #========================================== CocomoIntermediate (CocomoAdvanced) AND CocomoII (CocomoExpert) modules data =============================================
 
@@ -1624,7 +1639,6 @@ public
 
     #======================================== END CURRENT MODULE OUTPUTS DATA ==============================================
 
-
     # get all current module_project attribute value
     @current_module_project.pemodule.pe_attributes.each do |attr|
       attr_data = Array.new
@@ -1645,8 +1659,6 @@ public
       end
     end
     puts "INPUT DATA = #{@input_dataset}"
-
-
 
 
     #=============================================  All project data (modules, attributes, ...)  ==========================================

@@ -20,17 +20,15 @@
         var js_fillColor_array = fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb(151,187,205)", "rgb(151,187,205)"];
         var js_pie_fillColor_array = ["#F38630", "#E0E4CC", "#69D2E7", "#D97041", "#C7604C", "#21323D", "#9D9B7F", "#7D4F6D", "#584A5E"];
 
-        // Attributes Unit
-        var attribute_yAxisUnit_array =  {
-            'cost' : "<%= @project_organization.cost_unit.nil? ? "Unit" : @project_organization.cost_unit.capitalize %>",
-            'effort_man_month' : "<%= I18n.t(:unit_effort_man_month) %>",
-            'effort_man_hour' : "<%= I18n.t(:unit_effort_man_hour) %>",
-            'delay' : "<%= I18n.t(:unit_delay) %>",
-            'end_date' : "<%= I18n.t(:unit_end_date) %>",
-            'staffing' : "<%= I18n.t(:unit_staffing) %>",
-            'ksloc' : "<%= I18n.t(:unit_ksloc) %>",
-            'sloc' : "<%= I18n.t(:unit_sloc) %>"
-        }
+        // Attributes Unit : Table of Attributes units according to their aliases
+        var js_attribute_yAxisUnit_array = <%= @attribute_yAxisUnit_array.to_json.html_safe %>;
+
+        // Contains all attribute name according to their aliases
+        var js_all_attributes_names = <%= @all_attributes_names.to_json.html_safe %>;
+
+        // Value to increment for getting new color
+        var js_hue_color = 0;
+        <% $rb_hue_color = 0 %>
 
 
         ///============== datasets for input data Radar chart for Cocomo_Advanced and CocomoII (Modules using Factors) =======================
@@ -117,7 +115,7 @@
             <% @cocomo_advanced_input_dataset.each do |corresponding_graph_name, array_value|
                 factor_data_hash =
                     {
-                       fillColor: fillColor_array[cocomo_ad_iter+=1],
+                       fillColor: "hsla(#{$rb_hue_color+=222.5}, 75%, 50%, 0.5)",
                        strokeColor: "rgba(220,220,220,1)",
                        pointColor: "rgba(220,220,220,1)",
                        pointStrokeColor: "#fff",
@@ -177,17 +175,15 @@
                 // only get the Probable value for the Pie chart
                 <% r_pie_chart_effort_per_activity = []
                    pie_chart_iter = -1
-                   hue = 0
                    effort_per_activity_probable_value = @current_mp_effort_per_activity["probable"]
                    if !effort_per_activity_probable_value.nil?
                         effort_per_activity_probable_value.each do |key, value|
                             activity_data = {
                                 value: value,
-                                color: "hsla(#{hue}, 75%, 50%, 0.5)", #"%06x" % (rand * 0xffffff), #pie_fillColor_array[pie_chart_iter+=1],
+                                color: "hsla(#{$rb_hue_color+=222.5}, 75%, 50%, 0.5)", #"%06x" % (rand * 0xffffff), #pie_fillColor_array[pie_chart_iter+=1],
                                 title: key
                             }
                             r_pie_chart_effort_per_activity << activity_data
-                            hue += 222.5
                         end
                    end
                 %>
@@ -196,11 +192,13 @@
                 pie_chart_effort_per_activity = <%= r_pie_chart_effort_per_activity.to_json.html_safe %> ;
             <% end %>
 
+            <% $rb_hue_color +=222.5 %>
             var attr_data = {
                 labels : outputs_data_levels,
                 datasets : [
                     {
                         fillColor : js_fillColor_array[output_iter+=1],
+                        //fillColor : "<%#= "hsla(#{$rb_hue_color}, 75%, 50%, 0.5)" %>",
                         strokeColor : "rgba(220,220,220,1)",
                         pointColor : "rgba(220,220,220,1)",
                         pointStrokeColor : "#fff",
@@ -231,7 +229,7 @@
                 xAxisFontSize : 14,
                 xAxisFontStyle : "normal",
                 xAxisFontColor : "#666",
-                yAxisUnit : attribute_yAxisUnit_array[value], //"UNIT",
+                yAxisUnit : js_attribute_yAxisUnit_array[value], //"UNIT",
                 yAxisUnitFontFamily : "'Arial'",
                 yAxisUnitFontSize : 12,
                 yAxisUnitFontStyle : "bold", //"normal",
@@ -246,7 +244,7 @@
                 graphSubTitleFontSize : 16,
                 graphSubTitleFontStyle : "normal", //"bold"
                 graphSubTitleFontColor : "#666",
-                footNote : ''+value,
+                footNote : js_all_attributes_names[value], //''+value,
                 footNoteFontFamily : "'Arial'",
                 footNoteFontSize : 16,
                 footNoteFontStyle : "bold",
@@ -329,7 +327,7 @@
                     xAxisFontSize : 14,
                     xAxisFontStyle : "normal",
                     xAxisFontColor : "#666",
-                    yAxisUnit : attribute_yAxisUnit_array[value], //"UNIT",
+                    yAxisUnit : js_attribute_yAxisUnit_array[value], //"UNIT",
                     yAxisUnitFontFamily : "'Arial'",
                     yAxisUnitFontSize : 12,
                     yAxisUnitFontStyle : "bold", //"normal",
@@ -344,7 +342,7 @@
                     graphSubTitleFontSize : 16,
                     graphSubTitleFontStyle : "normal", //"bold"
                     graphSubTitleFontColor : "#666",
-                    footNote : ''+value,
+                    footNote : js_all_attributes_names[value], //''+value,
                     footNoteFontFamily : "'Arial'",
                     footNoteFontSize : 16,
                     footNoteFontStyle : "bold",

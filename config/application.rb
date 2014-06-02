@@ -126,6 +126,11 @@ module Projestimate
     INITIALIZATION = "initialization"
     EFFORT_MAN_HOUR = "effort_man_hour"
     EFFORT_MAN_MONTH = "effort_man_month"
+    EFFORT_MAN_WEEK = "effort_man_week"
+    DELAY = "delay"
+    STAFFING = "staffing"
+    COST = "cost"
+
 
     # Modules with Factors
     COCOMO_ADVANCED = "cocomo_advanced"
