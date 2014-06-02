@@ -41,8 +41,8 @@ class Home < ActiveRecord::Base
   attr_accessible
   include ExternalMasterDatabase
 
-  EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory, ExternalAcquisitionCategory, ExternalPeicon,
-                    ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalLaborCategory, ExternalProjectSecurityLevel,
+  EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory,
+                    ExternalAcquisitionCategory, ExternalPeicon, ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalLaborCategory, ExternalProjectSecurityLevel,
                     ExternalPermission]
   def self.connect_external_database
     #begin
@@ -131,6 +131,7 @@ class Home < ActiveRecord::Base
           loc_factor = Factor.find_by_uuid(ext_factor.uuid)
           loc_cplx = OrganizationUowComplexity.find_by_uuid(ext_complexity.uuid)
           loc_cplx.factor_id = loc_factor.id
+          loc_cplx.display_order = ext_complexity.display_order
           loc_cplx.value = ext_complexity.value
           loc_cplx.save(validate: false)
         end
@@ -616,24 +617,27 @@ class Home < ActiveRecord::Base
     puts '   - Factors...'
     self.create_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'state', 'factor_type', 'uuid'])
 
-    puts '   - Complexity...'
+    puts '   - Complexity levels...'
     self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
-    #Associate
-    ext_factors = ExternalMasterDatabase::ExternalFactor.all
-    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
-    ext_factors.each do |ext_factor|
-      ext_complexities.each do |ext_complexity|
-        if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
-          loc_factor = Factor.find_by_uuid(ext_factor.uuid)
-          loc_cplx = OrganizationUowComplexity.find_by_uuid(ext_complexity.uuid)
-          loc_cplx.factor_id = loc_factor.id
-          loc_cplx.value = ext_complexity.value
-          loc_cplx.record_status_id = local_defined_rs_id
-          loc_cplx.save
-        end
-      end
-    end
+    #ext_factors = ExternalMasterDatabase::ExternalFactor.all
+    #ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
+    #ext_factors.each do |ext_factor|
+    #  ext_complexities.each do |ext_complexity|
+    #    if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
+    #      loc_factor = Factor.find_by_uuid(ext_factor.uuid)
+    #      loc_cplx = OrganizationUowComplexity.new(uuid: ext_complexity.uuid)
+    #      loc_cplx.name = ext_complexity.name
+    #      loc_cplx.description = ext_complexity.description
+    #      loc_cplx.factor_id = loc_factor.id
+    #      loc_cplx.value = ext_complexity.value
+    #      loc_cplx.display_order = ext_complexity.display_order
+    #      loc_cplx.record_status_id = local_defined_rs_id
+    #      loc_cplx.change_comment = ext_complexity.change_comment
+    #      loc_cplx.save
+    #    end
+    #  end
+    #end
 
     puts '   - Admin user'
     #Create first user

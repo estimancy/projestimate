@@ -847,9 +847,9 @@ module ProjectsHelper
         res << '</table>'
 
         if module_project.pemodule.alias == "uos"
-          res << "#{ link_to 'Unit of Works Setting', '/uos?mp=' + module_project.id.to_s }"
+          res << "#{ link_to I18n.t :configure_uow, '/uos?mp=' + module_project.id.to_s }"
         elsif module_project.pemodule.alias == "cocomo_advanced" or module_project.pemodule.alias == "cocomo_expert"
-          res << link_to("Configure Cocomo's setting", "/#{module_project.pemodule.alias}")
+          res << link_to(I18n.t :configure_cocomo, "/#{module_project.pemodule.alias}")
         else
           ""
         end

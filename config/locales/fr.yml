@@ -1154,5 +1154,6 @@ fr:
   released: "Confirmé"
   rejected: "Rejeté"
 
-
+  configure_cocomo: "Configurer les facteurs d'ajustements"
+  configure_uow: "Configurer les unité d'oeuvres"
 
