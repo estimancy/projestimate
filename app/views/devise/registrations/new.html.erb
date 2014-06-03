@@ -4,10 +4,10 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :first_name, required: true, autofocus: true, :label => I18n.t('first_name'), :input_html => { :class => 'login_info span5'} %>
-    <%= f.input :last_name, required: true, :label => I18n.t('last_name'), :input_html => { :class => 'login_info span5'} %>
-    <%= f.input :login_name, required: true, :label => I18n.t('login_name'), :input_html => { :class => 'login_info span5' } %>
-    <%= f.input :email, required: true, :input_html => { :class => 'login_info span5' } %>
+    <%= f.input :first_name, required: true, autofocus: true, :label => I18n.t('first_name'), :input_html => { :class => 'login_info span5', :value => (session["devise.user_attributes"]['first_name'] unless session["devise.user_attributes"]['provider'].nil?)} %>
+    <%= f.input :last_name, required: true, :label => I18n.t('last_name'), :input_html => { :class => 'login_info span5', :value => (session["devise.user_attributes"]['last_name'] unless session["devise.user_attributes"]['provider'].nil?)} %>
+    <%= f.input :login_name, required: true, :label => I18n.t('login_name'), :input_html => { :class => 'login_info span5', :value => (session["devise.user_attributes"]['login_name'] unless session["devise.user_attributes"]['provider'].nil?) } %>
+    <%= f.input :email, required: true, :input_html => { :class => 'login_info span5', :value => (session["devise.user_attributes"]['email'] unless session["devise.user_attributes"]['provider'].nil?) } %>
     <%= f.input :language_id, :as => :collection_select, collection: Language.all.map{|i| [i.name, i.id] }.sort, :prompt => I18n.t('helpers.select.prompt'), :input_html => {:class => "login_info span5"} %>
     <%= f.input :password, required: true, :input_html => { :class => 'login_info span5' } %>
     <%= f.input :password_confirmation, required: true, :input_html => { :class => 'login_info span5' } %>

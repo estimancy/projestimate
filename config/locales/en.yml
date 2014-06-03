@@ -1126,7 +1126,7 @@ en:
   mail_someone_has_requested_link_change_password: "Someone has requested a link to change your password. You can do this through the link below."
   text_ask_connect_to_estimancy_via_google: "Do you agree to connect to Estimancy using your Google account?"
   text_sign_in_with: "Sign in with"
-  text_almost_done_provide_password_to_finish: "You are almost Done! Please provide a password to finish setting up your account"
+  text_almost_done_provide_password_to_finish: "You are almost Done! For a first connection, please provide a password to finish setting up your account. You can also modify the connexion id if needed."
   text_measuring_units: "Measuring units"
   number_hours_per_day: "Number hours per day"
   number_hours_per_month: "Number hours per month"

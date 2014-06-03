@@ -21,15 +21,16 @@
 
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def google_oauth2
-    user = User.from_omniauth(request.env["omniauth.auth"])
-    if user.persisted?
-      ###flash[:notice] = "Signed in Through Google!"
+    # The "find_for_google_oauth2" method is implemented in (app/models/user.rb) user model
+    @user = User.find_for_google_oauth2(request.env["omniauth.auth"], current_user)
+    if @user.persisted?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "Google"
-      sign_in_and_redirect user, :event => :authentication
+      sign_in_and_redirect @user, :event => :authentication
     else
-      session["devise.user_attributes"] = user.attributes
-      flash.notice = I18n.t(:text_almost_done_provide_password_to_finish)
+      session["devise.user_attributes"] = @user.attributes
+      flash[:warning] = I18n.t(:text_almost_done_provide_password_to_finish, kind: "Google")
       redirect_to new_user_registration_url
     end
   end
+
 end

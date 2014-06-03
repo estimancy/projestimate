@@ -43,7 +43,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, # account confirmation
-         :omniauthable, :omniauth_providers => [:google_oauth2]
+         :omniauthable, :omniauth_providers => [:google_oauth2],
+         :authentication_keys => [:id_connexion]
 
   # Setup accessible (or protected) attributes for your model for Devise gem
   #attr_accessible :email, :password, :password_confirmation, :remember_me
@@ -158,6 +159,10 @@ class User < ActiveRecord::Base
     updating_password || new_record?
   end
 
+  # Devise confirmation
+  def confirmation_required?
+    self.provider.nil?
+  end
 
   public
 
@@ -207,7 +212,8 @@ class User < ActiveRecord::Base
   end
 
   # GOOGLE AUTHENTICATION FROM DEVISE
-  def self.from_omniauth(auth)
+  ####def self.from_omniauth(auth)
+  def self.find_for_google_oauth2(auth, signed_in_resource=nil)
     if user = User.find_by_email(auth.info.email)
       user.provider = auth.provider
       user.uid = auth.uid
@@ -217,6 +223,8 @@ class User < ActiveRecord::Base
         user.provider = auth.provider
         user.uid = auth.uid
         user.login_name = auth.info.name
+        user.first_name = auth.info.first_name
+        user.last_name = auth.info.last_name
         user.email = auth.info.email
         user.avatar = auth.info.image
         user.password = Devise.friendly_token[0,20]
