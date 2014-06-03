@@ -1156,4 +1156,5 @@ fr:
 
   configure_cocomo: "Configurer les facteurs d'ajustements"
   configure_uow: "Configurer les unité d'oeuvres"
-
+  effort_multiplier: "Coefficients multiplicateur"
+  scale_factor: "Facteurs d'ajustement"
