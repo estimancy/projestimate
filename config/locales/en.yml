@@ -1156,4 +1156,6 @@ en:
 
   configure_cocomo: "Configure Cocomo's setting"
   configure_uow: "Unit of Works Setting"
+  effort_multiplier: "Effort multiplier"
+  scale_factor: "Scale factor"
 
