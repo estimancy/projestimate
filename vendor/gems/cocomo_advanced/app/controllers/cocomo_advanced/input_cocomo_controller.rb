@@ -70,7 +70,7 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
   end
 
   def help
-    factor = Factor.find(params[:factor_id])
-    @descriptions = factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| ["<strong>#{i.name}</strong>", "#{ i.description.blank? ? 'N/A' : i.description }"]}.join("<br>")
+    @factor = Factor.find(params[:factor_id])
+    #@descriptions = @factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| ["<strong>#{i.name}</strong>", "#{ i.description.blank? ? 'N/A' : i.description }"]}.join("<br>")
   end
 end

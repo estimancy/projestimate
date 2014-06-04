@@ -94,6 +94,9 @@ gem 'rb-readline'
 #Cache management
 gem 'cache_digests'
 
+#Databases data translations
+gem 'globalize', '~> 3.1.0'
+
 #Optional gem for monitoring
 group :ic do
   gem 'newrelic_rpm'

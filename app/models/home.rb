@@ -620,24 +620,31 @@ class Home < ActiveRecord::Base
     puts '   - Complexity levels...'
     self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
-    #ext_factors = ExternalMasterDatabase::ExternalFactor.all
-    #ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
-    #ext_factors.each do |ext_factor|
-    #  ext_complexities.each do |ext_complexity|
-    #    if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
-    #      loc_factor = Factor.find_by_uuid(ext_factor.uuid)
-    #      loc_cplx = OrganizationUowComplexity.new(uuid: ext_complexity.uuid)
-    #      loc_cplx.name = ext_complexity.name
-    #      loc_cplx.description = ext_complexity.description
-    #      loc_cplx.factor_id = loc_factor.id
-    #      loc_cplx.value = ext_complexity.value
-    #      loc_cplx.display_order = ext_complexity.display_order
-    #      loc_cplx.record_status_id = local_defined_rs_id
-    #      loc_cplx.change_comment = ext_complexity.change_comment
-    #      loc_cplx.save
-    #    end
-    #  end
-    #end
+    ext_factors = ExternalMasterDatabase::ExternalFactor.all
+    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
+
+    ext_factors.each do |ext_factor|
+
+      @loc_factor = Factor.find_by_uuid(ext_factor.uuid)
+
+      ext_complexities.each do |ext_complexity|
+        if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
+
+
+
+          loc_cplx = OrganizationUowComplexity.new(uuid: ext_complexity.uuid)
+          loc_cplx.factor_id = @loc_factor.id
+          loc_cplx.name = ext_complexity.name
+          loc_cplx.description = ext_complexity.description
+          loc_cplx.value = ext_complexity.value
+          loc_cplx.display_order = ext_complexity.display_order
+          loc_cplx.record_status_id = local_defined_rs_id
+          loc_cplx.change_comment = ext_complexity.change_comment
+          loc_cplx.save
+
+        end
+      end
+    end
 
     puts '   - Admin user'
     #Create first user
@@ -662,6 +669,19 @@ class Home < ActiveRecord::Base
     Organization.create(:name => 'YourOrganization', :description => 'This must be update to match your organization')
     Organization.create(:name => 'Other', :description => 'This could be used to group users that are not members of any organization')
     organization = Organization.first
+
+    Organization.all.each do |organization|
+      OrganizationUowComplexity.where(organization_id: nil).each do |o|
+        ouc = OrganizationUowComplexity.new(name: o.name ,
+                                            organization_id: organization.id,
+                                            description: o.description,
+                                            value: o.value,
+                                            factor_id: o.factor_id,
+                                            is_default: o.is_default,
+                                            state: 'defined')
+        ouc.save(validate: false)
+      end
+    end
 
     puts '   - Demo project'
     #Create default project
