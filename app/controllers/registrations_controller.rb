@@ -23,7 +23,17 @@
 class RegistrationsController < Devise::RegistrationsController
 
   def new
+    if session["devise.user_attributes"]
+      if !session["devise.user_attributes"]['provider'].nil? && session["devise.user_attributes"]['uid'].nil?
+        @firstname_with_provider = session["devise.user_attributes"]['first_name']
+        @lastname_with_provider = session["devise.user_attributes"]['last_name']
+        @login_name_with_provider = session["devise.user_attributes"]['login_name']
+        @email_with_provider = session["devise.user_attributes"]['email']
+      end
+    end
+
     super
+
   end
 
   def create

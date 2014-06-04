@@ -619,7 +619,8 @@ public
       @my_results[level.to_sym] = run_estimation_plan(set_attributes[level], pbs_project_element_id, level, @project, start_module_project)
     end
 
-    #Save output values: only for current pbs_project_element and for current module-project
+    # Save output values: only for current pbs_project_element and for current module-project
+    # Component parent estimation results is computed again in a asynchronous jobs processing in the "save_estimation_results" method
     save_estimation_results(start_module_project, set_attributes, @my_results)
 
     # Need to execute other module_projects if all required input attributes are present
@@ -733,6 +734,11 @@ public
         end
 
         est_val.update_attributes(out_result)
+
+        # Save estimation for the current component parent
+        ###EstimationsWorker.perform_async(start_module_project, @pbs_project_element.id, est_val.id)
+
+
       elsif est_val.in_out == 'input'
         in_result = Hash.new
 

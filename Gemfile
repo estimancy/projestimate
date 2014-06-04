@@ -136,6 +136,9 @@ gem 'license_finder'
 
 gem 'tinymce-rails'
 
+# Tool for asynchronous jobs processing
+###gem 'sidekiq'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
