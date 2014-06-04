@@ -66,7 +66,6 @@ namespace :projestimate do
             ActiveRecord::Base.connection.execute('show tables').each { |r| tables << r[0] }
             tables = tables - ['schema_migrations']
             tables.each do |table|
-              p table
               ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
             end
 
