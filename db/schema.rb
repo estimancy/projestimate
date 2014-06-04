@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140528094048) do
+ActiveRecord::Schema.define(:version => 20140604080341) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -244,6 +244,17 @@ ActiveRecord::Schema.define(:version => 20140528094048) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "factor_translations", :force => true do |t|
+    t.integer  "factor_id"
+    t.string   "locale",     :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.text     "helps"
+  end
+
+  add_index "factor_translations", ["factor_id"], :name => "index_factor_translations_on_factor_id"
+  add_index "factor_translations", ["locale"], :name => "index_factor_translations_on_locale"
 
   create_table "factors", :force => true do |t|
     t.string   "name"
