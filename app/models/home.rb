@@ -621,7 +621,7 @@ class Home < ActiveRecord::Base
     self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
     ext_factors = ExternalMasterDatabase::ExternalFactor.all
-    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
+    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.where(organization_id: nil).all
 
     ext_factors.each do |ext_factor|
 
@@ -629,10 +629,8 @@ class Home < ActiveRecord::Base
 
       ext_complexities.each do |ext_complexity|
         if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
-
-
-
           loc_cplx = OrganizationUowComplexity.new(uuid: ext_complexity.uuid)
+
           loc_cplx.factor_id = @loc_factor.id
           loc_cplx.name = ext_complexity.name
           loc_cplx.description = ext_complexity.description

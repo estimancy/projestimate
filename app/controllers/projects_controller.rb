@@ -1579,6 +1579,21 @@ public
         end
       end
 
+      attr_staffing = PeAttribute.where(alias: "staffing").first
+      staffing = @current_module_project.estimation_values.where(pe_attribute_id: attr_staffing.id).first.string_data_probable[current_component.id]
+      @staffing_profile_data = []
+      @staffing_profile_data << staffing.to_i
+
+      6.times do |i|
+        if i < 2
+          @staffing_profile_data << @staffing_profile_data.last * 1.2
+        elsif i == 2
+          @staffing_profile_data << staffing.to_i
+        else
+          @staffing_profile_data << @staffing_profile_data.last * 0.8
+        end
+      end
+
       puts "ALL FACTOR_DATA LAST = #{@cocomo_advanced_input_dataset}"
     end
 

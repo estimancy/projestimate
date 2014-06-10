@@ -786,11 +786,6 @@ module ProjectsHelper
     pbs_project_element = current_component
     res = String.new
 
-    #if module_project.pemodule.alias == "uos"
-    #  display_uos_module(module_project.id)
-    #elsif module_project.pemodule.alias == "cocomo_advanced"
-    #  link_to "Cocomo Advanced", "/cocomo_advanced"
-    #else
       if module_project.compatible_with(current_component.work_element_type.alias) || current_component
 
         pemodule = Pemodule.find(module_project.pemodule.id)
