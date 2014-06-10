@@ -70,7 +70,7 @@ Projestimate::Application.routes.draw do
   resources :audits
 
   mount Uos::Engine, :at => '/uos'
-  mount Cocomo81::Engine, :at => '/cocomo_81'
+  #mount Cocomo81::Engine, :at => '/cocomo_81'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
   mount BalancingModule::Engine, at: "/balancing_module"
