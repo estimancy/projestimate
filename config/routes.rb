@@ -38,12 +38,10 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
-
   # Mount the Sidekiq web interface
   mount Sidekiq::Web, at: "/sidekiq"
 
   resources :boxes
-
 
   resources :estimation_values
   get 'add_note_to_attribute' => 'estimation_values#add_note_to_attribute', :as => 'add_note_to_attribute'
@@ -79,6 +77,7 @@ Projestimate::Application.routes.draw do
   resources :audits
 
   mount Uos::Engine, :at => '/uos'
+  #mount Cocomo81::Engine, :at => '/cocomo_81'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
   mount BalancingModule::Engine, at: "/balancing_module"
