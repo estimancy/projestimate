@@ -729,12 +729,9 @@ public
           else
             probable_estimation_value[@pbs_project_element.id] = @my_results[:most_likely]["#{est_val_attribute_alias}_#{est_val.module_project_id.to_s}".to_sym]
           end
-
           out_result['string_data_probable'] = probable_estimation_value
         end
-
         est_val.update_attributes(out_result)
-
 
       elsif est_val.in_out == 'input'
         in_result = Hash.new
@@ -768,8 +765,6 @@ public
         EstimationsWorker.perform_async(@pbs_project_element.id, est_val.id)
         ###perform_test(@pbs_project_element.id, est_val.id)
       end
-
-      ###===============================================================================
     end
   end
 
@@ -1584,18 +1579,18 @@ public
         end
       end
 
-      attr_staffing = PeAttribute.where(alias: "staffing").first
+      attr_staffing = PeAttribute.where('alias=? AND record_status_id=? ', "staffing", @defined_status).first
       staffing = @current_module_project.estimation_values.where(pe_attribute_id: attr_staffing.id).first.string_data_probable[current_component.id]
       @staffing_profile_data = []
-      @staffing_profile_data << staffing.to_i
+      @staffing_profile_data << (staffing.nan? ? nil.to_i : staffing.to_i)
 
       6.times do |i|
         if i < 2
-          @staffing_profile_data << @staffing_profile_data.last * 1.2
+          @staffing_profile_data << @staffing_profile_data.last.to_f * 1.2
         elsif i == 2
-          @staffing_profile_data << staffing.to_i
+          @staffing_profile_data << (staffing.nan? ? nil.to_i : staffing.to_i)
         else
-          @staffing_profile_data << @staffing_profile_data.last * 0.8
+          @staffing_profile_data << @staffing_profile_data.last.to_f * 0.8
         end
       end
 

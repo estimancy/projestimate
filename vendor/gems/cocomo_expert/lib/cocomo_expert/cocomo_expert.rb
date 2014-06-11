@@ -100,11 +100,17 @@ module CocomoExpert
     #Return staffing
     def get_staffing(*args)
       @staffing = (get_effort_man_month(args[0], args[1], args[2])*152 / get_delay(args[0], args[1], args[2]))
+      if @staffing.nan?
+        @staffing = nil
+      end
       @staffing
     end
 
     def get_cost(*args)
       @cost = get_effort_man_month(args[0], args[1], args[2]) * 3000
+      if @cost.nan?
+        @cost = nil
+      end
       @cost
     end
   end
