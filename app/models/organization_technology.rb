@@ -45,8 +45,8 @@ class OrganizationTechnology < ActiveRecord::Base
     state :retired
   end
 
-
   belongs_to :organization
+  has_many :pbs_project_elements
   has_and_belongs_to_many :unit_of_works
   has_many :abacus_organizations, :dependent => :destroy
 

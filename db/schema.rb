@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140604080341) do
+ActiveRecord::Schema.define(:version => 20140611130136) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -508,6 +508,7 @@ ActiveRecord::Schema.define(:version => 20140604080341) do
     t.boolean  "is_validated"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "organization_technology_id"
   end
 
   add_index "pbs_project_elements", ["ancestry"], :name => "index_components_on_ancestry"
@@ -793,6 +794,20 @@ ActiveRecord::Schema.define(:version => 20140604080341) do
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
     t.string   "state",           :limit => 20
+  end
+
+  create_table "technologies", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "unit_of_works", :force => true do |t|

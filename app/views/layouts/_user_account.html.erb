@@ -167,6 +167,10 @@
           <%= I18n.t(:work_element) %></a></li>
       <% end %>
 
+      <li class="dropdown"><a href="<%= main_app.technologies_path %>">
+        <%= I18n.t(:organization_technology) %></a>
+      </li>
+
       <% if can? :manage, Peicon or can? :create_and_edit_projestimate_icons, Peicon %>
         <li class="dropdown">
           <a href="<%= main_app.peicons_path %>">

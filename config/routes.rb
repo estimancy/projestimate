@@ -36,6 +36,9 @@
 
 Projestimate::Application.routes.draw do
 
+  resources :technologies
+
+
   resources :estimation_values
   get 'add_note_to_attribute' => 'estimation_values#add_note_to_attribute', :as => 'add_note_to_attribute'
 
