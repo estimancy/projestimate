@@ -5,6 +5,8 @@ $("#project_wbs_product_section .tab-pane.active").html("<%=raw j generate_wbs_p
 
 $(".component_name").html("<%=raw @current_component %>");
 
+$("#buttons").html("<%=raw j(render('users/buttons')) %>")
+
 $('.component_tree ul li').hover(
     function () {
         $(this.children).css('display', 'block');

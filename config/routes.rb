@@ -34,7 +34,14 @@
 #
 #############################################################################
 
+require 'sidekiq/web'
+
 Projestimate::Application.routes.draw do
+
+  # Mount the Sidekiq web interface
+  mount Sidekiq::Web, at: "/sidekiq"
+
+  resources :boxes
 
   resources :technologies
 

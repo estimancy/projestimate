@@ -735,9 +735,6 @@ public
 
         est_val.update_attributes(out_result)
 
-        # Save estimation for the current component parent
-        ###EstimationsWorker.perform_async(start_module_project, @pbs_project_element.id, est_val.id)
-
 
       elsif est_val.in_out == 'input'
         in_result = Hash.new
@@ -765,6 +762,14 @@ public
         end
         est_val.update_attributes(in_result)
       end
+
+      # Save estimation for the current component parent
+      if est_val.save
+        EstimationsWorker.perform_async(@pbs_project_element.id, est_val.id)
+        ###perform_test(@pbs_project_element.id, est_val.id)
+      end
+
+      ###===============================================================================
     end
   end
 

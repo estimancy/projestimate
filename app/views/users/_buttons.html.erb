@@ -2,7 +2,7 @@
   <%= select_tag 'pbs_list', options_for_select(current_project.root_component.subtree.map { |i| [i.name, i.id] }, :selected => current_component.id), :class => 'pull-right', :prompt => 'Product Quick Access' %>
   <% if can? :execute_estimation_plan, current_project %>
     <% if current_module_project %>
-      <% unless current_module_project.pemodule.alias == "uos" %>
+      <% unless current_module_project.pemodule.alias == "uos" || current_component.folder? %>
         <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
       <% end %>
     <% end %>

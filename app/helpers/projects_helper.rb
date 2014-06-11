@@ -86,27 +86,27 @@ module ProjectsHelper
         level_estimation_values = Hash.new
         level_estimation_values = est_val.send("string_data_#{level}")
         total = []
-        if pbs_project_element.folder?
-          if !pbs_project_element.descendants.empty?
-            if est_val_pe_attribute.attr_type == "float" or est_val_pe_attribute.attr_type == "integer"
-              pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id].to_f }
-              res << "#{total.compact.sum.round(2)}"
-            elsif est_val_pe_attribute.attr_type == "date"
-              pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id] }
-              if total.compact.max.nil?
-                res << "-"
-              else
-                res << "#{total.compact.max.strftime("%d/%m/%Y")}"
-              end
-            end
-          end
-        else
+        #if pbs_project_element.folder?
+        #  if !pbs_project_element.descendants.empty?
+        #    if est_val_pe_attribute.attr_type == "float" or est_val_pe_attribute.attr_type == "integer"
+        #      pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id].to_f }
+        #      res << "#{total.compact.sum.round(2)}"
+        #    elsif est_val_pe_attribute.attr_type == "date"
+        #      pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id] }
+        #      if total.compact.max.nil?
+        #        res << "-"
+        #      else
+        #        res << "#{total.compact.max.strftime("%d/%m/%Y")}"
+        #      end
+        #    end
+        #  end
+        ###else
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
             res << '-'
           else
             res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
           end
-        end
+        ###end
         res << '</td>'
       end
       res << '</tr>'
@@ -374,7 +374,6 @@ module ProjectsHelper
 
             refer_module_potential_ids = current_module_project.associated_module_projects
             refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_man_hour", @defined_status.id).first
-            #refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_man_month", @defined_status.id).first
 
             refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, current_project.id, pbs_project_element.id)
             refer_module_project = refer_modules_project.where(["module_project_id IN (?)", refer_module_potential_ids]).last
@@ -544,7 +543,6 @@ module ProjectsHelper
                                    nil,
                                    :class => "input_high_most_likely",
                                    "data-est_val_id" => balancing_attr_est_val.id}"
-
         end
       else
         res << "-"
@@ -806,7 +804,6 @@ module ProjectsHelper
             level_estimation_values = Hash.new
 
             ['low', 'most_likely', 'high'].each do |level|
-
               attribute_type = ""
               read_only_attribute = false
               disable_attribute_level = false
@@ -943,15 +940,13 @@ module ProjectsHelper
     est_val_pe_attribute = est_val.pe_attribute
     res = []
     if pbs_project_element.folder? && !pbs_project_element.descendants.empty?
-      #if !pbs_project_element.descendants.empty?
-        pbs_project_element.descendants.map{|i| res << level_estimation_values[i.id].to_i }
-        text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                       res.compact.sum,
-                       :class => "input-small #{level} #{est_val.id}",
-                       :readonly => true,
-                       "data-module_project_id" => module_project.id,
-                       "data-est_val_id" => est_val.id
-      #end
+      ###pbs_project_element.descendants.map{|i| res << level_estimation_values[i.id].to_i }
+      text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
+                     level_estimation_values[pbs_project_element.id].to_i, ###res.compact.sum,
+                     :class => "input-small #{level} #{est_val.id}",
+                     :readonly => true,
+                     "data-module_project_id" => module_project.id,
+                     "data-est_val_id" => est_val.id
     else
       if pbs_project_element.is_root?
         read_only_value = true
