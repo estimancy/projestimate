@@ -140,7 +140,9 @@ gem 'license_finder'
 gem 'tinymce-rails'
 
 # Tool for asynchronous jobs processing
-###gem 'sidekiq'
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim'
 
 # Gems used only for assets and not required
 # in production environments by default.

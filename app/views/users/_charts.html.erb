@@ -9,7 +9,7 @@
             ['2006',  660,       1120],
             ['2007',  1030,      540]
         ] %>
-        var data = google.visualization.arrayToDataTable(<%=raw generate_chart %>);
+        var data = google.visualization.arrayToDataTable(<%#=raw generate_chart %>);
 
         var options = {
             title: '<% current_project.title %>',

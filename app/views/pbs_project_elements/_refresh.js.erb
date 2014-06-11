@@ -13,6 +13,8 @@ $(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr 
 
 $(".component_name").html("<%=raw @current_component %>");
 
+$("#buttons").html("<%=raw j(render('users/buttons')) %>")
+
 $('.component_tree ul li').hover(
     function () {
       $(this.children).css('display', 'inline');

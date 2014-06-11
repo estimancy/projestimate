@@ -735,9 +735,6 @@ public
 
         est_val.update_attributes(out_result)
 
-        # Save estimation for the current component parent
-        ###EstimationsWorker.perform_async(start_module_project, @pbs_project_element.id, est_val.id)
-
 
       elsif est_val.in_out == 'input'
         in_result = Hash.new
@@ -765,7 +762,140 @@ public
         end
         est_val.update_attributes(in_result)
       end
+
+      # Save estimation for the current component parent
+      if est_val.save
+        ###EstimationsWorker.perform_async(@pbs_project_element.id, est_val.id)
+        perform_test(@pbs_project_element.id, est_val.id)
+      end
+
+      ###===============================================================================
     end
+  end
+
+  def perform_test(pbs_project_elt_id, estimation_value_id)
+    #No authorize required since this method is private and won't be call from any route
+
+    pbs_project_elt = PbsProjectElement.find(pbs_project_elt_id)
+    estimation_value = EstimationValue.find(estimation_value_id)
+    updated_estimation_value = Hash.new
+    pe_attribute = estimation_value.pe_attribute
+    module_project = estimation_value.module_project
+    pemodule = module_project.pemodule
+    wbs_project_elt_root = nil
+
+    # Get the project wbs_project_element root if module with activities
+    if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
+      wbs_project_elt_root = module_project.project.wbs_project_elements.elements_root
+    end
+
+    # Rebuild the tree to have an updated deph for each component
+    WbsProjectElement.rebuild_depth_cache!
+    unless pbs_project_elt.is_root?
+      pbs_ancestors = pbs_project_elt.ancestors.reverse
+      unless pbs_ancestors.empty?
+        pbs_ancestors.each do |component|
+          ['low', 'most_likely', 'high', 'probable'].each do |level|
+            level_estimation_values = Hash.new
+            level_estimation_values = estimation_value.send("string_data_#{level}")
+
+            component_estimation_value = compute_component_estimation_value(component, pe_attribute.id, level_estimation_values, wbs_project_elt_root)
+
+            if wbs_project_elt_root.nil?
+              # get estimation value without activities
+              level_estimation_values[component.id] = component_estimation_value
+            else
+              # get estimation value from WBS-Project_element (with activities)
+              level_estimation_values[component.id][wbs_project_elt_id] = { :value => component_estimation_value }
+            end
+
+            updated_estimation_value["string_data_#{level}"] = level_estimation_values
+          end
+        end
+      end
+
+      # Update the estimation value for all levels
+      estimation_value.update_attributes(updated_estimation_value)
+    end
+  end
+
+
+  def compute_component_estimation_value(component, pe_attribute_id, level_estimation_value, wbs_project_elt_root=nil)
+    #No authorize required since this method is private and won't be call from any route
+    component_children_results_array = Array.new
+    new_effort_man_hour = Hash.new
+    pe_attribute = PeAttribute.find(pe_attribute_id)
+    node_children_results_array = Array.new
+
+    #component.children.each do |node|
+    if component.folder?
+      component.descendants.each do |child|
+        if wbs_project_elt_root.nil?
+          node_children_results_array << level_estimation_value[child.id]
+        else
+          # get value with activities
+          wbs_est_val = level_estimation_value[child.id][wbs_project_elt_root.id]
+          node_children_results_array << wbs_est_val.nil? ? nil : wbs_est_val[:value]
+        end
+      end
+    else
+      if wbs_project_elt_root.nil?
+        node_children_results_array << level_estimation_value[component.id]
+      else
+        wbs_est_val = level_estimation_value[component.id][wbs_project_elt_root.id]
+        node_children_results_array << wbs_est_val.nil? ? nil : wbs_est_val[:value]
+      end
+    end
+
+    # get the result value according to the pe_attribute type
+    component_estimation_value = nil
+    attribute_type = pe_attribute.attr_type
+    case attribute_type
+      when 'integer', 'float'
+        ###component_estimation_value = node_children_results_array.compact.sum
+        node_children_results_array = node_children_results_array.compact.collect!{ |i| i.to_f }
+        component_estimation_value = node_children_results_array.inject{ |sum, el| sum + el }
+      when 'date'
+        component_estimation_value = node_children_results_array.compact.max
+      else
+        # see if the pe_attribute type is list or text
+        component_estimation_value = node_children_results_array.last
+    end
+
+    component_estimation_value
+  end
+
+
+  def compute_component_estimation_value_SAVE(component, pe_attribute_id, level_estimation_value, wbs_project_elt_root=nil)
+    #No authorize required since this method is private and won't be call from any route
+    component_children_results_array = Array.new
+    new_effort_man_hour = Hash.new
+    pe_attribute = PeAttribute.find(pe_attribute_id)
+    node_children_results_array = Array.new
+
+    # see if the pe_attribute type is list or text
+
+    component.children.each do |node|
+      # Sort node subtree by ancestry_depth
+      sorted_node_elements = node.subtree#.order('ancestry_depth desc')
+      sorted_node_elements.each do |child|
+        if child.is_childless?
+          if wbs_project_elt_root.nil?
+            node_children_results_array << level_estimation_value[child.id]
+          else
+            # get value with activities
+            wbs_est_val = level_estimation_value[child.id][wbs_project_elt_root.id]
+            node_children_results_array << wbs_est_val.nil? ? nil : wbs_est_val[:value]
+          end
+          # current child has children... need to compute value with its children before
+        else
+          node_children_results_array << compute_component_estimation_value(child, level_estimation_value, wbs_project_elt_root)
+        end
+      end
+    end
+
+    # get the result value according to the pe_attribute type
+    compute_component_value(component, pe_attribute_id, node_children_results_array)
   end
 
 
