@@ -139,6 +139,77 @@
             var radar_ctx = $('#canvas_radar').get(0).getContext("2d");
             var radarChart = new Chart(radar_ctx).Radar(cocomo_advanced_input_data, radarOptions);
 
+            // Line chart for staffing profile curve
+            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="staffing_curve" class="canvas" width="350" height="300"></canvas></div>');
+
+            var data = {
+              labels : ["P1","P2","P3","P4","P5","P6","P7"],
+              datasets : [
+                {
+                  fillColor : "rgba(0,220,0,1)",
+                  strokeColor : "rgba(220,220,220,1)",
+                  pointColor : "rgba(220,220,220,1)",
+                  pointStrokeColor : "#fff",
+                  data : <%= @staffing_profile_data.to_json %>
+                }
+              ]
+            }
+
+            var staffing_options = {
+              bezierCurve: false,
+              scaleSteps: 11,
+              scaleOverlay: true,
+              footNote : "Staffing Distribution",
+              // new attribute for the CharNew.js library
+              savePng : true,
+              canvasBorders : true,
+              canvasBordersWidth : 2,
+              canvasBordersColor : "black",
+              yAxisLeft : true,
+              yAxisRight : true,
+              yAxisLabel : "Y axis",
+              yAxisFontFamily : "'Arial'",
+              yAxisFontSize : 14,
+              yAxisFontStyle : "normal",
+              yAxisFontColor : "#666",
+              xAxisLabel : "",
+              xAxisFontFamily : "'Arial'",
+              xAxisFontSize : 14,
+              xAxisFontStyle : "normal",
+              xAxisFontColor : "#666",
+              yAxisUnit : "UNIT",
+              yAxisUnitFontFamily : "'Arial'",
+              yAxisUnitFontSize : 12,
+              yAxisUnitFontStyle : "normal",
+              yAxisUnitFontColor : "#666",
+              graphTitle : "",
+              graphTitleFontFamily : "'Arial'",
+              graphTitleFontSize : 18,
+              graphTitleFontStyle : "bold",
+              graphTitleFontColor : "#666",
+              graphSubTitle : "",
+              graphSubTitleFontFamily : "'Arial'",
+              graphSubTitleFontSize : 16,
+              graphSubTitleFontStyle : "normal",
+              graphSubTitleFontColor : "#666",
+              footNote : "Profile distribution",
+              footNoteFontFamily : "'Arial'",
+              footNoteFontSize : 14,
+              footNoteFontStyle : "bold",
+              footNoteFontColor : "#666",
+              legendFontFamily : "'Arial'",
+              legendFontSize : 14,
+              legendFontStyle : "normal",
+              legendFontColor : "#666",
+              legendBlockSize : 12,
+              legendBorders : true,
+              legendBordersWidth : 1,
+              legendBordersColor : "#666",
+            }
+
+            var staffing_ctx = $('#staffing_curve').get(0).getContext("2d");
+            var staffing_bar_chart = new Chart(staffing_ctx).Bar(data, staffing_options);
+
         <% end %>
         ///========================================= END COCOMO-ADVANCED AND COCOMOII (MODULES USING FACTORS  ======================================
 
@@ -405,6 +476,7 @@
 //            //var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(all_attribute_data);
 //            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
 //        });
+
 
     });
 </script>

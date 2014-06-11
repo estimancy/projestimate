@@ -12,9 +12,9 @@
   </tr>
   </thead>
   <tbody>
-  <% if @users.empty? %>
+    <% if @users.empty? %>
       <p style="text-align:center;"> <%= I18n.t('empty') %></p>
-  <% else %>
+    <% else %>
       <% @users.each do |user| %>
         <tr>
           <td><%= user.last_name %></td>
@@ -35,8 +35,7 @@
       <% end %>
 
       <%= render :partial => 'layouts/footer_table' %>
-
-  <% end %>
+    <% end %>
   </tbody>
 </table>
 
