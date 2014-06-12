@@ -1582,13 +1582,23 @@ public
       attr_staffing = PeAttribute.where('alias=? AND record_status_id=? ', "staffing", @defined_status).first
       staffing = @current_module_project.estimation_values.where(pe_attribute_id: attr_staffing.id).first.string_data_probable[current_component.id]
       @staffing_profile_data = []
-      @staffing_profile_data << (staffing.nan? ? nil.to_i : staffing.to_i)
+      if staffing.is_a?(Integer) || staffing.is_a?(Float)
+        @staffing_profile_data <<  staffing.to_i
+      else
+        @staffing_profile_data << nil.to_i
+      end
+
 
       6.times do |i|
         if i < 2
           @staffing_profile_data << @staffing_profile_data.last.to_f * 1.2
         elsif i == 2
-          @staffing_profile_data << (staffing.nan? ? nil.to_i : staffing.to_i)
+          if staffing.is_a?(Integer) || staffing.is_a?(Float)
+            @staffing_profile_data << staffing.to_i
+          else
+            @staffing_profile_data << nil.to_i
+          end
+
         else
           @staffing_profile_data << @staffing_profile_data.last.to_f * 0.8
         end
@@ -1607,9 +1617,16 @@ public
     @current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?) AND pe_attribute_id != ?', %w(output both), end_date_attribute)
     # Outputs attributes array
     @current_mp_outputs_attributes = []
-    @current_mp_outputs_attr_modules.each do |attr_module|
-      @current_mp_outputs_attributes << attr_module.pe_attribute
+
+    # For the Balancing module, only selected balancing attribute results will be displayed in chart
+    if @current_module_project.pemodule.alias == Projestimate::Application::BALANCING_MODULE
+      @current_mp_outputs_attributes << current_balancing_attribute
+    else
+      @current_mp_outputs_attr_modules.each do |attr_module|
+        @current_mp_outputs_attributes << attr_module.pe_attribute
+      end
     end
+
     # get all Attributes aliases
     @current_mp_outputs_attributes_aliases = @current_mp_outputs_attributes.map(&:alias)
     puts "@current_mp_outputs_attributes_aliases = #{@current_mp_outputs_attributes_aliases}"
@@ -1689,13 +1706,13 @@ public
 
     # get the all project modules for the charts labels
     @project_modules = []
-    @corresponding_attributes_alises_for_init = %w(effort_man_month effort_man_hour effort_man_week cost delay staffing sloc)
+    @corresponding_attributes_aliases_for_init = %w(effort_man_month effort_man_hour effort_man_week cost delay staffing sloc)
     # contains all the modules attributes labels
     @init_attributes_labels = []
     @attributes = []
     @project_module_projects.each do |mp|
       @project_modules << mp.pemodule
-      @attributes << mp.pemodule.pe_attributes.where('alias IN (?)', @corresponding_attributes_alises_for_init)
+      @attributes << mp.pemodule.pe_attributes.where('alias IN (?)', @corresponding_attributes_aliases_for_init)
       #@attributes_labels = @attributes_labels + mp.pemodule.pe_attributes.all.map(&:alias)
     end
     @attributes = @attributes.flatten.sort.uniq

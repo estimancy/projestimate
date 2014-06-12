@@ -1141,6 +1141,7 @@ fr:
   unit_staffing: "Personnes"
   unit_ksloc: "Lignes de code (kilo)"
   unit_sloc: "Lignes de code"
+  title_input_data_factors: "%{module_name} : facteurs des données en entrée"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

@@ -91,7 +91,7 @@
                 graphSubTitleFontSize : 16,
                 graphSubTitleFontStyle : "normal",
                 graphSubTitleFontColor : "#666",
-                footNote : "Cocomo-advanced input data factors",
+                footNote : "<%= I18n.t(:title_input_data_factors, :module_name => @current_module_project.pemodule.title.to_s) %>", //"Cocomo II input data factors",
                 footNoteFontFamily : "'Arial'",
                 footNoteFontSize : 14,
                 footNoteFontStyle : "bold",
@@ -203,7 +203,7 @@
               legendBlockSize : 12,
               legendBorders : true,
               legendBordersWidth : 1,
-              legendBordersColor : "#666",
+              legendBordersColor : "#666"
             }
 
             var staffing_ctx = $('#staffing_curve').get(0).getContext("2d");
