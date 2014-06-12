@@ -88,6 +88,10 @@ module CocomoExpert
       f = 0.28 + 0.2 * (1/100) * sf.sum.to_f
       @delay = 3.76 * (@effort ** f)
       @delay = @delay.to_f * project.organization.number_hours_per_month
+      if @delay.nan?
+        @delay = nil
+      end
+
       @delay
     end
 
@@ -101,12 +105,20 @@ module CocomoExpert
     #Return staffing
     def get_staffing(*args)
       @staffing = (get_effort_man_month(args[0], args[1], args[2]) * project.organization.number_hours_per_month) / get_delay(args[0], args[1], args[2])
+      if @staffing.nan?
+        @staffing = nil
+      end
+
       @staffing
     end
 
     def get_cost(*args)
       project = Project.find(args[0].to_i)
       @cost = get_effort_man_month(args[0], args[1], args[2]) * project.organization.cost_per_hour
+      if @cost.nan?
+        @cost = nil
+      end
+
       @cost
     end
   end
