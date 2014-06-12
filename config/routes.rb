@@ -41,10 +41,7 @@ Projestimate::Application.routes.draw do
   # Mount the Sidekiq web interface
   mount Sidekiq::Web, at: "/sidekiq"
 
-  resources :boxes
-
   resources :technologies
-
 
   resources :estimation_values
   get 'add_note_to_attribute' => 'estimation_values#add_note_to_attribute', :as => 'add_note_to_attribute'

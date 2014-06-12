@@ -28,9 +28,7 @@ module CocomoBasic
 
     #Constructor
     def initialize(elem)
-      #elem['ksloc'].blank? ?
-      #    @coef_kls = nil :
-          @coef_kls = elem['ksloc'].to_f
+      @coef_kls = elem['ksloc'].to_f
       case elem['complexity']
         when 'Organic'
           set_cocomo_organic
@@ -68,13 +66,7 @@ module CocomoBasic
     #Getters
     #Return effort (in man-month)
     def get_effort_man_month(*args)
-      #if @coef_kls && @complexity
-        @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
-      #else
-      #  @effort = nil
-      #end
-
-      #return @effort
+      @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
     end
 
     #Return effort (in man-hour)
@@ -85,53 +77,30 @@ module CocomoBasic
 
     #Return delay (in month)
     def get_delay(*args)
-      #if @coef_kls && @complexity
-        @delay = (2.5*((get_effort_man_month)**@coef_c)).to_f
-        @delay = @delay * 152
-        @delay
-      #else
-      #  nil
-      #end
-
-      #return @delay
+      project = Project.find(args[0].to_i)
+      @delay = (2.5*((get_effort_man_month)**@coef_c)).to_f
+      @delay = @delay.to_f * project.organization.number_hours_per_month
+      @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      #if @coef_kls && @complexity
-        @end_date = (Time.now + (get_delay).to_i.hours)
-      #else
-      #  nil
-      #end
-
-      #return @end_date
+      @end_date = (Time.now + (get_delay).to_i.hours)
     end
 
     #Return staffing
     def get_staffing(*args)
-      #if @coef_kls && @complexity
-        @staffing = (get_effort_man_month*152 / get_delay)
-      #else
-      #  nil
-      #end
-
-      #return @staffing
+      project = Project.find(args[0].to_i)
+      @staffing = (get_effort_man_month * project.organization.number_hours_per_month) / get_delay
     end
 
     def get_complexity(*args)
-      #if @complexity
-        @complexity
-      #else
-      #  nil
-      #end
+      @complexity
     end
 
     def get_cost(*args)
-      #if @complexity
-      get_effort_man_month * 3000
-      #else
-      #  nil
-      #end
+      project = Project.find(args[0].to_i)
+      get_effort_man_month * project.organization.cost_per_hour
     end
   end
 
