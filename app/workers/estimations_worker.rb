@@ -20,6 +20,7 @@
 
 class EstimationsWorker
   include Sidekiq::Worker
+  sidekiq_options :queue => :often, :retry => true, :backtrace => true
 
   def perform(pbs_project_elt_id, estimation_value_id)
     #No authorize required since this method is private and won't be call from any route
