@@ -69,7 +69,6 @@ module CocomoAdvanced
     # Return effort
     def get_effort_man_month(*args)
       sf = Array.new
-
       aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
       aliass.each do |a|
         input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a, factor_type: "advanced").first.id,
@@ -85,22 +84,24 @@ module CocomoAdvanced
 
     #Return delay (in hour)
     def get_delay(*args)
+      project = Project.find(args[0].to_i)
       @effort = get_effort_man_month(args[0], args[1], args[2])
       @delay = (2.5*(@effort**@coef_c)).to_f
-      @delay = @delay * 152
+      @delay = @delay.to_f * project.organization.number_hours_per_month
       @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      p = Project.find(args[0].to_i)
-      @end_date = (p.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      project = Project.find(args[0].to_i)
+      @end_date = (project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = ((get_effort_man_month(args[0], args[1], args[2]))*152 / get_delay(args[0], args[1], args[2]))
+      project = Project.find(args[0].to_i)
+      @staffing = get_effort_man_month(args[0], args[1], args[2]) * project.organization.number_hours_per_month / get_delay(args[0], args[1], args[2])
       @staffing
     end
 
@@ -109,7 +110,8 @@ module CocomoAdvanced
     end
 
     def get_cost(*args)
-      @cost = get_effort_man_month(args[0], args[1], args[2]) * 3000
+      project = Project.find(args[0].to_i)
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * project.organization.cost_per_hour
       @cost
     end
   end

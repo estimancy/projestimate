@@ -71,6 +71,7 @@ module CocomoExpert
     #Return delay (in month)
     def get_delay(*args)
       @effort = get_effort_man_month(args[0], args[1], args[2])
+      project =  Project.find(args[0])
 
       sf = Array.new
       aliass = %w(prec flex resl team pmat)
@@ -86,31 +87,26 @@ module CocomoExpert
 
       f = 0.28 + 0.2 * (1/100) * sf.sum.to_f
       @delay = 3.76 * (@effort ** f)
-      @delay = @delay.to_f * 152
+      @delay = @delay.to_f * project.organization.number_hours_per_month
       @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      p = Project.find(args[0].to_i)
-      @end_date = (p.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      project = Project.find(args[0].to_i)
+      @end_date = (project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort_man_month(args[0], args[1], args[2])*152 / get_delay(args[0], args[1], args[2]))
-      if @staffing.nan?
-        @staffing = nil
-      end
+      @staffing = (get_effort_man_month(args[0], args[1], args[2]) * project.organization.number_hours_per_month) / get_delay(args[0], args[1], args[2])
       @staffing
     end
 
     def get_cost(*args)
-      @cost = get_effort_man_month(args[0], args[1], args[2]) * 3000
-      if @cost.nan?
-        @cost = nil
-      end
+      project = Project.find(args[0].to_i)
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * project.organization.cost_per_hour
       @cost
     end
   end

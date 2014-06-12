@@ -1,0 +1,28 @@
+<%= simple_form_for(@technology) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :description %>
+  </div>
+
+  <table>
+    <tr>
+      <td>
+        <%= f.association :record_status, :label => I18n.t('record_status'),
+                          :collection => @technology.record_status_collection,
+                          :input_html => {:class => 'record_status'},
+                          :selected => (@technology.is_defined_or_nil? ? @proposed_status.id : @technology.record_status_id),
+                          :disabled => (true if @technology.is_retired?) %>
+      </td>
+      <td>
+        <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @technology.is_custom?) %>
+      </td>
+    </tr>
+  </table>
+  <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

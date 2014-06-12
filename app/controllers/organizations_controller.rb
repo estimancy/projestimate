@@ -90,6 +90,11 @@ class OrganizationsController < ApplicationController
         ouc.save(validate: false)
       end
 
+      Technology.all.each do |technology|
+        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name,  description: technology.description, organization_id: @organization.id)
+        ot.save(validate: false)
+      end
+
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
     else
       render action: 'new'
