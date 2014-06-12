@@ -1527,12 +1527,12 @@ public
     # The CocomoII = Cocomo_Expert factors
     @cocomo2_factors_corresponding = []
     # Contains all attribute name according to their aliases
-    @all_attributes_names = {"effort_man_hour" => "Effort Man Hour", "effort_man_month" => "Effort Man Month", "effort_man_week" => "Effort Man Week", "cost" => "Cost",
-                            "delay" => "Delay", "end_date" => "End Date", "staffing" => "Staffing", "staffing_complexity" => "Staffing complexity", "duration" => "Duration",
-                            "effective_technology"=>"Effective technology", "schedule"=>"Schedule", "defects"=>"Defects", "note"=>"Note", "methodology"=>"Methodology",
-                            "real_time_constraint"=>"Real-time Constraint", "platform_maturity"=>"Platform Maturity", "list_sandbox"=>"Sandbox List", "date_sandbox"=>"Sandbox Date",
-                            "description_sandbox"=>"Sandbox Description", "float_sandbox"=>"Sandbox Float", "integer_sandbox"=>"Sandbox Integer", "complexity"=>"Complexity",
-                            "ksloc"=>"KSLOC", "sloc"=>"SLOC", "size"=>"Size"}
+    @all_attributes_names = {"effort_man_hour" => I18n.t(:effort_man_hour), "effort_man_month" => I18n.t(:effort_man_month), "effort_man_week" => I18n.t(:effort_man_week), "cost" => I18n.t(:cost),
+                            "delay" => I18n.t(:delay), "end_date" => I18n.t(:end_date), "staffing" => I18n.t(:staffing), "staffing_complexity" => I18n.t(:staffing_complexity), "duration" => I18n.t(:duration),
+                            "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
+                            "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
+                            "description_sandbox"=>I18n.t(:description_sandbox), "float_sandbox" => I18n.t(:float_sandbox), "integer_sandbox"=> I18n.t(:integer_sandbox), "complexity"=>I18n.t(:complexity),
+                            "ksloc"=>I18n.t(:ksloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
 
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
