@@ -47,8 +47,9 @@ class Organization < ActiveRecord::Base
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations
   has_many :subcontractors
   has_many :abacus_organizations
-
   has_many :projects
+
+  belongs_to :currency
 
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}

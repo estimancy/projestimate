@@ -35,7 +35,7 @@ class EstimationsWorker
 
     # Get the project wbs_project_element root if module with activities
     if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
-      wbs_project_elt_root = module_project.project.wbs_project_elements.elements_root
+      wbs_project_elt_root = module_project.project.wbs_project_elements.elements_root.first
     end
 
     # Rebuild the tree to have an updated deph for each component
@@ -114,5 +114,26 @@ class EstimationsWorker
     component_estimation_value
   end
 
+  # Get the component estimation_value according to the in_out type (input or output)
+  def compute_estimation_values_with_activities(in_out, module_project_id, wbs_project_elt_root_id, component_id)
+    module_project = ModuleProject.find(module_project_id)
+
+    # The in_out attribute tells if it is an input or output
+    case in_out
+      when 'input'
+        if module_project.pemodule.yes_for_input? || module_project.pemodule.yes_for_input_output_with_ratio? || module_project.pemodule.yes_for_input_output_without_ratio?
+        else
+
+        end
+          when 'output'
+        if module_project.pemodule.yes_for_output_with_ratio? || module_project.pemodule.yes_for_output_without_ratio? || module_project.pemodule.yes_for_input_output_with_ratio? || module_project.pemodule.yes_for_input_output_without_ratio?
+        else
+
+        end
+
+      else
+        # Nothing (data are even input or output)
+    end
+  end
 
 end

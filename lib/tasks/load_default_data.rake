@@ -114,6 +114,12 @@ def load_data!
       rs.update_attribute(:record_status_id, rsid)
     end
 
+  puts '   - Currencies'
+    Currency.create(:name => 'Euro', :alias => 'euros', :description => 'European Union currency', :iso_code => 'EUR', :iso_code_number => '978', :sign => '€', :conversion_rate => 1.000000, :record_status_id => rsid)
+    Currency.create(:name => 'Dollar', :alias => 'dollars', :description => 'United State Dollar', :iso_code => 'USD', :iso_code_number => '840', :sign => '$', :conversion_rate => 1.312100, :record_status_id => rsid)
+    Currency.create(:name => 'Pound', :alias => 'pounds', :description => 'Great Britain currency', :iso_code => 'GBP', :iso_code_number => '826', :sign => '£', :conversion_rate => 0.851000, :record_status_id => rsid)
+
+
     puts '   - Project areas'
     #Default project area
     ProjectArea.create(:name => 'SW Project', :description => 'Software', :record_status_id => rsid)

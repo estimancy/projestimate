@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140611130136) do
+ActiveRecord::Schema.define(:version => 20140613140336) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -178,6 +178,10 @@ ActiveRecord::Schema.define(:version => 20140611130136) do
     t.string   "name"
     t.string   "alias"
     t.text     "description"
+    t.string   "iso_code"
+    t.string   "iso_code_number"
+    t.string   "sign"
+    t.float    "conversion_rate"
     t.string   "uuid"
     t.integer  "record_status_id"
     t.string   "custom_value"
@@ -484,7 +488,7 @@ ActiveRecord::Schema.define(:version => 20140611130136) do
     t.datetime "updated_at"
     t.float    "number_hours_per_day"
     t.float    "number_hours_per_month"
-    t.string   "cost_unit"
+    t.integer  "currency_id"
     t.float    "cost_per_hour"
   end
 
