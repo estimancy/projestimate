@@ -872,11 +872,14 @@ public
 
   # This estimation plan method is called for each component
   def run_estimation_plan(input_data, pbs_project_element_id, level, project, current_mp_to_execute)
-    @project = current_project
+    @project = project #current_project
     authorize! :execute_estimation_plan, @project
 
     @result_hash = Hash.new
     inputs = Hash.new
+    # Add the current project id in input data parameters
+    input_data['current_project_id'.to_sym] = @project.id
+
     #Need to add input for pbs_project_element and module_project
     input_data['pbs_project_element_id'.to_sym] = pbs_project_element_id
     input_data['module_project_id'.to_sym] = current_mp_to_execute.id
@@ -1531,7 +1534,7 @@ public
                             "delay" => I18n.t(:delay), "end_date" => I18n.t(:end_date), "staffing" => I18n.t(:staffing), "staffing_complexity" => I18n.t(:staffing_complexity), "duration" => I18n.t(:duration),
                             "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
                             "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
-                            "description_sandbox"=>I18n.t(:description_sandbox), "float_sandbox" => I18n.t(:float_sandbox), "integer_sandbox"=> I18n.t(:integer_sandbox), "complexity"=>I18n.t(:complexity),
+                            "description_sandbox"=>I18n.t(:description_sandbox), "float_sandbox" =>I18n.t(:float_sandbox), "integer_sandbox"=> I18n.t(:integer_sandbox), "complexity"=>I18n.t(:complexity),
                             "ksloc"=>I18n.t(:ksloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
 
     # Attributes Unit : Table of Attributes units according to their aliases
@@ -1582,9 +1585,9 @@ public
       attr_staffing = PeAttribute.where('alias=? AND record_status_id=? ', "staffing", @defined_status).first
       staffing = @current_module_project.estimation_values.where(pe_attribute_id: attr_staffing.id).first.string_data_probable[current_component.id]
       @staffing_profile_data = []
-      if staffing.is_a?(Integer) || staffing.is_a?(Float)
+      begin
         @staffing_profile_data <<  staffing.to_i
-      else
+      rescue
         @staffing_profile_data << nil.to_i
       end
 
@@ -1593,9 +1596,9 @@ public
         if i < 2
           @staffing_profile_data << @staffing_profile_data.last.to_f * 1.2
         elsif i == 2
-          if staffing.is_a?(Integer) || staffing.is_a?(Float)
+          begin
             @staffing_profile_data << staffing.to_i
-          else
+          rescue
             @staffing_profile_data << nil.to_i
           end
 

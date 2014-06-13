@@ -26,11 +26,12 @@ module CocomoExpert
   #Definition of CocomoBasic
   class CocomoExpert
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :project
 
     #Constructor
     def initialize(elem)
       @coef_kls = elem['ksloc'].to_f
+      @project = Project.find(elem[:current_project_id])
     end
 
     # Return effort
@@ -43,7 +44,7 @@ module CocomoExpert
         input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
                                         pbs_project_element_id: args[2],
                                         module_project_id: args[1],
-                                        project_id: args[0])
+                                        project_id: @project.id)
         if !input_cocomo.nil? && !input_cocomo.empty?
           sf << input_cocomo.first.coefficient
         end
@@ -54,7 +55,7 @@ module CocomoExpert
         input_cocomo = InputCocomo.where( factor_id: Factor.where(alias: a).first.id,
                                           pbs_project_element_id: args[2],
                                           module_project_id: args[1],
-                                          project_id: args[0])
+                                          project_id: @project.id)
         if !input_cocomo.nil? && !input_cocomo.empty?
           em << input_cocomo.first.coefficient
         end
@@ -71,7 +72,6 @@ module CocomoExpert
     #Return delay (in month)
     def get_delay(*args)
       @effort = get_effort_man_month(args[0], args[1], args[2])
-      project =  Project.find(args[0])
 
       sf = Array.new
       aliass = %w(prec flex resl team pmat)
@@ -79,7 +79,7 @@ module CocomoExpert
         input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a).first.id,
                                          pbs_project_element_id: args[2],
                                          module_project_id: args[1],
-                                         project_id: args[0])
+                                         project_id: @project.id)
         if !input_cocomo.nil? && !input_cocomo.empty?
           sf << input_cocomo.first.coefficient
         end
@@ -87,7 +87,7 @@ module CocomoExpert
 
       f = 0.28 + 0.2 * (1/100) * sf.sum.to_f
       @delay = 3.76 * (@effort ** f)
-      @delay = @delay.to_f * project.organization.number_hours_per_month.to_f
+      @delay = @delay.to_f * @project.organization.number_hours_per_month.to_f
       if @delay.nan?
         @delay = nil
       end
@@ -98,13 +98,13 @@ module CocomoExpert
     #Return end date
     def get_end_date(*args)
       project = Project.find(args[0].to_i)
-      @end_date = (project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      @end_date = (@project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort_man_month(args[0], args[1], args[2]) * project.organization.number_hours_per_month.to_f) / get_delay(args[0], args[1], args[2])
+      @staffing = (get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f) / get_delay(args[0], args[1], args[2])
       if @staffing.nan?
         @staffing = nil
       end
@@ -114,7 +114,7 @@ module CocomoExpert
 
     def get_cost(*args)
       project = Project.find(args[0].to_i)
-      @cost = get_effort_man_month(args[0], args[1], args[2]) * project.organization.cost_per_hour
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.cost_per_hour.to_f
       if @cost.nan?
         @cost = nil
       end

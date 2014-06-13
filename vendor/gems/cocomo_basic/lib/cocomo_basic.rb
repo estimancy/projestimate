@@ -24,11 +24,13 @@ module CocomoBasic
   #Definition of CocomoBasic
   class CocomoBasic
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :delay
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :delay, :project
 
     #Constructor
     def initialize(elem)
       @coef_kls = elem['ksloc'].to_f
+      @project = Project.find(elem[:current_project_id])
+
       case elem['complexity']
         when 'Organic'
           set_cocomo_organic
@@ -77,9 +79,8 @@ module CocomoBasic
 
     #Return delay (in month)
     def get_delay(*args)
-      project = Project.find(args[0].to_i)
       @delay = (2.5*((get_effort_man_month)**@coef_c)).to_f
-      @delay = @delay.to_f * project.organization.number_hours_per_month
+      @delay = @delay.to_f * @project.organization.number_hours_per_month.to_f
       @delay
     end
 
@@ -90,8 +91,7 @@ module CocomoBasic
 
     #Return staffing
     def get_staffing(*args)
-      project = Project.find(args[0].to_i)
-      @staffing = (get_effort_man_month * project.organization.number_hours_per_month) / get_delay
+      @staffing = (get_effort_man_month * @project.organization.number_hours_per_month.to_f) / get_delay
     end
 
     def get_complexity(*args)
@@ -99,8 +99,7 @@ module CocomoBasic
     end
 
     def get_cost(*args)
-      project = Project.find(args[0].to_i)
-      get_effort_man_month * project.organization.cost_per_hour
+      get_effort_man_month * @project.organization.cost_per_hour.to_f
     end
   end
 
