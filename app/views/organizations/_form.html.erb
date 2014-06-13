@@ -4,7 +4,6 @@
     <% if action_name.in?(%w(edit update)) %>
         <li><a href="#tabs-2"><%= I18n.t(:pe_attributes) %> </a></li>
         <li><a href="#tabs-3"><%= I18n.t(:attributes_settings) %> </a></li>
-        <li><a href="#tabs-12"><%= I18n.t(:text_measuring_units) %> </a></li>
         <li><a href="#tabs-4"><%= I18n.t(:organization_technology) %> </a></li>
         <li><a href="#tabs-5"><%= I18n.t(:organization_unit_of_work) %> </a></li>
         <li><a href="#tabs-6">Unit of Work's Complexity </a></li>
@@ -17,9 +16,29 @@
 
   <div id="tabs-1">
     <%= simple_form_for(@organization) do |f| %>
-
+      <div>
         <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
         <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      </div> <br />
+
+      <div id="accordion2" class="accordion">
+        <div class="accordion-group accordion-caret">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+              <i class="icon-caret-down"></i>
+              <b><%= I18n.t(:text_measuring_units) %></b>
+            </a>
+          </div>
+          <div id="collapseTwo" class="accordion-body in collapse">
+              <div class="accordion-inner">
+                <%= f.input :number_hours_per_day, :label => I18n.t('number_hours_per_day'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+                <%= f.input :number_hours_per_month, :label => I18n.t('number_hours_per_month'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+                <%= f.input :cost_unit, collection: [['Euros', 'euros'], ['Dollars', 'dollars']], :label => I18n.t(:cost_unit), :required => true %>
+                <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+              </div>
+          </div>
+        </div>
+      </div>
 
         <div class="actions-tabs">
           <% if can? :edit_organizations, Organization %>
@@ -352,13 +371,6 @@
 
   <div id="tabs-11">
     <%# render :partial => 'organization_technologies/factors_abacus' %>
-  </div>
-
-  <div id="tabs-12">
-    <b><%= I18n.t(:text_measuring_units) %></b>
-    <br><br>
-    <%= render :partial => 'organizations/measuring_units' %>
-    <br>
   </div>
 
 <% end %>

@@ -177,8 +177,6 @@ Projestimate::Application.routes.draw do
   resources :organizations
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
-  post '/set_organization_measuring_units' => 'organizations#set_organization_measuring_units', :as => 'set_organization_measuring_units'
-  put '/set_organization_measuring_units' => 'organizations#set_organization_measuring_units', :as => 'set_organization_measuring_units'
 
   resources :subcontractors
   #match '/subcontractors', :to => 'subcontractors#new', :via => :get, :as => :get_subcontractor

@@ -52,7 +52,8 @@ class Organization < ActiveRecord::Base
 
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
+  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }###, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
+  validates :cost_unit, :presence => true
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
