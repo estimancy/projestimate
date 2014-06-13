@@ -1539,7 +1539,7 @@ public
 
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
-        'cost' => (@project_organization.cost_unit.nil? ? "Unit" : @project_organization.cost_unit.capitalize),
+        'cost' => (@project_organization.currency.nil? ? "Unit" : @project_organization.currency.name.capitalize),
         'effort_man_month' => I18n.t(:unit_effort_man_month), 'effort_man_hour' =>  I18n.t(:unit_effort_man_hour),
         'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
         'ksloc' => I18n.t(:unit_ksloc), 'sloc' => I18n.t(:unit_sloc)

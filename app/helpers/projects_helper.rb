@@ -79,7 +79,7 @@ module ProjectsHelper
       when "delay"
         "(#{I18n.t(:unit_delay)})"
       when "cost"
-        "(#{current_project.organization.cost_unit})"
+        "(#{current_project.organization.currency.name})"
     else
       ""
     end
