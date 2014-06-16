@@ -9,7 +9,6 @@
         <% data_array = []
            input_data_array = []
            cocomo_advanced_input_data_array = []
-           #fillColor_array = ["rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
            #fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb((255,255,0)", "rgba(220,220,220,0.5)", "rgba(151,187,205,0.5)", "rgba(151,187,205,1)", "rgba(220,220,220,1)"]
            fillColor_array = ["rgb(135,206,250)", "rgb(255,165,0)", "rgb(0,255,255)", "rgb(151,187,205)", "rgb(151,187,205)"]
            pie_fillColor_array = ["#F38630", "#E0E4CC", "#69D2E7", "#D97041", "#C7604C", "#21323D", "#9D9B7F", "#7D4F6D", "#584A5E"]
@@ -92,7 +91,7 @@
                 graphSubTitleFontSize : 16,
                 graphSubTitleFontStyle : "normal",
                 graphSubTitleFontColor : "#666",
-                footNote : "Cocomo-advanced input data factors",
+                footNote : "<%= I18n.t(:title_input_data_factors, :module_name => @current_module_project.pemodule.title.to_s) %>", //"Cocomo II input data factors",
                 footNoteFontFamily : "'Arial'",
                 footNoteFontSize : 14,
                 footNoteFontStyle : "bold",
@@ -204,7 +203,7 @@
               legendBlockSize : 12,
               legendBorders : true,
               legendBordersWidth : 1,
-              legendBordersColor : "#666",
+              legendBordersColor : "#666"
             }
 
             var staffing_ctx = $('#staffing_curve').get(0).getContext("2d");

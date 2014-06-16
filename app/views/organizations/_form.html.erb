@@ -4,6 +4,7 @@
     <% if action_name.in?(%w(edit update)) %>
         <li><a href="#tabs-2"><%= I18n.t(:pe_attributes) %> </a></li>
         <li><a href="#tabs-3"><%= I18n.t(:attributes_settings) %> </a></li>
+        <li><a href="#tabs-12"><%= I18n.t(:text_measuring_units) %> </a></li>
         <li><a href="#tabs-4"><%= I18n.t(:organization_technology) %> </a></li>
         <li><a href="#tabs-5"><%= I18n.t(:organization_unit_of_work) %> </a></li>
         <li><a href="#tabs-6">Unit of Work's Complexity </a></li>
@@ -18,18 +19,39 @@
 
   <div id="tabs-1">
     <%= simple_form_for(@organization) do |f| %>
-      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-      <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      <div>
+        <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      </div> <br />
 
-      <div class="actions-tabs">
-        <% if can? :edit_organizations, Organization %>
-            <% if action_name == 'edit' %>
-                <%= submit_tag I18n.t('save'), :class => 'btn' %>
-            <% end %>
-            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-        <% end %>
-        <%= link_to I18n.t('back'), organizationals_params_path, :class => 'btn' %>
+      <div id="accordion2" class="accordion">
+        <div class="accordion-group accordion-caret">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+              <i class="icon-caret-down"></i>
+              <b><%= I18n.t(:text_measuring_units) %></b>
+            </a>
+          </div>
+          <div id="collapseTwo" class="accordion-body in collapse">
+              <div class="accordion-inner">
+                <%= f.input :number_hours_per_day, :label => I18n.t('number_hours_per_day'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+                <%= f.input :number_hours_per_month, :label => I18n.t('number_hours_per_month'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+                <%= f.input :currency_id, :as => :select, collection: Currency.defined_or_local.map{|i| [i.name, i.id]}, :label => I18n.t(:currency), :required => true %>
+                <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+              </div>
+          </div>
+        </div>
       </div>
+
+        <div class="actions-tabs">
+          <% if can? :edit_organizations, Organization %>
+              <% if action_name == 'edit' %>
+                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
+              <% end %>
+              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+          <% end %>
+          <%= link_to I18n.t('back'), organizationals_params_path, :class => 'btn' %>
+        </div>
     <% end %>
   </div>
 
@@ -39,40 +61,41 @@
       <br><br>
       <!-- Method in AttributeOrganizationsController -->
       <%= form_tag('/update_selected_attribute_organizations', :method => 'POST', :class => 'simple_form') do -%>
-        <%= hidden_field_tag 'organization_id', @organization.id %>
-        <%= hidden_field_tag 'organization[pe_attribute_ids][]' %>
 
-        <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
-          <thead>
-          <tr>
-            <th><%= I18n.t(:pe_attribute_name) %></th>
-            <th class="filter-select"><%= I18n.t(:selected) %></th>
-            <th class="filter-select"><%= I18n.t(:attribute_categories) %></th>
-            <th><%= I18n.t(:description) %></th>
-          </tr>
-          </thead>
-          <tbody>
-          <% @attributes.each do |attr| %>
-              <tr>
-                <td><%= link_to(attr.name, edit_pe_attribute_path(attr), :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(attr)) unless attr.nil? %></td>
-                <td>
-                      <span class="hidden">
-                        <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
-                      </span>
-                  <%= check_box_tag 'organization[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id) %>
-                </td>
-                <td><%= attr.attribute_category %></td>
-                <td><%= attr.description %></td>
-              </tr>
+          <%= hidden_field_tag 'organization_id', @organization.id %>
+          <%= hidden_field_tag 'organization[pe_attribute_ids][]' %>
+
+          <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
+            <thead>
+            <tr>
+              <th><%= I18n.t(:pe_attribute_name) %></th>
+              <th class="filter-select"><%= I18n.t(:selected) %></th>
+              <th class="filter-select"><%= I18n.t(:attribute_categories) %></th>
+              <th><%= I18n.t(:description) %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @attributes.each do |attr| %>
+                <tr>
+                  <td><%= link_to(attr.name, edit_pe_attribute_path(attr), :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(attr)) unless attr.nil? %></td>
+                  <td>
+                        <span class="hidden">
+                          <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
+                        </span>
+                    <%= check_box_tag 'organization[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id) %>
+                  </td>
+                  <td><%= attr.attribute_category %></td>
+                  <td><%= attr.description %></td>
+                </tr>
+            <% end %>
+            <%= render :partial => 'layouts/footer_table' %>
+            </tbody>
+          </table>
+          <% if can? :edit_organizations, Organization %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <%= render :partial => 'layouts/footer_table' %>
-          </tbody>
-        </table>
-        <% if can? :edit_organizations, Organization %>
-            <%= submit_tag I18n.t('save'), :class => 'btn' %>
-            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-        <% end %>
-        <span class="on_success_attr"></span>
+          <span class="on_success_attr"></span>
       <% end -%>
     </div>
 
@@ -385,6 +408,7 @@
   </div>
 
   <div id="tabs-11">
+    <%# render :partial => 'organization_technologies/factors_abacus' %>
     <%= render :partial => 'organization_technologies/technology_uos_synthesis' %>
   </div>
 

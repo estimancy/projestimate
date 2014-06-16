@@ -63,6 +63,29 @@ module ProjectsHelper
     res
   end
 
+  # Display the units of attributes
+  def get_attribute_unit(pe_attribute)
+    case pe_attribute.alias
+      when "effort_man_hour"
+        "(#{I18n.t(:unit_effort_man_hour)})"
+      when "effort_man_month"
+        "(#{I18n.t(:unit_effort_man_month)})"
+      when "effort_man_week"
+        "(#{I18n.t(:unit_effort_man_week)})"
+      when "staffing"
+        "(#{I18n.t(:unit_staffing)})"
+      when "end_date"
+        ""
+      when "delay"
+        "(#{I18n.t(:unit_delay)})"
+      when "cost"
+        "(#{current_project.organization.currency.name})"
+    else
+      ""
+    end
+  end
+
+
   # Methdods that display estimation results
   def display_results_without_activities(module_project)
     res = String.new
@@ -80,7 +103,7 @@ module ProjectsHelper
 
     module_project.estimation_values.where('in_out = ?', 'output').order('display_order ASC').each do |est_val|
       est_val_pe_attribute = est_val.pe_attribute
-      res << "<tr><td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name}</span></td>"
+      res << "<tr><td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name} #{get_attribute_unit(est_val_pe_attribute)}</span></td>"
       ['low', 'most_likely', 'high', 'probable'].each do |level|
         res << '<td>'
         level_estimation_values = Hash.new
@@ -137,7 +160,7 @@ module ProjectsHelper
     module_project.estimation_values.order('display_order ASC').each do |est_val|
       if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
         probable_est_value_for_consistency = est_val.send("string_data_probable")
-        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name}</span></th>"
+        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} #{get_attribute_unit(est_val.pe_attribute)}</span></th>"
 
         # For is_consistent purpose
         ['low', 'most_likely', 'high', 'probable'].each do |level|
@@ -259,7 +282,7 @@ module ProjectsHelper
                 <th></th>'
         if !mp_attr_est_values.nil? && !mp_attr_est_values.empty?
           est_val = mp_attr_est_values.last
-          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span></th>"
+          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name} #{get_attribute_unit(est_val.pe_attribute)}</span></th>"
         else
           res << "<th><span class='red_color'> #{I18n.t(:text_please_select_balancing_attribute)} </span></td>"
         end
@@ -298,7 +321,7 @@ module ProjectsHelper
                 <th></th>'
       module_project.estimation_values.each do |est_val|
         if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
-          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name}</span></th>"
+          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name} #{get_attribute_unit(est_val.pe_attribute)}</span></th>"
         end
       end
 

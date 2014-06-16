@@ -1,0 +1,27 @@
+<h1>Listing size_unit_types</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Alias</th>
+    <th>Description</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @size_unit_types.each do |size_unit_type| %>
+  <tr>
+    <td><%= size_unit_type.name %></td>
+    <td><%= size_unit_type.alias %></td>
+    <td><%= size_unit_type.description %></td>
+    <td><%= link_to 'Show', size_unit_type %></td>
+    <td><%= link_to 'Edit', edit_size_unit_type_path(size_unit_type) %></td>
+    <td><%= link_to 'Destroy', size_unit_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Size unit type', new_size_unit_type_path %>

@@ -152,22 +152,6 @@ class OrganizationsController < ApplicationController
   end
 
 
-  def set_organization_measuring_units
-    set_page_title "Organization measuring units"
-    authorize! :edit_organizations, Organization
-    @organization = Organization.find(params[:organization_id])
-
-    if @organization.update_attributes(params[:organization])
-      flash[:notice] = I18n.t(:notice_measuring_units_successfully_updated)
-      redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-12'), nil, '/organizationals_params')
-    else
-      flash[:error] = I18n.t(:notice_errors_on_measuring_units_update)
-      #render action: 'edit'
-      redirect_to(edit_organization_path(@organization, :anchor => "tabs-12"))
-    end
-  end
-
-
   def set_abacus
     authorize! :edit_organizations, Organization
 

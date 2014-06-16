@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @size_unit_type.name %>
+</p>
+
+<p>
+  <b>Alias:</b>
+  <%= @size_unit_type.alias %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @size_unit_type.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_size_unit_type_path(@size_unit_type) %> |
+<%= link_to 'Back', size_unit_types_path %>

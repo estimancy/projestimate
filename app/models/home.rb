@@ -194,7 +194,7 @@ class Home < ActiveRecord::Base
     end
 
     puts '   - Currencies'
-    self.update_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'description', 'uuid'])
+    self.update_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])
 
     puts '   - Language...'
     self.update_records(ExternalMasterDatabase::ExternalLanguage, Language, ['name', 'locale', 'uuid'])
@@ -603,7 +603,7 @@ class Home < ActiveRecord::Base
     end
 
     puts '   - Currencies'
-    self.create_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'description', 'uuid'])
+    self.create_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])
 
     puts '   - Language...'
     self.create_records(ExternalMasterDatabase::ExternalLanguage, Language, ['name', 'locale', 'uuid'])

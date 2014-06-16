@@ -729,12 +729,9 @@ public
           else
             probable_estimation_value[@pbs_project_element.id] = @my_results[:most_likely]["#{est_val_attribute_alias}_#{est_val.module_project_id.to_s}".to_sym]
           end
-
           out_result['string_data_probable'] = probable_estimation_value
         end
-
         est_val.update_attributes(out_result)
-
 
       elsif est_val.in_out == 'input'
         in_result = Hash.new
@@ -768,8 +765,6 @@ public
         EstimationsWorker.perform_async(@pbs_project_element.id, est_val.id)
         ###perform_test(@pbs_project_element.id, est_val.id)
       end
-
-      ###===============================================================================
     end
   end
 
@@ -877,11 +872,14 @@ public
 
   # This estimation plan method is called for each component
   def run_estimation_plan(input_data, pbs_project_element_id, level, project, current_mp_to_execute)
-    @project = current_project
+    @project = project #current_project
     authorize! :execute_estimation_plan, @project
 
     @result_hash = Hash.new
     inputs = Hash.new
+    # Add the current project id in input data parameters
+    input_data['current_project_id'.to_sym] = @project.id
+
     #Need to add input for pbs_project_element and module_project
     input_data['pbs_project_element_id'.to_sym] = pbs_project_element_id
     input_data['module_project_id'.to_sym] = current_mp_to_execute.id
@@ -1532,16 +1530,16 @@ public
     # The CocomoII = Cocomo_Expert factors
     @cocomo2_factors_corresponding = []
     # Contains all attribute name according to their aliases
-    @all_attributes_names = {"effort_man_hour" => "Effort Man Hour", "effort_man_month" => "Effort Man Month", "effort_man_week" => "Effort Man Week", "cost" => "Cost",
-                            "delay" => "Delay", "end_date" => "End Date", "staffing" => "Staffing", "staffing_complexity" => "Staffing complexity", "duration" => "Duration",
-                            "effective_technology"=>"Effective technology", "schedule"=>"Schedule", "defects"=>"Defects", "note"=>"Note", "methodology"=>"Methodology",
-                            "real_time_constraint"=>"Real-time Constraint", "platform_maturity"=>"Platform Maturity", "list_sandbox"=>"Sandbox List", "date_sandbox"=>"Sandbox Date",
-                            "description_sandbox"=>"Sandbox Description", "float_sandbox"=>"Sandbox Float", "integer_sandbox"=>"Sandbox Integer", "complexity"=>"Complexity",
-                            "ksloc"=>"KSLOC", "sloc"=>"SLOC", "size"=>"Size"}
+    @all_attributes_names = {"effort_man_hour" => I18n.t(:effort_man_hour), "effort_man_month" => I18n.t(:effort_man_month), "effort_man_week" => I18n.t(:effort_man_week), "cost" => I18n.t(:cost),
+                            "delay" => I18n.t(:delay), "end_date" => I18n.t(:end_date), "staffing" => I18n.t(:staffing), "staffing_complexity" => I18n.t(:staffing_complexity), "duration" => I18n.t(:duration),
+                            "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
+                            "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
+                            "description_sandbox"=>I18n.t(:description_sandbox), "float_sandbox" =>I18n.t(:float_sandbox), "integer_sandbox"=> I18n.t(:integer_sandbox), "complexity"=>I18n.t(:complexity),
+                            "ksloc"=>I18n.t(:ksloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
 
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
-        'cost' => (@project_organization.cost_unit.nil? ? "Unit" : @project_organization.cost_unit.capitalize),
+        'cost' => (@project_organization.currency.nil? ? "Unit" : @project_organization.currency.name.capitalize),
         'effort_man_month' => I18n.t(:unit_effort_man_month), 'effort_man_hour' =>  I18n.t(:unit_effort_man_hour),
         'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
         'ksloc' => I18n.t(:unit_ksloc), 'sloc' => I18n.t(:unit_sloc)
@@ -1584,18 +1582,28 @@ public
         end
       end
 
-      attr_staffing = PeAttribute.where(alias: "staffing").first
+      attr_staffing = PeAttribute.where('alias=? AND record_status_id=? ', "staffing", @defined_status).first
       staffing = @current_module_project.estimation_values.where(pe_attribute_id: attr_staffing.id).first.string_data_probable[current_component.id]
       @staffing_profile_data = []
-      @staffing_profile_data << staffing.to_i
+      begin
+        @staffing_profile_data <<  staffing.to_i
+      rescue
+        @staffing_profile_data << nil.to_i
+      end
+
 
       6.times do |i|
         if i < 2
-          @staffing_profile_data << @staffing_profile_data.last * 1.2
+          @staffing_profile_data << @staffing_profile_data.last.to_f * 1.2
         elsif i == 2
-          @staffing_profile_data << staffing.to_i
+          begin
+            @staffing_profile_data << staffing.to_i
+          rescue
+            @staffing_profile_data << nil.to_i
+          end
+
         else
-          @staffing_profile_data << @staffing_profile_data.last * 0.8
+          @staffing_profile_data << @staffing_profile_data.last.to_f * 0.8
         end
       end
 
@@ -1612,9 +1620,16 @@ public
     @current_mp_outputs_attr_modules = @current_module_project.pemodule.attribute_modules.where('in_out IN (?) AND pe_attribute_id != ?', %w(output both), end_date_attribute)
     # Outputs attributes array
     @current_mp_outputs_attributes = []
-    @current_mp_outputs_attr_modules.each do |attr_module|
-      @current_mp_outputs_attributes << attr_module.pe_attribute
+
+    # For the Balancing module, only selected balancing attribute results will be displayed in chart
+    if @current_module_project.pemodule.alias == Projestimate::Application::BALANCING_MODULE
+      @current_mp_outputs_attributes << current_balancing_attribute
+    else
+      @current_mp_outputs_attr_modules.each do |attr_module|
+        @current_mp_outputs_attributes << attr_module.pe_attribute
+      end
     end
+
     # get all Attributes aliases
     @current_mp_outputs_attributes_aliases = @current_mp_outputs_attributes.map(&:alias)
     puts "@current_mp_outputs_attributes_aliases = #{@current_mp_outputs_attributes_aliases}"
@@ -1694,13 +1709,13 @@ public
 
     # get the all project modules for the charts labels
     @project_modules = []
-    @corresponding_attributes_alises_for_init = %w(effort_man_month effort_man_hour effort_man_week cost delay staffing sloc)
+    @corresponding_attributes_aliases_for_init = %w(effort_man_month effort_man_hour effort_man_week cost delay staffing sloc)
     # contains all the modules attributes labels
     @init_attributes_labels = []
     @attributes = []
     @project_module_projects.each do |mp|
       @project_modules << mp.pemodule
-      @attributes << mp.pemodule.pe_attributes.where('alias IN (?)', @corresponding_attributes_alises_for_init)
+      @attributes << mp.pemodule.pe_attributes.where('alias IN (?)', @corresponding_attributes_aliases_for_init)
       #@attributes_labels = @attributes_labels + mp.pemodule.pe_attributes.all.map(&:alias)
     end
     @attributes = @attributes.flatten.sort.uniq

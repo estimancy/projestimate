@@ -5,6 +5,10 @@
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:autofocus => (controller.action_name == 'new')}  %>
       <%= f.input :alias, :label => I18n.t('alias') %>
       <%= f.input :description, :label => I18n.t('description') , :input_html => {:rows => 4} %> <br />
+      <%= f.input :iso_code, :label => I18n.t('iso_code') %>
+      <%= f.input :iso_code_number, :label => I18n.t('iso_code_number') %>
+      <%= f.input :sign, :label => I18n.t('currency_sign') %>
+      <%= f.input :conversion_rate, :label => I18n.t('conversion_rate') %>
 
       <%= f.input :change_comment,
                   :label => I18n.t('change_comment'),

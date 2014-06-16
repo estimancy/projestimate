@@ -28,11 +28,13 @@ module CocomoAdvanced
 
     include ApplicationHelper
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :project
 
     #Constructor
     def initialize(elem)
       @coef_kls = elem['ksloc'].to_f
+      @project = Project.find(elem[:current_project_id])
+
       case elem['complexity']
         when 'Organic'
           set_cocomo_organic
@@ -74,7 +76,7 @@ module CocomoAdvanced
         input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a, factor_type: "advanced").first.id,
                                pbs_project_element_id: args[2],
                                module_project_id: args[1],
-                               project_id: args[0]).first
+                               project_id: @project.id).first
         ic = input_cocomo.nil? ? nil.to_f : input_cocomo.coefficient
         sf << ic
       end
@@ -84,24 +86,21 @@ module CocomoAdvanced
 
     #Return delay (in hour)
     def get_delay(*args)
-      project = Project.find(args[0].to_i)
       @effort = get_effort_man_month(args[0], args[1], args[2])
       @delay = (2.5*(@effort**@coef_c)).to_f
-      @delay = @delay.to_f * project.organization.number_hours_per_month
+      @delay = @delay.to_f * @project.organization.number_hours_per_month.to_f
       @delay
     end
 
     #Return end date
     def get_end_date(*args)
-      project = Project.find(args[0].to_i)
-      @end_date = (project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      @end_date = (@project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
       @end_date
     end
 
     #Return staffing
     def get_staffing(*args)
-      project = Project.find(args[0].to_i)
-      @staffing = get_effort_man_month(args[0], args[1], args[2]) * project.organization.number_hours_per_month / get_delay(args[0], args[1], args[2])
+      @staffing = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f / get_delay(args[0], args[1], args[2])
       @staffing
     end
 
@@ -110,8 +109,7 @@ module CocomoAdvanced
     end
 
     def get_cost(*args)
-      project = Project.find(args[0].to_i)
-      @cost = get_effort_man_month(args[0], args[1], args[2]) * project.organization.cost_per_hour
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.cost_per_hour.to_f
       @cost
     end
   end

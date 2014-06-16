@@ -36,7 +36,7 @@
 
 #Organization of the User
 class Organization < ActiveRecord::Base
-  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :cost_unit
+  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id
 
   has_and_belongs_to_many :users
   has_many :wbs_activities, :dependent => :destroy
@@ -47,12 +47,14 @@ class Organization < ActiveRecord::Base
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations
   has_many :subcontractors
   has_many :abacus_organizations
-
   has_many :projects
+
+  belongs_to :currency
 
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
+  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }###, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
+  validates :currency_id, :presence => true
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]

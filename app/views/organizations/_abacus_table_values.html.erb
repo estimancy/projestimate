@@ -1,0 +1,27 @@
+<table class="table table-striped table-bordered table-condensed permissions">
+  <th></th>
+  <% @technologies.each do |technology| %>
+    <th>
+          <span class="attribute_tooltip" title='<%= technology.description %>'>
+            <%= technology.name %>
+          </span>
+    </th>
+  <% end %>
+
+  <% if @size_unit_types %>
+    <% @size_unit_types.each do |sut| %>
+      <tr>
+        <td style="text-align: right;">
+              <span class="attribute_tooltip" style="font-weight:bold" title='<%= sut.description %>'>
+                <%= sut.name %>
+              </span>
+        </td>
+        <% @technologies.each do |t| %>
+          <td style="text-align: center;">
+            <%= text_field_tag "technology_size_value[#{t.id}][#{sut.id}]", sut.technology_size_type.first.value %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
