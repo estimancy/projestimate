@@ -207,6 +207,11 @@
           <!--<i class="icon-legal icon-large pull-left"></i>-->
           <%= I18n.t(:record_status) %></a></li>
       <% end %>
+
+      <% if can? :manage, Currency %>
+          <li class="dropdown"><a href="<%= main_app.currencies_path %>">
+            <!--<i class="icon-legal icon-large pull-left"></i> --><%= I18n.t(:currency) %></a></li>
+      <% end %>
     </ul>
   </li>
 </ul>
