@@ -128,6 +128,7 @@ class OrganizationsController < ApplicationController
       @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
       @factors = Factor.order("factor_type")
       @technologies = OrganizationTechnology.all
+      @size_unit_types = SizeUnitType.all
 
       render action: 'edit'
     end

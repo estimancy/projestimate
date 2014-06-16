@@ -4,7 +4,6 @@
     <% if action_name.in?(%w(edit update)) %>
         <li><a href="#tabs-2"><%= I18n.t(:pe_attributes) %> </a></li>
         <li><a href="#tabs-3"><%= I18n.t(:attributes_settings) %> </a></li>
-        <li><a href="#tabs-12"><%= I18n.t(:text_measuring_units) %> </a></li>
         <li><a href="#tabs-4"><%= I18n.t(:organization_technology) %> </a></li>
         <li><a href="#tabs-5"><%= I18n.t(:organization_unit_of_work) %> </a></li>
         <li><a href="#tabs-6">Unit of Work's Complexity </a></li>
@@ -12,8 +11,7 @@
         <li><a href="#tabs-8">Size Unit Type </a></li>
         <li><a href="#tabs-9">Technology Size Abacus </a></li>
         <li><a href="#tabs-10"><%= I18n.t(:organization_subcontractor) %> </a></li>
-        <li><a href="#tabs-11"><%= I18n.t(:text_measuring_units) %> </a></li>
-        <li><a href="#tabs-12">Tech / UOS Synthesis</a></li>
+        <li><a href="#tabs-11">Tech / UOS Synthesis</a></li>
   <% end %>
   </ul>
 
@@ -38,6 +36,7 @@
                 <%= f.input :number_hours_per_month, :label => I18n.t('number_hours_per_month'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
                 <%= f.input :currency_id, :as => :select, collection: Currency.defined_or_local.map{|i| [i.name, i.id]}, :label => I18n.t(:currency), :required => true %>
                 <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
+                <%= f.input :inflation_rate, :label => I18n.t('inflation_rate'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
               </div>
           </div>
         </div>
@@ -410,13 +409,6 @@
   <div id="tabs-11">
     <%# render :partial => 'organization_technologies/factors_abacus' %>
     <%= render :partial => 'organization_technologies/technology_uos_synthesis' %>
-  </div>
-
-  <div id="tabs-12">
-    <b><%= I18n.t(:text_measuring_units) %></b>
-    <br><br>
-    <%= render :partial => 'organizations/measuring_units' %>
-    <br>
   </div>
 
 <% end %>
