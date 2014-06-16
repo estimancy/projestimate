@@ -38,6 +38,12 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :size_unit_types
+
+
+  resources :size_units
+
+
   # Mount the Sidekiq web interface
   mount Sidekiq::Web, at: "/sidekiq"
 

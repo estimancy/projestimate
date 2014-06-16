@@ -36,7 +36,7 @@
 
 #Organization of the User
 class Organization < ActiveRecord::Base
-  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id
+  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate
 
   has_and_belongs_to_many :users
   has_many :wbs_activities, :dependent => :destroy

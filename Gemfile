@@ -114,6 +114,7 @@ gem 'roo'
 # Including
 gem 'cocomo_advanced', path: "vendor/gems/cocomo_advanced"
 gem 'cocomo_expert', path: "vendor/gems/cocomo_expert"
+#gem 'real_size', path: "vendor/gems/real_size"
 gem 'uos', :path => 'vendor/gems/uos'
 #gem 'cocomo81', :path => 'vendor/gems/cocomo81'
 gem 'balancing_module', path: "vendor/gems/balancing_module"
