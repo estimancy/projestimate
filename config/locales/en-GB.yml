@@ -1165,4 +1165,8 @@ en-gb:
   integer_sandbox: "Sandbox Integer"
   float_sandbox: "Sandbox Float"
   description_sandbox: "Sandbox Description"
+  iso_code: "ISO code"
+  iso_code_number: "ISO code number"
+  currency_sign: "Sign"
+  conversion_rate: "Conversion rate"
 
