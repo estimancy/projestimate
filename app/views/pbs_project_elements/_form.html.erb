@@ -8,6 +8,7 @@
       <%= f.input :project_link, :label => I18n.t('project_link'), :input_html => {:class => 'input-xlarge'}, :as => :select, :collection => Project.all.map { |i| [i.title, i.id] } %>
     <% else %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge'} %>
+      <%= f.input :description, :label => I18n.t('requirements'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
     <% end %>
 
     <% unless @pbs_project_element.is_root? %>

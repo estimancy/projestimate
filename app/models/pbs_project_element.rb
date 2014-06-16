@@ -37,7 +37,7 @@
 #Component of the PE-WBS-Project. Component belongs to a type (dev, cots, folder, link...)
 #Component use Ancestry gem (has_ancestry). See ancestry on github for more information.
 class PbsProjectElement < ActiveRecord::Base
-  attr_accessible :name, :pe_wbs_project_id, :is_completed, :is_validated, :position, :is_root, :work_element_type_id,:ancestry, :wbs_activity_id, :wbs_activity_ratio_id, :parent_id
+  attr_accessible :name, :description, :pe_wbs_project_id, :is_completed, :is_validated, :position, :is_root, :work_element_type_id,:ancestry, :wbs_activity_id, :wbs_activity_ratio_id, :parent_id
 
   has_ancestry
 

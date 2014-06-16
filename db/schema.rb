@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140616071342) do
+ActiveRecord::Schema.define(:version => 20140616081333) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -514,6 +514,7 @@ ActiveRecord::Schema.define(:version => 20140616071342) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "organization_technology_id"
+    t.text     "description"
   end
 
   add_index "pbs_project_elements", ["ancestry"], :name => "index_components_on_ancestry"
