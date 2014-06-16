@@ -53,6 +53,13 @@ jQuery ->
       error: (XMLHttpRequest, testStatus, errorThrown) ->
         alert "Error!"
 
+
+  $(".select_size_unit").change ->
+    $.ajax
+      url: "/refresh_value_elements"
+      method: "GET"
+      data: "size_unit_id=" + $(this).val()
+
   $("#project_record_number").change ->
     $.ajax
       url: "project_record_number"

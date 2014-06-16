@@ -38,6 +38,12 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :size_unit_types
+
+
+  resources :size_units
+
+
   # Mount the Sidekiq web interface
   mount Sidekiq::Web, at: "/sidekiq"
 
@@ -78,6 +84,7 @@ Projestimate::Application.routes.draw do
 
   mount Uos::Engine, :at => '/uos'
   #mount Cocomo81::Engine, :at => '/cocomo_81'
+  #mount RealSize::Engine, :at => '/real_size'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
   mount BalancingModule::Engine, at: "/balancing_module"
@@ -177,6 +184,7 @@ Projestimate::Application.routes.draw do
   resources :organizations
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
+  get 'refresh_value_elements' => 'organizations#refresh_value_elements', :as => 'refresh_value_elements'
   post '/set_organization_measuring_units' => 'organizations#set_organization_measuring_units', :as => 'set_organization_measuring_units'
   put '/set_organization_measuring_units' => 'organizations#set_organization_measuring_units', :as => 'set_organization_measuring_units'
 

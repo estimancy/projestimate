@@ -100,6 +100,7 @@ module CocomoExpert
 
     #Return staffing
     def get_staffing(*args)
+      project = Project.find(args[0].to_i)
       @staffing = (get_effort_man_month(args[0], args[1], args[2]) * project.organization.number_hours_per_month) / get_delay(args[0], args[1], args[2])
       @staffing
     end

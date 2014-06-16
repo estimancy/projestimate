@@ -59,7 +59,9 @@ class OrganizationsController < ApplicationController
 
     @complexities = @organization.organization_uow_complexities
 
-    @technologies = OrganizationTechnology.all
+    @technologies = @organization.organization_technologies
+
+    @size_unit_types = SizeUnitType.all
 
     @factors = Factor.order("factor_type")
 
@@ -67,6 +69,12 @@ class OrganizationsController < ApplicationController
     @unitofworks = @organization.unit_of_works
 
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
+  end
+
+  def refresh_value_elements
+    @size_unit = SizeUnit.find(params[:size_unit_id])
+    @technologies = OrganizationTechnology.all
+
   end
 
   def create
@@ -138,6 +146,7 @@ class OrganizationsController < ApplicationController
     set_page_title 'Organizational Parameters'
     #No authorize required since everyone can list
     @organizations = Organization.all
+    @size_units = SizeUnit.all
     @factors = Factor.order("factor_type")
     @organizations_labor_categories = OrganizationLaborCategory.all || []
   end
