@@ -114,7 +114,7 @@ module CocomoExpert
 
     def get_cost(*args)
       project = Project.find(args[0].to_i)
-      @cost = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.cost_per_hour.to_f
+      @cost = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
       if @cost.nan?
         @cost = nil
       end
