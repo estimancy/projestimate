@@ -1,33 +1,45 @@
-<div class="span12">
-  <%= simple_form_for(@currency) do |f| %>
-      <%= f.error_notification %>
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= I18n.t(:currencies) %> </a></li>
+  </ul>
 
-      <%= f.input :name, :label => I18n.t('name'), :input_html => {:autofocus => (controller.action_name == 'new')}  %>
-      <%= f.input :alias, :label => I18n.t('alias') %>
-      <%= f.input :description, :label => I18n.t('description') , :input_html => {:rows => 4} %> <br />
-      <%= f.input :iso_code, :label => I18n.t('iso_code') %>
-      <%= f.input :iso_code_number, :label => I18n.t('iso_code_number') %>
-      <%= f.input :sign, :label => I18n.t('currency_sign') %>
-      <%= f.input :conversion_rate, :label => I18n.t('conversion_rate') %>
+    <div id="tabs-1">
+      <%= simple_form_for(@currency) do |f| %>
+          <%= f.error_notification %>
 
-      <%= f.input :change_comment,
-                  :label => I18n.t('change_comment'),
-                  :input_html => { :rows => 4 } %><br />
-      <%= f.association :record_status, :label => I18n.t('record_status') ,
-                        :collection => @currency.record_status_collection,
-                        :input_html => {:class => 'record_status'},
-                        :selected => (@currency.is_defined_or_nil? ? @proposed_status.id : @currency.record_status_id),
-                        :disabled => (true if @currency.is_retired?) %><br />
+          <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')}  %>
+          <%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :description, :label => I18n.t('description') , :input_html => {:class => 'input-xxlarge', :rows => 5} %> <br />
+          <%= f.input :iso_code, :label => I18n.t('iso_code'), :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :iso_code_number, :label => I18n.t('iso_code_number'), :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :sign, :label => I18n.t('currency_sign'), :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :conversion_rate, :label => I18n.t('conversion_rate'), :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :custom_value, :label => I18n.t('custom_value') , :input_html => {:class => 'custom_value'}, :disabled => (true unless @currency.is_custom?)  %><br />
+          <% if is_master_instance? %>
+              <table>
+                <tr>
+                  <td>
+                    <%= f.input :record_status_id, :as => :select, :label => I18n.t('record_status'), :required => (is_master_instance? ? true : false),
+                                :collection => @currency.record_status_collection,
+                                :input_html => {:class => 'record_status'},
+                                :selected => (@currency.is_defined_or_nil? ? @proposed_status.id : @currency.record_status_id),
+                                :disabled => (true if @currency.is_retired?) %>
+                  </td>
+                  <td>
+                    <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @currency.is_custom?) %>
+                  </td>
+                </tr>
+              </table>
+              <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+          <% end %>
 
-      <div class="actions">
-        <% if can? :update, @currency %>
-            <%= f.submit I18n.t('save'), :class => 'btn' %>
-            <%= f.submit I18n.t('apply'), :class => 'btn' %>
-        <% end %>
-      </div>
-  <% end %>
+          <div class="actions">
+            <% if can? :update, @currency %>
+                <%= f.submit I18n.t('save'), :class => 'btn' %>
+                <%= f.submit I18n.t('apply'), :class => 'btn' %>
+            <% end %>
+          </div>
+      <% end %>
+    </div>
 </div>
-
 

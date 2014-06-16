@@ -1168,6 +1168,10 @@ fr:
   integer_sandbox: "Sandbox Integer"
   float_sandbox: "Sandbox Float"
   description_sandbox: "Sandbox Description"
+  iso_code: "Code ISO"
+  iso_code_number: "Numéro code ISO"
+  currency_sign: "Signe"
+  conversion_rate: "Taux de conversion"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"
