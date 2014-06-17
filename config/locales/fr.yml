@@ -1189,3 +1189,5 @@ fr:
   configure_uow: "Configurer les unité d'oeuvres"
   effort_multiplier: "Coefficients multiplicateur"
   scale_factor: "Facteurs d'ajustement"
+
+  requirements: "Prérequis"

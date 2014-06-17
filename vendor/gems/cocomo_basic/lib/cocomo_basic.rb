@@ -99,7 +99,7 @@ module CocomoBasic
     end
 
     def get_cost(*args)
-      get_effort_man_month * @project.organization.cost_per_hour.to_f
+      get_effort_man_month  * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
     end
   end
 

@@ -1591,21 +1591,26 @@ public
         @staffing_profile_data << nil.to_i
       end
 
+      #Rayleigh
+      @staffing_profile_data = []
+      @staffing_labels = []
 
-      6.times do |i|
-        if i < 2
-          @staffing_profile_data << @staffing_profile_data.last.to_f * 1.2
-        elsif i == 2
-          begin
-            @staffing_profile_data << staffing.to_i
-          rescue
-            @staffing_profile_data << nil.to_i
-          end
+      #begin
+        attr_effort = PeAttribute.find_by_alias('effort_man_month')
+        attr_delay = PeAttribute.find_by_alias('delay')
 
-        else
-          @staffing_profile_data << @staffing_profile_data.last.to_f * 0.8
+        m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
+
+        k = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
+
+        a = 0.5 #pente
+        m.floor.times do |i|
+          t = i/12.to_f
+          @staffing_labels << i
+          @staffing_profile_data << 2*k*0.5*t*Math.exp(-0.5*t*t)
         end
-      end
+      #rescue
+      #end
 
       puts "ALL FACTOR_DATA LAST = #{@cocomo_advanced_input_dataset}"
     end
