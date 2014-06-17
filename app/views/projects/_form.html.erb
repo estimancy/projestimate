@@ -1,84 +1,83 @@
 <%= simple_form_for(@project) do |f| %>
-    <%= f.error_notification %>
+  <%= f.error_notification %>
 
     <div class="tabs">
       <ul>
         <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
         <% if action_name.in? %w(edit update) %>
-            <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
-            <li><a href="#tabs-3"><%= I18n.t(:wbs_activity) %></a></li>
-            <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
-            <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
-            <li><a href="#tabs-6"><%= I18n.t(:calendar) %> </a></li>
-            <li><a href="#tabs-7"><%= I18n.t(:resources) %> </a></li>
-            <li><a href="#tabs-8"><%= I18n.t(:analyse) %> </a></li>
-            <li><a href="#tabs-history"><%= I18n.t(:label_project_history) %> </a></li>
+          <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
+          <li><a href="#tabs-3"><%= I18n.t(:wbs_activity) %></a></li>
+          <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
+          <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
+          <li><a href="#tabs-6"><%= I18n.t(:calendar) %> </a></li>
+          <li><a href="#tabs-7"><%= I18n.t(:resources) %> </a></li>
+          <li><a href="#tabs-8"><%= I18n.t(:analyse) %> </a></li>
+          <li><a href="#tabs-history"><%= I18n.t(:label_project_history) %> </a></li>
         <% end %>
       </ul>
 
-       <div id="tabs-1">
+     <div id="tabs-1">
 
-        <%= link_to I18n.t(:label_activate_project), activate_path(project_id: @project.id), class: "btn pull-right" %>
+      <%= link_to I18n.t(:label_activate_project), activate_path(project_id: @project.id), class: "btn pull-right" %>
 
-        <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-        <table>
-          <tr>
-            <td><%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-large'} %></td>
-            <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
-          </tr>
-        </table>
+      <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <table>
+        <tr>
+          <td><%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-large'} %></td>
+          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
+        </tr>
+      </table>
 
-        <%= f.input :description, :label => "#{I18n.t 'description'}", :input_html => {:class => 'input-xxlarge', :rows => 5 } %>
-        <table>
-          <tr>
-            <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
-            <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
-              <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states, :input_html => {:class => 'input-large'} %></td>
-            <% else %>
-                <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states, :input_html => {:class => 'input-large'}, :disable => true %></td>
-            <% end %>
-          </tr>
-          <tr>
-            <td>
-                <%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %>
-            </td>
-
-            <script>
-                $(document).ready(function () {
-                    $(".date-picker").datepicker({
-                        language: '<%= set_user_language %>',
-                        autoclose: true,
-                        todayHighlight: true,
-                        todayBtn: true
-                    });
-                });
-            </script>
-
-            <td><%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-xlarge'} %></td>
-          </tr>
-        </table>
-
-         <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'} %>
-
-        <%= f.input :acquisition_category_id, :label => "#{I18n.t 'acquisition_category'}", :as => :select, :collection => @acquisition_categories, :input_html => {:class => 'input-xxlarge'} %>
-
-        <%= f.input :platform_category_id, :label => "#{I18n.t 'platform_category'}", :as => :select, :collection => @platform_categories, :input_html => {:class => 'input-xxlarge'} %>
-
-        <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'} %>
-
-        <div class="actions-tabs">
-          <% if @project.state.in?(%w(rejected released checkpoint))%>
-            <% if can? :alter_frozen_project, @project %>
-              <%= render :partial => 'submit_project', :object => f %>
-            <% end %>
+      <%= f.input :description, :label => "#{I18n.t 'description'}", :input_html => {:class => 'input-xxlarge', :rows => 5 } %>
+      <table>
+        <tr>
+          <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
+          <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
+            <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states, :input_html => {:class => 'input-large'} %></td>
           <% else %>
+              <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states, :input_html => {:class => 'input-large'}, :disable => true %></td>
+          <% end %>
+        </tr>
+        <tr>
+          <td>
+              <%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %>
+          </td>
+
+          <script>
+              $(document).ready(function () {
+                  $(".date-picker").datepicker({
+                      language: '<%= set_user_language %>',
+                      autoclose: true,
+                      todayHighlight: true,
+                      todayBtn: true
+                  });
+              });
+          </script>
+
+          <td><%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-xlarge'} %></td>
+        </tr>
+      </table>
+
+       <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'} %>
+
+      <%= f.input :acquisition_category_id, :label => "#{I18n.t 'acquisition_category'}", :as => :select, :collection => @acquisition_categories, :input_html => {:class => 'input-xxlarge'} %>
+
+      <%= f.input :platform_category_id, :label => "#{I18n.t 'platform_category'}", :as => :select, :collection => @platform_categories, :input_html => {:class => 'input-xxlarge'} %>
+
+      <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'} %>
+
+      <div class="actions-tabs">
+        <% if @project.state.in?(%w(rejected released checkpoint))%>
+          <% if can? :alter_frozen_project, @project %>
             <%= render :partial => 'submit_project', :object => f %>
           <% end %>
+        <% else %>
+          <%= render :partial => 'submit_project', :object => f %>
+        <% end %>
 
-          <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
-        </div>
-
-<% end %>
+        <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
+      </div>
+  <% end %>
 </div>
 
 <% if action_name.in?(%w(edit update)) %>

@@ -129,11 +129,14 @@ class Home < ActiveRecord::Base
       ext_complexities.each do |ext_complexity|
         if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
           loc_factor = Factor.find_by_uuid(ext_factor.uuid)
-          loc_cplx = OrganizationUowComplexity.find_by_uuid(ext_complexity.uuid)
-          loc_cplx.factor_id = loc_factor.id
-          loc_cplx.display_order = ext_complexity.display_order
-          loc_cplx.value = ext_complexity.value
-          loc_cplx.save(validate: false)
+          loc_cplx = OrganizationUowComplexity.where(uuid: ext_complexity.uuid, organization_id: nil).first
+          begin
+            loc_cplx.factor_id = loc_factor.id
+            loc_cplx.display_order = ext_complexity.display_order
+            loc_cplx.value = ext_complexity.value
+            loc_cplx.save(validate: false)
+          rescue
+          end
         end
       end
     end

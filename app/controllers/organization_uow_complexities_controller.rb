@@ -106,8 +106,10 @@ class OrganizationUowComplexitiesController < ApplicationController
     organization = @organization_uow_complexity.organization
 
     @organization_uow_complexity.delete
-    respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(cplx.organization, anchor: "tabs-7")), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}" }
+    begin
+      redirect_to redirect(edit_organization_path(organization, anchor: "tabs-7")), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}"
+    rescue
+      redirect_to "/organizationals_params"
     end
   end
 end
