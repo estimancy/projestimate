@@ -34,7 +34,7 @@
               <div class="accordion-inner">
                 <%= f.input :number_hours_per_day, :label => I18n.t('number_hours_per_day'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
                 <%= f.input :number_hours_per_month, :label => I18n.t('number_hours_per_month'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
-                <%= f.input :currency_id, :as => :select, collection: Currency.defined_or_local.map{|i| ["#{i.name}(#{i.sign})", i.id]}, :label => I18n.t(:currency), :required => true %>
+                <%= f.input :currency_id, :as => :select, collection: Currency.defined_or_local.map{|i| ["#{i.name} (#{i.sign})", i.id]}, :label => I18n.t(:currency), :required => true %>
                 <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
                 <%= f.input :inflation_rate, :label => I18n.t('inflation_rate'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
               </div>
