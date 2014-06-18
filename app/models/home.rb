@@ -384,11 +384,14 @@ class Home < ActiveRecord::Base
             obj.update_attribute(:wbs_activity_id, corresponding_wbs_activity_id)
 
           when 'WbsActivityRatioElement'
-            ext_ratio_uuid = ExternalMasterDatabase::ExternalWbsActivityRatio.find_by_id(ext.wbs_activity_ratio_id).uuid
-            ext_wbs_activity_element_uuid = ExternalMasterDatabase::ExternalWbsActivityElement.find_by_id(ext.wbs_activity_element_id).uuid
-            local_wbs_activity_ratio_id = WbsActivityRatio.find_by_uuid(ext_ratio_uuid).id
-            local_wbs_activity_element_id = WbsActivityElement.find_by_uuid(ext_wbs_activity_element_uuid).id
-            obj.update_attributes(:wbs_activity_ratio_id => local_wbs_activity_ratio_id, :wbs_activity_element_id => local_wbs_activity_element_id)
+            begin
+              ext_ratio_uuid = ExternalMasterDatabase::ExternalWbsActivityRatio.find_by_id(ext.wbs_activity_ratio_id).uuid
+              ext_wbs_activity_element_uuid = ExternalMasterDatabase::ExternalWbsActivityElement.find_by_id(ext.wbs_activity_element_id).uuid
+              local_wbs_activity_ratio_id = WbsActivityRatio.find_by_uuid(ext_ratio_uuid).id
+              local_wbs_activity_element_id = WbsActivityElement.find_by_uuid(ext_wbs_activity_element_uuid).id
+              obj.update_attributes(:wbs_activity_ratio_id => local_wbs_activity_ratio_id, :wbs_activity_element_id => local_wbs_activity_element_id)
+            rescue
+            end
         end
 
         obj.update_attributes(:record_status_id => corresponding_local_rs_id, :change_comment => ext.change_comment)
