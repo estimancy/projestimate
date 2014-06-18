@@ -17,10 +17,16 @@
         </tr>
 
         <% @size_unit_types.each do |sut| %>
+
+          <% i = RealSize::Input.where( pbs_project_element_id: current_component.id,
+                                         module_project_id: current_module_project.id,
+                                         size_unit_id: SizeUnit.first.id,
+                                         size_unit_type_id: sut.id,
+                                         project_id: current_project.id).first %>
           <tr>
             <td><%= sut.name %></td>
-            <td><%= text_field_tag "sizes[]" %></td>
-            <td><%= select_tag "size_unit_type", options_for_select(SizeUnit.all.map{|i| [i.name, i.id]}) %></td>
+            <td><%= text_field_tag "values[#{sut.id}]", i.value %></td>
+            <td><%= select_tag "size_unit[#{sut.id}]", options_for_select(SizeUnit.all.map{|i| [i.name, i.id]}) %></td>
           </tr>
         <% end %>
 

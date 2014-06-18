@@ -25,8 +25,35 @@ class RealSize::InputsController < ApplicationController
   end
 
   def save
-    pbs_element = params[:pbs_element_id]
+    project = current_project
+    organization = current_project.organization
+    pbs_element = current_component
+    module_project = current_module_project
+    technology = current_component.organization_technology
 
+    @size_unit_types = organization.size_unit_types
+
+    result = []
+
+    @size_unit_types.each do |sut|
+
+      size_unit = SizeUnit.find(params[:size_unit]["#{sut.id}"].to_i)
+
+      tst = TechnologySizeType.where(organization_id: organization.id,
+                                    organization_technology_id: technology.id,
+                                    size_unit_id: params[:size_unit]["#{sut.id}"].to_i,
+                                    size_unit_type_id: sut.id).first
+
+      result << (params[:values]["#{sut.id}"].to_f * tst.value.to_f)
+
+      RealSize::Input.create( pbs_project_element_id: pbs_element.id,
+                              module_project_id: module_project.id,
+                              size_unit_id: size_unit.id,
+                              size_unit_type_id: sut.id,
+                              project_id: project.id,
+                              value: result.sum)
+
+    end
     redirect_to root_url
   end
 end
