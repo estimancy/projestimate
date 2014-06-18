@@ -11,7 +11,7 @@ class SizeUnitType < ActiveRecord::Base
 
   attr_accessible :description, :name, :alias, :record_status_id, :custom_value, :change_comment, :organization_id
 
-  has_many :organizations
+  belongs_to :organization
 
   has_many :technology_size_type
   has_many :organization_technologies, through: :technology_size_type

@@ -83,18 +83,20 @@ Projestimate::Application.routes.draw do
   resources :audits
 
   mount Uos::Engine, :at => '/uos'
-  #mount Cocomo81::Engine, :at => '/cocomo_81'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
-  mount BalancingModule::Engine, at: "/balancing_module"
+  mount BalancingModule::Engine, at: '/balancing_module'
+  mount RealSize::Engine, at: '/inputs'
 
   resources :abacus_organizations
   match 'organizations/:id/export_abacus' => 'organizations#export_abacus', :as => 'export_abacus'
   match 'organizations/:id/import_abacus' => 'organizations#import_abacus', :as => 'import_abacus'
 
   resources :organization_abacus
+
   resources :organization_technologies
   post '/set_technology_uos_syntesis' => 'organization_technologies#set_technology_uos_syntesis', :as => 'set_technology_uos_syntesis'
+  get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
 
   resources :organization_uow_complexities
   match 'organization_uow_complexities/set_default/:id' => 'organization_uow_complexities#set_default', :as => 'set_default'
@@ -182,7 +184,7 @@ Projestimate::Application.routes.draw do
 
   resources :organizations
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
-  get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
+  post '/set_technology_size_abacus' => 'organizations#set_technology_size_abacus', :as => 'set_technology_size_abacus'
 
   resources :subcontractors
   #match '/subcontractors', :to => 'subcontractors#new', :via => :get, :as => :get_subcontractor

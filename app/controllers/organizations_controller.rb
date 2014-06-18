@@ -152,6 +152,39 @@ class OrganizationsController < ApplicationController
     @organizations_labor_categories = OrganizationLaborCategory.all || []
   end
 
+  def set_technology_size_abacus
+    authorize! :edit_organizations, Organization
+
+    @organization = Organization.find(params[:organization])
+    @size_unit = SizeUnit.find(params[:size_unit])
+    @technologies = @organization.organization_technologies
+    @size_unit_types = @organization.size_unit_types
+    SizeUnitType.all
+
+    @technologies.each do |technology|
+      @size_unit_types.each do |sut|
+        value = params[:abacus]["#{technology.id}"]["#{sut.id}"]
+        unless value.nil?
+          t = TechnologySizeType.where( organization_id: @organization.id,
+                                        organization_technology_id: technology.id,
+                                        size_unit_id: @size_unit.id,
+                                        size_unit_type_id: sut.id).first
+
+          if t.nil?
+            TechnologySizeType.create(organization_id: @organization.id,
+                                      organization_technology_id: technology.id,
+                                      size_unit_id: @size_unit.id,
+                                      size_unit_type_id: sut.id,
+                                      value: params[:abacus]["#{technology.id}"]["#{sut.id}"])
+          else
+            t.update_attributes(value: params[:abacus]["#{technology.id}"]["#{sut.id}"])
+          end
+        end
+      end
+    end
+
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-9'), nil, '/organizationals_params')
+  end
 
   def set_abacus
     authorize! :edit_organizations, Organization

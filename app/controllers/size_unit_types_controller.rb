@@ -68,6 +68,7 @@ class SizeUnitTypesController < ApplicationController
   # PUT /size_unit_types/1.json
   def update
     @size_unit_type = SizeUnitType.find(params[:id])
+    @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
 
     respond_to do |format|
       if @size_unit_type.update_attributes(params[:size_unit_type])
