@@ -60,8 +60,8 @@ class OrganizationsController < ApplicationController
     @complexities = @organization.organization_uow_complexities
 
     @technologies = @organization.organization_technologies
-
-    @size_unit_types = SizeUnitType.all
+    @size_units = SizeUnit.all
+    @size_unit_types = @organization.size_unit_types
 
     @factors = Factor.order("factor_type")
 
