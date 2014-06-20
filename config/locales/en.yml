@@ -1066,7 +1066,7 @@ en:
   error_project_state: "Sorry... this transaction is not possible!"
   warning_project_cannot_be_deleted: "Project with this state cannot be deleted"
   label_project_history: "History"
-  label_activate_project: "Activate"
+  label_activate_project: "Activate estimation"
   label_find_use_project: "Find use"
   label_promote_project: "Promote"
   label_checkout_project: "Checkout"

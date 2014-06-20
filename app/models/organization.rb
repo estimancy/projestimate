@@ -50,6 +50,8 @@ class Organization < ActiveRecord::Base
   has_many :projects
 
   belongs_to :currency
+  has_many :size_unit_types
+
 
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}

@@ -1,5 +1,5 @@
 class SizeUnitTypesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
   before_filter :get_record_statuses
   # GET /size_unit_types
@@ -68,6 +68,7 @@ class SizeUnitTypesController < ApplicationController
   # PUT /size_unit_types/1.json
   def update
     @size_unit_type = SizeUnitType.find(params[:id])
+    @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
 
     respond_to do |format|
       if @size_unit_type.update_attributes(params[:size_unit_type])

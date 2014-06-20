@@ -1,8 +1,7 @@
 class SizeUnitType < ActiveRecord::Base
-  include MasterDataHelper
 
-  belongs_to :record_status
-  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
+  #belongs_to :record_status
+  #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   validates :record_status, :presence => true
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
@@ -11,7 +10,7 @@ class SizeUnitType < ActiveRecord::Base
 
   attr_accessible :description, :name, :alias, :record_status_id, :custom_value, :change_comment, :organization_id
 
-  has_many :organizations
+  belongs_to :organization
 
   has_many :technology_size_type
   has_many :organization_technologies, through: :technology_size_type
