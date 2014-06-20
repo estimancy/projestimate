@@ -654,6 +654,7 @@ class Home < ActiveRecord::Base
     #Create first user
     user = User.new(:first_name => 'Administrator', :last_name => 'Estimancy', :login_name => 'admin', :initials => 'ad', :email => 'youremail@yourcompany.net', :auth_type => AuthMethod.first.id, :user_status => 'active', :language_id => Language.first.id, :time_zone => 'GMT')
     user.password = user.password_confirmation = 'projestimate'
+    user.confirm!
     user.save(:validate => false)
 
     puts '   - Default groups'
@@ -670,8 +671,8 @@ class Home < ActiveRecord::Base
     laborcategory=LaborCategory.first
 
     puts '   - Organizations'
-    Organization.create(:name => 'YourOrganization', :description => 'This must be update to match your organization')
-    Organization.create(:name => 'Other', :description => 'This could be used to group users that are not members of any organization')
+    Organization.create(name: 'YourOrganization', description: 'This must be update to match your organization', number_hours_per_day: 8, number_hours_per_month: 160 , cost_per_hour: 40, currency_id: Currency.first.id, inflation_rate: 1)
+    Organization.create(name: 'Other', description: 'This could be used to group users that are not members of any organization', number_hours_per_day: 8, number_hours_per_month: 160 , cost_per_hour: 40, currency_id: Currency.first.id, inflation_rate: 1)
     organization = Organization.first
 
     Organization.all.each do |organization|
@@ -689,7 +690,18 @@ class Home < ActiveRecord::Base
 
     puts '   - Demo project'
     #Create default project
-    Project.create(:title => 'Sample project', :description => 'This is a sample project for demonstration purpose', :alias => 'sample project', :state => 'preliminary', :start_date => Time.now.strftime('%Y/%m/%d'), :is_model => false, :organization_id => organization.id, :project_area_id => pjarea.id, :project_category_id => ProjectCategory.first.id, :platform_category_id => PlatformCategory.first.id, :acquisition_category_id => AcquisitionCategory.first.id)
+    Project.create(:title => 'Sample project',
+                   :description => 'This is a sample project for demonstration purpose',
+                   :alias => 'sample project',
+                   :state => 'preliminary',
+                   :start_date => Time.now.strftime('%Y/%m/%d'),
+                   :is_model => false,
+                   :organization_id => organization.id,
+                   :project_area_id => pjarea.id,
+                   :project_category_id => ProjectCategory.first.id,
+                   :platform_category_id => PlatformCategory.first.id,
+                   :acquisition_category_id => AcquisitionCategory.first.id)
+
     project = Project.first
 
     initialization = Pemodule.find_by_alias('initialization')

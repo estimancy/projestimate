@@ -1,5 +1,5 @@
 class SizeUnitTypesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
   before_filter :get_record_statuses
   # GET /size_unit_types
