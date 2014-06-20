@@ -90,7 +90,7 @@ class Project < ActiveRecord::Base
     state :rejected
 
     event :commit do #promote project
-      transitions :to => :in_progress, :from => :preliminaryf
+      transitions :to => :in_progress, :from => :preliminary
       transitions :to => :in_review, :from => :in_progress
       transitions :to => :released, :from => :in_review
     end

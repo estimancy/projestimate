@@ -14,6 +14,7 @@ FactoryGirl.define do
     association :language, :factory => :language, :strategy => :build
     password   "projestimate"
     password_confirmation "projestimate"
+    confirmed_at Time.now
   end
 
   factory :authenticated_user, :class => :user do
@@ -41,6 +42,7 @@ FactoryGirl.define do
     association :language, :factory => :language, :strategy => :build
     password   "projestimate3"
     password_confirmation "projestimate3"
+    confirmed_at Time.now
   end
 
 

@@ -20,43 +20,43 @@ require 'spec_helper'
 
 describe FactorsController do
 
-  # This should return the minimal set of attributes required to create a valid
-  # Factor. As you add validations to Factor, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) { { "name" => "MyString" } }
+  before do
+    sign_in
+    @connected_user = controller.current_user
+  end
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # FactorsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  before :each do
+    @factor = FactoryGirl.create(:factor)
+  end
+
 
   describe "GET index" do
     it "assigns all factors as @factors" do
-      factor = Factor.create! valid_attributes
-      get :index, {}, valid_session
+      factor = @factor
+      get :index, {}
       assigns(:factors).should eq([factor])
     end
   end
 
   describe "GET show" do
     it "assigns the requested factor as @factor" do
-      factor = Factor.create! valid_attributes
-      get :show, {:id => factor.to_param}, valid_session
+      factor = @factor
+      get :show, {:id => factor.to_param}
       assigns(:factor).should eq(factor)
     end
   end
 
   describe "GET new" do
     it "assigns a new factor as @factor" do
-      get :new, {}, valid_session
+      get :new, {}
       assigns(:factor).should be_a_new(Factor)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested factor as @factor" do
-      factor = Factor.create! valid_attributes
-      get :edit, {:id => factor.to_param}, valid_session
+      factor = @factor
+      get :edit, {:id => factor.to_param}
       assigns(:factor).should eq(factor)
     end
   end
@@ -65,18 +65,18 @@ describe FactorsController do
     describe "with valid params" do
       it "creates a new Factor" do
         expect {
-          post :create, {:factor => valid_attributes}, valid_session
+          post :create, {:factor => @factor.to_param}
         }.to change(Factor, :count).by(1)
       end
 
       it "assigns a newly created factor as @factor" do
-        post :create, {:factor => valid_attributes}, valid_session
+        post :create, {:factor => @factor.to_param}
         assigns(:factor).should be_a(Factor)
         assigns(:factor).should be_persisted
       end
 
       it "redirects to the created factor" do
-        post :create, {:factor => valid_attributes}, valid_session
+        post :create, {:factor => valid_attributes}
         response.should redirect_to(Factor.last)
       end
     end
@@ -85,14 +85,14 @@ describe FactorsController do
       it "assigns a newly created but unsaved factor as @factor" do
         # Trigger the behavior that occurs when invalid params are submitted
         Factor.any_instance.stub(:save).and_return(false)
-        post :create, {:factor => { "name" => "invalid value" }}, valid_session
+        post :create, {:factor => { "name" => "invalid value" }}
         assigns(:factor).should be_a_new(Factor)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Factor.any_instance.stub(:save).and_return(false)
-        post :create, {:factor => { "name" => "invalid value" }}, valid_session
+        post :create, {:factor => { "name" => "invalid value" }}
         response.should render_template("new")
       end
     end
@@ -101,42 +101,42 @@ describe FactorsController do
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested factor" do
-        factor = Factor.create! valid_attributes
+        factor = @factor
         # Assuming there are no other factors in the database, this
         # specifies that the Factor created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Factor.any_instance.should_receive(:update_attributes).with({ "name" => "MyString" })
-        put :update, {:id => factor.to_param, :factor => { "name" => "MyString" }}, valid_session
+        put :update, {:id => factor.to_param, :factor => { "name" => "MyString" }}
       end
 
       it "assigns the requested factor as @factor" do
-        factor = Factor.create! valid_attributes
-        put :update, {:id => factor.to_param, :factor => valid_attributes}, valid_session
+        factor = @factor
+        put :update, {:id => factor.to_param, :factor => factor.to_param}
         assigns(:factor).should eq(factor)
       end
 
       it "redirects to the factor" do
-        factor = Factor.create! valid_attributes
-        put :update, {:id => factor.to_param, :factor => valid_attributes}, valid_session
+        factor = @factor.to_param
+        put :update, {:id => factor.to_param, :factor => factor.to_param}
         response.should redirect_to(factor)
       end
     end
 
     describe "with invalid params" do
       it "assigns the factor as @factor" do
-        factor = Factor.create! valid_attributes
+        factor = @factor
         # Trigger the behavior that occurs when invalid params are submitted
         Factor.any_instance.stub(:save).and_return(false)
-        put :update, {:id => factor.to_param, :factor => { "name" => "invalid value" }}, valid_session
+        put :update, {:id => factor.to_param, :factor => { "name" => "invalid value" }}
         assigns(:factor).should eq(factor)
       end
 
       it "re-renders the 'edit' template" do
-        factor = Factor.create! valid_attributes
+        factor = @factor
         # Trigger the behavior that occurs when invalid params are submitted
         Factor.any_instance.stub(:save).and_return(false)
-        put :update, {:id => factor.to_param, :factor => { "name" => "invalid value" }}, valid_session
+        put :update, {:id => factor.to_param, :factor => { "name" => "invalid value" }}
         response.should render_template("edit")
       end
     end
@@ -144,15 +144,15 @@ describe FactorsController do
 
   describe "DELETE destroy" do
     it "destroys the requested factor" do
-      factor = Factor.create! valid_attributes
+      factor = @factor
       expect {
-        delete :destroy, {:id => factor.to_param}, valid_session
+        delete :destroy, {:id => factor.to_param}
       }.to change(Factor, :count).by(-1)
     end
 
     it "redirects to the factors list" do
-      factor = Factor.create! valid_attributes
-      delete :destroy, {:id => factor.to_param}, valid_session
+      factor = @factor
+      delete :destroy, {:id => factor.to_param}
       response.should redirect_to(factors_url)
     end
   end

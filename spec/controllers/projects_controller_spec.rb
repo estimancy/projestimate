@@ -3,8 +3,8 @@ require 'spec_helper'
 describe ProjectsController do
 
   before :each do
-
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user = controller.current_user
 
     @project = FactoryGirl.create(:project, :title => 'Project11', :alias => 'P11')
     @user = FactoryGirl.build(:user)
@@ -56,7 +56,6 @@ describe ProjectsController do
   end
 
   describe 'GET edit' do
-    #login_as_admin
     #@defined_status = FactoryGirl.build(:defined_status)
     #it "assigns the requested project as @project" do
     #  get :edit, {:id => @project.to_param}
@@ -71,20 +70,17 @@ describe ProjectsController do
 
     context 'with valid params' do
       #it "located the requested project" do
-      #  login_as_admin
       #  put :update, id: @new_project, project: FactoryGirl.attributes_for(:project)
       #  assigns(:project)==(@new_project)
       #end
       #
       #it "updates the requested peAttribute" do
-      #  login_as_admin
       #  put :update, id: @new_project.to_param, project: @new_project.attributes = {:title => "12345", :alias => "My_new_Alias"}
       #  @new_project.title.should eq("12345")
       #  @new_project.alias.should eq("My_new_Alias")
       #end
       #
       #it "should redirect to the peAttribute_paths list" do
-      #  login_as_admin
       #  put :update, {id: @new_project.to_param}
       #  response.should be_success
       #end

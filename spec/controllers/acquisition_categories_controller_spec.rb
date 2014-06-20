@@ -3,7 +3,7 @@ require 'spec_helper'
 describe AcquisitionCategoriesController do
 
   before :each do
-    login_as_admin
+    sign_in
 
     @acquisition_category = FactoryGirl.create(:acquisition_category, :enhancement)
     @defined_status = FactoryGirl.build(:defined_status)
@@ -43,7 +43,6 @@ describe AcquisitionCategoriesController do
 
   describe 'PUT update' do
     before :each do
-      login_as_admin
       @new_ac =  FactoryGirl.create(:acquisition_category, :newDevelopment)
     end
 
@@ -57,7 +56,6 @@ describe AcquisitionCategoriesController do
 
   describe 'DELETE destroy' do
     it 'redirects to the acquisition_category list' do
-      login_as_admin
       @params = { :id => @acquisition_category.id }
       delete :destroy, @params
       response.should redirect_to projects_global_params_path(:anchor => 'tabs-4')

@@ -3,8 +3,11 @@ require 'spec_helper'
 describe Project do
 
   before :each do
-    @project = FactoryGirl.create(:project) #, :title => "Project11", :alias => "P11")
+    @project = FactoryGirl.create(:project)
     @user = FactoryGirl.create(:user)
+    #@user = FactoryGirl.build(:user)
+    #@user.skip_confirmation!
+    #@user.save!
 
     #@user1 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin1', :email => 'youremail1@yourcompany.net', :user_status => 'active', :auth_type => AuthMethod.first.id, :password => 'test', :password_confirmation => 'test')
     #@project1 = Project.new(:title => 'Project1', :description => 'project number 1', :alias => 'P1', :state => 'preliminary')
@@ -88,8 +91,7 @@ describe Project do
   end
 
   it 'should return all possible states' do
-    project1 = FactoryGirl.create(:project)
-    project1.states.should eql(Project.aasm_states_for_select)
+    @project.states.should eql(Project.aasm_states_for_select)
   end
 
 
@@ -100,23 +102,19 @@ describe Project do
   end
 
   it 'should return the good WBS attached to the project' do
-    project = FactoryGirl.create(:project)
-    pe_wbs_project = FactoryGirl.create(:wbs_1, :project_id => project.id)
-
-    #pe_wbs_project.project.should eql(project1)
-    project.pe_wbs_projects.products_wbs.first.project_id.should eql(project.id)
+    pe_wbs_project = FactoryGirl.create(:wbs_1, :project_id => @project.id)
+    #pe_wbs_project.project.should eql(@project)
+    @project.pe_wbs_projects.products_wbs.first.project_id.should eql(@project.id)
   end
 
   it 'should be the project root pbs_project_element' do
-
-    project = FactoryGirl.create(:project)
-    pe_wbs_project_1 = FactoryGirl.create(:wbs_1, :project_id => project.id)
+    pe_wbs_project_1 = FactoryGirl.create(:wbs_1, :project_id => @project.id)
 
     pbs_project_element = FactoryGirl.create(:pbs_project_element, :pbs_trait_folder, :is_root => true, :pe_wbs_project => pe_wbs_project_1)
     #pbs_project_element.pe_wbs_project = pe_wbs_project_1
 
     #project.root_component.is_root?.should be_true
-    project.root_component.should eq(pbs_project_element)
+    @project.root_component.should eq(pbs_project_element)
   end
 
 
@@ -129,8 +127,7 @@ describe Project do
   end
 
   it 'should be a folder component' do
-    project = FactoryGirl.create(:project)
-    pe_wbs_project = FactoryGirl.create(:wbs_1, :project_id => project.id)
+    pe_wbs_project = FactoryGirl.create(:wbs_1, :project_id => @project.id)
     #peicon_folder = FactoryGirl.create(:peicon_folder)
     #peicon_link = FactoryGirl.create(:peicon_link)
     #wet_folder = FactoryGirl.create(:work_element_type_folder, :peicon => FactoryGirl.create(:peicon_folder))
@@ -138,7 +135,7 @@ describe Project do
     #project.pe_wbs_project.pbs_project_elements << FactoryGirl.create(:pbs_project_element_folder)
     #project.pe_wbs_project.pbs_project_elements << FactoryGirl.create(:pbs_project_element_link)
 
-    project.pe_wbs_projects.products_wbs.first.pbs_project_elements.each do |pc|
+    @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.each do |pc|
       pc.work_element_type.name.should eql('Folder')
     end
   end
@@ -154,8 +151,7 @@ describe Project do
   end
 
   it ' should duplicate project' do
-    @project = FactoryGirl.create(:project)
-    @project4=@project.amoeba_dup
+    @project4 = @project.amoeba_dup
   end
 
   after :each do

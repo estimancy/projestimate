@@ -24,17 +24,22 @@ describe UserMailer do
       before(:each) do
         ActionMailer::Base.deliveries = []
         @defined_status=RecordStatus.find_by_name("Defined")
-        #@user = FactoryGirl.create(:user)
-        @user = User.first
-        @user.language = Language.where("locale = ?", "en").first #we force user language to English.
+        @user = FactoryGirl.build(:user)
+        @user.confirm!
+        @user.save!
+
+        @user.language = FactoryGirl.create(:en_language) #Language.where("locale = ?", "en").first #we force user language to English.
+        @admin_setting = FactoryGirl.create(:notifications_email_ad, :key => "notifications_email")
+
         @mailer_created = UserMailer.account_created(@user)
-        @mailer_validate_ldap=UserMailer.account_validate_ldap(@user)
-        @mailer_account_suspended=UserMailer.account_suspended(@user)
-        @mailer_new=UserMailer.new_password(@user)
-        @mailer_forgotten_password=UserMailer.forgotten_password(@user)
-        @mailer_account_request=UserMailer.account_request(@defined_status)
-        @mailer_account_validate=UserMailer.account_validate(@user)
-        @mailer_account_validate_nopwd=UserMailer.account_validate_no_pw(@user)
+        @mailer_validate_ldap = UserMailer.account_validate_ldap(@user)
+        @mailer_account_suspended = UserMailer.account_suspended(@user)
+
+        @mailer_new = UserMailer.new_password(@user)
+        @mailer_forgotten_password = UserMailer.forgotten_password(@user)
+        @mailer_account_request = UserMailer.account_request(@defined_status)
+        @mailer_account_validate = UserMailer.account_validate(@user)
+        @mailer_account_validate_nopwd = UserMailer.account_validate_no_pw(@user)
         I18n.locale = 'en' #we force Locale to English
       end
 

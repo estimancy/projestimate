@@ -45,6 +45,7 @@ FactoryGirl.define do
     password 'projestimate1'
     password_confirmation 'projestimate1'
     password_reset_token
+    confirmed_at Time.now
   end
 
   factory :logged_in_admin, :class => User do
@@ -60,6 +61,7 @@ FactoryGirl.define do
     password 'projestimate'
     password_confirmation 'projestimate'
     password_reset_token
+    confirmed_at Time.now
   end
 
   factory :ProjectCategory do

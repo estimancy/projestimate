@@ -34,7 +34,7 @@ Spork.prefork do
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
-  require Rails.root.join("spec/controller_macros.rb")
+  ###require Rails.root.join("spec/support/controller_macros.rb")
 end
 
 Spork.each_run do
@@ -61,7 +61,7 @@ Spork.each_run do
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
     # instead of true.
-    config.use_transactional_fixtures = true
+    config.use_transactional_fixtures = false  ###true
 
     # If true, the base class of anonymous controllers will be inferred
     # automatically. This will be the default behavior in future versions of
@@ -78,15 +78,8 @@ Spork.each_run do
     config.render_views
 
     #Manage user authentication on test
-    #config.include(ControllerMacros, :type => :controller)        ##config.extend ControllerMacros, :type => :controller
-    #config.include(ControllerMacros, :type => :views)
-    #config.include(ControllerMacros, :type => :helper)
-    #config.include(ControllerMacros, :type => :request)
-
-    config.include AuthRequestHelper, :type => :request
-    config.include AuthHelper, :type => :controller
-    config.include ControllerMacros, :type => :controller
-
+    config.include Devise::TestHelpers, :type => :controller
+    config.include ControllerHelpers, :type => :controller
 
     ##For taking in account the Permissions with the CanCan gem
     #config.extend(ControllerSpecs::CanCan, type: :controller)

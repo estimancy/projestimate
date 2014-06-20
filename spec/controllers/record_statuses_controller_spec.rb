@@ -20,7 +20,8 @@ require 'spec_helper'
 #
 describe RecordStatusesController do
   before :each do
-    login_as_admin
+    sign_in
+    @connected_user = controller.current_user
   end
   # This should return the minimal set of attributes required to create a valid
   # RecordStatus. As you add validations to RecordStatus, be sure to

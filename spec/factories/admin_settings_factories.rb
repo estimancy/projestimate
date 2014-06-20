@@ -5,7 +5,7 @@ FactoryGirl.define do
    end
 
    sequence :value do |n|
-     "value_#{n}"
+     "value_#{n}@email.com"
    end
 
    factory :admin_setting do
@@ -35,6 +35,10 @@ FactoryGirl.define do
 
      factory :welcome_message_ad do
        welcome_message
+     end
+
+     factory :notifications_email_ad do
+       notifications_email
      end
 
    end
