@@ -122,6 +122,12 @@ class Home < ActiveRecord::Base
     puts '   - Complexity...'
     self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
+    puts '   - Technologies...'
+    self.update_records(ExternalMasterDatabase::ExternalTechnology, Technology, ['name', 'description', 'uuid'])
+
+    puts '   - Size Unit...'
+    self.update_records(ExternalMasterDatabase::ExternalSizeUnit, SizeUnit, ['name', 'alias', 'description', 'uuid'])
+
     #Associate
     ext_factors = ExternalMasterDatabase::ExternalFactor.all
     ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
@@ -626,6 +632,12 @@ class Home < ActiveRecord::Base
     puts '   - Complexity levels...'
     self.create_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
 
+    puts '   - Technologies...'
+    self.create_records(ExternalMasterDatabase::ExternalTechnology, Technology, ['name', 'description', 'uuid'])
+
+    puts '   - Size Unit...'
+    self.create_records(ExternalMasterDatabase::ExternalSizeUnit, SizeUnit, ['name', 'alias', 'description', 'uuid'])
+
     ext_factors = ExternalMasterDatabase::ExternalFactor.all
     ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.where(organization_id: nil).all
 
@@ -671,11 +683,25 @@ class Home < ActiveRecord::Base
     laborcategory=LaborCategory.first
 
     puts '   - Organizations'
-    Organization.create(name: 'YourOrganization', description: 'This must be update to match your organization', number_hours_per_day: 8, number_hours_per_month: 160 , cost_per_hour: 40, currency_id: Currency.first.id, inflation_rate: 1)
-    Organization.create(name: 'Other', description: 'This could be used to group users that are not members of any organization', number_hours_per_day: 8, number_hours_per_month: 160 , cost_per_hour: 40, currency_id: Currency.first.id, inflation_rate: 1)
+    Organization.create(name: 'YourOrganization',
+                        description: 'This must be update to match your organization',
+                        number_hours_per_day: 8,
+                        number_hours_per_month: 160 ,
+                        cost_per_hour: 40,
+                        currency_id: Currency.first.id,
+                        inflation_rate: 1)
+    Organization.create(name: 'Other',
+                        description: 'This could be used to group users that are not members of any organization',
+                        number_hours_per_day: 8,
+                        number_hours_per_month: 160 ,
+                        cost_per_hour: 40,
+                        currency_id: Currency.first.id,
+                        inflation_rate: 1)
+
     organization = Organization.first
 
     Organization.all.each do |organization|
+
       OrganizationUowComplexity.where(organization_id: nil).each do |o|
         ouc = OrganizationUowComplexity.new(name: o.name ,
                                             organization_id: organization.id,
@@ -686,6 +712,47 @@ class Home < ActiveRecord::Base
                                             state: 'defined')
         ouc.save(validate: false)
       end
+
+      Technology.all.each do |technology|
+        ot = OrganizationTechnology.create(name: technology.name,
+                                           alias: technology.name,
+                                           description: technology.description,
+                                           organization_id: organization.id)
+      end
+
+      s1 = SizeUnitType.create(name: "New", alias: "new", description: "New lines of codes or functions points", organization_id: organization.id )
+      SizeUnit.all.each do |su|
+        s1.organization.organization_technologies.each do |ot|
+          TechnologySizeType.create(organization_id: s1.organization_id,
+                                    organization_technology_id: ot.id,
+                                    size_unit_id: su.id,
+                                    size_unit_type_id: s1.id,
+                                    value: 1)
+        end
+      end
+
+      s2 = SizeUnitType.create(name: "Modified", alias: "modified", description: "Modified lines of codes or functions points", organization_id: organization.id )
+      SizeUnit.all.each do |su|
+        s2.organization.organization_technologies.each do |ot|
+          TechnologySizeType.create(organization_id: s2.organization_id,
+                                    organization_technology_id: ot.id,
+                                    size_unit_id: su.id,
+                                    size_unit_type_id: s2.id,
+                                    value: 1)
+        end
+      end
+
+      s3 = SizeUnitType.create(name: "Reused", alias: "reused", description: "Reused lines of codes or functions points", organization_id: organization.id )
+      SizeUnit.all.each do |su|
+        s3.organization.organization_technologies.each do |ot|
+          TechnologySizeType.create(organization_id: s3.organization_id,
+                                    organization_technology_id: ot.id,
+                                    size_unit_id: su.id,
+                                    size_unit_type_id: s3.id,
+                                    value: 1)
+        end
+      end
+
     end
 
     puts '   - Demo project'

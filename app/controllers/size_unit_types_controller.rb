@@ -36,9 +36,13 @@ class SizeUnitTypesController < ApplicationController
     respond_to do |format|
       if @size_unit_type.save
 
-        OrganizationTechnology.all.each do |ot|
+        @size_unit_type.organization.organization_technologies.each do |ot|
           SizeUnit.all.each do |su|
-            TechnologySizeType.create(organization_id: @size_unit_type.organization_id, organization_technology_id: ot.id, size_unit_id: su.id, size_unit_type_id: @size_unit_type.id, value: 1)
+            TechnologySizeType.create(organization_id: @size_unit_type.organization_id,
+                                      organization_technology_id: ot.id,
+                                      size_unit_id: su.id,
+                                      size_unit_type_id: @size_unit_type.id,
+                                      value: 1)
           end
         end
 
