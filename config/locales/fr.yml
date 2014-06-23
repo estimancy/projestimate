@@ -244,14 +244,14 @@ fr:
   label_user_security_resume: "Gestion des droits utilisateurs du projet"
   label_group_security_resume: "Gestion des groupes du projet"
 
-  label_menu_library: "Bibliothèque"
+  label_menu_organization: "Organisations"
   project_global_setting: "Paramètres projets"
   estimation_setting: "Estimation"
-  organization_setting: "Organisations"
+  organization_setting: "Toutes les organisations"
   wbs_activities: "WBS-Activitiés"
   template: "Modèle"
 
-  label_menu_admin: "Admin"
+  label_menu_admin: "Administration"
   administration: "Paramètres d'admin"
   user: "Utilisateur"
   groups: "Groupes"
@@ -265,7 +265,7 @@ fr:
   events: "Evènements"
 
   master: "Paramètres master"
-  label_menu_master_admin: "Master Admin"
+  label_menu_master_admin: "Master Administration"
   project_global_parameters: "Paramètres projets"
   pemodule_global_parameters: "Paramètres modules"
   pe_attributes: "Attributs"
@@ -1191,3 +1191,9 @@ fr:
   scale_factor: "Facteurs d'ajustement"
 
   requirements: "Prérequis"
+  size_unit: "Unité de taille"
+  unit_or_work_complexity: "Complexité des unité d'oeuvres"
+  factor_complexity: "Complexité des facteurs"
+  size_unit_type: "Type de d'unité de taille"
+  technology_size_abacus: "Abaque Unité de taille / Technologie"
+  technology_uos_synthesis: "Abaque Unité d'oeuvre / Technologie"

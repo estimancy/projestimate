@@ -244,14 +244,14 @@ en:
   label_user_security_resume: "User securities resume"
   label_group_security_resume: "Group securities resume"
 
-  label_menu_library: "Library"
+  label_menu_organization: "Organizations"
   project_global_setting: "Project global settings"
   estimation_setting: "Estimation settings"
-  organization_setting: "Organizational setting"
+  organization_setting: "All organizations"
   wbs_activities: "WBS-Activities"
   template: "Template"
 
-  label_menu_admin: "Admin"
+  label_menu_admin: "Administration"
   administration: "Admin Settings"
   user: "User"
   groups: "Groups"
@@ -265,7 +265,7 @@ en:
   events: "Events"
 
   master: "Master parameters"
-  label_menu_master_admin: "Master Admin"
+  label_menu_master_admin: "Master Administration"
   project_global_parameters: "Project global parameters"
   pemodule_global_parameters: "Module global parameters"
   pe_attributes: "Attributes"
@@ -1191,4 +1191,9 @@ en:
   scale_factor: "Scale factor"
 
   requirements: "Requirements"
-
+  size_unit: "Size unit"
+  unit_or_work_complexity: "Complexité des unité d'oeuvres"
+  factor_complexity: "Complexité des facteurs"
+  size_unit_type: "Type de d'unité de taille"
+  technology_size_abacus: "Abaque Unité de taille / Technologie"
+  technology_uos_synthesis: "Abaque Unité d'oeuvre / Technologie"

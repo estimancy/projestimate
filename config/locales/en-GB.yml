@@ -265,7 +265,7 @@ en-gb:
   events: "Events"
 
   master: "Master parameters"
-  label_menu_master_admin: "Master Admin"
+  label_menu_master_admin: "Master Administration"
   project_global_parameters: "Project global parameters"
   pemodule_global_parameters: "Module global parameters"
   pe_attributes: "Attributes"
@@ -1169,4 +1169,7 @@ en-gb:
   iso_code_number: "ISO code number"
   currency_sign: "Sign"
   conversion_rate: "Conversion rate"
+
+  requirement: "Requirements"
+  size_unit: "Size unit"
 

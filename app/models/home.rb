@@ -173,7 +173,6 @@ class Home < ActiveRecord::Base
         icon = Peicon.find(id_icon)
         icon.update_attributes(:name => ext_icon.name, :icon => File.new("#{Rails.root}/public/#{icon_name}"), :record_status_id => local_defined_rs_id,:uuid=> ext_icon.uuid)
       else
-        puts 'create'
         icon = Peicon.create(:name => ext_icon.name, :icon => File.open("#{Rails.root}/public/#{icon_name}"), :record_status_id => local_defined_rs_id, :uuid => ext_icon.uuid )
         icon.uuid=ext_icon.uuid
         icon.save
