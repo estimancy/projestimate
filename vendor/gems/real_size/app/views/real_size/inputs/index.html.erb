@@ -25,14 +25,18 @@
                                          project_id: current_project.id).first %>
           <tr>
             <td><%= sut.name %></td>
-            <td><%= text_field_tag "values[#{sut.id}]", i.value %></td>
+            <td><%= text_field_tag "values[#{sut.id}]", i.nil? ? '' : i.value %></td>
             <td><%= select_tag "size_unit[#{sut.id}]", options_for_select(SizeUnit.all.map{|i| [i.name, i.id]}) %></td>
           </tr>
         <% end %>
 
         <tr>
           <td>Total</td>
-          <td>678</td>
+          <td>  <%= RealSize::Input.where( pbs_project_element_id: current_component.id,
+                                          module_project_id: current_module_project.id,
+                                          size_unit_id: SizeUnit.first.id,
+                                          project_id: current_project.id).map(&:value).sum %>
+          </td>
           <td>KSLOC</td>
         </tr>
       </table>

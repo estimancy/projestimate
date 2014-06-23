@@ -11,11 +11,18 @@
       <%= f.input :description, :label => I18n.t('requirements'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
     <% end %>
 
-    <% unless @pbs_project_element.is_root? %>
-      <%= f.input :ancestry, :label => I18n.t('ancestry'), :as => :select, :collection => @folder_components, :label => 'Parent', :selected => @pbs_project_element.parent.id %>
+    <%# unless @pbs_project_element.is_root? %>
+      <% begin %>
+        <%= f.input :ancestry, :label => I18n.t('ancestry'), :as => :select, :collection => @folder_components, :label => 'Parent', :selected => @pbs_project_element.parent.id %>
+      <% rescue %>
+        <% if @parent %>
+          <%= f.input :ancestry, :label => I18n.t('ancestry'), :as => :select, :collection => @folder_components, :selected => @parent.id, :label => 'Parent' %>
+        <% end %>
+      <% end %>
+
       <%= f.input :work_element_type_id, :label => I18n.t('work_element_type'), :as => :select, :collection => WorkElementType.all, :include_blank => false %>
       <%= f.input :organization_technology_id, :label => I18n.t('organization_technology'), :as => :select, :collection => current_project.organization.organization_technologies, :include_blank => false %>
-    <% end %>
+    <%# end %>
 
     <% unless @pbs_project_element.link? %>
       <%= I18n.t(:text_overloading_default_ratio_table) %>

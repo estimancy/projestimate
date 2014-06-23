@@ -1,27 +1,14 @@
 class SizeUnitTypesController < ApplicationController
   #include DataValidationHelper #Module for master data changes validation
+  #before_filter :get_record_statuses
 
-  before_filter :get_record_statuses
-  # GET /size_unit_types
-  # GET /size_unit_types.json
   def index
     @size_unit_types = SizeUnitType.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @size_unit_types }
-    end
   end
 
-  # GET /size_unit_types/1
-  # GET /size_unit_types/1.json
   def show
     @size_unit_type = SizeUnitType.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @size_unit_type }
-    end
   end
 
   # GET /size_unit_types/new
