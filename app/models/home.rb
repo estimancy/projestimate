@@ -43,7 +43,7 @@ class Home < ActiveRecord::Base
 
   EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory,
                     ExternalAcquisitionCategory, ExternalPeicon, ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalLaborCategory, ExternalProjectSecurityLevel,
-                    ExternalPermission]
+                    ExternalPermission, ExternalSizeUnit]
   def self.connect_external_database
     #begin
       db = Mysql2::Client.new(ExternalMasterDatabase::HOST)

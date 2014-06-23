@@ -21,7 +21,7 @@
 
 class RealSize::InputsController < ApplicationController
   def index
-    @size_unit_types = SizeUnitType.all
+    @size_unit_types = current_project.organization.size_unit_types
   end
 
   def save
