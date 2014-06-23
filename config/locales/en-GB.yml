@@ -544,8 +544,8 @@ en-gb:
 
   #projects
   edit_project: "Edit project \"%{value}\" ..."
-  new_project: "New project"
-  new_project_from: "New project from template"
+  new_project: "New estimation"
+  new_project_from: "New estimation from template"
   wbs_product: "WBS Product"
   wbs_activity: "WBS Activity"
   available_wbs_activity: "Available WBS-Activities from the library, with their associated ratio tables\n(Selected ratio table will be used as default ratio table)"

@@ -15,55 +15,53 @@
 </head>
 <body>
 
-<%= render 'layouts/modal' %>
+  <%= render 'layouts/modal' %>
 
-<div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
-      <div class="row">
-        <div class="pull-left">
-          <%= link_to(image_tag("/assets/Logo 200x75.png"), '/dashboard') %>
-        </div>
-        <div class="pull-right" style="margin-top:16px; margin-left: 10px">
-          <% if defined?(current_user)  %>
-            <%= render 'layouts/send_feedback', :handlers => [:erb], :formats => [:html] %>
-          <% end %>
-        </div>
-        <div style="margin-top:16px" class="pull-right">
-          <%= render 'layouts/search_input' %>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="row">
+          <div class="pull-left">
+            <%= link_to(image_tag("/assets/Logo 200x75.png"), '/dashboard') %>
+          </div>
+          <div class="pull-right" style="margin-top:16px; margin-left: 10px">
+            <% if defined?(current_user)  %>
+              <%= render 'layouts/send_feedback', :handlers => [:erb], :formats => [:html] %>
+            <% end %>
+          </div>
+          <div style="margin-top:16px" class="pull-right">
+            <%= render 'layouts/search_input' %>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
 
-      <% if user_signed_in? %>
-        <%= render 'layouts/user_account' %>
-      <% end %>
-      <div id="notifications">
-        <%= render 'layouts/notifications' %>
-      </div>
+        <% if user_signed_in? %>
+          <%= render 'layouts/user_account' %>
+        <% end %>
+        <div id="notifications">
+          <%= render 'layouts/notifications' %>
+        </div>
 
-    </div>
-  </div>
-</div>
-
-
-
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span12">
-        <%= yield %>
       </div>
     </div>
   </div>
 
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
 
-</body>
+
+  </body>
 </html>
 <script type="text/javascript">
     $("#toggle_button").click(function(){

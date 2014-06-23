@@ -546,8 +546,8 @@ fr:
 
   #projects
   edit_project: "Editer le projet \"%{value}\" ..."
-  new_project: "Créer un projet"
-  new_project_from: "Créer un projet à partir d'un modèle"
+  new_project: "Créer une estimation"
+  new_project_from: "Créer une estimation à partir d'un modèle"
   wbs_product: "WBS Produit"
   wbs_activity: "WBS Activité"
   available_wbs_activity: "WBS-Activité disponibles dans la bibliothèque, avec leurs tables de ratio associées\n(La table de ratio selectionnée sera utilisée comme table de ratio par défaut)"

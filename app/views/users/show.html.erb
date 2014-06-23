@@ -4,6 +4,16 @@
       <%= hidden_field_tag :project_id, current_project.id %>
       <%= render 'dashboard_inner' %>
   <% else %>
-      <div><%= load_admin_setting('welcome_message') %></div>
+      <h1>Bienvenue sur Estimancy</h1>
+
+      <p>
+        Pour créer une première estimation, cliquer sur <%= link_to "créer un nouvelle estimation", new_project_path %>.
+      </p>
+      <p>
+        Vous avez également accès à <%= link_to "toutes vos estimations", projects_path %> à partir du menu Estimations > Toutes les estimations.
+      </p>
+      <p>
+        Vous pouvez également paramétrer <%= link_to "vos organisations", "/organizationals_params" %> à partir du menu Bibliothèque > Organisations.
+      </p>
   <% end %>
 </div>
