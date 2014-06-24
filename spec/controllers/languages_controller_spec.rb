@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe LanguagesController do
 
-  render_views
-
   before :each do
     sign_in
     @connected_user =  controller.current_user

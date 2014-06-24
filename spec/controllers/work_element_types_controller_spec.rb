@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe WorkElementTypesController do
 
-  render_views
-
   before :each do
     sign_in
     @user = controller.current_user
