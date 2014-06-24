@@ -1603,11 +1603,11 @@ public
 
         k = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
 
-        a = 0.5 #pente
-        m.floor.times do |i|
+        a = 2 #pente
+        24.floor.times do |i|
           t = i/12.to_f
           @staffing_labels << i
-          @staffing_profile_data << 2*k*0.5*t*Math.exp(-0.5*t*t)
+          @staffing_profile_data << 2*k*a*t*Math.exp(-(a)*t*t)
         end
       #rescue
       #end
