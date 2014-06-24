@@ -71,16 +71,17 @@ describe LanguagesController do
 
   describe 'create' do
     it 'renders the create template' do
-      @params = { :name => 'Breton', :locale => 'br'}
-      post :create, @params
+      @params = FactoryGirl.attributes_for(:language, :name => 'Breton', :locale => 'br')
+      post :create, :factor => @params
       response.should be_success
     end
 
-    #it "renders the create template" do
-    #  @params = { :name => "Breton", :locale => "br" }
-    #  post :create, @params
-    #  response.should redirect_to redirect(languages_path)
-    #end
+    it "redirect after the create" do
+      #@params = { :name => "Breton", :locale => "br" }
+      #@params = FactoryGirl.attributes_for(:language, :name => "Breton", :locale => "br")
+      #post :create, :language => @params
+      #response.should redirect_to(languages_path)
+    end
   end
 
   describe 'PUT update' do
@@ -97,13 +98,13 @@ describe LanguagesController do
   end
 
   describe 'DELETE destroy' do
-    #it "destroys the requested record_status" do
-    #    @params = { :id => @language.id }
-    #    delete :destroy, @params
-    #    response.should be_success
-    #end
+    it "destroys the requested record_status" do
+        @params = { :id => @language.id }
+        delete :destroy, @params
+        response.should redirect_to(languages_path)
+    end
+
     it 'redirects to the record_statuses list' do
-      #login_admin
       @params = { :id => @language.id }
 
       delete :destroy, @params

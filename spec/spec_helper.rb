@@ -83,8 +83,9 @@ Spork.each_run do
     config.include DatabaseCleaner
 
     #Manage user authentication on test
-    config.include Devise::TestHelpers, :type => :controller
-    config.include ControllerHelpers, :type => :controller
+    #config.include Devise::TestHelpers, :type => :controller
+    #config.include Warden::Test::Helpers
+    #config.include ControllerHelpers, :type => :controller
 
     ##For taking in account the Permissions with the CanCan gem
     #config.extend(ControllerSpecs::CanCan, type: :controller)

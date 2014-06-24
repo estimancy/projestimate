@@ -68,7 +68,6 @@ describe UsersController, 'Creating and managing user', :type => :controller do
 
   describe "GET 'display_states'" do
     it 'returns http success' do
-      #@user = FactoryGirl.create(:user)
       @params = { :user_status => @user.user_status, :format => 'js' }
       get 'display_states', @params
       response.should be_success
