@@ -1,5 +1,5 @@
 class TechnologySizeType < ActiveRecord::Base
-  attr_accessible :organization_id, :organization_technology_id, :size_unit_id, :size_unit_type_id, :value
+  attr_accessible :organization_id, :organization_technology_id, :size_unit_id, :size_unit_type_id, :value_low, :value_most_likely, :value_high
 
   belongs_to :organization
   belongs_to :organization_technology
