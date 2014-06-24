@@ -21,7 +21,8 @@ require 'spec_helper'
 describe AttributeCategoriesController do
 
   before :each do
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user = controller.current_user
 
     @attribute_category = FactoryGirl.create(:quality_in_use)
     @defined_status = FactoryGirl.build(:defined_status)

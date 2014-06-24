@@ -2,11 +2,9 @@ require 'spec_helper'
 
 describe PbsProjectElementsController do
 
-  before do
-    @connected_user = login_as_admin
-  end
-
   before :each do
+    sign_in
+    @connected_user = controller.current_user
     @work_element_type = FactoryGirl.build(:work_element_type, :wet_folder)
     @folder = FactoryGirl.create(:folder)
     @folder1 = FactoryGirl.create(:folder, :name => 'Folder11', :work_element_type => @work_element_type)

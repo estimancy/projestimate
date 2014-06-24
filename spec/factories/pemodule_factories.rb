@@ -3,15 +3,15 @@ FactoryGirl.define do
 
   #Pemodule
   factory :pemodule do |mo|
-    mo.sequence(:title) {|n| "Cocomo basic_#{n}" }
-    mo.sequence(:alias) {|n| "cocomo_basic_#{n}" }
-    mo.description "basic cocomo"
-    mo.uuid { uuid }
-    mo.association :record_status, :factory => :proposed_status, strategy: :build
+    mo.sequence(:title) {|n| "Module_#{n}" }
+    mo.sequence(:alias) {|n| "module#{n}" }
+    mo.description "Module description"
+    mo.uuid "#{UUIDTools::UUID.random_create.to_s}"
+    mo.association :record_status, :factory => :defined_status, strategy: :build
+    mo.with_activities 'no'
   end
 
 end
-
 
 
 

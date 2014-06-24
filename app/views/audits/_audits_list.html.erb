@@ -21,7 +21,7 @@
             <td><%= audit.customize_action_name %></td>
             <td><%= audit.customize_audited_changes %></td>
             <td><%= audit.customize_user_id %></td>
-            <td><%= I18n.l(audit.created_at) %></td>
+            <td><%= audit.created_at.nil? ? nil : I18n.l(audit.created_at) %></td>
             <td>
               <%#= link_to(' ', edit_audit_path(user, :anchor => "tabs-1"), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit')) +
                           link_to(' ', "users/#{user.id}/activate", :class => 'icon-legal icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('button_activate_user_account')) +

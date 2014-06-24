@@ -2,17 +2,15 @@ require 'spec_helper'
 describe ProjectAreasController do
 
   before do
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user = controller.current_user
   end
+
 
   before :each do
     @project_area = FactoryGirl.create(:project_area)
   end
-  before :each do
-    @admin = FactoryGirl.create(:user)
-  end
 
-  #log_user(@admin)
   describe 'New' do
     it 'renders the new template' do
       get :new

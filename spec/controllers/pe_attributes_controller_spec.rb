@@ -2,11 +2,9 @@ require 'spec_helper'
 
 describe PeAttributesController do
 
-  before do
-    @connected_user = login_as_admin
-  end
-
   before :each do
+    sign_in
+    @connected_user = controller.current_user
     @attribute = FactoryGirl.create(:ksloc_attribute)
     @params = { :id => @attribute.id }
   end
@@ -50,7 +48,6 @@ describe PeAttributesController do
     end
 
     it 'should create record with success' do
-      #login_as_admin
       post :create, :cost_attribute => { :name => 'KSLOC1', :alias=> 'KSLOC1', :uuid => '1111', :description=> 'test'}, :options => ['integer', '>=', '0']  # FactoryGirl.attributes_for(:cost_attribute)
       response.should be_success
     end
@@ -74,8 +71,6 @@ describe PeAttributesController do
       end
 
       it 'updates the requested peAttribute' do
-        login_as_admin
-
         put :update, id: @cost_attribute.to_param, cost_attribute: @cost_attribute.attributes = {:description => 'My_new_description'}
         @cost_attribute.uuid='12345'
         @cost_attribute.uuid.should eq('12345')

@@ -1,7 +1,8 @@
 require 'spec_helper'
   describe SearchesController do
     before :each do
-      login_as_admin
+      sign_in
+      @connected_user = controller.current_user
     end
     describe 'GET results' do
       it 'renders the results template' do

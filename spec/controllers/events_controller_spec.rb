@@ -3,11 +3,11 @@ require 'spec_helper'
 describe EventsController do
 
   before do
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user = controller.current_user
   end
 
   before :each do
-    login_as_admin
     @event = FactoryGirl.create(:event)
   end
 

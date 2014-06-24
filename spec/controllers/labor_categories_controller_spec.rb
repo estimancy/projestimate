@@ -3,7 +3,8 @@ require 'spec_helper'
 describe LaborCategoriesController do
 
   before do
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user = controller.current_user
   end
 
   before :each do

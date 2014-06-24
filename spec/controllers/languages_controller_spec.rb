@@ -2,14 +2,10 @@ require 'spec_helper'
 
 describe LanguagesController do
 
-  render_views
-
-  before :all do
-    http_login
-  end
-
   before :each do
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user =  controller.current_user
+
     @language = FactoryGirl.create(:language)
     @params = { :id => @language.id }
   end
@@ -41,31 +37,16 @@ describe LanguagesController do
     #end
 
     it 'should be successful' do
-      #http_login
-      #@request.env["HTTP_AUTHORIZATION"] = "Basic " + Base64::encode64("admin:projestimate")
-      #@request.env["HTTP_AUTHORIZATION"] = ActionController::HttpAuthentication::Basic.encode_credentials("admin", "projestimate")
-
-      request.env['HTTP_AUTHORIZATION'] = user =  User.authenticate('admin', 'projestimate')  #ActionController::HttpAuthentication::Token.encode_credentials("admin:projestimate")
-      session[:current_user_id] = user.id
-      controller.stub(:current_user).and_return(user)
       get 'index'
       response.should be_success
     end
 
     it 'renders the index template' do
-      request.env['HTTP_AUTHORIZATION'] = user =  User.authenticate('admin', 'projestimate')
-      session[:current_user_id] = user.id
-      controller.stub(:current_user).and_return(user)
-
       get :index
       expect(:get => '/languages').to route_to(:controller => 'languages', :action => 'index')
     end
 
     it 'render index if have read ability on project' do
-      request.env['HTTP_AUTHORIZATION'] = user =  User.authenticate('admin', 'projestimate')
-      session[:current_user_id] = user.id
-      controller.stub(:current_user).and_return(user)
-
       get :index
       assert_template :index
   end
@@ -74,10 +55,6 @@ describe LanguagesController do
 
   describe 'New' do
     it 'renders the new template' do
-      request.env['HTTP_AUTHORIZATION'] = user =  User.authenticate('admin', 'projestimate')
-      session[:current_user_id] = user.id
-      controller.stub(:current_user).and_return(user)
-
       get :new
       response.should render_template('new')
     end
@@ -94,15 +71,17 @@ describe LanguagesController do
 
   describe 'create' do
     it 'renders the create template' do
-      @params = { :name => 'Breton', :locale => 'br'}
-      post :create, @params
+      @params = FactoryGirl.attributes_for(:language, :name => 'Breton', :locale => 'br')
+      post :create, :factor => @params
       response.should be_success
     end
-    #it "renders the create template" do
-    #  @params = { :name => "Breton", :locale => "br" }
-    #  post :create, @params
-    #  response.should redirect_to redirect(languages_path)
-    #end
+
+    it "redirect after the create" do
+      #@params = { :name => "Breton", :locale => "br" }
+      #@params = FactoryGirl.attributes_for(:language, :name => "Breton", :locale => "br")
+      #post :create, :language => @params
+      #response.should redirect_to(languages_path)
+    end
   end
 
   describe 'PUT update' do
@@ -119,13 +98,13 @@ describe LanguagesController do
   end
 
   describe 'DELETE destroy' do
-    #it "destroys the requested record_status" do
-    #    @params = { :id => @language.id }
-    #    delete :destroy, @params
-    #    response.should be_success
-    #end
+    it "destroys the requested record_status" do
+        @params = { :id => @language.id }
+        delete :destroy, @params
+        response.should redirect_to(languages_path)
+    end
+
     it 'redirects to the record_statuses list' do
-      #login_admin
       @params = { :id => @language.id }
 
       delete :destroy, @params

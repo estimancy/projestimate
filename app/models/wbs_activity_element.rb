@@ -109,7 +109,8 @@ class WbsActivityElement < ActiveRecord::Base
       @inserts = []
       csv.each_with_index do |row, i|
         unless row.empty? or i == 0
-          @inserts.push("(\"#{Time.now}\",
+          @inserts.push("(\"#{Time.now.utc.to_s(:db)}\",
+                          \"#{Time.now.utc.to_s(:db)}\",
                           \"#{ !row[2].nil? ? row[2].gsub("\"", "\"\"") : row[2] }\",
                           \"#{ !row[0].nil? ? row[0].gsub("\"", "\"\"") : row[0] }\",
                           \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\", #{@localstatus.id}, #{@wbs_activity.id}, \"#{UUIDTools::UUID.random_create.to_s}\")")
@@ -118,7 +119,7 @@ class WbsActivityElement < ActiveRecord::Base
       end
     end
 
-    ActiveRecord::Base.connection.execute("INSERT INTO wbs_activity_elements(created_at,description,dotted_id,name,record_status_id,wbs_activity_id,uuid) VALUES  #{@inserts.join(',')}")
+    ActiveRecord::Base.connection.execute("INSERT INTO wbs_activity_elements(created_at,updated_at,description,dotted_id,name,record_status_id,wbs_activity_id,uuid) VALUES  #{@inserts.join(',')}")
 
     elements = @wbs_activity.wbs_activity_elements
     build_ancestry(elements, @wbs_activity.id)

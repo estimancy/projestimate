@@ -3,15 +3,14 @@ require 'spec_helper'
 describe GroupsController do
 
   before do
-    @connected_user = login_as_admin
+    sign_in
+    @connected_user = controller.current_user
   end
 
   before :each do
-    login_as_admin
     @group = FactoryGirl.create(:group)
     @project = FactoryGirl.create(:project)
     @proposed_status = FactoryGirl.build(:proposed_status)
-
   end
 
   describe 'GET index' do

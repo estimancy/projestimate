@@ -41,10 +41,15 @@ FactoryGirl.define do
     #time_zone  "GMT"
     association :auth_method, :factory => :auth_method
     user_status 'pending'
-    association :language, :factory => :language
+    association :language, :factory => :en_language, strategy: :build
     password 'projestimate1'
     password_confirmation 'projestimate1'
     password_reset_token
+    confirmed_at Time.now
+  end
+
+  factory :master_admin do
+
   end
 
   factory :logged_in_admin, :class => User do
@@ -60,6 +65,7 @@ FactoryGirl.define do
     password 'projestimate'
     password_confirmation 'projestimate'
     password_reset_token
+    confirmed_at Time.now
   end
 
   factory :ProjectCategory do

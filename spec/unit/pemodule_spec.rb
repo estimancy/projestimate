@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Pemodule do
   before :each do
     proposed_status = FactoryGirl.build(:proposed_status)
-    @pemodule = Pemodule.new(:title => 'CocomoBasic', :alias => 'cocomo_basic', :description => 'CocomoBasic basic', :uuid => '121212', :record_status => proposed_status)
+    @pemodule = FactoryGirl.create(:pemodule, :title => 'CocomoBasic', :alias => 'cocomo_basic', :description => 'CocomoBasic basic', :uuid => '121212', :record_status => proposed_status)
+
     @custom_status = FactoryGirl.build(:custom_status)
   end
 

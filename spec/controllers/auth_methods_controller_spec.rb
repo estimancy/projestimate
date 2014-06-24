@@ -2,12 +2,9 @@ require 'spec_helper'
 
 describe AuthMethodsController do
 
-  before do
-    @connected_user = login_as_admin
-  end
-
   before :each do
-    login_as_admin
+    sign_in
+    @connected_user = controller.current_user
     @default_auth_method = FactoryGirl.create(:auth_method)
     proposed_status = FactoryGirl.build(:proposed_status)
     @another_auth_method = AuthMethod.new(:name => 'LDAP', :server_name => 'example.com', :port => 636, :base_dn => 'something', :uuid => '124563', :record_status => proposed_status)

@@ -3,7 +3,22 @@ require 'spec_helper'
 describe UsersController, 'Creating and managing user', :type => :controller do
 
   before do
-    @connected_user = login_as_admin
+    sign_in
+    @user = controller.current_user
+  end
+
+  describe "Authentication test" do
+    it 'blocks unauthenticated user' do
+      sign_in nil
+      get :index
+      response.should redirect_to(new_user_session_path)
+    end
+
+    it 'allows authenticated access' do
+      sign_in
+      get :index
+      response.should be_success
+    end
   end
 
   describe "GET 'index'" do
@@ -15,8 +30,7 @@ describe UsersController, 'Creating and managing user', :type => :controller do
 
   describe "GET 'edit'" do
     it 'returns correct template' do
-      #@user = FactoryGirl.create(:user)
-      get 'edit', :id=> @user.to_param
+      get 'edit', :id => @user.to_param
       response.should render_template('edit')
     end
   end
@@ -30,7 +44,6 @@ describe UsersController, 'Creating and managing user', :type => :controller do
 
   describe "GET 'find_use_user'" do
     it 'returns correct template' do
-    #  @user = FactoryGirl.create(:user)
       @params = { :user_id => @user.id, :format => 'js' }
       get 'find_use_user', @params
       response.should be_success
@@ -55,7 +68,6 @@ describe UsersController, 'Creating and managing user', :type => :controller do
 
   describe "GET 'display_states'" do
     it 'returns http success' do
-      #@user = FactoryGirl.create(:user)
       @params = { :user_status => @user.user_status, :format => 'js' }
       get 'display_states', @params
       response.should be_success
