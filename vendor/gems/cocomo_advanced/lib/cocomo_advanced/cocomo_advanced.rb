@@ -94,7 +94,7 @@ module CocomoAdvanced
 
     #Return end date
     def get_end_date(*args)
-      @end_date = (@project.start_date + (get_delay(args[0], args[1], args[2])).to_i.hours)
+      @end_date = (@project.start_date + ((get_delay(args[0], args[1], args[2])) / @project.organization.number_hours_per_month.to_f).to_i.months )
       @end_date
     end
 

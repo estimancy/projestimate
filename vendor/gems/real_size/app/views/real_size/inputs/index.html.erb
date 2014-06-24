@@ -30,7 +30,7 @@
             <td><%= text_field_tag "value_low[#{sut.id}]", i.nil? ? '' : i.value_low %></td>
             <td><%= text_field_tag "value_most_likely[#{sut.id}]", i.nil? ? '' : i.value_most_likely %></td>
             <td><%= text_field_tag "value_high[#{sut.id}]", i.nil? ? '' : i.value_high %></td>
-            <td><%= select_tag "size_unit[#{sut.id}]", options_for_select(SizeUnit.all.map{|i| [i.name, i.id]}) %></td>
+            <td><%= select_tag "size_unit[#{sut.id}]", options_for_select(SizeUnit.all.map{|i| [i.name, i.id]}), class: "size_unit" %></td>
           </tr>
         <% end %>
 
@@ -63,3 +63,11 @@
   <% end %>
   </div>
 </div>
+
+<script>
+  $(".size_unit_" + index).on("change", function(e){
+    $.ajax({ url:'/',
+      data: 'uow_id=' + $(this).val()
+    })
+  });
+</script>
