@@ -24,11 +24,10 @@ describe UserMailer do
       before(:each) do
         ActionMailer::Base.deliveries = []
         @defined_status=RecordStatus.find_by_name("Defined")
-        @user = FactoryGirl.build(:user)
+        @user = FactoryGirl.build(:user)    # default user language is English.
         @user.confirm!
         @user.save!
 
-        @user.language = FactoryGirl.create(:en_language) #Language.where("locale = ?", "en").first #we force user language to English.
         @admin_setting = FactoryGirl.create(:notifications_email_ad, :key => "notifications_email")
 
         @mailer_created = UserMailer.account_created(@user)

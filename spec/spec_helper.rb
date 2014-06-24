@@ -1,3 +1,4 @@
+require 'database_cleaner'
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
@@ -45,6 +46,7 @@ Spork.each_run do
 
   # This code will be run each time you run your specs.
   RSpec.configure do |config|
+
     config.mock_with :rspec
 
     # ## Mock Framework
@@ -77,11 +79,15 @@ Spork.each_run do
     #Render views globally
     config.render_views
 
+    # For cleaning test database
+    config.include DatabaseCleaner
+
     #Manage user authentication on test
     config.include Devise::TestHelpers, :type => :controller
     config.include ControllerHelpers, :type => :controller
 
     ##For taking in account the Permissions with the CanCan gem
     #config.extend(ControllerSpecs::CanCan, type: :controller)
+
   end
 end

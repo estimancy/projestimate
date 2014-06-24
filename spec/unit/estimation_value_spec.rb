@@ -7,10 +7,9 @@ describe EstimationValue do
 
     @project = FactoryGirl.create(:project, :title => 'Estimationproject', :alias => 'EstP', :state => 'preliminary')
 
-    @pemodule = Pemodule.new(:title => 'Bar', :alias => 'bar', :description => 'Bar module',
-                             :record_status => defined_status,
-                             :compliant_component_type=>['Toto'])
-    @pemodule.uuid = 'moimoiaussi'
+    @pemodule = FactoryGirl.create(:pemodule, :title => 'Bar', :alias => 'bar', :description => 'Bar module',
+                                   :record_status => defined_status,
+                                   :compliant_component_type=>['Toto'])
 
     @mp1 = ModuleProject.create(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1)
     @mp2 = ModuleProject.create(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 2)

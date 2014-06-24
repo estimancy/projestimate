@@ -5,6 +5,7 @@ describe WbsActivityElement do
   before :each do
     @wbs_activity_element = FactoryGirl.create(:wbs_activity_element)
     @wbs_activity_element2 = FactoryGirl.create(:wbs_activity_element, :name=>1)
+    @local_status = FactoryGirl.create(:local_status)
   end
 
   it 'should return wbs_activity name' do

@@ -6,14 +6,7 @@ describe ModuleProject do
   before :each do
     @project = FactoryGirl.create(:project, :title => 'M1project', :alias => 'M1P', :state => 'preliminary')
 
-    @pemodule = Pemodule.new(:title => 'Foo',
-                            :alias => 'foo',
-                            :description => 'Bar',
-                            :record_status => proposed_status,
-                            :compliant_component_type=>['Toto'])
-    @pemodule.uuid = 'pepepe'
-
-   # @pemodule = FactoryGirl.create(:pemodule)
+    @pemodule = FactoryGirl.create(:pemodule, title: 'Foo', alias: 'foo', description: 'Bar', compliant_component_type: ['Toto'])
 
     @mp1 = ModuleProject.create(:project_id => @project.id, :position_y => 1, :pemodule => @pemodule)
     @mp2 = ModuleProject.create(:project_id => @project.id, :position_y => 1, :pemodule => @pemodule)
@@ -105,7 +98,7 @@ describe ModuleProject do
   end
 
   it 'should return pemodule title' do
-    @mp2.to_s.should eql(@mp2.pemodule.title)
+    @mp2.to_s.should include(@mp2.pemodule.title)
   end
 
 

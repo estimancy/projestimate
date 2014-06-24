@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
 
   serialize :ten_latest_projects, Array
 
-  validates_presence_of :last_name, :first_name#, :user_status, :auth_type
+  validates_presence_of :last_name, :first_name, :auth_type #, :user_status
   validates :login_name, :presence => true, :uniqueness => {case_sensitive: false}
   #validates :email, :presence => true, :format => {:with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/i}, :uniqueness => {case_sensitive: false}
   validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}, :uniqueness => {case_sensitive: false}

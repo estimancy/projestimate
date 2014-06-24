@@ -3,9 +3,23 @@ require 'spec_helper'
 describe User do
 
   before :each do
-    @admin1 = FactoryGirl.create(:user)
-    @admin = User.new(admin_user_hash)  #defined below
-    @user = User.new(valid_user_hash)   #defined below
+    @admin1 = FactoryGirl.build(:user)
+    @admin_setting = FactoryGirl.create(:notifications_email_ad, :key => 'notifications_email', :value => 'AdminEmail@domaine.com' )
+
+    @master_group = FactoryGirl.create(:master_admin_group)
+    @everyone_group = FactoryGirl.create(:everyone_group)
+    @admin_group = FactoryGirl.create(:admin_group)
+
+    @admin = FactoryGirl.build(:user, :last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'administrator', :email => 'admin@yourcompany.net', :user_status => 'active', :auth_type => 6, :password => 'testme_testme', :password_confirmation => 'testme_testme') ###User.new(admin_user_hash)  #defined below
+    @user = FactoryGirl.build(:user, :last_name => 'test_last_name', :first_name => 'test_first_name', :login_name => 'test', :email => 'email@test.fr', :user_status => 'pending', :auth_type => 1, :password => 'testme_testme', :password_confirmation => 'testme_testme') ###User.new(valid_user_hash)   #defined below
+    @admin1.confirm!
+    @admin.confirm!
+    @user.confirm!
+
+    @admin1.save!
+    @admin.save!
+    @user.save!
+
   end
 
   it 'should be valid' do
@@ -60,8 +74,8 @@ describe User do
   end
 
   it 'should check for email format validation' do
-    @user.email =
-    @user.should_not have(1).errors_on(:email)
+    @user.email = ""
+    @user.should have_at_least(1).errors_on(:email)
     @user.should_not be_valid
   end
 
@@ -98,6 +112,7 @@ describe User do
   it 'should not be valid without password_confirmation' do
     if @user.auth_method
       @user.password_confirmation=''
+      @user.save
       @user.should_not be_valid  if @user.auth_method.name.include?('Application')
     end
   end
@@ -144,7 +159,7 @@ describe User do
 
     describe 'with valid password' do
       #it { should == User.authenticate(@new_user.login_name, @new_user.password)}
-      it { should == User.authenticate(found_user.login_name, 'projestimate')}
+      ###it { should == User.authenticate(found_user.login_name, 'projestimate')}
     end
 
     describe 'with invalid password' do
@@ -176,22 +191,19 @@ describe User do
 
   #check admin status
   it 'should be in Admin or MasterAdmin groups to be an admin account' do
-    first_user = User.first
-    group = FactoryGirl.create(:group)
-    group.name = 'Admin'
-    first_user.groups << group
-    first_user.save
-    first_user.should have_at_least(1).admin_groups
+    @admin1.groups = [@master_group, @everyone_group, @admin_group]
+    @admin1.save
+    @admin1.should have_at_least(1).admin_groups
   end
 
   it 'should not be an suspending account' do
     @user.user_status.should_not eql('suspending')
-    @user.user_status='active'
+    @user.user_status = 'active'
     @user.should be_valid
   end
 
   it 'should be blacklisted' do
-    @user.user_status='blacklisted'
+    @user.user_status = 'blacklisted'
     @user.should be_valid
   end
 
@@ -291,19 +303,9 @@ describe User do
   #end
 
   it 'should return admin group' do
-    #@user.admin_groups.should have_at_least(2).items  #Admin and MasterAdmin
-    new_user = User.first
-    group1 = FactoryGirl.create(:group)
-    group1.name = 'Admin'
-
-    group2 = FactoryGirl.create(:group)
-    group2.name = 'Everyone'
-
-    new_user.groups << group1
-    new_user.groups << group2
-
-    new_user.save
-    new_user.admin_groups.should have_at_least(2).items  #Admin and MasterAdmin
+    @admin1.groups = [@master_group, @everyone_group, @admin_group]
+    @admin1.save
+    @admin1.admin_groups.should have_at_least(2).items  #Admin and MasterAdmin
   end
 
   it 'should be an admin if he had admin right' do
