@@ -49,20 +49,18 @@
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
       <i class="icon-tasks icon-large pull-left"></i>&nbsp;
-      <%= I18n.t :label_menu_library %>
+      <%= I18n.t :label_menu_organization %>
 
       <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
-      <li class="dropdown">
-        <a href="/projects_global_params">
-          <!--<i class="icon-tasks icon-large pull-left"></i>-->
-          <%= I18n.t(:project_global_setting) %>
-        </a>
-      </li>
       <li class="dropdown"><a href="/organizationals_params">
         <!--<i class="icon-globe icon-large pull-left"></i>-->
         <%= I18n.t(:organization_setting) %></a>
+      </li>
+      <li class="dropdown"><a href="<%= factors_path %>">
+        <!--<i class="icon-globe icon-large pull-left"></i>-->
+        <%= I18n.t(:factors) %></a>
       </li>
       <li class="dropdown"><a href="<%= main_app.wbs_activities_path %>">
         <!--<i class="icon-sitemap icon-large pull-left"></i>-->
@@ -76,7 +74,7 @@
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
       <i class="icon-cog icon-large pull-left"></i>&nbsp;
-      <%= I18n.t :master %>
+      <%= I18n.t :label_menu_admin %>
 
       <b class="caret"></b>
     </a>
@@ -121,6 +119,13 @@
           <!--<i class="icon-signin icon-large pull-left"></i>-->
           <%= I18n.t(:auth_methods) %></a></li>
       <% end %>
+
+      <li class="dropdown">
+        <a href="/projects_global_params">
+          <!--<i class="icon-tasks icon-large pull-left"></i>-->
+          <%= I18n.t(:project_global_setting) %>
+        </a>
+      </li>
 
       <% if can? :manage, Event %>
         <li class="dropdown"><a href="<%= main_app.events_path %>">

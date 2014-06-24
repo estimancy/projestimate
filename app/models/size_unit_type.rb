@@ -1,19 +1,13 @@
 class SizeUnitType < ActiveRecord::Base
 
-  #belongs_to :record_status
-  #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
+  validates :name, :presence => true
 
-  validates :record_status, :presence => true
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
-  validates :custom_value, :presence => true, :if => :is_custom?
-
-  attr_accessible :description, :name, :alias, :record_status_id, :custom_value, :change_comment, :organization_id
+  attr_accessible :description, :name, :alias, :organization_id#, :record_status_id, :custom_value, :change_comment
 
   belongs_to :organization
 
   has_many :technology_size_type
   has_many :organization_technologies, through: :technology_size_type
 
-  has_many :size_unit
+  has_many :size_units
 end

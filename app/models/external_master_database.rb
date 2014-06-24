@@ -131,6 +131,18 @@ module ExternalMasterDatabase
     include ExternalInclude
   end
 
+  class ExternalTechnology < ActiveRecord::Base
+    attr_accessible
+    establish_connection HOST
+    include ExternalInclude
+  end
+
+  class ExternalSizeUnit < ActiveRecord::Base
+    attr_accessible
+    establish_connection HOST
+    include ExternalInclude
+  end
+
   class ExternalEventType < ActiveRecord::Base
     attr_accessible
     establish_connection HOST

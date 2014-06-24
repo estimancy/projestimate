@@ -13,7 +13,7 @@
       </tr>
     </table>
 
-    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+    <table id="table_list_5" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
       <tr>
         <th><%= I18n.t(:name) %></th>
@@ -34,7 +34,7 @@
           <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>
           <td>
             <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-            <%= link_to '', factor, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             <% if is_master_instance? && !factor.is_local_record? %>
               <% if factor.is_retired? %>
                 <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
@@ -51,17 +51,11 @@
 
       <%= render :partial => 'layouts/footer_table' %>
     </table>
-
   </div>
 
   <div id="tabs-2">
-    <b>Factors Complexities</b>
-
+    <b>Factor's Complexities Library</b>
     <br>
-
-    <% if can? :edit_organizations, Organization %>
-      <%= link_to I18n.t('new_factor_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id), :class => 'btn pull-right' %>
-    <% end %>
 
     <% @factors.each do |factor| %>
 
@@ -70,36 +64,36 @@
       </h4>
 
       <table class="table">
-        <% factor.organization_uow_complexities.order('display_order ASC').each do |c| %>
-          <% if c.state == 'retired' %>
-            <tr style="font-style:italic; color:Red">
-          <% elsif c.state == 'draft' %>
-            <tr style="font-style:italic; color:DarkOrange ">
-          <% else %>
-            <tr>
-          <% end %>
-          <td class="span2"><%= c.name %></td>
-          <td class="span2"><%= c.value %></td>
-          <td class="span2"><%= c.record_status.name unless c.record_status.nil? %> <%= c.show_custom_value %></td>
-          <td>
+        <tr>
+          <th>
             <% if can? :edit_organizations, Organization %>
-              <%= link_to '', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => 'icon-plus-sign icon-large pull-left' %>
+              <%= link_to 'Ajouter un niveau', new_organization_uow_complexity_path(:organization_id => nil, factor: factor.id), :class => '' %>
             <% end %>
-            <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-            <%= link_to '', c, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
-            <% if is_master_instance? && !c.is_local_record? %>
-              <% if c.is_retired? %>
-                <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-              <% else %>
-                <% unless c.is_defined? %>
-                  <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+        <% factor.organization_uow_complexities.where(organization_id: nil).order('display_order ASC').each do |c| %>
+          <tr>
+            <td class="span2"><%= c.name %></td>
+            <td class="span2"><%= c.value %></td>
+            <td>
+              <%= link_to '', edit_organization_uow_complexity_path(c, organization_id: nil), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <% if is_master_instance? && !c.is_local_record? %>
+                <% if c.is_retired? %>
+                  <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                <% else %>
+                  <% unless c.is_defined? %>
+                    <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                  <% end %>
                 <% end %>
               <% end %>
-            <% end %>
-          </td>
+            </td>
           </tr>
         <% end %>
       </table>
+
     <% end %>
   </div>
 </div>

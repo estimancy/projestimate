@@ -4,11 +4,8 @@
 <div class="tabs">
   <ul>
     <li><a href="#tabs-1"><%= I18n.t(:organizations) %></a></li>
-    <li><a href="#tabs-2"><%= I18n.t(:inflation) %></a></li>
+    <li><a href="#tabs-2"><%= I18n.t(:size_unit) %></a></li>
     <li><a href="#tabs-3"><%= I18n.t(:organizationals_labors_categories) %></a></li>
-    <li><a href="#tabs-4">Size Unit</a></li>
-    <li><a href="#tabs-5">Factors library</a></li>
-    <li><a href="#tabs-6">Factors complexity library</a></li>
   </ul>
 
   <div id="tabs-1">
@@ -24,22 +21,22 @@
 
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
-      <tr>
-        <th><%= I18n.t(:name) %></th>
-        <th><%= I18n.t(:description) %></th>
-        <th class="action"><%= I18n.t(:actions) %></th>
-      </tr>
+        <tr>
+          <th><%= I18n.t(:name) %></th>
+          <th><%= I18n.t(:description) %></th>
+          <th class="action"><%= I18n.t(:actions) %></th>
+        </tr>
       </thead>
 
       <tbody>
       <% @organizations.each do |i| %>
           <tr>
-            <td><%= i.name %></td>
+            <td><%= link_to i.name, edit_organization_path(i) %></td>
             <td><%= i.description %></td>
             <td>
-              <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>
           </tr>
@@ -50,51 +47,6 @@
   </div>
 
   <div id="tabs-2">
-    <div style="color:red"><i class="icon-ambulance icon-large icon-border pull-left"></i> Not yet implemented. I'm sure
-      someone is working hard to solve this problem<br/>
-    </div>
-  </div>
-
-  <div id="tabs-3">
-    <div style="color:red"><i class="icon-ambulance icon-large icon-border pull-left"></i> Not yet implemented. I'm sure
-      someone is working hard to solve this problem<br/>
-    </div>
-    <% if can? :manage, Organization %>
-        <table border="0" width="100%">
-          <tr>
-            <td style="text-align:right;">
-              <%= link_to I18n.t('new_organization_labor_category'), new_organization_labor_category_path, :class => 'btn' %>
-            </td>
-          </tr>
-        </table>
-
-        <table id="table_list_3" class="table tablesorterPager table-striped table-bordered table-condensed">
-          <thead>
-          <tr>
-            <th><%= I18n.t(:name) %></th>
-            <th><%= I18n.t(:description) %></th>
-            <th class="action"><%= I18n.t(:actions) %></th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <% @organizations_labor_categories.each do |i| %>
-              <tr>
-                <td><%= i.name %></td>
-                <td><%= i.description %></td>
-                <td>
-                  <%= link_to '', edit_organization_labor_category_path(i), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
-                </td>
-              </tr>
-          <% end %>
-          <%= render :partial => 'layouts/footer_table' %>
-          <tbody>
-        </table>
-    <% end %>
-  </div>
-
-  <div id="tabs-4">
     <% if can? :manage, Organization %>
       <table border="0" width="100%">
         <tr>
@@ -122,16 +74,16 @@
             <td><%= i.description %></td>
             <td><%= i.record_status.name unless i.record_status.nil? %> <%= i.show_custom_value %></td>
             <td>
-              <%= link_to '', edit_size_unit_path(i), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', edit_size_unit_path(i), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
               <% unless i.is_defined? %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
               <% if is_master_instance? && !i.is_local_record? %>
                 <% if i.is_retired? %>
-                  <%= link_to('', "size_units/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                  <%= link_to('', "size_units/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
                 <% else %>
                   <% unless i.is_defined? %>
-                    <%= link_to('', "size_units/#{i.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                    <%= link_to('', "size_units/#{i.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
                   <% end %>
                 <% end %>
               <% end %>
@@ -144,98 +96,46 @@
     <% end %>
   </div>
 
-  <div id="tabs-5">
-    <table border="0" width="100%">
-      <tr>
-        <td style="text-align:right;">
-          <%= link_to I18n.t('new_factor'), new_factor_path, :class => 'btn' %>
-        </td>
-      </tr>
-    </table>
-
-    <table id="table_list_5" class="table tablesorterPager table-striped table-bordered table-condensed">
-      <thead>
-      <tr>
-        <th><%= I18n.t(:name) %></th>
-        <th><%= I18n.t(:alias) %></th>
-        <th><%= I18n.t(:type) %></th>
-        <th><%= I18n.t(:description) %></th>
-        <th class="filter-select"><%= I18n.t(:record_status) %></th>
-        <th class="action"><%= I18n.t(:actions) %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @factors.each do |factor| %>
+  <div id="tabs-3">
+    <div style="color:red"><i class="icon-ambulance icon-large pull-left"></i> Not yet implemented. I'm sure
+      someone is working hard to solve this problem<br/>
+    </div>
+    <% if can? :manage, Organization %>
+      <table border="0" width="100%">
         <tr>
-          <td><%= factor.name %></td>
-          <td><%= factor.alias %></td>
-          <td><%= factor.factor_type.nil? ? '' : factor.factor_type.humanize %></td>
-          <td><%= factor.description %></td>
-          <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>
-          <td>
-            <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
-            <% if is_master_instance? && !factor.is_local_record? %>
-              <% if factor.is_retired? %>
-                <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-              <% else %>
-                <% unless factor.is_defined? %>
-                  <%= link_to('', "factors/#{factor.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                <% end %>
-              <% end %>
-            <% end %>
+          <td style="text-align:right;">
+            <%= link_to I18n.t('new_organization_labor_category'), new_organization_labor_category_path, :class => 'btn' %>
           </td>
         </tr>
-      <% end %>
-      </tbody>
+      </table>
 
-      <%= render :partial => 'layouts/footer_table' %>
-    </table>
-  </div>
-
-  <div id="tabs-6">
-    <b>Factor's Complexities Library</b>
-    <br>
-
-    <% @factors.each do |factor| %>
-
-      <h4>
-        <%= factor.factor_type.nil? ? "" : factor.factor_type.humanize %> - <%= factor.name %> - <%= factor.description %>
-      </h4>
-
-      <table class="table">
+      <table id="table_list_3" class="table tablesorterPager table-striped table-bordered table-condensed">
+        <thead>
         <tr>
-          <th>
-            <% if can? :edit_organizations, Organization %>
-              <%= link_to 'Ajouter un niveau', new_organization_uow_complexity_path(:organization_id => nil, factor: factor.id), :class => '' %>
-            <% end %>
-          </th>
-          <th></th>
-          <th></th>
+          <th><%= I18n.t(:name) %></th>
+          <th><%= I18n.t(:description) %></th>
+          <th class="action"><%= I18n.t(:actions) %></th>
         </tr>
-        <% factor.organization_uow_complexities.where(organization_id: nil).order('display_order ASC').each do |c| %>
+        </thead>
+
+        <tbody>
+        <% @organizations_labor_categories.each do |i| %>
           <tr>
-            <td class="span2"><%= c.name %></td>
-            <td class="span2"><%= c.value %></td>
+            <td><%= i.name %></td>
+            <td><%= i.description %></td>
             <td>
-              <%= link_to '', edit_organization_uow_complexity_path(c, organization_id: nil), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
-              <% if is_master_instance? && !c.is_local_record? %>
-                <% if c.is_retired? %>
-                  <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-                <% else %>
-                  <% unless c.is_defined? %>
-                    <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                  <% end %>
-                <% end %>
-              <% end %>
+              <%= link_to '', edit_organization_labor_category_path(i), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
             </td>
           </tr>
         <% end %>
-      </table>
-
+        <%= render :partial => 'layouts/footer_table' %>
+        <tbody>
+        </table>
     <% end %>
   </div>
+
+
 </div>
 
 
