@@ -1,8 +1,10 @@
 language: ruby
+cache: bundler
 rvm:
 - 1.9.3
 env:
 - RAILS_ENV=test
+- SECRET_KEY_BASE="$(bundle exec rake secret)"
 
 before_script:
 - bundle install
@@ -20,7 +22,6 @@ before_script:
 script:
   - bundle install
 #  - bundle exec rake db:schema:load
-#  - bundle exec rake db:test:prepare
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake db:test:prepare
   ####- CODECLIMATE_REPO_TOKEN = 551f2cd12272922000636791925d42fd6a732f6e48d89ceadc5bffaf2d7c271c bundle exec rake  ###

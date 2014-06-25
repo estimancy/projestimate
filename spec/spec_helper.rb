@@ -35,7 +35,7 @@ Spork.prefork do
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
-  ###require Rails.root.join("spec/support/controller_macros.rb")
+  require Rails.root.join("spec/support/controller_helpers.rb")
 end
 
 Spork.each_run do
@@ -76,6 +76,8 @@ Spork.each_run do
     #     --seed 1234
     config.order = "random"
 
+    ###config.infer_spec_type_from_file_location!
+
     #Render views globally
     config.render_views
 
@@ -83,9 +85,9 @@ Spork.each_run do
     config.include DatabaseCleaner
 
     #Manage user authentication on test
-    #config.include Devise::TestHelpers, :type => :controller
-    #config.include Warden::Test::Helpers
-    #config.include ControllerHelpers, :type => :controller
+    config.include Devise::TestHelpers, :type => :controller
+    config.include Warden::Test::Helpers
+    config.include ControllerHelpers, :type => :controller
 
     ##For taking in account the Permissions with the CanCan gem
     #config.extend(ControllerSpecs::CanCan, type: :controller)
