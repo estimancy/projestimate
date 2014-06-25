@@ -100,8 +100,8 @@ module CocomoAdvanced
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f / get_delay(args[0], args[1], args[2])
-      @staffing
+      @staffing = (get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f / get_delay(args[0], args[1], args[2]))
+      @staffing.ceil
     end
 
     def get_complexity(*args)

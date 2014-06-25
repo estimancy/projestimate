@@ -92,6 +92,7 @@ module CocomoBasic
     #Return staffing
     def get_staffing(*args)
       @staffing = (get_effort_man_month * @project.organization.number_hours_per_month.to_f) / get_delay
+      @staffing.ceil
     end
 
     def get_complexity(*args)

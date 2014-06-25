@@ -98,7 +98,7 @@ module CocomoExpert
     #Return end date
     def get_end_date(*args)
       @project = Project.find(args[0].to_i)
-      @end_date = (@project.start_date + ((get_delay(args[0], args[1], args[2])) / @project.organization.number_hours_per_month.to_f).to_i.months )
+      @end_date = (@project.start_date + ((get_delay(args[0], args[1], args[2])) / @project.organization.number_hours_per_month.to_f).to_i.months)
       @end_date
     end
 
@@ -109,7 +109,7 @@ module CocomoExpert
         @staffing = nil
       end
 
-      @staffing
+      @staffing.ceil
     end
 
     def get_cost(*args)
