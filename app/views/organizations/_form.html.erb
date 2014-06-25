@@ -320,13 +320,6 @@
 
   <div id="tabs-8">
     <% if can? :manage, Organization %>
-      <table border="0" width="100%">
-        <tr>
-          <td style="text-align:right;">
-            <%= link_to 'Size Unit Type', new_size_unit_type_path(organization_id: @organization.id), :class => 'btn' %>
-          </td>
-        </tr>
-      </table>
 
       <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>

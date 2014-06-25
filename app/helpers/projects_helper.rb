@@ -67,21 +67,49 @@ module ProjectsHelper
   def get_attribute_unit(pe_attribute)
     case pe_attribute.alias
       when "effort_man_hour"
-        "(#{I18n.t(:unit_effort_man_hour)})"
+        I18n.t(:unit_effort_man_hour)
       when "effort_man_month"
-        "(#{I18n.t(:unit_effort_man_month)})"
+        I18n.t(:unit_effort_man_month)
       when "effort_man_week"
-        "(#{I18n.t(:unit_effort_man_week)})"
+        I18n.t(:unit_effort_man_week)
       when "staffing"
-        "(#{I18n.t(:unit_staffing)})"
+        I18n.t(:unit_staffing)
       when "end_date"
-        ""
+        "jj/mm/aaaa"
       when "delay"
-        "(#{I18n.t(:unit_delay)})"
+        I18n.t(:delay)
       when "cost"
-        current_project.organization.currency.nil? ? nil.to_s : "(#{current_project.organization.currency.name})"
+        current_project.organization.currency.nil? ? nil.to_s : "#{current_project.organization.currency.name.underscore.pluralize}"
     else
       ""
+    end
+  end
+
+  def convert_delay(value, organization)
+    if value < 100
+      value
+    elsif (value > 100) && (value < 1000)
+      value / organization.number_hours_per_day
+    elsif (value > 1000) && (value < 10000)
+      value / organization.number_hours_per_day / 4
+    elsif value > 10000
+      value / organization.number_hours_per_month
+    else
+      value
+    end
+  end
+
+  def convert_delay_label(value, organization)
+    if value < 100
+      I18n.t(:hours)
+    elsif (value > 100) && (value < 1000)
+      I18n.t(:unit_days)
+    elsif (value > 1000) && (value < 10000)
+      I18n.t(:weeks)
+    elsif value > 10000
+      I18n.t(:months)
+    else
+      I18n.t(:hours)
     end
   end
 
@@ -103,33 +131,17 @@ module ProjectsHelper
 
     module_project.estimation_values.where('in_out = ?', 'output').order('display_order ASC').each do |est_val|
       est_val_pe_attribute = est_val.pe_attribute
-      res << "<tr><td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name} #{get_attribute_unit(est_val_pe_attribute)}</span></td>"
+      res << "<tr><td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name} (#{get_attribute_unit(est_val_pe_attribute)})</span></td>"
       ['low', 'most_likely', 'high', 'probable'].each do |level|
         res << '<td>'
         level_estimation_values = Hash.new
         level_estimation_values = est_val.send("string_data_#{level}")
         total = []
-        #if pbs_project_element.folder?
-        #  if !pbs_project_element.descendants.empty?
-        #    if est_val_pe_attribute.attr_type == "float" or est_val_pe_attribute.attr_type == "integer"
-        #      pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id].to_f }
-        #      res << "#{total.compact.sum.round(2)}"
-        #    elsif est_val_pe_attribute.attr_type == "date"
-        #      pbs_project_element.descendants.map{|i| total << level_estimation_values[i.id] }
-        #      if total.compact.max.nil?
-        #        res << "-"
-        #      else
-        #        res << "#{total.compact.max.strftime("%d/%m/%Y")}"
-        #      end
-        #    end
-        #  end
-        ###else
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
             res << '-'
           else
             res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
           end
-        ###end
         res << '</td>'
       end
       res << '</tr>'
@@ -160,7 +172,7 @@ module ProjectsHelper
     module_project.estimation_values.order('display_order ASC').each do |est_val|
       if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
         probable_est_value_for_consistency = est_val.send("string_data_probable")
-        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} #{get_attribute_unit(est_val.pe_attribute)}</span></th>"
+        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
 
         # For is_consistent purpose
         ['low', 'most_likely', 'high', 'probable'].each do |level|
@@ -282,7 +294,7 @@ module ProjectsHelper
                 <th></th>'
         if !mp_attr_est_values.nil? && !mp_attr_est_values.empty?
           est_val = mp_attr_est_values.last
-          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name} #{get_attribute_unit(est_val.pe_attribute)}</span></th>"
+          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
         else
           res << "<th><span class='red_color'> #{I18n.t(:text_please_select_balancing_attribute)} </span></td>"
         end
@@ -321,7 +333,7 @@ module ProjectsHelper
                 <th></th>'
       module_project.estimation_values.each do |est_val|
         if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
-          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name} #{get_attribute_unit(est_val.pe_attribute)}</span></th>"
+          res << "<th><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}' rel='tooltip'>#{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
         end
       end
 
@@ -918,8 +930,8 @@ module ProjectsHelper
 
 
   #Display pemodule output depending attribute type.
-  def display_value(value, estimation_value)
-    est_val_pe_attribute = estimation_value.pe_attribute
+  def display_value(value, est_val)
+    est_val_pe_attribute = est_val.pe_attribute
     case est_val_pe_attribute.attr_type
       when 'date'
         display_date(value)
@@ -928,7 +940,11 @@ module ProjectsHelper
           if est_val_pe_attribute.precision
             value.round(est_val_pe_attribute.precision)
           else
-            value.round(2)
+            if est_val_pe_attribute.alias == "delay"
+              "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+            else
+              "#{number_with_delimiter(value.round(2))} #{get_attribute_unit(est_val_pe_attribute)}"
+            end
           end
         rescue
           value

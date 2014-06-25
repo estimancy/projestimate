@@ -136,6 +136,4 @@ class PeAttribute < ActiveRecord::Base
         'string'
     end
   end
-
-
 end
