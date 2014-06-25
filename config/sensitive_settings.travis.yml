@@ -21,7 +21,7 @@
 #############################################################################
 
 #This file contain sensitive data
-SECRET_TOKEN: "$(bundle exec rake secret)"
+SECRET_TOKEN: %x(bundle exec rake secret)
 SMTP_ADDRESS:
 SMTP_PORT:
 SMTP_DOMAIN:
