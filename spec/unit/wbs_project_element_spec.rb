@@ -17,7 +17,7 @@ describe WbsProjectElement do
   end
 
   it "should not be from Library" do
-    @wbs_project_element.is_from_library_and_is_leaf?.should be_false
+    expect(@wbs_project_element.is_from_library_and_is_leaf?).to be_falsey
   end
 
   it "Duplicate project element" do
@@ -38,14 +38,14 @@ describe WbsProjectElement do
       @wbs_project_element3 = FactoryGirl.create(:wbs_project_element, :is_root => false, :pe_wbs_project => @pe_wbs_project,:wbs_activity => nil, :wbs_activity_element => nil)
       @wbs_project_element3.parent= @wbs_project_element
       @wbs_project_element3.parent.can_get_new_child=nil
-      @wbs_project_element3.is_from_library_and_is_leaf?.should be_false
+      expect(@wbs_project_element3.is_from_library_and_is_leaf?).to be_falsey
     end
 
     it "should return true if has children" do
       @wbs_project_element3 = FactoryGirl.create(:wbs_project_element, :is_root => false, :pe_wbs_project => @pe_wbs_project, :wbs_activity => @wbs_activity, :wbs_activity_element => @wbs_activity_element)
       @wbs_project_element.parent= @wbs_project_element3
       @wbs_project_element.save
-      @wbs_project_element3.is_from_library_and_is_leaf?.should be_true
+      expect(@wbs_project_element3.is_from_library_and_is_leaf?).to be_truthy
     end
 
     it "should return true if not has a children and can have a children" do
@@ -54,7 +54,7 @@ describe WbsProjectElement do
       @wbs_project_element.can_get_new_child=true
       @wbs_project_element3.save
       @wbs_project_element.save
-      @wbs_project_element3.is_from_library_and_is_leaf?.should be_true
+      expect(@wbs_project_element3.is_from_library_and_is_leaf?).to be_truthy
     end
     #it "should return true if not has a children and can have a children" do
     #  @wbs_project_element3 = FactoryGirl.create(:wbs_project_element, :is_root => false, :pe_wbs_project => @pe_wbs_project,:wbs_activity => @wbs_activity, :wbs_activity_element => @wbs_activity_element)
@@ -66,7 +66,7 @@ describe WbsProjectElement do
     it "should return false if not has a children and can't have a children" do
       @wbs_project_element3 = FactoryGirl.create(:wbs_project_element, :is_root => false, :pe_wbs_project => @pe_wbs_project,:wbs_activity => @wbs_activity, :wbs_activity_element => @wbs_activity_element)
       @wbs_project_element3.parent = @wbs_project_element
-      @wbs_project_element3.is_from_library_and_is_leaf?.should be_false
+      expect(@wbs_project_element3.is_from_library_and_is_leaf?).to be_falsey
     end
   end
 

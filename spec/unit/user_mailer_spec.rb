@@ -24,9 +24,7 @@ describe UserMailer do
       before(:each) do
         ActionMailer::Base.deliveries = []
         @defined_status=RecordStatus.find_by_name("Defined")
-        @user = FactoryGirl.build(:user)    # default user language is English.
-        @user.confirm!
-        @user.save!
+        @user = FactoryGirl.create(:user)    # default user language is English.
 
         @admin_setting = FactoryGirl.create(:notifications_email_ad, :key => "notifications_email")
 

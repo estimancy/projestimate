@@ -57,12 +57,12 @@ describe WbsActivityElement do
                                                       :content_type => 'text/csv',
                                                       :tempfile => File.new(File.dirname(__FILE__) + '/../fixtures/test.csv')
                                                   })
-      WbsActivityElement::import(file,'').should be_true
+      expect(WbsActivityElement::import(file,'')).to be_truthy
       # sometimes it is better to parse generated_csv (ie. when you testing other formats like json or xml
     end
 
     it 'should rebuild wbs activity' do
-      WbsActivityElement::rebuild([@wbs_activity_element,@wbs_activity_element2], @wbs_activity.id).should be_true
+      expect(WbsActivityElement::rebuild([@wbs_activity_element,@wbs_activity_element2], @wbs_activity.id)).to be_truthy
     end
   end
 

@@ -76,7 +76,7 @@ Spork.each_run do
     #     --seed 1234
     config.order = "random"
 
-    ###config.infer_spec_type_from_file_location!
+    config.infer_spec_type_from_file_location!
 
     #Render views globally
     config.render_views

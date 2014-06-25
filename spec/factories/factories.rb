@@ -46,6 +46,8 @@ FactoryGirl.define do
     password_confirmation 'projestimate1'
     password_reset_token
     confirmed_at Time.now
+
+    after :create, &:confirm!
   end
 
   factory :master_admin do

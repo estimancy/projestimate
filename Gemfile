@@ -167,7 +167,8 @@ group :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'capybara'
   # rspec goodies
-  gem 'rspec-rails', :group => [:test, :development]
+  #gem 'rspec-rails', :group => [:test, :development]
+  gem 'rspec-rails', '~> 3.0.1', :group => [:test, :development]
   # DRb server for testing frameworks
   gem 'spork'
   # command line tool to easily handle events on file system modifications
