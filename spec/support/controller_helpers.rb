@@ -10,7 +10,6 @@ module ControllerHelpers
       request.env["devise.mapping"] = Devise.mappings[:user]
       master_group = FactoryGirl.create(:master_admin_group)
       user = FactoryGirl.create(:user, :groups => [master_group])
-      user.confirm!
 
       request.env['warden'].stub :authenticate! => user
       allow(controller).to receive(:current_user) { user }

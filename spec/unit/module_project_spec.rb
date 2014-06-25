@@ -31,10 +31,10 @@ describe ModuleProject do
   end
 
   it 'should feet for bidirectional relation' do
-    @mp8.previous().include?(@mp7).should be_true
-    @mp8.preceding().include?(@mp7).should be_true
-    @mp7.following().include?(@mp8).should be_true
-    @mp7.next().include?(@mp8).should be_true
+    expect( @mp8.previous ).to include(@mp7)
+    expect( @mp8.preceding ).to include(@mp7)
+    expect( @mp7.following ).to include(@mp8)
+    expect( @mp7.next ).to include(@mp8)
   end
 
   it 'should have a valid module' do
@@ -67,30 +67,30 @@ describe ModuleProject do
 
   #Don't modify please: tests failed because methods next and previous are not functional'
   it 'should return next module project' do
-    @mp4.next().include?(@mp5).should be_true
+    expect(@mp4.next()).to include(@mp5)
   end
   it 'should return previous module project' do
-    @mp5.previous().include?(@mp4).should be_true
+    expect(@mp5.previous()).to include(@mp4)
   end
 
   it 'should not return next module project' do
-    @mp5.next().include?(@mp4).should be_false
+    expect(@mp5.next()).not_to include(@mp4)
   end
   it 'should not return previous module project' do
-    @mp4.previous().include?(@mp5).should be_false
+    expect(@mp4.previous).not_to include(@mp5)
   end
 
   it 'should be return false if pemodule.compliant_component_type is nil' do
     @mp2.pemodule.compliant_component_type=nil
-    @mp2.compatible_with('Toto').should be_false
+    expect(@mp2.compatible_with('Toto')).not_to be_truthy
   end
 
   it 'should be return pemodule.compliant_component_type include alias' do
-    @mp2.compatible_with('Toto').should be_true
+    expect(@mp2.compatible_with('Toto')).to be_truthy
   end
 
   it 'should be return pemodule.compliant_component_type include alias' do
-    @mp2.compatible_with('Tata').should be_false
+    expect(@mp2.compatible_with('Tata')).to be_falsey
   end
 
   it 'should a string' do
@@ -117,7 +117,7 @@ describe ModuleProject do
 
 
   it "should be a One Activity-elements" do
-    @mp1.is_All_Activity_Elements?.should be_false
+    expect(@mp1.is_All_Activity_Elements?).to be_falsey
   end
 
   it 'should be an Array' do

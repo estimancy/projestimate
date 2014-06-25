@@ -37,27 +37,27 @@ describe EstimationValue do
 
 
   it 'should validate 15 because 15 is greater than 10' do
-    @ksloc_estimation_value.is_validate('15').should be_true
+    expect(@ksloc_estimation_value.is_validate('15')).to be_truthy
   end
 
   it 'should not validate 9 because 9 is lower than 10' do
-    @ksloc_estimation_value.is_validate('').should be_false
+    expect(@ksloc_estimation_value.is_validate('')).to be_falsey
   end
 
   it 'should not be valid because toto is not a integer' do
-    @ksloc_estimation_value.is_validate('toto').should be_false
+    expect(@ksloc_estimation_value.is_validate('toto')).to be_falsey
   end
 
   it 'should not be valid because string to evaluate is wrong' do
-    @ksloc_estimation_value.is_validate('>').should be_false
+    expect(@ksloc_estimation_value.is_validate('>')).to be_falsey
   end
 
   it 'should not be return false because eval result is nil' do
-    @ksloc_estimation_value.is_validate('nil').should be_false
+    expect(@ksloc_estimation_value.is_validate('nil')).to be_falsey
   end
 
   it 'should be true because no options defined' do
-    @cost_estimation_value.is_validate('15').should be_true
+    expect(@cost_estimation_value.is_validate('15')).to be_truthy
   end
 
   it 'should return attr name' do

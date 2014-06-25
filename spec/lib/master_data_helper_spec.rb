@@ -31,38 +31,38 @@ describe MasterDataHelper do
 
   specify "Record should be proposed" do
     @language.record_status = @proposed_status
-    @language.is_proposed?.should be_true
+    expect(@language.is_proposed?).to be_truthy
   end
 
   specify "should be defined" do
     @language.record_status = @defined_status
-    @language.is_defined?.should be_true
+    expect(@language.is_defined?).to be_truthy
   end
 
   it "should be inReview" do
     @language.record_status = @in_review_status
-    @language.is_inReview?.should be_true
+    expect(@language.is_inReview?).to be_truthy
   end
 
   it "should be drafted" do
     @language.record_status = @draft_status
-    @language.is_draft?.should be_true
+    expect(@language.is_draft?).to be_truthy
   end
 
   it "should be retired" do
     @language.record_status = @retired_status
-    @language.is_retired?.should be_true
+    expect(@language.is_retired?).to be_truthy
   end
 
   it "should be defined or nil" do
     @language.record_status = @defined_status
-    @language.is_defined_or_nil?.should be_true
+    expect(@language.is_defined_or_nil?).to be_truthy
   end
 
   it "should show custom value if record status is custom" do
     @language.record_status = @custom_status
     @language.custom_value = "Test"
-    @language.show_custom_value.should eql(" (Test) ")
+    expect(@language.show_custom_value).to eql(" (Test) ")
   end
 
 end

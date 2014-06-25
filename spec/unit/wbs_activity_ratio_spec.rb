@@ -86,7 +86,7 @@ describe WbsActivityRatio do
                                                       :content_type => 'text/csv',
                                                       :tempfile => File.new(File.dirname(__FILE__) + '/../fixtures/test.csv')
                                                   })
-      WbsActivityRatio::import(file,'', 'UTF-8').should be_true
+      expect(WbsActivityRatio::import(file,'', 'UTF-8')).to be_truthy
       # sometimes it is better to parse generated_csv (ie. when you testing other formats like json or xml
     end
   end

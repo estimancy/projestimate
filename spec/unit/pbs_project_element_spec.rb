@@ -23,7 +23,7 @@ describe PbsProjectElement do
   end
 
   it "should have a correct type" do
-    @folder1.name.eql?("Folder1").should be_true
+    expect(@folder1.name).to eql("Folder1")
   end
 
   it "should duplicate pbs project element" do
