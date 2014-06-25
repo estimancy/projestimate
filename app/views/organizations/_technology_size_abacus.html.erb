@@ -2,11 +2,6 @@
 
   <%= hidden_field_tag "organization", params[:id] %>
 
-  <div class="pull-left">
-    Select the size unit to display
-    <%= select_tag 'size_unit', options_for_select(@size_units.map { |i| [i.name, i.id] }), :class => 'select_size_unit' %>
-  </div>
-
   <div id="value_section">
     <%= render 'organizations/abacus_table_values' %>
   </div>

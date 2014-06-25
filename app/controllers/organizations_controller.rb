@@ -156,28 +156,33 @@ class OrganizationsController < ApplicationController
     authorize! :edit_organizations, Organization
 
     @organization = Organization.find(params[:organization])
-    @size_unit = SizeUnit.find(params[:size_unit])
     @technologies = @organization.organization_technologies
     @size_unit_types = @organization.size_unit_types
-    SizeUnitType.all
+    @size_units = SizeUnit.all
 
     @technologies.each do |technology|
       @size_unit_types.each do |sut|
-        value = params[:abacus]["#{technology.id}"]["#{sut.id}"]
-        unless value.nil?
-          t = TechnologySizeType.where( organization_id: @organization.id,
-                                        organization_technology_id: technology.id,
-                                        size_unit_id: @size_unit.id,
-                                        size_unit_type_id: sut.id).first
+        @size_units.each do |size_unit|
 
-          if t.nil?
-            TechnologySizeType.create(organization_id: @organization.id,
-                                      organization_technology_id: technology.id,
-                                      size_unit_id: @size_unit.id,
-                                      size_unit_type_id: sut.id,
-                                      value: params[:abacus]["#{technology.id}"]["#{sut.id}"])
-          else
-            t.update_attributes(value: params[:abacus]["#{technology.id}"]["#{sut.id}"])
+          #size_unit = params[:size_unit]["#{su.id}"].to_i
+
+          value = params[:abacus]["#{size_unit.id}"]["#{technology.id}"]["#{sut.id}"].to_f
+
+          unless value.nil?
+            t = TechnologySizeType.where( organization_id: @organization.id,
+                                          organization_technology_id: technology.id,
+                                          size_unit_id: size_unit,
+                                          size_unit_type_id: sut.id).first
+
+            if t.nil?
+              TechnologySizeType.create(organization_id: @organization.id,
+                                        organization_technology_id: technology.id,
+                                        size_unit_id: size_unit,
+                                        size_unit_type_id: sut.id,
+                                        value: value)
+            else
+              t.update_attributes(value: value)
+            end
           end
         end
       end

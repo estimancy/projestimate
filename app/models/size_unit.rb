@@ -10,4 +10,7 @@ class SizeUnit < ActiveRecord::Base
   validates :custom_value, :presence => true, :if => :is_custom?
 
   attr_accessible :description, :name, :alias, :record_status_id, :custom_value, :change_comment
+
+  belongs_to :size_unit_type
+
 end
