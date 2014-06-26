@@ -36,6 +36,9 @@
 
 class Input < ActiveRecord::Base
   belongs_to :module_project
+  belongs_to :organization_technology, :foreign_key => :technology_id
+
+  validates :technology_id, :unit_of_work_id, presence: true
 
   def self.export(mp, pbs)
     @inputs = Input.where(module_project_id: mp, pbs_project_element_id: pbs).all

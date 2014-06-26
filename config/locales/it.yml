@@ -1154,3 +1154,5 @@ it:
   iso_code_number: "ISO code number"
   currency_sign: "Sign"
   conversion_rate: "Conversion rate"
+  select_technology: "select technology"
+  select_uow: "select unit of work"

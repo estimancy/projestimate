@@ -107,7 +107,7 @@ class Uos::InputsController < ApplicationController
       input.module_project_id = params[:module_project_id]
       input.technology_id = params[:technology]["#{r}"]
       input.unit_of_work_id = params[:uow]["#{r}"]
-      input.complexity_id = params[:complexity]["#{r}"]
+      input.complexity_id = params[:complexity]["#{r}"] if params[:complexity]
       input.size_low = params[:size_low]["#{r}"]
       input.size_most_likely = params[:size_most_likely]["#{r}"]
       input.size_high = params[:size_high]["#{r}"]
@@ -176,6 +176,13 @@ class Uos::InputsController < ApplicationController
     @complexities = OrganizationUowComplexity.where(unit_of_work_id: params[:uow_id]).all.map{|i| [i.name, i.id]}
     @index = params[:index]
   end
+
+  def update_unit_of_works_select_box
+    @index = params[:index]
+    @technology = OrganizationTechnology.find(params[:technology_id])
+    @unit_of_works = @technology.unit_of_works
+  end
+
 
   def save_entries(input_id, module_project)
     input_id.keys.each do |r|
