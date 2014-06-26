@@ -16,13 +16,13 @@
           <%= f.error_notification %>
 
           <% if controller.action_name == 'edit' and @wbs_activity.retired? %>
-              <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm_states_for_select, :input_html => {:class => 'input-xxlarge'} %>
+              <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm.states_for_select, :input_html => {:class => 'input-xxlarge'} %>
           <% else %>
               <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
               <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
               <%= f.input :organization_id, :label => I18n.t('organizations'), :as => :select, :collection => current_user.organizations, :input_html => {:class => 'input-xxlarge'} %>
 
-              <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm_states_for_select, :input_html => {:class => 'input-large'} %>
+              <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm.states_for_select, :input_html => {:class => 'input-large'} %>
           <% end %>
 
           <% if is_master_instance? %>

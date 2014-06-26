@@ -120,9 +120,9 @@ class Project < ActiveRecord::Base
   #Return possible states of project
   def states
     if self.preliminary? || self.in_progress? || self.in_review?
-      Project.aasm_states_for_select
+      Project.aasm.states_for_select
     else
-      Project.aasm_states_for_select.reject { |i| i[0] == 'preliminary' || i[0] == 'in_progress' || i[0] == 'in_review'}
+      Project.aasm.states_for_select.reject { |i| i[0] == 'preliminary' || i[0] == 'in_progress' || i[0] == 'in_review'}
     end
   end
 
