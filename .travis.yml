@@ -13,12 +13,6 @@ before_script:
 ###- "mysql -e 'CREATE DATABASE projestimate_test; USE projestimate_test; CREATE TABLE work_element_types (id INTEGER NOT NULL AUTO_INCREMENT, name VARCHAR(255), alias VARCHAR(255), description TEXT, project_area_id INTEGER, created_at DATETIME, updated_at DATETIME, peicon_id INTEGER, uuid VARCHAR(255), record_status_id INTEGER, custom_value VARCHAR(255), owner_id INTEGER, change_comment TEXT, reference_id INTEGER, reference_uuid VARCHAR(255), PRIMARY KEY (id));'"
 - "mysql -e 'CREATE DATABASE projestimate_test; USE projestimate_test;'"
 
-#- "mysql -e 'create table projestimate_test.work_element_types(id INTEGER NOT NULL AUTO_INCREMENT, name VARCHAR(255), alias VARCHAR(255), description TEXT,
-#            project_area_id INTEGER, created_at DATETIME, updated_at DATETIME, peicon_id INTEGER, uuid VARCHAR(255), record_status_id INTEGER, custom_value VARCHAR(255),
-#            owner_id INTEGER, change_comment TEXT, reference_id INTEGER, reference_uuid VARCHAR(255);'"
-#
-###- "mysql -e 'CREATE DATABASE okimi; USE okimi; CREATE TABLE pages (id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(40) NOT NULL, PRIMARY KEY (id));'"
-
 script:
   - bundle install
 #  - bundle exec rake db:schema:load
