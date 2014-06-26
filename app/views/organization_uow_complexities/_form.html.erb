@@ -29,7 +29,7 @@
         <tr>
           <td><%= f.input :display_order, :label => I18n.t('display_order'), :input_html => {:class => 'input-small'} %></td>
           <td>&nbsp;&nbsp;&nbsp;</td>
-          <td><%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => OrganizationUowComplexity.aasm_states_for_select, :input_html => {:class => 'input-large'} %></td>
+          <td><%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => OrganizationUowComplexity.aasm.states_for_select, :input_html => {:class => 'input-large'} %></td>
         </tr>
       </table>
 

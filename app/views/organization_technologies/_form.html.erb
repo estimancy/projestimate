@@ -13,7 +13,7 @@
           <tr>
             <td><%= f.input :productivity_ratio, :label => I18n.t('productivity_ratio'), :input_html => {:value => (controller.action_name == 'new' ? 1 : @organization_technology.productivity_ratio), :class => 'input-mini'} %></td>
             <td>&nbsp;&nbsp;&nbsp;</td>
-            <td><%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => OrganizationTechnology.aasm_states_for_select, :input_html => {:class => 'input-large'} %></td>
+            <td><%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => OrganizationTechnology.aasm.states_for_select, :input_html => {:class => 'input-large'} %></td>
           </tr>
         </table>
         <div class="accordion" id="accordion1">

@@ -81,7 +81,7 @@ describe Project do
   #ASSM STATES
 
   it 'should have 6 states' do
-    Project.aasm_states_for_select.size.should eql(6)
+    Project.aasm.states_for_select.size.should eql(6)
   end
 
   it 'should change project state when transition' do
@@ -91,7 +91,7 @@ describe Project do
   end
 
   it 'should return all possible states' do
-    @project.states.should eql(Project.aasm_states_for_select)
+    @project.states.should eql(Project.aasm.states_for_select)
   end
 
 

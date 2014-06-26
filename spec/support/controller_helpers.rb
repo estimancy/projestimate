@@ -3,8 +3,7 @@ module ControllerHelpers
 
   def sign_in(user = "user")
     if user.nil?
-      request.env['warden'].stub(:authenticate!).
-          and_throw(:warden, {:scope => :user})
+      request.env['warden'].stub(:authenticate!).and_throw(:warden, {:scope => :user})
       allow(controller).to receive(:current_user) { nil }
     else
       request.env["devise.mapping"] = Devise.mappings[:user]
