@@ -10,7 +10,7 @@
   <a href="https://codeclimate.com/github/estimancy/projestimate"><img src="https://codeclimate.com/github/estimancy/projestimate.png" /></a>
 
   <!-- <a href='https://coveralls.io/r/estimancy/projestimate'><img src='https://coveralls.io/repos/estimancy/projestimate/badge.png' alt='Coverage Status' data-canonical-src="https://coveralls.io/repos/estimancy/projestimate/badge.png?branch=master" style="max-width:100%;" /></a> -->
-  <a href='https://coveralls.io/r/estimancy/projestimate?branch=dev'><img src='https://coveralls.io/repos/estimancy/projestimate/badge.png?branch=master' alt='Coverage Status' /></a>
+  <a href='https://coveralls.io/r/estimancy/projestimate?branch=dev'><img src='https://coveralls.io/repos/estimancy/projestimate/badge.png?branch=dev' alt='Coverage Status' /></a>
 
   <a href='https://gemnasium.com/estimancy/projestimate'><img src="https://gemnasium.com/estimancy/projestimate.png" alt="Dependency Status" data-canonical-src="https://gemnasium.com/estimancy/projestimate.png" style="max-width:100%;"></a>
 
