@@ -16,8 +16,6 @@
 
   <a href='http://inch-pages.github.io/github/estimancy/projestimate'> <img src="https://camo.githubusercontent.com/375ec98fcd609f3002f649746e183c545804bae5/687474703a2f2f696e63682d70616765732e6769746875622e696f2f6769746875622f657374696d616e63792f70726f6a657374696d6174652e706e67" alt="Inline docs" data-canonical-src="http://inch-pages.github.io/github/estimancy/projestimate.png" style="max-width:100%;"></a>
 
- [![Inline docs](http://inch-pages.github.io/github/estimancy/projestimate.png)](http://inch-pages.github.io/github/estimancy/projestimate)
-
   <a href='http://dev.estimancy.com/dependencies.html'>Dependencies</a>
 </p>
 
