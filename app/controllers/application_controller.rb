@@ -104,7 +104,8 @@ class ApplicationController < ActionController::Base
 
   def session_expired?
     unless load_admin_setting('session_maximum_lifetime')=='unset'
-      unless session[:ctime] && (Time.now.utc.to_i - session[:ctime].to_i <= load_admin_setting('session_maximum_lifetime').to_i*60*60*24)
+      setting_session_maximum_lifetime = load_admin_setting('session_maximum_lifetime').to_i*60*60*24
+      unless session[:ctime] && (Time.now.utc.to_i - session[:ctime].to_i <= setting_session_maximum_lifetime)
         return true
       end
     end

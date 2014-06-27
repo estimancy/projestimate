@@ -15,22 +15,12 @@ module ControllerHelpers
     end
   end
 
-  #def sign_in(user = double('user'))
-  #def sign_in(user = User.first)
-  def sign_in_save(user = "user")
+  def sign_in_SAVE(user = double('user'))
     if user.nil?
       request.env['warden'].stub(:authenticate!).
           and_throw(:warden, {:scope => :user})
       allow(controller).to receive(:current_user) { nil }
     else
-      #master_group = FactoryGirl.create(:group)
-      #defined_group = FactoryGirl.create(:defined_group)
-      #master_group = FactoryGirl.create(:master_admin_group)
-      #admin_group = FactoryGirl.create(:admin_group)
-      #everyone_group = FactoryGirl.create(:everyone_group)
-      #user = FactoryGirl.build(:user, :groups => [master_group])
-      #user.confirm!
-
       request.env['warden'].stub :authenticate! => user
       allow(controller).to receive(:current_user) { user }
     end

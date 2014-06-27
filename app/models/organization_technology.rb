@@ -49,6 +49,7 @@ class OrganizationTechnology < ActiveRecord::Base
   has_many :pbs_project_elements
   has_and_belongs_to_many :unit_of_works
   has_many :abacus_organizations, :dependent => :destroy
+  has_many :inputs, :foreign_key => :technology_id
 
   validates :name, :alias, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
