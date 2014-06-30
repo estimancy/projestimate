@@ -46,8 +46,12 @@ class RealSize::InputsController < ApplicationController
                                         size_unit_id: size_unit.id,
                                         size_unit_type_id: sut.id).first
 
+          tsu = TechnologySizeUnit.where(organization_id: organization.id,
+                                         organization_technology_id: technology.id,
+                                         size_unit_id: size_unit.id).first
+
           #calcul du resultat final
-          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"].to_f * tst.value.to_f
+          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"].to_f * tst.value.to_f * tsu.value.to_f
 
           rzi = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
                                       module_project_id: module_project.id,
