@@ -45,7 +45,7 @@ class RealSize::InputsController < ApplicationController
                                          size_unit_id: su.id,
                                          size_unit_type_id: sut.id).first
 
-          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"] * tst.value.to_f
+          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"].to_f * tst.value.to_f
 
           rzi = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
                                       module_project_id: module_project.id,
@@ -71,9 +71,13 @@ class RealSize::InputsController < ApplicationController
 
       in_ev = EstimationValue.where(module_project_id: module_project.id, pe_attribute_id: am.pe_attribute.id).first
 
-      @size_units.each do |su|
-        ["low", "most_likely", "high"].each do |level|
-          level_est_val = in_ev.send("string_data_#{level}")
+      ["low", "most_likely", "high"].each do |level|
+
+        level_est_val = in_ev.send("string_data_#{level}")
+        result = []
+
+        @size_units.each do |su|
+
           output = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
                                           module_project_id: module_project.id,
                                           size_unit_id: su.id,
@@ -83,12 +87,12 @@ class RealSize::InputsController < ApplicationController
                                          organization_technology_id: technology.id,
                                          size_unit_id: su.id).first
 
-          result = output * tsu.value
-
-          level_est_val[current_component.id] = result
-          in_ev.update_attribute(:"string_data_#{level}", level_est_val)
-
+          result << output.to_f * tsu.value.to_f
         end
+
+        level_est_val[current_component.id] = result.compact.sum
+        in_ev.update_attribute(:"string_data_#{level}", level_est_val)
+
       end
     end
 
