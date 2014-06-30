@@ -323,7 +323,7 @@ def load_data!
     user.project_ids = [project.id]
     user.save
     #Create default Pe-wbs-Project associated with previous project
-    PeWbsProject.create(:project_id => project.id, :name => "#{project.title} WBS-Product", :wbs_type => 'Product')
+    PeWbsProject.create(:project_id => project.id, :name => "#{project.title} PBS-Product", :wbs_type => 'Product')
     pe_wbs_project = PeWbsProject.first
     #Create root pbs_project_element
     PbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :work_element_type_id => wet.id, :position => 0, :name => 'Root folder')

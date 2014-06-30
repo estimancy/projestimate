@@ -7,22 +7,12 @@ class SizeUnitsController < ApplicationController
   # GET /size_units/1.json
   def show
     @size_unit = SizeUnit.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @size_unit }
-    end
   end
 
   # GET /size_units/new
   # GET /size_units/new.json
   def new
     @size_unit = SizeUnit.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @size_unit }
-    end
   end
 
   # GET /size_units/1/edit
