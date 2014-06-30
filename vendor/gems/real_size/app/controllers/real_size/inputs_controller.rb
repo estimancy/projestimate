@@ -32,7 +32,6 @@ class RealSize::InputsController < ApplicationController
     module_project = current_module_project
     technology = current_component.organization_technology
 
-
     @size_unit_types = organization.size_unit_types
     @size_units = SizeUnit.all
 
@@ -42,17 +41,8 @@ class RealSize::InputsController < ApplicationController
 
           size_unit = SizeUnit.find(params[:size_unit]["#{su.id}"].to_i)
 
-          tst = TechnologySizeType.where(organization_id: organization.id,
-                                        organization_technology_id: technology.id,
-                                        size_unit_id: size_unit.id,
-                                        size_unit_type_id: sut.id).first
-
-          tsu = TechnologySizeUnit.where(organization_id: organization.id,
-                                         organization_technology_id: technology.id,
-                                         size_unit_id: size_unit.id).first
-
           #calcul du resultat final
-          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"].to_f * tst.value.to_f * tsu.value.to_f
+          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"]
 
           rzi = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
                                       module_project_id: module_project.id,
@@ -78,7 +68,6 @@ class RealSize::InputsController < ApplicationController
       in_ev = EstimationValue.where(module_project_id: module_project.id,
                                     pe_attribute_id: am.pe_attribute.id).first
 
-
       ["low", "most_likely", "high"].each do |level|
         @size_units.each do |su|
 
@@ -91,7 +80,21 @@ class RealSize::InputsController < ApplicationController
                                             size_unit_id: su.id,
                                             project_id: project.id).map(&:"value_#{level}").sum
 
-            level_est_val[current_component.id] = output
+            result = []
+            @size_unit_types.each do |sut|
+              tst = TechnologySizeType.where(organization_id: organization.id,
+                                             organization_technology_id: technology.id,
+                                             size_unit_id: su.id,
+                                             size_unit_type_id: sut.id).first
+
+              tsu = TechnologySizeUnit.where(organization_id: organization.id,
+                                             organization_technology_id: technology.id,
+                                             size_unit_id: su.id).first
+
+              result << output.to_f * tst.value.to_f * tsu.value.to_f
+            end
+
+            level_est_val[current_component.id] = result.sum
           end
           in_ev.update_attribute(:"string_data_#{level}", level_est_val)
         end
