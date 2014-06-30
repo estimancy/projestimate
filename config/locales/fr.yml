@@ -1202,5 +1202,6 @@ fr:
   unit_or_work_complexity: "Complexité des unité d'oeuvres"
   factor_complexity: "Complexité des facteurs"
   size_unit_type: "Type de d'unité de taille"
-  technology_size_abacus: "Abaque Unité de taille / Technologie"
+  technology_size_type_abacus: "Abaque type d'unité de taille / Technologie"
+  technology_size_abacus: "Abaque unité de taille / Technologie"
   technology_uos_synthesis: "Abaque Unité d'oeuvre / Technologie"

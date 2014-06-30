@@ -9,9 +9,10 @@
         <li><a href="#tabs-6"><%= I18n.t(:unit_or_work_complexity) %> </a></li>
         <li><a href="#tabs-7"><%= I18n.t(:factor_complexity) %> </a></li>
         <li><a href="#tabs-8"><%= I18n.t(:size_unit_type) %></a></li>
-        <li><a href="#tabs-9"><%= I18n.t(:technology_size_abacus) %></a></li>
-        <li><a href="#tabs-10"><%= I18n.t(:organization_subcontractor) %> </a></li>
-        <li><a href="#tabs-11"><%= I18n.t(:technology_uos_synthesis) %></a></li>
+        <li><a href="#tabs-9"><%= I18n.t(:technology_size_type_abacus) %></a></li>
+        <li><a href="#tabs-10"><%= I18n.t(:technology_size_abacus) %></a></li>
+        <li><a href="#tabs-11"><%= I18n.t(:organization_subcontractor) %> </a></li>
+        <li><a href="#tabs-12"><%= I18n.t(:technology_uos_synthesis) %></a></li>
   <% end %>
   </ul>
 
@@ -349,12 +350,15 @@
     <% end %>
   </div>
 
-
   <div id="tabs-9">
-    <%= render :partial => 'organizations/technology_size_abacus' %>
+    <%= render :partial => 'organizations/technology_size_type_abacus' %>
   </div>
 
   <div id="tabs-10">
+    <%= render :partial => 'organizations/technology_size_unit_abacus' %>
+  </div>
+
+  <div id="tabs-11">
     <b><%= I18n.t(:text_organization_subcontractor) %></b>
     <br>
     <% if can? :edit_organizations, Organization %>
@@ -362,13 +366,13 @@
     <% end %>
     <table id="table_list_7" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
-      <tr>
-        <th><%= I18n.t(:name) %></th>
-        <th><%= I18n.t(:alias) %></th>
-        <th><%= I18n.t(:description) %></th>
-        <th class="filter-select" title="<%= I18n.t(:tooltip_state) %>"><%= I18n.t(:state) %></th>
-        <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
-      </tr>
+        <tr>
+          <th><%= I18n.t(:name) %></th>
+          <th><%= I18n.t(:alias) %></th>
+          <th><%= I18n.t(:description) %></th>
+          <th class="filter-select" title="<%= I18n.t(:tooltip_state) %>"><%= I18n.t(:state) %></th>
+          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
+        </tr>
       </thead>
       <tbody>
       <% @organization.subcontractors.each do |ot| %>
@@ -399,7 +403,7 @@
     </table>
   </div>
 
-  <div id="tabs-11">
+  <div id="tabs-12">
     <%# render :partial => 'organization_technologies/factors_abacus' %>
     <%= render :partial => 'organization_technologies/technology_uos_synthesis' %>
   </div>

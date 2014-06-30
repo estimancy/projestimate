@@ -1,9 +1,9 @@
-<%= form_tag '/set_technology_size_abacus', :method => 'POST', :class => 'simple_form' do %>
+<%= form_tag '/set_technology_size_unit_abacus', :method => 'POST', :class => 'simple_form' do %>
 
   <%= hidden_field_tag "organization", params[:id] %>
 
   <div id="value_section">
-    <%= render 'organizations/abacus_table_values' %>
+    <%= render 'organizations/size_unit_abacus_table_values' %>
   </div>
 
   <% if can? :edit_organizations, Organization %>

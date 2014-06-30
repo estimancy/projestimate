@@ -710,3 +710,8 @@ div.block_label.selected_pbs {
     max-width: 100%;
     height: auto;
 }
+
+.table th,
+.table td.center {
+    text-align: center;
+}

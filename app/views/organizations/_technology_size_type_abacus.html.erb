@@ -1,0 +1,15 @@
+<%= form_tag '/set_technology_size_type_abacus', :method => 'POST', :class => 'simple_form' do %>
+
+  <%= hidden_field_tag "organization", params[:id] %>
+
+  <div id="value_section">
+    <%= render 'organizations/size_type_abacus_table_values' %>
+  </div>
+
+  <% if can? :edit_organizations, Organization %>
+    <%= submit_tag I18n.t('save'), :class => 'btn' %>
+    <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+  <% end %>
+
+<% end %>
+

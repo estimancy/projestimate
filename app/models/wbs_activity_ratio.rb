@@ -89,10 +89,16 @@ class WbsActivityRatio < ActiveRecord::Base
         unless row.empty? or i == 0
           begin
             @ware = WbsActivityRatioElement.find(row[0])
-            @ware.wbs_activity_element.has_children?
-            @ware.update_attribute('ratio_value', row[5])
-            @ware.update_attribute('simple_reference', row[6])
-            @ware.update_attribute('multiple_references', row[7])
+            if @ware.nil?
+              WbsActivityRatioElement.create(ratio_value: row[5],
+                                             simple_reference: row[6],
+                                             multiple_references: row[7])
+            else
+              @ware.wbs_activity_element.has_children?
+              @ware.update_attribute('ratio_value', row[5])
+              @ware.update_attribute('simple_reference', row[6])
+              @ware.update_attribute('multiple_references', row[7])
+            end
           rescue
             error_count = error_count + 1
           end

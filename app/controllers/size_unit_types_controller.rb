@@ -11,24 +11,16 @@ class SizeUnitTypesController < ApplicationController
     @size_unit_type = SizeUnitType.find(params[:id])
   end
 
-  # GET /size_unit_types/new
-  # GET /size_unit_types/new.json
   def new
     @size_unit_type = SizeUnitType.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @size_unit_type }
-    end
+    @organization = Organization.find(params[:organization_id])
   end
 
-  # GET /size_unit_types/1/edit
   def edit
     @size_unit_type = SizeUnitType.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
   end
 
-  # POST /size_unit_types
-  # POST /size_unit_types.json
   def create
     @size_unit_type = SizeUnitType.new(params[:size_unit_type])
     @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
@@ -55,8 +47,6 @@ class SizeUnitTypesController < ApplicationController
     end
   end
 
-  # PUT /size_unit_types/1
-  # PUT /size_unit_types/1.json
   def update
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
@@ -71,16 +61,9 @@ class SizeUnitTypesController < ApplicationController
       end
     end
   end
-
-  # DELETE /size_unit_types/1
-  # DELETE /size_unit_types/1.json
   def destroy
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.destroy
-
-    respond_to do |format|
-      format.html { redirect_to size_unit_types_url }
-      format.json { head :no_content }
-    end
+    redirect_to size_unit_types_url
   end
 end
