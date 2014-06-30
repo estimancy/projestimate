@@ -40,9 +40,12 @@ class RealSize::InputsController < ApplicationController
         @size_units.each do |su|
 
           size_unit = SizeUnit.find(params[:size_unit]["#{su.id}"].to_i)
+          tst = TechnologySizeType.where(organization_id: organization.id,
+                                         organization_technology_id: technology.id,
+                                         size_unit_id: su.id,
+                                         size_unit_type_id: sut.id).first
 
-          #calcul du resultat final
-          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"]
+          result = params[:"value_#{level}"]["#{su.id}"]["#{sut.id}"] * tst.value.to_f
 
           rzi = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
                                       module_project_id: module_project.id,
@@ -65,38 +68,26 @@ class RealSize::InputsController < ApplicationController
     end
 
     module_project.pemodule.attribute_modules.each do |am|
-      in_ev = EstimationValue.where(module_project_id: module_project.id,
-                                    pe_attribute_id: am.pe_attribute.id).first
 
-      ["low", "most_likely", "high"].each do |level|
-        @size_units.each do |su|
+      in_ev = EstimationValue.where(module_project_id: module_project.id, pe_attribute_id: am.pe_attribute.id).first
 
-          if am.pe_attribute.alias == "ksloc"
+      @size_units.each do |su|
+        ["low", "most_likely", "high"].each do |level|
+          level_est_val = in_ev.send("string_data_#{level}")
+          output = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
+                                          module_project_id: module_project.id,
+                                          size_unit_id: su.id,
+                                          project_id: project.id).map(&:"value_#{level}").sum
 
-            level_est_val = in_ev.send("string_data_#{level}")
+          tsu = TechnologySizeUnit.where(organization_id: organization.id,
+                                         organization_technology_id: technology.id,
+                                         size_unit_id: su.id).first
 
-            output = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
-                                            module_project_id: module_project.id,
-                                            size_unit_id: su.id,
-                                            project_id: project.id).map(&:"value_#{level}").sum
+          result = output * tsu.value
 
-            result = []
-            @size_unit_types.each do |sut|
-              tst = TechnologySizeType.where(organization_id: organization.id,
-                                             organization_technology_id: technology.id,
-                                             size_unit_id: su.id,
-                                             size_unit_type_id: sut.id).first
-
-              tsu = TechnologySizeUnit.where(organization_id: organization.id,
-                                             organization_technology_id: technology.id,
-                                             size_unit_id: su.id).first
-
-              result << output.to_f * tst.value.to_f * tsu.value.to_f
-            end
-
-            level_est_val[current_component.id] = result.sum
-          end
+          level_est_val[current_component.id] = result
           in_ev.update_attribute(:"string_data_#{level}", level_est_val)
+
         end
       end
     end
