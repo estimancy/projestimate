@@ -1178,6 +1178,7 @@ en:
   conversion_rate: "Conversion rate"
   select_technology: "select technology"
   select_uow: "select unit of work"
+  number_precision: "Number precision"
 
   new_factor: "New factor"
   new_factor_complexity: "New factor"

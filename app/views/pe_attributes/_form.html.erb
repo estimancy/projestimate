@@ -15,11 +15,8 @@
             </tr>
 
             <tr>
-              <td><p><%= label_tag :single_entry_attribute, I18n.t('label_single_entry_attribute') %></td>
-              <td><i class="icon-info-sign" rel="tooltip" title="<%= I18n.t(:help_single_entry_attribute) %>" style="cursor: help;"></i></td>
+              <td> <%= f.input :single_entry_attribute, :label => I18n.t('label_single_entry_attribute'), :as => :select, :input_html => {:class => 'input-xlarge'} %></td>
             </tr>
-
-            <tr><td> <%= f.input :single_entry_attribute, :label => false, :as => :select %></td></tr>
           </table>
 
           <%= f.input :attribute_category_id, :label => I18n.t('category'), :as => :select, :collection => @attribute_categories %>

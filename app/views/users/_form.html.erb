@@ -252,6 +252,7 @@
               <td><%= f.input :time_zone, :label => I18n.t('time_zone'), :input_html => {:class => 'input-xlarge'}, :as => :select, :collection => ActiveSupport::TimeZone.all.map { |i| [i.to_s, i.name] }, :include_blank => false, :selected => @user.time_zone || 'GMT' %></td>
             </tr>
             <tr>
+              <td><%= f.input :number_precision, :label => I18n.t(:number_precision), :input_html => {:class => 'input-large'} %></td>
               <td><%= f.input :object_per_page, :label => I18n.t('object_per_page'), :input_html => {:class => 'input-small'}, :as => :select, :collection => [5, 10, 25, 50, 100], :include_blank => true, :selected => @user.object_per_page %></td>
             </tr>
             <!--

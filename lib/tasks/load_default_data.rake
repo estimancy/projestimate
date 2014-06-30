@@ -170,33 +170,33 @@ def load_data!
       
     puts '   - Attributes'
       attributes = [
-      ['KSLOC', 'ksloc', 'Kilo (1000) Source Lines Of Code.', 'float', ['float','>=', '0'], 'sum'],
-      ['Cost', 'cost', 'Cost of a product, a service or a process in local currency', 'float', ['float','>=', '0'], 'sum'],
-      ['Delay', 'delay', 'Time allowed for the completion of something in number of days', 'float', ['float','>=', '0'], 'average'],
-      ['Staffing', 'staffing', 'Staff required to accomplish a task in number of people', 'integer', ['integer','>=', '0'], 'sum'],
-      ['Staffing complexity', 'staffing_complexity', "A rating of the project's inherent difficulty in terms of the rate at which staff are added to a project.", 'float', ['float','>=', '0'], 'average'],
-      ['Effective technology', 'effective_technology', 'A composite metric that captures factors relating to the efficiency or productivity with which development can be carried out.', 'float', ['float','>=', '0'], 'average'],
-      ['End date', 'end_date', 'End date for a task, a pbs_project_element. Dependent of delay.', 'date', ['date'], 'maxi'],
-      ['Effort Man Hour', 'effort_man_hour', 'A man-hour or person-hour is the amount of work performed by an average worker in one hour.', 'float', ['float','>=', '0'], 'average'],
-      ['Effort Man Month', 'effort_man_month', 'A man-month or person-month is the amount of work performed by an average worker in one Month.', 'float', ['float','>=', '0'], 'average'],
-      ['Duration', 'duration', 'Duration of a task in hour', 'float', ['float','>=', '0'], 'average'],
-      ['Complexity', 'complexity', 'classes of software projects (for COCOMO modules) - Organic projects: "small" teams with "good" experience working with "less than rigid" requirements - Semi-detached projects: "medium" teams with mixed experience working with a mix of rigid and less than rigid requirements - Embedded projects: developed within a set of "tight" constraints. It is also combination of organic and semi-detached projects.(hardware, software, operational, ...)', 'list', ['list','','Organic;Semi-detached;Embedded'], 'average'],
-      ['Schedule', 'schedule', 'Schedule in calendar months', 'integer', ['integer', '>=', '0'], 'sum'],
-      ['Defects', 'defects', 'Defects', 'integer', ['integer', '>=', '0'], 'sum'],
-      ['Total Effort', 'total_effort', 'A man-hour or person-hour is the amount of work performed by an average worker in one hour for all activities.', 'float', ['float', '>=', '0'], 'average'],
-      ['Methodology', 'methodology', 'Methodology M 1-5 1=none/CMMI Level 1 to 5-CMMI Level 5', 'integer', ['between', '0;5'], 'sum'],
-      ['Note', 'note', 'A text note, for annotation, comment etc.', 'text', ['text']],
-      ['Platform Maturity', 'platform_maturity', 'Platform Maturity - 1 ou 2', 'integer', ['integer']],
-      ['Real-time Constraint', 'real_time_constraint', '1=not real time/desktop with no constraints - 10=mission critical/ssafety critical real time system', 'integer', ['integer']],
-      ['Sandbox Date', 'date_sandbox', 'Sample Date attribute for testing purpose', 'date', ['date']],
-      ['Sandbox Description', 'description_sandbox', 'Sample text attribute for testing purpose', 'text', ['text']],
-      ['Sandbox Float', 'float_sandbox', 'Sample Float attribute for testing purpose', 'float', ['float']],
-      ['Sandbox Integer', 'integer_sandbox', 'Sample Integer attribute for testing purpose', 'integer', ['integer']],
-      ['Sandbox List', 'list_sandbox', 'Sample List attribute for testing purpose', 'list', ['list', 'Un;Deux;Troix;Quatre;Cinq;Six;Sept']],
+      ['KSLOC', 'ksloc', 'Kilo (1000) Source Lines Of Code.', 'float', ['float','>=', '0'], 'sum', nil],
+      ['Cost', 'cost', 'Cost of a product, a service or a process in local currency', 'float', ['float','>=', '0'], 'sum', nil],
+      ['Delay', 'delay', 'Time allowed for the completion of something in number of days', 'float', ['float','>=', '0'], 'average', nil],
+      ['Staffing', 'staffing', 'Staff required to accomplish a task in number of people', 'integer', ['integer','>=', '0'], 'sum', nil],
+      ['Staffing complexity', 'staffing_complexity', "A rating of the project's inherent difficulty in terms of the rate at which staff are added to a project.", 'float', ['float','>=', '0'], 'average', nil],
+      ['Effective technology', 'effective_technology', 'A composite metric that captures factors relating to the efficiency or productivity with which development can be carried out.', 'float', ['float','>=', '0'], 'average', nil],
+      ['End date', 'end_date', 'End date for a task, a pbs_project_element. Dependent of delay.', 'date', ['date'], 'maxi', nil],
+      ['Effort Man Hour', 'effort_man_hour', 'A man-hour or person-hour is the amount of work performed by an average worker in one hour.', 'float', ['float','>=', '0'], 'average', nil],
+      ['Effort Man Month', 'effort_man_month', 'A man-month or person-month is the amount of work performed by an average worker in one Month.', 'float', ['float','>=', '0'], 'average', nil],
+      ['Duration', 'duration', 'Duration of a task in hour', 'float', ['float','>=', '0'], 'average', nil],
+      ['Complexity', 'complexity', 'classes of software projects (for COCOMO modules) - Organic projects: "small" teams with "good" experience working with "less than rigid" requirements - Semi-detached projects: "medium" teams with mixed experience working with a mix of rigid and less than rigid requirements - Embedded projects: developed within a set of "tight" constraints. It is also combination of organic and semi-detached projects.(hardware, software, operational, ...)', 'list', ['list','','Organic;Semi-detached;Embedded'], 'average', true],
+      ['Schedule', 'schedule', 'Schedule in calendar months', 'integer', ['integer', '>=', '0'], 'sum', nil],
+      ['Defects', 'defects', 'Defects', 'integer', ['integer', '>=', '0'], 'sum', nil],
+      ['Total Effort', 'total_effort', 'A man-hour or person-hour is the amount of work performed by an average worker in one hour for all activities.', 'float', ['float', '>=', '0'], 'average', nil],
+      ['Methodology', 'methodology', 'Methodology M 1-5 1=none/CMMI Level 1 to 5-CMMI Level 5', 'integer', ['between', '0;5'], 'sum', nil],
+      ['Note', 'note', 'A text note, for annotation, comment etc.', 'text', ['text'], nil],
+      ['Platform Maturity', 'platform_maturity', 'Platform Maturity - 1 ou 2', 'integer', ['integer'], nil],
+      ['Real-time Constraint', 'real_time_constraint', '1=not real time/desktop with no constraints - 10=mission critical/ssafety critical real time system', 'integer', ['integer'], nil],
+      ['Sandbox Date', 'date_sandbox', 'Sample Date attribute for testing purpose', 'date', ['date'], nil],
+      ['Sandbox Description', 'description_sandbox', 'Sample text attribute for testing purpose', 'text', ['text'], nil],
+      ['Sandbox Float', 'float_sandbox', 'Sample Float attribute for testing purpose', 'float', ['float'], nil],
+      ['Sandbox Integer', 'integer_sandbox', 'Sample Integer attribute for testing purpose', 'integer', ['integer'], nil],
+      ['Sandbox List', 'list_sandbox', 'Sample List attribute for testing purpose', 'list', ['list', 'Un;Deux;Troix;Quatre;Cinq;Six;Sept'], nil],
     ]
 
     attributes.each do |i|
-      PeAttribute.create(:name => i[0], :alias => i[1], :description => i[2], :attr_type => i[3], :options => i[4], :aggregation => i[5], :record_status_id => rsid)
+      PeAttribute.create(:name => i[0], :alias => i[1], :description => i[2], :attr_type => i[3], :options => i[4], :aggregation => i[5], :record_status_id => rsid, :single_entry_attribute => ( i[6] if i[6]) )
     end
 
   puts '   - Modules'

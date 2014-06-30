@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140624071629) do
+ActiveRecord::Schema.define(:version => 20140627141007) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -922,6 +922,7 @@ ActiveRecord::Schema.define(:version => 20140624071629) do
     t.string   "provider"
     t.string   "uid"
     t.string   "avatar"
+    t.integer  "number_precision"
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

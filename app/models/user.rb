@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   audited # audit the users (comptes utilisateurs)
 
   #attr_accessible :email, :login_name, :first_name, :last_name, :initials, :auth_type, :auth_method_id, :user_status, :time_zone, :language_id, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token,:created_at,:updated_at, :organization_ids, :group_ids, :project_ids, :password, :password_confirmation, :project_security_ids
-  attr_accessible :current_password, :email, :login_name, :id_connexion, :password, :password_confirmation, :remember_me, :provider, :uid, :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at, :updated_at, :auth_type#, :project_security_ids
+  attr_accessible :current_password, :email, :login_name, :id_connexion, :password, :password_confirmation, :remember_me, :provider, :uid, :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at, :updated_at, :auth_type, :number_precision #, :project_security_ids
 
   # Virtual attribute for authenticating by either login_name or email  # This is in addition to a real persisted field like 'login_name'
   attr_accessor :id_connexion, :updating_password, :current_password
@@ -103,6 +103,7 @@ class User < ActiveRecord::Base
   validates :login_name, :presence => true, :uniqueness => {case_sensitive: false}
   #validates :email, :presence => true, :format => {:with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/i}, :uniqueness => {case_sensitive: false}
   validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}, :uniqueness => {case_sensitive: false}
+  validates :number_precision, numericality: { only_integer: true, :allow_blank => true }
 
   #validates :password, :presence => {:on => :create}, :confirmation => true, :if => :auth_method_application?
   validates :password, :presence => true, :if => :should_validate_password?

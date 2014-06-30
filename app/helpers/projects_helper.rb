@@ -943,7 +943,7 @@ module ProjectsHelper
             if est_val_pe_attribute.alias == "delay"
               "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
             else
-              "#{number_with_delimiter(value.round(2))} #{get_attribute_unit(est_val_pe_attribute)}"
+              "#{number_with_delimiter(value.round(user_number_precision))} #{get_attribute_unit(est_val_pe_attribute)}"
             end
           end
         rescue
@@ -957,7 +957,7 @@ module ProjectsHelper
         end
       else
         begin
-          value.round(2)
+          value.round(user_number_precision)
         rescue
           value
         end

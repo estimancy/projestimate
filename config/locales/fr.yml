@@ -1178,6 +1178,7 @@ fr:
   conversion_rate: "Taux de conversion"
   select_technology: "selectionner une technologie"
   select_uow: "selectionner une unité de travail"
+  number_precision: "Précision des nombres"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

@@ -81,6 +81,7 @@ class ApplicationController < ActionController::Base
   helper_method :set_locale_from_browser
   helper_method :set_user_language
   helper_method :initialization_module
+  helper_method :user_number_precision
 
   before_filter :set_user_time_zone
   before_filter :set_user_language
@@ -184,7 +185,6 @@ class ApplicationController < ActionController::Base
         return true
       end
     end
-
   end
 
   #For some specific tables, we need to know if record is created on MasterData instance or on the local instance
@@ -357,6 +357,16 @@ class ApplicationController < ActionController::Base
   def set_page_title(page_title)
     @page_title = page_title
   end
+
+  # Get the current_user number precision defined in the user preferences (default is 2)
+  def user_number_precision
+    if current_user && !current_user.number_precision.nil?
+      return current_user.number_precision
+    else
+      return 2
+    end
+  end
+
 
   #Get record statuses
   def get_record_statuses

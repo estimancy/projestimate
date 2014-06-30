@@ -109,7 +109,7 @@ module CocomoExpert
         @staffing = nil
       end
 
-      @staffing.ceil
+      @staffing.nil? ? nil : @staffing.ceil
     end
 
     def get_cost(*args)
