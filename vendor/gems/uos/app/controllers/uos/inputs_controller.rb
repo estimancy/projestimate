@@ -63,7 +63,9 @@ class Uos::InputsController < ApplicationController
   def new_item
     module_project = ModuleProject.find(params[:mp])
     pbs = PbsProjectElement.find(params[:pbs_id])
-    input = Input.create(module_project_id: module_project.id, pbs_project_element_id: pbs.id)
+
+    input = Input.new(module_project_id: module_project.id, pbs_project_element_id: pbs.id)
+    input.save(validate: false)
 
     if params[:input_id]
       save_entries(params[:input_id], module_project)
