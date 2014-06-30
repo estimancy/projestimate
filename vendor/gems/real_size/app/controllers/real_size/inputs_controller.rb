@@ -79,19 +79,21 @@ class RealSize::InputsController < ApplicationController
 
 
       ["low", "most_likely", "high"].each do |level|
-        if am.pe_attribute.alias == "ksloc"
+        @size_units.each do |su|
 
-          level_est_val = in_ev.send("string_data_#{level}")
+          if am.pe_attribute.alias == "ksloc"
 
-          output = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
-                                          module_project_id: module_project.id,
-                                          size_unit_id: SizeUnit.first.id,
-                                          project_id: project.id).map(&:"value_#{level}").sum
+            level_est_val = in_ev.send("string_data_#{level}")
 
-          level_est_val[current_component.id] = output
+            output = RealSize::Input.where( pbs_project_element_id: pbs_element.id,
+                                            module_project_id: module_project.id,
+                                            size_unit_id: su.id,
+                                            project_id: project.id).map(&:"value_#{level}").sum
 
+            level_est_val[current_component.id] = output
+          end
+          in_ev.update_attribute(:"string_data_#{level}", level_est_val)
         end
-        in_ev.update_attribute(:"string_data_#{level}", level_est_val)
       end
     end
 
