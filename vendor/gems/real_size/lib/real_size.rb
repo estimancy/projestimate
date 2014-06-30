@@ -31,7 +31,7 @@ module RealSize
 
     #Constructor
     def initialize(elem)
-      @coef_ksloc = 1
+      @coef_ksloc = elem['ksloc'].to_f
     end
 
     def get_ksloc(*args)
