@@ -1599,12 +1599,14 @@ public
         attr_effort = PeAttribute.find_by_alias('effort_man_month')
         attr_delay = PeAttribute.find_by_alias('delay')
 
-        m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
+        delay = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id]
+        effort = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
 
-        k = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
-
+        m =  delay / current_project.organization.number_hours_per_month
+        k = effort
         a = 2 #pente
-        24.floor.times do |i|
+
+        m.floor.times do |i|
           t = i/12.to_f
           @staffing_labels << i
           @staffing_profile_data << 2*k*a*t*Math.exp(-(a)*t*t)
