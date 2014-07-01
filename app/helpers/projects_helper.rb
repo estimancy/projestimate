@@ -86,31 +86,31 @@ module ProjectsHelper
   end
 
   def convert_delay(value, organization)
-    if value < 100
+    #if value < 100
+    #  value
+    #elsif (value > 100) && (value < 1000)
+    #  value / organization.number_hours_per_day
+    #elsif (value > 1000) && (value < 10000)
+    #  value / organization.number_hours_per_day / 4
+    #elsif value > 10000
+    #  value / organization.number_hours_per_month
+    #else
       value
-    elsif (value > 100) && (value < 1000)
-      value / organization.number_hours_per_day
-    elsif (value > 1000) && (value < 10000)
-      value / organization.number_hours_per_day / 4
-    elsif value > 10000
-      value / organization.number_hours_per_month
-    else
-      value
-    end
+    #end
   end
 
   def convert_delay_label(value, organization)
-    if value < 100
+    #if value < 100
+    #  I18n.t(:hours)
+    #elsif (value > 100) && (value < 1000)
+    #  I18n.t(:unit_days)
+    #elsif (value > 1000) && (value < 10000)
+    #  I18n.t(:weeks)
+    #elsif value > 10000
+    #  I18n.t(:months)
+    #else
       I18n.t(:hours)
-    elsif (value > 100) && (value < 1000)
-      I18n.t(:unit_days)
-    elsif (value > 1000) && (value < 10000)
-      I18n.t(:weeks)
-    elsif value > 10000
-      I18n.t(:months)
-    else
-      I18n.t(:hours)
-    end
+    #end
   end
 
 
@@ -937,14 +937,10 @@ module ProjectsHelper
         display_date(value)
       when 'float'
         begin
-          if est_val_pe_attribute.precision
-            value.round(est_val_pe_attribute.precision)
+          if est_val_pe_attribute.alias == "delay"
+            "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
           else
-            if est_val_pe_attribute.alias == "delay"
-              "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
-            else
-              "#{number_with_delimiter(value.round(user_number_precision))} #{get_attribute_unit(est_val_pe_attribute)}"
-            end
+            "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))} #{get_attribute_unit(est_val_pe_attribute)}"
           end
         rescue
           value

@@ -44,9 +44,6 @@
         <% if user_signed_in? %>
           <%= render 'layouts/user_account' %>
         <% end %>
-        <div id="notifications">
-          <%= render 'layouts/notifications' %>
-        </div>
 
       </div>
     </div>
@@ -71,3 +68,5 @@
       $("#toggle_button > i").toggleClass("icon-double-angle-down icon-large pull-left icon-border");
     });
 </script>
+
+<%= render 'layouts/notifications' %>
