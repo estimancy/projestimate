@@ -1188,6 +1188,7 @@ en-gb:
   defined_profile_not_deletable: "Defined profile is not deletable."
   creator: "Creator"
   organization_profiles: "Organization profiles"
+  profils_per_activity: "Profils per activity"
 
   requirement: "Requirements"
   size_unit: "Size unit"

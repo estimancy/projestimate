@@ -211,6 +211,9 @@ public
     array_json_tree = Project.json_tree(arranged_projects)
     @projects_json_tree = Hash[*array_json_tree.flatten]
     @projects_json_tree = @projects_json_tree.to_json
+
+    # Project's organization profiles
+    @project_profiles = @project.organization.organization_profiles
   end
 
   def update

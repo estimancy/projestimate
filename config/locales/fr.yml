@@ -1191,6 +1191,8 @@ fr:
   defined_profile_not_deletable: "Impossible de supprimer un profil dans le statut Defined."
   creator: "Créateur"
   organization_profiles: "Profils de l'organization"
+  profils_per_activity: "Profils per activity"
+  profils_per_activity: "Profils par activité"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

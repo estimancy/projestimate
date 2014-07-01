@@ -7,6 +7,7 @@
         <% if action_name.in? %w(edit update) %>
           <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
           <li><a href="#tabs-3"><%= I18n.t(:wbs_activity) %></a></li>
+          <li><a href="#tabs-9"><%= I18n.t(:profils_per_activity) %></a></li>
           <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
           <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
           <li><a href="#tabs-6"><%= I18n.t(:calendar) %> </a></li>
@@ -243,6 +244,11 @@
       <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
       <%= render :partial => "show_project_tree_history", :object => [@projects_json_tree] %>
     </div>
+
+    <div id="tabs-9">
+        <%= render :partial => 'projects/profils_per_activity' %>
+    </div>
+
 <% end %>
 </div>
 
