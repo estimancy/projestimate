@@ -1,7 +1,7 @@
 <% if @inputs.empty? %>
   <tr>
     <td colspan="13">
-      <%= link_to "", uos.new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus" %>
+      <%= link_to "", uos.new_item_path(mp: params[:mp], pbs_id: current_component.id), class: "icon icon-plus", title: "New item" %>
     </td>
   </tr>
 <% end %>
@@ -12,13 +12,13 @@
     <%= hidden_field_tag "input_id[#{i+1}]", input.id, :class => "input_id" %>
 
     <td class="span1">
-      <%= link_to "", uos.new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus" %>
-      <%= link_to "", uos.remove_item_path(input_id: input.id), :class => "icon icon-trash" %>
+      <%= link_to "", uos.new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus", title: "New item"  %>
+      <%= link_to "", uos.remove_item_path(input_id: input.id), :class => "icon icon-trash", title: "Remove item"  %>
       <span class="icon icon-star <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></span>
       <%= hidden_field_tag "flag[#{i+1}]", input.flag.blank? ? 'black-question-mark' : input.flag %>
     </td>
     <td class="span1 center">
-      <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-xlarge" %>
+      <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-large" %>
     </td>
     <td class="span1 center">
       <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, :selected => input.technology_id), {:class => "technology input-large", :prompt => I18n.t(:select_technology), :required=>true} %>

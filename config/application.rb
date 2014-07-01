@@ -126,9 +126,9 @@ module Projestimate
     # Global constante declaration
     ALPHABETICAL = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
     INITIALIZATION = "initialization"
-    EFFORT_MAN_HOUR = "effort_man_hour"
-    EFFORT_MAN_MONTH = "effort_man_month"
-    EFFORT_MAN_WEEK = "effort_man_week"
+    EFFORT_PERSON_HOUR = "effort_person_hour"
+    EFFORT_PERSON_MONTH = "effort_person_month"
+    EFFORT_PERSON_WEEK = "effort_person_week"
     DELAY = "delay"
     STAFFING = "staffing"
     COST = "cost"

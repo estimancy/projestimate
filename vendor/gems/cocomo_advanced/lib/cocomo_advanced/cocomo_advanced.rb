@@ -69,7 +69,7 @@ module CocomoAdvanced
     end
 
     # Return effort
-    def get_effort_man_month(*args)
+    def get_effort_person_month(*args)
       sf = Array.new
       aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
       aliass.each do |a|

@@ -25,11 +25,11 @@ module ExpertJudgment
   class ExpertJudgment
     include PemoduleEstimationMethods
 
-    attr_accessor :effort_man_hour, :pbs_project_element_id, :wbs_project_element_root
+    attr_accessor :effort_person_hour, :pbs_project_element_id, :wbs_project_element_root
 
     def initialize(elem)
       WbsProjectElement.rebuild_depth_cache!
-      elem[:effort_man_hour].blank? ? @effort_man_hour = nil : @effort_man_hour = elem[:effort_man_hour]
+      elem[:effort_person_hour].blank? ? @effort_person_hour = nil : @effort_person_hour = elem[:effort_person_hour]
       set_wbs_project_element_root(elem)
     end
 
@@ -43,7 +43,7 @@ module ExpertJudgment
 
 
     #Set the WBS-activity node elements effort using aggregation (sum) of child elements (from the bottom up)
-    def set_node_effort_man_hour(node)
+    def set_node_effort_person_hour(node)
     end
 
     #Get the project WBS root
@@ -55,29 +55,29 @@ module ExpertJudgment
     end
 
     #GETTERS
-    def get_effort_man_hour(*args)
-      new_effort_man_hour = Hash.new
-      root_element_effort_man_hour = 0.0
+    def get_effort_person_hour(*args)
+      new_effort_person_hour = Hash.new
+      root_element_effort_person_hour = 0.0
 
       @wbs_project_element_root.children.each do |node|
         # Sort node subtree by ancestry_depth
         sorted_node_elements = node.subtree.order('ancestry_depth desc')
         sorted_node_elements.each do |wbs_project_element|
           if wbs_project_element.is_childless?
-            new_effort_man_hour[wbs_project_element.id] = (@effort_man_hour[wbs_project_element.id.to_s].blank? ? nil : @effort_man_hour[wbs_project_element.id.to_s].to_f)
+            new_effort_person_hour[wbs_project_element.id] = (@effort_person_hour[wbs_project_element.id.to_s].blank? ? nil : @effort_person_hour[wbs_project_element.id.to_s].to_f)
           else
             node_effort = 0.0
             wbs_project_element.children.each do |child|
-              node_effort = node_effort + new_effort_man_hour[child.id].to_f
+              node_effort = node_effort + new_effort_person_hour[child.id].to_f
             end
-            new_effort_man_hour[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort_man_hour)
+            new_effort_person_hour[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort_person_hour)
           end
         end
       end
 
-      new_effort_man_hour[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort_man_hour)
+      new_effort_person_hour[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort_person_hour)
 
-      new_effort_man_hour
+      new_effort_person_hour
     end
   end
 

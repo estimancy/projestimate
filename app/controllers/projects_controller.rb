@@ -798,22 +798,22 @@ private
   def compute_tree_node_estimation_value(tree_root, values_to_set)
     #No authorize required since this method is private and won't be call from any route
     WbsProjectElement.rebuild_depth_cache!
-    new_effort_man_hour = Hash.new
+    new_effort_person_hour = Hash.new
 
     tree_root.children.each do |node|
       # Sort node subtree by ancestry_depth
       sorted_node_elements = node.subtree.order('ancestry_depth desc')
       sorted_node_elements.each do |wbs_project_element|
         if wbs_project_element.is_childless?
-          new_effort_man_hour[wbs_project_element.id] = values_to_set[wbs_project_element.id.to_s]
+          new_effort_person_hour[wbs_project_element.id] = values_to_set[wbs_project_element.id.to_s]
         else
-          new_effort_man_hour[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort_man_hour)
+          new_effort_person_hour[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort_person_hour)
         end
       end
     end
 
-    new_effort_man_hour[tree_root.id] = compact_array_and_compute_node_value(tree_root, new_effort_man_hour) ###root_element_effort_man_hour
-    new_effort_man_hour
+    new_effort_person_hour[tree_root.id] = compact_array_and_compute_node_value(tree_root, new_effort_person_hour) ###root_element_effort_person_hour
+    new_effort_person_hour
   end
 
 
@@ -1530,7 +1530,7 @@ public
     # The CocomoII = Cocomo_Expert factors
     @cocomo2_factors_corresponding = []
     # Contains all attribute name according to their aliases
-    @all_attributes_names = {"effort_man_hour" => I18n.t(:effort_man_hour), "effort_man_month" => I18n.t(:effort_man_month), "effort_man_week" => I18n.t(:effort_man_week), "cost" => I18n.t(:cost),
+    @all_attributes_names = {"effort_person_hour" => I18n.t(:effort_person_hour), "effort_person_month" => I18n.t(:effort_person_month), "effort_person_week" => I18n.t(:effort_person_week), "cost" => I18n.t(:cost),
                             "delay" => I18n.t(:delay), "end_date" => I18n.t(:end_date), "staffing" => I18n.t(:staffing), "staffing_complexity" => I18n.t(:staffing_complexity), "duration" => I18n.t(:duration),
                             "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
                             "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
@@ -1540,7 +1540,7 @@ public
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
         'cost' => (@project_organization.currency.nil? ? "Unit" : @project_organization.currency.name.capitalize),
-        'effort_man_month' => I18n.t(:unit_effort_man_month), 'effort_man_hour' =>  I18n.t(:unit_effort_man_hour),
+        'effort_person_month' => I18n.t(:unit_effort_person_month), 'effort_person_hour' =>  I18n.t(:unit_effort_person_hour),
         'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
         'sloc' => I18n.t(:unit_sloc), 'sloc' => I18n.t(:unit_sloc)
     }
@@ -1596,7 +1596,7 @@ public
       @staffing_labels = []
 
       #begin
-        attr_effort = PeAttribute.find_by_alias('effort_man_month')
+        attr_effort = PeAttribute.find_by_alias('effort_person_month')
         attr_delay = PeAttribute.find_by_alias('delay')
 
         delay = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id]
@@ -1716,7 +1716,7 @@ public
 
     # get the all project modules for the charts labels
     @project_modules = []
-    @corresponding_attributes_aliases_for_init = %w(effort_man_month effort_man_hour effort_man_week cost delay staffing sloc)
+    @corresponding_attributes_aliases_for_init = %w(effort_person_month effort_person_hour effort_person_week cost delay staffing sloc)
     # contains all the modules attributes labels
     @init_attributes_labels = []
     @attributes = []

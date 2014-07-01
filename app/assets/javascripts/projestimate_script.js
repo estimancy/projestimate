@@ -169,7 +169,7 @@ $(document).ready(function() {
 
     // For the Balancing-Module, We need to copy current text_field value in high and most_likely text_field
 //    $("#").change(function(){
-//        //_low_effort_man_hour_76
+//        //_low_effort_person_hour_76
 //    });
 
      $('.component_tree ul li, .widget-content ul li').hover(
