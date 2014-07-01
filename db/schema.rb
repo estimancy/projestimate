@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140627141007) do
+ActiveRecord::Schema.define(:version => 20140630143216) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -658,6 +658,25 @@ ActiveRecord::Schema.define(:version => 20140627141007) do
     t.datetime "updated_at"
   end
 
+  create_table "profiles", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.float    "cost_per_hour"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "profiles", ["record_status_id"], :name => "index_profiles_on_record_status_id"
+  add_index "profiles", ["reference_id"], :name => "index_profiles_on_parent_id"
+  add_index "profiles", ["uuid"], :name => "index_profiles_on_uuid", :unique => true
+
   create_table "project_areas", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -865,6 +884,15 @@ ActiveRecord::Schema.define(:version => 20140627141007) do
     t.integer  "organization_technology_id"
     t.integer  "size_unit_id"
     t.integer  "size_unit_type_id"
+    t.integer  "organization_id"
+    t.float    "value"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
+
+  create_table "technology_size_units", :force => true do |t|
+    t.integer  "size_unit_id"
+    t.integer  "organization_technology_id"
     t.integer  "organization_id"
     t.float    "value"
     t.datetime "created_at",                 :null => false

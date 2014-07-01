@@ -215,7 +215,11 @@
 
       <% if can? :manage, Currency %>
           <li class="dropdown"><a href="<%= main_app.currencies_path %>">
-            <!--<i class="icon-legal icon-large pull-left"></i> --><%= I18n.t(:currency) %></a></li>
+           <%= I18n.t(:currencies) %></a></li>
+      <% end %>
+
+      <% if can? :manage, Profile %>
+          <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
       <% end %>
     </ul>
   </li>
