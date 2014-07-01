@@ -14,43 +14,42 @@
     <td class="span1">
       <%= link_to "", uos.new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus" %>
       <%= link_to "", uos.remove_item_path(input_id: input.id), :class => "icon icon-trash" %>
-    </td>
-    <td>
-      <i class="icon icon-star icon-center <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></i>
+      <span class="icon icon-star <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></span>
       <%= hidden_field_tag "flag[#{i+1}]", input.flag.blank? ? 'black-question-mark' : input.flag %>
     </td>
-    <td>
-      <%= text_field_tag "name[#{i+1}]", input.name, :class => "name" %>
+    <td class="span1 center">
+      <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-xlarge" %>
     </td>
-    <td>
-      <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, :selected => input.technology_id), {:class => "technology", :prompt => I18n.t(:select_technology), :required=>true} %>
+    <td class="span1 center">
+      <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, :selected => input.technology_id), {:class => "technology input-large", :prompt => I18n.t(:select_technology), :required=>true} %>
     </td>
-    <td>
+    <td class="span1 center">
       <% input.technology_id.nil? ? (@unit_of_works = []) : (@unit_of_works = input.organization_technology.unit_of_works) %>
-      <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, :selected => input.unit_of_work_id ), {:class => "uow", :prompt => I18n.t(:select_uow), :required=>true} %>
+      <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, :selected => input.unit_of_work_id ), {:class => "uow input-large", :prompt => I18n.t(:select_uow), :required=>true} %>
+      <a href="#modal_description" class="icon icon-question" data-toggle="modal"></a>
     </td>
-    <td>
-      <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>
+    <td class="span1 center">
+      <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity input-large" %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "size_low[#{i+1}]", input.size_low, :class => "size_low compressed" %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "size_most_likely[#{i+1}]", input.size_most_likely, :class => "size_most_likely compressed" %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "size_high[#{i+1}]", input.size_high, :class => "size_high compressed" %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "weight[#{i+1}]", input.weight.nil? ? 1 : input.weight, :class => "weight compressed" %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "gross_low[#{i+1}]", input.gross_low, :class => "gross_low compressed", readonly: true %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "gross_most_likely[#{i+1}]", input.gross_most_likely, :class => "gross_most_likely compressed", readonly: true %>
     </td>
-    <td>
+    <td class="span1 center">
       <%= text_field_tag "gross_high[#{i+1}]", input.gross_high, :class => "gross_high compressed", readonly: true %>
     </td>
   </tr>

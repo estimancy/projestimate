@@ -59,7 +59,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     if @organization_uow_complexity.save
       flash[:notice] = I18n.t(:notice_organization_uow_complexity_successful_created)
 
-      redirect_to redirect_apply(nil, new_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-5'))
+      redirect_to redirect_apply(nil, new_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-6'))
     else
       render action: 'new', :organization_id => @organization
     end
@@ -79,7 +79,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     if @organization_uow_complexity.update_attributes(params[:organization_uow_complexity])
       flash[:notice] = I18n.t (:notice_organization_uow_complexity_successful_updated)
-      redirect_to redirect_apply(edit_organization_uow_complexity_path(@organization_uow_complexity.id), nil, "/organizationals_params")
+      redirect_to redirect_apply(nil, edit_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-6'))
     else
       render action: 'edit', :organization_id => @organization.id
     end

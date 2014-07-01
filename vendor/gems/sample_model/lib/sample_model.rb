@@ -25,7 +25,7 @@ module SampleModel
     attr_accessor :k, :r, :p, :m, :e, :s, :d
 
     def initialize(input)
-      @k = input[:ksloc].blank? ? @k = nil : @k = input[:ksloc].to_f
+      @k = input[:sloc].blank? ? @k = nil : @k = input[:sloc].to_f
       @r = input[:real_time_constraint].blank? ? @r = nil : @r = input[:real_time_constraint].to_f
       @p = input[:platform_maturity].blank? ? @p = nil : @p = input[:platform_maturity].to_f
       @m = input[:methodology].blank? ? @m = nil : @m = input[:methodology].to_f

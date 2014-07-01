@@ -58,6 +58,15 @@
         <!--<i class="icon-globe icon-large pull-left"></i>-->
         <%= I18n.t(:organization_setting) %></a>
       </li>
+      <% if current_project %>
+        <% if !current_project.organization.nil? %>
+          <li class="dropdown">
+            <a href="<%= edit_organization_path(current_project.organization)%>">
+              <%= current_project.organization %>
+            </a>
+          </li>
+        <% end %>
+      <% end %>
       <li class="dropdown"><a href="<%= factors_path %>">
         <!--<i class="icon-globe icon-large pull-left"></i>-->
         <%= I18n.t(:factors) %></a>

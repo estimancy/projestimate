@@ -28,11 +28,11 @@ module CocomoAdvanced
 
     include ApplicationHelper
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :project
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_sloc, :complexity, :effort, :project
 
     #Constructor
     def initialize(elem)
-      @coef_kls = elem['ksloc'].to_f
+      @coef_sloc = elem['sloc'].to_f / 1000
       @project = Project.find(elem[:current_project_id])
 
       case elem['complexity']
@@ -81,7 +81,7 @@ module CocomoAdvanced
         sf << ic
       end
 
-      return (@coef_a * @coef_kls ** @coef_b) * sf.inject(:*)
+      return (@coef_a * @coef_sloc ** @coef_b) * sf.inject(:*)
     end
 
     #Return delay (in hour)

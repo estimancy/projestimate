@@ -11,9 +11,9 @@ FactoryGirl.define do
      association :record_status, :factory => :proposed_status, strategy: :build
   end
 
-  factory :ksloc_attribute, :class => :pe_attribute do |attr|
-     attr.name "Ksloc1"
-     attr.alias "ksloc1"
+  factory :sloc_attribute, :class => :pe_attribute do |attr|
+     attr.name "Sloc1"
+     attr.alias "sloc1"
      attr.description "Attribute number 1"
      attr.attr_type "integer"
      attr.options ["integer", ">=", "10"]

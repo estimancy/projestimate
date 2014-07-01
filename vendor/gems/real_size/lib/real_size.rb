@@ -27,15 +27,15 @@ module RealSize
   #Definition of CocomoBasic
   class RealSize
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_sloc, :complexity, :effort
 
     #Constructor
     def initialize(elem)
-      @coef_ksloc = 1
+      @coef_sloc = elem['sloc'].to_f
     end
 
-    def get_ksloc(*args)
-      @coef_ksloc
+    def get_sloc(*args)
+      @coef_sloc
     end
   end
 

@@ -3,7 +3,7 @@ require "spec_helper"
 describe PeAttribute do
 
   before :each do
-    @attribute = FactoryGirl.create(:ksloc_attribute)
+    @attribute = FactoryGirl.create(:sloc_attribute)
     @custom_status = FactoryGirl.build(:custom_status)
   end
 

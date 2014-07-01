@@ -8,17 +8,17 @@ describe EstimationValue do
                             :alias => "foo",
                             :description => "Bar")
     @module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1)
-    @ksloc_attribute = PeAttribute.new(:name=>"Cost",:alias=>"cost",:description=>"Cost desc" ,:attr_type=>"Integer")
-    @ksloc_attribute2 = PeAttribute.new(:name=>1,:alias=>"cost",:description=>"Cost desc" ,:attr_type=>"Integer")
+    @sloc_attribute = PeAttribute.new(:name=>"Cost",:alias=>"cost",:description=>"Cost desc" ,:attr_type=>"Integer")
+    @sloc_attribute2 = PeAttribute.new(:name=>1,:alias=>"cost",:description=>"Cost desc" ,:attr_type=>"Integer")
 
-    @mpa = EstimationValue.new(:pe_attribute_id => @ksloc_attribute.id,
+    @mpa = EstimationValue.new(:pe_attribute_id => @sloc_attribute.id,
                                       :in_out => "input",
                                       :module_project_id => @module_project.id,
                                       :custom_attribute => "user",
                                       :is_mandatory => true,
                                       :description => "Undefined")
 
-    @mpa2 = EstimationValue.new(:pe_attribute_id => @ksloc_attribute2.id,
+    @mpa2 = EstimationValue.new(:pe_attribute_id => @sloc_attribute2.id,
                                       :in_out => "input",
                                       :module_project_id => @module_project.id,
                                       :custom_attribute => "toto",
@@ -45,9 +45,9 @@ describe EstimationValue do
   #end
   #
   #it "should return module project attribute name" do
-  #  puts @ksloc_attribute.name
+  #  puts @sloc_attribute.name
   #  puts @mpa.to_s
-  #  @mpa.to_s.should eql(@ksloc_attribute.name)
+  #  @mpa.to_s.should eql(@sloc_attribute.name)
   #end
 
   it "in_out should be equals to type" do

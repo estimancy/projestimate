@@ -50,6 +50,8 @@ class OrganizationUowComplexity < ActiveRecord::Base
   validates :value, :presence => true
   validates :custom_value, :presence => true, :if => :is_custom?
 
+  validates_presence_of :unit_of_work_id
+
   amoeba do
     enable
     exclude_field [:users]

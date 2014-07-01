@@ -14,10 +14,10 @@ describe EstimationValue do
     @mp1 = ModuleProject.create(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1)
     @mp2 = ModuleProject.create(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 2)
 
-    @ksloc_attribute = FactoryGirl.create(:ksloc_attribute)
+    @sloc_attribute = FactoryGirl.create(:sloc_attribute)
     @cost_attribute = FactoryGirl.create(:cost_attribute)
 
-    @ksloc_estimation_value = EstimationValue.create(:module_project_id => @mp1.id, :pe_attribute_id => @ksloc_attribute.id, :in_out => 'input', :is_mandatory => true)
+    @sloc_estimation_value = EstimationValue.create(:module_project_id => @mp1.id, :pe_attribute_id => @sloc_attribute.id, :in_out => 'input', :is_mandatory => true)
     @cost_estimation_value = EstimationValue.create(:module_project_id => @mp1.id, :in_out => 'output', :pe_attribute => @cost_attribute)
   end
 
@@ -29,31 +29,31 @@ describe EstimationValue do
   end
 
   it 'should have valid estimation data' do
-    @ksloc_attribute.should be_valid
+    @sloc_attribute.should be_valid
     @cost_attribute.should be_valid
-    @ksloc_estimation_value.should be_valid
+    @sloc_estimation_value.should be_valid
     @cost_estimation_value.should be_valid
   end
 
 
   it 'should validate 15 because 15 is greater than 10' do
-    expect(@ksloc_estimation_value.is_validate('15')).to be_truthy
+    expect(@sloc_estimation_value.is_validate('15')).to be_truthy
   end
 
   it 'should not validate 9 because 9 is lower than 10' do
-    expect(@ksloc_estimation_value.is_validate('')).to be_falsey
+    expect(@sloc_estimation_value.is_validate('')).to be_falsey
   end
 
   it 'should not be valid because toto is not a integer' do
-    expect(@ksloc_estimation_value.is_validate('toto')).to be_falsey
+    expect(@sloc_estimation_value.is_validate('toto')).to be_falsey
   end
 
   it 'should not be valid because string to evaluate is wrong' do
-    expect(@ksloc_estimation_value.is_validate('>')).to be_falsey
+    expect(@sloc_estimation_value.is_validate('>')).to be_falsey
   end
 
   it 'should not be return false because eval result is nil' do
-    expect(@ksloc_estimation_value.is_validate('nil')).to be_falsey
+    expect(@sloc_estimation_value.is_validate('nil')).to be_falsey
   end
 
   it 'should be true because no options defined' do

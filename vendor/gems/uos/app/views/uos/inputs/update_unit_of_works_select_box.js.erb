@@ -1,4 +1,5 @@
 $("#uow_<%= @index %>").parent().html("<%= j(select_tag "uow[#{@index}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}), :class => "uow") %>");
+$("#uow_<%= @index %>").parent().append("<a href='#modal_description' class='icon icon-question' data-toggle='modal'></a>")
 
 $(document).ready(function(e){
     $("#myTable").find("tr").each(function(index){

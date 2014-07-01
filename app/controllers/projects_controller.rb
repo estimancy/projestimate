@@ -639,7 +639,7 @@ public
       # Verification will be done only if there are some required attribute for the module
       #unless required_input_attributes.empty?
       # Re-initialize the current module_project
-      # @my_results is like that {:low => {:complexity_467 => 'organic', :ksloc_467 => 10}, :most_likely => {:complexity_467 => 'organic', :ksloc_467 => 10}, :hight => {:complexity_467 => 'organic', :ksloc_467 => 10}}
+      # @my_results is like that {:low => {:complexity_467 => 'organic', :sloc_467 => 10}, :most_likely => {:complexity_467 => 'organic', :sloc_467 => 10}, :hight => {:complexity_467 => 'organic', :sloc_467 => 10}}
       get_all_required_attributes = []
 
       ['low', 'most_likely', 'high'].each do |level|
@@ -1535,14 +1535,14 @@ public
                             "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
                             "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
                             "description_sandbox"=>I18n.t(:description_sandbox), "float_sandbox" =>I18n.t(:float_sandbox), "integer_sandbox"=> I18n.t(:integer_sandbox), "complexity"=>I18n.t(:complexity),
-                            "ksloc"=>I18n.t(:ksloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
+                            "sloc"=>I18n.t(:sloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
 
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
         'cost' => (@project_organization.currency.nil? ? "Unit" : @project_organization.currency.name.capitalize),
         'effort_man_month' => I18n.t(:unit_effort_man_month), 'effort_man_hour' =>  I18n.t(:unit_effort_man_hour),
         'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
-        'ksloc' => I18n.t(:unit_ksloc), 'sloc' => I18n.t(:unit_sloc)
+        'sloc' => I18n.t(:unit_sloc), 'sloc' => I18n.t(:unit_sloc)
     }
 
     #========================================== CocomoIntermediate (CocomoAdvanced) AND CocomoII (CocomoExpert) modules data =============================================
@@ -1599,12 +1599,14 @@ public
         attr_effort = PeAttribute.find_by_alias('effort_man_month')
         attr_delay = PeAttribute.find_by_alias('delay')
 
-        m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
+        delay = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id]
+        effort = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
 
-        k = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
-
+        m =  delay / current_project.organization.number_hours_per_month
+        k = effort
         a = 2 #pente
-        24.floor.times do |i|
+
+        m.floor.times do |i|
           t = i/12.to_f
           @staffing_labels << i
           @staffing_profile_data << 2*k*a*t*Math.exp(-(a)*t*t)
