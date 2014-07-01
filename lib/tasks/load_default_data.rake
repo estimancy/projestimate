@@ -170,7 +170,7 @@ def load_data!
       
     puts '   - Attributes'
       attributes = [
-      ['KSLOC', 'ksloc', 'Kilo (1000) Source Lines Of Code.', 'float', ['float','>=', '0'], 'sum', nil],
+      ['SLOC', 'sloc', 'Kilo (1000) Source Lines Of Code.', 'float', ['float','>=', '0'], 'sum', nil],
       ['Cost', 'cost', 'Cost of a product, a service or a process in local currency', 'float', ['float','>=', '0'], 'sum', nil],
       ['Delay', 'delay', 'Time allowed for the completion of something in number of days', 'float', ['float','>=', '0'], 'average', nil],
       ['Staffing', 'staffing', 'Staff required to accomplish a task in number of people', 'integer', ['integer','>=', '0'], 'sum', nil],

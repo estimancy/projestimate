@@ -26,11 +26,11 @@ module CocomoExpert
   #Definition of CocomoBasic
   class CocomoExpert
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :project
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_sloc, :complexity, :effort, :project
 
     #Constructor
     def initialize(elem)
-      @coef_kls = elem['ksloc'].to_f
+      @coef_sloc = elem['sloc'].to_f / 1000
       @project = Project.find(elem[:current_project_id])
     end
 
@@ -64,7 +64,7 @@ module CocomoExpert
       b = 0.91 + 0.01 * sf.sum.to_f
 
       #on ne gere pas BRAK
-      pm = 2.94 * em.inject(:*).to_f * 1 * (@coef_kls)**b
+      pm = 2.94 * em.inject(:*).to_f * 1 * (@coef_sloc)**b
 
       return pm
     end

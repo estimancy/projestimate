@@ -5,7 +5,7 @@ describe PeAttributesController do
   before :each do
     sign_in
     @connected_user = controller.current_user
-    @attribute = FactoryGirl.create(:ksloc_attribute)
+    @attribute = FactoryGirl.create(:sloc_attribute)
     @params = { :id => @attribute.id }
   end
 
@@ -17,7 +17,7 @@ describe PeAttributesController do
 
     it 'assigns all attributes as @attributes' do
       get :index
-      assigns(:ksloc_attribute)==(@attribute)
+      assigns(:sloc_attribute)==(@attribute)
     end
   end
 
@@ -28,7 +28,7 @@ describe PeAttributesController do
     end
 
     it 'assigns a new attributes as @attribute' do
-      get :new, :attribute => { :name => 'ksloc_new',:alias=> 'ksloc_new', :uuid => '1-new-2345', :description=> 'test new', :attr_type=> 'integer'}
+      get :new, :attribute => { :name => 'sloc_new',:alias=> 'sloc_new', :uuid => '1-new-2345', :description=> 'test new', :attr_type=> 'integer'}
       assigns(:attribute).should be_a_new_record
     end
   end
@@ -36,24 +36,24 @@ describe PeAttributesController do
   describe 'GET edit' do
     it 'assigns the requested attribute as @attribute' do
       get :edit, {:id => @attribute.to_param}
-      assigns(:ksloc_attribute)==(@attribute)
+      assigns(:sloc_attribute)==(@attribute)
     end
   end
 
   describe 'create' do
     before :each do
       @custom_status = FactoryGirl.build(:custom_status)
-      #@params = { :name => "KSLOC1",:alias=>"KSLOC1", :uuid => "1", :description=>"test", :attr_type=>"integer", :record_status=>23, :custom_value=>"local"}
-      @params = { :name => 'KSLOC1',:alias=> 'KSLOC1', :uuid => '1', :description=> 'test', :attr_type=> 'integer'}
+      #@params = { :name => "SLOC1",:alias=>"SLOC1", :uuid => "1", :description=>"test", :attr_type=>"integer", :record_status=>23, :custom_value=>"local"}
+      @params = { :name => 'SLOC1',:alias=> 'SLOC1', :uuid => '1', :description=> 'test', :attr_type=> 'integer'}
     end
 
     it 'should create record with success' do
-      post :create, :cost_attribute => { :name => 'KSLOC1', :alias=> 'KSLOC1', :uuid => '1111', :description=> 'test'}, :options => ['integer', '>=', '0']  # FactoryGirl.attributes_for(:cost_attribute)
+      post :create, :cost_attribute => { :name => 'SLOC1', :alias=> 'SLOC1', :uuid => '1111', :description=> 'test'}, :options => ['integer', '>=', '0']  # FactoryGirl.attributes_for(:cost_attribute)
       response.should be_success
     end
 
     it 'renders the create template' do
-      post :create, :ksloc_attribute => { :name => 'KSLOC12', :alias=> 'KSLOC12', :uuid => '11112', :description=> 'test2'}, :options => ['integer', '>=', '1']
+      post :create, :sloc_attribute => { :name => 'SLOC12', :alias=> 'SLOC12', :uuid => '11112', :description=> 'test2'}, :options => ['integer', '>=', '1']
       response.should be_success
     end
   end
@@ -61,7 +61,7 @@ describe PeAttributesController do
   describe 'PUT update' do
     before :each do
       @cost_attribute = FactoryGirl.create(:cost_attribute)
-      @params = {:name => 'KSLOC1', :alias=> 'KSLOC1', :uuid => '12345', :description=> 'test', :attr_type=> 'integer', :record_status => RecordStatus.first.id, :custom_value=> 'local'}
+      @params = {:name => 'SLOC1', :alias=> 'SLOC1', :uuid => '12345', :description=> 'test', :attr_type=> 'integer', :record_status => RecordStatus.first.id, :custom_value=> 'local'}
     end
 
     context 'with valid params' do

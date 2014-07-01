@@ -25,23 +25,15 @@ class SizeUnitsController < ApplicationController
   def create
     @size_unit = SizeUnit.new(params[:size_unit])
 
-    respond_to do |format|
-      if @size_unit.save
-
-        Organization.all.each do |o|
-          OrganizationTechnology.all.each do |ot|
-            SizeUnitType.all.each do |sut|
-              TechnologySizeType.create(organization_id: o.id, organization_technology_id: ot.id, size_unit_id: @size_unit.id, size_unit_type_id: sut.id, value: 1)
-            end
+    if @size_unit.save
+      Organization.all.each do |o|
+        OrganizationTechnology.all.each do |ot|
+          SizeUnitType.all.each do |sut|
+            TechnologySizeType.create(organization_id: o.id, organization_technology_id: ot.id, size_unit_id: @size_unit.id, size_unit_type_id: sut.id, value: 1)
           end
         end
-
-        format.html { redirect_to @size_unit, notice: 'Size unit was successfully created.' }
-        format.json { render json: @size_unit, status: :created, location: @size_unit }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @size_unit.errors, status: :unprocessable_entity }
       end
+      redirect_to "/organizational_params"
     end
   end
 
@@ -52,11 +44,9 @@ class SizeUnitsController < ApplicationController
 
     respond_to do |format|
       if @size_unit.update_attributes(params[:size_unit])
-        format.html { redirect_to @size_unit, notice: 'Size unit was successfully updated.' }
-        format.json { head :no_content }
+        format.html { redirect_to "/organizational_params", notice: 'Size unit was successfully updated.' }
       else
         format.html { render action: "edit" }
-        format.json { render json: @size_unit.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -66,10 +56,6 @@ class SizeUnitsController < ApplicationController
   def destroy
     @size_unit = SizeUnit.find(params[:id])
     @size_unit.destroy
-
-    respond_to do |format|
-      format.html { redirect_to size_units_url }
-      format.json { head :no_content }
-    end
+    redirect_to "/organizational_params"
   end
 end

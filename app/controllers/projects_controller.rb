@@ -639,7 +639,7 @@ public
       # Verification will be done only if there are some required attribute for the module
       #unless required_input_attributes.empty?
       # Re-initialize the current module_project
-      # @my_results is like that {:low => {:complexity_467 => 'organic', :ksloc_467 => 10}, :most_likely => {:complexity_467 => 'organic', :ksloc_467 => 10}, :hight => {:complexity_467 => 'organic', :ksloc_467 => 10}}
+      # @my_results is like that {:low => {:complexity_467 => 'organic', :sloc_467 => 10}, :most_likely => {:complexity_467 => 'organic', :sloc_467 => 10}, :hight => {:complexity_467 => 'organic', :sloc_467 => 10}}
       get_all_required_attributes = []
 
       ['low', 'most_likely', 'high'].each do |level|
@@ -1535,14 +1535,14 @@ public
                             "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
                             "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
                             "description_sandbox"=>I18n.t(:description_sandbox), "float_sandbox" =>I18n.t(:float_sandbox), "integer_sandbox"=> I18n.t(:integer_sandbox), "complexity"=>I18n.t(:complexity),
-                            "ksloc"=>I18n.t(:ksloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
+                            "sloc"=>I18n.t(:sloc), "sloc"=>I18n.t(:sloc), "size"=>I18n.t(:size)}
 
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
         'cost' => (@project_organization.currency.nil? ? "Unit" : @project_organization.currency.name.capitalize),
         'effort_man_month' => I18n.t(:unit_effort_man_month), 'effort_man_hour' =>  I18n.t(:unit_effort_man_hour),
         'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
-        'ksloc' => I18n.t(:unit_ksloc), 'sloc' => I18n.t(:unit_sloc)
+        'sloc' => I18n.t(:unit_sloc), 'sloc' => I18n.t(:unit_sloc)
     }
 
     #========================================== CocomoIntermediate (CocomoAdvanced) AND CocomoII (CocomoExpert) modules data =============================================

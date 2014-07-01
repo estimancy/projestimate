@@ -24,11 +24,11 @@ module CocomoBasic
   #Definition of CocomoBasic
   class CocomoBasic
 
-    attr_accessor :coef_a, :coef_b, :coef_c, :coef_kls, :complexity, :effort, :delay, :project
+    attr_accessor :coef_a, :coef_b, :coef_c, :coef_sloc, :complexity, :effort, :delay, :project
 
     #Constructor
     def initialize(elem)
-      @coef_kls = elem['ksloc'].to_f
+      @coef_sloc = elem['sloc'].to_f / 1000
       @project = Project.find(elem[:current_project_id])
 
       case elem['complexity']
@@ -68,12 +68,12 @@ module CocomoBasic
     #Getters
     #Return effort (in man-month)
     def get_effort_man_month(*args)
-      @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
+      @effort = (@coef_a*(@coef_sloc**@coef_b)).to_f
     end
 
     #Return effort (in man-hour)
     def get_effort_man_hour(*args)
-      @effort = (@coef_a*(@coef_kls**@coef_b)).to_f
+      @effort = (@coef_a*(@coef_sloc**@coef_b)).to_f
     end
 
 
