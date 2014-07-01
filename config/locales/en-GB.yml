@@ -1183,9 +1183,11 @@ en-gb:
   notice_profile_successful_created: "Profile was successfully created."
   notice_profile_successful_updated: "Profile was successfully updated."
   error_profile_failed_update: "Error when updating the profile."
+  error_profile_failed_create: "Error when creating the profile."
   notice_profile_successful_deleted: "Profile was successfully deleted."
   defined_profile_not_deletable: "Defined profile is not deletable."
   creator: "Creator"
+  organization_profiles: "Organization profiles"
 
   requirement: "Requirements"
   size_unit: "Size unit"

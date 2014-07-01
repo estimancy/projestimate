@@ -69,6 +69,8 @@ class OrganizationsController < ApplicationController
     @unitofworks = @organization.unit_of_works
 
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
+
+    @organization_profiles = @organization.organization_profiles
   end
 
   def refresh_value_elements
@@ -148,7 +150,12 @@ class OrganizationsController < ApplicationController
                                       value: 1)
           end
         end
+      end
 
+      # Add MasterData Profiles to Organization
+      Profile.all.each do |profile|
+        op = OrganizationProfile.new(organization_id: @organization.id, name: profile.name, description: profile.description, cost_per_hour: profile.cost_per_hour)
+        op.save
       end
 
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"

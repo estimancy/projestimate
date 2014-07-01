@@ -8,9 +8,9 @@
       <%= f.error_notification %>
 
       <div class="form-inputs">
-        <%= f.input :name, :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-        <%= f.input :description, :input_html => {:class => 'input-xxlarge', :rows => 8 }  %>
-        <%= f.input :cost_per_hour %>
+        <%= f.input :name, :label => I18n.t(:name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :description, :label => I18n.t(:description), :input_html => {:class => 'input-xxlarge', :rows => 8 }  %>
+        <%= f.input :cost_per_hour, :label => I18n.t(:cost_per_hour) %>
       </div>
 
       <div>
@@ -33,7 +33,7 @@
           <%= submit_tag I18n.t('save'), :class => 'btn' %>
           <%= submit_tag I18n.t('apply'), :class => 'btn' %>
       <% end %>
-      <%= link_to I18n.t('back'), pe_attributes_path, :class => 'btn' %>
+      <%= link_to I18n.t('back'), profiles_path, :class => 'btn' %>
     </div>
 
     <% end %>

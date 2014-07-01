@@ -48,6 +48,7 @@ class Organization < ActiveRecord::Base
   has_many :subcontractors
   has_many :abacus_organizations
   has_many :projects
+  has_many :organization_profiles
 
   has_many :size_unit_types
 

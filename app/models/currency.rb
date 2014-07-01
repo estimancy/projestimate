@@ -50,4 +50,8 @@ class Currency < ActiveRecord::Base
   validates :record_status, :presence => true
   validates :name, :alias, :uuid, :presence => true, :uniqueness => {:scope => :record_status_id, case_sensitive: false}
   validates :custom_value, :presence => true, :if => :is_custom?
+
+  def to_s
+    self.sign
+  end
 end

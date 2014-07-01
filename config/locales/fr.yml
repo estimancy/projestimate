@@ -1186,9 +1186,11 @@ fr:
   notice_profile_successful_created: "Le profile a été créé avec succès."
   notice_profile_successful_updated: "Le profile a été mis à jour avec succès."
   error_profile_failed_update: "Erreur lors de la mise à jour du profil."
+  error_profile_failed_create: "Erreur lors de la création du profil."
   notice_profile_successful_deleted: "Le profil a bien été supprimé."
   defined_profile_not_deletable: "Impossible de supprimer un profil dans le statut Defined."
   creator: "Créateur"
+  organization_profiles: "Profils de l'organization"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"
