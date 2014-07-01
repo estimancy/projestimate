@@ -38,6 +38,12 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :organization_profiles
+
+
+  resources :profiles
+
+
   resources :size_unit_types
 
 

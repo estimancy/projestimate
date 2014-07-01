@@ -13,6 +13,7 @@
         <li><a href="#tabs-10"><%= I18n.t(:technology_size_abacus) %></a></li>
         <li><a href="#tabs-11"><%= I18n.t(:organization_subcontractor) %> </a></li>
         <li><a href="#tabs-12"><%= I18n.t(:technology_uos_synthesis) %></a></li>
+        <li><a href="#tabs-13"><%= I18n.t(:profiles) %></a></li>
   <% end %>
   </ul>
 
@@ -410,5 +411,12 @@
     <%= render :partial => 'organization_technologies/technology_uos_synthesis' %>
   </div>
 
+  <div id="tabs-13">
+    <b><%= I18n.t(:profiles) %></b>
+    <%= render :partial => 'organizations/profiles' %>
+    <br><br>
+  </div>
+
 <% end %>
 </div>
+

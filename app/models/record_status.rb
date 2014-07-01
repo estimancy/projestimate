@@ -54,6 +54,7 @@ class RecordStatus < ActiveRecord::Base
   has_many :project_categories
   has_many :project_security_levels
   has_many :work_element_types
+  has_many :profiles
 
   has_many :admin_settings
   has_many :auth_methods
