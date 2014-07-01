@@ -1,0 +1,52 @@
+
+<%= hidden_field_tag "organization_id", params[:id] %>
+
+<table border="0" width="100%">
+  <tr>
+    <td style="text-align:right;">
+      <%= link_to I18n.t('new_profile'), new_organization_profile_path(:organization_id => params[:id]), :class => 'btn' %>
+    </td>
+  </tr>
+</table>
+<table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+  <thead>
+  <tr>
+    <th><%= I18n.t(:name) %></th>
+    <th><%= I18n.t(:description) %></th>
+    <th><%= I18n.t(:cost_per_hour) %></th>
+    <th  class="action"><%= I18n.t(:actions) %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+
+  <% @organization_profiles.each do |profile| %>
+      <tr>
+        <td><%= profile.name %></td>
+        <td><%= profile.description %></td>
+        <td><%= profile.cost_per_hour %></td>
+
+        <td><%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+          <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+        </td>
+      </tr>
+  <% end %>
+  <%= render :partial => 'layouts/footer_table' %>
+  </tbody>
+</table>
+
+
+<script>
+    <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js] %>
+</script>
+
+
+
+
+
+
+
+
+
+
+
