@@ -1509,3 +1509,4 @@ es:
   error_profile_failed_update: "Error when updating the profile."
   notice_profile_successful_deleted: "Profile was successfully deleted."
   defined_profile_not_deletable: "Defined profile is not deletable."
+  creator: "Creator"
