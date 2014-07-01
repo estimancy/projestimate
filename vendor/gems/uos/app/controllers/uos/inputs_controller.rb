@@ -67,10 +67,6 @@ class Uos::InputsController < ApplicationController
     input = Input.new(module_project_id: module_project.id, pbs_project_element_id: pbs.id)
     input.save(validate: false)
 
-    if params[:input_id]
-      save_entries(params[:input_id], module_project)
-    end
-
     redirect_to redirect_apply("/uos?mp=#{module_project.id}", "/uos?mp=#{module_project.id}",  "/dashboard")
   end
 
@@ -78,10 +74,6 @@ class Uos::InputsController < ApplicationController
     input = Input.find(params[:input_id])
     module_project = input.module_project
     input.delete
-
-    if params[:input_id]
-      save_entries(params[:input_id], module_project)
-    end
 
     redirect_to redirect_apply("/uos?mp=#{module_project.id}", "/uos?mp=#{module_project.id}",  "/dashboard")
   end
