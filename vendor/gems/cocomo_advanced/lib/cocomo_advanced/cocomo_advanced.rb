@@ -86,7 +86,7 @@ module CocomoAdvanced
 
     #Return delay (in hour)
     def get_delay(*args)
-      @effort = get_effort_man_month(args[0], args[1], args[2])
+      @effort = get_effort_person_month(args[0], args[1], args[2])
       @delay = (2.5*(@effort**@coef_c)).to_f
       @delay = @delay.to_f * @project.organization.number_hours_per_month.to_f
       @delay
@@ -100,7 +100,7 @@ module CocomoAdvanced
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f / get_delay(args[0], args[1], args[2]))
+      @staffing = (get_effort_person_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f / get_delay(args[0], args[1], args[2]))
       @staffing.ceil
     end
 
@@ -109,7 +109,7 @@ module CocomoAdvanced
     end
 
     def get_cost(*args)
-      @cost = get_effort_man_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
+      @cost = get_effort_person_month(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
       @cost
     end
   end
