@@ -309,7 +309,7 @@ class ApplicationController < ActionController::Base
   def current_balancing_attribute
     @defined_record_status = RecordStatus.find_by_name('Defined')
     begin
-      @default_balancing_attribute = current_module_project.pemodule.pe_attributes.where('alias = ?', Projestimate::Application::EFFORT_MAN_HOUR).defined.first
+      @default_balancing_attribute = current_module_project.pemodule.pe_attributes.where('alias = ?', Projestimate::Application::EFFORT_PERSON_HOUR).defined.first
       if current_module_project.pemodule.alias == Projestimate::Application::BALANCING_MODULE
         @current_balancing_attribute = session[:balancing_attribute_id].nil? ? @default_balancing_attribute : PeAttribute.find(session[:balancing_attribute_id])
       else

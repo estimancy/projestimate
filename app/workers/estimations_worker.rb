@@ -72,7 +72,7 @@ class EstimationsWorker
   def compute_component_estimation_value(component, pe_attribute_id, level_estimation_value, wbs_project_elt_root=nil)
     #No authorize required since this method is private and won't be call from any route
     component_children_results_array = Array.new
-    new_effort_man_hour = Hash.new
+    new_effort_person_hour = Hash.new
     pe_attribute = PeAttribute.find(pe_attribute_id)
     node_children_results_array = Array.new
 
