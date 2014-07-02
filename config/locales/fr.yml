@@ -1220,6 +1220,8 @@ fr:
   technology_size_abacus: "Abaque unité de taille / Technologie"
   technology_uos_synthesis: "Abaque Unité d'oeuvre / Technologie"
   quantity: "Quantité"
+  unit_of_work: "Unité d'oeuvres"
+  how_to_use_uow: "Choisir une unité d'oeuvre"
   actions: "Actions"
   reference: "Référence"
   technology: "Technologie"

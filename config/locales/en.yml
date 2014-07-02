@@ -1221,6 +1221,8 @@ en:
   technology_uos_synthesis: "Abaque Unité d'oeuvre / Technologie"
 
   quantity: "Quantity"
+  unit_of_work: "Unit Of Work"
+  how_to_use_uow: "Choose an unit of work"
   actions: "Actions"
   reference: "Reference"
   technology: "Technology"
