@@ -214,6 +214,7 @@ public
 
     # Project's organization profiles
     @project_profiles = @project.organization.organization_profiles
+    @project_activities = @pe_wbs_project_activity.wbs_project_elements
   end
 
   def update
@@ -1317,6 +1318,26 @@ public
 
   end
 
+
+  # Project Profiles per activity(phase)
+  def save_profiles_per_activity
+    # Project's organization profiles
+    @project = Project.find(params[:project_id])
+    @project_profiles = @project.organization.organization_profiles
+    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
+    @project_activities = @pe_wbs_project_activity.wbs_project_elements
+
+    @project_activities.each do |activity|
+      @project_profiles.each do |profile|
+        activity_profile = ActivityProfile.where(project_id: @project.id, wbs_project_element_id: activity.id, organization_profile_id: profile.id).first_or_create
+        percentage = params["activity_profile_percentage"]["#{activity.id}"]["#{profile.id}"].nil? ? nil : params["activity_profile_percentage"]["#{activity.id}"]["#{profile.id}"].to_f
+        activity_profile.ratio_percentage = percentage
+        activity_profile.save
+      end
+    end
+
+    redirect_to edit_project_path(@project, :anchor => 'tabs-9')
+  end
 
 private
 

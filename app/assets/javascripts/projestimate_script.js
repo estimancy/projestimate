@@ -405,6 +405,25 @@ $(document).ready(function() {
         return false;
     });
 
+    //Update the total ratio value per activity when activity's profile ratio has changed
+    $('.profiles_per_activity').change(function(){
+        var ap_id = $(this).attr('id');
+        var ap_value = $('#'+ap_id).val();
+        ap_value = parseFloat(ap_value.replace("," , "."));
+
+        if(!isNaN(parseFloat(ap_value)) && isFinite(ap_value)){
+            var activity_id = $(this).data('activity_id');
+            //$('input .module_project_'+mp_id+':checkbox').each(function(){
+//            $('input .profiles_per_activity')
+//
+//            }
+
+            var total_per_activity = $('#total_ratio_activity_'+activity_id).val();
+            $('#total_ratio_activity_'+activity_id).val(parseFloat(total_per_activity) + parseFloat(ap_value));
+        }
+        return false;
+    });
+
 
     //Find use Attribute in Module: which module is using such attribute
     //ADD selected WBS-Activity to Project
