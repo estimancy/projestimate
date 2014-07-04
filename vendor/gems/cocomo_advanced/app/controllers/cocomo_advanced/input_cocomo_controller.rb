@@ -20,7 +20,9 @@
 #############################################################################
 
 class CocomoAdvanced::InputCocomoController < ApplicationController
+
   def index
+
     @aprod = Array.new
     aliass = %w(rely data cplx ruse docu)
     aliass.each do |a|
@@ -44,7 +46,6 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
     aliass.each do |a|
       @aproj << Factor.where(alias: a, factor_type: "advanced").first
     end
-
 
   end
 
@@ -73,4 +74,13 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
     @factor = Factor.find(params[:factor_id])
     #@descriptions = @factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| ["<strong>#{i.name}</strong>", "#{ i.description.blank? ? 'N/A' : i.description }"]}.join("<br>")
   end
+
+  def add_note_to_factor
+    @factor = Factor.find(params[:factor_id])
+  end
+
+  def notes_form
+
+  end
+
 end
