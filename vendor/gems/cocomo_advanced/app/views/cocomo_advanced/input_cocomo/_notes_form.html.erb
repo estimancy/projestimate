@@ -1,9 +1,13 @@
-<%= form_tag "/notes_form", method: "POST" do %>
-    <div class="span8">
+<%= form_tag notes_form_path(params[:factor_id]), method: "POST" do %>
+    <div class="span12">
 
-      <label>Notes</label>
-      <%= text_area_tag "notes", "", input_html:{ class: "input-large" } %>
+      <div class="zdzd">
+        <label>Notes</label>
+        <%= text_area_tag "notes", @notes, input_html:{ class: "input-large" } %>
+      </div>
 
-      <%= submit_tag "Save" %>
+      <br>
+
+      <%= submit_tag "Save", class: "btn" %>
     </div>
 <% end %>
