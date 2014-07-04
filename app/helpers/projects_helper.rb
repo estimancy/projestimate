@@ -155,7 +155,7 @@ module ProjectsHelper
   #The view to display result with ACTIVITIES
   def display_results_with_activities(module_project)
     res = String.new
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = @pbs_project_element || current_component
 
     pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
     project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
@@ -323,7 +323,7 @@ module ProjectsHelper
 
 
   def display_effort_balancing_output(module_project)
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = @pbs_project_element || current_component
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)

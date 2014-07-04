@@ -21,15 +21,15 @@
       <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-large" %>
     </td>
     <td class="span1 center">
-      <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, :selected => input.technology_id), {:class => "technology input-large", :prompt => I18n.t(:select_technology), :required=>true} %>
+      <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, :selected => input.technology_id), {:class => "technology", :prompt => I18n.t(:select_technology), :required=>true} %>
     </td>
     <td class="span1 center">
       <% input.technology_id.nil? ? (@unit_of_works = []) : (@unit_of_works = input.organization_technology.unit_of_works) %>
-      <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, :selected => input.unit_of_work_id ), {:class => "uow input-large", :prompt => I18n.t(:select_uow), :required=>true} %>
+      <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, :selected => input.unit_of_work_id ), {:class => "uow", :prompt => I18n.t(:select_uow), :required=>true} %>
       <a href="#modal_description" class="icon icon-question" data-toggle="modal"></a>
     </td>
     <td class="span1 center">
-      <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity input-large" %>
+      <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>
     </td>
     <td class="span1 center">
       <%= text_field_tag "size_low[#{i+1}]", input.size_low, :class => "size_low compressed" %>
