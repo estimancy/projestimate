@@ -41,7 +41,8 @@ module ProjectsHelper
   def display_results
     res = String.new
     unless current_project.nil?
-      pbs_project_element = @pbs_project_element || current_project.root_component
+      #pbs_project_element = @pbs_project_element || current_project.root_component
+      pbs_project_element = @pbs_project_element || current_component
       #get the current module_project
       module_project_to_display = current_module_project
 
@@ -117,7 +118,7 @@ module ProjectsHelper
   # Methdods that display estimation results
   def display_results_without_activities(module_project)
     res = String.new
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = @pbs_project_element || current_component
 
     pemodule = Pemodule.find(module_project.pemodule.id)
     res << "<h4>#{ I18n.t(:label_output_data) }</h4>"
@@ -137,11 +138,11 @@ module ProjectsHelper
         level_estimation_values = Hash.new
         level_estimation_values = est_val.send("string_data_#{level}")
         total = []
-          if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
-            res << '-'
-          else
-            res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
-          end
+        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
+          res << '-'
+        else
+          res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
+        end
         res << '</td>'
       end
       res << '</tr>'

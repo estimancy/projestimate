@@ -61,12 +61,12 @@
   </body>
 </html>
 <script type="text/javascript">
-    $("#toggle_button").click(function(){
-      $('#sidebar').toggle();
-      $('#mycontent').toggleClass("span10");
-      $("#toggle_button > i").toggleClass("icon-double-angle-right icon-large pull-left icon-border");
-      $("#toggle_button > i").toggleClass("icon-double-angle-down icon-large pull-left icon-border");
-    });
+
+
+  $(document).ready(function() {
+    $(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr th td span title h4 strong), :attributes => %w(id class style title colspan rowspan))) %>");
+  });
+
 </script>
 
 <%= render 'layouts/notifications' %>
