@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140701103351) do
+ActiveRecord::Schema.define(:version => 20140701154234) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -47,6 +47,15 @@ ActiveRecord::Schema.define(:version => 20140701103351) do
     t.integer  "project_area_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "activity_profiles", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "wbs_project_element_id"
+    t.integer  "organization_profile_id"
+    t.float    "ratio_percentage"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "admin_settings", :force => true do |t|

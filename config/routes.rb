@@ -278,6 +278,7 @@ Projestimate::Application.routes.draw do
   get 'show_project_history' => 'projects#show_project_history', :as => :show_project_history
 
   get 'projects_from' => 'projects#projects_from', :as => 'projects_from'
+  post 'save_profiles_per_activity' => 'projects#save_profiles_per_activity', :as => 'save_profiles_per_activity'
 
   #Master Data validation and restoration routes
   match ':controller/:id/validate_change' => ':controller#validate_change', :as => 'validate_change'

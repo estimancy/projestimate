@@ -2,6 +2,7 @@ class OrganizationProfile < ActiveRecord::Base
   attr_accessible :cost_per_hour, :description, :name, :organization_id
 
   belongs_to :organization
+  has_many :activity_profiles
 
   validates :organization_id, :presence => true
   validates :name, :presence => true, :uniqueness => true
