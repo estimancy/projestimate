@@ -41,7 +41,8 @@ module ProjectsHelper
   def display_results
     res = String.new
     unless current_project.nil?
-      pbs_project_element = @pbs_project_element || current_project.root_component
+      #pbs_project_element = @pbs_project_element || current_project.root_component
+      pbs_project_element = @pbs_project_element || current_component
       #get the current module_project
       module_project_to_display = current_module_project
 
@@ -86,38 +87,38 @@ module ProjectsHelper
   end
 
   def convert_delay(value, organization)
-    if value < 100
+    #if value < 100
+    #  value
+    #elsif (value > 100) && (value < 1000)
+    #  value / organization.number_hours_per_day
+    #elsif (value > 1000) && (value < 10000)
+    #  value / organization.number_hours_per_day / 4
+    #elsif value > 10000
+    #  value / organization.number_hours_per_month
+    #else
       value
-    elsif (value > 100) && (value < 1000)
-      value / organization.number_hours_per_day
-    elsif (value > 1000) && (value < 10000)
-      value / organization.number_hours_per_day / 4
-    elsif value > 10000
-      value / organization.number_hours_per_month
-    else
-      value
-    end
+    #end
   end
 
   def convert_delay_label(value, organization)
-    if value < 100
+    #if value < 100
+    #  I18n.t(:hours)
+    #elsif (value > 100) && (value < 1000)
+    #  I18n.t(:unit_days)
+    #elsif (value > 1000) && (value < 10000)
+    #  I18n.t(:weeks)
+    #elsif value > 10000
+    #  I18n.t(:months)
+    #else
       I18n.t(:hours)
-    elsif (value > 100) && (value < 1000)
-      I18n.t(:unit_days)
-    elsif (value > 1000) && (value < 10000)
-      I18n.t(:weeks)
-    elsif value > 10000
-      I18n.t(:months)
-    else
-      I18n.t(:hours)
-    end
+    #end
   end
 
 
   # Methdods that display estimation results
   def display_results_without_activities(module_project)
     res = String.new
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = @pbs_project_element || current_component
 
     pemodule = Pemodule.find(module_project.pemodule.id)
     res << "<h4>#{ I18n.t(:label_output_data) }</h4>"
@@ -137,11 +138,11 @@ module ProjectsHelper
         level_estimation_values = Hash.new
         level_estimation_values = est_val.send("string_data_#{level}")
         total = []
-          if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
-            res << '-'
-          else
-            res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
-          end
+        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
+          res << '-'
+        else
+          res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
+        end
         res << '</td>'
       end
       res << '</tr>'
@@ -154,7 +155,7 @@ module ProjectsHelper
   #The view to display result with ACTIVITIES
   def display_results_with_activities(module_project)
     res = String.new
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = @pbs_project_element || current_component
 
     pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
     project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
@@ -322,7 +323,7 @@ module ProjectsHelper
 
 
   def display_effort_balancing_output(module_project)
-    pbs_project_element = @pbs_project_element || current_project.root_component
+    pbs_project_element = @pbs_project_element || current_component
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
@@ -937,14 +938,10 @@ module ProjectsHelper
         display_date(value)
       when 'float'
         begin
-          if est_val_pe_attribute.precision
-            value.round(est_val_pe_attribute.precision)
+          if est_val_pe_attribute.alias == "delay"
+            "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
           else
-            if est_val_pe_attribute.alias == "delay"
-              "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
-            else
-              "#{number_with_delimiter(value.round(user_number_precision))} #{get_attribute_unit(est_val_pe_attribute)}"
-            end
+            "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))} #{get_attribute_unit(est_val_pe_attribute)}"
           end
         rescue
           value
