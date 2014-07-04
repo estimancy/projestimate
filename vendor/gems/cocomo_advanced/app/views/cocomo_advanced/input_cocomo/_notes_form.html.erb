@@ -1,0 +1,9 @@
+<%= form_tag "/notes_form", method: "POST" do %>
+    <div class="span8">
+
+      <label>Notes</label>
+      <%= text_area_tag "notes", "", input_html:{ class: "input-large" } %>
+
+      <%= submit_tag "Save" %>
+    </div>
+<% end %>
