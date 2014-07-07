@@ -79,6 +79,10 @@ module ExpertJudgment
 
       new_effort_person_hour
     end
+
+    def get_effort_person_month(*args)
+      get_effort_person_hour(args)
+    end
   end
 
 end

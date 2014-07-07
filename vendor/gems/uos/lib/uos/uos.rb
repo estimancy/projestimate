@@ -52,7 +52,7 @@ module Uos
 
     # Return effort
     #project.id, current_mp_to_execute.id, pbs_project_element_id)
-    def get_effort_person_hour(*args)
+    def get_effort_person_month(*args)
       Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).first.gross_low
     end
 
