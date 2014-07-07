@@ -31,7 +31,8 @@
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
-              <%= link_to "Help", help_path(factor.id), remote: true %>
+              <%= link_to "Aides", help_path(factor.id), remote: true %> |
+              <%= link_to "Notes", add_note_to_factor_path(factor.id), remote: true %>
             </td>
           </tr>
         <% end %>
@@ -51,7 +52,8 @@
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
-              <%= link_to "Help", help_path(factor.id), remote: true %>
+              <%= link_to "Aides", help_path(factor.id), remote: true %> |
+              <%= link_to "Notes", add_note_to_factor_path(factor.id), remote: true %>
             </td>
           </tr>
         <% end %>
@@ -73,7 +75,8 @@
         <h4 class="modal-title" id="myModalLabel"><%= I18n.t :help %></h4>
       </div>
       <div class="modal-body">
-        <span id="help"></span>
+        <div id="content">
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t :close %></button>

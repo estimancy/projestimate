@@ -77,10 +77,15 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
 
   def add_note_to_factor
     @factor = Factor.find(params[:factor_id])
-    @notes = InputCocomo.where( factor_id: params[:factor_id],
+    ic = InputCocomo.where( factor_id: params[:factor_id],
                             pbs_project_element_id: current_component.id,
                             project_id: current_project.id,
-                            module_project_id: current_module_project.id).first.notes
+                            module_project_id: current_module_project.id).first
+    if ic.nil?
+      @notes = ""
+    else
+      @notes = ic.notes
+    end
   end
 
   def notes_form
@@ -89,8 +94,16 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
                             project_id: current_project.id,
                             module_project_id: current_module_project.id).first
 
-    ic.notes = params[:notes]
-    ic.save
+    if ic.nil?
+      InputCocomo.create( factor_id: params[:factor_id],
+                          pbs_project_element_id: current_component.id,
+                          project_id: current_project.id,
+                          module_project_id: current_module_project.id,
+                          notes: params[:notes])
+    else
+      ic.notes = params[:notes]
+      ic.save
+    end
 
     redirect_to "/cocomo_advanced"
   end
