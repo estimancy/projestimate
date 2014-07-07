@@ -23,7 +23,9 @@
         <%= link_to I18n.t(:label_activate_project), activate_path(project_id: @project.id), class: "btn pull-right" %>
       <% end %>
 
-      <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <%= f.input :product_name, :label => I18n.t(:label_product_name), :input_html => {:class => 'input-xxlarge', value: @project.root_component.nil? ? '' : @project.root_component.name } %>
+
+      <%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
       <table>
         <tr>
           <td><%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-large'} %></td>

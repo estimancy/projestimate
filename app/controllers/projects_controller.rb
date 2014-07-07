@@ -90,6 +90,9 @@ public
   def create
     authorize! :create_project_from_scratch, Project
     set_page_title 'Create estimation'
+
+    product_name = params[:project][:product_name]
+    project_title = params[:project][:title]
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
     @project.users << current_user
@@ -122,7 +125,7 @@ public
 
           pe_wbs_project_product.save!
           ##New root Pbs-Project-Element
-          pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{@project.title} - PBS-Product", :is_root => true, :work_element_type_id => default_work_element_type.id, :position => 0)
+          pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{product_name.blank? ? project_title : product_name} - PBS-Product", :is_root => true, :work_element_type_id => default_work_element_type.id, :position => 0)
           pbs_project_element.add_to_transaction
 
           pbs_project_element.save!
@@ -224,6 +227,11 @@ public
     unless (cannot? :edit_project, @project) || # No write access to project
         (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) || # frozen project
         (@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
+
+      product_name = params[:project][:product_name]
+      project_root = @project.root_component
+      project_root.name = "#{product_name.blank? ? @project.title : product_name} - PBS-Product"
+      project_root.save
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
       @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
