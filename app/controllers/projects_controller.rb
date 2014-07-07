@@ -117,7 +117,7 @@ public
         if @project.valid?
           @project.save!
           #New default Pe-Wbs-Project
-          pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title} PBS-Product", :wbs_type => 'Product')
+          pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
           pe_wbs_project_activity = @project.pe_wbs_projects.build(:name => "#{@project.title} WBS-Activity", :wbs_type => 'Activity')
 
           pe_wbs_project_product.add_to_transaction
@@ -125,7 +125,7 @@ public
 
           pe_wbs_project_product.save!
           ##New root Pbs-Project-Element
-          pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{product_name.blank? ? project_title : product_name} - PBS-Product", :is_root => true, :work_element_type_id => default_work_element_type.id, :position => 0)
+          pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{product_name.blank? ? project_title : product_name}", :is_root => true, :work_element_type_id => default_work_element_type.id, :position => 0)
           pbs_project_element.add_to_transaction
 
           pbs_project_element.save!
@@ -227,7 +227,7 @@ public
 
       product_name = params[:project][:product_name]
       project_root = @project.root_component
-      project_root.name = "#{product_name.blank? ? @project.title : product_name} - PBS-Product"
+      project_root.name = "#{product_name.blank? ? @project.title : product_name}"
       project_root.save
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
