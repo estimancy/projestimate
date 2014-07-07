@@ -980,7 +980,7 @@ module ProjectsHelper
     if pbs_project_element.folder? && !pbs_project_element.descendants.empty?
       ###pbs_project_element.descendants.map{|i| res << level_estimation_values[i.id].to_i }
       text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                     level_estimation_values[pbs_project_element.id].to_i, ###res.compact.sum,
+                     level_estimation_values[pbs_project_element.id].to_i,
                      :class => "input-small #{level} #{est_val.id}",
                      :readonly => true,
                      "data-module_project_id" => module_project.id,
