@@ -940,7 +940,7 @@ public
 
   #Method to duplicate project and associated pe_wbs_project
   def duplicate
-    begin
+    #begin
       authorize! :create_project_from_template, Project
 
       old_prj = Project.find(params[:project_id])
@@ -1002,10 +1002,10 @@ public
 
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
       redirect_to edit_project_path(new_prj) and return
-    rescue
-      flash['Error'] = I18n.t(:error_project_duplication_failed)
-      redirect_to '/projects'
-    end
+    #rescue
+    #  flash['Error'] = I18n.t(:error_project_duplication_failed)
+    #  redirect_to '/projects'
+    #end
   end
 
 

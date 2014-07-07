@@ -45,7 +45,7 @@ class WbsProjectElement < ActiveRecord::Base
   belongs_to :wbs_activity_ratio #Default Wbs-Activity-Ratio
   belongs_to :author, :class_name => 'User', :foreign_key => 'author_id'
 
-  has_many :activity_profiles, dependent: :destroy
+  #has_many :activity_profiles, dependent: :destroy
 
   scope :elements_root, where(:is_root => true)
 
