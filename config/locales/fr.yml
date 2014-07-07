@@ -1007,6 +1007,7 @@ fr:
   text_index_permissions_guidance: "Liste toutes les permissions (globales et projets)."
   notice_end_of_estimation_execution: "Fin de l'exécution des modules"
   label_project_name: "Nom du projet"
+  label_product_name: "Nom du produit"
   label_project_version: "Version"
   label_permission_access: "Accès"
   error_group_failed_update: "Une erreur s'est produite lors de la mise à jour."

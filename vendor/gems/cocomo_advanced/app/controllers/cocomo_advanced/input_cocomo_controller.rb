@@ -20,7 +20,9 @@
 #############################################################################
 
 class CocomoAdvanced::InputCocomoController < ApplicationController
+
   def index
+
     @aprod = Array.new
     aliass = %w(rely data cplx ruse docu)
     aliass.each do |a|
@@ -44,7 +46,6 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
     aliass.each do |a|
       @aproj << Factor.where(alias: a, factor_type: "advanced").first
     end
-
 
   end
 
@@ -73,4 +74,38 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
     @factor = Factor.find(params[:factor_id])
     #@descriptions = @factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| ["<strong>#{i.name}</strong>", "#{ i.description.blank? ? 'N/A' : i.description }"]}.join("<br>")
   end
+
+  def add_note_to_factor
+    @factor = Factor.find(params[:factor_id])
+    ic = InputCocomo.where( factor_id: params[:factor_id],
+                            pbs_project_element_id: current_component.id,
+                            project_id: current_project.id,
+                            module_project_id: current_module_project.id).first
+    if ic.nil?
+      @notes = ""
+    else
+      @notes = ic.notes
+    end
+  end
+
+  def notes_form
+    ic = InputCocomo.where( factor_id: params[:factor_id],
+                            pbs_project_element_id: current_component.id,
+                            project_id: current_project.id,
+                            module_project_id: current_module_project.id).first
+
+    if ic.nil?
+      InputCocomo.create( factor_id: params[:factor_id],
+                          pbs_project_element_id: current_component.id,
+                          project_id: current_project.id,
+                          module_project_id: current_module_project.id,
+                          notes: params[:notes])
+    else
+      ic.notes = params[:notes]
+      ic.save
+    end
+
+    redirect_to "/cocomo_advanced"
+  end
+
 end

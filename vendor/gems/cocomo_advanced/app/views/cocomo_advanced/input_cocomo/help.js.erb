@@ -1,2 +1,6 @@
 $("#myModal").modal('toggle');
-$("#help").html("<%=raw @help.factors %>")
+<% if @help.nil? %>
+  $("#content").html("Aucune aide n'est disponible pour ce facteur.")
+<% else %>
+  $("#content").html("<%=raw @help.factors %>")
+<% end %>
