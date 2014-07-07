@@ -20,10 +20,10 @@
       </tr>
 
       <% gap = 1 %>
-
       <% @wbs_activity_ratio_elements.each do |activity| %>
           <%= hidden_field_tag 'wbs_activity_ratio_id', activity.wbs_activity_ratio_id %>
           <%= hidden_field_tag 'wbs_activity_id', activity.wbs_activity_ratio.wbs_activity_id %>
+
           <% total_percentage_activity = 0 %>
           <tr>
             <td><%= activity.wbs_activity_element.dotted_id %></td>

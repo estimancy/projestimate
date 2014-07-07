@@ -65,6 +65,10 @@ class WbsActivitiesController < ApplicationController
 
     @wbs_activity_ratio_elements = []
     @wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
+
+    @wbs_activity_organization = @wbs_activity_ratio.wbs_activity.organization
+    @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity_organization.organization_profiles
+
     wbs_activity_elements_list = WbsActivityElement.where(:wbs_activity_id => @wbs_activity_ratio.wbs_activity.id).all
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list)
 
