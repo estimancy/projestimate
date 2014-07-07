@@ -12,7 +12,7 @@
   <tbody>
     <% projects.each do |project| %>
       <tr>
-        <td><%= project.title %></td>
+        <td><%= link_to project.title, edit_project_path(project) %></td>
         <td><%= project.version %></td>
         <td><%= project.alias %></td>
         <td><%= project.state %></td>

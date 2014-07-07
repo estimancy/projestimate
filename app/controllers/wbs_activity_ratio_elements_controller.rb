@@ -107,4 +107,32 @@ class WbsActivityRatioElementsController < ApplicationController
     end
   end
 
+
+  # Profiles per activity(phase)
+  def save_wbs_activity_ratio_per_profile
+    authorize! :edit_wbs_activities, WbsActivity
+
+    @wbs_activity = WbsActivity.find(params[:wbs_activity_id])
+    @wbs_activity_organization = @wbs_activity.organization
+    @wbs_organization_profiles = @wbs_activity_organization.organization_profiles
+
+    #Select ratio and elements
+    wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
+    @wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements
+
+    @wbs_activity_ratio_elements.each do |activity|
+      @wbs_organization_profiles.each do |profile|
+        activity_profile = WbsActivityRatioProfile.where(wbs_activity_ratio_element_id: activity.id, organization_profile_id: profile.id).first_or_create
+        percentage = params["activity_profile_percentage"]["#{activity.id}"]["#{profile.id}"].empty? ? nil : params["activity_profile_percentage"]["#{activity.id}"]["#{profile.id}"].to_f
+        activity_profile.ratio_value = percentage
+        activity_profile.save
+      end
+    end
+
+    #redirect_to edit_wbs_activity_path(@wbs_activity, :anchor => 'tabs-4')
+    respond_to do |format|
+      format.js
+    end
+  end
+
 end

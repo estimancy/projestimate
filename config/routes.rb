@@ -278,13 +278,13 @@ Projestimate::Application.routes.draw do
   get 'show_project_history' => 'projects#show_project_history', :as => :show_project_history
 
   get 'projects_from' => 'projects#projects_from', :as => 'projects_from'
-  post 'save_profiles_per_activity' => 'projects#save_profiles_per_activity', :as => 'save_profiles_per_activity'
 
   #Master Data validation and restoration routes
   match ':controller/:id/validate_change' => ':controller#validate_change', :as => 'validate_change'
   match ':controller/:id/restore_change' => ':controller#restore_change', :as => 'restore_change'
 
   match 'wbs_activities/:id/validate_change_with_children' => 'wbs_activities#validate_change_with_children', :as => 'validate_change_with_children'
+  post 'save_wbs_activity_ratio_per_profile' => 'wbs_activity_ratio_elements#save_wbs_activity_ratio_per_profile', :as => 'save_wbs_activity_ratio_per_profile'
 
   resources :translations
   get 'load_translations' => 'translations#load_translations', :as => 'load_translations'

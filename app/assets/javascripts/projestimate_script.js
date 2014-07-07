@@ -413,13 +413,18 @@ $(document).ready(function() {
 
         if(!isNaN(parseFloat(ap_value)) && isFinite(ap_value)){
             var activity_id = $(this).data('activity_id');
-            //$('input .module_project_'+mp_id+':checkbox').each(function(){
-//            $('input .profiles_per_activity')
-//
-//            }
-
-            var total_per_activity = $('#total_ratio_activity_'+activity_id).val();
-            $('#total_ratio_activity_'+activity_id).val(parseFloat(total_per_activity) + parseFloat(ap_value));
+            var sum_of_ratio = 0;
+            $("tr").find("[data-activity_id='" + activity_id + "']").each(function(){
+                var current_ratio_value = $(this).val();
+                if((current_ratio_value != "") && (current_ratio_value != undefined))
+                    sum_of_ratio += parseFloat(current_ratio_value.replace("," , "."));
+            });
+            $('td#total_ratio_activity_'+activity_id).text(sum_of_ratio + ' %');
+            if(sum_of_ratio > 100){
+                $('td#total_ratio_activity_'+activity_id).css('color', 'red');
+                alert("Warning : sum of activity's ratio values is greater than 100 !");
+            }
+            else { $('td#total_ratio_activity_'+activity_id).css('color', '#444'); }
         }
         return false;
     });

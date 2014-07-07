@@ -1193,6 +1193,11 @@ fr:
   organization_profiles: "Profils de l'organization"
   profils_per_activity: "Profils per activity"
   profils_per_activity: "Profils par activité"
+  organization: "Organisation"
+  wbs_ratio_per_profile: "Ratio par profil"
+  total_ratio_per_activity: "Sum des ratio par activité (%)"
+  warning_sum_of_ratio_values_greater_than_100: "Attention : la somme des ratios de l'activité est supérieure à 100 !"
+  no_profiles_for_wbs_activity_organization: "Aucun profil dans l'organization du wbs-activity"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

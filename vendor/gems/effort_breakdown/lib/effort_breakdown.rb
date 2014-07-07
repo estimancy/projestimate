@@ -68,6 +68,11 @@ module EffortBreakdown
       efforts_man_month
     end
 
+    # Calculate the WBS-Activity effort according to the selected value as ratio
+    def get_effort_with_activities_elements
+
+    end
+
 
     # Get each wbs-activity-element effort with one activity element as reference
     def get_efforts_with_one_activity_element(*args)
