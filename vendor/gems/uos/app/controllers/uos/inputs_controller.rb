@@ -48,14 +48,11 @@ class Uos::InputsController < ApplicationController
     end
 
     @module_project.pemodule.attribute_modules.each do |am|
-      if am.pe_attribute.alias ==  "size"
+      if am.pe_attribute.alias ==  "effort_person_month"
         @size = EstimationValue.where(:module_project_id => @module_project.id,
                                       :pe_attribute_id => am.pe_attribute.id,
                                       :in_out => "input" ).first
-      else
-        @gross_size = EstimationValue.where(:module_project_id => @module_project.id,
-                                            :pe_attribute_id => am.pe_attribute.id,
-                                            :in_out => "output" ).first
+        @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
       end
     end
   end
@@ -121,10 +118,7 @@ class Uos::InputsController < ApplicationController
 
       tmp_prbl = Array.new
       ["low", "most_likely", "high"].each do |level|
-        if am.pe_attribute.alias == "size"
-          level_est_val = @in_ev.send("string_data_#{level}")
-          level_est_val[current_component.id] = @gross.map(&:"size_#{level}").compact.sum
-        elsif am.pe_attribute.alias == "effort_person_month"
+        if am.pe_attribute.alias == "effort_person_month"
           level_est_val = @in_ev.send("string_data_#{level}")
           level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
           tmp_prbl << level_est_val[current_component.id]
@@ -205,10 +199,7 @@ class Uos::InputsController < ApplicationController
 
       tmp_prbl = Array.new
       ["low", "most_likely", "high"].each do |level|
-        if am.pe_attribute.alias == "size"
-          level_est_val = @in_ev.send("string_data_#{level}")
-          level_est_val[current_component.id] = @gross.map(&:"size_#{level}").compact.sum
-        elsif am.pe_attribute.alias == "effort_person_month"
+        if am.pe_attribute.alias == "effort_man_month"
           level_est_val = @in_ev.send("string_data_#{level}")
           level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
           tmp_prbl << level_est_val[current_component.id]
