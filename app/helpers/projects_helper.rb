@@ -1009,7 +1009,7 @@ module ProjectsHelper
           estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id, :module_project_id => module_project.previous.first.id).first
           new_level_estimation_values = estimation_value.send("string_data_#{level}")
           text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                         (new_level_estimation_values[pbs_project_element.id]).round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision),
+                         (new_level_estimation_values[pbs_project_element.id]).to_f.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision),
                          :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                          "data-est_val_id" => est_val.id,
                          "data-module_project_id" => module_project.id,

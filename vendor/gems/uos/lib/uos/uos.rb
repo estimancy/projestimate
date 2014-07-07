@@ -47,7 +47,7 @@ module Uos
 
     #Constructor
     def initialize(elem)
-      @size = elem['size']
+      @effort_person_month = elem['effort_person_month']
     end
 
     # Return effort

@@ -71,12 +71,6 @@ module CocomoBasic
       @effort = (@coef_a*(@coef_sloc**@coef_b)).to_f
     end
 
-    #Return effort (in man-hour)
-    def get_effort_person_hour(*args)
-      @effort = (@coef_a*(@coef_sloc**@coef_b)).to_f
-    end
-
-
     #Return delay (in month)
     def get_delay(*args)
       @delay = (2.5*((get_effort_person_month)**@coef_c)).to_f
