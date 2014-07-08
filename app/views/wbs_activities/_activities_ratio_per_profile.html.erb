@@ -33,10 +33,14 @@
                     <% activity_profile = WbsActivityRatioProfile.where(wbs_activity_ratio_element_id: activity.id, organization_profile_id: profile.id).first %>
                     <% current_percentage =  activity_profile.nil? ? nil : activity_profile.ratio_value %>
                     <% total_percentage_activity += (current_percentage.nil? ? 0 : current_percentage.to_f) %>
-                    <td style="text-align: center"><%= text_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", current_percentage, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id %></td>
-                <% end %>
+                    <% if ! activity.wbs_activity_element.has_children? %>
+                        <td style="text-align: center"><%= text_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", current_percentage, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id %></td>
+                    <% else %>
+                        <td style="text-align: center"><%= text_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", current_percentage, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id, :readonly => true %></td>
+                    <% end %>
+                 <% end %>
             <% else %>
-            <td></td>
+                <td></td>
             <% end %>
             <td id='<%= "total_ratio_activity_#{activity.id}" %>' style="text-align: center"><%= "#{total_percentage_activity} %" %></td>
           </tr>
