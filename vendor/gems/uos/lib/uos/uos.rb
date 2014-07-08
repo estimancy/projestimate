@@ -43,17 +43,17 @@ module Uos
 
     include ApplicationHelper
 
-    attr_accessor :size
+    attr_accessor :effort_person_month
 
     #Constructor
     def initialize(elem)
-      @size = elem['size']
+      @effort_person_month = elem['effort_person_month']
     end
 
     # Return effort
     #project.id, current_mp_to_execute.id, pbs_project_element_id)
-    def get_effort_person_hour(*args)
-      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).first.gross_low
+    def get_effort_person_month(*args)
+      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).first.send("gross_#{args[3]}")
     end
 
   end

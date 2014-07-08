@@ -31,7 +31,7 @@ module SampleModel
       @m = input[:methodology].blank? ? @m = nil : @m = input[:methodology].to_f
     end
 
-    def get_effort_person_hour(*args)
+    def get_effort_person_month(*args)
       begin
         34.96*(450/(@p+@m))*(1 - Math.exp(((-1)*@k*@k*0.01)/32))
       rescue

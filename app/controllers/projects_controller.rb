@@ -117,7 +117,7 @@ public
         if @project.valid?
           @project.save!
           #New default Pe-Wbs-Project
-          pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title} PBS-Product", :wbs_type => 'Product')
+          pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
           pe_wbs_project_activity = @project.pe_wbs_projects.build(:name => "#{@project.title} WBS-Activity", :wbs_type => 'Activity')
 
           pe_wbs_project_product.add_to_transaction
@@ -125,7 +125,7 @@ public
 
           pe_wbs_project_product.save!
           ##New root Pbs-Project-Element
-          pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{product_name.blank? ? project_title : product_name} - PBS-Product", :is_root => true, :work_element_type_id => default_work_element_type.id, :position => 0)
+          pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{product_name.blank? ? project_title : product_name}", :is_root => true, :work_element_type_id => default_work_element_type.id, :position => 0)
           pbs_project_element.add_to_transaction
 
           pbs_project_element.save!
@@ -227,7 +227,7 @@ public
 
       product_name = params[:project][:product_name]
       project_root = @project.root_component
-      project_root.name = "#{product_name.blank? ? @project.title : product_name} - PBS-Product"
+      project_root.name = "#{product_name.blank? ? @project.title : product_name}"
       project_root.save
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
@@ -902,7 +902,7 @@ public
       # Normally, the input data is commonly from the Expert Judgment Module on PBS (when running estimation on its product)
       cm = current_module.send(:new, input_data)
       #begin
-        @result_hash["#{balancing_attr_est_values.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{balancing_attr_est_values.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+        @result_hash["#{balancing_attr_est_values.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{balancing_attr_est_values.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id, level)
       #rescue => e
       #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
       #  puts e.message
@@ -925,7 +925,7 @@ public
 
         if est_val.in_out == 'output' or est_val.in_out=='both'
           #begin
-              @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id)
+              @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id, level)
           #rescue => e
           #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
           #  puts e.message
@@ -940,7 +940,7 @@ public
 
   #Method to duplicate project and associated pe_wbs_project
   def duplicate
-    begin
+    #begin
       authorize! :create_project_from_template, Project
 
       old_prj = Project.find(params[:project_id])
@@ -1002,10 +1002,10 @@ public
 
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
       redirect_to edit_project_path(new_prj) and return
-    rescue
-      flash['Error'] = I18n.t(:error_project_duplication_failed)
-      redirect_to '/projects'
-    end
+    #rescue
+    #  flash['Error'] = I18n.t(:error_project_duplication_failed)
+    #  redirect_to '/projects'
+    #end
   end
 
 

@@ -409,7 +409,7 @@ module ProjectsHelper
                                                                                    #unless refer_module.empty?
 
             refer_module_potential_ids = current_module_project.associated_module_projects
-            refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_person_hour", @defined_status.id).first
+            refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_person_month", @defined_status.id).first
 
             refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, current_project.id, pbs_project_element.id)
             refer_module_project = refer_modules_project.where(["module_project_id IN (?)", refer_module_potential_ids]).last
@@ -980,7 +980,7 @@ module ProjectsHelper
     if pbs_project_element.folder? && !pbs_project_element.descendants.empty?
       ###pbs_project_element.descendants.map{|i| res << level_estimation_values[i.id].to_i }
       text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                     level_estimation_values[pbs_project_element.id].to_i, ###res.compact.sum,
+                     level_estimation_values[pbs_project_element.id].to_i,
                      :class => "input-small #{level} #{est_val.id}",
                      :readonly => true,
                      "data-module_project_id" => module_project.id,
@@ -1000,7 +1000,7 @@ module ProjectsHelper
         comm_attr = ModuleProject::common_attributes(module_project.previous.first, module_project)
         if comm_attr.empty?
           text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                         level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
+                         (level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id]).to_f.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision),
                          :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                          "data-est_val_id" => est_val.id,
                          "data-module_project_id" => module_project.id,
@@ -1009,7 +1009,7 @@ module ProjectsHelper
           estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id, :module_project_id => module_project.previous.first.id).first
           new_level_estimation_values = estimation_value.send("string_data_#{level}")
           text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                         new_level_estimation_values[pbs_project_element.id],
+                         (new_level_estimation_values[pbs_project_element.id]).to_f.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision),
                          :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                          "data-est_val_id" => est_val.id,
                          "data-module_project_id" => module_project.id,
