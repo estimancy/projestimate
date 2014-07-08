@@ -219,7 +219,9 @@
         //create dynamique div and canvas for each output attribute graph
         var current_mp_outputs_attributes_aliases = <%= @current_mp_outputs_attributes_aliases.to_json.html_safe %>;
         $.each(current_mp_outputs_attributes_aliases, function( index, value ) {
-            $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" class="canvas" width="350" height="300"></canvas></div>');
+            <% unless @current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN %>
+                $("#estimation_graph_box").append('<div class="span4" style="margin-left: 0px"><canvas id="'+value+'" class="canvas" width="350" height="300"></canvas></div>');
+            <% end %>
         });
 
         var outputs_data_levels = ["Low", "Most Likely", "High", "probable"];
@@ -228,8 +230,9 @@
         //generate data for each attribute
         var js_current_mp_outputs_dataset = <%= @current_mp_outputs_dataset.to_json.html_safe %> ;
         var js_current_mp_outputs_attributes_aliases = <%= @current_mp_outputs_attributes_aliases.to_json.html_safe %> ;
-        var graph_title = "";
+        var graph_title = [];
         var pie_chart_effort_per_activity;
+        var stacked_bar_effort_per_activity;
 
         $.each( js_current_mp_outputs_attributes_aliases, function( key, value ) {
 
@@ -240,26 +243,52 @@
                 }
 
                 //create div for the Pie chart
-                $("#estimation_graph_box").append('<div class="span8" style="margin-left: 0px"><canvas id="canvas_pie_effort_per_activity" class="canvas" width="700" height="300"></canvas></div>');
+                $("#estimation_graph_box").append('<div class="span6" style="margin-left: 0px"><canvas id="canvas_stacked_bar_effort_per_activity" class="canvas" width="600" height="300"></canvas></div>');
+                $("#estimation_graph_box").append('<div class="span6" style="margin-left: 0px"><canvas id="canvas_pie_effort_per_activity" class="canvas" width="600" height="300"></canvas></div>');
 
                 // only get the Probable value for the Pie chart
-                <% r_pie_chart_effort_per_activity = []
+                <%
+                   r_pie_chart_effort_per_activity = []
+                   r_stacked_bar_effort_per_activity = []
+                   r_colors = {}
                    pie_chart_iter = -1
                    effort_per_activity_probable_value = @current_mp_effort_per_activity["probable"]
                    if !effort_per_activity_probable_value.nil?
                         effort_per_activity_probable_value.each do |key, value|
+                            $rb_hue_color+=222.5
                             activity_data = {
                                 value: value,
-                                color: "hsla(#{$rb_hue_color+=222.5}, 75%, 50%, 0.5)", #"%06x" % (rand * 0xffffff), #pie_fillColor_array[pie_chart_iter+=1],
+                                #color: "hsla(#{$rb_hue_color+=222.5}, 75%, 50%, 0.5)", #pie_fillColor_array[pie_chart_iter+=1],
+                                color: "hsla(#{$rb_hue_color}, 75%, 50%, 0.5)", #pie_fillColor_array[pie_chart_iter+=1],
                                 title: key
                             }
                             r_pie_chart_effort_per_activity << activity_data
+
+                            # For the stacked Bar: Create the stacked bar chart data
+                            if !@effort_breakdown_stacked_bar_dataset.nil?
+                                array_values = @effort_breakdown_stacked_bar_dataset["#{key}"]
+                                activity_data = {
+                                    fillColor: "hsla(#{$rb_hue_color}, 75%, 50%, 0.5)",
+                                    strokeColor: "rgba(220,220,220,1)",
+                                    pointColor: "rgba(220,220,220,1)",
+                                    pointstrokeColor: "yellow",
+                                    data: (array_values.empty? ? [0,0,0,0] : array_values),
+                                    title: "#{key}"
+                                }
+                                r_stacked_bar_effort_per_activity << activity_data
+                           end
                         end
                    end
                 %>
 
                 //create the Pie chart data
                 pie_chart_effort_per_activity = <%= r_pie_chart_effort_per_activity.to_json.html_safe %> ;
+
+                //Create the Stacked Bar chart dataset
+                stacked_bar_effort_per_activity = {
+                    labels : ["low", "most_likely", "high", "probable"],
+                    datasets : <%= r_stacked_bar_effort_per_activity.to_json.html_safe %>
+                }
             <% end %>
 
             <% $rb_hue_color +=222.5 %>
@@ -324,7 +353,7 @@
                 legendFontSize : 14,
                 legendFontStyle : "normal",
                 legendFontColor : "#666",
-                legendBlockSize : 12,
+                legendBlockSize : 50, //12,
                 legendBorders : true,
                 legendBordersWidth : 2,
                 legendBordersColor : "#666",
@@ -333,12 +362,16 @@
                 graphMax : "DEFAULT"
             };
 
-            //generate Bar chart for current output attribute
-            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(attr_data, attr_options);
+            //generate Bar chart for current output attribute (unless for the Effort_breakdown)
+            <% unless @current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN %>
+                var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(attr_data, attr_options);
+            <% end %>
 
             //Pie chart for Effort per activity
             <% if !@current_mp_effort_per_activity.empty? %>
                 var myPie = new Chart(document.getElementById("canvas_pie_effort_per_activity").getContext("2d")).Pie(pie_chart_effort_per_activity, attr_options);
+                attr_options["graphTitle"] = "Effort per activity";
+            var myStacked_bar = new Chart(document.getElementById("canvas_stacked_bar_effort_per_activity").getContext("2d")).StackedBar(stacked_bar_effort_per_activity, attr_options);
             <% end %>
         });
 
@@ -436,44 +469,13 @@
 
 
 
-        //========================================= DATASET FOR OUTPUT DATA  ===============================================
-        // create de data
-        <%# @attributes_labels.each do |attr|
-            attr_data_hash =
-            {
-                fillColor: fillColor_array[iteration+=1],
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                data: @dataset[:"#{attr}"],
-                title: attr
-            }
-            data_array << attr_data_hash
-        end %>
+        //========================================= TEST  ===============================================
 
         // get the data
         var all_attribute_data = {
             labels : module_labels,
             datasets : <%= data_array.to_json.html_safe %>
         }
-
-        //Get the context of the canvas element we want to select
-        //var ctx = document.getElementById("myChart").getContext("2d");
-
-        //Line chart
-//        var line_ctx = $('#canvas_line').get(0).getContext("2d");
-//        var lineChart =  new Chart(line_ctx).Line(all_attribute_data, options);
-//
-//        //Bar chart
-//        var bar_ctx = $('#canvas_bar').get(0).getContext("2d");
-//        var barChart =   new Chart(bar_ctx).Bar(all_attribute_data, options);
-
-//        var js_current_mp_outputs_attributes_aliases = <%#= @current_mp_outputs_attributes_aliases.to_json.html_safe %> ;
-//        $.each( js_current_mp_outputs_attributes_aliases, function( key, value ) {
-//            //var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(all_attribute_data);
-//            var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(outputs_data_hash[attribute_name], options);
-//        });
-
 
     });
 </script>

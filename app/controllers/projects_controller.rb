@@ -1533,6 +1533,8 @@ public
     @complexities_name = []
     @organization_uow_complexities = []
     @cocomo_advanced_input_dataset = {}
+    # Dataset of the effort-breakdown stacked bar chart
+    @effort_breakdown_stacked_bar_dataset = {}
     # the Cocomo_advanced = Cocomo_Intermediate factors
     @cocomo_advanced_factor_corresponding = []
     # The CocomoII = Cocomo_Expert factors
@@ -1645,6 +1647,12 @@ public
       end
     end
 
+    # get all project's wbs-project_elements
+    @project_wbs_project_elts = @project.wbs_project_elements
+    @project_wbs_project_elts.each do |wbs_project_elt|
+      @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name}"] = Array.new
+    end
+
     # get all Attributes aliases
     @current_mp_outputs_attributes_aliases = @current_mp_outputs_attributes.map(&:alias)
     puts "@current_mp_outputs_attributes_aliases = #{@current_mp_outputs_attributes_aliases}"
@@ -1662,6 +1670,9 @@ public
             @current_mp_effort_per_activity = { "low" => {}, "most_likely" => {}, "high" => {}, "probable" => {} }
             if level_value.nil?
               pbs_level_value=nil.to_i
+              @project_wbs_project_elts.each do |elt|
+                @effort_breakdown_stacked_bar_dataset["#{elt.name}"] << 0
+              end
             else
               # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
               pbs_level_with_activities = level_value[@current_component.id]
@@ -1672,6 +1683,8 @@ public
                   wbs_project_elt = WbsProjectElement.find(wbs_activity_elt_id)
                   unless wbs_project_elt.is_root || wbs_project_elt.has_children?
                     @current_mp_effort_per_activity[level]["#{wbs_project_elt.name}"] = hash_value[:value]
+                    #@effort_breakdown_stacked_bar_dataset["#{wbs_activity_elt_id}"] << hash_value[:value]
+                    @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name}"] << hash_value[:value]
                   end
                 end
               end
@@ -1692,6 +1705,7 @@ public
       @current_mp_outputs_dataset["#{output_attr.alias}"] = attr_data
     end
     puts "OUTOUT_DATASET = #{@current_mp_outputs_dataset}"
+    puts "STACKED_BAR = #{@effort_breakdown_stacked_bar_dataset}"
 
     #======================================== END CURRENT MODULE OUTPUTS DATA ==============================================
 
