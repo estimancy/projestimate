@@ -7,6 +7,7 @@ FactoryGirl.define do
     state "defined"
     description "Wbs-Activity"
     association :record_status, :factory => :proposed_status, strategy: :build
+    association :organization, :factory => :organization
   end
 
 end

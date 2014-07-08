@@ -466,7 +466,7 @@ fr:
   labor_category: "Catégorie de travail"
   level: "Niveau"
   cost_per_hour: "Coût par heure"
-  inflation_rate: "Taux d'inflation"
+  inflation_rate: "Taux d'inflation (%)"
   base_year: "Année de référence"
   currency: "Devise"
   hour_per_day: "Heures par jour"

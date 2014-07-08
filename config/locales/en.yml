@@ -466,7 +466,7 @@ en:
   labor_category: "Labor category"
   level: "Level"
   cost_per_hour: "Cost per hour"
-  inflation_rate: "Inflation rate"
+  inflation_rate: "Inflation rate (%)"
   base_year: "Base year"
   currency: "Currency"
   hour_per_day: "Hour per day"
