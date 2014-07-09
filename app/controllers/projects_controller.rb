@@ -1571,11 +1571,12 @@ public
       @complexities_name = @current_module_project.organization_uow_complexities.map(&:name).uniq
       @cocomo_advanced_factors =  @current_module_project.factors   #Factor.where('factor_type = ?', "advanced") #
       @all_cocomo_advanced_factors_names = @cocomo_advanced_factors.map(&:name)
+      current_module_project_name = @current_module_project.pemodule.alias
 
       coefficients_hash = {"Extra Low" => 1, "Very Low" => 2, "Low" => 3, "Normal" => 4, "High" => 5, "Very High" => 6, "Extra High" => 7}
       # Median value correspond to the "Default" value defined by the Organization
-      @cocomo_advanced_input_dataset["median"] = Array.new
-      @cocomo_advanced_input_dataset["cocomo_advanced"] = Array.new
+      @cocomo_advanced_input_dataset["default"] = Array.new
+      @cocomo_advanced_input_dataset["#{current_module_project_name}"] = Array.new
 
       factor_data = {}
       @complexities_name.each do |complexity_name|
@@ -1586,7 +1587,7 @@ public
       # dataset for the Radar chart about Factors
       @current_module_project.input_cocomos.where('pbs_project_element_id = ?', @current_component.id).each do |input_cocomo|
         @cocomo_advanced_factor_corresponding << input_cocomo.factor.name
-        @cocomo_advanced_input_dataset["cocomo_advanced"] << coefficients_hash[input_cocomo.organization_uow_complexity.name]
+        @cocomo_advanced_input_dataset["#{current_module_project_name}"] << coefficients_hash[input_cocomo.organization_uow_complexity.name]
 
         ###@cocomo_advanced_input_dataset["median"] << coefficients_hash["Normal"]
         # The Median value will be the value defined in the project's organization default factors values
@@ -1594,9 +1595,9 @@ public
         org_factor_uow_with_default_cplex = input_cocomo.factor.organization_uow_complexities.where('organization_id=? AND is_default = ?', @project_organization.id, true).first
         if org_factor_uow_with_default_cplex.nil?
           # Median value will be set to 0
-          @cocomo_advanced_input_dataset["median"] << 0
+          @cocomo_advanced_input_dataset["default"] << 0
         else
-          @cocomo_advanced_input_dataset["median"] << coefficients_hash[org_factor_uow_with_default_cplex.name]
+          @cocomo_advanced_input_dataset["default"] << coefficients_hash[org_factor_uow_with_default_cplex.name]
         end
       end
 
@@ -1620,7 +1621,7 @@ public
         delay = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id]
         effort = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_effort.id).last.string_data_probable[current_component.id]
 
-        m =  delay / current_project.organization.number_hours_per_month
+        m =  delay.to_f / current_project.organization.number_hours_per_month
         k = effort
         a = 2 #pente
 
