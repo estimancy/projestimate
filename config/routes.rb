@@ -88,7 +88,7 @@ Projestimate::Application.routes.draw do
 
   resources :audits
 
-  mount Uos::Engine, :at => '/uos'
+  mount Uow::Engine, :at => '/uow'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
   mount BalancingModule::Engine, at: '/balancing_module'
@@ -101,7 +101,7 @@ Projestimate::Application.routes.draw do
   resources :organization_abacus
 
   resources :organization_technologies
-  post '/set_technology_uos_syntesis' => 'organization_technologies#set_technology_uos_syntesis', :as => 'set_technology_uos_syntesis'
+  post '/set_technology_uow_syntesis' => 'organization_technologies#set_technology_uow_syntesis', :as => 'set_technology_uow_syntesis'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
 
   resources :organization_uow_complexities

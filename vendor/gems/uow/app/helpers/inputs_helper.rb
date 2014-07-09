@@ -34,28 +34,18 @@
 #
 #############################################################################
 
-# This migration comes from uow_engine (originally 20131009092730)
-class CreateUow < ActiveRecord::Migration
-  def self.up
-    create_table :inputs, :force => true do |t|
-      t.integer :module_project_id
-      t.integer :technology_id
-      t.integer :unit_of_work_id
-      t.integer :complexity_id
-      t.string  :flag
-      t.string  :name
-      t.integer :weight
-      t.integer :size_low
-      t.integer :size_most_likely
-      t.integer :size_high
-      t.integer :gross_low
-      t.integer :gross_most_likely
-      t.integer :gross_high
-      t.timestamps
-    end
+module InputsHelper
+
+  def display_uow_module(module_project_id)
+    "<h4>Estimation inputs</h4>
+    #{ link_to "Fill input data", "/uow?mp=#{module_project_id}" }"
   end
 
-  def self.down
-    drop_table :inputs
+  def method_missing(method, *args, &block)
+    if (method.to_s.end_with?('_path') || method.to_s.end_with?('_url')) && main_app.respond_to?(method)
+      main_app.send(method, *args)
+    else
+      super
+    end
   end
 end

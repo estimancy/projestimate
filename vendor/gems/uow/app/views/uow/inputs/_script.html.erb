@@ -1,0 +1,92 @@
+<script>
+  function initialize_gross_behaviour(index){
+    $(".icon-star").click(function(){
+      switch(true) {
+        case ($(this).hasClass('black-question-mark')):
+          $(this).removeClass('black-question-mark').addClass('purple-exclamation-mark');
+          $(this).next().val("purple");
+          break;
+        case ($(this).hasClass('purple-exclamation-mark')):
+          $(this).removeClass('purple-exclamation-mark').addClass('yellow-exclamation-mark');
+          $(this).next().val("yellow");
+          break;
+        case ($(this).hasClass('yellow-exclamation-mark')):
+          $(this).removeClass('yellow-exclamation-mark').addClass('green-check-mark');
+          $(this).next().val("green");
+          break;
+        case ($(this).hasClass('green-check-mark')):
+          $(this).removeClass('green-check-mark').addClass('blue-info-mark');
+          $(this).next().val("blue");
+          break;
+        case ($(this).hasClass('blue-info-mark')):
+          $(this).removeClass('blue-info-mark').addClass('orange-exclamation-mark');
+          $(this).next().val("orange");
+          break;
+        case ($(this).hasClass('orange-exclamation-mark')):
+          $(this).removeClass('orange-exclamation-mark').addClass('red-star');
+          $(this).next().val("red");
+          break;
+        case ($(this).hasClass('red-star')):
+          $(this).removeClass('red-star').addClass('black-question-mark');
+          $(this).next().val("black");
+      }
+    });
+
+    var selector = "#size_low_" + index +
+            ", #size_most_likely_" + index +
+            ", #size_high_" + index +
+            ", #weight_" + index
+
+    $(selector).on("blur change", function(e){
+      $.ajax({ url:'/uow/load_gross',
+        data: 'size_low=' + $('#size_low_' + index).val()
+                + '&size_most_likely=' + $('#size_most_likely_' + index).val()
+                + '&size_high=' + $('#size_high_' + index).val()
+                + '&weight=' + $('#weight_' + index).val()
+                + '&technology=' + $('#technology_' + index).val()
+                + '&uow=' + $('#uow_' + index).val()
+                + '&complexity=' + $('#complexity_' + index).val()
+                + '&index=' + $(this).closest('tr').index()
+      });
+    });
+
+    $(", #uow_" + index +
+            ", #technology_" + index +
+            ", #complexity_" + index).on("change", function(e){
+
+      $.ajax({ url:'/uow/load_gross',
+        data: 'size_low=' + $('#size_low_' + index).val()
+                + '&size_most_likely=' + $('#size_most_likely_' + index).val()
+                + '&size_high=' + $('#size_high_' + index).val()
+                + '&weight=' + $('#weight_' + index).val()
+                + '&technology=' + $('#technology_' + index).val()
+                + '&uow=' + $('#uow_' + index).val()
+                + '&complexity=' + $('#complexity_' + index).val()
+                + '&index=' + $(this).closest('tr').index()
+
+      });
+    });
+
+    // Update the Unit of Works select_box according to the selected technology
+    $("#technology_" + index).on("change", function(e){
+      $.ajax({ url:'/uow/update_unit_of_works_select_box',
+        data: 'technology_id=' + $(this).val()
+                + "&index=" + index
+      });
+    });
+
+    $("#uow_" + index).on("change", function(e){
+      $.ajax({ url:'/uow/update_complexity_select_box',
+        data: 'uow_id=' + $(this).val()
+                + "&index=" + index
+      });
+    });
+  }
+
+  $(document).ready(function(e){
+    $("#myTable").find("tr").each(function(index){
+      initialize_gross_behaviour(index);
+    });
+  });
+
+</script>

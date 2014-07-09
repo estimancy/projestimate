@@ -98,13 +98,13 @@ class OrganizationsController < ApplicationController
         @organization.subcontractors.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
       end
 
-      uos = [
+      uow = [
           ['Données', 'data', "Création, modification, suppression, duplication de composants d'une base de données (tables, fichiers). Une UO doit être comptée pour chaque entité métier. Seules les entités métier sont comptabilisées."],
           ['Traitement', 'traitement', 'Création, modification, suppression, duplication de composants de visualisation, gestion de données, activation de fonctionnalités avec une interface de type Caractère (terminal passif).'],
           ['Batch', 'batch', "Création, modification, suppression, duplication de composants d'extraction ou de MAJ de données d'une source de données persistante. Par convention, cette UO ne couvre pas les interfaces. Cette UO couvre le nettoyage et la purge des tables."],
           ['Interfaces', 'interface', "Création, modification, suppression, duplication de composants d'interface de type : Médiation, Conversion, Transcodification, Transformation (les transformations sont implémentées en langage de programmation). Les 'Historisation avec clés techniques générée' sont à comptabiliser en 'Règle de gestion'"]
       ]
-      uos.each do |i|
+      uow.each do |i|
         @organization.unit_of_works.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
       end
 

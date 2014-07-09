@@ -4,7 +4,7 @@
     <% if can? :execute_estimation_plan, current_project %>
       <% if current_module_project %>
         <% unless current_component.folder? %>
-          <% if current_module_project.pemodule.alias == "uos" %>
+          <% if current_module_project.pemodule.alias == "uow" %>
             <%= submit_tag 'Actualiser', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
           <% else %>
             <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>

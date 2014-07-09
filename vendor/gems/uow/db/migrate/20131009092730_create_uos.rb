@@ -34,10 +34,9 @@
 #
 #############################################################################
 
-# This migration comes from uow_engine (originally 20131009092730)
 class CreateUow < ActiveRecord::Migration
   def self.up
-    create_table :inputs, :force => true do |t|
+    create_table :inputs do |t|
       t.integer :module_project_id
       t.integer :technology_id
       t.integer :unit_of_work_id
