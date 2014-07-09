@@ -168,6 +168,8 @@ public
     #No authorize required since this method is called for the dashbord
 
     set_page_title 'Dashboard'
+    set_breadcrumbs "Dashboard" => "/dashboard", current_project.title => edit_project_path(current_project)
+
     session[:anchor_value] = params[:anchor_value]
 
     if current_user

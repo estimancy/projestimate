@@ -78,11 +78,13 @@ public
   def index
     #No authorize required since everyone can access the list (permission will be managed project per project)
     set_page_title 'Estimations'
+    set_breadcrumbs "Dashboard" => "/dashboard"
     @projects = Project.all.reject { |i| !i.is_childless? }
   end
 
   def new
     authorize! :create_project_from_scratch, Project
+    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path
     set_page_title 'New estimation'
   end
 
@@ -181,6 +183,8 @@ public
 
     @project = Project.find(params[:id])
 
+    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
+
     if (cannot? :edit_project, @project) ||                                            # No write access to project
         (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||   # frozen project
         (@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
@@ -220,6 +224,8 @@ public
   def update
     set_page_title 'Edit estimation'
     @project = Project.find(params[:id])
+
+    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
 
     unless (cannot? :edit_project, @project) || # No write access to project
         (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) || # frozen project
@@ -347,6 +353,8 @@ public
 
   def show
     @project = Project.find(params[:id])
+    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
+
     authorize! :show_project, @project
     set_page_title 'Show estimation'
 

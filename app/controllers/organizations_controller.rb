@@ -54,6 +54,8 @@ class OrganizationsController < ApplicationController
     set_page_title 'Organizations'
     @organization = Organization.find(params[:id])
 
+    set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", @organization => ""
+
     @attributes = PeAttribute.defined.all
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 

@@ -20,7 +20,10 @@
 #############################################################################
 
 class CocomoExpert::InputCocomoController < ApplicationController
+
   def index
+    set_breadcrumbs "Dashboard" => "/dashboard", "Cocomo Expert" => ""
+
     @sf = []
     @em = []
 
