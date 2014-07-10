@@ -168,7 +168,6 @@ public
     #No authorize required since this method is called for the dashbord
 
     set_page_title 'Dashboard'
-    set_breadcrumbs "Dashboard" => "/dashboard", current_project.title => edit_project_path(current_project)
 
     session[:anchor_value] = params[:anchor_value]
 
@@ -184,6 +183,7 @@ public
 
       @user = current_user
       @project = current_project
+      set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
       @pemodules ||= Pemodule.all
       @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first unless @project.nil?
       @show_hidden = 'true'

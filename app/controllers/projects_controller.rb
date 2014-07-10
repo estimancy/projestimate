@@ -1526,7 +1526,10 @@ public
     end
   end
 
-  # Function that show the estimation graph
+  def show_module_configuration
+  end
+
+    # Function that show the estimation graph
   def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
     @project = current_project
     @project_organization = @project.organization
