@@ -688,6 +688,8 @@ div.block_label.selected_pbs {
     color: red;
 }
 
+.red_border { border-color: red ; }
+
 
 .note_input_with_activities{
     margin-left: 20px;
