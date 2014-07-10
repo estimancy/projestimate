@@ -5,12 +5,20 @@
       <% if current_module_project %>
         <% unless current_component.folder? %>
           <% if current_module_project.pemodule.alias == "uow" %>
+            <%= link_to 'Configure', "/uow?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
             <%= submit_tag 'Actualiser', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
+          <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
+            <%= link_to 'Configure', "/cocomo_expert?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
+            <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
+          <% elsif current_module_project.pemodule.alias == "cocomo_advanced" %>
+            <%= link_to 'Configure', "/cocomo_advanced?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
+            <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
+          <% elsif current_module_project.pemodule.alias == "real_size" %>
+            <%= link_to 'Configure', "/inputs?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
+            <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
           <% else %>
             <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
           <% end %>
-        <% else %>
-          <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
         <% end %>
       <% end %>
     <% end %>
