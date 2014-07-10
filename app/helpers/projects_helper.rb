@@ -820,79 +820,76 @@ module ProjectsHelper
     pbs_project_element = current_component
     res = String.new
 
-      if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
 
-        pemodule = Pemodule.find(module_project.pemodule.id)
-        res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
-        res << "<table class='table table-condensed table-bordered'>
-                        <tr>
-                          <th></th>"
-        ['low', '', 'most_likely', 'high', ''].each do |level|
-          res << "<th>#{level.humanize}</th>"
-        end
-        res << '</tr>'
-        module_project.estimation_values.order('display_order ASC').each do |est_val|
-          est_val_pe_attribute = est_val.pe_attribute
-          est_val_in_out = est_val.in_out
-          if (est_val_in_out == 'input' or est_val_in_out == 'both') and (est_val.module_project.id == module_project.id) and est_val_pe_attribute
-            res << '<tr>'
-            res << "<td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name}</span></td>"
-            level_estimation_values = Hash.new
+      pemodule = Pemodule.find(module_project.pemodule.id)
+      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
+      res << "<table class='table table-condensed table-bordered'>
+                      <tr>
+                        <th></th>"
+      ['low', '', 'most_likely', 'high', ''].each do |level|
+        res << "<th>#{level.humanize}</th>"
+      end
+      res << '</tr>'
+      module_project.estimation_values.order('display_order ASC').each do |est_val|
+        est_val_pe_attribute = est_val.pe_attribute
+        est_val_in_out = est_val.in_out
+        if (est_val_in_out == 'input' or est_val_in_out == 'both') and (est_val.module_project.id == module_project.id) and est_val_pe_attribute
+          res << '<tr>'
+          res << "<td><span class='attribute_tooltip tree_element_in_out' title='#{est_val_pe_attribute.description} #{display_rule(est_val)}'>#{est_val_pe_attribute.name}</span></td>"
+          level_estimation_values = Hash.new
 
-            ['low', 'most_likely', 'high'].each do |level|
-              attribute_type = ""
-              read_only_attribute = false
-              disable_attribute_level = false
-              # customize the single attribute entry
-              # this class will only be applied on the low level, as most_likely and high values are read_only
-              if est_val.pe_attribute.single_entry_attribute
-                if level == "low"
-                  attribute_type = "single_entry_attribute"
-                else
-                  read_only_attribute = true
-                  disable_attribute_level = true
-                end
-              end
-
-              level_estimation_values = est_val.send("string_data_#{level}")
-              res << "<td>#{pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type, read_only_attribute)}</td>"
-              if level == 'low'
-                input_id = "_#{est_val_pe_attribute.alias}_#{module_project.id}"
-                res << "<td>"
-                res << "<span id='#{input_id}' class='copyLib icon  icon-chevron-right' data-effort_input_id='#{input_id}' title='Copy value in other fields' onblur='this.style.cursor='default''></span>"
-                res << '</td>'
+          ['low', 'most_likely', 'high'].each do |level|
+            attribute_type = ""
+            read_only_attribute = false
+            disable_attribute_level = false
+            # customize the single attribute entry
+            # this class will only be applied on the low level, as most_likely and high values are read_only
+            if est_val.pe_attribute.single_entry_attribute
+              if level == "low"
+                attribute_type = "single_entry_attribute"
+              else
+                read_only_attribute = true
+                disable_attribute_level = true
               end
             end
 
-            # Add link to add attribute Note to justify each estimation attribute
-            res << '<td>'
-            res << add_attribute_notes_link(est_val, pbs_project_element.id)
-            res << '</td>'
-            res << '</td>'
+            level_estimation_values = est_val.send("string_data_#{level}")
+            res << "<td>#{pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type, read_only_attribute)}</td>"
+            if level == 'low'
+              input_id = "_#{est_val_pe_attribute.alias}_#{module_project.id}"
+              res << "<td>"
+              res << "<span id='#{input_id}' class='copyLib icon  icon-chevron-right' data-effort_input_id='#{input_id}' title='Copy value in other fields' onblur='this.style.cursor='default''></span>"
+              res << '</td>'
+            end
           end
-          res << '</tr>'
-        end
-        res << '</table>'
 
-        if module_project.pemodule.alias == "uos"
-          res << "#{ link_to I18n.t(:configure_uow), '/uos?mp=' + module_project.id.to_s }"
-        elsif module_project.pemodule.alias == "real_size"
-          res << "#{ link_to 'Configure Real Size', real_size.inputs_path }"
-        elsif module_project.pemodule.alias == "cocomo_advanced" or module_project.pemodule.alias == "cocomo_expert"
-          res << link_to(I18n.t(:configure_cocomo), "/#{module_project.pemodule.alias}")
-        else
-          ""
+          # Add link to add attribute Note to justify each estimation attribute
+          res << '<td>'
+          res << add_attribute_notes_link(est_val, pbs_project_element.id)
+          res << '</td>'
+          res << '</td>'
         end
+        res << '</tr>'
       end
-      res
-    #end
-  end
+      res << '</table>'
 
+      if module_project.pemodule.alias == "uow"
+        res << "#{ link_to I18n.t(:configure_uow), '/uow?mp=' + module_project.id.to_s }"
+      elsif module_project.pemodule.alias == "real_size"
+        res << "#{ link_to 'Configure Real Size', real_size.inputs_path }"
+      elsif module_project.pemodule.alias == "cocomo_advanced" or module_project.pemodule.alias == "cocomo_expert"
+        res << link_to(I18n.t(:configure_cocomo), "/#{module_project.pemodule.alias}")
+      else
+        ""
+      end
+    end
+    res
+  end
 
   def pemodule_input(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type="", read_only_value=false)
 
     est_val_pe_attribute = est_val.pe_attribute
-
     if est_val_pe_attribute.attr_type == 'integer' or est_val_pe_attribute.attr_type == 'float'
 
       display_text_field_tag(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type, read_only_value)

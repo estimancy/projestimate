@@ -16,9 +16,13 @@ div.actions-tabs {
     overflow-y: auto;
 }
 
-/*.container-fluid .row-fluid:first-child {*/
-    /*margin-top: 20px;*/
-/*}*/
+.breadcrumb {
+    padding: 8px 15px;
+    margin: 2px 0 0;
+    list-style: none;
+    background-color: white;
+}
+
 /* Widgets */
 .widget-box {
     background: none repeat scroll 0 0 #F9F9F9;

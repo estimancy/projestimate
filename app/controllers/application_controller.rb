@@ -87,6 +87,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_user_language
   before_filter :set_return_to
   before_filter :previous_page
+  before_filter :set_breadcrumbs
   ###before_filter :session_expiration
   before_filter :update_activity_time
   before_filter :initialization_module
@@ -356,6 +357,14 @@ class ApplicationController < ActionController::Base
 
   def set_page_title(page_title)
     @page_title = page_title
+  end
+
+  def set_breadcrumbs(*args)
+    if args.empty?
+      @breacrumbs = { "Dashboard" => '/dashboard', "#{action_name.humanize} #{controller_name.humanize}" => request.original_url}
+    else
+      @breacrumbs = args.first
+    end
   end
 
   # Get the current_user number precision defined in the user preferences (default is 2)

@@ -5,18 +5,17 @@
     <!--</a>-->
   <!--</li>-->
 
-  <!--<li class="divider-vertical"></li>-->
-
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :estimate %>">
       <i class="icon-home icon-large pull-left"></i>&nbsp;
-      <%= I18n.t :estimate %>
-      <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
-      <li class="dropdown"><a href="/dashboard">
+      <li class="dropdown">
+        <a href="/dashboard">
         <!--<i class="icon-home icon-large pull-left"></i>-->
-        <%= I18n.t('home') %></a></li>
+          <%= I18n.t('home') %>
+        </a>
+      </li>
 
       <% if current_project %>
         <% if can? :write_access_to_inreview_project, current_project %>
@@ -47,11 +46,8 @@
   <li class="divider-vertical"></li>
 
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-      <i class="icon-tasks icon-large pull-left"></i>&nbsp;
-      <%= I18n.t :label_menu_organization %>
-
-      <b class="caret"></b>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_organization %>">
+      <i class="icon-tasks icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <li class="dropdown"><a href="/organizationals_params">
@@ -81,11 +77,8 @@
   <li class="divider-vertical"></li>
 
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-      <i class="icon-cog icon-large pull-left"></i>&nbsp;
-      <%= I18n.t :label_menu_admin %>
-
-      <b class="caret"></b>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_admin %>">
+      <i class="icon-cog icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <% if can? :manage, AdminSetting or can? :edit_admin_settings, AdminSetting %>
@@ -147,11 +140,8 @@
   <li class="divider-vertical"></li>
 
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-      <i class="icon-cog icon-large pull-left"></i>
-      &nbsp;
-      <%= I18n.t :label_menu_master_admin %>
-      <b class="caret"></b>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_master_admin %>">
+      <i class="icon-key icon-large pull-left"></i></b>
     </a>
     <ul class="dropdown-menu">
       <% if can? :manage, PeAttribute or can? :create_and_edit_attributes, PeAttribute %>
@@ -283,8 +273,23 @@
 </ul>
 
 
-<!--<div class="span3">-->
-  <%# if user_signed_in? %>
-    <%# render 'layouts/sidebar_menu' %>
-  <%# end %>
-<!--</div>-->
+<ul class="nav">
+  <li class="divider-vertical"></li>
+</ul>
+
+<ul class="nav">
+  <ul class="breadcrumb">
+    <% @breacrumbs.each_with_index do |k, i| %>
+        <li>
+          <% if i != @breacrumbs.length - 1 %>
+            <a href="<%= k[1] %>">
+              <%= k[0] %>
+            </a>
+            <span class="divider">/</span>
+          <% else %>
+            <%= k[0] %>
+        <% end %>
+        </li>
+    <% end %>
+  </ul>
+</ul>

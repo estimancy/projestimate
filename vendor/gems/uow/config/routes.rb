@@ -34,28 +34,16 @@
 #
 #############################################################################
 
-# This migration comes from uow_engine (originally 20131009092730)
-class CreateUow < ActiveRecord::Migration
-  def self.up
-    create_table :inputs, :force => true do |t|
-      t.integer :module_project_id
-      t.integer :technology_id
-      t.integer :unit_of_work_id
-      t.integer :complexity_id
-      t.string  :flag
-      t.string  :name
-      t.integer :weight
-      t.integer :size_low
-      t.integer :size_most_likely
-      t.integer :size_high
-      t.integer :gross_low
-      t.integer :gross_most_likely
-      t.integer :gross_high
-      t.timestamps
-    end
-  end
+Uow::Engine.routes.draw do
+  root :to => 'inputs#index'
+  post 'save_uow' => 'inputs#save_uow', :as => 'save_uow'
+  get 'load_gross' => 'inputs#load_gross', :as => 'load_gross'
+  get 'update_complexity_select_box' => 'inputs#update_complexity_select_box', :as => 'update_complexity_select_box'
+  get 'update_unit_of_works_select_box' => 'inputs#update_unit_of_works_select_box', :as => 'update_unit_of_works_select_box'
 
-  def self.down
-    drop_table :inputs
-  end
+  get 'new_item/:mp/:pbs_id' => 'inputs#new_item', :as => 'new_item'
+  get 'remove_item/:input_id' => 'inputs#remove_item', :as => 'remove_item'
+
+  get 'export/:mp/:pbs_id' => 'inputs#export', :as => 'export'
+  post 'import/:mp/:pbs_id' => 'inputs#import', :as => 'import'
 end

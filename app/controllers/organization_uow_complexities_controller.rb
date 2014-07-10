@@ -31,6 +31,9 @@ class OrganizationUowComplexitiesController < ApplicationController
     #No authorize required since everyone can edit
 
     @organization = Organization.find(params[:id])
+
+    set_breadcrumbs "Dashboard" => "/dashboard", @organization => edit_organization_path(@organization)
+
     @organization_uow_complexities = @organization.organization_uow_complexities
   end
 
@@ -38,12 +41,17 @@ class OrganizationUowComplexitiesController < ApplicationController
     #No authorize required since everyone can edit
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
     @organization = @organization_uow_complexity.organization
+
+    set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", @organization_uow_complexity.name => ""
+
   end
 
   def new
     authorize! :edit_organizations, Organization
     @organization = Organization.find_by_id(params[:organization_id])
     @organization_uow_complexity = OrganizationUowComplexity.new
+
+    set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", "New Complexity" => ""
   end
 
   def create

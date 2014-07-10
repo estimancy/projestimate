@@ -97,11 +97,11 @@ class OrganizationTechnologiesController < ApplicationController
     end
   end
 
-  def set_technology_uos_syntesis
+  def set_technology_uow_syntesis
     authorize! :edit_organizations, Organization
 
     @organization = Organization.find(params[:organization])
-    @technologies = OrganizationTechnology.where(id: params[:technology_uos_synthesis].keys)
+    @technologies = OrganizationTechnology.where(id: params[:technology_uow_synthesis].keys)
     @unitofworks = @organization.unit_of_works
 
     array = []
@@ -109,7 +109,7 @@ class OrganizationTechnologiesController < ApplicationController
 
       array << technology.id
 
-      unit = UnitOfWork.find(params[:technology_uos_synthesis]["#{technology.id}".to_sym].keys.first)
+      unit = UnitOfWork.find(params[:technology_uow_synthesis]["#{technology.id}".to_sym].keys.first)
       unit.organization_technology_ids = array
       unit.save
     end

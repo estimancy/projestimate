@@ -13,11 +13,13 @@ class SizeUnitsController < ApplicationController
   # GET /size_units/new.json
   def new
     @size_unit = SizeUnit.new
+    set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params"
   end
 
   # GET /size_units/1/edit
   def edit
     @size_unit = SizeUnit.find(params[:id])
+    set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", @size_unit.name => edit_size_unit_path(@size_unit)
   end
 
   # POST /size_units

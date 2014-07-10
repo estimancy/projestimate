@@ -34,28 +34,15 @@
 #
 #############################################################################
 
-# This migration comes from uow_engine (originally 20131009092730)
-class CreateUow < ActiveRecord::Migration
-  def self.up
-    create_table :inputs, :force => true do |t|
-      t.integer :module_project_id
-      t.integer :technology_id
-      t.integer :unit_of_work_id
-      t.integer :complexity_id
-      t.string  :flag
-      t.string  :name
-      t.integer :weight
-      t.integer :size_low
-      t.integer :size_most_likely
-      t.integer :size_high
-      t.integer :gross_low
-      t.integer :gross_most_likely
-      t.integer :gross_high
-      t.timestamps
+module Uow
+  class ApplicationController < ActionController::Base
+    protected
+    def url_for options=nil
+      begin
+        super options
+      rescue ActionController::RoutingError
+        main_app.url_for options
+      end
     end
-  end
-
-  def self.down
-    drop_table :inputs
   end
 end

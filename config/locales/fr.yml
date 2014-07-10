@@ -1224,7 +1224,7 @@ fr:
   size_unit_type: "Type de d'unité de taille"
   technology_size_type_abacus: "Abaque type d'unité de taille / Technologie"
   technology_size_abacus: "Abaque unité de taille / Technologie"
-  technology_uos_synthesis: "Abaque Unité d'oeuvre / Technologie"
+  technology_uow_synthesis: "Abaque Unité d'oeuvre / Technologie"
   quantity: "Quantité"
   unit_of_work: "Unité d'oeuvres"
   how_to_use_uow: "Choisir une unité d'oeuvre"

@@ -34,28 +34,28 @@
 #
 #############################################################################
 
-# This migration comes from uow_engine (originally 20131009092730)
-class CreateUow < ActiveRecord::Migration
-  def self.up
-    create_table :inputs, :force => true do |t|
-      t.integer :module_project_id
-      t.integer :technology_id
-      t.integer :unit_of_work_id
-      t.integer :complexity_id
-      t.string  :flag
-      t.string  :name
-      t.integer :weight
-      t.integer :size_low
-      t.integer :size_most_likely
-      t.integer :size_high
-      t.integer :gross_low
-      t.integer :gross_most_likely
-      t.integer :gross_high
-      t.timestamps
+require 'uow/version'
+
+module Uow
+
+  #Definition of Uo
+  class Uow
+
+    include ApplicationHelper
+
+    attr_accessor :effort_person_month
+
+    #Constructor
+    def initialize(elem)
+      @effort_person_month = elem['effort_person_month']
     end
+
+    # Return effort
+    #project.id, current_mp_to_execute.id, pbs_project_element_id)
+    def get_effort_person_month(*args)
+      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).first.send("gross_#{args[3]}")
+    end
+
   end
 
-  def self.down
-    drop_table :inputs
-  end
 end
