@@ -183,12 +183,13 @@ public
 
       @user = current_user
       @project = current_project
-      set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
       @pemodules ||= Pemodule.all
       @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first unless @project.nil?
       @show_hidden = 'true'
 
       if @project
+        set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
+
         @module_projects ||= @project.module_projects
         #Get the initialization module_project
         @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
