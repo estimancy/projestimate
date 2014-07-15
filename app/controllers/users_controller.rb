@@ -168,7 +168,6 @@ public
     #No authorize required since this method is called for the dashbord
 
     set_page_title 'Dashboard'
-    set_breadcrumbs "Dashboard" => "/dashboard", current_project.title => edit_project_path(current_project)
 
     session[:anchor_value] = params[:anchor_value]
 
@@ -189,6 +188,8 @@ public
       @show_hidden = 'true'
 
       if @project
+        set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
+
         @module_projects ||= @project.module_projects
         #Get the initialization module_project
         @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?

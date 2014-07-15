@@ -1596,6 +1596,11 @@ public
     end
   end
 
+  def show_module_configuration
+  end
+
+    # Function that show the estimation graph
+  def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
   # Display the estimation results with activities by profile
   def results_with_activities_by_profile
     @project = current_project

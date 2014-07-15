@@ -872,16 +872,6 @@ module ProjectsHelper
         res << '</tr>'
       end
       res << '</table>'
-
-      if module_project.pemodule.alias == "uow"
-        res << "#{ link_to I18n.t(:configure_uow), '/uow?mp=' + module_project.id.to_s }"
-      elsif module_project.pemodule.alias == "real_size"
-        res << "#{ link_to 'Configure Real Size', real_size.inputs_path }"
-      elsif module_project.pemodule.alias == "cocomo_advanced" or module_project.pemodule.alias == "cocomo_expert"
-        res << link_to(I18n.t(:configure_cocomo), "/#{module_project.pemodule.alias}")
-      else
-        ""
-      end
     end
     res
   end
