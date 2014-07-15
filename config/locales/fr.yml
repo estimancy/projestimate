@@ -446,7 +446,7 @@ fr:
   new_estimation_value: "Créer un nouvel attribut de module de projet"
 
   #module_project
-  edit_module_project: "Editer un module de projet"
+  edit_module_project: "Editer le module de projet \"%{value}\" ..."
   new_module_project: "Créer un nouveau module de projet"
   related_attributes: "Attributs associés"
   module_ratio_settings: "Paramètrage Ratio"
@@ -1199,6 +1199,12 @@ fr:
   total_ratio_per_activity: "Sum des ratio par activité (%)"
   warning_sum_of_ratio_values_greater_than_100: "Attention : la somme des ratios de l'activité est supérieure à 100 !"
   no_profiles_for_wbs_activity_organization: "Aucun profil dans l'organization du wbs-activity"
+  display_results_with_profiles: "Afficher les résultats par profil"
+  tooltip_results_with_profiles: "Afficher les résultats de l'estimation des Wbs-activités par profil"
+  label_output_data_with_activities_profiles: "Résultat des estimations : activités par profil"
+  label_ratio: "un ratio"
+  label_wbs_activity: "un WBS-Activité"
+  probable: "Probable"
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

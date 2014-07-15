@@ -5160,23 +5160,25 @@ function update_wbs_activity_ratio_profiles(){
 //                        sum_of_parent_wbs_ratio += parseFloat(current_ratio_value.replace("," , "."));
 //                });
 //                $('td#total_ratio_activity_'+wbs_activity_elt_id).text(sum_of_parent_wbs_ratio + ' %');
-
             });
 
             if(sum_of_wbs_ratio > 100){
-                //$('td#total_ratio_activity_'+activity_id).css('color', 'red');
                 $('td#total_ratio_activity_'+activity_id).addClass('red_color');
                 alert("Warning : sum of activity's ratio values is greater than 100 !");
             }
             else {
-                //$('td#total_ratio_activity_'+activity_id).css('color', '#444');
                 $('td#total_ratio_activity_'+activity_id).removeClass('red_color');
             }
         }
-        return false;
+
+        $('#profiles_per_activity').dataTable({
+            "bProcessing": true,
+            "bSort": false
+        });
+
+        //return true;
     });
 }
-
 
 jQuery.fn.submitWithAjax = function () {
     this.submit(function () {

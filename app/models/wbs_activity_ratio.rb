@@ -39,9 +39,10 @@ class WbsActivityRatio < ActiveRecord::Base
 
   include MasterDataHelper
 
-  has_many :wbs_activity_ratio_elements, :dependent => :destroy
   has_many :wbs_project_elements
   has_many :pbs_project_elements
+  has_many :wbs_activity_ratio_elements, :dependent => :destroy
+  has_many :wbs_activity_ratio_profiles, :through => :wbs_activity_ratio_elements
 
   belongs_to :wbs_activity
 

@@ -446,7 +446,7 @@ en:
   new_estimation_value: "New module project attribute"
 
   #module_project
-  edit_module_project: "Edit a module project"
+  edit_module_project: "Edit the \"%{value}\" module project ..."
   new_module_project: "New module project"
   related_attributes: "Related attributes"
   module_ratio_settings: "Ratio settings"
@@ -1202,6 +1202,12 @@ en:
   total_ratio_per_activity: "Sum of ratio values per activity (%)"
   warning_sum_of_ratio_values_greater_than_100: "Warning : sum of activity's ratio values is greater than 100 !"
   no_profiles_for_wbs_activity_organization: "There is no profile for the current wbs-activity's organization"
+  display_results_with_profiles: "Display results with profiles"
+  tooltip_results_with_profiles: "Display the WBS-Activities results by profile"
+  label_output_data_with_activities_profiles: "Estimation results : activities per profile"
+  label_ratio: "a ratio"
+  label_wbs_activity: "a WBS-Activity"
+  probable: "Probable"
 
   factors: "Factors"
 

@@ -42,7 +42,7 @@
             <% else %>
                 <td></td>
             <% end %>
-            <td id='<%= "total_ratio_activity_#{activity.id}" %>' style="text-align: center"><%= "#{total_percentage_activity} %" %></td>
+            <td id='<%= "total_ratio_activity_#{activity.id}" %>' style="text-align: center"><%= activity.wbs_activity_element.is_root? ? "-" : "#{total_percentage_activity} %"  %></td>
           </tr>
       <% end %>
 
