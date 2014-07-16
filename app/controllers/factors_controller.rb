@@ -20,6 +20,7 @@
 #############################################################################
 
 class FactorsController < ApplicationController
+  load_and_authorize_resource :except => [:index]
 
   include DataValidationHelper #Module for master data changes validation
 

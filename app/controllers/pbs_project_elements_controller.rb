@@ -36,7 +36,6 @@
 
 class PbsProjectElementsController < ApplicationController
 
-
   #Create a new pbs_project_element and refresh the partials
   def new
     @project = Project.find(params[:project_id])

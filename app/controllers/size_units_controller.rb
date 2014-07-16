@@ -3,27 +3,22 @@ class SizeUnitsController < ApplicationController
 
   before_filter :get_record_statuses
 
-  # GET /size_units/1
-  # GET /size_units/1.json
+  load_and_authorize_resource :except => [:index]
+
   def show
     @size_unit = SizeUnit.find(params[:id])
   end
 
-  # GET /size_units/new
-  # GET /size_units/new.json
   def new
     @size_unit = SizeUnit.new
     set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params"
   end
 
-  # GET /size_units/1/edit
   def edit
     @size_unit = SizeUnit.find(params[:id])
     set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", @size_unit.name => edit_size_unit_path(@size_unit)
   end
 
-  # POST /size_units
-  # POST /size_units.json
   def create
     @size_unit = SizeUnit.new(params[:size_unit])
 
@@ -39,8 +34,6 @@ class SizeUnitsController < ApplicationController
     end
   end
 
-  # PUT /size_units/1
-  # PUT /size_units/1.json
   def update
     @size_unit = SizeUnit.find(params[:id])
 
@@ -53,8 +46,6 @@ class SizeUnitsController < ApplicationController
     end
   end
 
-  # DELETE /size_units/1
-  # DELETE /size_units/1.json
   def destroy
     @size_unit = SizeUnit.find(params[:id])
     @size_unit.destroy

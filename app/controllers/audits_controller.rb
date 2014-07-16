@@ -20,8 +20,8 @@
 ##########################################################################
 
 class AuditsController < ApplicationController
-  # GET /audits
-  # GET /audits.json
+  load_and_authorize_resource :except => [:index]
+
   def index
     @audits = Audit.all
 

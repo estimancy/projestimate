@@ -21,7 +21,7 @@
 #
 class UnitOfWorksController < ApplicationController
 
-  load_resource
+  load_and_authorize_resource :except => [:index]
 
   def index
     #No authorize required since everyone can edit
