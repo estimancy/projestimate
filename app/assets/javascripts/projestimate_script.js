@@ -5171,12 +5171,7 @@ function update_wbs_activity_ratio_profiles(){
             }
         }
 
-        $('#profiles_per_activity').dataTable({
-            "bProcessing": true,
-            "bSort": false
-        });
-
-        //return true;
+        return false;
     });
 }
 

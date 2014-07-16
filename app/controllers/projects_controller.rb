@@ -1599,8 +1599,7 @@ public
   def show_module_configuration
   end
 
-    # Function that show the estimation graph
-  def show_estimation_graph #(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
+
   # Display the estimation results with activities by profile
   def results_with_activities_by_profile
     @project = current_project
@@ -1768,7 +1767,7 @@ public
     # get all project's wbs-project_elements
     @project_wbs_project_elts = @project.wbs_project_elements
     @project_wbs_project_elts.each do |wbs_project_elt|
-      @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name}"] = Array.new
+      @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
     end
 
     # get all Attributes aliases
@@ -1789,7 +1788,7 @@ public
             if level_value.nil?
               pbs_level_value=nil.to_i
               @project_wbs_project_elts.each do |elt|
-                @effort_breakdown_stacked_bar_dataset["#{elt.name}"] << 0
+                @effort_breakdown_stacked_bar_dataset["#{elt.name.parameterize.underscore}"] << 0
               end
             else
               # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
@@ -1800,9 +1799,8 @@ public
                   sum_of_value = sum_of_value + hash_value[:value]
                   wbs_project_elt = WbsProjectElement.find(wbs_activity_elt_id)
                   unless wbs_project_elt.is_root || wbs_project_elt.has_children?
-                    @current_mp_effort_per_activity[level]["#{wbs_project_elt.name}"] = hash_value[:value]
-                    #@effort_breakdown_stacked_bar_dataset["#{wbs_activity_elt_id}"] << hash_value[:value]
-                    @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name}"] << hash_value[:value]
+                    @current_mp_effort_per_activity[level]["#{wbs_project_elt.name.parameterize.underscore}"] = hash_value[:value]
+                    @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] << hash_value[:value]
                   end
                 end
               end

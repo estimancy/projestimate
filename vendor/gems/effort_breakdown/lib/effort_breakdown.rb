@@ -35,7 +35,6 @@ module EffortBreakdown
       module_input_data['effort_person_month'].blank? ? @input_effort_person_month = nil : @input_effort_person_month = module_input_data['effort_person_month'].to_f
     end
 
-
     # Getters for module outputs
 
     # Calculate each Wbs activity effort according to Ratio and Reference_Value and PBS effort

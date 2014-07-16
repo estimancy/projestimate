@@ -43,6 +43,13 @@ $(".header_data").html("<h5><%= @current_component %> - <%= current_module_proje
     $(".header_data h5").append("<%= escape_javascript( select_tag('select_balancing_attribute', options_for_select(current_module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]}, :selected => (current_balancing_attribute.id unless current_balancing_attribute.nil?)), :class => 'balancing_attribute', :prompt => I18n.t(:text_select_balancing_attribute)) ).html_safe %> ");
 <% end %>
 
+// For the Effort-Breakdown moduel: show the effort per activity
+<% if current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN %>
+    $(".effort_breakdown_activities_profiles").html("<%= raw j(render('users/effort_per_activity')) %>");
+<% else %>
+    $('#display_results_by_profile').hide();
+<% end %>
+
 //Allow to copy value from one field to another
 $('.copyLib').css( 'cursor', 'pointer' );
 $(".copyLib").click(function(){

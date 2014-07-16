@@ -371,7 +371,7 @@
             <% if !@current_mp_effort_per_activity.empty? %>
                 var myPie = new Chart(document.getElementById("canvas_pie_effort_per_activity").getContext("2d")).Pie(pie_chart_effort_per_activity, attr_options);
                 attr_options["graphTitle"] = "Effort per activity";
-            var myStacked_bar = new Chart(document.getElementById("canvas_stacked_bar_effort_per_activity").getContext("2d")).StackedBar(stacked_bar_effort_per_activity, attr_options);
+                var myStacked_bar = new Chart(document.getElementById("canvas_stacked_bar_effort_per_activity").getContext("2d")).StackedBar(stacked_bar_effort_per_activity, attr_options);
             <% end %>
         });
 
