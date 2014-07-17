@@ -97,31 +97,4 @@ class OrganizationTechnologiesController < ApplicationController
     end
   end
 
-  def set_technology_uow_syntesis
-    authorize! :edit_organizations, Organization
-
-    @organization = Organization.find(params[:organization])
-    @technologies = OrganizationTechnology.where(id: params[:technology_uow_synthesis].keys)
-    @unitofworks = @organization.unit_of_works
-
-    array = []
-    @technologies.each do |technology|
-
-      array << technology.id
-
-      unit = UnitOfWork.find(params[:technology_uow_synthesis]["#{technology.id}".to_sym].keys.first)
-      unit.organization_technology_ids = array
-      unit.save
-    end
-
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-9'), nil, '/organizationals_params')
-  end
-
-  #def change_abacus
-  #  authorize! :edit_organizations, Organization
-  #  @ot = OrganizationTechnology.find(params[:technology])
-  #  @organization = @ot.organization
-  #  @unitofworks = @ot.unit_of_works
-  #  @complexities = @ot.organization.organization_uow_complexities
-  #end
 end

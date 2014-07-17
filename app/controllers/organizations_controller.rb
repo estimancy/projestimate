@@ -69,7 +69,6 @@ class OrganizationsController < ApplicationController
 
     @ot = @organization.organization_technologies.first
     @unitofworks = @organization.unit_of_works
-
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
 
     @organization_profiles = @organization.organization_profiles
@@ -298,6 +297,34 @@ class OrganizationsController < ApplicationController
       end
     end
     redirect_to redirect_apply(edit_organization_path(@ot.organization_id, :anchor => 'tabs-8'), nil, '/organizationals_params')
+  end
+
+  def set_technology_uow_syntesis
+    authorize! :edit_organizations, Organization
+
+    @organization = Organization.find(params[:organization])
+    #@technologies = OrganizationTechnology.where(id: params[:technology_uow_synthesis].keys)
+    #@unitofworks = @organization.unit_of_works
+
+    params[:abacus].each do |ot|
+      ot.last.each do |uow|
+        uow.last.each do |cplx|
+          #t = OrganizationTechnology.find(ot.id)
+          #u = UnitOfWork.find(uow.id)
+          c = OrganizationUowComplexity.find(cplx.first.to_i)
+          c.value = cplx.last
+          c.save(validate: false)
+        end
+      end
+    end
+
+    #array << technology.id
+    #
+    #unit =
+    #unit.organization_technology_ids = array
+    #unit.save
+
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-12'), nil, '/organizationals_params')
   end
 
   def import_abacus
