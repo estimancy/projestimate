@@ -187,6 +187,9 @@ group :test do
   gem 'database_cleaner'
 end
 
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 1.2'
+
 local_gemfile = File.join(File.dirname(__FILE__), 'Gemfile.local')
 if File.exists?(local_gemfile)
   puts 'Loading Gemfile.local ...' if $DEBUG # `ruby -d` or `bundle -v`

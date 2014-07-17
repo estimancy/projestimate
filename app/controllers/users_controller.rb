@@ -165,7 +165,7 @@ public
 
   #Dashboard of the application
   def show
-    #No authorize required since this method is called for the dashbord
+    #No authorize required since this method is called for the dashboard
 
     set_page_title 'Dashboard'
 
