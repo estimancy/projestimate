@@ -44,9 +44,10 @@
         <% end %>
       <% end %>
     </table>
+
     <% if can? :edit_organizations, Organization %>
-        <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+      <%= submit_tag I18n.t('save'), :class => 'btn' %>
+      <%= submit_tag I18n.t('apply'), :class => 'btn' %>
     <% end %>
 
 <% end %>
