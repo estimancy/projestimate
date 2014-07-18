@@ -34,15 +34,19 @@
                     <% current_percentage =  activity_profile.nil? ? nil : activity_profile.ratio_value %>
                     <% total_percentage_activity += (current_percentage.nil? ? 0 : current_percentage.to_f) %>
                     <% if activity.wbs_activity_element.has_children? %>
-                        <td style="text-align: center"><%= text_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", current_percentage, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id, "data-profile_id" => profile.id, 'data-parent_id' => activity.wbs_activity_element.parent_id, 'data-wbs_activity_elt_id' => activity.wbs_activity_element_id, 'data-depth' => activity.wbs_activity_element.depth, :readonly => true %></td>
+                        <td style="text-align: center"><%= hidden_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", nil, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id, "data-profile_id" => profile.id %> - </td>
                     <% else %>
-                        <td style="text-align: center"><%= text_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", current_percentage, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id, "data-profile_id" => profile.id, 'data-parent_id' => activity.wbs_activity_element.parent_id, 'data-depth' => activity.wbs_activity_element.depth %></td>
+                        <td style="text-align: center"><%= text_field_tag "activity_profile_percentage[#{activity.id}][#{profile.id}]", current_percentage, :class => 'input-mini profiles_per_activity', 'data-activity_id' => activity.id, "data-profile_id" => profile.id %></td>
                     <% end %>
                  <% end %>
             <% else %>
                 <td></td>
             <% end %>
-            <td id='<%= "total_ratio_activity_#{activity.id}" %>' style="text-align: center"><%= activity.wbs_activity_element.is_root? ? "-" : "#{total_percentage_activity} %"  %></td>
+            <% if activity.wbs_activity_element.has_children? %>
+                <td style="text-align: center"> - </td>
+            <% else %>
+                <td id='<%= "total_ratio_activity_#{activity.id}" %>' style="text-align: center"><%= activity.wbs_activity_element.is_root? ? "-" : "#{total_percentage_activity} %"  %></td>
+            <% end %>
           </tr>
       <% end %>
 

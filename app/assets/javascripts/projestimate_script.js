@@ -5132,36 +5132,6 @@ function update_wbs_activity_ratio_profiles(){
             });
             $('td#total_ratio_activity_'+activity_id).text(sum_of_wbs_ratio + ' %');
 
-            //get all non leaf elements
-            $("td").find("[data-profile_id='" + profile_id + "'][data-wbs_activity_elt_id]").sort(function (a, b) {
-                return +b.dataset.depth - +a.dataset.depth;
-            }).each(function(){
-                var wbs_activity_elt_id = $(this).data('wbs_activity_elt_id');
-                var sum_of_profile_ratio = 0;
-
-                //Update the ratio for wbs parent
-                $("td").find("[data-profile_id='" + profile_id + "'][data-parent_id='" + wbs_activity_elt_id + "']").sort(function (a, b) {
-                    return +b.dataset.depth - +a.dataset.depth;
-                }).each(function(){
-                    var current_ratio_value = $(this).val();
-                    if((current_ratio_value != "") && (current_ratio_value != undefined)){
-                        sum_of_profile_ratio += parseFloat(current_ratio_value.replace("," , ".")) ;
-                    }
-                });
-
-                //update the parent value
-                $(this).val(sum_of_profile_ratio);
-
-                //Then update the total ratio for the wbs-activity
-//                var sum_of_parent_wbs_ratio = 0;
-//                $("tr").find("[data-activity_id='" + wbs_activity_elt_id + "']").each(function(){
-//                    var current_ratio_value = $(this).val();
-//                    if((current_ratio_value != "") && (current_ratio_value != undefined))
-//                        sum_of_parent_wbs_ratio += parseFloat(current_ratio_value.replace("," , "."));
-//                });
-//                $('td#total_ratio_activity_'+wbs_activity_elt_id).text(sum_of_parent_wbs_ratio + ' %');
-            });
-
             if(sum_of_wbs_ratio > 100){
                 $('td#total_ratio_activity_'+activity_id).addClass('red_color');
                 alert("Warning : sum of activity's ratio values is greater than 100 !");
@@ -5170,7 +5140,6 @@ function update_wbs_activity_ratio_profiles(){
                 $('td#total_ratio_activity_'+activity_id).removeClass('red_color');
             }
         }
-
         return false;
     });
 }
