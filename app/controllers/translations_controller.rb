@@ -43,9 +43,9 @@ class TranslationsController < ApplicationController
 
     I18n.backend.send(:init_translations)
     if params[:locale].nil?
-      @translations = I18n.backend.send(:translations)[session[:current_locale]]
+      @translations = I18n.backend.send(:translations)[session[:current_locale].to_sym]
     else
-      @translations = I18n.backend.send(:translations)[params[:locale]]
+      @translations = I18n.backend.send(:translations)[params[:locale].to_sym]
     end
     @available_locales = I18n.backend.send(:available_locales)
   end

@@ -38,6 +38,7 @@ class Project < ActiveRecord::Base
   attr_accessible :title, :description, :version, :alias, :state,
                   :start_date, :is_model, :organization_id, :project_area_id,
                   :project_category_id, :acquisition_category_id, :platform_category_id, :parent_id
+
   attr_accessor :product_name
 
   include AASM

@@ -1,6 +1,5 @@
 class SizeUnitTypesController < ApplicationController
-  #include DataValidationHelper #Module for master data changes validation
-  #before_filter :get_record_statuses
+  load_and_authorize_resource :except => [:index]
 
   def index
     @size_unit_types = SizeUnitType.all

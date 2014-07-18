@@ -1,0 +1,54 @@
+<%= form_tag '/set_technology_uow_syntesis', :method => 'POST', :class => 'simple_form' do %>
+
+  <%= hidden_field_tag "organization", params[:id] %>
+
+    <table class="table table-striped table-bordered table-condensed permissions">
+      <tr>
+        <th>Technology</th>
+        <th>Unit of Work</th>
+        <th>Complexity</th>
+        <th>Create</th>
+        <th>Modify</th>
+        <th>Delete</th>
+      </tr>
+
+      <% @organization.organization_technologies.each do |ot| %>
+        <% ot.unit_of_works.each do |uow| %>
+          <% uow.organization_uow_complexities.each do |cplx| %>
+            <tr>
+              <td>
+                <%= ot.name %>
+              </td>
+
+              <td>
+                <%= uow.name %>
+              </td>
+
+              <td>
+                <%= cplx.name %>
+              </td>
+
+              <td class="center">
+                <%= text_field_tag "abacus[#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
+              </td>
+
+              <td class="center">
+                <%= text_field_tag "abacus[#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
+              </td>
+
+              <td class="center">
+                <%= text_field_tag "abacus[#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </table>
+
+    <% if can? :edit_organizations, Organization %>
+      <%= submit_tag I18n.t('save'), :class => 'btn' %>
+      <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+    <% end %>
+
+<% end %>
+
