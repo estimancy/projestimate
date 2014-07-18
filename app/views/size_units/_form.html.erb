@@ -10,7 +10,7 @@
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :alias %>
-        <%= f.input :description %>
+        <%= f.input :description, :input_html => { :class => 'input-xxlarge', :rows => 5} %>
       </div>
 
       <table>
@@ -41,7 +41,7 @@
             <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
         <% end %>
-        <%= link_to I18n.t('back'), "/organizationals_params", :anchor => "tabs-2", :class => 'btn' %>
+        <%= link_to I18n.t('back'), organizationals_params_path(:anchor => "tabs-2"), :class => 'btn' %>
       </div>
     <% end %>
   </div>

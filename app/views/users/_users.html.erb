@@ -25,11 +25,10 @@
           <td><%= user.auth_method %></td>
           <td><%= user.user_status %></td>
           <td>
-            <%= "#{link_to(' ', edit_user_path(user, :anchor => 'tabs-1'), :class => 'icon-pencil icon-border pull-left', :title => I18n.t('edit'))
-                link_to(' ', 'users/#{user.id}/activate', :class => 'icon-legal icon-border pull-left', :style => 'color:green', :title => I18n.t('button_activate_user_account'))
-                link_to(' ', {:controller => 'users', :action => 'find_use_user', :user_id => user.id}, :remote => true, :class => 'icon-info icon-border pull-left', :title => I18n.t('button_find_use'))
-                link_to(' ', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-border pull-left', :style => 'color:red', :title => I18n.t('delete'))}"
-            %>
+            <%= link_to('', edit_user_path(user, :anchor => 'tabs-1'), :class => 'icon-pencil icon-border pull-left', :title => I18n.t('edit')) %>
+            <%= link_to('', "users/#{user.id}/activate", :class => 'icon-legal icon-border pull-left', :style => 'color:green', :title => I18n.t('button_activate_user_account')) %>
+            <%= link_to(' ', {:controller => 'users', :action => 'find_use_user', :user_id => user.id}, :remote => true, :class => 'icon-info icon-border pull-left', :title => I18n.t('button_find_use')) %>
+            <%= link_to(' ', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-border pull-left', :style => 'color:red', :title => I18n.t('delete')) %>
           </td>
         </tr>
       <% end %>
