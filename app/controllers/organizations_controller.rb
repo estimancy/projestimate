@@ -306,14 +306,16 @@ class OrganizationsController < ApplicationController
     #@technologies = OrganizationTechnology.where(id: params[:technology_uow_synthesis].keys)
     #@unitofworks = @organization.unit_of_works
 
-    params[:abacus].each do |ot|
-      ot.last.each do |uow|
-        uow.last.each do |cplx|
-          #t = OrganizationTechnology.find(ot.id)
-          #u = UnitOfWork.find(uow.id)
-          c = OrganizationUowComplexity.find(cplx.first.to_i)
-          c.value = cplx.last
-          c.save(validate: false)
+    params[:abacus].each do |actions|
+      actions.last.each do |ot|
+        ot.last.each do |uow|
+          uow.last.each do |cplx|
+            #t = OrganizationTechnology.find(ot.id)
+            #u = UnitOfWork.find(uow.id)
+            c = OrganizationUowComplexity.find(cplx.first.to_i)
+            c.value = cplx.last
+            c.save(validate: false)
+          end
         end
       end
     end
