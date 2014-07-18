@@ -246,8 +246,7 @@
           <tr>
             <th><%= I18n.t(:name) %></th>
             <th><%= I18n.t(:description) %></th>
-            <th><%= I18n.t(:value) %></th>
-            <th><%= I18n.t(:state) %></th>
+-            <th><%= I18n.t(:state) %></th>
             <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
           </tr>
         </thead>
@@ -262,7 +261,6 @@
             <% end %>
             <td><%= oc.name %></td>
             <td><%= oc.description %></td>
-            <td><%= oc.value %></td>
             <td><%= oc.state %></td>
             <td>
               <%= link_to '', edit_organization_uow_complexity_path(oc.id, :organization_id => @organization.id), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>

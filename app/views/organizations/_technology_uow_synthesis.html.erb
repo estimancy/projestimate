@@ -7,9 +7,9 @@
         <th>Technology</th>
         <th>Unit of Work</th>
         <th>Complexity</th>
-        <th>Create</th>
-        <th>Modify</th>
-        <th>Delete</th>
+        <% current_project.organization.size_unit_types.each do |sut| %>
+          <th><%= sut.name %></th>
+        <% end %>
       </tr>
 
       <% @organization.organization_technologies.each do |ot| %>
@@ -28,17 +28,11 @@
                 <%= cplx.name %>
               </td>
 
-              <td class="center">
-                <%= text_field_tag "abacus[#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
-              </td>
-
-              <td class="center">
-                <%= text_field_tag "abacus[#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
-              </td>
-
-              <td class="center">
-                <%= text_field_tag "abacus[#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
-              </td>
+              <% current_project.organization.size_unit_types.each do |sut| %>
+                <td class="center">
+                  <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         <% end %>

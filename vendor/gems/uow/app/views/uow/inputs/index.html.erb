@@ -34,7 +34,7 @@
     <div id="tabs-1" style="overflow-x: auto;">
       <table id="myTable" class="table table-striped table-bordered table-condensed ">
         <tr>
-          <th colspan="5"></th>
+          <th colspan="6"></th>
           <th colspan="3"><%= I18n.t :quantity %></th>
           <th></th>
           <th colspan="3"> Result </th>
@@ -45,6 +45,7 @@
           <th><%= I18n.t :technology %></th>
           <th><%= I18n.t :unit_of_work %></th>
           <th><%= I18n.t :complexity %></th>
+          <th>Type</th>
           <th>Low</th>
           <th>ML</th>
           <th>High</th>
@@ -55,7 +56,7 @@
         </tr>
 
         <tr>
-          <th colspan="5">Overall</th>
+          <th colspan="6">Overall</th>
           <td class="center">
             <%= text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
