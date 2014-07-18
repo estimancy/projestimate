@@ -10,8 +10,13 @@ json.array!(@projects) do |project|
   json.url edit_project_url(project)
 
   json.owner do
-    json.name "#{project.creator.first_name} #{project.creator.last_name}"
-    json.email project.creator.email
+    if project.creator
+      json.name "#{project.creator.first_name} #{project.creator.last_name}"
+      json.email project.creator.email
+    else
+      json.name nil
+      json.email nil
+    end
   end
 
   json.organizations do
