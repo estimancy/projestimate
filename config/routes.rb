@@ -101,7 +101,7 @@ Projestimate::Application.routes.draw do
   resources :organization_abacus
 
   resources :organization_technologies
-  post '/set_technology_uow_syntesis' => 'organizations#set_technology_uow_syntesis', :as => 'set_technology_uow_syntesis'
+  post '/set_technology_uow_synthesis' => 'organizations#set_technology_uow_synthesis', :as => 'set_technology_uow_synthesis'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
 
   resources :organization_uow_complexities

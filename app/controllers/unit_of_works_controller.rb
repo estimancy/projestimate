@@ -48,14 +48,13 @@ class UnitOfWorksController < ApplicationController
     @organization = Organization.find_by_id(params[:unit_of_work][:organization_id])
 
     if @unit_of_work.save
-      flash[:notice] = I18n.t (:notice_unit_of_work_successful_created)
+      flash[:notice] = I18n.t(:notice_unit_of_work_successful_created)
       redirect_to redirect_apply(nil,
                                  new_unit_of_work_path(params[:unit_of_work]),
                                  edit_organization_path(params[:unit_of_work][:organization_id], :anchor => 'tabs-6'))
     else
       render action: 'new', :organization_id => @organization.id
     end
-
   end
 
   def update

@@ -150,8 +150,8 @@ class Uow::InputsController < ApplicationController
       @index = 1
     end
 
-    productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
-    abacus_value = OrganizationUowComplexity.find(params[:complexity]).value
+      productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
+      abacus_value = SizeUnitTypeComplexity.where(size_unit_type_id: params["size_unit_type"], organization_uow_complexity_id: params[:complexity]).first.value
 
     weight = params[:"weight"].blank? ? 1 : params[:"weight"]
 

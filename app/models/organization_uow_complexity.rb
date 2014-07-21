@@ -41,13 +41,13 @@ class OrganizationUowComplexity < ActiveRecord::Base
 
   belongs_to :factor
   belongs_to :unit_of_work
+  belongs_to :size_unit_type
 
   default_scope order('display_order ASC')
 
   validates :record_status, :presence => true
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :name, :presence => true
-  validates :value, :presence => true
   validates :custom_value, :presence => true, :if => :is_custom?
 
   validates_presence_of :unit_of_work_id

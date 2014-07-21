@@ -142,7 +142,7 @@ class Project < ActiveRecord::Base
 
   #Override
   def to_s
-    self.title + '-' + self.version  + ' - ' + self.description.truncate(40)
+    self.title + '-' + self.version
   end
 
   #Return project value
