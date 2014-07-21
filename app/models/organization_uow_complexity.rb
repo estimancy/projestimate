@@ -41,6 +41,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
 
   belongs_to :factor
   belongs_to :unit_of_work
+  belongs_to :size_unit_type
 
   default_scope order('display_order ASC')
 

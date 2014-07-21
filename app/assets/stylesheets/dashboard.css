@@ -730,3 +730,7 @@ div.block_label.selected_pbs {
     width: 300px;
     border-radius: 0px;
 }
+
+.input{
+    margin-bottom: 15px;
+}

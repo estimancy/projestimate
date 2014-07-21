@@ -1,4 +1,4 @@
-<%= form_tag '/set_technology_uow_syntesis', :method => 'POST', :class => 'simple_form' do %>
+<%= form_tag '/set_technology_uow_synthesis', :method => 'POST', :class => 'simple_form' do %>
 
   <%= hidden_field_tag "organization", params[:id] %>
 
@@ -7,7 +7,7 @@
         <th>Technology</th>
         <th>Unit of Work</th>
         <th>Complexity</th>
-        <% current_project.organization.size_unit_types.each do |sut| %>
+        <% @organization.size_unit_types.each do |sut| %>
           <th><%= sut.name %></th>
         <% end %>
       </tr>
@@ -28,9 +28,9 @@
                 <%= cplx.name %>
               </td>
 
-              <% current_project.organization.size_unit_types.each do |sut| %>
+              <% @organization.size_unit_types.each do |sut| %>
                 <td class="center">
-                  <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", cplx.value %>
+                  <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: cplx.id).first.value %>
                 </td>
               <% end %>
             </tr>

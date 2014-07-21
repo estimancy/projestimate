@@ -97,40 +97,7 @@ class OrganizationsController < ApplicationController
         @organization.subcontractors.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
       end
 
-      uow = [
-          ['Données', 'data', "Création, modification, suppression, duplication de composants d'une base de données (tables, fichiers). Une UO doit être comptée pour chaque entité métier. Seules les entités métier sont comptabilisées."],
-          ['Traitement', 'traitement', 'Création, modification, suppression, duplication de composants de visualisation, gestion de données, activation de fonctionnalités avec une interface de type Caractère (terminal passif).'],
-          ['Batch', 'batch', "Création, modification, suppression, duplication de composants d'extraction ou de MAJ de données d'une source de données persistante. Par convention, cette UO ne couvre pas les interfaces. Cette UO couvre le nettoyage et la purge des tables."],
-          ['Interfaces', 'interface', "Création, modification, suppression, duplication de composants d'interface de type : Médiation, Conversion, Transcodification, Transformation (les transformations sont implémentées en langage de programmation). Les 'Historisation avec clés techniques générée' sont à comptabiliser en 'Règle de gestion'"]
-      ]
-      uow.each do |i|
-        @organization.unit_of_works.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
-      end
-
-      levels = [
-          ['Simple', 'simple', "Simple", 1, "draft"],
-          ['Moyen', 'moyen', "Moyen", 2, "draft"],
-          ['Complexe', 'complexe', "Complexe", 4, "draft"]
-      ]
-      levels.each do |i|
-        @organization.unit_of_works.each do |uow|
-          ouc = OrganizationUowComplexity.new(:name => i[0], :alias => i[1], :description => i[2], :value => i[3], :state => i[4], :unit_of_work_id => uow.id, :organization_id => @organization.id)
-          ouc.save(validate: false)
-        end
-      end
-
-      #A la sauvegarde, on crée les complexités de facteurs (organization => nil)
-      OrganizationUowComplexity.where(organization_id: nil).each do |o|
-        ouc = OrganizationUowComplexity.new(name: o.name , organization_id: @organization.id, description: o.description, value: o.value, factor_id: o.factor_id, is_default: o.is_default, :state => 'defined')
-        ouc.save(validate: false)
-      end
-
-      #A la sauvegarde, on copies des technologies
-      Technology.all.each do |technology|
-        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name,  description: technology.description, organization_id: @organization.id)
-        ot.save(validate: false)
-      end
-
+      #Create default the size unit type's
       size_unit_types = [
           ['New', 'new', ""],
           ['Modified', 'new', ""],
@@ -151,6 +118,47 @@ class OrganizationsController < ApplicationController
                                       value: 1)
           end
         end
+      end
+
+      uow = [
+          ['Données', 'data', "Création, modification, suppression, duplication de composants d'une base de données (tables, fichiers). Une UO doit être comptée pour chaque entité métier. Seules les entités métier sont comptabilisées."],
+          ['Traitement', 'traitement', 'Création, modification, suppression, duplication de composants de visualisation, gestion de données, activation de fonctionnalités avec une interface de type Caractère (terminal passif).'],
+          ['Batch', 'batch', "Création, modification, suppression, duplication de composants d'extraction ou de MAJ de données d'une source de données persistante. Par convention, cette UO ne couvre pas les interfaces. Cette UO couvre le nettoyage et la purge des tables."],
+          ['Interfaces', 'interface', "Création, modification, suppression, duplication de composants d'interface de type : Médiation, Conversion, Transcodification, Transformation (les transformations sont implémentées en langage de programmation). Les 'Historisation avec clés techniques générée' sont à comptabiliser en 'Règle de gestion'"]
+      ]
+      uow.each do |i|
+        @organization.unit_of_works.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
+      end
+
+      #A la création de l'organixation, on crée les complexités de facteurs à partir des defined ( les defined ont organization_id => nil)
+      OrganizationUowComplexity.where(organization_id: nil).each do |o|
+        ouc = OrganizationUowComplexity.new(name: o.name , organization_id: @organization.id, description: o.description, value: o.value, factor_id: o.factor_id, is_default: o.is_default, :state => 'defined')
+        ouc.save(validate: false)
+      end
+
+      #Et la, on crée les complexités des unités d'oeuvres par défaut
+      levels = [
+          ['Simple', 'simple', "Simple", 1, "draft"],
+          ['Moyen', 'moyen', "Moyen", 2, "draft"],
+          ['Complexe', 'complexe', "Complexe", 4, "draft"]
+      ]
+      levels.each do |i|
+        @organization.unit_of_works.each do |uow|
+          ouc = OrganizationUowComplexity.new(:name => i[0], :alias => i[1],
+                                              :description => i[2], :state => i[4], :unit_of_work_id => uow.id,
+                                              :organization_id => @organization.id)
+          ouc.save(validate: false)
+
+          @organization.size_unit_types.each do |sut|
+            SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id, value: i[3])
+          end
+        end
+      end
+
+      #A la sauvegarde, on copies des technologies
+      Technology.all.each do |technology|
+        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name,  description: technology.description, organization_id: @organization.id)
+        ot.save(validate: false)
       end
 
       # Add MasterData Profiles to Organization
@@ -299,22 +307,18 @@ class OrganizationsController < ApplicationController
     redirect_to redirect_apply(edit_organization_path(@ot.organization_id, :anchor => 'tabs-8'), nil, '/organizationals_params')
   end
 
-  def set_technology_uow_syntesis
+  def set_technology_uow_synthesis
     authorize! :edit_organizations, Organization
 
     @organization = Organization.find(params[:organization])
-    #@technologies = OrganizationTechnology.where(id: params[:technology_uow_synthesis].keys)
-    #@unitofworks = @organization.unit_of_works
-
-    params[:abacus].each do |actions|
-      actions.last.each do |ot|
+    params[:abacus].each do |sut|
+      sut.last.each do |ot|
         ot.last.each do |uow|
           uow.last.each do |cplx|
-            #t = OrganizationTechnology.find(ot.id)
-            #u = UnitOfWork.find(uow.id)
-            c = OrganizationUowComplexity.find(cplx.first.to_i)
-            c.value = cplx.last
-            c.save(validate: false)
+            sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i,
+                                                organization_uow_complexity_id: cplx.first.to_i).first
+            sutc.value = cplx.last
+            sutc.save
           end
         end
       end
