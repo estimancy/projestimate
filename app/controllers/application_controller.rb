@@ -82,6 +82,7 @@ class ApplicationController < ActionController::Base
   helper_method :set_user_language
   helper_method :initialization_module
   helper_method :user_number_precision
+  helper_method :display_badge
 
   before_filter :set_user_time_zone
   before_filter :set_user_language
@@ -406,6 +407,30 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  # Get the bootstraap badge class
+  def display_badge(state)
+    badge = "badge-default"
+    case state
+      when "preliminary"
+        badge = "badge-default" #Gris
+      when ":in_progress"
+        badge = "badge-info"  #Bleu
+      when "in_review"
+        badge = "badge-warning" #Orange
+      when "checkpoint"
+        badge = "badge-important" #Rouge
+      when "released"
+        badge = "badge-success" #Vert
+      when "rejected"
+        badge = "badge-inverse" #Noir
+      else
+        badge = "badge-default"
+    end
+
+    return badge
+  end
+
 
   private
   def extract_locale_from_accept_language_header

@@ -80,10 +80,10 @@
             <% @attributes.each do |attr| %>
                 <tr>
                   <td><%= link_to(attr.name, edit_pe_attribute_path(attr), :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(attr)) unless attr.nil? %></td>
-                  <td>
-                        <span class="hidden">
-                          <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
-                        </span>
+                  <td style="text-align: center">
+                    <span class="hidden">
+                      <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
+                    </span>
                     <%= check_box_tag 'organization[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id) %>
                   </td>
                   <td><%= attr.attribute_category %></td>
