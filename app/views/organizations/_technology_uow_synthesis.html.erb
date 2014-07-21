@@ -30,7 +30,12 @@
 
               <% @organization.size_unit_types.each do |sut| %>
                 <td class="center">
-                  <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: cplx.id).first.value %>
+                  <% sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: cplx.id).first %>
+                  <% if sutc %>
+                    <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", sutc.value %>
+                  <% else %>
+                    -
+                  <% end %>
                 </td>
               <% end %>
             </tr>

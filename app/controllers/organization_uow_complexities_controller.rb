@@ -65,6 +65,11 @@ class OrganizationUowComplexitiesController < ApplicationController
     end
 
     if @organization_uow_complexity.save
+
+      @organization.size_unit_types.each do |sut|
+        SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: @organization_uow_complexity.id)
+      end
+
       flash[:notice] = I18n.t(:notice_organization_uow_complexity_successful_created)
 
       redirect_to redirect_apply(nil, new_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-6'))

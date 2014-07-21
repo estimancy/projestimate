@@ -23,8 +23,6 @@
         <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
       <% end %>
 
-      <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge'} %>
-
       <table>
         <tr>
           <td><%= f.input :display_order, :label => I18n.t('display_order'), :input_html => {:class => 'input-small'} %></td>
