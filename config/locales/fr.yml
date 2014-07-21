@@ -1205,6 +1205,10 @@ fr:
   label_ratio: "un ratio"
   label_wbs_activity: "un WBS-Activité"
   probable: "Probable"
+  new_size_unit_type: "Nouveau type d'unité de taille"
+  type: "Type"
+  new_technology: "Nouvelle technologie"
+  edit_technology: "Editer la technologie \"%{value}\" ..."
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"

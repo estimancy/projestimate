@@ -232,7 +232,7 @@
     <br>
 
     <% if can? :edit_organizations, Organization %>
-        <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
+        <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.id, :anchortab => 'tabs-6'), :class => 'btn pull-right' %>
     <% end %>
 
     <% @unitofworks.each do |uow| %>
@@ -280,7 +280,7 @@
     <br>
 
     <% if can? :edit_organizations, Organization %>
-      <%= link_to I18n.t('new_factor_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id), :class => 'btn pull-right' %>
+      <%= link_to I18n.t('new_factor_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, :anchortab => 'tabs-7'), :class => 'btn pull-right' %>
     <% end %>
 
 

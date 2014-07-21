@@ -1181,3 +1181,7 @@ it:
   label_ratio: "a ratio"
   label_wbs_activity: "a WBS-Activity"
   probable: "Probable"
+  new_size_unit_type: "New size unit type"
+  type: "Type"
+  new_technology: "New technology"
+  edit_technology: "Edit the \"%{value}\" technology ..."
