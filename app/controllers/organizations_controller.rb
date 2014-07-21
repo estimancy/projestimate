@@ -138,9 +138,9 @@ class OrganizationsController < ApplicationController
 
       #Et la, on crée les complexités des unités d'oeuvres par défaut
       levels = [
-          ['Simple', 'simple', "Simple", 1, "draft"],
-          ['Moyen', 'moyen', "Moyen", 2, "draft"],
-          ['Complexe', 'complexe', "Complexe", 4, "draft"]
+          ['Simple', 'simple', "Simple", 1, "defined"],
+          ['Moyen', 'moyen', "Moyen", 2, "defined"],
+          ['Complexe', 'complexe', "Complexe", 4, "defined"]
       ]
       levels.each do |i|
         @organization.unit_of_works.each do |uow|

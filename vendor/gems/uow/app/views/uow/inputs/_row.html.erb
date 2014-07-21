@@ -32,7 +32,7 @@
       <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>
     </td>
     <td class="span1 center">
-      <%= select_tag "actions[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}), :class => "complexity" %>
+      <%= select_tag "size_unit_type[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}), :class => "complexity" %>
     </td>
     <td class="span1 center">
       <%= text_field_tag "size_low[#{i+1}]", input.size_low, :class => "size_low compressed" %>
