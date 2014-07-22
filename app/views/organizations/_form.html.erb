@@ -1,23 +1,23 @@
 <div class="tabs">
   <ul>
-    <li><a href="#tabs-1"><%= I18n.t(:organizations) %> </a></li>
+    <li><a href="#tabs-organization"><%= I18n.t(:organizations) %> </a></li>
     <% if action_name.in?(%w(edit update)) %>
-        <li><a href="#tabs-2"><%= I18n.t(:pe_attributes) %> </a></li>
-        <li><a href="#tabs-3"><%= I18n.t(:attributes_settings) %> </a></li>
-        <li><a href="#tabs-4"><%= I18n.t(:organization_technology) %> </a></li>
-        <li><a href="#tabs-5"><%= I18n.t(:organization_unit_of_work) %> </a></li>
-        <li><a href="#tabs-6"><%= I18n.t(:unit_or_work_complexity) %> </a></li>
-        <li><a href="#tabs-7"><%= I18n.t(:factor_complexity) %> </a></li>
-        <li><a href="#tabs-8"><%= I18n.t(:size_unit_type) %></a></li>
-        <li><a href="#tabs-9"><%= I18n.t(:technology_size_type_abacus) %></a></li>
-        <li><a href="#tabs-10"><%= I18n.t(:technology_size_abacus) %></a></li>
-        <li><a href="#tabs-11"><%= I18n.t(:organization_subcontractor) %> </a></li>
-        <li><a href="#tabs-12"><%= I18n.t(:technology_uow_synthesis) %></a></li>
-        <li><a href="#tabs-13"><%= I18n.t(:profiles) %></a></li>
+        <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
+        <li><a href="#tabs-attribute-setting"><%= I18n.t(:attributes_settings) %> </a></li>
+        <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
+        <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
+        <li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_or_work_complexity) %> </a></li>
+        <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
+        <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
+        <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
+        <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
+        <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
+        <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
+        <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
   <% end %>
   </ul>
 
-  <div id="tabs-1">
+  <div id="tabs-organization">
     <%= simple_form_for(@organization) do |f| %>
       <div>
         <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
@@ -57,7 +57,7 @@
   </div>
 
   <% if action_name.in?(%w(edit update)) %>
-    <div id="tabs-2">
+    <div id="tabs-attribute">
       <b><%= I18n.t(:text_organization_attributes) %></b>
       <br><br>
       <!-- Method in AttributeOrganizationsController -->
@@ -100,7 +100,7 @@
       <% end -%>
     </div>
 
-    <div id="tabs-3">
+    <div id="tabs-attribute-setting">
       <b><%= I18n.t(:text_organization_attributes_settings) %></b>
       <br><br>
       <!-- Method in AttributeOrganizationsController -->
@@ -138,7 +138,7 @@
       <% end -%>
     </div>
 
-    <div id="tabs-4">
+    <div id="tabs-technology">
       <b><%= I18n.t(:text_organization_technology) %></b>
       <br>
       <% if can? :edit_organizations, Organization %>
@@ -183,7 +183,7 @@
       </table>
     </div>
 
-    <div id="tabs-5">
+    <div id="tabs-uow">
       <b><%= I18n.t(:text_organization_unit_of_work) %></b>
       <br>
       <% if can? :edit_organizations, Organization %>
@@ -226,7 +226,7 @@
       </table>
     </div>
 
-  <div id="tabs-6">
+  <div id="tabs-cplx-uow">
     <b>Complexity (Unit of work)</b>
 
     <br>
@@ -275,7 +275,7 @@
     <% end %>
   </div>
 
-  <div id="tabs-7">
+  <div id="tabs-cplx-factor">
     <b>Factors Complexities</b>
     <br>
 
@@ -318,7 +318,7 @@
     <% end %>
   </div>
 
-  <div id="tabs-8">
+  <div id="tabs-sut">
     <% if can? :manage, Organization %>
 
       <%= link_to I18n.t('new_size_unit_type'), new_size_unit_type_path(:organization_id => @organization.nil? ? nil : @organization.id), :class => 'btn pull-right' %>
@@ -351,15 +351,15 @@
     <% end %>
   </div>
 
-  <div id="tabs-9">
+  <div id="tabs-abacus-sut">
     <%= render :partial => 'organizations/technology_size_type_abacus' %>
   </div>
 
-  <div id="tabs-10">
+  <div id="tabs-abacus-tsu">
     <%= render :partial => 'organizations/technology_size_unit_abacus' %>
   </div>
 
-  <div id="tabs-11">
+  <div id="tabs-sub">
     <b><%= I18n.t(:text_organization_subcontractor) %></b>
     <br>
     <% if can? :edit_organizations, Organization %>
@@ -404,11 +404,11 @@
     </table>
   </div>
 
-  <div id="tabs-12">
+  <div id="tabs-synthesis-uow-techno">
     <%= render :partial => 'organizations/technology_uow_synthesis' %>
   </div>
 
-  <div id="tabs-13">
+  <div id="tabs-profile">
     <b><%= I18n.t(:profiles) %></b>
     <%= render :partial => 'organizations/profiles' %>
     <br><br>

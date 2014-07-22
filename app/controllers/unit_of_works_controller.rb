@@ -51,7 +51,7 @@ class UnitOfWorksController < ApplicationController
       flash[:notice] = I18n.t(:notice_unit_of_work_successful_created)
       redirect_to redirect_apply(nil,
                                  new_unit_of_work_path(params[:unit_of_work]),
-                                 edit_organization_path(params[:unit_of_work][:organization_id], :anchor => 'tabs-6'))
+                                 edit_organization_path(params[:unit_of_work][:organization_id], :anchor => 'tabs-uow'))
     else
       render action: 'new', :organization_id => @organization.id
     end
@@ -66,7 +66,7 @@ class UnitOfWorksController < ApplicationController
       redirect_to redirect_apply(edit_unit_of_work_path(@unit_of_work),
                                  nil,
                                  edit_organization_path(params[:unit_of_work][:organization_id],
-                                                        :anchor => 'tabs-6'))
+                                                        :anchor => 'tabs-uow'))
     else
       render action: 'edit', :organization_id => @organization.id
     end
@@ -78,7 +78,7 @@ class UnitOfWorksController < ApplicationController
     organization_id = @unit_of_work.organization_id
     @unit_of_work.delete
     respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-6')), notice: "#{I18n.t (:notice_unit_of_work_successful_deleted)}" }
+      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-uow')), notice: "#{I18n.t (:notice_unit_of_work_successful_deleted)}" }
     end
   end
 end

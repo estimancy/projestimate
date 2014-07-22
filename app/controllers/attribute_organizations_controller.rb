@@ -95,7 +95,7 @@ class AttributeOrganizationsController < ApplicationController
     end
 
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => params[:organization_id]})
-    redirect_to redirect("/organizationals_params"), :notice => "#{I18n.t (:notice_attribute_organization_successful_updated)}"
+    redirect_to( edit_organization_path(@organization, anchor: "tabs-attribute"), :notice => "#{I18n.t (:notice_attribute_organization_successful_updated)}" )
   end
 
   # Update the Organizational attribute parameters
@@ -122,7 +122,7 @@ class AttributeOrganizationsController < ApplicationController
         end
       end
     end
-    redirect_to redirect("/organizationals_params"), :notice => "#{I18n.t (:notice_attribute_organization_successful_updated)}"
+    redirect_to( edit_organization_path(@organization, anchor: "tabs-attribute-setting"), :notice => "#{I18n.t (:notice_attribute_organization_successful_updated)}" )
   end
 
 end

@@ -80,7 +80,7 @@ class PeAttributesController < ApplicationController
 
     if @attribute.save
       flash[:notice] = I18n.t (:notice_pe_attribute_successful_created)
-      redirect_to redirect_apply(nil, new_pe_attribute_path(),  pe_attributes_path)
+      redirect_to redirect_apply(nil, new_pe_attribute_path,  pe_attributes_path)
     else
       render action: 'new'
     end

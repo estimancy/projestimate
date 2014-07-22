@@ -67,7 +67,7 @@ class OrganizationTechnologiesController < ApplicationController
 
     if @organization_technology.save
       flash[:notice] = I18n.t (:notice_organization_technology_successful_created)
-      redirect_to redirect_apply(nil, new_organization_technology_path(params[:organization_technology]), edit_organization_path(@organization, :anchor => 'tabs-4'))
+      redirect_to redirect_apply(nil, new_organization_technology_path(params[:organization_technology]), edit_organization_path(@organization, :anchor => 'tabs-technology'))
     else
       render action: 'new', :organization_id => @organization.id
     end

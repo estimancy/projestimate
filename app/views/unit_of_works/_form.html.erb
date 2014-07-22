@@ -56,8 +56,7 @@
           <% end %>
         <% end %>
 
-        <%= link_to "Create a new complexity", new_organization_uow_complexity_path(organization_id: @organization || params[:organization_id]), :class => 'btn' %>
-        <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-5'), :class => 'btn' %>
+        <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-uow'), :class => 'btn' %>
 
       </div>
 
