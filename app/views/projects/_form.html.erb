@@ -179,7 +179,7 @@
                         <tr>
                           <td><%= user.name %>
                             <% ProjectSecurityLevel.defined.all.each do |prj_level| %>
-                              <td><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %> </td>
+                              <td style="text-align: center"><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %> </td>
                           <% end %>
                         </tr>
                     <% end %>
@@ -213,7 +213,7 @@
                         <tr>
                           <td><%= group.name %>
                             <% ProjectSecurityLevel.defined.all.each do |prj_level| %>
-                              <td><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id))) %> </td>
+                              <td style="text-align: center"><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id))) %> </td>
                           <% end %>
                         </tr>
                     <% end %>

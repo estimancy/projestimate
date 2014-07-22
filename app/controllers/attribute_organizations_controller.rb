@@ -60,27 +60,28 @@ class AttributeOrganizationsController < ApplicationController
         #Delete the attribute_organization
         m.destroy
       end
-      attributes_ids.delete(m.pe_attribute_id.to_s)
+      # We no longer need to delete attribute from the attributes_ids array because we are now using the "first_or_initialize" method
+      ###attributes_ids.delete(m.pe_attribute_id.to_s)
     end
 
     attributes_ids.reject(&:empty?).each do |g|
-      @organization.attribute_organizations.create(:pe_attribute_id => g.to_i)
+      # Find the attribute_organization or create it if not exist
+      attr_org = AttributeOrganization.where(:pe_attribute_id => g.to_i, :organization_id => @organization.id).first_or_initialize
+      attr_org.update_attribute('is_mandatory', params[:is_mandatory][g])
+
       #Update de Initialization module 's estimation_values
       unless @initialization_module.nil?
-        attr_org = @organization.attribute_organizations.where("pe_attribute_id = ?", g).first
         @organization_projects.each do |project|
           module_project = project.module_projects.where("pemodule_id = ?", @initialization_module.id).first
           unless module_project.nil?
             #Create corresponding Estimation_value
             ['input', 'output'].each do |in_out|
-              mpa = EstimationValue.create(:pe_attribute_id => g.to_i,
-                                           :module_project_id => module_project.id,
-                                           :in_out => in_out,
-                                           :is_mandatory => attr_org.is_mandatory,
-                                           :description => attr_org.pe_attribute.description,
-                                           :string_data_low => {:pe_attribute_name => attr_org.pe_attribute.name, :default_low => ""},
-                                           :string_data_most_likely => {:pe_attribute_name => attr_org.pe_attribute.name, :default_most_likely => ""},
-                                           :string_data_high => {:pe_attribute_name => attr_org.pe_attribute.name, :default_high => ""})
+              mpa = EstimationValue.where(:pe_attribute_id => g.to_i, :module_project_id => module_project.id, :in_out => in_out).first_or_initialize
+              mpa.update_attributes( :is_mandatory => attr_org.is_mandatory,
+                                     :description => attr_org.pe_attribute.description,
+                                     :string_data_low => {:pe_attribute_name => attr_org.pe_attribute.name, :default_low => ""},
+                                     :string_data_most_likely => {:pe_attribute_name => attr_org.pe_attribute.name, :default_most_likely => ""},
+                                     :string_data_high => {:pe_attribute_name => attr_org.pe_attribute.name, :default_high => ""})
             end
           end
         end
@@ -95,34 +96,7 @@ class AttributeOrganizationsController < ApplicationController
     end
 
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => params[:organization_id]})
-    redirect_to( edit_organization_path(@organization, anchor: "tabs-attribute"), :notice => "#{I18n.t (:notice_attribute_organization_successful_updated)}" )
-  end
-
-  # Update the Organizational attribute parameters
-  def update_attribute_organizations_settings
-    authorize! :manage_organizations, Organization
-    current_organization = Organization.find(params[:organization_id])
-    organization_projects = current_organization.projects
-
-    selected_attributes = params[:attributes]
-    selected_attributes.each_with_index do |attr, i|
-      attribute = AttributeOrganization.first(:conditions => {:pe_attribute_id => attr.to_i, :organization_id => params[:organization_id]})
-      attribute.update_attribute('is_mandatory', params[:is_mandatory][i])
-
-      unless @initialization_module.nil?
-        #Get Initialization corresponding EstimationValues for each project of this organization
-        organization_projects.each do |project|
-          cap_module_project = project.module_projects.find_by_pemodule_id(@initialization_module.id)
-          unless cap_module_project.nil?
-            cap_estimation_values = cap_module_project.estimation_values.where("pe_attribute_id = ?", attr.to_i)
-            cap_estimation_values.each do |est_val|
-              est_val.update_attribute("is_mandatory", params[:is_mandatory][i])
-            end
-          end
-        end
-      end
-    end
-    redirect_to( edit_organization_path(@organization, anchor: "tabs-attribute-setting"), :notice => "#{I18n.t (:notice_attribute_organization_successful_updated)}" )
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-2'), nil, '/organizationals_params')
   end
 
 end

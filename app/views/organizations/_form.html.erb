@@ -73,20 +73,25 @@
               <th class="filter-select"><%= I18n.t(:selected) %></th>
               <th class="filter-select"><%= I18n.t(:attribute_categories) %></th>
               <th><%= I18n.t(:description) %></th>
+              <th><%= I18n.t(:mandatory) %></th>
             </tr>
             </thead>
             <tbody>
             <% @attributes.each do |attr| %>
                 <tr>
                   <td><%= link_to(attr.name, edit_pe_attribute_path(attr), :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(attr)) unless attr.nil? %></td>
-                  <td>
-                        <span class="hidden">
-                          <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
-                        </span>
+                  <td style="text-align: center">
+                    <span class="hidden">
+                      <%= @attribute_settings.map(&:pe_attribute_id).include?(attr.id).to_s.humanize %>
+                    </span>
                     <%= check_box_tag 'organization[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id) %>
                   </td>
                   <td><%= attr.attribute_category %></td>
                   <td><%= attr.description %></td>
+                  <td>
+                    <% ao = AttributeOrganization.where("organization_id = ? AND pe_attribute_id = ?", @organization.id, attr.id).first %>
+                    <%= select_tag "is_mandatory[#{attr.id}]", options_for_select([["#{I18n.t('simple_form.yes')}", true], ["#{I18n.t('simple_form.no')}", false]], :selected => (ao.nil? ? nil : ao.is_mandatory)), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small' %>
+                  </td>
                 </tr>
             <% end %>
             <%= render :partial => 'layouts/footer_table' %>
@@ -96,44 +101,6 @@
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <span class="on_success_attr"></span>
-      <% end -%>
-    </div>
-
-    <div id="tabs-attribute-setting">
-      <b><%= I18n.t(:text_organization_attributes_settings) %></b>
-      <br><br>
-      <!-- Method in AttributeOrganizationsController -->
-      <%= form_tag('/update_attribute_organizations_settings', :method => 'POST', :class => 'simple_form') do -%>
-
-          <%= hidden_field_tag 'organization_id', @organization.id %>
-          <%= hidden_field_tag 'organization[pe_attribute_ids][]' %>
-
-          <table id="table_list_3" class="table tablesorterPager table-striped table-bordered table-condensed">
-            <thead>
-            <tr>
-              <th><%= I18n.t(:name) %></th>
-              <th><%= I18n.t(:mandatory) %></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @attribute_settings.each_with_index do |ao, i| %>
-                <%= hidden_field_tag 'attributes[]', ao.pe_attribute_id %>
-                <tr>
-                  <td><%= link_to ao.pe_attribute.nil? ? '-' : ao.pe_attribute.name, '#', :class => 'attribute_tooltip', :style => 'color:green;', :title => display_attribute_rule(ao.pe_attribute) %></td>
-                  <td><%= select_tag 'is_mandatory[]', options_for_select([['yes', true], ['no', false]], :selected => ao.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small' %></td>
-                </tr>
-            <% end %>
-            </tbody>
-
-            <%= render :partial => 'layouts/footer_table' %>
-
-          </table>
-          <% if can? :edit_organizations, Organization %>
-              <%= submit_tag I18n.t('save'), :class => 'btn' %>
-              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-          <% end %>
-
           <span class="on_success_attr"></span>
       <% end -%>
     </div>

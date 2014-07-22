@@ -733,4 +733,27 @@ div.block_label.selected_pbs {
 
 .input{
     margin-bottom: 15px;
+    margin-right: 10px;
 }
+
+.badge{
+    font-weight: normal;
+    font-family: inherit;
+}
+
+.blue_background{
+    background: #1d89cf;
+    border-bottom: 2px solid #1a7ab9;
+}
+.light_blue_background{
+    background: #5bc0de;
+    border-left-color: #39b3d7;
+    border-right-color: #39b3d7;
+    border-color: #46b8da;
+    border-bottom-color: #2caed5;
+    color: #ffffff;
+}
+
+
+
+

@@ -15,7 +15,7 @@
         <td><%= link_to project.title, edit_project_path(project) %></td>
         <td><%= project.version %></td>
         <td><%= project.alias %></td>
-        <td><%= project.state %></td>
+        <td><span class="badge <%= display_badge(project.state) %>"><%= I18n.t(project.state) %></span></td>
         <td><%= project.is_model %></td>
         <td>
           <span class="hidden">
