@@ -7,6 +7,12 @@ describe UsersController, 'Creating and managing user', :type => :controller do
     @user = controller.current_user
   end
 
+  describe "Authorization tests" do
+    it 'should have at least one group' do
+
+    end
+  end
+
   describe "Authentication test" do
     it 'blocks unauthenticated user' do
       sign_in nil
