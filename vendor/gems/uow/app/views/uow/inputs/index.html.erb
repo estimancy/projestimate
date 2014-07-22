@@ -132,9 +132,33 @@
     <div class="modal-body">
       <% current_project.organization.unit_of_works.each do |uow| %>
         <h4><%= uow.name %></h4>
+
         <p>
           <%= uow.description %>
         </p>
+
+        <h4>Critères</h4>
+        <% uow.organization_uow_complexities.each do |cplx| %>
+          <p>
+            <%= cplx.name %> - <%= cplx.description %>
+          </p>
+
+          <p>
+            <table class="table table-bordered table-condensed">
+              <tr>
+                <th>Actions</th>
+                <th>Valeur</th>
+              </tr>
+              <% cplx.size_unit_type_complexities.each do |sutc| %>
+                <tr>
+                  <td class="center"><%= sutc.size_unit_type.name %></td>
+                  <td class="center"><%= sutc.value %></td>
+                </tr>
+              <% end %>
+            </table>
+          </p>
+        <% end %>
+
         <p>
           <b>
             <%= I18n.t :organization_technology %> <br>

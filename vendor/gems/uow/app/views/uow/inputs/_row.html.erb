@@ -21,18 +21,18 @@
       <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-large" %>
     </td>
     <td class="span1 center">
-      <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, :selected => input.technology_id), {:class => "technology", :prompt => I18n.t(:select_technology), :required=>true} %>
+      <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, selected: input.technology_id.nil? ? current_component.organization_technology_id : input.technology_id), {class: "technology", prompt: I18n.t(:select_technology), required: true} %>
     </td>
     <td class="span1 center">
       <% input.technology_id.nil? ? (@unit_of_works = []) : (@unit_of_works = input.organization_technology.unit_of_works) %>
-      <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, :selected => input.unit_of_work_id ), {:class => "uow", :prompt => I18n.t(:select_uow), :required=>true} %>
+      <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, selected: input.unit_of_work_id.nil? ? current_component.inputs.last.unit_of_work_id : input.unit_of_work_id), {class: "uow", prompt: I18n.t(:select_uow), required: true} %>
       <a href="#modal_description" class="icon icon-question" data-toggle="modal"></a>
     </td>
     <td class="span1 center">
       <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>
     </td>
     <td class="span1 center">
-      <%= select_tag "size_unit_type[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}), :class => "complexity" %>
+      <%= select_tag "size_unit_type[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}, selected: input.size_unit_type_id) %>
     </td>
     <td class="span1 center">
       <%= text_field_tag "size_low[#{i+1}]", input.size_low, :class => "size_low compressed" %>

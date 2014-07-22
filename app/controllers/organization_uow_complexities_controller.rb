@@ -94,7 +94,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     if @organization_uow_complexity.update_attributes(params[:organization_uow_complexity])
       flash[:notice] = I18n.t (:notice_organization_uow_complexity_successful_updated)
-      redirect_to redirect_apply(nil, edit_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow'))
+      redirect_to edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow')
     else
       render action: 'edit', :organization_id => @organization.id
     end

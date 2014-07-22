@@ -43,9 +43,9 @@ class Input < ActiveRecord::Base
   def self.export(mp, pbs)
     @inputs = Input.where(module_project_id: mp, pbs_project_element_id: pbs).all
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
-      csv << ['id', 'Name', 'Technology', 'UO', 'Complexity', 'Size Low', 'Size Most Likely', 'Size High', 'Weight']
+      csv << ['id', 'Reference', 'Technology', 'Unit Of Work', 'Complexity', 'Type', 'Low', 'Most Likely', 'High', 'Weight']
       @inputs.each do |i|
-        csv << ["#{i.id}", "#{i.name}", "#{i.technology_id}", "#{i.unit_of_work_id}", "#{i.complexity_id}",
+        csv << ["#{i.id}", "#{i.name}", "#{i.technology_id}", "#{i.unit_of_work_id}", "#{i.complexity_id}", "#{i.size_unit_type_id}",
                 "#{i.size_low}", "#{i.size_most_likely}", "#{i.size_high}",
                 "#{i.weight}"]
       end
@@ -65,6 +65,7 @@ class Input < ActiveRecord::Base
             @ware.update_attribute('technology_id', row[2])
             @ware.update_attribute('unit_of_work_id', row[3])
             @ware.update_attribute('complexity_id', row[4])
+            @ware.update_attribute('size_unit_type_id', row[4])
             @ware.update_attribute('size_low', row[5])
             @ware.update_attribute('size_most_likely', row[6])
             @ware.update_attribute('size_high', row[7])

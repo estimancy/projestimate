@@ -38,6 +38,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
 
   has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :abacus_organizations, :dependent => :destroy
+  has_many :size_unit_type_complexities, :dependent => :destroy
 
   belongs_to :factor
   belongs_to :unit_of_work

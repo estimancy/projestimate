@@ -193,12 +193,13 @@
     </div>
 
   <div id="tabs-cplx-uow">
-    <b>Complexity (Unit of work)</b>
-
-    <br>
+    <h4>Complexity (Unit of work)</h4>
+    <hr>
 
     <% if can? :edit_organizations, Organization %>
+      <p>
         <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.id, :anchortab => 'tabs-6'), :class => 'btn pull-right' %>
+      </p>
     <% end %>
 
     <% @unitofworks.each do |uow| %>
@@ -212,7 +213,7 @@
           <tr>
             <th><%= I18n.t(:name) %></th>
             <th><%= I18n.t(:description) %></th>
--            <th><%= I18n.t(:state) %></th>
+            <th><%= I18n.t(:state) %></th>
             <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
           </tr>
         </thead>

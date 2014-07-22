@@ -178,6 +178,16 @@ class OrganizationsController < ApplicationController
 
     @organization = Organization.find(params[:id])
     if @organization.update_attributes(params[:organization])
+
+      OrganizationUowComplexity.where(organization_id: @organization.id).each do |ouc|
+        @organization.size_unit_types.each do |sut|
+          sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id).first
+          if sutc.nil?
+            SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id)
+          end
+        end
+      end
+
       flash[:notice] = I18n.t (:notice_organization_successful_updated)
       redirect_to redirect_apply(edit_organization_path(@organization), nil, '/organizationals_params')
     else
