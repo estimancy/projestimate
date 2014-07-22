@@ -179,7 +179,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:id])
     if @organization.update_attributes(params[:organization])
 
-      OrganizationUowComplexity.where(organization_id: nil).each do |ouc|
+      OrganizationUowComplexity.where(organization_id: @organization.id).each do |ouc|
         @organization.size_unit_types.each do |sut|
           sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id).first
           if sutc.nil?
