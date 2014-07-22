@@ -48,6 +48,8 @@ class PbsProjectElement < ActiveRecord::Base
   belongs_to :wbs_activity_ratio
 
   has_many :estimation_values
+
+  has_many :inputs
   belongs_to :organization_technology
 
   has_and_belongs_to_many :module_projects
