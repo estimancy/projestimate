@@ -52,6 +52,10 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    #super do |resource|
+    #  #resource.save
+    #  #redirect_to edit_user_path(current_user)
+    #end
     super
   end
 

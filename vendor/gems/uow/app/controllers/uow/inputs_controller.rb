@@ -172,46 +172,4 @@ class Uow::InputsController < ApplicationController
     @unit_of_works = @technology.unit_of_works
   end
 
-
-  def save_entries(input_id, module_project)
-    input_id.keys.each do |r|
-      input = Input.where(id: params[:input_id]["#{r}"].to_i).first
-      input.name = params[:name]["#{r}"]
-      input.module_project_id = params[:module_project_id]
-      input.technology_id = params[:technology]["#{r}"]
-      input.unit_of_work_id = params[:uow]["#{r}"]
-      input.complexity_id = params[:complexity]["#{r}"]
-      input.size_unit_type_id = params[:size_unit_type]["#{r}"]
-      input.size_low = params[:size_low]["#{r}"]
-      input.size_most_likely = params[:size_most_likely]["#{r}"]
-      input.size_high = params[:size_high]["#{r}"]
-      input.weight = (params[:weight]["#{r}"].blank? ? 1 : params[:weight]["#{r}"])
-      input.gross_low = params[:gross_low]["#{r}"]
-      input.gross_most_likely = params[:gross_most_likely]["#{r}"]
-      input.gross_high = params[:gross_high]["#{r}"]
-      input.flag = params[:flag]["#{r}"]
-      input.save
-
-      inputs = Input.where(id: params[:input_id]["#{r}"].to_i)
-      @gross << inputs.first
-    end
-
-    module_project.pemodule.attribute_modules.each do |am|
-      @in_ev = EstimationValue.where(:module_project_id => module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-
-      tmp_prbl = Array.new
-      ["low", "most_likely", "high"].each do |level|
-        if am.pe_attribute.alias == "effort_man_month"
-          level_est_val = @in_ev.send("string_data_#{level}")
-          level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
-          tmp_prbl << level_est_val[current_component.id]
-        end
-        @in_ev.update_attribute(:"string_data_#{level}", level_est_val)
-      end
-
-      if am.pe_attribute.alias == "effort_person_month"
-        @in_ev.update_attribute(:"string_data_probable", (tmp_prbl[0].to_f + 4*tmp_prbl[1].to_f + tmp_prbl[2].to_f) / 6)
-      end
-    end
-  end
 end
