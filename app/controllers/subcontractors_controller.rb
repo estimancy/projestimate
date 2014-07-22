@@ -51,7 +51,7 @@ class SubcontractorsController < ApplicationController
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
     if @subcontractor.alias.in?(%w(undefined internal subcontracted))
       flash[:error] = "#{@subcontractor.name} subcontractor can't be modified"
-      redirect_to edit_organization_path(@organization, :anchor => 'tabs-7')
+      redirect_to edit_organization_path(@organization, :anchor => 'tabs-sub')
     end
 
   end
@@ -64,7 +64,7 @@ class SubcontractorsController < ApplicationController
 
     if @subcontractor.save
       flash[:notice] = I18n.t(:notice_subcontractor_successfully_created)
-      redirect_to edit_organization_path(@organization, :anchor => 'tabs-7')
+      redirect_to edit_organization_path(@organization, :anchor => 'tabs-sub')
     else
       render action: 'new', :organization_id => @organization.id
     end
@@ -77,7 +77,7 @@ class SubcontractorsController < ApplicationController
 
     if @subcontractor.update_attributes(params[:subcontractor])
       flash[:notice] = I18n.t(:notice_subcontractor_successfully_updated)
-      redirect_to (edit_organization_path(@organization, :anchor => 'tabs-7'))
+      redirect_to (edit_organization_path(@organization, :anchor => 'tabs-sub'))
     else
       render action: 'edit', :organization_id => @organization.id
     end
@@ -89,6 +89,6 @@ class SubcontractorsController < ApplicationController
     organization_id = @subcontractor.organization_id
     @subcontractor.destroy
     flash[:notice] = I18n.t(:notice_subcontractor_successfully_deleted)
-    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-7')
+    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-sub')
   end
 end

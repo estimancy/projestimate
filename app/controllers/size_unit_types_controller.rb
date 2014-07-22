@@ -36,7 +36,7 @@ class SizeUnitTypesController < ApplicationController
         end
       end
 
-      redirect_to edit_organization_path(@size_unit_type.organization_id), notice: 'Size unit type was successfully created.'
+      redirect_to edit_organization_path(@size_unit_type.organization_id, anchor: "tabs-sut"), notice: 'Size unit type was successfully created.'
     else
       render action: "new"
     end
@@ -47,7 +47,7 @@ class SizeUnitTypesController < ApplicationController
     @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
 
     if @size_unit_type.update_attributes(params[:size_unit_type])
-      redirect_to edit_organization_path(@size_unit_type.organization_id), notice: 'Size unit type was successfully updated.'
+      redirect_to edit_organization_path(@size_unit_type.organization_id, anchor: "tabs-sut"), notice: 'Size unit type was successfully updated.'
     else
       render action: "edit"
     end
@@ -56,6 +56,6 @@ class SizeUnitTypesController < ApplicationController
   def destroy
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.destroy
-    redirect_to size_unit_types_url
+    redirect_to edit_organization_path(@size_unit_type.organization_id, anchor: "tabs-sut"), notice: 'Size unit type was successfully deleted.'
   end
 end

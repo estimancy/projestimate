@@ -183,9 +183,6 @@ class OrganizationsController < ApplicationController
     else
       @attributes = PeAttribute.defined.all
       @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
-
-      #@complexities = OrganizationUowComplexity.all
-      #@unitofworks = UnitOfWork.all
       @complexities = @organization.organization_uow_complexities
       @ot = @organization.organization_technologies.first
       @unitofworks = @organization.unit_of_works
@@ -252,7 +249,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-9'), nil, '/organizationals_params')
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => '-abacus-tsu'), nil, '/organizationals_params')
   end
 
   def set_technology_size_unit_abacus
@@ -283,7 +280,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-10'), nil, '/organizationals_params')
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-abacus-sut'), nil, '/organizationals_params')
 
   end
 
@@ -304,7 +301,7 @@ class OrganizationsController < ApplicationController
         end
       end
     end
-    redirect_to redirect_apply(edit_organization_path(@ot.organization_id, :anchor => 'tabs-8'), nil, '/organizationals_params')
+    redirect_to redirect_apply(edit_organization_path(@ot.organization_id, :anchor => 'tabs-abacus-tsu'), nil, '/organizationals_params')
   end
 
   def set_technology_uow_synthesis
@@ -330,7 +327,7 @@ class OrganizationsController < ApplicationController
     #unit.organization_technology_ids = array
     #unit.save
 
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-12'), nil, '/organizationals_params')
+    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-synthesis-uow-techno'), nil, '/organizationals_params')
   end
 
   def import_abacus
@@ -402,7 +399,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(edit_organization_path(@organization.id, :anchor => 'tabs-8'), nil, '/organizationals_params')
+    redirect_to redirect_apply(edit_organization_path(@organization.id), nil, '/organizationals_params')
   end
 
   def export_abacus

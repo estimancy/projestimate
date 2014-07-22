@@ -72,7 +72,9 @@ class OrganizationUowComplexitiesController < ApplicationController
 
       flash[:notice] = I18n.t(:notice_organization_uow_complexity_successful_created)
 
-      redirect_to redirect_apply(nil, new_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-6'))
+      redirect_to redirect_apply(nil,
+                                 new_organization_uow_complexity_path(params[:organization_uow_complexity]),
+                                 edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow'))
     else
       render action: 'new', :organization_id => @organization
     end
@@ -92,7 +94,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     if @organization_uow_complexity.update_attributes(params[:organization_uow_complexity])
       flash[:notice] = I18n.t (:notice_organization_uow_complexity_successful_updated)
-      redirect_to redirect_apply(nil, edit_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-6'))
+      redirect_to redirect_apply(nil, edit_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow'))
     else
       render action: 'edit', :organization_id => @organization.id
     end
@@ -110,7 +112,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     cplx.is_default = true
     cplx.save(validate: false)
 
-    redirect_to edit_organization_path(cplx.organization, anchor: "tabs-7")
+    redirect_to edit_organization_path(cplx.organization, anchor: "tabs-cplx-uow")
   end
 
   def destroy
@@ -120,7 +122,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     @organization_uow_complexity.delete
     begin
-      redirect_to redirect(edit_organization_path(organization, anchor: "tabs-7")), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}"
+      redirect_to redirect(edit_organization_path(organization, anchor: "tabs-cplx-uow")), notice: "#{I18n.t (:notice_organization_uow_complexity_successful_deleted)}"
     rescue
       redirect_to "/organizationals_params"
     end
