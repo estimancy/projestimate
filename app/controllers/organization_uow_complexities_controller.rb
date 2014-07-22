@@ -92,9 +92,16 @@ class OrganizationUowComplexitiesController < ApplicationController
       @organization_uow_complexity.organization_id = @organization.id
     end
 
+    @organization.size_unit_types.each do |sut|
+      sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: @organization_uow_complexity.id).first
+      if sutc.nil?
+        SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: @organization_uow_complexity.id)
+      end
+    end
+
     if @organization_uow_complexity.update_attributes(params[:organization_uow_complexity])
       flash[:notice] = I18n.t (:notice_organization_uow_complexity_successful_updated)
-      redirect_to redirect_apply(nil, edit_organization_uow_complexity_path(params[:organization_uow_complexity]), edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow'))
+      redirect_to edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow')
     else
       render action: 'edit', :organization_id => @organization.id
     end
