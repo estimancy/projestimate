@@ -33,7 +33,6 @@ class RegistrationsController < Devise::RegistrationsController
     end
 
     super
-
   end
 
   def create

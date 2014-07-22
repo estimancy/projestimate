@@ -60,7 +60,7 @@ Projestimate::Application.routes.draw do
 
   resources :factors
 
-  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"} #, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
+  devise_for :users, :path_prefix => 'de', :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"} #, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
 
   get 'awaiting_confirmation' => 'registrations#awaiting_confirmation', :as => 'awaiting_confirmation'
 

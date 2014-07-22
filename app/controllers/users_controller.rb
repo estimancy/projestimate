@@ -105,7 +105,7 @@ public
       set_page_title 'Edit your user account'
     else
       authorize! :manage, User
-      flash[:notice] = "You're not allowed to perform this action"
+      #flash[:notice] = "You're not allowed to perform this action"
     end
   end
 
@@ -150,7 +150,7 @@ public
     if successfully_updated
       set_user_language
       flash[:notice] = I18n.t (:notice_account_successful_updated)
-      sign_in @user, :bypass => true
+      ###sign_in @user, :bypass => true     #To sign-in the user of the current updated account
 
       #session[:current_password] = nil;  session[:password] = nil; session[:password_confirmation] = nil
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
