@@ -160,7 +160,6 @@ public
       @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]
       render(:edit)
     end
-    redirect_to root_url
   end
 
   #Dashboard of the application
