@@ -79,8 +79,16 @@ public
     #No authorize required since everyone can access the list (permission will be managed project per project)
     set_page_title 'Estimations'
     set_breadcrumbs "Dashboard" => "/dashboard"
-    @projects = Project.all.reject { |i| !i.is_childless? }
+
+    # The current user can only see projects of its organizations
+    @projects = []
+    current_user.organizations.each do |organization|
+      @projects << organization.projects.all
+    end
+    # Then only projects on which the current is authorise to see will be displayed
+    @projects = (@projects.flatten & current_user.projects).reject { |i| !i.is_childless? }
   end
+
 
   def new
     authorize! :create_project_from_scratch, Project
@@ -1395,17 +1403,18 @@ public
             end
 
             flash[:success] = I18n.t(:notice_project_successful_checkout)
-            redirect_to (edit_project_path(new_prj, :anchor => "tabs-history")), :notice => I18n.t(:notice_project_successful_checkout)
+            redirect_to (edit_project_path(new_prj, :anchor => "tabs-history")), :notice => I18n.t(:notice_project_successful_checkout) and return
 
             #raise "#{RuntimeError}"
           else
-            flash['Error'] = I18n.t(:error_project_checkout_failed)
-            redirect_to '/projects' and return
+            flash[:error] = I18n.t(:error_project_checkout_failed)
+            redirect_to '/projects', :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
           end
 
         rescue
-          flash['Error'] = I18n.t(:error_project_checkout_failed)
-          redirect_to '/projects', :flash => {:error => I18n.t(:error_project_checkout_failed)}
+          flash[:error] = I18n.t(:error_project_checkout_failed)
+          redirect_to '/projects', :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
+          ###redirect_to(edit_project_path(old_prj, :anchor => 'tabs-history'), :flash => {:error => I18n.t(:error_project_checkout_failed)} ) and return
         end
       else
         redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_checkout_unauthorized_action')}
@@ -1494,23 +1503,43 @@ public
     selected_filter_version = params[:filter_selected]
     #"Display leaves projects only",1], ["Display all versions",2], ["Display root version only",3], ["Most recent version",4]
 
+    # The current user can only see projects of its organizations
+    @organization_user_projects = []
+    current_user.organizations.each do |organization|
+      @organization_user_projects << organization.projects.all
+    end
+
+    case params[:project_list_name]
+      when "filter_projects_version"
+        # Then only projects on which the current is authorise to see will be displayed
+        @projects = @organization_user_projects.flatten & current_user.projects
+
+      when "filter_user_projects_version"
+        # The current_user organizations's projects
+        @projects = @organization_user_projects.flatten
+
+      when "filter_group_projects_version"
+        # The current_user organizations's projects
+        @projects = @organization_user_projects.flatten
+    end
+
     unless selected_filter_version.empty?
       case selected_filter_version
         when '1' #Display leaves projects only
-          @projects = Project.all.reject { |i| !i.is_childless? }
+          @projects = @projects.reject { |i| !i.is_childless? }
 
         when '2' #Display all versions
-          @projects = Project.all
+          @projects = @projects
 
         when '3' #Display root version only
-          @projects = Project.all.reject { |i| !i.is_root? }
+          @projects = @projects.reject { |i| !i.is_root? }
 
         when '4' #Most recent version
-                 #@projects = Project.all.uniq_by(&:title)
-          @projects = Project.reorder('updated_at DESC').uniq_by(&:title)
+          #@projects = @projects.reorder('updated_at DESC').uniq_by(&:title)
+          @projects = @projects.sort{ |x,y| y.updated_at <=> x.updated_at }.uniq(&:title)
 
         else
-          @projects = Project.all
+          @projects = @projects #Project.all
       end
     end
     @projects
