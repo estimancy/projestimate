@@ -52,6 +52,7 @@ class Uow::InputsController < ApplicationController
         @size = EstimationValue.where(:module_project_id => @module_project.id,
                                       :pe_attribute_id => am.pe_attribute.id,
                                       :in_out => "input" ).first
+
         @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
       end
     end
@@ -151,9 +152,8 @@ class Uow::InputsController < ApplicationController
       @index = 1
     end
 
-      productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
-      abacus_value = SizeUnitTypeComplexity.where(size_unit_type_id: params["size_unit_type"], organization_uow_complexity_id: params[:complexity]).first.value
-
+    productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
+    abacus_value = SizeUnitTypeComplexity.where(size_unit_type_id: params["size_unit_type"], organization_uow_complexity_id: params[:complexity]).first.value
     weight = params[:"weight"].blank? ? 1 : params[:"weight"]
 
     @result[:"gross_low_#{@index.to_s}"] = params[:size_low].to_i * abacus_value.to_f * weight.to_f * productivity_ratio.to_f
