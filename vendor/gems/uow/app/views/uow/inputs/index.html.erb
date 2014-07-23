@@ -230,7 +230,8 @@
 
     $(", #uow_" + index +
       ", #technology_" + index +
-      ", #complexity_" + index).on("change", function(e){
+      ", #complexity_" + index +
+      ", #size_unit_type_" + index ).on("change", function(e){
 
       $.ajax({ url:'/uow/load_gross',
         data: 'size_low=' + $('#size_low_' + index).val()

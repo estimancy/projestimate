@@ -53,7 +53,8 @@ module Uow
     # Return effort
     #project.id, current_mp_to_execute.id, pbs_project_element_id)
     def get_effort_person_month(*args)
-      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).first.send("gross_#{args[3]}")
+      Input.where(:module_project_id => args[1],
+                  pbs_project_element_id: args[2]).map(&:"gross_#{args[3]}").compact.sum
     end
 
   end
