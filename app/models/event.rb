@@ -36,5 +36,8 @@
 
 class Event < ActiveRecord::Base
   attr_accessible :name, :description, :start_date, :end_date, :event_type_id, :project_id
+
+  belongs_to :project
+
   validates_presence_of :name
 end

@@ -36,7 +36,8 @@
 
 
 class ModuleProject < ActiveRecord::Base
-  attr_accessible  :project_id, :pemodule_id, :pemodule, :position_x, :position_y
+  attr_accessible  :project_id, :pemodule_id, :pemodule, :position_x, :position_y, :nb_input_attr, :nb_output_attr
+
   belongs_to :pemodule
   belongs_to :project, :touch => true
 

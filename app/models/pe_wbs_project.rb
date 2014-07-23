@@ -47,7 +47,7 @@ class PeWbsProject < ActiveRecord::Base
   scope :products_wbs, where(:wbs_type => 'Product')
   scope :activities_wbs, where(:wbs_type => 'Activity')
 
-  validates_associated :project
+  #validates_presence_of :project_id  ###validates_associated :project
 
   #validate :project_id_exists
   #def project_id_exists

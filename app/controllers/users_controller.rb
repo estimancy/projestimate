@@ -51,7 +51,14 @@ protected
       @user = User.new :user_status => 'active'
       @user.auth_type = AuthMethod.first.id
     end
-    @projects = Project.all.reject{ |i| i.is_childless? == false }
+
+    # The current user can only see projects of its organizations
+    @projects = []
+    @user.organizations.each do |organization|
+      @projects << organization.projects.all
+    end
+    @projects = @projects.flatten.reject { |i| !i.is_childless? }
+
     @organizations = Organization.all
     @groups = Group.defined_or_local
     @project_users = @user.projects
