@@ -1229,7 +1229,7 @@ fr:
 
   requirements: "Prérequis"
   size_unit: "Unité de taille"
-  unit_or_work_complexity: "Complexité des unité d'oeuvres"
+  unit_of_work_complexity: "Récapitulatif des complexités / unité d'oeuvres"
   factor_complexity: "Complexité des facteurs"
   size_unit_type: "Type de d'unité de taille"
   technology_size_type_abacus: "Abaque type d'unité de taille / Technologie"

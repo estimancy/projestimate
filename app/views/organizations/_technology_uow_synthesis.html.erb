@@ -1,3 +1,10 @@
+<div class="alert alert-info">
+  <span>
+    <i class="icon icon-info"></i>
+    For each size's types, configure nominal effort by technology/unit of work/complexity
+  </span>
+</div>
+
 <%= form_tag '/set_technology_uow_synthesis', :method => 'POST', :class => 'simple_form' do %>
 
   <%= hidden_field_tag "organization", params[:id] %>
@@ -14,7 +21,7 @@
 
       <% @organization.organization_technologies.each do |ot| %>
         <% ot.unit_of_works.each do |uow| %>
-          <% uow.organization_uow_complexities.each do |cplx| %>
+          <% OrganizationUowComplexity.where(organization_technology_id: ot.id, unit_of_work_id: uow.id).all.each do |cplx| %>
             <tr>
               <td>
                 <%= ot.name %>
@@ -25,7 +32,7 @@
               </td>
 
               <td>
-                <%= cplx.name %>
+                <%= link_to cplx.name, "#", title: cplx.description, class: "attribute_tooltip" %>
               </td>
 
               <% @organization.size_unit_types.each do |sut| %>

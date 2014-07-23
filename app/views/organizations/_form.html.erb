@@ -2,17 +2,17 @@
   <ul>
     <li><a href="#tabs-organization"><%= I18n.t(:organizations) %> </a></li>
     <% if action_name.in?(%w(edit update)) %>
+        <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
         <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
         <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
         <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
-        <li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_or_work_complexity) %> </a></li>
+        <li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_of_work_complexity) %> </a></li>
+        <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
         <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
         <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
         <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
         <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
         <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
-        <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
-        <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
   <% end %>
   </ul>
 
@@ -56,6 +56,13 @@
   </div>
 
   <% if action_name.in?(%w(edit update)) %>
+
+    <div id="tabs-profile">
+      <b><%= I18n.t(:profiles) %></b>
+      <%= render :partial => 'organizations/profiles' %>
+      <br><br>
+    </div>
+
     <div id="tabs-attribute">
       <b><%= I18n.t(:text_organization_attributes) %></b>
       <br><br>
@@ -116,7 +123,6 @@
           <th><%= I18n.t(:name) %></th>
           <th><%= I18n.t(:alias) %></th>
           <th><%= I18n.t(:description) %></th>
-          <th class="filter-select" title="<%= I18n.t(:tooltip_state) %>"><%= I18n.t(:state) %></th>
           <th><%= I18n.t(:productivity_ratio) %></th>
           <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
@@ -133,7 +139,6 @@
             <td><%= ot.name %></td>
             <td><%= ot.alias %></td>
             <td><%= ot.description %></td>
-            <td><%= ot.state %></td>
             <td><%= ot.productivity_ratio %></td>
             <td>
               <%= link_to '', edit_organization_technology_path(ot.id, :organization_id => @organization.id), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
@@ -161,7 +166,6 @@
           <th><%= I18n.t(:name) %></th>
           <th><%= I18n.t(:alias) %></th>
           <th><%= I18n.t(:description) %></th>
-          <th class="filter-select" title="<%= I18n.t(:tooltip_state) %>"><%= I18n.t(:state) %></th>
           <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
         </thead>
@@ -177,7 +181,6 @@
           <td><%= uow.name %></td>
           <td><%= uow.alias %></td>
           <td><%= uow.description %></td>
-          <td><%= uow.state %></td>
           <td>
             <%= link_to '', edit_unit_of_work_path(uow.id, :organization_id => @organization.id), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
             <% if can? :manage, Organization %>
@@ -205,15 +208,15 @@
     <% @unitofworks.each do |uow| %>
 
       <h4>
-        <%= uow.name %>
+        <%= link_to uow.name, edit_unit_of_work_path(uow, organization_id: @organization) %>
       </h4>
 
       <table id="table_list_5" class="table table-bordered">
         <thead>
           <tr>
             <th><%= I18n.t(:name) %></th>
+            <th><%= I18n.t(:technology) %></th>
             <th><%= I18n.t(:description) %></th>
-            <th><%= I18n.t(:state) %></th>
             <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
           </tr>
         </thead>
@@ -227,8 +230,8 @@
                 <tr>
             <% end %>
             <td><%= oc.name %></td>
+            <td><%= oc.organization_technology.nil? ? '-' : oc.organization_technology.name %></td>
             <td><%= oc.description %></td>
-            <td><%= oc.state %></td>
             <td>
               <%= link_to '', edit_organization_uow_complexity_path(oc.id, :organization_id => @organization.id), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
@@ -242,8 +245,13 @@
     <% end %>
   </div>
 
+  <div id="tabs-synthesis-uow-techno">
+    <%= render :partial => 'organizations/technology_uow_synthesis' %>
+  </div>
+
   <div id="tabs-cplx-factor">
-    <b>Factors Complexities</b>
+    <h4>Factors Complexities</h4>
+
     <br>
 
     <% if can? :edit_organizations, Organization %>
@@ -369,16 +377,6 @@
       <%= render :partial => 'layouts/footer_table' %>
       </tbody>
     </table>
-  </div>
-
-  <div id="tabs-synthesis-uow-techno">
-    <%= render :partial => 'organizations/technology_uow_synthesis' %>
-  </div>
-
-  <div id="tabs-profile">
-    <b><%= I18n.t(:profiles) %></b>
-    <%= render :partial => 'organizations/profiles' %>
-    <br><br>
   </div>
 
 <% end %>

@@ -11,13 +11,14 @@
     <%= hidden_field_tag "module_project_id", params[:mp] %>
     <%= hidden_field_tag "input_id[#{i+1}]", input.id, :class => "input_id" %>
 
-    <td class="span1">
+    <td class="span2 center">
       <%= link_to "", uow.new_item_path(mp: params[:mp], pbs_id: current_component.id), :class => "icon icon-plus", title: "New item"  %>
       <%= link_to "", uow.remove_item_path(input_id: input.id), :class => "icon icon-trash", title: "Remove item"  %>
       <span class="icon icon-star <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></span>
       <%= hidden_field_tag "flag[#{i+1}]", input.flag.blank? ? 'black-question-mark' : input.flag %>
+      <a href="#modal_description" class="icon icon-question" data-toggle="modal"></a>
     </td>
-    <td class="span1 center">
+    <td class="span2 center">
       <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-large" %>
     </td>
     <td class="span1 center">
@@ -26,7 +27,6 @@
     <td class="span1 center">
       <% input.technology_id.nil? ? (@unit_of_works = []) : (@unit_of_works = input.organization_technology.unit_of_works) %>
       <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, selected: input.unit_of_work_id.nil? ? current_component.inputs.last.unit_of_work_id : input.unit_of_work_id), {class: "uow", prompt: I18n.t(:select_uow), required: true} %>
-      <a href="#modal_description" class="icon icon-question" data-toggle="modal"></a>
     </td>
     <td class="span1 center">
       <%= select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>

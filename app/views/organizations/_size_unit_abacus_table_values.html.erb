@@ -1,9 +1,16 @@
+<div class="alert alert-info">
+  <span>
+    <i class="icon icon-info"></i>
+    Configure Function Point Conversion to SLOC table
+  </span>
+</div>
+
 <table class="table table-striped table-bordered table-condensed permissions">
   <th></th>
   <% @size_units.each do |su| %>
     <th>
         <span class="attribute_tooltip" title='<%= su.description %>'>
-          <%= su.name %>
+          <%= su.name %> -> SLOC
         </span>
     </th>
   <% end %>

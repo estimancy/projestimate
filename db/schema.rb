@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140722100317) do
+ActiveRecord::Schema.define(:version => 20140723145123) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -484,10 +484,10 @@ ActiveRecord::Schema.define(:version => 20140722100317) do
     t.integer  "organization_id"
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
+    t.datetime "created_at",                                                  :null => false
+    t.datetime "updated_at",                                                  :null => false
     t.integer  "display_order"
-    t.string   "state",            :limit => 20
+    t.string   "state",                      :limit => 20
     t.integer  "factor_id"
     t.integer  "unit_of_work_id"
     t.float    "value"
@@ -498,7 +498,8 @@ ActiveRecord::Schema.define(:version => 20140722100317) do
     t.text     "change_comment"
     t.integer  "reference_id"
     t.string   "reference_uuid"
-    t.boolean  "is_default",                     :default => false
+    t.boolean  "is_default",                               :default => false
+    t.integer  "organization_technology_id"
   end
 
   create_table "organizations", :force => true do |t|
