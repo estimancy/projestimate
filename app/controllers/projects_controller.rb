@@ -811,10 +811,11 @@ public
                       corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
                       estimation_value_profile = nil
                       unless corresponding_ratio_profile_value.nil?
-                        estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value) / 100
+                        estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
 
                         #the update the parent's value
-                        parent_profile_est_value["#{wbs_project_elt.parent_id}"] += estimation_value_profile
+                        ###parent_profile_est_value["#{wbs_project_elt.parent_id}"] += estimation_value_profile
+                        parent_profile_est_value["#{wbs_project_elt.parent_id}"] = parent_profile_est_value["#{wbs_project_elt.parent_id}"].to_f + estimation_value_profile
                       end
 
                       #if current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil?
