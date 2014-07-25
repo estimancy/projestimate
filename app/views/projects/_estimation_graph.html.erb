@@ -286,9 +286,9 @@
 
                 //Create the Stacked Bar chart dataset
                 stacked_bar_effort_per_activity = {
-                    labels : ["low", "most_likely", "high", "probable"],
-                    datasets : <%= r_stacked_bar_effort_per_activity.to_json.html_safe %>
-                }
+                labels : ["low", "most_likely", "high", "probable"],
+                datasets : <%= r_stacked_bar_effort_per_activity.to_json.html_safe %>
+            }
             <% end %>
 
             <% $rb_hue_color +=222.5 %>
@@ -466,7 +466,6 @@
                 var myBar = new Chart(document.getElementById(value).getContext("2d")).Bar(attr_data, attr_options);
             });
         <% end %>
-
 
 
         //========================================= TEST  ===============================================
