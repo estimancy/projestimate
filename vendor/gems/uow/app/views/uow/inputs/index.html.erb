@@ -140,7 +140,11 @@
         <h4>Critères & Valeurs</h4>
         <% uow.organization_uow_complexities.each do |cplx| %>
           <p>
-            <%= cplx.name %> - <%= cplx.organization_technology.name %> - <%= cplx.description %>
+            <%= cplx.name %>
+            <% unless cplx.organization_technology.nil? %>
+              - <%= cplx.organization_technology.name %>
+            <% end %>
+              - <%= cplx.description %>
           </p>
 
           <p>
