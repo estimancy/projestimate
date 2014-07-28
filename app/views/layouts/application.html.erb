@@ -8,6 +8,7 @@
 
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application', 'projestimate_script' %>
+  <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
   <%= javascript_heads %>
   <%= csrf_meta_tag %>
@@ -68,4 +69,10 @@
 
 </script>
 
+
+
 <%= render 'layouts/notifications' %>
+
+<!--<div id='polynomial2_div' style='width: 900px; height: 500px;'></div>-->
+
+<%# line_chart User.order("created_at").group(:created_at).count %>

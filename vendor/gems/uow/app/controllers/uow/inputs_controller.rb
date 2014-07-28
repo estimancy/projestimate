@@ -45,7 +45,7 @@ class Uow::InputsController < ApplicationController
     @complexities = []
     organization_unit_of_works = current_project.organization.unit_of_works.first
     if !organization_unit_of_works.nil?
-      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.name}", i.id]}
+      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
     end
 
     @module_project.pemodule.attribute_modules.each do |am|

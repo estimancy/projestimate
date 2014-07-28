@@ -28,6 +28,7 @@
               <!--</div>-->
           <%# end %>
           <%= render :partial => "projects/estimation_graph", :locals => { :project_modules => @project_modules } %>
+          <%# column_chart Task.group_by_hour_of_day(:created_at, format: "%l %P").count %>
         </div>
       </div>
     </div>
