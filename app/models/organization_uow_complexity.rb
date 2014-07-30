@@ -66,5 +66,8 @@ class OrganizationUowComplexity < ActiveRecord::Base
     })
   end
 
+  def to_s
+    nil? ? '' : name
+  end
 
 end

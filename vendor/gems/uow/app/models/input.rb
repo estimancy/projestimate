@@ -37,15 +37,18 @@
 class Input < ActiveRecord::Base
   belongs_to :module_project
   belongs_to :organization_technology, :foreign_key => :technology_id
+  belongs_to :unit_of_work
+  belongs_to :organization_uow_complexity, :foreign_key => :complexity_id
+  belongs_to :size_unit_type
 
   validates :technology_id, :unit_of_work_id, presence: true
 
   def self.export(mp, pbs)
     @inputs = Input.where(module_project_id: mp, pbs_project_element_id: pbs).all
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
-      csv << ['id', 'Reference', 'Technology', 'Unit Of Work', 'Complexity', 'Type', 'Low', 'Most Likely', 'High', 'Weight']
+      csv << ['id', 'Organization', 'Reference', 'Technology', 'Unit Of Work', 'Complexity', 'Type', 'Low', 'Most Likely', 'High', 'Weight']
       @inputs.each do |i|
-        csv << ["#{i.id}", "#{i.name}", "#{i.technology_id}", "#{i.unit_of_work_id}", "#{i.complexity_id}", "#{i.size_unit_type_id}",
+        csv << ["#{i.id}", "#{i.organization_technology.organization.name}", "#{i.name}", "#{i.organization_technology}", "#{i.unit_of_work}", "#{i.organization_uow_complexity}", "#{i.size_unit_type.name}",
                 "#{i.size_low}", "#{i.size_most_likely}", "#{i.size_high}",
                 "#{i.weight}"]
       end
@@ -59,20 +62,39 @@ class Input < ActiveRecord::Base
     CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
       csv.each_with_index do |row, i|
         unless row.empty? or i == 0
-          begin
+          #begin
             @ware = Input.find(row[0])
-            @ware.update_attribute('name', row[1])
-            @ware.update_attribute('technology_id', row[2])
-            @ware.update_attribute('unit_of_work_id', row[3])
-            @ware.update_attribute('complexity_id', row[4])
-            @ware.update_attribute('size_unit_type_id', row[4])
-            @ware.update_attribute('size_low', row[5])
-            @ware.update_attribute('size_most_likely', row[6])
-            @ware.update_attribute('size_high', row[7])
-            @ware.update_attribute('weight', row[8])
-          rescue
-            error_count = error_count + 1
-          end
+            unless @ware.nil?
+              #@ware.update_attribute('organization_id', row[1])
+              @ware.update_attribute('name', row[2])
+              #@ware.update_attribute('technology_id', row[3])
+              #@ware.update_attribute('unit_of_work_id', row[4])
+              #@ware.update_attribute('complexity_id', row[5])
+              #@ware.update_attribute('size_unit_type_id', row[6])
+              @ware.update_attribute('size_low', row[7])
+              @ware.update_attribute('size_most_likely', row[8])
+              @ware.update_attribute('size_high', row[9])
+              @ware.update_attribute('weight', row[10])
+            else
+
+              o = Organization.find_by_name(row[1])
+              t = OrganizationTechnology.where(name: row[3], organization_id: o.id).first
+              u = UnitOfWork.where(name: row[4], organization_id: o.id).first
+              c = OrganizationUowComplexity.where(name: row[5], organization_id: o.id).first
+              sut = SizeUnitType.where(name: row[6], organization_id: o.id).first
+
+              i = Input.new(name: row[2],
+                            technology_id: t.id,
+                            unit_of_work_id: u.id,
+                            complexity_id: c.id,
+                            size_unit_type_id: sut.id,
+                            size_low: row[7], size_most_likely: row[8], size_high: row[9], weight: row[10])
+
+              i.save
+            end
+          #rescue
+          #  error_count = error_count + 1
+          #end
         end
       end
     end
