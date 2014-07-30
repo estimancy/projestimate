@@ -77,7 +77,6 @@ class OrganizationsController < ApplicationController
   def refresh_value_elements
     @size_unit = SizeUnit.find(params[:size_unit_id])
     @technologies = OrganizationTechnology.all
-
   end
 
   def create

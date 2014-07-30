@@ -1232,10 +1232,9 @@ en:
   unit_of_work_complexity: "Complexity / Unit Of Work"
   factor_complexity: "Factor complexities"
   size_unit_type: "Size unit type"
-  technology_size_type_abacus: "Size unit type/ Technology abacus"
-  technology_size_abacus: "Size unit / Technology abacus"
-  technology_uow_synthesis: "Unit Of Work / Technology abacus"
-
+  technology_size_type_abacus: "Converter"
+  technology_size_abacus: "SLOC / IFPUG"
+  technology_uow_synthesis: "Unit of Work Abacus"
   quantity: "Quantity"
   unit_of_work: "Unit Of Work"
   how_to_use_uow: "Choose an unit of work"
@@ -1243,3 +1242,4 @@ en:
   reference: "Reference"
   technology: "Technology"
   display_charts: "Display charts"
+  criteria: "Critères"

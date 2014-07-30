@@ -8,11 +8,11 @@
         <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
         <li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_of_work_complexity) %> </a></li>
         <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
-        <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
         <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
         <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
         <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
         <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
+        <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
   <% end %>
   </ul>
 
@@ -216,7 +216,7 @@
           <tr>
             <th><%= I18n.t(:name) %></th>
             <th><%= I18n.t(:technology) %></th>
-            <th><%= I18n.t(:description) %></th>
+            <th><%= I18n.t(:criteria) %></th>
             <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
           </tr>
         </thead>
@@ -249,50 +249,6 @@
     <%= render :partial => 'organizations/technology_uow_synthesis' %>
   </div>
 
-  <div id="tabs-cplx-factor">
-    <h4>Factors Complexities</h4>
-
-    <br>
-
-    <% if can? :edit_organizations, Organization %>
-      <%= link_to I18n.t('new_factor_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, :anchortab => 'tabs-7'), :class => 'btn pull-right' %>
-    <% end %>
-
-
-    <% @factors.each do |factor| %>
-
-      <h4>
-        <%= factor.factor_type.nil? ? "" : factor.factor_type.humanize %> - <%= factor.name %> - <%= factor.description %>
-      </h4>
-
-      <table class="table">
-        <% factor.organization_uow_complexities.where(organization_id: @organization.id).order('display_order ASC').each do |c| %>
-          <tr style="<%= (c.is_default == true) ? 'color: blue;' : '' %>">
-            <td class="span2"><%= c.name %></td>
-            <td class="span2"><%= c.value %></td>
-            <td>
-              <%= link_to '', set_default_path(c), :class => 'icon-exclamation icon-large pull-left', :title => I18n.t('edit') %>
-              <% if can? :edit_organizations, Organization %>
-                <%= link_to '', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => 'icon-plus-sign icon-large pull-left' %>
-              <% end %>
-              <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', c, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
-              <% if is_master_instance? && !c.is_local_record? %>
-                <% if c.is_retired? %>
-                  <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-                <% else %>
-                  <% unless c.is_defined? %>
-                    <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
-    <% end %>
-  </div>
-
   <div id="tabs-sut">
     <% if can? :manage, Organization %>
 
@@ -300,12 +256,12 @@
 
       <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th><%= I18n.t(:alias) %></th>
-          <th><%= I18n.t(:description) %></th>
-          <th class="action"><%= I18n.t(:actions) %></th>
-        </tr>
+          <tr>
+            <th><%= I18n.t(:name) %></th>
+            <th><%= I18n.t(:alias) %></th>
+            <th><%= I18n.t(:description) %></th>
+            <th class="action"><%= I18n.t(:actions) %></th>
+          </tr>
         </thead>
 
         <tbody>
@@ -377,6 +333,50 @@
       <%= render :partial => 'layouts/footer_table' %>
       </tbody>
     </table>
+  </div>
+
+  <div id="tabs-cplx-factor">
+    <h4>Factors Complexities</h4>
+
+    <br>
+
+    <% if can? :edit_organizations, Organization %>
+      <%= link_to I18n.t('new_factor_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, :anchortab => 'tabs-7'), :class => 'btn pull-right' %>
+    <% end %>
+
+
+    <% @factors.each do |factor| %>
+
+      <h4>
+        <%= factor.factor_type.nil? ? "" : factor.factor_type.humanize %> - <%= factor.name %> - <%= factor.description %>
+      </h4>
+
+      <table class="table">
+        <% factor.organization_uow_complexities.where(organization_id: @organization.id).order('display_order ASC').each do |c| %>
+          <tr style="<%= (c.is_default == true) ? 'color: blue;' : '' %>">
+            <td class="span2"><%= c.name %></td>
+            <td class="span2"><%= c.value %></td>
+            <td>
+              <%= link_to '', set_default_path(c), :class => 'icon-exclamation icon-large pull-left', :title => I18n.t('edit') %>
+              <% if can? :edit_organizations, Organization %>
+                <%= link_to '', new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, factor: factor.id), :class => 'icon-plus-sign icon-large pull-left' %>
+              <% end %>
+              <%= link_to '', edit_organization_uow_complexity_path(c), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', c, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <% if is_master_instance? && !c.is_local_record? %>
+                <% if c.is_retired? %>
+                  <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                <% else %>
+                  <% unless c.is_defined? %>
+                    <%= link_to('', "/organization_uow_complexities/#{c.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
   </div>
 
 <% end %>

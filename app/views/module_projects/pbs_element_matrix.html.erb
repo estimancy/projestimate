@@ -1,6 +1,6 @@
 <div class="module_box" style=" width: auto; overflow-x:auto; margin-bottom: 3px;"> <!-- <div class="span12"  style="  overflow-x:scroll;"> -->
   <% @alphabetical = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) %>
-  <h4 class="ui-widget">&nbsp;<i class="icon-pencil icon-large"></i>&nbsp;<b><%= I18n.t(:label_pbs_element_matrix, :value => @project.title) %> </b></h4>
+  <h4 class="ui-widget"><b><%= I18n.t(:label_pbs_element_matrix, :value => @project.title) %> </b></h4>
 
   <%= form_tag({:action => 'associate', :controller => 'module_projects', :project_id => @project.id}, :method => 'POST', :class => 'simple_form') do %>
       <table class="table table-striped table-bordered table-condensed">

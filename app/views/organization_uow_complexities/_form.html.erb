@@ -14,7 +14,7 @@
 
       <%= f.input :organization_id, :as => :hidden, :input_html => {:class => 'input-xxlarge', :value => params[:organization_id]} %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-      <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      <%= f.input :description, :label => I18n.t('criteria'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
       <% if params[:factor].present? %>
         <%= f.input :factor_id, as: :select, collection: Factor.order("factor_type").map{|i|["#{i.name} - #{i.factor_type.humanize}", i.id]}, selected: params[:factor].nil? ? @organization_uow_complexity.factor_id : params[:factor], include_blank: true %>
@@ -67,7 +67,6 @@
       <% end %>
 
       <% if @organization %>
-        <%#= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-6'), :class => 'btn' %>
         <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => params[:anchortab]), :class => 'btn' %>
       <% else %>
         <%= link_to I18n.t('back'), factors_path, :class => 'btn' %>
