@@ -77,7 +77,6 @@ class OrganizationsController < ApplicationController
   def refresh_value_elements
     @size_unit = SizeUnit.find(params[:size_unit_id])
     @technologies = OrganizationTechnology.all
-
   end
 
   def create
@@ -259,7 +258,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => '-abacus-tsu'), nil, '/organizationals_params')
+    redirect_to edit_organization_path(@organization, :anchor => 'tabs-abacus-sut')
   end
 
   def set_technology_size_unit_abacus
@@ -290,7 +289,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-abacus-sut'), nil, '/organizationals_params')
+    redirect_to edit_organization_path(@organization, :anchor => 'tabs-abacus-tsu')
 
   end
 

@@ -87,6 +87,10 @@ class OrganizationUowComplexitiesController < ApplicationController
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
     @organization = @organization_uow_complexity.organization
 
+    unless @organization_uow_complexity.organization_id.nil?
+      @organization_uow_complexity.uuid = UUIDTools::UUID.random_create.to_s
+    end
+
     if params[:organization_uow_complexity][:organization_id].present?
       @organization = Organization.find_by_id(params[:organization_uow_complexity][:organization_id])
       @organization_uow_complexity.organization_id = @organization.id

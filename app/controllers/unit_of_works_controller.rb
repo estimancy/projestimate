@@ -65,8 +65,7 @@ class UnitOfWorksController < ApplicationController
       flash[:notice] = I18n.t (:notice_unit_of_work_successful_updated)
       redirect_to redirect_apply(edit_unit_of_work_path(@unit_of_work),
                                  nil,
-                                 edit_organization_path(params[:unit_of_work][:organization_id],
-                                                        :anchor => 'tabs-uow'))
+                                 edit_organization_path(params[:unit_of_work][:organization_id], :anchor => 'tabs-uow'))
     else
       render action: 'edit', :organization_id => @organization.id
     end

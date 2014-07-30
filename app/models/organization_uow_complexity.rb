@@ -23,7 +23,7 @@
 class OrganizationUowComplexity < ActiveRecord::Base
   include MasterDataHelper
 
-  attr_accessible :name, :description, :display_order, :state, :factor_id, :unit_of_work_id, :value, :record_status_id, :organization_id, :state
+  attr_accessible :name, :description, :display_order, :state, :factor_id, :unit_of_work_id, :value, :record_status_id, :organization_id, :state, :organization_technology_id
 
   include AASM
   aasm :column => :state do # defaults to aasm_state
@@ -42,6 +42,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
 
   belongs_to :factor
   belongs_to :unit_of_work
+  belongs_to :organization_technology
   belongs_to :size_unit_type
 
   default_scope order('display_order ASC')
@@ -52,6 +53,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
   validates :custom_value, :presence => true, :if => :is_custom?
 
   validates_presence_of :unit_of_work_id
+  validates_presence_of :organization_technology_id
 
   amoeba do
     enable
@@ -64,5 +66,8 @@ class OrganizationUowComplexity < ActiveRecord::Base
     })
   end
 
+  def to_s
+    nil? ? '' : name
+  end
 
 end

@@ -1229,13 +1229,12 @@ en:
 
   requirements: "Requirements"
   size_unit: "Size unit"
-  unit_or_work_complexity: "Complexité des unité d'oeuvres"
-  factor_complexity: "Complexité des facteurs"
-  size_unit_type: "Type de d'unité de taille"
-  technology_size_type_abacus: "Abaque type d'unité de taille / Technologie"
-  technology_size_abacus: "Abaque unité de taille / Technologie"
-  technology_uow_synthesis: "Abaque Unité d'oeuvre / Technologie"
-
+  unit_of_work_complexity: "Complexity / Unit Of Work"
+  factor_complexity: "Factor complexities"
+  size_unit_type: "Size unit type"
+  technology_size_type_abacus: "Converter"
+  technology_size_abacus: "SLOC / IFPUG"
+  technology_uow_synthesis: "Unit of Work Abacus"
   quantity: "Quantity"
   unit_of_work: "Unit Of Work"
   how_to_use_uow: "Choose an unit of work"
@@ -1246,3 +1245,4 @@ en:
   new_pbs_product: "New component"
   project_default_ratio: "Project's default ratio"
 
+  criteria: "Critères"

@@ -57,4 +57,8 @@ class UnitOfWork < ActiveRecord::Base
 
   default_scope { order('display_order ASC') }
 
+  def to_s
+    self.nil? ? '' : self.name
+  end
+
 end

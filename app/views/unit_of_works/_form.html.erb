@@ -1,6 +1,7 @@
 <div class="tabs">
   <ul>
     <li><a href="#tabs-1"><%= I18n.t(:organization_unit_of_work) %> </a></li>
+    <li><a href="#tabs-2"> Complexities </a></li>
   </ul>
 
   <div id="tabs-1">
@@ -28,22 +29,6 @@
         </div>
       </div>
 
-      <div class="accordion" id="accordion1">
-        <div class="accordion-group accordion-caret">
-          <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-              <i class="icon-caret-down"></i>
-              <b>Complexities</b>
-            </a>
-          </div>
-          <div id="collapseOne" class="accordion-body in collapse">
-            <div class="accordion-inner">
-              <%= f.association :organization_uow_complexities, :collection => @unit_of_work.organization_uow_complexities, :as => :check_boxes, :input_html => {:class => 'input-xxlarge'} %>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="actions-tabs">
 
         <% if can? :edit_organizations, Organization %>
@@ -61,5 +46,43 @@
       </div>
 
     <% end %>
+  </div>
+
+  <div id="tabs-2">
+
+    <% if can? :edit_organizations, Organization %>
+      <p>
+        <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.id, :anchor => 'tabs-uow'), :class => 'btn pull-right' %>
+      </p>
+    <% end %>
+
+    <% @unit_of_work.organization_technologies.each do |ot| %>
+
+      <h4><%= @unit_of_work.name %> - <%= ot.name %></h4>
+      <table id="table_list_5" class="table table-bordered">
+        <thead>
+          <tr>
+            <th><%= I18n.t(:name) %></th>
+            <th><%= I18n.t(:description) %></th>
+            <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
+          </tr>
+        </thead>
+        <tbody>
+        <% OrganizationUowComplexity.where(organization_technology_id: ot.id, unit_of_work_id: @unit_of_work.id).all.each do |oc| %>
+          <tr>
+            <td><%= oc.name %></td>
+            <td><%= oc.description %></td>
+            <td>
+              <%= link_to '', edit_organization_uow_complexity_path(oc.id, :organization_id => @organization.id), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+              <% if can? :manage, Organization %>
+                <%= link_to '', oc, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
+         </tr>
+        <% end %>
+        </tbody>
+      </table>
+      <% end %>
+
   </div>
 </div>

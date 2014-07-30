@@ -137,10 +137,14 @@
           <%= uow.description %>
         </p>
 
-        <h4>Critères</h4>
+        <h4>Critères & Valeurs</h4>
         <% uow.organization_uow_complexities.each do |cplx| %>
           <p>
-            <%= cplx.name %> - <%= cplx.description %>
+            <%= cplx.name %>
+            <% unless cplx.organization_technology.nil? %>
+              - <%= cplx.organization_technology.name %>
+            <% end %>
+              - <%= cplx.description %>
           </p>
 
           <p>
@@ -158,13 +162,6 @@
             </table>
           </p>
         <% end %>
-
-        <p>
-          <b>
-            <%= I18n.t :organization_technology %> <br>
-          </b>
-          <%= uow.organization_technologies.map(&:name).join(', ') %>
-        </p>
         <hr>
       <% end %>
     </div>
