@@ -1243,3 +1243,6 @@ en:
   reference: "Reference"
   technology: "Technology"
   display_charts: "Display charts"
+  new_pbs_product: "New component"
+  project_default_ratio: "Project's default ratio"
+
