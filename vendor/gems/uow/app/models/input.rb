@@ -56,14 +56,14 @@ class Input < ActiveRecord::Base
     csv_string.encode(I18n.t(:general_csv_encoding))
   end
 
-  def self.import(file, sep, encoding)
+  def self.import(file, sep, encoding, component, module_project)
     sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
     error_count = 0
     CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
       csv.each_with_index do |row, i|
         unless row.empty? or i == 0
           #begin
-            @ware = Input.find(row[0])
+            @ware = Input.find_by_id(row[0])
             unless @ware.nil?
               #@ware.update_attribute('organization_id', row[1])
               @ware.update_attribute('name', row[2])
@@ -77,20 +77,26 @@ class Input < ActiveRecord::Base
               @ware.update_attribute('weight', row[10])
             else
 
-              o = Organization.find_by_name(row[1])
+              o = Organization.find_by_name(row[1].to_i)
               t = OrganizationTechnology.where(name: row[3], organization_id: o.id).first
               u = UnitOfWork.where(name: row[4], organization_id: o.id).first
               c = OrganizationUowComplexity.where(name: row[5], organization_id: o.id).first
               sut = SizeUnitType.where(name: row[6], organization_id: o.id).first
 
-              i = Input.new(name: row[2],
-                            technology_id: t.id,
-                            unit_of_work_id: u.id,
-                            complexity_id: c.id,
-                            size_unit_type_id: sut.id,
-                            size_low: row[7], size_most_likely: row[8], size_high: row[9], weight: row[10])
+              begin
+                i = Input.new(name: row[2],
+                              technology_id: t.id,
+                              unit_of_work_id: u.id,
+                              complexity_id: c.id,
+                              size_unit_type_id: sut.id,
+                              pbs_project_element_id: component.id,
+                              module_project_id: module_project.id,
+                              flag: "black-question-mark",
+                              size_low: row[7], size_most_likely: row[8], size_high: row[9], weight: row[10])
 
-              i.save
+                i.save
+              rescue
+              end
             end
           #rescue
           #  error_count = error_count + 1
@@ -100,6 +106,4 @@ class Input < ActiveRecord::Base
     end
     error_count
   end
-
-
 end
