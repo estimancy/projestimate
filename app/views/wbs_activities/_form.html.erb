@@ -139,7 +139,7 @@
         <div id="tabs-4">
           <div class="pull-left">
             <%= I18n.t(:select_ratio_table) %>
-            <%= select_tag 'Ratio', options_for_select(@wbs_activity_ratios.map { |i| [i.name, i.id] }, :selected => @wbs_activity_ratio), :class => 'select_ratio' %>
+            <%= select_tag 'Ratio', options_for_select(@wbs_activity_ratios.map { |i| [i.name, i.id] }, :selected => (params[:project_default_ratio] || @wbs_activity_ratio)), :class => 'select_ratio' %>
           </div>
 
           <%= form_tag '/save_values', :id => 'save_ratio_elt_reference', :remote => true, :class => 'simple_form' do %>

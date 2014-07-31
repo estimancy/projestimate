@@ -10,6 +10,11 @@
   <%= javascript_include_tag 'application', 'projestimate_script' %>
   <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
+  <script>
+      var Chartkick = {"language": "en"};
+  </script>
+  <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+
   <%= javascript_heads %>
   <%= csrf_meta_tag %>
 

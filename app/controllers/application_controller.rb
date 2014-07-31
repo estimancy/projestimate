@@ -494,4 +494,5 @@ class ApplicationController < ActionController::Base
     devise_controller? ? 'devise' : 'application'
   end
 
+
 end

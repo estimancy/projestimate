@@ -1522,6 +1522,8 @@ public
       when "filter_group_projects_version"
         # The current_user organizations's projects
         @projects = @organization_user_projects.flatten
+      else
+        @projects = @organization_user_projects.flatten & current_user.projects
     end
 
     unless selected_filter_version.empty?
@@ -1790,7 +1792,6 @@ public
     end
 
     #======================================== CURRENT MODULE OUTPUTS DATA ==============================================
-
     @current_mp_outputs_dataset = {}
     @current_mp_effort_per_activity = Hash.new
     # get all current module_project attributes for outputs data
@@ -1948,7 +1949,6 @@ public
           end
         end
         attr_data << pbs_level_value
-
 
         #========================
       end

@@ -1242,5 +1242,8 @@ fr:
   reference: "Référence"
   technology: "Technologie"
   display_charts: "Afficher les graphiques"
+  new_pbs_product: "Nouveau composant"
+  project_default_ratio: "Ratio par défaut du projet"
+
   criteria: "Critères"
 
