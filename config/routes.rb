@@ -282,6 +282,7 @@ Projestimate::Application.routes.draw do
   get 'show_project_history' => 'projects#show_project_history', :as => :show_project_history
 
   get 'projects_from' => 'projects#projects_from', :as => 'projects_from'
+  post 'load_setting_module/:module_project_id' => 'projects#load_setting_module', :as => 'load_setting_module'
 
   #Master Data validation and restoration routes
   match ':controller/:id/validate_change' => ':controller#validate_change', :as => 'validate_change'
