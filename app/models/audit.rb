@@ -25,8 +25,8 @@ class Audit < ActiveRecord::Base
 
   def customize_action_name
     audit_action = ""
-    if self.action
-      case self.action
+    if action
+      case action
         when "create"
           audit_action = "Création"
         when "update"
@@ -41,14 +41,14 @@ class Audit < ActiveRecord::Base
   # customize the changes
   def customize_audited_changes
     changes = ""
-    if self.action && self.audited_changes
-      case self.action
+    if action && audited_changes
+      case action
         when "create"
-          changes = "Création d'un nouvel objet '#{self.auditable_type}' (id = #{self.auditable_id})"
+          changes = "Création d'un nouvel objet '#{auditable_type}' (id = #{auditable_id})"
         when "update"
-          audited_value = self.audited_changes
+          audited_value = audited_changes
           changed_attribute = audited_value[audited_value.keys.first]
-          changes = "Modification de la valeur du champ '#{self.audited_changes.keys.first}' de '#{changed_attribute.first}' à '#{changed_attribute.last}' "
+          changes = "Modification de la valeur du champ '#{audited_changes.keys.first}' de '#{changed_attribute.first}' à '#{changed_attribute.last}' "
         when "delete"
           changes = "Suppression"
       end
@@ -60,8 +60,8 @@ class Audit < ActiveRecord::Base
   def customize_user_id
     user_login = ""
     begin
-      if self.user_id
-        user = User.find(self.user_id)
+      if user_id
+        user = User.find(user_id)
         if user
           user_login = "#{user.login_name}"
         end

@@ -53,6 +53,6 @@ class ProjectSecurityLevel < ActiveRecord::Base
 
 
   def to_s
-    self.name
+    name
   end
 end

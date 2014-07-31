@@ -1244,6 +1244,7 @@ fr:
   display_charts: "Afficher les graphiques"
   new_pbs_product: "Nouveau composant"
   project_default_ratio: "Ratio par défaut du projet"
+  no_default_ratio: "No default ratio"
 
   criteria: "Critères"
 

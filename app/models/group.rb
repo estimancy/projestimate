@@ -63,7 +63,7 @@ class Group < ActiveRecord::Base
 
   #Override
   def to_s
-    self.name
+    name
   end
 
   #Return group project_securities for selected project_id

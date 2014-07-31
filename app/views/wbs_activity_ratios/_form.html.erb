@@ -34,7 +34,7 @@
           <% if can? :edit_wbs_activities, WbsActivity and action_name.in?(%w(new create)) %>
               <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
-          <% elsif can? :edit_wbs_activities, WbsActivity and (action_name == 'edit' || action_name=='update') %>
+          <% elsif can? :update_wbs_activities, WbsActivity and (action_name == 'edit' || action_name=='update') %>
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>

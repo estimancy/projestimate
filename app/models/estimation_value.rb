@@ -53,12 +53,12 @@ class EstimationValue < ActiveRecord::Base
   #input or output
   EstimationValue.all.map(&:in_out).each do |type|
     define_method("#{type}?") do
-      (self.in_out == type) ? true : false
+      (in_out == type) ? true : false
     end
   end
 
   def custom_attribute?
-    if self.custom_attribute == 'user'
+    if custom_attribute == 'user'
       true
     else
       false

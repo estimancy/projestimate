@@ -7,7 +7,11 @@
     </ul>
 
     <div class="tab-content">
-      <div class = "pull-right darkorange_color"><%= I18n.t(:project_default_ratio) %> : <%= link_to "#{@project_default_ratio.name}", edit_wbs_activity_path(@project_default_ratio.wbs_activity.id, project_default_ratio: @project_default_ratio, Ratio: @project_default_ratio.id, anchor: 'tabs-4', class: 'darkorange_color')  %></div>
+      <% if @project_default_ratio %>
+        <div class = "pull-right darkorange_color"><%= I18n.t(:project_default_ratio) %> : <%= link_to "#{@project_default_ratio}", edit_wbs_activity_path(@project_default_ratio.wbs_activity.id, project_default_ratio: @project_default_ratio, Ratio: @project_default_ratio.id, anchor: 'tabs-4')  %></div>
+      <% else %>
+          <div class = "pull-right darkorange_color"><%= I18n.t(:project_default_ratio) %> : <%= I18n.t(:no_default_ratio) %></div>
+      <% end %>
 
       <div class="tab-pane active" id="pbs">
         <% unless @project.nil? || @project.pe_wbs_projects.products_wbs.first.nil? %>

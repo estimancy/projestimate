@@ -52,7 +52,7 @@ class PeWbsProject < ActiveRecord::Base
   #validate :project_id_exists
   #def project_id_exists
   #  begin
-  #    Project.find(self.project_id)
+  #    Project.find(project_id)
   #  rescue ActiveRecord::RecordNotFound
   #    errors.add(:project_id, 'project_id foreign key must exist')
   #    false

@@ -109,6 +109,8 @@ class WbsActivityRatiosController < ApplicationController
   def create
     authorize! :edit_wbs_activities, WbsActivity
     @wbs_activity_ratio = WbsActivityRatio.new(params[:wbs_activity_ratio])
+    @wbs_activity_ratio.owner_id = current_user.id
+
     #If we are on local instance, Status is set to "Local"
     unless is_master_instance?   #so not on master
       @wbs_activity_ratio.record_status = @local_status

@@ -54,6 +54,6 @@ class Permission < ActiveRecord::Base
 
 
   def to_s
-    self.name
+    name
   end
 end

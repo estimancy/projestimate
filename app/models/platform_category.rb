@@ -60,6 +60,6 @@ class PlatformCategory < ActiveRecord::Base
 
   #Override
   def to_s
-    self.name
+    name
   end
 end

@@ -53,6 +53,6 @@ class AttributeCategory < ActiveRecord::Base
 
 
   def to_s
-    self.name.humanize
+    name.humanize
   end
 end

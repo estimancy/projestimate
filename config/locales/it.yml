@@ -1187,4 +1187,5 @@ it:
   edit_technology: "Edit the \"%{value}\" technology ..."
   new_pbs_product: "New component"
   project_default_ratio: "Project's default ratio"
+  no_default_ratio: "No default ratio"
 

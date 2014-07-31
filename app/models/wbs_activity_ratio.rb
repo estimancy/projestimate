@@ -109,4 +109,8 @@ class WbsActivityRatio < ActiveRecord::Base
     error_count
   end
 
+  def to_s
+    name
+  end
+
 end

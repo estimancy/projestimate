@@ -94,6 +94,6 @@ class Pemodule < ActiveRecord::Base
 
   #Override
   def to_s
-    self.title
+    title
   end
 end

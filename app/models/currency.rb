@@ -52,6 +52,6 @@ class Currency < ActiveRecord::Base
   validates :custom_value, :presence => true, :if => :is_custom?
 
   def to_s
-    self.sign
+    sign
   end
 end

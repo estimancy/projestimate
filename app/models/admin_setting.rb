@@ -56,28 +56,28 @@ class AdminSetting < ActiveRecord::Base
 
   # function that show the admin_setting value according to the admin_setting key
   def customize_admin_setting_value
-    case self.key
+    case key
       when 'session_maximum_lifetime'
-        I18n.t('datetime.distance_in_words.x_days', :count => self.value.to_i)
+        I18n.t('datetime.distance_in_words.x_days', :count => value.to_i)
       when 'session_inactivity_timeout'
-        if self.value.to_i==30
-          I18n.t('datetime.distance_in_words.x_minutes', :count => (self.value.to_i))
+        if value.to_i==30
+          I18n.t('datetime.distance_in_words.x_minutes', :count => (value.to_i))
         else
-          I18n.t('datetime.distance_in_words.x_hours', :count => self.value.to_i)
+          I18n.t('datetime.distance_in_words.x_hours', :count => value.to_i)
         end
       when 'allow_feedback'
-        self.value == '1' ? true : false
+        value == '1' ? true : false
       when 'audit_history_lifetime'
-        setting_value = self.value.split(' ')
-        value = setting_value.first
+        setting_value = value.split(' ')
+        audit_value = setting_value.first
         if setting_value.first == 0
           I18n.t(:label_disabled)
         else
-          I18n.t("datetime.distance_in_words.x_#{setting_value.last.to_s.pluralize}", :count => value.to_i)
+          I18n.t("datetime.distance_in_words.x_#{setting_value.last.to_s.pluralize}", :count => audit_value.to_i)
         end
         # for others keys
       else
-        self.value
+        value
     end
 
   end

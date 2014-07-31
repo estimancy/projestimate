@@ -201,7 +201,7 @@ public
         project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first
         wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
         # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
-        @project_default_ratio = wbs_project_elt_with_ratio.wbs_activity_ratio
+        @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
         @module_projects ||= @project.module_projects
         #Get the initialization module_project
