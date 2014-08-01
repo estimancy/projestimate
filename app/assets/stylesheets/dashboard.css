@@ -1,5 +1,6 @@
 body {
     font-size: 13px;
+    font-weight: 300;
     background-color: white;
 }
 th.action {
@@ -69,7 +70,7 @@ div.actions-tabs {
     margin: 0;
     outline: medium none;
     padding: 9px 10px 8px;
-    font-weight: bold;
+    font-weight: inherit;
     text-shadow: 0 1px 0 #FFFFFF;
 }
 .widget-title .nav-tabs li:first-child a{
@@ -95,7 +96,7 @@ div.actions-tabs {
     color: white;
     float: left;
     font-size: 13px;
-    font-weight: normal;
+    font-weight: inherit;
     padding: 12px;
     line-height: 12px;
     margin: 0;
@@ -108,7 +109,7 @@ div.actions-tabs {
     height: 23px;
     font-size: 11px;
     margin-left: 6px;
-    border-radius: 6px;
+    border-radius: 0px;
     padding-top: 2px;
 }
 .widget-title .label {
@@ -167,7 +168,7 @@ div.actions-tabs {
     height: 23px;
     font-size: 11px;
     margin-left: 6px;
-    border-radius: 6px;
+    border-radius: 0px;
     padding-top: 2px;
 }
 .modal {
@@ -459,7 +460,7 @@ ul{
     min-width: 30px;
     text-align: center;
     font-size: 13px;
-    font-weight: normal;
+    font-weight: inherit;
     margin-right: 2px;
     margin-top: 10px;
 }
@@ -471,7 +472,7 @@ ul{
 h1, h2, h3, h4, h5, h6 {
     margin: 10px 0;
     font-family: inherit;
-    font-weight: bold;
+    font-weight: 300;
     line-height: 1;
     color: inherit;
     text-rendering: optimizelegibility;
@@ -532,9 +533,9 @@ input[type="color"],
     margin-bottom: 0px;
     font-size: 12px;
     vertical-align: middle;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
 }
 
 .confirm_deletion{
@@ -622,13 +623,7 @@ div.block_label.selected_pbs {
 }
 
 .selected_module_project, .selected_module_project a, .highlight, .selected_pbs{
-    /*background-color: #e1e1e8;*/
-    /*color: black;*/
     font-weight: bold;
-}
-
-.selected_pbs a{
-    /*color: #000000;*/
 }
 
 /* override the font-awesome.css*/
@@ -732,7 +727,7 @@ div.block_label.selected_pbs {
 }
 
 .badge{
-    font-weight: normal;
+    font-weight: inherit;
     font-family: inherit;
 }
 
@@ -751,6 +746,11 @@ div.block_label.selected_pbs {
 
 .darkorange_color {
     color: darkorange;
+}
+
+.accordion-group{
+    -moz-border-radius: 0px;
+    border-radius: 0px;
 }
 
 
