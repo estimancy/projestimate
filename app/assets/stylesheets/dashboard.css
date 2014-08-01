@@ -27,14 +27,15 @@ div.actions-tabs {
 /* Widgets */
 .widget-box {
     background: none repeat scroll 0 0 #F9F9F9;
-    border-top: 1px solid #74CAE3;
-    border-left: 1px solid #74CAE3;
-    border-right: 1px solid #74CAE3;
-    border-bottom: 1px solid #74CAE3;
+    /* border-top: 1px solid #74CAE3; */
+    /* border-left: 1px solid #74CAE3; */
+    /* border-right: 1px solid #74CAE3; */
+    /* border-bottom: 1px solid #74CAE3; */
     clear: both;
     margin-top: 16px;
     margin-bottom: 16px;
     position: relative;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.21);
 }
 .widget-box.widget-calendar, .widget-box.widget-chat {
     overflow:hidden !important;
@@ -117,6 +118,7 @@ div.actions-tabs {
     float: right;
     margin: 9px 15px 0 0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.3) inset, 0 1px 0 #ffffff;
+    font-weight: 300;
 }
 .widget-content {
     padding: 12px 15px;
@@ -183,7 +185,7 @@ div.actions-tabs {
 }
 .modal-header h3 {
     font-size: 12px;
-    text-shadow: 0 1px 0 #ffffff;
+    color: white;
 }
 
 .logoEstimate{
@@ -751,6 +753,16 @@ div.block_label.selected_pbs {
 .accordion-group{
     -moz-border-radius: 0px;
     border-radius: 0px;
+}
+
+label,
+input,
+button,
+select,
+textarea {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
 }
 
 
