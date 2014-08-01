@@ -33,9 +33,9 @@
             <td><%= I18n.l (event.end_date) unless event.end_date.nil? %></td>
             <td><%= event.event_type_id %></td>
             <td><%= event.project_id %></td>
-            <td>
-              <%= link_to '', edit_event_path(event), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', event, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <td class="center">
+              <%= link_to '', edit_event_path(event), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
+              <%= link_to '', event, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
             </td>
           </tr>
       <% end %>

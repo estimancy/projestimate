@@ -29,18 +29,18 @@
 
             <td><%= admin_setting.record_status.name unless admin_setting.record_status.nil? %> <%= admin_setting.show_custom_value %></td>
 
-            <td>
-              <%= link_to '', edit_admin_setting_path(admin_setting), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+            <td class="center">
+              <%= link_to '', edit_admin_setting_path(admin_setting), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
 
               <% if is_master_instance? || admin_setting.is_local_record? %>
-                  <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
               <% if is_master_instance? && !admin_setting.is_local_record? %>
                   <% if admin_setting.is_retired? && (can? :restore, :all) %>
-                      <%= link_to(' ', "admin_settings/#{admin_setting.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                      <%= link_to(' ', "admin_settings/#{admin_setting.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo icon-large icon-border', :style => 'color:orange', :title => I18n.t('restore_title')) %>
                   <% else %>
                       <% if (!admin_setting.is_defined? && (can? :validate, :all)) %>
-                          <%= link_to(' ', "admin_settings/#{admin_setting.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                          <%= link_to(' ', "admin_settings/#{admin_setting.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok icon-large icon-border', :style => 'color:green', :title => I18n.t('validate_title')) %>
                       <% end %>
                   <% end %>
               <% end %>

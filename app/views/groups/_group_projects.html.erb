@@ -21,7 +21,7 @@
         <td><%= group_project.description %></td>
         <td><span class="badge <%= display_badge(group_project.state) %>"><%= I18n.t(group_project.state) %></span></td>
         <td><%= group_project.is_model %></td>
-        <td style="text-align: center">
+        <td class="align-center">
            <span class="hidden">
                   <%= group.projects.map(&:id).include?(group_project.id).to_s.humanize %>
            </span>

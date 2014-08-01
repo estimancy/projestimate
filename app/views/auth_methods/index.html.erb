@@ -25,15 +25,15 @@
           <tr>
             <td><%= auth_method.name %></td>
             <td><%= auth_method.record_status.name unless auth_method.record_status.nil? %> <%= auth_method.show_custom_value %></td>
-            <td>
-              <%= link_to '', edit_auth_method_path(auth_method), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', auth_method, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <td class="center">
+              <%= link_to '', edit_auth_method_path(auth_method), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
+              <%= link_to '', auth_method, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !auth_method.is_local_record? %>
                   <% if auth_method.is_retired? %>
-                      <%= link_to('', "auth_methods/#{auth_method.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                      <%= link_to('', "auth_methods/#{auth_method.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border', :style => 'color:orange', :title => I18n.t('restore_title')) %>
                   <% else %>
                       <% unless auth_method.is_defined? %>
-                          <%= link_to('', "auth_methods/#{auth_method.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                          <%= link_to('', "auth_methods/#{auth_method.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border', :style => 'color:green', :title => I18n.t('validate_title')) %>
                       <% end %>
                   <% end %>
               <% end %>

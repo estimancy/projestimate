@@ -26,8 +26,8 @@
         <td><%= profile.description %></td>
         <td><%= profile.cost_per_hour %></td>
 
-        <td><%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-          <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+        <td class="align-center"><%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
+          <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
         </td>
       </tr>
   <% end %>

@@ -780,6 +780,9 @@ textarea {
     line-height: 20px;
 }
 
+td.align-center{
+    text-align:center;
+}
 
 
 

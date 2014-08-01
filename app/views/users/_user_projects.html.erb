@@ -17,7 +17,7 @@
         <td><%= project.alias %></td>
         <td><span class="badge <%= display_badge(project.state) %>"><%= I18n.t(project.state) %></span></td>
         <td><%= project.is_model %></td>
-        <td>
+        <td class="align-center">
           <span class="hidden">
                   <%= project_users.map(&:id).include?(project.id).to_s.humanize %>
           </span>

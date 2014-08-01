@@ -176,7 +176,7 @@
                     <td><%= group.description %></td>
                     <td><%= group.for_global_permission %></td>
                     <td><%= group.for_project_security %></td>
-                    <td>
+                    <td class="align-center">
                       <span class="hidden">
                             <%= @project_groups.map(&:id).include?(group.id).to_s.humanize %>
                       </span>
@@ -212,7 +212,7 @@
                   <tr>
                     <td><%= org.name %></td>
                     <td><%= org.description %></td>
-                    <td>
+                    <td class="align-center">
                       <span class="hidden">
                             <%= @org_users.map(&:id).include?(org.id).to_s.humanize %>
                       </span>
