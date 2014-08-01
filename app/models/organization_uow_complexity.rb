@@ -36,8 +36,8 @@ class OrganizationUowComplexity < ActiveRecord::Base
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
   belongs_to :organization
 
-  has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :abacus_organizations, :dependent => :destroy
+  has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :size_unit_type_complexities, :dependent => :destroy
 
   belongs_to :factor
@@ -52,8 +52,8 @@ class OrganizationUowComplexity < ActiveRecord::Base
   validates :name, :presence => true
   validates :custom_value, :presence => true, :if => :is_custom?
 
-  validates_presence_of :unit_of_work_id
-  validates_presence_of :organization_technology_id
+  #validates_presence_of :unit_of_work_id
+  #validates_presence_of :organization_technology_id
 
   amoeba do
     enable
@@ -67,7 +67,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
   end
 
   def to_s
-    nil? ? '' : name
+    name || ''
   end
 
 end

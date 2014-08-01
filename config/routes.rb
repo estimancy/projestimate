@@ -192,6 +192,7 @@ Projestimate::Application.routes.draw do
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'
   post '/set_technology_size_unit_abacus' => 'organizations#set_technology_size_unit_abacus', :as => 'set_technology_size_unit_abacus'
+  match 'organizations/:organization_id/duplicate_organization' => 'organizations#duplicate_organization', :as => :duplicate_organization
 
   resources :subcontractors
   #match '/subcontractors', :to => 'subcontractors#new', :via => :get, :as => :get_subcontractor

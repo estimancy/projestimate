@@ -195,11 +195,11 @@
       </table>
     </div>
 
-  <div id="tabs-cplx-uow">
-    <h4>Complexity (Unit of work)</h4>
-    <hr>
+  <div id="tabs-cplx-uow" style="min-height: 50px;">
+    <b>Complexity (Unit of work)</b>
+    <br>
 
-    <% if can? :edit_organizations, Organization %>
+    <% if can? :create_organizations, Organization %>
       <p>
         <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.id, :anchortab => 'tabs-6'), :class => 'btn pull-right' %>
       </p>

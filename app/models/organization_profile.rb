@@ -5,7 +5,7 @@ class OrganizationProfile < ActiveRecord::Base
 
   has_many :wbs_activity_ratio_profiles
 
-  validates :organization_id, :presence => true
-  validates :name, :presence => true, :uniqueness => true
+  #validates :organization_id, :presence => true
+  validates_uniqueness_of :name, :scope => :organization_id
   validates :cost_per_hour, :numericality => { :allow_blank => true }
 end

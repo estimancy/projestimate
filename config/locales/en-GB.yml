@@ -1207,6 +1207,9 @@ en-gb:
   new_pbs_product: "New component"
   project_default_ratio: "Project's default ratio"
   no_default_ratio: "No default ratio"
+  button_duplicate_organization: "Duplicate organization"
+  organization_successfully_copied: "Organization was successfully copied"
+  errors_when_copying_organization: "Errors when copying organization"
 
   requirement: "Requirements"
   size_unit: "Size unit"

@@ -57,6 +57,6 @@ class OrganizationTechnology < ActiveRecord::Base
   default_scope { order('alias DESC') }
 
   def to_s
-    nil? ? '' : name
+    name || ''
   end
 end

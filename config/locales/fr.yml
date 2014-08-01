@@ -1245,6 +1245,9 @@ fr:
   new_pbs_product: "Nouveau composant"
   project_default_ratio: "Ratio par défaut du projet"
   no_default_ratio: "No default ratio"
+  button_duplicate_organization: "Dupliquer l'organisation"
+  organization_successfully_copied: "L'organization a été copiée avec succès"
+  errors_when_copying_organization: "Une erreur s'est produite lors de la copie de l'organisation"
 
   criteria: "Critères"
 

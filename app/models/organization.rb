@@ -49,8 +49,8 @@ class Organization < ActiveRecord::Base
   has_many :abacus_organizations
   has_many :projects
   has_many :organization_profiles
-
   has_many :size_unit_types
+  has_many :technology_size_types, :through => :size_unit_types
 
   belongs_to :currency
   #validates_presence_of :name
@@ -65,4 +65,17 @@ class Organization < ActiveRecord::Base
   def to_s
     name
   end
+
+  # Add the amoeba gem for the copy
+  amoeba do
+    enable
+    include_field [:attribute_organizations, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :abacus_organizations, :organization_uow_complexities]
+
+    customize(lambda { |original_organization, new_organization|
+      new_organization.name = "Copy of '#{original_organization.name}' at #{Time.now}"
+    })
+
+  end
+
+  #propagate
 end

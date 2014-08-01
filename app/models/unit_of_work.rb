@@ -48,9 +48,8 @@ class UnitOfWork < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :organization_technologies
 
-  has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :abacus_organizations, :dependent => :destroy
-
+  has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :organization_uow_complexities, :dependent => :destroy
 
   validates :name, :alias, :presence => true
@@ -58,8 +57,7 @@ class UnitOfWork < ActiveRecord::Base
   default_scope { order('display_order ASC') }
 
   def to_s
-    #self.nil? ? '' : self.name
-    name
+    name || ''
   end
 
 end
