@@ -126,25 +126,27 @@
     <div id="tabs-4" class="tabs_4_with_estimation_plan2">
       <% if controller.controller_name == 'projects' %>
         <% if @project.is_locked == false or @project.is_locked.nil? %>
-          <table style="width: 100%" border=0>
-            <tr>
-              <td>
-                <%= I18n.t(:label_add_a_module_to_project) %>
-                <%= select_tag 'select_module', options_for_select(Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }), :prompt => '' %>
-              </td>
-              <td class="pull-right">
-                <%= I18n.t(:label_filter_on_pbs_element) %>
-                <%= select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>
-              </td>
-            <tr>
-              <td>
-                <%= hidden_field_tag 'project_id', @project.id %>
-                <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
-                <%= link_to I18n.t(:button_configure_module_pbs_element), pbs_element_matrix_path(@project.id), :class => 'btn' %>
-              </td>
-              <td></td>
-            </tr>
-          </table>
+          <div class="row-fluid">
+            <div class="span12">
+              <%= I18n.t(:label_add_a_module_to_project) %>
+              <%= select_tag 'select_module', options_for_select(Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }), :prompt => '' %>
+            </div>
+          </div>
+
+
+          <div class="row-fluid">
+            <div class="span12">
+              <%= hidden_field_tag 'project_id', @project.id %>
+              <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
+              <%= link_to I18n.t(:button_configure_module_pbs_element), pbs_element_matrix_path(@project.id), :class => 'btn' %>
+            </div>
+          </div>
+
+
+        <!--<td class="pull-right">-->
+          <%# I18n.t(:label_filter_on_pbs_element) %>
+          <%# select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>
+        <!--</td>-->
         <% end %>
       <% end %>
 

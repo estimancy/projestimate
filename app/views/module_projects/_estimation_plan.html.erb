@@ -38,16 +38,16 @@
                 <% end %>
 
                 <div class="<%= pbs_class %> module_project <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
-                    <%= link_to pmod.pemodule.title, "#" %>
+                    <%= link_to pmod.pemodule.title, "#", class: "a_white" %>
                     <br>
                     <% unless @project.locked? || (@project.in_frozen_status? && action_name=="show") %>
-                      <%= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left' %>
-                      <%= link_to '', pemodules_up_path(pmod.id), :class => 'icon-arrow-up' %>
-                      <%= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down' %>
-                      <%= link_to '', pemodules_right_path(pmod.id), :class => 'icon-arrow-right' %>
-                      <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip" %>
-                      <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-edit" %>
-                      <%= link_to '', pmod, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash' %>
+                      <%= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left a_white' %>
+                      <%= link_to '', pemodules_up_path(pmod.id), :class => 'icon-arrow-up a_white' %>
+                      <%= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down a_white' %>
+                      <%= link_to '', pemodules_right_path(pmod.id), :class => 'icon-arrow-right a_white' %>
+                      <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip a_white" %>
+                      <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-edit a_white" %>
+                      <%= link_to '', pmod, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash a_white' %>
                     <% end %>
                 </div>
 

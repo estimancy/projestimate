@@ -353,37 +353,46 @@ ul{
 }
 
 .table-estimation{
-    width: auto;
+    border: none;
 }
 
 .table-estimation td{
     vertical-align: middle;
+    border: none;
+}
+
+.ui-widget-content a.a_white{
+    color: #f5f5f5;
+    font-size: 15px;
+}
+
+.ui-widget-content a:hover{
+    text-decoration: none;
 }
 
 .module_project{
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     padding: 10px;
-    background-color: #fafafa;
-    background-image: -moz-linear-gradient(top, #fafafa, #efefef);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#efefef));
-    background-image: -webkit-linear-gradient(top, #fafafa, #efefef);
-    background-image: -o-linear-gradient(top, #fafafa, #efefef);
-    background-image: linear-gradient(to bottom, #fafafa, #efefef);
-    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#fafafa', endColorstr='#efefef', GradientType=0);
+
+    background: #3498db;
+    background: -moz-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#3498db),color-stop(100%,#2980b9));
+    background: -webkit-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: -o-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: -ms-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: linear-gradient(to bottom,#3498db 0%,#2980b9 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3498db',endColorstr='#2980b9',GradientType=0);
 
     display: block;
-    color: #646464;
-    text-shadow: 0 1px 1px #fff;
+    color: white;
 
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    box-shadow: 0px 0px 3   px rgba(0, 0, 0, 0.51);
+
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
 
     z-index: 20;
-    /*margin: 10px;*/
 
     width: 135px;  /*min-width:150px;*/
     max-width: 135px;
@@ -403,7 +412,7 @@ ul{
 
 .module_project_min{
     border: 1px solid #ddd;
-    padding: 0;
+    padding: 2px;
     display: block;
     color: #646464;
     text-shadow: 0 1px 1px #fff;
@@ -412,10 +421,10 @@ ul{
     box-shadow: none;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    border-radius: 2px;
+    border-radius: 5px;
     z-index: 20;
-    width: 120px;
-    max-width: 120px;
+    /*width: 120px;*/
+    max-width: 150px;
     margin-left:auto;
     margin-right:auto;
 }

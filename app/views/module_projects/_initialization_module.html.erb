@@ -3,12 +3,12 @@
     <td class="line_number">
       <h4 class="text-center">0</h4>
     </td>
-    <td colspan="<%= @module_positions_x %>">
+    <td colspan="<%= @module_positions_x %>" class="module_bloc_size">
       <div class="<%=  %> module_project <%= "#{@initialization_module.alias}_#{@initialization_module_project.position_x}_#{@initialization_module_project.position_y}" %> text-center">
-        <%= link_to @initialization_module.title, "#" %>
+        <%= link_to @initialization_module.title, "#", class: "a_white" %>
 
         <% unless @project.locked? %>
-          <%= link_to '', '#', :title => "#{@initialization_module.title}: \n #{@initialization_module.description}", :class => "icon-info attribute_tooltip" %>
+          <%= link_to '', '#', :title => "#{@initialization_module.title}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
         <% end %>
       </div>
     </td>
