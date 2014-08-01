@@ -105,6 +105,6 @@ class AuthMethod < ActiveRecord::Base
   end
 
   def to_s
-    self.name
+    name
   end
 end

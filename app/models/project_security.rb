@@ -50,6 +50,6 @@ class ProjectSecurity < ActiveRecord::Base
   end
 
   def to_s
-    self.id.to_s
+    id.to_s
   end
 end

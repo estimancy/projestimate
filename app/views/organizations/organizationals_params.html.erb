@@ -36,11 +36,11 @@
             <td>
               <%= link_to "Gérer les unités d'oeuvres", "#" %> / <%= link_to "Gérer les facteurs", "#" %>
             </td>
-            <td>
-              <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large pull-left icon-border', :title => I18n.t('edit') %>
+            <td class="center">
+              <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
                   <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'button_attribute_tooltip icon-copy icon-border', :title => I18n.t('button_duplicate_organization')) %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large pull-left icon-border', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large  icon-border', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>
           </tr>
@@ -78,17 +78,17 @@
               <td><%= i.alias %></td>
               <td><%= i.description %></td>
               <td><%= i.record_status.name unless i.record_status.nil? %> <%= i.show_custom_value %></td>
-              <td>
-                <%= link_to '', edit_size_unit_path(i), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
+              <td class="center">
+                <%= link_to '', edit_size_unit_path(i), :class => 'icon-pencil icon-large', :title => I18n.t('edit') %>
                 <% unless i.is_defined? %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large', :style => 'color:red', :title => I18n.t('delete') %>
                 <% end %>
                 <% if is_master_instance? && !i.is_local_record? %>
                   <% if i.is_retired? %>
-                    <%= link_to('', "size_units/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                    <%= link_to('', "size_units/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large', :style => 'color:orange', :title => I18n.t('restore_title')) %>
                   <% else %>
                     <% unless i.is_defined? %>
-                      <%= link_to('', "size_units/#{i.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                      <%= link_to('', "size_units/#{i.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large', :style => 'color:green', :title => I18n.t('validate_title')) %>
                     <% end %>
                   <% end %>
                 <% end %>
@@ -130,9 +130,9 @@
           <tr>
             <td><%= i.name %></td>
             <td><%= i.description %></td>
-            <td>
-              <%= link_to '', edit_organization_labor_category_path(i), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <td class="center">
+              <%= link_to '', edit_organization_labor_category_path(i), :class => 'icon-pencil icon-large', :title => I18n.t('edit') %>
+              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large', :style => 'color:red', :title => I18n.t('delete') %>
             </td>
           </tr>
         <% end %>
