@@ -400,6 +400,12 @@ ul{
     margin-right:auto;
 }
 
+.dropdown-menu {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
 .unselected_module_project{
     background-color: #fafafa;
     background-image: -moz-linear-gradient(top, #fafafa, #efefef);
