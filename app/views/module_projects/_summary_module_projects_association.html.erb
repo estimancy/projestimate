@@ -1,51 +1,62 @@
-<h4 class="ui-widget"><b>Edit module project path </b></h4>
+<div class="tabs">
 
-<%= form_tag url_for({:action=> 'associate_modules_projects', :controller=> 'module_projects', :project_id => @project.id}),{:method => 'POST', :class=>'simple_form'} do %>
+  <ul>
+    <li><a href="#tabs-1">Edit module project path</a></li>
+    <li><a href="#tabs-2"><%= I18n.t(:estimation_plan) %></a></li>
+  </ul>
 
-  <% @alphabetical= %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) %>
+  <div id="tabs-1">
+    <%= form_tag url_for({:action=> 'associate_modules_projects', :controller=> 'module_projects', :project_id => @project.id}),{:method => 'POST', :class=>'simple_form'} do %>
 
-  <table id="table_list_2" class="table table-striped table-bordered table-condensed">
-    <tr>
-      <th>Module projects</th>
-      <% @module_projects.each do |mp| %>
-        <th>
-          <%= mp.pemodule.title %> (<%= @alphabetical[mp.position_x.to_i-1] %>;<%= mp.position_y.to_i %>)
-        </th>
-      <% end %>
-    </tr>
+      <% @alphabetical= %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) %>
 
-    <% @module_projects.each_with_index do |i, l| %>
-      <tr>
-        <td>
-          <%= hidden_field_tag "module_projects[#{i.id}][]" %>
-          <strong><%= i.pemodule.title %> (<%= @alphabetical[i.position_x.to_i-1] %>;<%= i.position_y.to_i %>)</strong>
-        </td>
+      <table id="table_list_2" class="table table-striped table-bordered table-condensed">
+        <tr>
+          <th>Module projects</th>
+          <% @module_projects.each do |mp| %>
+            <th>
+              <%= mp.pemodule.title %> (<%= @alphabetical[mp.position_x.to_i-1] %>;<%= mp.position_y.to_i %>)
+            </th>
+          <% end %>
+        </tr>
 
-        <% @module_projects.each_with_index do |j, k| %>
-          <td>
-            <% if  k<l && i.position_y!=j.position_y.to_i %>
-              <% if i.pemodule.alias == Projestimate::Application::BALANCING_MODULE %>
-                <!-- For the EffortBalancing and SizeBalancing modules can follow a module if only they have common attributes -->
-                <% if !(i.pemodule.pe_attributes & j.pemodule.pe_attributes).empty? %>
+        <% @module_projects.each_with_index do |i, l| %>
+          <tr>
+            <td>
+              <%= hidden_field_tag "module_projects[#{i.id}][]" %>
+              <strong><%= i.pemodule.title %> (<%= @alphabetical[i.position_x.to_i-1] %>;<%= i.position_y.to_i %>)</strong>
+            </td>
+
+            <% @module_projects.each_with_index do |j, k| %>
+              <td>
+                <% if  k<l && i.position_y!=j.position_y.to_i %>
+                  <% if i.pemodule.alias == Projestimate::Application::BALANCING_MODULE %>
+                    <!-- For the EffortBalancing and SizeBalancing modules can follow a module if only they have common attributes -->
+                    <% if !(i.pemodule.pe_attributes & j.pemodule.pe_attributes).empty? %>
+                      <%= check_box_tag("module_projects[#{i.id}][]", j.id, (i.associated_module_projects.map(&:id).include?(j.id)) )%>
+                    <% else %>
+                      -
+                    <% end %>
+                  <% else %>
                     <%= check_box_tag("module_projects[#{i.id}][]", j.id, (i.associated_module_projects.map(&:id).include?(j.id)) )%>
+                  <% end %>
                 <% else %>
-                    -
+                  -
                 <% end %>
-              <% else %>
-                <%= check_box_tag("module_projects[#{i.id}][]", j.id, (i.associated_module_projects.map(&:id).include?(j.id)) )%>
-              <% end %>
-            <% else %>
-                -
+              </td>
             <% end %>
-          </td>
+          </tr>
         <% end %>
-      </tr>
+      </table>
+
+      <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+      <%= link_to I18n.t('back'), edit_project_path(@project, :anchor => 'tabs-4'), :class => 'btn' %>
+
     <% end %>
-  </table>
+  </div>
 
-  <%= submit_tag I18n.t('save'), :class => 'btn ' %>
-  <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-
-<% end %>
-
-<%= render 'module_projects/widget_estimation_plan', :locals => {:project => @project} %>
+  <div id="tabs-2">
+    <%= render 'module_projects/widget_estimation_plan', :locals => {:project => @project} %>
+    <%= link_to I18n.t('back'), edit_project_path(@project, :anchor => 'tabs-4'), :class => 'btn' %>
+  </div>
+ </div>

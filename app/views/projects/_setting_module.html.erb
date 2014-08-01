@@ -2,24 +2,24 @@
   <div class="widget-box collapsible">
     <div class="widget-title">
       <a href="#estimation_graph_box" data-toggle="collapse">
-          <span class="icon">
-            <i class="icon-bar-chart"></i>
-          </span>
+        <span class="icon">
+          <i class="icon-align-left"></i>
+        </span>
       </a>
 
       <div class="header_data">
-        <h5><%= "Estimation graph" %> - <%= "#{current_module_project}" %></h5>
+        <h5>
+          <%= current_component %> - <%= "#{current_module_project}" %> settings
+        </h5>
       </div>
     </div>
 
     <div class="collapse in" id="collapseIn">
       <div class="widget-content tab-content">
         <div class="" id="estimation_graph_box">
-          <%#= render :partial => "projects/estimation_graph", :locals => { :project_modules => @project_modules } %>
-          <%= render :partial => "projects/estimation_graph" %>
+          <%= render partial: "uow/inputs/settings" %>
         </div>
       </div>
     </div>
   </div>
 </div>
-

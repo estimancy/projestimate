@@ -2,23 +2,13 @@
 <% @alphabet = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) %>
 
 <% unless module_projects.empty? %>
-  <table class="table table-condensed table-bordered table-estimation">
-    <tr>
-      <th></th>
-      <% for x in 1..@module_positions_x.to_i do %>
-          <th><h6><%= @alphabet[x-1] %></h6></th>
-      <% end %>
-    </tr>
+  <table class="table table-estimation">
 
       <!-- The Initialization module -->
       <%= render :partial => 'module_projects/initialization_module_min' %>
 
       <% for y in 1..@module_positions do %>
         <tr>
-          <td class="line_number">
-            <h6 class="text-center"><%= y %></h6>
-          </td>
-
           <% for x in 1..@module_positions_x.to_i do %>
             <td>
               <% pmod = @project.module_projects.where("position_x = ? AND position_y = ?", x, y).first %>

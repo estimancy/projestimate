@@ -1,5 +1,6 @@
 body {
     font-size: 13px;
+    font-weight: 300;
     background-color: white;
 }
 th.action {
@@ -26,14 +27,15 @@ div.actions-tabs {
 /* Widgets */
 .widget-box {
     background: none repeat scroll 0 0 #F9F9F9;
-    border-top: 1px solid #74CAE3;
-    border-left: 1px solid #74CAE3;
-    border-right: 1px solid #74CAE3;
-    border-bottom: 1px solid #74CAE3;
+    /* border-top: 1px solid #74CAE3; */
+    /* border-left: 1px solid #74CAE3; */
+    /* border-right: 1px solid #74CAE3; */
+    /* border-bottom: 1px solid #74CAE3; */
     clear: both;
     margin-top: 16px;
     margin-bottom: 16px;
     position: relative;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.21);
 }
 .widget-box.widget-calendar, .widget-box.widget-chat {
     overflow:hidden !important;
@@ -69,7 +71,7 @@ div.actions-tabs {
     margin: 0;
     outline: medium none;
     padding: 9px 10px 8px;
-    font-weight: bold;
+    font-weight: inherit;
     text-shadow: 0 1px 0 #FFFFFF;
 }
 .widget-title .nav-tabs li:first-child a{
@@ -95,7 +97,7 @@ div.actions-tabs {
     color: white;
     float: left;
     font-size: 13px;
-    font-weight: normal;
+    font-weight: inherit;
     padding: 12px;
     line-height: 12px;
     margin: 0;
@@ -108,7 +110,7 @@ div.actions-tabs {
     height: 23px;
     font-size: 11px;
     margin-left: 6px;
-    border-radius: 6px;
+    border-radius: 0px;
     padding-top: 2px;
 }
 .widget-title .label {
@@ -116,6 +118,7 @@ div.actions-tabs {
     float: right;
     margin: 9px 15px 0 0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.3) inset, 0 1px 0 #ffffff;
+    font-weight: 300;
 }
 .widget-content {
     padding: 12px 15px;
@@ -167,7 +170,7 @@ div.actions-tabs {
     height: 23px;
     font-size: 11px;
     margin-left: 6px;
-    border-radius: 6px;
+    border-radius: 0px;
     padding-top: 2px;
 }
 .modal {
@@ -182,7 +185,7 @@ div.actions-tabs {
 }
 .modal-header h3 {
     font-size: 12px;
-    text-shadow: 0 1px 0 #ffffff;
+    color: white;
 }
 
 .logoEstimate{
@@ -350,42 +353,57 @@ ul{
 }
 
 .table-estimation{
-    width: auto;
+    border: none;
 }
 
 .table-estimation td{
     vertical-align: middle;
+    border: none;
+}
+
+.ui-widget-content a.a_white{
+    color: #f5f5f5;
+    font-size: 15px;
+}
+
+.ui-widget-content a:hover{
+    text-decoration: none;
 }
 
 .module_project{
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     padding: 10px;
-    background-color: #fafafa;
-    background-image: -moz-linear-gradient(top, #fafafa, #efefef);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#efefef));
-    background-image: -webkit-linear-gradient(top, #fafafa, #efefef);
-    background-image: -o-linear-gradient(top, #fafafa, #efefef);
-    background-image: linear-gradient(to bottom, #fafafa, #efefef);
-    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#fafafa', endColorstr='#efefef', GradientType=0);
+
+    background: #3498db;
+    background: -moz-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#3498db),color-stop(100%,#2980b9));
+    background: -webkit-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: -o-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: -ms-linear-gradient(top,#3498db 0%,#2980b9 100%);
+    background: linear-gradient(to bottom,#3498db 0%,#2980b9 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3498db',endColorstr='#2980b9',GradientType=0);
 
     display: block;
-    color: #646464;
-    text-shadow: 0 1px 1px #fff;
+    color: white;
 
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    box-shadow: 0px 0px 3   px rgba(0, 0, 0, 0.51);
+
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
 
     z-index: 20;
-    /*margin: 10px;*/
 
     width: 135px;  /*min-width:150px;*/
     max-width: 135px;
     margin-left:auto;
     margin-right:auto;
+}
+
+.dropdown-menu {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
 }
 
 .unselected_module_project{
@@ -400,7 +418,7 @@ ul{
 
 .module_project_min{
     border: 1px solid #ddd;
-    padding: 0;
+    padding: 2px;
     display: block;
     color: #646464;
     text-shadow: 0 1px 1px #fff;
@@ -409,10 +427,10 @@ ul{
     box-shadow: none;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    border-radius: 2px;
+    border-radius: 5px;
     z-index: 20;
-    width: 120px;
-    max-width: 120px;
+    /*width: 120px;*/
+    max-width: 150px;
     margin-left:auto;
     margin-right:auto;
 }
@@ -459,7 +477,7 @@ ul{
     min-width: 30px;
     text-align: center;
     font-size: 13px;
-    font-weight: normal;
+    font-weight: inherit;
     margin-right: 2px;
     margin-top: 10px;
 }
@@ -471,7 +489,7 @@ ul{
 h1, h2, h3, h4, h5, h6 {
     margin: 10px 0;
     font-family: inherit;
-    font-weight: bold;
+    font-weight: 300;
     line-height: 1;
     color: inherit;
     text-rendering: optimizelegibility;
@@ -532,9 +550,9 @@ input[type="color"],
     margin-bottom: 0px;
     font-size: 12px;
     vertical-align: middle;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
 }
 
 .confirm_deletion{
@@ -622,13 +640,7 @@ div.block_label.selected_pbs {
 }
 
 .selected_module_project, .selected_module_project a, .highlight, .selected_pbs{
-    /*background-color: #e1e1e8;*/
-    /*color: black;*/
     font-weight: bold;
-}
-
-.selected_pbs a{
-    /*color: #000000;*/
 }
 
 /* override the font-awesome.css*/
@@ -732,7 +744,7 @@ div.block_label.selected_pbs {
 }
 
 .badge{
-    font-weight: normal;
+    font-weight: inherit;
     font-family: inherit;
 }
 
@@ -751,6 +763,21 @@ div.block_label.selected_pbs {
 
 .darkorange_color {
     color: darkorange;
+}
+
+.accordion-group{
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+label,
+input,
+button,
+select,
+textarea {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
 }
 
 
