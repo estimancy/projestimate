@@ -7,11 +7,7 @@ class OrganizationProfilesController < ApplicationController
     set_page_title 'New organization profile'
     @organization = Organization.find_by_id(params[:organization_id])
     @organization_profile = OrganizationProfile.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @organization_profile }
-    end
+    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
   end
 
   # GET /organization_profiles/1/edit
@@ -20,6 +16,7 @@ class OrganizationProfilesController < ApplicationController
     set_page_title 'Edit organization profile'
     @organization_profile = OrganizationProfile.find(params[:id])
     @organization = @organization_profile.organization
+    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
   end
 
   # POST /organization_profiles
@@ -30,6 +27,7 @@ class OrganizationProfilesController < ApplicationController
 
     @organization_profile = OrganizationProfile.new(params[:organization_profile])
     @organization = Organization.find_by_id(params['organization_profile']['organization_id'])
+    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
 
     respond_to do |format|
       if @organization_profile.save
@@ -51,6 +49,7 @@ class OrganizationProfilesController < ApplicationController
 
     @organization_profile = OrganizationProfile.find(params[:id])
     @organization = @organization_profile.organization
+    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
 
     respond_to do |format|
       if @organization_profile.update_attributes(params[:organization_profile])
@@ -78,4 +77,5 @@ class OrganizationProfilesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
 end

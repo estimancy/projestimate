@@ -49,6 +49,7 @@ class Organization < ActiveRecord::Base
   has_many :abacus_organizations
   has_many :projects
   has_many :organization_profiles
+  has_many :profile_categories
   has_many :size_unit_types
   has_many :technology_size_types, :through => :size_unit_types
 

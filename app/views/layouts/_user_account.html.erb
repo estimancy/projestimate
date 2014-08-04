@@ -217,6 +217,10 @@
            <%= I18n.t(:currencies) %></a></li>
       <% end %>
 
+      <% if can? :manage, ProfileCategory or can? :create_and_edit_profile_categories, ProfileCategory %>
+          <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
+      <% end %>
+
       <% if can? :manage, Profile %>
           <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
       <% end %>

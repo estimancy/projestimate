@@ -37,5 +37,5 @@
 <% if can? :update_wbs_activities, WbsActivity %>
      <%= submit_tag I18n.t(:save ), :id => 'reference_value_submit_save', :class => 'btn' %>
 <% end %>
-<%= link_to I18n.t('back'), wbs_activities_path, :class => 'btn' %>
+<%= link_to I18n.t('back'), wbs_activities_path, :class => 'btn back' %>
 

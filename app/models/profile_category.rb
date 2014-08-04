@@ -1,16 +1,18 @@
-class Profile < ActiveRecord::Base
-  attr_accessible :cost_per_hour, :description, :name, :record_status, :record_status_id, :custom_value, :change_comment
+class ProfileCategory < ActiveRecord::Base
+  attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment, :organization_id
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
-  belongs_to :profile_category
+  has_many :profiles
+  has_many :organization_profiles
+  belongs_to :organization
+
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   validates :record_status, :presence => true
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
-  validates :cost_per_hour, :numericality => { :allow_blank => true }
+  validates :uuid, :presence => true, :uniqueness => {case_sensitive: false}
+  validates :name, :presence => true, :uniqueness => {case_sensitive: false, :scope => :record_status_id}
   validates :custom_value, :presence => true, :if => :is_custom?
 
   amoeba do

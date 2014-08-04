@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140723145123) do
+ActiveRecord::Schema.define(:version => 20140804070444) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -449,8 +449,9 @@ ActiveRecord::Schema.define(:version => 20140723145123) do
     t.string   "name"
     t.text     "description"
     t.float    "cost_per_hour"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "profile_category_id"
   end
 
   create_table "organization_technologies", :force => true do |t|
@@ -670,6 +671,21 @@ ActiveRecord::Schema.define(:version => 20140723145123) do
     t.datetime "updated_at"
   end
 
+  create_table "profile_categories", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "organization_id"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "profiles", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -681,8 +697,9 @@ ActiveRecord::Schema.define(:version => 20140723145123) do
     t.text     "change_comment"
     t.integer  "reference_id"
     t.string   "reference_uuid"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "profile_category_id"
   end
 
   add_index "profiles", ["record_status_id"], :name => "index_profiles_on_record_status_id"

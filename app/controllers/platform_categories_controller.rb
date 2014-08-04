@@ -65,6 +65,7 @@ class PlatformCategoriesController < ApplicationController
     authorize! :manage, PlatformCategory
 
     @platform_category = PlatformCategory.new(params[:platform_category])
+    @platform_category.owner_id = current_user.id
 
     if @platform_category.save
       flash[:notice] = I18n.t (:notice_platform_category_successful_created)

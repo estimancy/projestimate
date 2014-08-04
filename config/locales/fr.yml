@@ -1248,6 +1248,15 @@ fr:
   button_duplicate_organization: "Dupliquer l'organisation"
   organization_successfully_copied: "L'organization a été copiée avec succès"
   errors_when_copying_organization: "Une erreur s'est produite lors de la copie de l'organisation"
+  profile_categories: "Catégories de profils"
+  profile_category: "Catégorie de profil"
+  edit_profile_category: "Editer la catégorie de profil \"%{value}\" ..."
+  new_profile_category: "Créer une catégorie de profil"
+  warning_profile_category_cant_be_edit: "Cette catégorie de travail ne peut pas être modifiée, les modifications précédentes n'ont pas encore été validé."
+  notice_profile_category_successful_created: "Cette catégorie de profil a été créée avec succès."
+  notice_profile_category_successful_updated: "Cette catégorie de profil a été mise à jour avec succès."
+  notice_profile_category_successful_deleted: "Cette catégorie de profil a été supprimée avec succès."
+  or_create_new_profile_category: "Ou Créer une nouvelle catégorie de profil"
 
   criteria: "Critères"
 

@@ -38,6 +38,7 @@ class WbsActivityRatiosController < ApplicationController
   include DataValidationHelper #Module for master data changes validation
 
   before_filter :get_record_statuses
+  helper_method :enable_update_in_local?
 
   def export
     #No authorize required since everyone can access the list
@@ -170,5 +171,25 @@ class WbsActivityRatiosController < ApplicationController
       end
     end
     redirect_to edit_wbs_activity_path(@ratio.wbs_activity, :anchor => 'tabs-3')
+  end
+
+  protected
+  #Function that enable/disable to update
+  def enable_update_in_local?
+    #No authorize required since this method is protected and won't be call from route
+    if is_master_instance?
+      true
+    else
+      if params[:action] == 'new'
+        true
+      elsif params[:action] == 'edit'
+        @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
+        if @wbs_activity_ratio.is_defined? || @wbs_activity.defined?
+          false
+        else
+          true
+        end
+      end
+    end
   end
 end

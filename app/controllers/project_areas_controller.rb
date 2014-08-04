@@ -74,6 +74,7 @@ class ProjectAreasController < ApplicationController
     authorize! :manage, ProjectArea
 
     @project_area = ProjectArea.new(params[:project_area])
+    @project_area.owner_id = current_user.id
 
     if @project_area.save
       flash[:notice] = I18n.t (:notice_project_area_successful_created)

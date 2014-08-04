@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
 
-  load_resource
   include DataValidationHelper #Module for master data changes validation
+  load_resource
 
   before_filter :get_record_statuses
 
@@ -16,6 +16,7 @@ class ProfilesController < ApplicationController
   # GET /profiles/new.json
   def new
     @profile = Profile.new
+    @profile_categories = ProfileCategory.defined.all
   end
 
   # GET /profiles/1/edit
@@ -23,6 +24,7 @@ class ProfilesController < ApplicationController
     authorize! :create_and_edit_profiles, Profile
     set_page_title 'Edit profile'
     @profile = Profile.find(params[:id])
+    @profile_categories = ProfileCategory.defined.all
 
     unless @profile.child_reference.nil?
       if @profile.child_reference.is_proposed_or_custom?
@@ -38,7 +40,10 @@ class ProfilesController < ApplicationController
   def create
     authorize! :create_and_edit_profiles, Profile
     set_page_title 'Create profile'
+
     @profile = Profile.new(params[:profile])
+    @profile.owner_id = current_user.id
+    @profile_categories = ProfileCategory.defined.all
 
     @profile.record_status = @proposed_status
     if @profile.save
@@ -54,6 +59,7 @@ class ProfilesController < ApplicationController
   def update
     authorize! :create_and_edit_profiles, Profile
     set_page_title 'Update profile'
+    @profile_categories = ProfileCategory.defined.all
 
     @profile = nil
     current_profile = Profile.find(params[:id])
@@ -96,4 +102,5 @@ class ProfilesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
 end

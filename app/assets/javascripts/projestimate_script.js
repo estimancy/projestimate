@@ -282,7 +282,7 @@ $(document).ready(function() {
 
     if(($('.div_tabs_to_disable').data('enable_update')) ==  false){
         $('.div_tabs_to_disable').find('input, textarea, button, select, a').attr('disabled','disabled');
-        $('.select_ratio').removeAttr("disabled");
+        $('.select_ratio, .back').removeAttr("disabled");
     }
 
     $(function() {

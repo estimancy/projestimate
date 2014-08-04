@@ -2,6 +2,7 @@ class OrganizationProfile < ActiveRecord::Base
   attr_accessible :cost_per_hour, :description, :name, :organization_id
 
   belongs_to :organization
+  belongs_to :profile_category
 
   has_many :wbs_activity_ratio_profiles
 

@@ -38,6 +38,9 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :profile_categories
+
+
   resources :organization_profiles
 
 
