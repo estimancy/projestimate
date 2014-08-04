@@ -1,5 +1,5 @@
 class Profile < ActiveRecord::Base
-  attr_accessible :cost_per_hour, :description, :name, :record_status, :record_status_id, :custom_value, :change_comment
+  attr_accessible :cost_per_hour, :description, :name, :record_status, :record_status_id, :custom_value, :change_comment, :profile_category_id
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 

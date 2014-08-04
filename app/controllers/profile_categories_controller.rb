@@ -19,6 +19,12 @@ class ProfileCategoriesController < ApplicationController
     set_page_title 'Profile Categories'
     @profile_category = ProfileCategory.new
     @enable_update_in_local = true
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.js
+      format.json { render json: @profile_categories }
+    end
   end
 
   def edit

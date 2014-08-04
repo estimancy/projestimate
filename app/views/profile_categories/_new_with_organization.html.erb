@@ -5,7 +5,7 @@
 
         <div class="div_tabs_to_disable" data-enable_update="<%= enable_update_in_local? %>">
           <%= f.input :organization_id, :as => :hidden, :input_html => {:value => params[:organization_id]} %>
-          <%= f.input :name, :label => I18n.t('name'), :input_html => {:autofocus => (controller.action_name == 'new')} %>
+          <%= f.input :name, :label => I18n.t('name'), :input_html => {:autofocus => (controller.action_name == 'new'), :class => 'input-xxlarge'} %>
           <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
           <div class="actions-tabs">
