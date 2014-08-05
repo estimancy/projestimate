@@ -8,7 +8,7 @@
             <%= link_to 'Configure', load_setting_module_path(current_module_project.id.to_s), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true %>
             <%= submit_tag 'Actualiser', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
           <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
-            <%= link_to 'Configure', "/cocomo_expert?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
+            <%= link_to 'Configure', load_setting_module_path(current_module_project.id.to_s), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true %>
             <%= submit_tag 'Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
           <% elsif current_module_project.pemodule.alias == "cocomo_advanced" %>
             <%= link_to 'Configure', "/cocomo_advanced?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
