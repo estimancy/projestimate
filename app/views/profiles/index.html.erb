@@ -27,8 +27,8 @@
 
       <% @profiles.each do |profile| %>
           <tr>
-            <td style="color: blue" rowspan=""><%= profile.profile_category %></td>
-            <td><%= profile.name %></td>
+            <td class="td_min_width" style="color: blue"><%= profile.profile_category %></td>
+            <td class="td_min_width"><%= profile.name %></td>
             <td><%= profile.description %></td>
             <td><%= profile.cost_per_hour %></td>
 

@@ -794,4 +794,12 @@ span.error{
     border-color: #ddd;
 }
 
+.button_margin_left{
+    margin-left: 5px;
+}
+
+.td_min_width{
+    min-width: 220px;
+}
+
 
