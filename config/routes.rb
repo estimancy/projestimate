@@ -42,6 +42,8 @@ Projestimate::Application.routes.draw do
 
 
   resources :organization_profiles
+  get 'refresh_organization_profiles' => 'organization_profiles#refresh_organization_profiles', as: 'refresh_organization_profiles'
+  get 'refresh_organization_profile_data' => 'organization_profiles#refresh_organization_profile_data', as: 'refresh_organization_profile_data'
 
 
   resources :profiles

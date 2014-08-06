@@ -1176,6 +1176,7 @@ en-gb:
   select_technology: "select technology"
   select_uow: "select unit of work"
   number_precision: "Number precision"
+  profile: "Profile"
   profiles: "Profiles"
   new_profile: "New profile"
   edit_profile: "Edit the \"%{value}\" profile ..."
@@ -1218,7 +1219,8 @@ en-gb:
   notice_profile_category_successful_created: "Profile category was successfully created."
   notice_profile_category_successful_updated: "Profile category was successfully updated."
   notice_profile_category_successful_deleted: "Profile category was successfully deleted."
-  or_create_new_profile_category: "Or Create new profile category"
+  or_create_new_profile_category: "Create new profile category"
+  select_profile_or_fill_text_fields: "Select a profile or please fill text fields bellow"
 
   requirement: "Requirements"
   size_unit: "Size unit"

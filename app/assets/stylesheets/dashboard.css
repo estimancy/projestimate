@@ -784,9 +784,22 @@ td.align-center{
     text-align:center;
 }
 
-
 span.error{
     color: red;
+}
+
+.div-title{
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.button_margin_left{
+    margin-left: 5px;
+}
+
+.td_min_width{
+    min-width: 220px;
 }
 
 

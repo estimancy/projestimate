@@ -1180,6 +1180,7 @@ fr:
   select_technology: "Sélectionner une technologie"
   select_uow: "Sélectionner une unité de travail"
   number_precision: "Précision des nombres"
+  profile: "un profil"
   profiles: "Profils"
   new_profile: "Nouveau profil"
   edit_profile: "Editer le profil \"%{value}\" ..."
@@ -1256,7 +1257,8 @@ fr:
   notice_profile_category_successful_created: "Cette catégorie de profil a été créée avec succès."
   notice_profile_category_successful_updated: "Cette catégorie de profil a été mise à jour avec succès."
   notice_profile_category_successful_deleted: "Cette catégorie de profil a été supprimée avec succès."
-  or_create_new_profile_category: "Ou Créer une nouvelle catégorie de profil"
+  or_create_new_profile_category: "Créer une nouvelle catégorie de profil"
+  select_profile_or_fill_text_fields: "Sélectionner un profil ou veuiller remplir les champs de texte ci-dessous"
 
   criteria: "Critères"
 

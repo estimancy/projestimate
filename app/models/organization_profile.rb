@@ -1,5 +1,5 @@
 class OrganizationProfile < ActiveRecord::Base
-  attr_accessible :cost_per_hour, :description, :name, :organization_id
+  attr_accessible :cost_per_hour, :description, :name, :organization_id, :profile_category_id, :profile_id
 
   belongs_to :organization
   belongs_to :profile_category
