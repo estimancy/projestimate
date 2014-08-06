@@ -21,7 +21,7 @@
 </style>
 
 <div class="tabs">
-  <%= form_tag uow.save_uow_path do %>
+  <%= form_tag uow.save_uow_path, remote: true do %>
 
     <%= hidden_field_tag "module_project_id", @module_project.id %>
     <div id="tabs-1" style="overflow-x: auto;">
@@ -74,11 +74,9 @@
         <%= render :partial => '/uow/inputs/row' %>
       </table>
 
-      <%= submit_tag I18n.t(:save), :class => "btn" %>
       <%= submit_tag I18n.t(:apply), :class => "btn" %>
       <a href="#import_modal" role="button" class="btn" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal">Importer</a>
       <%= link_to "Exporter", uow.export_path(current_module_project.id, current_component.id), :class => "btn" %>
-      <%= link_to I18n.t(:back), main_app.root_url, :class => "btn" %>
       <%= submit_tag "Mettre à jour les données brutes", :class => "btn pull-right" %>
 
     </div>

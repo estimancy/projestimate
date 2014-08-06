@@ -68,7 +68,7 @@ class RecordStatusesController < ApplicationController
     @record_status = RecordStatus.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.json { render json: @record_status }
     end
   end

@@ -48,9 +48,13 @@ class Input < ActiveRecord::Base
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
       csv << ['id', 'Organization', 'Reference', 'Technology', 'Unit Of Work', 'Complexity', 'Type', 'Low', 'Most Likely', 'High', 'Weight']
       @inputs.each do |i|
-        csv << ["#{i.id}", "#{i.organization_technology.organization.name}", "#{i.name}", "#{i.organization_technology}", "#{i.unit_of_work}", "#{i.organization_uow_complexity}", "#{i.size_unit_type.name}",
-                "#{i.size_low}", "#{i.size_most_likely}", "#{i.size_high}",
-                "#{i.weight}"]
+        begin
+          csv << ["#{i.id}", "#{i.organization_technology.organization.name}", "#{i.name}", "#{i.organization_technology}", "#{i.unit_of_work}", "#{i.organization_uow_complexity}", "#{i.size_unit_type.name}",
+                  "#{i.size_low}", "#{i.size_most_likely}", "#{i.size_high}",
+                  "#{i.weight}"]
+        rescue
+
+        end
       end
     end
     csv_string.encode(I18n.t(:general_csv_encoding))
