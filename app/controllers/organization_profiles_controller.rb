@@ -31,7 +31,7 @@ class OrganizationProfilesController < ApplicationController
 
     respond_to do |format|
       if @organization_profile.save
-        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-13'), notice: I18n.t(:notice_profile_successful_created) }
+        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_created) }
         format.json { render json: @organization_profile, status: :created, location: @organization_profile }
       else
         flash[:error] = I18n.t(:error_profile_failed_created)
@@ -53,7 +53,7 @@ class OrganizationProfilesController < ApplicationController
 
     respond_to do |format|
       if @organization_profile.update_attributes(params[:organization_profile])
-        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-13'), notice: I18n.t(:notice_profile_successful_updated) }
+        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_updated) }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -73,8 +73,26 @@ class OrganizationProfilesController < ApplicationController
     @organization_profile.destroy
 
     respond_to do |format|
-      format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-13') }
+      format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile') }
       format.json { head :no_content }
+    end
+  end
+
+  def refresh_organization_profiles
+    if !params[:profile_category_id].nil?
+      @profile_category = ProfileCategory.find(params[:profile_category_id])
+      @profiles = @profile_category.profiles
+    end
+    #Voir si il faut modifier le cout horaire lorsqu'on change de profile
+  end
+
+  def refresh_organization_profile_data
+    @profile_name = nil; @profile_description = nil; @profile_cost_per_hour= nil
+    if !params[:profile_id].nil?
+      @profile_for_organization = Profile.find(params[:profile_id])
+      @profile_name = @profile_for_organization.name
+      @profile_description = @profile_for_organization.description
+      @profile_cost_per_hour = @profile_for_organization.cost_per_hour
     end
   end
 

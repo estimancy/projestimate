@@ -405,6 +405,29 @@ $(document).ready(function() {
         return false;
     });
 
+    //Update the profiles select box according to the selected ProfileCategoty
+    $("#organization_profile_profile_category_id").change(function(){
+        $.ajax({
+            url:"/refresh_organization_profiles",
+            method: 'GET',
+            data: {
+                profile_category_id: $(this).val()
+            }
+        })
+    });
+
+    //Update the profiles name and description according to the selected Profile
+    $("#profile_id_for_organization").change(function(){
+        $.ajax({
+            url:"/refresh_organization_profile_data",
+            method: 'GET',
+            data: {
+                profile_id: $(this).val()
+            }
+        })
+    });
+
+
     //Update the total ratio value per activity when activity's profile ratio has changed
     update_wbs_activity_ratio_profiles();
 

@@ -784,9 +784,14 @@ td.align-center{
     text-align:center;
 }
 
-
 span.error{
     color: red;
+}
+
+.div-title{
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
 }
 
 

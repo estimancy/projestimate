@@ -8,7 +8,7 @@
       <%= f.error_notification %>
 
       <div class="form-inputs">
-        <%= f.input :profile_category_id, label: I18n.t(:profile_category), as: :select, collection: @profile_categories, prompt: I18n.t("helpers.select.prompt") %>
+        <%= f.input :profile_category_id, label: I18n.t(:profile_category), as: :select, collection: @profile_categories, selected: @profile.profile_category_id || nil , prompt: I18n.t("helpers.select.prompt") %>
         <%= f.input :name, :label => I18n.t(:name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
         <%= f.input :description, :label => I18n.t(:description), :input_html => {:class => 'input-xxlarge', :rows => 8 }  %>
         <%= f.input :cost_per_hour, :label => I18n.t(:cost_per_hour) %>
