@@ -1683,13 +1683,36 @@ public
 
   # Function that show the estimation graph
   def show_estimation_graph
+    @timeline = []
     @project = current_project
+    @current_module_project = current_module_project
+
+    end_date = PeAttribute.where(alias: "end_date").first
+    products = @project.root_component.subtree.sort_by(&:position)
+
+    products.each_with_index do |element, i|
+      if i == 0
+        @timeline << [element.name, @project.start_date, @project.start_date + 63.days]
+      else
+        unless i-1 == 0
+          date_prec = @timeline[i-1][2]
+        else
+          date_prec = @project.start_date
+        end
+
+        date_next = EstimationValue.where(pe_attribute_id: end_date.id,
+                                          module_project_id: @current_module_project.id).first.string_data_probable[element.id]
+        @timeline << [element.name, date_prec, date_next]
+      end
+    end
+
+    @timeline[0][2] = @timeline.map(&:last).max
+
     @project_organization = @project.organization
     @project_module_projects = @project.module_projects
     # the current activated component (PBS)
     @current_component = current_component
     #get the current activated module project
-    @current_module_project = current_module_project
     @current_mp_attributes = []
     @input_dataset = {}
     @all_cocomo_advanced_factors_names = []
