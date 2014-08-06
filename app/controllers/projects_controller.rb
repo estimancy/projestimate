@@ -1959,25 +1959,41 @@ public
 
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
-    @pbs = current_component
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
-    @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
-    @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
-    @complexities = []
-    organization_unit_of_works = current_project.organization.unit_of_works.first
-    if !organization_unit_of_works.nil?
-      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
-    end
+    if @module_project.pemodule.alias == "uow"
+      @pbs = current_component
+      @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+      @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
+      @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
+      @complexities = []
+      organization_unit_of_works = current_project.organization.unit_of_works.first
+      if !organization_unit_of_works.nil?
+        @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
+      end
 
-    @module_project.pemodule.attribute_modules.each do |am|
-      if am.pe_attribute.alias ==  "effort_person_month"
-        @size = EstimationValue.where(:module_project_id => @module_project.id,
-                                      :pe_attribute_id => am.pe_attribute.id,
-                                      :in_out => "input" ).first
+      @module_project.pemodule.attribute_modules.each do |am|
+        if am.pe_attribute.alias ==  "effort_person_month"
+          @size = EstimationValue.where(:module_project_id => @module_project.id,
+                                        :pe_attribute_id => am.pe_attribute.id,
+                                        :in_out => "input" ).first
 
-        @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+          @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+        end
+      end
+    else
+      set_breadcrumbs "Dashboard" => "/dashboard", "Cocomo Expert" => ""
+
+      @sf = []
+      @em = []
+
+      aliass = %w(pers rcpx ruse pdif prex fcil sced)
+      aliass.each do |a|
+        @em << Factor.where(alias: a).first
+      end
+
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        @sf << Factor.where(alias: a).first
       end
     end
   end
-
 end
