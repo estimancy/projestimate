@@ -57,9 +57,8 @@ class Uow::InputsController < ApplicationController
   end
 
   def import
-    module_project = current_module_project
-    csv_string = Input::import(params[:file], params[:separator], params[:encoding], current_component, module_project)
-    redirect_to "/uow?mp=#{module_project.id}"
+    csv_string = Input::import(params[:file], params[:separator], params[:encoding], current_component, @module_project)
+    redirect_to main_app.root_url
   end
 
   def save_uow

@@ -196,6 +196,7 @@ gem 'jbuilder', '~> 1.2'
 
 gem "chartkick"
 gem 'groupdate'
+gem 'remotipart', '~> 1.2'
 
 local_gemfile = File.join(File.dirname(__FILE__), 'Gemfile.local')
 if File.exists?(local_gemfile)
