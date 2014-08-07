@@ -94,7 +94,7 @@
                   </td>
                   <td><%= attr.attribute_category %></td>
                   <td><%= attr.description %></td>
-                  <td>
+                  <td class="center">
                     <% ao = AttributeOrganization.where("organization_id = ? AND pe_attribute_id = ?", @organization.id, attr.id).first %>
                     <%= select_tag "is_mandatory[#{attr.id}]", options_for_select([["#{I18n.t('simple_form.yes')}", true], ["#{I18n.t('simple_form.no')}", false]], :selected => (ao.nil? ? nil : ao.is_mandatory)), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small' %>
                   </td>

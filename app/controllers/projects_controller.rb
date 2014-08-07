@@ -639,6 +639,18 @@ public
       end
     end
 
+    # if the EffortBreakdown module is called, we need to have at least one Wbs-activity/Ratio defined in the PBS or in project level
+    if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+      pe_wbs_activity = start_module_project.project.pe_wbs_projects.activities_wbs.first
+      project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+      if current_component.wbs_activity_ratio.nil? && wbs_project_elt_with_ratio.nil?
+        flash[:notice] = "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"
+        #return redirect_to(:back, :alert =>"Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet" )
+        redirect_to(root_path(flash: { error: "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"})) and return
+      end
+    end
+
     # Execution of the first/current module-project
     ['low', 'most_likely', 'high'].each do |level|
       @my_results[level.to_sym] = run_estimation_plan(set_attributes[level], pbs_project_element_id, level, @project, start_module_project)
