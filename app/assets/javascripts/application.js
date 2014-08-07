@@ -5,6 +5,7 @@
 // the compiled file.
 //
 //= require jquery
+//= require jquery.remotipart
 //= require jquery_ujs
 //= require jquery-ui
 //= require tinymce-jquery

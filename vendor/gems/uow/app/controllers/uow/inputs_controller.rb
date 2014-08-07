@@ -36,63 +36,32 @@
 
 class Uow::InputsController < ApplicationController
 
+  before_filter :set_pemodule, only: [:index, :new_item, :remove_item, :import, :save_uow]
+
   def index
-    @module_project = ModuleProject.find(params[:mp])
-    @pbs = current_component
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
-    @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
-    @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
-    @complexities = []
-    organization_unit_of_works = current_project.organization.unit_of_works.first
-    if !organization_unit_of_works.nil?
-      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
-    end
-
-    @module_project.pemodule.attribute_modules.each do |am|
-      if am.pe_attribute.alias ==  "effort_person_month"
-        @size = EstimationValue.where(:module_project_id => @module_project.id,
-                                      :pe_attribute_id => am.pe_attribute.id,
-                                      :in_out => "input" ).first
-
-        @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-      end
-    end
   end
 
   def new_item
-    module_project = ModuleProject.find(params[:mp])
-    pbs = PbsProjectElement.find(params[:pbs_id])
-
-    input = Input.new(module_project_id: module_project.id, pbs_project_element_id: pbs.id)
+    input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
     input.save(validate: false)
-
-    redirect_to redirect_apply("/uow?mp=#{module_project.id}", "/uow?mp=#{module_project.id}",  "/dashboard")
   end
 
   def remove_item
     input = Input.find(params[:input_id])
-    module_project = input.module_project
     input.delete
-
-    redirect_to redirect_apply("/uow?mp=#{module_project.id}", "/uow?mp=#{module_project.id}",  "/dashboard")
   end
 
   def export
-    csv_string = Input::export(params[:mp], params[:pbs_id])
+    csv_string = Input::export(params[:module_project_id], params[:pbs_id])
     send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=uo.csv")
   end
 
   def import
-    module_project = current_module_project
-    csv_string = Input::import(params[:file], params[:separator], params[:encoding], current_component, module_project)
-    redirect_to "/uow?mp=#{module_project.id}"
+    csv_string = Input::import(params[:file], params[:separator], params[:encoding], current_component, @module_project)
+    redirect_to main_app.root_url
   end
 
   def save_uow
-    @module_project = current_module_project
-    @organization_technologies = current_project.organization.organization_technologies.defined.map{|i| [i.name, i.id]}
-    @unit_of_works = current_project.organization.unit_of_works.defined.map{|i| [i.name, i.id]}
-    @complexities = current_project.organization.unit_of_works.first.organization_uow_complexities.map{|i| [i.name, i.id]}
     @gross = []
 
     params[:input_id].keys.each do |r|
@@ -134,8 +103,6 @@ class Uow::InputsController < ApplicationController
         @in_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
-
-    redirect_to redirect_apply("/uow?mp=#{@module_project.id}", "/uow?mp=#{@module_project.id}",  "/dashboard")
   end
 
   def load_gross
@@ -172,6 +139,32 @@ class Uow::InputsController < ApplicationController
     @index = params[:index]
     @technology = OrganizationTechnology.find(params[:technology_id])
     @unit_of_works = @technology.unit_of_works
+  end
+
+
+  private
+  # Use callbacks to share common setup or constraints between actions.
+  def set_pemodule
+    @module_project = current_module_project
+    @pbs = current_component
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
+    @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
+    @complexities = []
+    organization_unit_of_works = current_project.organization.unit_of_works.first
+    if !organization_unit_of_works.nil?
+      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
+    end
+
+    @module_project.pemodule.attribute_modules.each do |am|
+      if am.pe_attribute.alias ==  "effort_person_month"
+        @size = EstimationValue.where(:module_project_id => @module_project.id,
+                                      :pe_attribute_id => am.pe_attribute.id,
+                                      :in_out => "input" ).first
+
+        @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+      end
+    end
   end
 
 end
