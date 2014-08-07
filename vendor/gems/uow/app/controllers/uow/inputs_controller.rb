@@ -63,10 +63,6 @@ class Uow::InputsController < ApplicationController
   end
 
   def save_uow
-    @module_project = current_module_project
-    @organization_technologies = current_project.organization.organization_technologies.defined.map{|i| [i.name, i.id]}
-    @unit_of_works = current_project.organization.unit_of_works.defined.map{|i| [i.name, i.id]}
-    @complexities = current_project.organization.unit_of_works.first.organization_uow_complexities.map{|i| [i.name, i.id]}
     @gross = []
 
     params[:input_id].keys.each do |r|

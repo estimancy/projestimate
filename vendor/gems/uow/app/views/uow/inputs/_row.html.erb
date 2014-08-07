@@ -16,7 +16,6 @@
       <%= link_to "", uow.remove_item_path(params[:module_project_id], input.id, current_component.id), :class => "icon icon-trash", title: "Remove item", remote: true %>
       <span class="icon icon-star <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></span>
       <%= hidden_field_tag "flag[#{i+1}]", input.flag.blank? ? 'black-question-mark' : input.flag %>
-      <a href="#modal_description" class="icon icon-question" data-toggle="modal"></a>
     </td>
     <td class="span2 center">
       <%= text_field_tag "name[#{i+1}]", input.name, :class => "name input-large" %>
