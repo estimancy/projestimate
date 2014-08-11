@@ -1,2 +1,4 @@
-$("#setting_module").html("<%= j(render(:partial => 'projects/setting_module'))%>");
+//$("#setting_module").html("<%#= j(render(:partial => 'projects/setting_module'))%>");
+$('#myTable tr:last').after("<%= j(render(:partial => 'new_item', object: @input))%>");
+
 $('.spiner').hide();

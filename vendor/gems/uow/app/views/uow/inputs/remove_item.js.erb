@@ -1,2 +1,3 @@
-$("#setting_module").html("<%= j(render(:partial => 'projects/setting_module'))%>");
+//$("#setting_module").html("<%#= j(render(:partial => 'projects/setting_module'))%>");
+$('<%= "#myTableRow_#{@deleted_input_id}"%>').remove();
 $('.spiner').hide();
