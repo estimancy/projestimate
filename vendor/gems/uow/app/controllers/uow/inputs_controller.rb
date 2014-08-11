@@ -44,11 +44,13 @@ class Uow::InputsController < ApplicationController
   def new_item
     input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
     input.save(validate: false)
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
   end
 
   def remove_item
     input = Input.find(params[:input_id])
     input.delete
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
   end
 
   def export
