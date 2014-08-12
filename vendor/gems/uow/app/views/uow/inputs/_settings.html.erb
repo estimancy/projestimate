@@ -217,9 +217,9 @@
     });
 
     $(", #uow_" + index +
-            ", #technology_" + index +
-            ", #complexity_" + index +
-            ", #size_unit_type_" + index ).on("change", function(e){
+      ", #technology_" + index +
+      ", #complexity_" + index +
+      ", #size_unit_type_" + index ).on("change", function(e){
 
       $.ajax({ url:'/uow/load_gross',
         data: 'size_low=' + $('#size_low_' + index).val()
@@ -235,19 +235,22 @@
     });
 
     // Update the Unit of Works select_box according to the selected technology
-    $("#technology_" + index).on("change", function(e){
-      $.ajax({ url:'/uow/update_unit_of_works_select_box',
-        data: 'technology_id=' + $(this).val()
-                + "&index=" + index
+      $("#technology_" + index).on("change", function(e){
+          $.ajax({ url:'/uow/update_unit_of_works_select_box',
+              data: 'technology_id=' + $(this).val()
+                      + "&index=" + index
+          });
+          return false;
       });
-    });
 
-    $("#uow_" + index).on("change", function(e){
-      $.ajax({ url:'/uow/update_complexity_select_box',
-        data: 'uow_id=' + $(this).val()
-                + "&index=" + index
+      $("#uow_" + index).on("change", function(e){
+          $.ajax({ url:'/uow/update_complexity_select_box',
+              data: 'uow_id=' + $(this).val()
+                      + "&index=" + index
+          });
+          return false;
       });
-    });
+
   }
 
   $(document).ready(function(e){
