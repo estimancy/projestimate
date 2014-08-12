@@ -45,6 +45,7 @@ class Uow::InputsController < ApplicationController
     @input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
     @input.save(validate: false)
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @input_index = params['row_index'].to_i+1
   end
 
   def remove_item
@@ -52,6 +53,7 @@ class Uow::InputsController < ApplicationController
     @input = Input.find(params[:input_id])
     @input.delete
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @input_index = params['row_index']
   end
 
   def export

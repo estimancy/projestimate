@@ -1,4 +1,13 @@
-$("#setting_module").html("<%= j(render(:partial => 'projects/setting_module'))%>");
-//$('#myTable tr:last').after("<%#= j(render(:partial => 'new_item', object: @input))%>");
+//$("#setting_module").html("<%#= j(render(:partial => 'projects/setting_module'))%>");
 
+$('#myTable tr:last').after("<%= j(render(:partial => 'new_item', object: [@input, @input_index]))%>");
 $('.spiner').hide();
+
+
+$(document).ready(function(e){
+    $("#myTable").find("tr").each(function(index){
+        initialize_gross_behaviour(index);
+    });
+});
+
+
