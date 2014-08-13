@@ -241,8 +241,8 @@ fr:
   home: "Mon estimation"
   all_projects: "Toutes les estimations"
   create_new_project: "Nouvelle estimation"
-  label_user_security_resume: "Gestion des droits utilisateurs du projet"
-  label_group_security_resume: "Gestion des groupes du projet"
+  label_user_security_resume: "Gestion des droits utilisateurs de l'estimation"
+  label_group_security_resume: "Gestion des groupes de l'estimation"
 
   label_menu_organization: "Organisations"
   project_global_setting: "Paramètres projets"
@@ -259,7 +259,7 @@ fr:
   global_permissions: "Autorisations globales"
   text_global_permission: "Use this page to assign "
   all_permissions: "Permissions"
-  project_permissions: "Autorisations Projets"
+  project_permissions: "Autorisations des Estimations"
   master_permissions: "Autorisations Master"
   auth_methods: "Authentifications"
   events: "Evènements"
@@ -568,7 +568,7 @@ fr:
   global_properties: "Propriétés globales"
   text_confirm_project_deletion: "Ëtes-vous Sûr de vouloir supprimer ce projet et les données dépendantes ?"
   warning_need_check_box_confirmation: "Vous devez confirmer la suppression du projet avec la case à cocher"
-  label_project_is_model: "Est un modèle de projet"
+  label_project_is_model: "Est un modèle d'estimation"
   is_model: "Modèle"
   estimate: "Estimations"
 
@@ -1006,7 +1006,7 @@ fr:
   notice_pe_attribute_successful_updated: "Attribut mis à jour avec succès."
   text_index_permissions_guidance: "Liste toutes les permissions (globales et projets)."
   notice_end_of_estimation_execution: "Fin de l'exécution des modules"
-  label_project_name: "Nom du projet"
+  label_project_name: "Nom de l'estimation"
   label_product_name: "Nom du produit"
   label_project_version: "Version"
   label_permission_access: "Accès"
@@ -1033,7 +1033,7 @@ fr:
   notice_subcontractor_successfully_deleted: "Le sous-traitant a été supprimé avec succès"
 
   label_Project: "Projet"
-  label_filter_on_projects_version: "Filtre sur les versions de projets"
+  label_filter_on_projects_version: "Filtre sur les versions des estimations"
   label_filter_on_project_version_1: "Afficher seulement les feuilles "
   label_filter_on_project_version_2: "Afficher toutes les versions"
   label_filter_on_project_version_3: "Afficher seulement la racine"
@@ -1259,8 +1259,8 @@ fr:
   notice_profile_category_successful_deleted: "Cette catégorie de profil a été supprimée avec succès."
   or_create_new_profile_category: "Créer une nouvelle catégorie de profil"
   select_profile_or_fill_text_fields: "Sélectionner un profil ou veuiller remplir les champs de texte ci-dessous"
-  projects_states: "États des projets"
-  text_user_associated_projects_states: "États de projets associés (États des projets auxquels l'utilisateur a accès)"
+  projects_states: "États des estimations"
+  text_user_associated_projects_states: "États des estimations associés (États des estimations auxquels l'utilisateur a accès)"
 
   criteria: "Critères"
 
