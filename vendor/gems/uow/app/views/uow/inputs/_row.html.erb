@@ -1,7 +1,7 @@
 <% if @inputs.empty? %>
   <tr>
     <td colspan="13">
-      <%= link_to "", uow.new_item_path(params[:module_project_id], current_component.id), :class => "icon icon-plus", title: "New item"  %>
+      <%= link_to "", uow.new_item_path(params[:module_project_id], current_component.id, 0), :class => "icon icon-plus", title: "New item", remote: true  %>
     </td>
   </tr>
 <% end %>

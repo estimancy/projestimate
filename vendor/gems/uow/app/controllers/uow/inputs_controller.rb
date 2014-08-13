@@ -46,6 +46,9 @@ class Uow::InputsController < ApplicationController
     @input.save(validate: false)
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @input_index = params['row_index'].to_i+1
+    #respond_to do |format|
+    #  format.js
+    #end
   end
 
   def remove_item
@@ -126,9 +129,11 @@ class Uow::InputsController < ApplicationController
       @index = 1
     end
 
-    productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
-    abacus_value = SizeUnitTypeComplexity.where(size_unit_type_id: params["size_unit_type"], organization_uow_complexity_id: params[:complexity]).first.value
     weight = params[:"weight"].blank? ? 1 : params[:"weight"]
+    technology_productivity_ratio = OrganizationTechnology.find(params[:technology]).productivity_ratio
+    productivity_ratio =  technology_productivity_ratio.nil? ? 1 : technology_productivity_ratio
+
+    abacus_value = SizeUnitTypeComplexity.where(size_unit_type_id: params["size_unit_type"], organization_uow_complexity_id: params[:complexity]).first.value
 
     @result[:"gross_low_#{@index.to_s}"] = params[:size_low].to_i * abacus_value.to_f * weight.to_f * productivity_ratio.to_f
     @result[:"gross_most_likely_#{@index.to_s}"] = params[:size_most_likely].to_i * abacus_value * weight.to_f * productivity_ratio.to_f
