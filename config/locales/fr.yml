@@ -1259,6 +1259,8 @@ fr:
   notice_profile_category_successful_deleted: "Cette catégorie de profil a été supprimée avec succès."
   or_create_new_profile_category: "Créer une nouvelle catégorie de profil"
   select_profile_or_fill_text_fields: "Sélectionner un profil ou veuiller remplir les champs de texte ci-dessous"
+  projects_states: "États des projets"
+  text_user_associated_projects_states: "États de projets associés (États des projets auxquels l'utilisateur a accès)"
 
   criteria: "Critères"
 

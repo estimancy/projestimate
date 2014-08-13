@@ -1210,3 +1210,5 @@ de:
   notice_profile_category_successful_deleted: "Profile category was successfully deleted."
   or_create_new_profile_category: "Create new profile category"
   select_profile_or_fill_text_fields: "Select a profile or please fill text fields bellow"
+  projects_states: "Projects states"
+  text_user_associated_projects_states: "Associated projects's states (states of projects in which the user has access)"

@@ -11,6 +11,7 @@
           <li><a href="#tabs-2"><%= I18n.t(:groups) %></a></li>
           <li><a href="#tabs-3"><%= I18n.t(:organizations) %></a></li>
           <li><a href="#tabs-4"><%= I18n.t(:projects) %></a></li>
+          <li><a href="#tabs-projects_states"><%= I18n.t(:projects_states) %></a></li>
           <li><a href="#tabs-5"><%= I18n.t(:settings) %></a></li>
         </ul>
 
@@ -266,6 +267,16 @@
             -->
           </table>
         </div>
+
+        <div id="tabs-projects_states">
+          <b><%= I18n.t(:text_user_associated_projects_states) %></b>
+          <br/>
+
+          <div id="user_projects" class="field_checkbox">
+            <%#= render :partial => 'user_projects_states', :locals => {:projects => @projects, :project_users => @project_users} %>
+          </div>
+        </div>
+
 
         <div class="actions">
           <% if action_name.in?(%w(new create)) %>
