@@ -37,7 +37,7 @@
         <tr>
           <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
           <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
-            <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states, :input_html => {:class => 'input-large'} %></td>
+            <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-large'} %></td>
           <% else %>
               <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states, :input_html => {:class => 'input-large'}, :disable => true %></td>
           <% end %>
