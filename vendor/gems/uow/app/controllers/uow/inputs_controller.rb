@@ -90,8 +90,8 @@ class Uow::InputsController < ApplicationController
       input.flag = params[:flag]["#{r}"]
       input.save
 
-      inputs = Input.where(id: params[:input_id]["#{r}"].to_i)
-      @gross << inputs.first
+      #inputs = Input.where(id: params[:input_id]["#{r}"].to_i)
+      @gross << input #inputs.first
     end
 
     @module_project.pemodule.attribute_modules.each do |am|
@@ -120,7 +120,7 @@ class Uow::InputsController < ApplicationController
     @level = ["gross_low", "gross_most_likely", "gross_high"]
 
     @size << params[:size_low]
-    @size << params[:size_ml]
+    @size << params[:size_most_likely]
     @size << params[:size_high]
 
     if params['index']
