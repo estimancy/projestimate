@@ -214,7 +214,7 @@
             if((current_value != "") && (current_value != undefined))
                 sum_of_cols += parseFloat(current_value.replace("," , "."));
         });
-        //$('#overall_'+common_on_id).val(sum_of_cols);
+        $('#overall_'+common_on_id).val(sum_of_cols);
 
       //=====
       $.ajax({ url:'/uow/load_gross',
@@ -230,8 +230,8 @@
       });
 
         var gross_selector = "#gross_low_" + index +
-        ", #gross_most_likely_" + index +
-        ", #gross_high_" + index +
+                             ", #gross_most_likely_" + index +
+                             ", #gross_high_" + index +
         $(gross_selector).on("blur change", function(e){
             // ====
             var selector_id = $(this).attr('id');
@@ -243,7 +243,7 @@
                 if((current_value != "") && (current_value != undefined))
                     sum_of_cols += parseFloat(current_value.replace("," , "."));
             });
-            //$('#overall_'+common_on_id).val(sum_of_cols);
+            $('#overall_'+common_on_id).val(sum_of_cols);
         });
     });
 
