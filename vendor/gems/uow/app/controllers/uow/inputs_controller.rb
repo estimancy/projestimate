@@ -111,6 +111,9 @@ class Uow::InputsController < ApplicationController
         @in_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
+
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+
   end
 
   def load_gross

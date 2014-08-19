@@ -26,7 +26,7 @@ $('.component_tree ul li, .widget-content ul li').hover(
 
 $('.spiner').hide();
 
-$("#pbs_list").val(<%= @current_component.nil? ? '' : @current_component.id %>);
+//$("#pbs_list").val(<%# @current_component.nil? ? '' : @current_component.id %>);
 $("#select_balancing_attribute").val(<%= current_balancing_attribute.nil? ? '' : current_balancing_attribute.id %>);
 
 $(".header_data").html("<h5><%= @current_component %> - <%= current_module_project %> </h5>");
