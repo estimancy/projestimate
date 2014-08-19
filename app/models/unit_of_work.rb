@@ -60,4 +60,9 @@ class UnitOfWork < ActiveRecord::Base
     name || ''
   end
 
+  # Add the amoeba gem for the copy
+  amoeba do
+    enable
+    include_field [:abacus_organizations, :organization_uow_complexities]
+  end
 end

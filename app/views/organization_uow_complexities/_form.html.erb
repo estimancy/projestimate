@@ -23,11 +23,11 @@
       <% end %>
 
       <% if params[:organization_id].present? and !params[:factor].present? %>
-        <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]} %>
+        <%= f.input :unit_of_work_id, as: :select, collection: @organization.unit_of_works.map{|i|[i.name, i.id]}, selected: @organization_uow_complexity.unit_of_work_id %>
       <% end %>
 
       <% if params[:organization_id].present? and !params[:factor].present? %>
-        <%= f.input :organization_technology_id, as: :select, collection: @organization.organization_technologies.map{|i|[i.name, i.id]} %>
+        <%= f.input :organization_technology_id, as: :select, collection: @organization.organization_technologies.map{|i|[i.name, i.id]}, selected: @organization_uow_complexity.organization_technology_id %>
       <% end %>
 
       <table>
