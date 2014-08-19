@@ -32,10 +32,7 @@
       <% @organizations.each do |i| %>
           <tr>
             <td><%= link_to i.name, edit_organization_path(i) %></td>
-            <!--<td><%# i.description %></td>-->
-            <td>
-              <%= link_to "Gérer les unités d'oeuvres", "#" %> / <%= link_to "Gérer les facteurs", "#" %>
-            </td>
+            <td><%= i.description %></td>
             <td class="center">
               <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
