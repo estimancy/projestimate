@@ -24,7 +24,7 @@
       <%= select_tag "technology[#{i+1}]", options_for_select(@organization_technologies, selected: input.technology_id.nil? ? current_component.organization_technology_id : input.technology_id), {class: "technology", prompt: I18n.t(:select_technology), required: true} %>
     </td>
     <td class="span1 center">
-      <% input.technology_id.nil? ? (@unit_of_works = current_component.organization_technology.unit_of_works) : (@unit_of_works = input.organization_technology.unit_of_works) %>
+      <% input.technology_id.nil? ? (@unit_of_works = current_component.organization_technology) : (@unit_of_works = input.organization_technology.unit_of_works) %>
       <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, selected: input.unit_of_work_id.nil? ? current_component.inputs.last.unit_of_work_id : input.unit_of_work_id), {class: "uow", prompt: I18n.t(:select_uow), required: true} %>
     </td>
     <td class="span1 center">

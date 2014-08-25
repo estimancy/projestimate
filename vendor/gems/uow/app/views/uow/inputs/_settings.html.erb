@@ -165,6 +165,7 @@
 
 <script>
   function initialize_gross_behaviour(index){
+
     $(".icon-star").click(function(){
       switch(true) {
         case ($(this).hasClass('black-question-mark')):
@@ -269,7 +270,7 @@
       $("#technology_" + index).on("change", function(e){
           $.ajax({ url:'/uow/update_unit_of_works_select_box',
               data: 'technology_id=' + $(this).val()
-                      + "&index=" + index
+                  + "&index=" + index
           });
           return false;
       });
@@ -277,7 +278,7 @@
       $("#uow_" + index).on("change", function(e){
           $.ajax({ url:'/uow/update_complexity_select_box',
               data: 'uow_id=' + $(this).val()
-                      + "&index=" + index
+                  + "&index=" + index
           });
           return false;
       });
