@@ -17,10 +17,6 @@
   <% else %>
       <% @projects.each do |project| %>
         <% if can? :show_project, project %>
-          <%# if can? :commit_project, project %>
-            <%# render :partial => 'check_state', :locals => { :can => 'admin_project_state', :prj => project } %>
-          <%# end %>
-
           <tr>
             <td><%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %></td>
             <td class="span2"><%= project.version %></td>
