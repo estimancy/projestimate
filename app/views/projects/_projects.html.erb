@@ -3,8 +3,8 @@
   <tr>
     <th><%= I18n.t(:label_project_name) %></th>
     <th><%= I18n.t(:label_project_version) %></th>
+    <th><%= I18n.t(:label_product_name) %></th>
     <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
-    <th style="width: 120px"><%= I18n.t(:start_date) %></th>
     <th class="filter-select"><%= I18n.t(:organizations) %></th>
     <th class="filter-select"><%= I18n.t(:creator) %></th>
     <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
@@ -20,10 +20,10 @@
           <tr>
             <td><%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %></td>
             <td class="span2"><%= project.version %></td>
+            <td><%= project.root_component %></td>
             <td><span class="badge <%= display_badge(project.state) %>"><%= I18n.t(project.state) %></span></td>
-            <td><%= I18n.l(project.start_date) unless project.start_date.nil? %></td>
-            <td><%= project.organization %></td>
-            <td><%= project.creator.nil? ? 'N/A' : project.creator.to_s %></td>
+            <td class="span3"><%= project.organization %></td>
+            <td class="span2"><%= project.creator.nil? ? 'N/A' : project.creator.to_s %></td>
             <td><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
             <td class="center">
               <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
