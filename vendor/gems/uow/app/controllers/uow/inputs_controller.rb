@@ -46,9 +46,6 @@ class Uow::InputsController < ApplicationController
     @input.save(validate: false)
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @input_index = params['row_index'].to_i+1
-    #respond_to do |format|
-    #  format.js
-    #end
   end
 
   def remove_item
@@ -172,11 +169,7 @@ class Uow::InputsController < ApplicationController
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
     @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
-    @complexities = []
-    organization_unit_of_works = current_project.organization.unit_of_works.first
-    if !organization_unit_of_works.nil?
-      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
-    end
+    @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
     @module_project.pemodule.attribute_modules.each do |am|
       if am.pe_attribute.alias ==  "effort_person_month"
