@@ -1,7 +1,5 @@
 //$("#setting_module").html("<%#= j(render(:partial => 'projects/setting_module'))%>");
 
-$(".icon-plus").parent().remove();
-
 $('#myTable tr:last').after("<%= j(render(:partial => 'new_item', object: [@input, @input_index]))%>");
 
 $('.spiner').hide();
