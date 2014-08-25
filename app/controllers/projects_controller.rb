@@ -1696,39 +1696,42 @@ public
   # Function that show the estimation graph
   def show_estimation_graph
 
-
-    #Timeline
-    @timeline = []
-    @project = current_project
-    @current_module_project = current_module_project
-    end_date = PeAttribute.where(alias: "end_date").first
-    products = @project.root_component.subtree.sort_by(&:position)
-    products.each_with_index do |element, i|
-      if i == 0
-        #begin
-        #  ev = EstimationValue.where(module_project_id: current_module_project.id, in_out: 'output').first
-        #  @timeline << [element.name, @project.start_date, @project.start_date + ev.string_data_probable[current_component.id].to_i.months]
-        #rescue
-          @timeline << [element.name, @project.start_date, @project.start_date]
-        #end
-      else
-        unless i-1 == 0
-          unless @timeline[i-1].nil?
-            date_prec = @project.start_date
-            #date_prec = @timeline[i-1][2]
-          end
+    begin
+      #Timeline
+      @timeline = []
+      @project = current_project
+      @current_module_project = current_module_project
+      end_date = PeAttribute.where(alias: "end_date").first
+      products = @project.root_component.subtree.sort_by(&:position)
+      products.each_with_index do |element, i|
+        if i == 0
+          #begin
+          #  ev = EstimationValue.where(module_project_id: current_module_project.id, in_out: 'output').first
+          #  @timeline << [element.name, @project.start_date, @project.start_date + ev.string_data_probable[current_component.id].to_i.months]
+          #rescue
+            @timeline << [element.name, @project.start_date, @project.start_date]
+          #end
         else
-          date_prec = @project.start_date
-        end
+          unless i-1 == 0
+            unless @timeline[i-1].nil?
+              date_prec = @project.start_date
+              #date_prec = @timeline[i-1][2]
+            end
+          else
+            date_prec = @project.start_date
+          end
 
-        ev = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first
-        unless ev.nil?
-          date_next = ev.string_data_probable[element.id]
-          @timeline << [element.name, date_prec, date_next]
+          ev = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first
+          unless ev.nil?
+            date_next = ev.string_data_probable[element.id]
+            @timeline << [element.name, date_prec, date_next]
+          end
         end
       end
+      @timeline[0][2] = @timeline.map(&:last).max
+    rescue
+      @timeline = nil
     end
-    @timeline[0][2] = @timeline.map(&:last).max
 
     #Barchart
     @efforts = Hash.new
