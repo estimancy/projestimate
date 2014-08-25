@@ -30,26 +30,26 @@
       </tr>
 
       <% unless @estimation_pbs_probable_results.nil? %>
-          <% @project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt| %>
-              <% wbs_probable_value =  @estimation_pbs_probable_results[wbs_project_elt.id] %>
-              <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
-              <tr>
-                <td><span style="float: left; margin-left:<%=wbs_project_elt.depth%>em"> <%= wbs_project_elt.name %> </span></td>
-                <td><%= (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{number_with_delimiter(wbs_probable_value[:value].round(@attribute.precision.nil? ? user_number_precision : @attribute.precision))} #{get_attribute_unit(@attribute)}" %></td>
+        <% @project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt| %>
+          <% wbs_probable_value =  @estimation_pbs_probable_results[wbs_project_elt.id] %>
+            <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
+            <tr>
+              <td><span style="float: left; margin-left:<%=wbs_project_elt.depth%>em"> <%= wbs_project_elt.name %> </span></td>
+              <td><%= (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{number_with_delimiter(wbs_probable_value[:value].round(@attribute.precision.nil? ? user_number_precision : @attribute.precision))} #{get_attribute_unit(@attribute)}" %></td>
 
-                <% if @project_organization_profiles.length > 0 %>
-                    <% @project_organization_profiles.each do |profile| %>
-                        <% wbs_profiles_value = nil %>
-                        <% unless  (wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?) %>
-                            <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{@ratio_reference.id}"][:value] %>
-                        <% end %>
-                        <td style="text-align: center"><%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{number_with_delimiter(wbs_profiles_value.round(@attribute.precision.nil? ? user_number_precision : @attribute.precision))} #{get_attribute_unit(@attribute)}" %></td>
+              <% if @project_organization_profiles.length > 0 %>
+                <% @project_organization_profiles.each do |profile| %>
+                    <% wbs_profiles_value = nil %>
+                    <% unless  (wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?) %>
+                        <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{@ratio_reference.id}"][:value] %>
                     <% end %>
-                <% else %>
-                    <td></td>
+                    <td style="text-align: center"><%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{number_with_delimiter(wbs_profiles_value.round(@attribute.precision.nil? ? user_number_precision : @attribute.precision))} #{get_attribute_unit(@attribute)}" %></td>
                 <% end %>
-              </tr>
-          <% end %>
+              <% else %>
+                  <td></td>
+              <% end %>
+            </tr>
+        <% end %>
       <% end %>
     </table>
 </div>
