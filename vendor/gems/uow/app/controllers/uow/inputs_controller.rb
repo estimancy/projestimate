@@ -95,20 +95,21 @@ class Uow::InputsController < ApplicationController
     end
 
     @module_project.pemodule.attribute_modules.each do |am|
-      @in_ev = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-
-      tmp_prbl = Array.new
-      ["low", "most_likely", "high"].each do |level|
-        if am.pe_attribute.alias == "effort_person_month"
-          level_est_val = @in_ev.send("string_data_#{level}")
-          level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
-          tmp_prbl << level_est_val[current_component.id]
+      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+      @evs.each do |ev|
+        tmp_prbl = Array.new
+        ["low", "most_likely", "high"].each do |level|
+          if am.pe_attribute.alias == "effort_person_month"
+            level_est_val = ev.send("string_data_#{level}")
+            level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
+            tmp_prbl << level_est_val[current_component.id]
+          end
+          ev.update_attribute(:"string_data_#{level}", level_est_val)
         end
-        @in_ev.update_attribute(:"string_data_#{level}", level_est_val)
-      end
 
-      if am.pe_attribute.alias == "effort_person_month"
-        @in_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        if am.pe_attribute.alias == "effort_person_month" and ev.in_out == "output"
+          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        end
       end
     end
 
