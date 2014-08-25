@@ -1,29 +1,31 @@
 <% if current_module_project.pemodule.alias == "effort_breakdown" %>
-  <div class="row-fluid">
-    <div class="span12" style="<%= (i % 3 == 0) ? 'margin: 0 !important;' : '' %>">
-      <div class="widget-box collapsible">
-        <div class="widget-title">
-          <a href="#estimation_graph_box" data-toggle="collapse">
-              <span class="icon">
-                <i class="icon-bar-chart"></i>
-              </span>
-          </a>
+  <% @efforts.each_with_index do |effort, i| %>
+    <div class="row-fluid">
+      <div class="span12" style="<%= (i % 3 == 0) ? 'margin: 0 !important;' : '' %>">
+        <div class="widget-box collapsible">
+          <div class="widget-title">
+            <a href="#estimation_graph_box" data-toggle="collapse">
+                <span class="icon">
+                  <i class="icon-bar-chart"></i>
+                </span>
+            </a>
 
-          <div class="header_data">
-            <h5><%= "Estimation graph" %> - <%= "#{current_module_project}" %> - <%= effort.first.humanize %></h5>
+            <div class="header_data">
+              <h5><%= "Estimation graph" %> - <%= "#{current_module_project}" %> - <%= effort.first.humanize %></h5>
+            </div>
           </div>
-        </div>
 
-        <div class="collapse in" id="collapseIn">
-          <div class="widget-content tab-content">
-            <div id="estimation_graph_box">
-              <%= render :partial => "projects/estimation_graph", :locals => { :project_modules => @project_modules } %>
+          <div class="collapse in" id="collapseIn">
+            <div class="widget-content tab-content">
+              <div id="estimation_graph_box">
+                <%= render :partial => "projects/estimation_graph", :locals => { :project_modules => @project_modules } %>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  <% end %>
 <% end %>
 
 
