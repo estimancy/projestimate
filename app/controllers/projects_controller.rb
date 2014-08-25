@@ -2029,6 +2029,7 @@ public
       if @inputs.empty?
         @input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
         @input.save(validate: false)
+        @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
       end
       @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
       @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
