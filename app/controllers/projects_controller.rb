@@ -1705,11 +1705,17 @@ public
     products = @project.root_component.subtree.sort_by(&:position)
     products.each_with_index do |element, i|
       if i == 0
-        @timeline << [element.name, @project.start_date, @project.start_date + 63.days]
+        #begin
+        #  ev = EstimationValue.where(module_project_id: current_module_project.id, in_out: 'output').first
+        #  @timeline << [element.name, @project.start_date, @project.start_date + ev.string_data_probable[current_component.id].to_i.months]
+        #rescue
+          @timeline << [element.name, @project.start_date, @project.start_date]
+        #end
       else
         unless i-1 == 0
           unless @timeline[i-1].nil?
-            date_prec = @timeline[i-1][2]
+            date_prec = @project.start_date
+            #date_prec = @timeline[i-1][2]
           end
         else
           date_prec = @project.start_date
@@ -2018,7 +2024,12 @@ public
     @module_project = ModuleProject.find(params[:module_project_id])
     if @module_project.pemodule.alias == "uow"
       @pbs = current_component
+
       @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+      if @inputs.empty?
+        @input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
+        @input.save(validate: false)
+      end
       @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
       @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
       @complexities = []

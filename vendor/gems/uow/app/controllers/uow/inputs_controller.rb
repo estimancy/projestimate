@@ -46,9 +46,6 @@ class Uow::InputsController < ApplicationController
     @input.save(validate: false)
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @input_index = params['row_index'].to_i+1
-    #respond_to do |format|
-    #  format.js
-    #end
   end
 
   def remove_item
@@ -118,6 +115,11 @@ class Uow::InputsController < ApplicationController
   end
 
   def load_gross
+
+    @module_project = current_module_project
+    @pbs = current_component
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+
     @size = Array.new
     @tmp_result = Hash.new
     @result = Hash.new
