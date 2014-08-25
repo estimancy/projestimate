@@ -51,15 +51,15 @@
         <tr>
           <th colspan="6">Overall</th>
           <td class="center">
-            <%= text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
+            <%# text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td class="center">
-            <%= text_field_tag "overall_size_most_likely", @size.nil? ? '' : @size.string_data_most_likely[current_component.id], :class => "overall compressed", readonly: true %>
+            <%# text_field_tag "overall_size_most_likely", @size.nil? ? '' : @size.string_data_most_likely[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td class="center">
-            <%= text_field_tag "overall_size_high", @size.nil? ? '' : @size.string_data_high[current_component.id], :class => "overall compressed", readonly: true %>
+            <%# text_field_tag "overall_size_high", @size.nil? ? '' : @size.string_data_high[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
-          <td> </td>
+          <td></td>
           <td class="center">
             <%= text_field_tag "overall_gross_low", @gross_size.nil? ? '' : @gross_size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>

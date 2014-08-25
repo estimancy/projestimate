@@ -1714,8 +1714,8 @@ public
         else
           unless i-1 == 0
             unless @timeline[i-1].nil?
-              date_prec = @project.start_date
-              #date_prec = @timeline[i-1][2]
+              #date_prec = @project.start_date
+              date_prec = @timeline[i-1][2]
             end
           else
             date_prec = @project.start_date
