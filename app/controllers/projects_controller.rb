@@ -2036,11 +2036,11 @@ public
       end
       @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
       @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
-      @complexities = []
-      organization_unit_of_works = current_project.organization.unit_of_works.first
-      if !organization_unit_of_works.nil?
-        @complexities = @pbs.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
-      end
+      #@complexities = []
+      #organization_unit_of_works = current_project.organization.unit_of_works.first
+      #if !organization_unit_of_works.nil?
+      @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
+      #end
 
       @module_project.pemodule.attribute_modules.each do |am|
         if am.pe_attribute.alias ==  "effort_person_month"
