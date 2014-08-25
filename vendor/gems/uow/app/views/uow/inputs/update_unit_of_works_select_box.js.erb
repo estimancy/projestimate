@@ -1,4 +1,5 @@
 $("#uow_<%= @index %>").parent().html("<%= j(select_tag "uow[#{@index}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}), :class => "uow") %>");
+$("#complexity_<%= @index %>").parent().html("<%= j(select_tag "complexity[#{@index}]", options_for_select(@complexities), :class => "complexity") %>")
 
 $('.spiner').hide();
 
