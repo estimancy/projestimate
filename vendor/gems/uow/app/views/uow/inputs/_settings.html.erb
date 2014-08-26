@@ -139,18 +139,18 @@
           </p>
 
           <p>
-          <table class="table table-bordered table-condensed">
-            <tr>
-              <th>Actions</th>
-              <th>Valeur</th>
-            </tr>
-            <% cplx.size_unit_type_complexities.each do |sutc| %>
+            <table class="table table-bordered table-condensed">
               <tr>
-                <td class="center"><%= sutc.size_unit_type.name %></td>
-                <td class="center"><%= sutc.value %></td>
+                <th>Actions</th>
+                <th>Valeur</th>
               </tr>
-            <% end %>
-          </table>
+              <% cplx.size_unit_type_complexities.each do |sutc| %>
+                <tr>
+                  <td class="center"><%= sutc.size_unit_type.name %></td>
+                  <td class="center"><%= sutc.value %></td>
+                </tr>
+              <% end %>
+            </table>
           </p>
         <% end %>
         <hr>
