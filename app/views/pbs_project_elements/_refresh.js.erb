@@ -15,7 +15,7 @@ $(".component_name").html("<%=raw @current_component %>");
 
 $("#buttons").html("<%=raw j(render('users/buttons')) %>")
 
-$('.component_tree ul li').hover(
+$('.component_tree ul li, .widget-content ul li').hover(
     function () {
       $(this.children).css('display', 'inline');
     },
