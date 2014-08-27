@@ -53,8 +53,20 @@ module Uow
     # Return effort
     #project.id, current_mp_to_execute.id, pbs_project_element_id)
     def get_effort_person_month(*args)
-      Input.where(:module_project_id => args[1],
-                  pbs_project_element_id: args[2]).map(&:"gross_#{args[3]}").compact.sum
+      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).map(&:"gross_#{args[3]}").compact.sum
+    end
+
+    def get_end_date(*args)
+      '-'
+    end
+
+    def get_delay(*args)
+      '-'
+    end
+
+    def get_cost(*args)
+      @project = Project.find(args[0])
+      @effort_person_month.to_f * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
     end
 
   end
