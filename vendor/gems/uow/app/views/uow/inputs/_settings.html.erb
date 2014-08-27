@@ -1,25 +1,5 @@
-<style>
-  select, input{
-    width: 100px;
-  }
-
-  .icon-center{
-    padding-left: 9px;
-  }
-
-  .black-question-mark { color:black; }
-  .purple-exclamation-mark { color:pink; }
-  .yellow-exclamation-mark { color: #ebeb00; }
-  .green-check-mark { color:green; }
-  .blue-info-mark { color:blue; }
-  .orange-exclamation-mark { color:orange; }
-  .red-star { color:red; }
-
-  .compressed{
-    width: 40px;
-  }
-</style>
-
+<%= render partial: "/uow/inputs/script" %>
+<%= render partial: "/uow/inputs/style" %>
 <div class="tabs">
   <%= form_tag uow.save_uow_path, remote: true do %>
 
