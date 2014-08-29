@@ -68,7 +68,6 @@ module Uow
       @project = Project.find(args[0])
       @effort_person_month.to_f * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
     end
-
   end
 
 end

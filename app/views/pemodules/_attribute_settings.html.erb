@@ -31,13 +31,13 @@
         <td><%= select_tag 'project_value[]', options_for_select(Project.attribute_names, :selected => ma.project_value), :style => ma.project_value.blank? ? 'display:none;' : '', :class => "input-small project_attribute_#{i}", :include_blank => true %></td>
         <td><%= ma.record_status %></td>
         <td>
-          <%= link_to '', ma, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+          <%= link_to '', ma, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete') %>
           <% if is_master_instance? && !ma.is_local_record? %>
               <% if ma.is_retired? %>
-                  <%= link_to('', "/attribute_modules/#{ma.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                  <%= link_to('', "/attribute_modules/#{ma.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
               <% else %>
                   <% unless ma.is_defined? %>
-                      <%= link_to('', "/attribute_modules/#{ma.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                      <%= link_to('', "/attribute_modules/#{ma.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
                   <% end %>
               <% end %>
           <% end %>

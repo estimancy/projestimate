@@ -87,16 +87,16 @@
                   <td><%= wbs_activity_ratio.description %></td>
                   <td><%= wbs_activity_ratio.record_status %></td>
                   <td class="align-center">
-                    <%= link_to '', edit_wbs_activity_ratio_path(wbs_activity_ratio, :activity_id => wbs_activity_ratio.wbs_activity_id), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border', :title => I18n.t(:edit) %>
+                    <%= link_to '', edit_wbs_activity_ratio_path(wbs_activity_ratio, :activity_id => wbs_activity_ratio.wbs_activity_id), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
                     <% if can? :delete_wbs_activities, WbsActivity %>
-                        <%= link_to '', wbs_activity_ratio, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t(:delete) %>
+                        <%= link_to '', wbs_activity_ratio, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-remove', :style => 'color:red', :title => I18n.t(:delete) %>
                     <% end %>
                     <% if can? :edit_wbs_activities, WbsActivity %>
-                        <%= link_to '', export_wbs_activity_ratios_path(wbs_activity_ratio), :class => 'button_attribute_tooltip icon-download icon-large icon-border', :title => I18n.t(:export) %>
-                        <a href="#myWBSModal" role="button" class="button_attribute_tooltip icon-upload icon-large icon-border" data-toggle="modal" title="Import a CSV file"></a>
+                        <%= link_to '', export_wbs_activity_ratios_path(wbs_activity_ratio), :class => 'button_attribute_tooltip icon-download', :title => I18n.t(:export) %>
+                        <a href="#myWBSModal" role="button" class="button_attribute_tooltip icon-upload" data-toggle="modal" title="Import a CSV file"></a>
                         <% if wbs_activity_ratio.wbs_activity.is_defined? && is_master_instance? && wbs_activity_ratio.record_status != @local_status %>
                             <% unless wbs_activity_ratio.is_defined? %>
-                                <%= link_to('', "/wbs_activity_ratios/#{wbs_activity_ratio.id}/validate_ratio", confirm: 'Do you confirm ?', :title => I18n.t(:validate_title), :class => 'button_attribute_tooltip icon-ok icon-large icon-border', :style => 'color:green') %>
+                                <%= link_to('', "/wbs_activity_ratios/#{wbs_activity_ratio.id}/validate_ratio", confirm: 'Do you confirm ?', :title => I18n.t(:validate_title), :class => 'button_attribute_tooltip icon-ok', :style => 'color:green') %>
                             <% end %>
                         <% end %>
                     <% end %>

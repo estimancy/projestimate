@@ -28,14 +28,14 @@
             <td><%= project_security_level.description %></td>
             <td><%= project_security_level.record_status.name unless project_security_level.record_status.nil? %> <%= project_security_level.show_custom_value %></td>
             <td class="center">
-              <%= link_to '', edit_project_security_level_path(project_security_level), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
-              <%= link_to '', project_security_level, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', edit_project_security_level_path(project_security_level), :class => 'icon-pencil', :title => I18n.t('edit') %>
+              <%= link_to '', project_security_level, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !project_security_level.is_local_record? %>
                   <% if project_security_level.is_retired? %>
-                      <%= link_to('', "project_security_levels/#{project_security_level.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo icon-large icon-border', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                      <%= link_to('', "project_security_levels/#{project_security_level.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>
                   <% else %>
                       <% unless project_security_level.is_defined? %>
-                          <%= link_to('', "project_security_levels/#{project_security_level.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok icon-large icon-border', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                          <%= link_to('', "project_security_levels/#{project_security_level.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok', :style => 'color:green', :title => I18n.t('validate_title')) %>
                       <% end %>
                   <% end %>
               <% end %>

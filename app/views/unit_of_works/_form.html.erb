@@ -73,9 +73,9 @@
             <td><%= oc.name %></td>
             <td><%= oc.description %></td>
             <td>
-              <%= link_to '', edit_organization_uow_complexity_path(oc.id, :organization_id => @organization.id), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', edit_organization_uow_complexity_path(oc.id, :organization_id => @organization.id), :class => 'icon-pencil pull-left', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
-                <%= link_to '', oc, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', oc, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>
          </tr>
