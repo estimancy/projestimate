@@ -4,15 +4,15 @@
       <%= hidden_field_tag :select_at_least_one_project, I18n.t(:select_at_least_one_project) %>
 
       <span style="color:#23A4FF; float: left; margin-left: 0px; margin-right: 10px;">Estimation Actions : </span>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-pencil icon-border pull-left', :id => 'edit_node_path', :title => I18n.t('edit'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-star icon-border pull-left', :id => 'activate_node_path', :title => I18n.t('button_activate_project'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-ok-circle icon-border pull-left', :id => 'promote_node_path', :title => I18n.t('button_commit_project'), :remote => true %>    <!-- :confirm => send_notice(project), -->
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-pencil pull-left', :id => 'edit_node_path', :title => I18n.t('edit'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-star pull-left', :id => 'activate_node_path', :title => I18n.t('button_activate_project'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-ok-circle pull-left', :id => 'promote_node_path', :title => I18n.t('button_commit_project'), :remote => true %>    <!-- :confirm => send_notice(project), -->
       <!--<h4><i class="icon-step-forward pull-left"></i><%#= link_to I18n.t('label_checkout_project'), '', :class => 'node_link_to button_attribute_tooltip', :id => 'checkout_node_path', :title => I18n.t('button_checkout_project'), :remote => true, :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?) %></h4>-->
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-step-forward icon-border pull-left', :id => 'checkout_node_path', :title => I18n.t('button_checkout_project'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-info icon-border pull-left', :id => 'find_use_projects_from_history', :project_id => @project.id, :title => I18n.t('button_find_use'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-copy icon-border pull-left', :id => 'duplicate_node_path', :title => I18n.t('button_duplicate_project'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-remove icon-border pull-left', :style => 'color:red', :id => 'delete_node_path', :title => I18n.t('delete'), :remote => true %>
-      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-eraser icon-border pull-left', :style => 'color:red', :id => 'collapse_node_path', :title => I18n.t('button_collapse_project'), :confirm => I18n.t('label_collapse_project'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-step-forward pull-left', :id => 'checkout_node_path', :title => I18n.t('button_checkout_project'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-info pull-left', :id => 'find_use_projects_from_history', :project_id => @project.id, :title => I18n.t('button_find_use'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-copy pull-left', :id => 'duplicate_node_path', :title => I18n.t('button_duplicate_project'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-remove pull-left', :style => 'color:red', :id => 'delete_node_path', :title => I18n.t('delete'), :remote => true %>
+      <%= link_to '', '', :class => 'node_link_to button_attribute_tooltip icon-eraser pull-left', :style => 'color:red', :id => 'collapse_node_path', :title => I18n.t('button_collapse_project'), :confirm => I18n.t('label_collapse_project'), :remote => true %>
     </h4>
   </div>
 </div>
@@ -196,22 +196,22 @@
                     var promote_button = document.getElementById('promote_node_path');
                     if(counter > 0){
                         promote_button.disabled = true;
-                        $('#promote_node_path').removeClass('icon-ok-circle icon-border');
+                        $('#promote_node_path').removeClass('icon-ok-circle');
                     }
                     else{
                         promote_button.disabled = false;
-                        $('#promote_node_path').addClass('icon-ok-circle icon-border');
+                        $('#promote_node_path').addClass('icon-ok-circle');
                     }
 
                     //Get checkout link_to
                     var checkout_button = document.getElementById('checkout_node_path');
                     if(checkout_counter > 0){
                         checkout_button.disabled = true;
-                        $('#checkout_node_path').removeClass('icon-step-forward icon-border');
+                        $('#checkout_node_path').removeClass('icon-step-forward');
                     }
                     else{
                         checkout_button.disabled = false;
-                        $('#checkout_node_path').addClass('icon-step-forward icon-border');
+                        $('#checkout_node_path').addClass('icon-step-forward');
                     }
                 };
 
