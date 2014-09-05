@@ -1698,32 +1698,24 @@ public
     @timeline = []
     @project = current_project
     @current_module_project = current_module_project
+    @component = current_component
+
     delay = PeAttribute.where(alias: "delay").first
+    end_date = PeAttribute.where(alias: "end_date").first
+
     products = @project.root_component.subtree.sort_by(&:position)
     products.each_with_index do |element, i|
-      #if i == 0
-        #begin
-          d = EstimationValue.where(pe_attribute_id: delay.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id].to_i.hours
-        #rescue
-          @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + d : element.start_date + d]
-        #end
-    #  else
-    #    unless i-1 == 0
-    #      unless @timeline[i-1].nil?
-    #        #date_prec = @project.start_date
-    #        date_prec = @timeline[i-1][2]
-    #      end
-    #    else
-    #      date_prec = @project.start_date
-    #    end
-    #
-    #    unless ev.nil?
-    #      date_next = ev.string_data_probable[element.id]
-    #      @timeline << [element.name, date_prec, date_next]
-    #    end
-    #  end
+      d = EstimationValue.where(pe_attribute_id: delay.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id].to_i.hours
+      ed = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
+
+      @component.end_date = ed
+      @component.save
+
+      @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + d : element.start_date + d]
     end
-    #@timeline[0][2] = @timeline.map(&:last).max
+
+
+    @timeline[0][2] = @timeline.map(&:last).max
 
     #Barchart
     @efforts = Hash.new
