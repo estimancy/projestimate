@@ -193,8 +193,6 @@ end
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-
-gem "chartkick"
 gem 'groupdate'
 gem 'remotipart', '~> 1.2'
 

@@ -1702,6 +1702,7 @@ public
 
     delay = PeAttribute.where(alias: "delay").first
     end_date = PeAttribute.where(alias: "end_date").first
+    effort = PeAttribute.where(alias: "effort_person_month").first
 
     products = @project.root_component.subtree.sort_by(&:position)
     products.each_with_index do |element, i|
@@ -1713,9 +1714,15 @@ public
 
       @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + d : element.start_date + d]
     end
-
-
     @timeline[0][2] = @timeline.map(&:last).max
+
+
+    k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
+    @schedule = []
+    @schedule_hash = {}
+    ((0..k).to_a).each do |i|
+      @schedule_hash[i.to_s] = 3*i**0.33
+    end
 
     #Barchart
     @efforts = Hash.new
