@@ -39,7 +39,7 @@
                 <%=
                   link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'icon-pencil pull-left', :title => I18n.t('edit')) +
                   link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon-info pull-left',:id => 'find_use_projects', :title => I18n.t('button_find_use')) +
-                  link_to('', "projects/#{project.id}/duplicate", :class => 'icon-copy pull-left', :title => I18n.t('button_duplicate_model'))
+                  link_to('', duplicate_path(project), :class => 'icon-copy pull-left', :title => I18n.t('button_duplicate_model'))
                 %>
               </td>
             </tr>
