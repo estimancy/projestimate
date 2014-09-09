@@ -893,7 +893,7 @@ module ProjectsHelper
                  :prompt => "Unset",
                  "data-est_val_id" => est_val.id,
                  "data-module_project_id" => module_project.id,
-                 :readonly => read_only_value, :disabled => read_only_value
+                 :readonly => read_only_value#, :disabled => read_only_value
 
     elsif est_val_pe_attribute.attr_type == 'date'
 
