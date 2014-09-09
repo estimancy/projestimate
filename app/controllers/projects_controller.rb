@@ -1758,10 +1758,21 @@ public
       end
 
       k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id].to_i
-      @schedule = []
-      @schedule_hash2 = {}
-      ((0..k).to_a).each do |i|
-        @schedule_hash2[i.to_s] = 3*i**0.33
+      p k
+      p effort
+      p @current_module_project.id
+      p current_component.id
+
+      begin
+        @schedule_hash2 = {}
+        ((0..k).to_a).each do |i|
+          @schedule_hash2[i.to_s] = 3*i**0.33
+        end
+      rescue
+        @schedule_hash2 = {}
+        ((0..100).to_a).each do |i|
+          @schedule_hash2[i.to_s] = 3*i**0.33
+        end
       end
     end
 
