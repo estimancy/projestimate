@@ -1707,54 +1707,67 @@ public
     @current_module_project = current_module_project
     @component = current_component
 
-    delay = PeAttribute.where(alias: "delay").first
-    end_date = PeAttribute.where(alias: "end_date").first
-    staffing = PeAttribute.where(alias: "staffing").first
-    effort = PeAttribute.where(alias: "effort_person_month").first
+    #unless @current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+      delay = PeAttribute.where(alias: "delay").first
+      end_date = PeAttribute.where(alias: "end_date").first
+      staffing = PeAttribute.where(alias: "staffing").first
+      effort = PeAttribute.where(alias: "effort_person_month").first
 
-    products = @project.root_component.subtree.sort_by(&:position)
-    products.each_with_index do |element, i|
-      dev = EstimationValue.where(pe_attribute_id: delay.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
-      if !dev.nil?
-        d = dev.to_f
-        if d.nil?
-          dh = 1.hours
-        else
-          dh = d.hours
-        end
+      products = @project.root_component.subtree.sort_by(&:position)
+      products.each_with_index do |element, i|
+        begin
+          dev = EstimationValue.where(pe_attribute_id: delay.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
+          if !dev.nil?
+            d = dev.to_f
+            if d.nil?
+              dh = 1.hours
+            else
+              dh = d.hours
+            end
 
-        ed = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
+            ed = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
 
-        @component.end_date = ed
-        @component.save
+            @component.end_date = ed
+            @component.save
 
-        unless dh.nan?
-          @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
+            unless dh.nan?
+              @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
+            else
+              @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date : element.start_date]
+            end
+          end
+        rescue
+
         end
       end
-    end
-    @timeline[0][2] = @timeline.map(&:last).max
+
+      #begin
+      #  @timeline[0][2] = @timeline.map(&:last).max
+      #rescue
+      #end
+
+    unless @current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+      k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
+      a = 2
+      m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: delay.id).first.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
+      if !k.nil?
+        @schedule_hash = {}
+        ((0..m).to_a).each do |i|
+          #@schedule_hash[i.to_s] = 3*i**0.33
+          t = i/12.to_f
+          @schedule_hash[i.to_s] = 2*k*a*t*Math.exp(-(a)*t*t)
+        end
+      end
 
 
-    k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
-    a = 2
-    m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: delay.id).last.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
-    if !k.nil?
-      @schedule_hash = {}
-      ((0..m).to_a).each do |i|
-        #@schedule_hash[i.to_s] = 3*i**0.33
-        t = i/12.to_f
-        @schedule_hash[i.to_s] = 2*k*a*t*Math.exp(-(a)*t*t)
+      k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
+      @schedule = []
+      @schedule_hash2 = {}
+      ((0..k).to_a).each do |i|
+        @schedule_hash2[i.to_s] = 3*i**0.33
       end
     end
 
-
-    k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
-    @schedule = []
-    @schedule_hash2 = {}
-    ((0..k).to_a).each do |i|
-      @schedule_hash2[i.to_s] = 3*i**0.33
-    end
 
     #Barchart
     @efforts = Hash.new

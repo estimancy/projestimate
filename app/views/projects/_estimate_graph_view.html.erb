@@ -26,109 +26,108 @@
       </div>
     </div>
   <% end %>
-<% end %>
+<% else %>
+  <div class="row-fluid">
+    <% @efforts.each_with_index do |effort, i| %>
+      <% if !effort.last.map{|i| i[1]}.compact.first.nil? %>
+        <div class="span4" style="<%= (i % 3 == 0) ? 'margin: 0 !important;' : '' %>">
+          <div class="widget-box collapsible">
+            <div class="widget-title">
+              <a href="#estimation_graph_box" data-toggle="collapse">
+                  <span class="icon">
+                    <i class="icon-bar-chart"></i>
+                  </span>
+              </a>
 
-
-<div class="row-fluid">
-  <% @efforts.each_with_index do |effort, i| %>
-    <% if !effort.last.map{|i| i[1]}.compact.first.nil? %>
-      <div class="span4" style="<%= (i % 3 == 0) ? 'margin: 0 !important;' : '' %>">
-        <div class="widget-box collapsible">
-          <div class="widget-title">
-            <a href="#estimation_graph_box" data-toggle="collapse">
-                <span class="icon">
-                  <i class="icon-bar-chart"></i>
-                </span>
-            </a>
-
-            <div class="header_data">
-              <h5><%= "Estimation graph" %> - <%= "#{current_module_project}" %> - <%= effort.first.humanize %></h5>
+              <div class="header_data">
+                <h5><%= "Estimation graph" %> - <%= "#{current_module_project}" %> - <%= effort.first.humanize %></h5>
+              </div>
             </div>
-          </div>
 
-          <div class="collapse in" id="collapseIn">
-            <div class="widget-content tab-content">
-              <div id="estimation_graph_box">
-                <%= column_chart effort.last %>
+            <div class="collapse in" id="collapseIn">
+              <div class="widget-content tab-content">
+                <div id="estimation_graph_box">
+                  <%= column_chart effort.last %>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
+  </div>
+
+  <% if current_module_project.pemodule.alias == "cocomo_basic" || current_module_project.pemodule.alias == "uow" %>
+    <div class="row-fluid">
+      <div class="widget-box collapsible span12">
+        <div class="widget-title">
+          <a href="#estimation_graph_box" data-toggle="collapse">
+              <span class="icon">
+                <i class="icon-bar-chart"></i>
+              </span>
+          </a>
+
+          <div class="header_data">
+            <h5><%= "Timeline" %> - <%= "#{current_module_project}" %></h5>
+          </div>
+        </div>
+
+        <div class="collapse in" id="collapseIn">
+          <div class="widget-content tab-content">
+            <div class="" id="estimation_graph_box">
+              <%= timeline @timeline %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="widget-box collapsible span12">
+        <div class="widget-title">
+          <a href="#estimation_graph_box" data-toggle="collapse">
+              <span class="icon">
+                <i class="icon-bar-chart"></i>
+              </span>
+          </a>
+
+          <div class="header_data">
+            <h5> Schedule distribution - <%= "#{current_module_project}" %></h5>
+          </div>
+        </div>
+
+        <div class="collapse in" id="collapseIn">
+          <div class="widget-content tab-content">
+            <div class="" id="estimation_graph_box">
+              <%= column_chart @schedule_hash %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="widget-box collapsible span12">
+        <div class="widget-title">
+          <a href="#estimation_graph_box" data-toggle="collapse">
+              <span class="icon">
+                <i class="icon-bar-chart"></i>
+              </span>
+          </a>
+
+          <div class="header_data">
+            <h5> Schedule distribution - <%= "#{current_module_project}" %></h5>
+          </div>
+        </div>
+
+        <div class="collapse in" id="collapseIn">
+          <div class="widget-content tab-content">
+            <div class="" id="estimation_graph_box">
+              <%= column_chart @schedule_hash2 %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
-</div>
-
-<%# if current_module_project.pemodule.alias == "cocomo_basic" %>
-  <div class="row-fluid">
-    <div class="widget-box collapsible span12">
-      <div class="widget-title">
-        <a href="#estimation_graph_box" data-toggle="collapse">
-            <span class="icon">
-              <i class="icon-bar-chart"></i>
-            </span>
-        </a>
-
-        <div class="header_data">
-          <h5><%= "Timeline" %> - <%= "#{current_module_project}" %></h5>
-        </div>
-      </div>
-
-      <div class="collapse in" id="collapseIn">
-        <div class="widget-content tab-content">
-          <div class="" id="estimation_graph_box">
-            <%= timeline @timeline %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="widget-box collapsible span12">
-      <div class="widget-title">
-        <a href="#estimation_graph_box" data-toggle="collapse">
-            <span class="icon">
-              <i class="icon-bar-chart"></i>
-            </span>
-        </a>
-
-        <div class="header_data">
-          <h5> Schedule distribution - <%= "#{current_module_project}" %></h5>
-        </div>
-      </div>
-
-      <div class="collapse in" id="collapseIn">
-        <div class="widget-content tab-content">
-          <div class="" id="estimation_graph_box">
-            <%= column_chart @schedule_hash %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="widget-box collapsible span12">
-      <div class="widget-title">
-        <a href="#estimation_graph_box" data-toggle="collapse">
-            <span class="icon">
-              <i class="icon-bar-chart"></i>
-            </span>
-        </a>
-
-        <div class="header_data">
-          <h5> Schedule distribution - <%= "#{current_module_project}" %></h5>
-        </div>
-      </div>
-
-      <div class="collapse in" id="collapseIn">
-        <div class="widget-content tab-content">
-          <div class="" id="estimation_graph_box">
-            <%= column_chart @schedule_hash2 %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<%# end %>
+<% end %>
