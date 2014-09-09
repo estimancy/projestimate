@@ -1745,7 +1745,7 @@ public
       #end
 
     unless @current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-      k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
+      k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id].to_i
       a = 2
       m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: delay.id).first.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
       if !k.nil?
@@ -1757,8 +1757,7 @@ public
         end
       end
 
-
-      k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
+      k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id].to_i
       @schedule = []
       @schedule_hash2 = {}
       ((0..k).to_a).each do |i|
