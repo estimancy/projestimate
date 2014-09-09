@@ -1709,26 +1709,51 @@ public
 
     delay = PeAttribute.where(alias: "delay").first
     end_date = PeAttribute.where(alias: "end_date").first
+    staffing = PeAttribute.where(alias: "staffing").first
     effort = PeAttribute.where(alias: "effort_person_month").first
 
     products = @project.root_component.subtree.sort_by(&:position)
     products.each_with_index do |element, i|
-      d = EstimationValue.where(pe_attribute_id: delay.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id].to_i.hours
-      ed = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
+      dev = EstimationValue.where(pe_attribute_id: delay.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
+      if !dev.nil?
+        d = dev.to_f
+        if d.nil?
+          dh = 1.hours
+        else
+          dh = d.hours
+        end
 
-      @component.end_date = ed
-      @component.save
+        ed = EstimationValue.where(pe_attribute_id: end_date.id, module_project_id: @current_module_project.id).first.string_data_probable[element.id]
 
-      @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + d : element.start_date + d]
+        @component.end_date = ed
+        @component.save
+
+        unless dh.nan?
+          @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
+        end
+      end
     end
     @timeline[0][2] = @timeline.map(&:last).max
 
 
     k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
+    a = 2
+    m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: delay.id).last.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
+    if !k.nil?
+      @schedule_hash = {}
+      ((0..m).to_a).each do |i|
+        #@schedule_hash[i.to_s] = 3*i**0.33
+        t = i/12.to_f
+        @schedule_hash[i.to_s] = 2*k*a*t*Math.exp(-(a)*t*t)
+      end
+    end
+
+
+    k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id]
     @schedule = []
-    @schedule_hash = {}
+    @schedule_hash2 = {}
     ((0..k).to_a).each do |i|
-      @schedule_hash[i.to_s] = 3*i**0.33
+      @schedule_hash2[i.to_s] = 3*i**0.33
     end
 
     #Barchart
@@ -1747,11 +1772,6 @@ public
     @project_module_projects = @project.module_projects
     # the current activated component (PBS)
     @current_component = current_component
-
-
-
-
-
 
     #get the current activated module project
     @current_mp_attributes = []
