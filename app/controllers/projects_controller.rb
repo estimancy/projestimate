@@ -1122,7 +1122,7 @@ public
       end
 
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
-      redirect_to edit_project_path(new_prj) and return
+      redirect_to edit_project_path(new_prj.id) and return
     #rescue
     #  flash['Error'] = I18n.t(:error_project_duplication_failed)
     #  redirect_to '/projects'
