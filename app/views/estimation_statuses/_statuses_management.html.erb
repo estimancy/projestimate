@@ -15,10 +15,10 @@
     <tbody>
       <% @organization.estimation_statuses.each do |estimation_status| %>
           <tr>
-            <td><%= estimation_status.status_number %></td>
+            <td style='width: 10px;'><%= estimation_status.status_number %></td>
             <td><%= estimation_status.status_alias %></td>
             <td><%= estimation_status.name %></td>
-            <td class='input-large' style='background-color: <%= "##{estimation_status.status_color}" %>'><%#= "##{estimation_status.status_color}" %></td>
+            <td style='max-width: 10px; background-color: <%= "##{estimation_status.status_color}" %>'><%#= "##{estimation_status.status_color}" %></td>
             <td><%= estimation_status.description %></td>
             <td class="center">
               <%= link_to '', edit_estimation_status_path(estimation_status), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
