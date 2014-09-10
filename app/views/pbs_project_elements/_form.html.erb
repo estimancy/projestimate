@@ -9,6 +9,8 @@
     <% else %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge'} %>
       <%= f.input :description, :label => I18n.t('requirements'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
+      <%= f.input :start_date, as: :string, :label => I18n.t('start_date'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
+      <%= f.input :end_date, as: :string, disabled: true, :label => I18n.t('end_date'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
     <% end %>
 
     <%# unless @pbs_project_element.is_root? %>

@@ -32,14 +32,14 @@
             <td><%= work_element_type.peicon.nil? ? 'None' : image_tag(work_element_type.peicon.icon.url) %></td>
             <td><%= work_element_type.record_status.name unless work_element_type.record_status.nil? %> <%= work_element_type.show_custom_value %> </td>
             <td class="center">
-              <%= link_to '', edit_work_element_type_path(work_element_type), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
-              <%= link_to '', work_element_type, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', edit_work_element_type_path(work_element_type), :class => 'icon-pencil', :title => I18n.t('edit') %>
+              <%= link_to '', work_element_type, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
 
               <% if work_element_type.is_retired? %>
-                  <%= link_to('', "work_element_types/#{work_element_type.id}/restore_change", confirm: I18n.t(:restoring), :class => 'icon-undo icon-large icon-border', :style => 'color:orange', :title => I18n.t(:restore_title)) %>
+                  <%= link_to('', "work_element_types/#{work_element_type.id}/restore_change", confirm: I18n.t(:restoring), :class => 'icon-undo', :style => 'color:orange', :title => I18n.t(:restore_title)) %>
               <% else %>
                   <% unless work_element_type.is_defined? %>
-                      <%= link_to('', "work_element_types/#{work_element_type.id}/validate_change", confirm: I18n.t(:validation), :class => 'icon-ok icon-large icon-border', :style => 'color:green', :title => I18n.t(:validate_title)) %>
+                      <%= link_to('', "work_element_types/#{work_element_type.id}/validate_change", confirm: I18n.t(:validation), :class => 'icon-ok', :style => 'color:green', :title => I18n.t(:validate_title)) %>
                   <% end %>
               <% end %>
             </td>

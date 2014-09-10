@@ -968,7 +968,7 @@ fr:
   text_result_index: "index des résultats / nombre de résultat filtré (nombre total d'enregistrements)"
   label_dashboard: "Tableau de bord du projet \"%{value}\""
   label_estimation_modules: "Modules d'estimation"
-  label_input_data: "Formulaire des données d'entrée"
+  label_input_data: "Attributs en entrée"
   label_output_data: "Résultat des estimations"
   button_activate_user_account: "Activer le compte utilisateur"
   button_find_use: "Trouver où il est utilisé et connaitre l'impact des modifications"

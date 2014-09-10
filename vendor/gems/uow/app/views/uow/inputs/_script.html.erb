@@ -1,5 +1,6 @@
 <script>
   function initialize_gross_behaviour(index){
+
     $(".icon-star").click(function(){
       switch(true) {
         case ($(this).hasClass('black-question-mark')):
@@ -32,12 +33,26 @@
       }
     });
 
+
     var selector = "#size_low_" + index +
             ", #size_most_likely_" + index +
             ", #size_high_" + index +
             ", #weight_" + index
 
     $(selector).on("blur change", function(e){
+      // ====
+      var selector_id = $(this).attr('id');
+      var common_on_id = selector_id.split("_"+index)[0];
+
+      var sum_of_cols = 0;
+      $("."+common_on_id).each(function(){
+        var current_value = $(this).val();
+        if((current_value != "") && (current_value != undefined))
+          sum_of_cols += parseFloat(current_value.replace("," , "."));
+      });
+      $('#overall_'+common_on_id).val(sum_of_cols);
+
+      //=====
       $.ajax({ url:'/uow/load_gross',
         data: 'size_low=' + $('#size_low_' + index).val()
                 + '&size_most_likely=' + $('#size_most_likely_' + index).val()
@@ -45,14 +60,33 @@
                 + '&weight=' + $('#weight_' + index).val()
                 + '&technology=' + $('#technology_' + index).val()
                 + '&uow=' + $('#uow_' + index).val()
+                + '&size_unit_type=' + $('#size_unit_type_' + index).val()
                 + '&complexity=' + $('#complexity_' + index).val()
                 + '&index=' + $(this).closest('tr').index()
       });
+
+      var gross_selector = "#gross_low_" + index +
+              ", #gross_most_likely_" + index +
+              ", #gross_high_" + index +
+              $(gross_selector).on("blur change", function(e){
+                // ====
+                var selector_id = $(this).attr('id');
+                var common_on_id = selector_id.split("_"+index)[0];
+
+                var sum_of_cols = 0;
+                $("."+common_on_id).each(function(){
+                  var current_value = $(this).val();
+                  if((current_value != "") && (current_value != undefined))
+                    sum_of_cols += parseFloat(current_value.replace("," , "."));
+                });
+                $('#overall_'+common_on_id).val(sum_of_cols);
+              });
     });
 
     $(", #uow_" + index +
             ", #technology_" + index +
-            ", #complexity_" + index).on("change", function(e){
+            ", #complexity_" + index +
+            ", #size_unit_type_" + index ).on("change", function(e){
 
       $.ajax({ url:'/uow/load_gross',
         data: 'size_low=' + $('#size_low_' + index).val()
@@ -60,7 +94,7 @@
                 + '&size_high=' + $('#size_high_' + index).val()
                 + '&weight=' + $('#weight_' + index).val()
                 + '&technology=' + $('#technology_' + index).val()
-                + '&uow=' + $('#uow_' + index).val()
+                + '&size_unit_type=' + $('#size_unit_type_' + index).val()
                 + '&complexity=' + $('#complexity_' + index).val()
                 + '&index=' + $(this).closest('tr').index()
 
@@ -73,6 +107,7 @@
         data: 'technology_id=' + $(this).val()
                 + "&index=" + index
       });
+      return false;
     });
 
     $("#uow_" + index).on("change", function(e){
@@ -80,13 +115,13 @@
         data: 'uow_id=' + $(this).val()
                 + "&index=" + index
       });
+      return false;
     });
   }
 
-  $(document).ready(function(e){
-    $("#myTable").find("tr").each(function(index){
-      initialize_gross_behaviour(index);
-    });
+  //  $(document).ready(function(e){
+  $("#myTable").find("tr").each(function(index){
+    initialize_gross_behaviour(index);
   });
-
+  //  });
 </script>

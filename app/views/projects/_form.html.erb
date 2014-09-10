@@ -18,10 +18,6 @@
 
      <div id="tabs-1">
 
-      <% unless controller.action_name == 'new' %>
-        <%= link_to I18n.t(:label_activate_project), activate_path(project_id: @project.id), class: "btn pull-right" %>
-      <% end %>
-
       <% states_order = { preliminary: 1, in_progress: 2, in_review: 3, checkpoint: 4, released: 5, rejected: 6 }.with_indifferent_access %>
 
       <%= f.input :product_name, :label => I18n.t(:label_product_name), :input_html => {:class => 'input-xxlarge', value: @project.root_component.nil? ? '' : @project.root_component.name } %>
@@ -30,7 +26,7 @@
       <table>
         <tr>
           <td><%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-large'} %></td>
-          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
+          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-xlarge'} %></td>
         </tr>
       </table>
 
@@ -39,9 +35,9 @@
         <tr>
           <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
           <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
-            <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{states_order[i[1]]} - #{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-large'} %></td>
+            <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{states_order[i[1]]} - #{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-xlarge'} %></td>
           <% else %>
-              <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{states_order[i[1]]} - #{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-large'}, :disable => true %></td>
+              <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{states_order[i[1]]} - #{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-xlarge'}, :disable => true %></td>
           <% end %>
         </tr>
         <tr>
@@ -84,6 +80,13 @@
         <% end %>
 
         <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
+
+        <% if !@project.is_model %>
+          <%= link_to I18n.t('delete'), @project, method: :delete, confirm: "Etes vous sur de vouloir annuler le projet ?", :class => 'btn' %>
+        <% end %>
+        <% unless controller.action_name == 'new' %>
+          <%= link_to I18n.t(:label_activate_project), activate_path(project_id: @project.id), class: "btn pull-right" %>
+        <% end %>
       </div>
   <% end %>
 </div>
@@ -233,15 +236,15 @@
 
 
     <div id="tabs-6">
-      <div style="color:red"><i class="icon-ambulance icon-large icon-border pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
+      <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
     </div>
 
     <div id="tabs-7">
-      <div style="color:red"><i class="icon-ambulance icon-large icon-border pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
+      <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
     </div>
 
     <div id="tabs-8">
-      <div style="color:red"><i class="icon-ambulance icon-large icon-border pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
+      <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
     </div>
 
     <div id="tabs-history">

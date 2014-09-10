@@ -28,14 +28,14 @@
             <td><%= image_tag i.icon.url(:small) %></td>
             <td><%= i.record_status.name unless i.record_status.nil? %> <%= i.show_custom_value %></td>
             <td>
-              <%= link_to '', edit_peicon_path(i), :class => 'icon-pencil icon-large icon-border pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', edit_peicon_path(i), :class => 'icon-pencil pull-left', :title => I18n.t('edit') %>
+              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !i.is_local_record? %>
                   <% if i.is_retired? %>
-                      <%= link_to('', "peicons/#{i.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo icon-large icon-border pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                      <%= link_to('', "peicons/#{i.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
                   <% else %>
                       <% unless i.is_defined? %>
-                          <%= link_to('', "peicons/#{i.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok icon-large icon-border pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                          <%= link_to('', "peicons/#{i.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
                       <% end %>
                   <% end %>
               <% end %>

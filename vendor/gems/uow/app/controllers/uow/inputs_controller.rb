@@ -46,9 +46,6 @@ class Uow::InputsController < ApplicationController
     @input.save(validate: false)
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @input_index = params['row_index'].to_i+1
-    #respond_to do |format|
-    #  format.js
-    #end
   end
 
   def remove_item
@@ -95,20 +92,21 @@ class Uow::InputsController < ApplicationController
     end
 
     @module_project.pemodule.attribute_modules.each do |am|
-      @in_ev = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-
-      tmp_prbl = Array.new
-      ["low", "most_likely", "high"].each do |level|
-        if am.pe_attribute.alias == "effort_person_month"
-          level_est_val = @in_ev.send("string_data_#{level}")
-          level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
-          tmp_prbl << level_est_val[current_component.id]
+      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+      @evs.each do |ev|
+        tmp_prbl = Array.new
+        ["low", "most_likely", "high"].each do |level|
+          if am.pe_attribute.alias == "effort_person_month"
+            level_est_val = ev.send("string_data_#{level}")
+            level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
+            tmp_prbl << level_est_val[current_component.id]
+          end
+          ev.update_attribute(:"string_data_#{level}", level_est_val)
         end
-        @in_ev.update_attribute(:"string_data_#{level}", level_est_val)
-      end
 
-      if am.pe_attribute.alias == "effort_person_month"
-        @in_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        if am.pe_attribute.alias == "effort_person_month" and ev.in_out == "output"
+          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        end
       end
     end
 
@@ -117,6 +115,11 @@ class Uow::InputsController < ApplicationController
   end
 
   def load_gross
+
+    @module_project = current_module_project
+    @pbs = current_component
+    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+
     @size = Array.new
     @tmp_result = Hash.new
     @result = Hash.new
@@ -152,8 +155,10 @@ class Uow::InputsController < ApplicationController
     @index = params[:index]
     @technology = OrganizationTechnology.find(params[:technology_id])
     @unit_of_works = @technology.unit_of_works
-  end
+    @complexities = OrganizationUowComplexity.where(organization_technology_id: params[:technology_id]).all.map{|i| [i.name, i.id]}
 
+    @index = params[:index]
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.
@@ -163,11 +168,7 @@ class Uow::InputsController < ApplicationController
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
     @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
-    @complexities = []
-    organization_unit_of_works = current_project.organization.unit_of_works.first
-    if !organization_unit_of_works.nil?
-      @complexities = organization_unit_of_works.organization_uow_complexities.map{|i| ["#{i.name} - #{i.organization_technology.nil? ? '' : i.organization_technology.name}", i.id]}
-    end
+    @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
     @module_project.pemodule.attribute_modules.each do |am|
       if am.pe_attribute.alias ==  "effort_person_month"

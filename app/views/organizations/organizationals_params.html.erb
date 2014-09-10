@@ -34,10 +34,10 @@
             <td><%= link_to i.name, edit_organization_path(i) %></td>
             <td><%= i.description %></td>
             <td class="center">
-              <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
+              <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t('edit') %>
               <% if can? :manage, Organization %>
-                  <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'button_attribute_tooltip icon-copy icon-border', :title => I18n.t('button_duplicate_organization')) %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large  icon-border', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'button_attribute_tooltip icon-copy', :title => I18n.t('button_duplicate_organization')) %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large ', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>
           </tr>

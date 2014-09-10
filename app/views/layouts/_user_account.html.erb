@@ -40,6 +40,13 @@
             <%= I18n.t('create_new_project') %></a>
         </li>
       <% end %>
+      <% if (can? :create_project_from_scratch, Project) or (can? :create_project_from_template, Project) %>
+        <li class="dropdown">
+          <a href="/projects_from">
+            <!--<i class="icon-plus icon-large pull-left"></i>-->
+            <%= I18n.t('new_project_from') %></a>
+        </li>
+      <% end %>
     </ul>
   </li>
 

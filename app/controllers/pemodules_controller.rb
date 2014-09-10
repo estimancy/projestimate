@@ -54,8 +54,7 @@ class PemodulesController < ApplicationController
     authorize! :create_and_edit_modules, Pemodule
 
     set_page_title 'New Modules'
-    @wets = WorkElementType.defined.reject{|i| i.alias == 'link' || i.alias == 'folder'
-    }
+    @wets = WorkElementType.defined.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @pemodule = Pemodule.new
     @attributes = PeAttribute.defined.all
     @attribute_settings = []

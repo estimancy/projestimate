@@ -1,25 +1,5 @@
-<style>
-  select, input{
-    width: 100px;
-  }
-
-  .icon-center{
-    padding-left: 9px;
-  }
-
-  .black-question-mark { color:black; }
-  .purple-exclamation-mark { color:pink; }
-  .yellow-exclamation-mark { color: #ebeb00; }
-  .green-check-mark { color:green; }
-  .blue-info-mark { color:blue; }
-  .orange-exclamation-mark { color:orange; }
-  .red-star { color:red; }
-
-  .compressed{
-    width: 40px;
-  }
-</style>
-
+<%= render partial: "/uow/inputs/script" %>
+<%= render partial: "/uow/inputs/style" %>
 <div class="tabs">
   <%= form_tag uow.save_uow_path, remote: true do %>
 
@@ -51,15 +31,15 @@
         <tr>
           <th colspan="6">Overall</th>
           <td class="center">
-            <%= text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
+            <%# text_field_tag "overall_size_low", @size.nil? ? '' : @size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td class="center">
-            <%= text_field_tag "overall_size_most_likely", @size.nil? ? '' : @size.string_data_most_likely[current_component.id], :class => "overall compressed", readonly: true %>
+            <%# text_field_tag "overall_size_most_likely", @size.nil? ? '' : @size.string_data_most_likely[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
           <td class="center">
-            <%= text_field_tag "overall_size_high", @size.nil? ? '' : @size.string_data_high[current_component.id], :class => "overall compressed", readonly: true %>
+            <%# text_field_tag "overall_size_high", @size.nil? ? '' : @size.string_data_high[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
-          <td> </td>
+          <td></td>
           <td class="center">
             <%= text_field_tag "overall_gross_low", @gross_size.nil? ? '' : @gross_size.string_data_low[current_component.id], :class => "overall compressed", readonly: true %>
           </td>
@@ -139,18 +119,18 @@
           </p>
 
           <p>
-          <table class="table table-bordered table-condensed">
-            <tr>
-              <th>Actions</th>
-              <th>Valeur</th>
-            </tr>
-            <% cplx.size_unit_type_complexities.each do |sutc| %>
+            <table class="table table-bordered table-condensed">
               <tr>
-                <td class="center"><%= sutc.size_unit_type.name %></td>
-                <td class="center"><%= sutc.value %></td>
+                <th>Actions</th>
+                <th>Valeur</th>
               </tr>
-            <% end %>
-          </table>
+              <% cplx.size_unit_type_complexities.each do |sutc| %>
+                <tr>
+                  <td class="center"><%= sutc.size_unit_type.name %></td>
+                  <td class="center"><%= sutc.value %></td>
+                </tr>
+              <% end %>
+            </table>
           </p>
         <% end %>
         <hr>
@@ -162,131 +142,3 @@
   </div>
 
 </div>
-
-<script>
-  function initialize_gross_behaviour(index){
-    $(".icon-star").click(function(){
-      switch(true) {
-        case ($(this).hasClass('black-question-mark')):
-          $(this).removeClass('black-question-mark').addClass('purple-exclamation-mark');
-          $(this).next().val("purple");
-          break;
-        case ($(this).hasClass('purple-exclamation-mark')):
-          $(this).removeClass('purple-exclamation-mark').addClass('yellow-exclamation-mark');
-          $(this).next().val("yellow");
-          break;
-        case ($(this).hasClass('yellow-exclamation-mark')):
-          $(this).removeClass('yellow-exclamation-mark').addClass('green-check-mark');
-          $(this).next().val("green");
-          break;
-        case ($(this).hasClass('green-check-mark')):
-          $(this).removeClass('green-check-mark').addClass('blue-info-mark');
-          $(this).next().val("blue");
-          break;
-        case ($(this).hasClass('blue-info-mark')):
-          $(this).removeClass('blue-info-mark').addClass('orange-exclamation-mark');
-          $(this).next().val("orange");
-          break;
-        case ($(this).hasClass('orange-exclamation-mark')):
-          $(this).removeClass('orange-exclamation-mark').addClass('red-star');
-          $(this).next().val("red");
-          break;
-        case ($(this).hasClass('red-star')):
-          $(this).removeClass('red-star').addClass('black-question-mark');
-          $(this).next().val("black");
-      }
-    });
-
-
-    var selector = "#size_low_" + index +
-            ", #size_most_likely_" + index +
-            ", #size_high_" + index +
-            ", #weight_" + index
-
-    $(selector).on("blur change", function(e){
-      // ====
-       var selector_id = $(this).attr('id');
-       var common_on_id = selector_id.split("_"+index)[0];
-
-        var sum_of_cols = 0;
-        $("."+common_on_id).each(function(){
-            var current_value = $(this).val();
-            if((current_value != "") && (current_value != undefined))
-                sum_of_cols += parseFloat(current_value.replace("," , "."));
-        });
-        $('#overall_'+common_on_id).val(sum_of_cols);
-
-      //=====
-      $.ajax({ url:'/uow/load_gross',
-        data: 'size_low=' + $('#size_low_' + index).val()
-                + '&size_most_likely=' + $('#size_most_likely_' + index).val()
-                + '&size_high=' + $('#size_high_' + index).val()
-                + '&weight=' + $('#weight_' + index).val()
-                + '&technology=' + $('#technology_' + index).val()
-                + '&uow=' + $('#uow_' + index).val()
-                + '&size_unit_type=' + $('#size_unit_type_' + index).val()
-                + '&complexity=' + $('#complexity_' + index).val()
-                + '&index=' + $(this).closest('tr').index()
-      });
-
-        var gross_selector = "#gross_low_" + index +
-                             ", #gross_most_likely_" + index +
-                             ", #gross_high_" + index +
-        $(gross_selector).on("blur change", function(e){
-            // ====
-            var selector_id = $(this).attr('id');
-            var common_on_id = selector_id.split("_"+index)[0];
-
-            var sum_of_cols = 0;
-            $("."+common_on_id).each(function(){
-                var current_value = $(this).val();
-                if((current_value != "") && (current_value != undefined))
-                    sum_of_cols += parseFloat(current_value.replace("," , "."));
-            });
-            $('#overall_'+common_on_id).val(sum_of_cols);
-        });
-    });
-
-    $(", #uow_" + index +
-      ", #technology_" + index +
-      ", #complexity_" + index +
-      ", #size_unit_type_" + index ).on("change", function(e){
-
-      $.ajax({ url:'/uow/load_gross',
-        data: 'size_low=' + $('#size_low_' + index).val()
-                + '&size_most_likely=' + $('#size_most_likely_' + index).val()
-                + '&size_high=' + $('#size_high_' + index).val()
-                + '&weight=' + $('#weight_' + index).val()
-                + '&technology=' + $('#technology_' + index).val()
-                + '&size_unit_type=' + $('#size_unit_type_' + index).val()
-                + '&complexity=' + $('#complexity_' + index).val()
-                + '&index=' + $(this).closest('tr').index()
-
-      });
-    });
-
-    // Update the Unit of Works select_box according to the selected technology
-      $("#technology_" + index).on("change", function(e){
-          $.ajax({ url:'/uow/update_unit_of_works_select_box',
-              data: 'technology_id=' + $(this).val()
-                      + "&index=" + index
-          });
-          return false;
-      });
-
-      $("#uow_" + index).on("change", function(e){
-          $.ajax({ url:'/uow/update_complexity_select_box',
-              data: 'uow_id=' + $(this).val()
-                      + "&index=" + index
-          });
-          return false;
-      });
-  }
-
-  $(document).ready(function(e){
-    $("#myTable").find("tr").each(function(index){
-      initialize_gross_behaviour(index);
-    });
-  });
-
-</script>
