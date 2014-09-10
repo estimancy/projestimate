@@ -1273,7 +1273,7 @@ fr:
   notice_estimation_status_successful_saved: "Le statut de l'estimation a bien été sauvegardé"
   notice_successful_cancelled: "Vos modifications ont bien été annulées"
   text_explain_estimation_status_workflow: "Pour chaque statut en colonne, vous pouvez cocher les statuts pour lesquels la transition est possible vers ce statut"
-  text_explain_estimation_status_group_roles: "Pour chaque groupe d'utilisateurs en colonne, vous pouvez, en plus des autorisations définies niveau estimation, définir des droits d'accès et de modification en fonction du statut de l'estimation"
+  text_explain_estimation_status_group_roles: "Pour chaque groupe d'utilisateurs en colonne, vous pouvez définir des droits d'accès et de modification en fonction du statut de l'estimation"
   label_show_project_status: "Voir"
   label_edit_project_status: "Modifier"
   label_delete_project_status: "Supprimer"

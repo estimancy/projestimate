@@ -1559,7 +1559,7 @@ es:
   notice_estimation_status_successful_saved: "Estimation status was successfully saved"
   notice_successful_cancelled: "Your changes were cancelled"
   text_explain_estimation_status_workflow: "For each status column, you can check the statutes for which the transition is possible to that status."
-  text_explain_estimation_status_group_roles: "For each group of users in a column, you can, in addition to the permissions set on estimation level, define access rights depending on the status of the estimate"
+  text_explain_estimation_status_group_roles: "For each group of users in a column, you can define access rights depending on the status of the estimate"
   label_show_project_status: "Show"
   label_edit_project_status: "Edit"
   label_delete_project_status: "Delete"
