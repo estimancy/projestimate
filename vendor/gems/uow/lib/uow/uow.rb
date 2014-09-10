@@ -59,7 +59,9 @@ module Uow
     def get_end_date(*args)
       @project = Project.find(args[0])
       @component = PbsProjectElement.find(args[2])
-      @component.start_date + ((3 * @effort_person_month.to_f ** 0.33) * @project.organization.number_hours_per_month.to_f).hours
+
+      m = (3 * @effort_person_month.to_f ** 0.33).to_i
+      @component.start_date + m.months
     end
 
     def get_delay(*args)

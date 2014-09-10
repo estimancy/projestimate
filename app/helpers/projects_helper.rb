@@ -91,9 +91,9 @@ module ProjectsHelper
       value
     elsif (value > 100) && (value < 1000)
       value / organization.number_hours_per_day
-    elsif (value > 1000) && (value < 10000)
-      value / organization.number_hours_per_day / 4
-    elsif value > 10000
+    elsif (value > 1000)# && (value < 10000)
+      #value / organization.number_hours_per_day / 4
+    #elsif value > 10000
       value / organization.number_hours_per_month
     else
       value
@@ -105,9 +105,9 @@ module ProjectsHelper
       I18n.t(:hours)
     elsif (value > 100) && (value < 1000)
       I18n.t(:unit_days)
-    elsif (value > 1000) && (value < 10000)
-      I18n.t(:weeks)
-    elsif value > 10000
+    elsif (value > 1000)
+      #I18n.t(:weeks)
+    #elsif value > 10000
       I18n.t(:months)
     else
       I18n.t(:hours)
