@@ -209,12 +209,12 @@ ActiveRecord::Schema.define(:version => 20140905143602) do
   create_table "estimation_statuses", :force => true do |t|
     t.integer  "organization_id"
     t.integer  "status_number"
-    t.string   "status_alias"
     t.string   "name"
     t.text     "description"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
     t.string   "status_color"
+    t.string   "status_alias"
   end
 
   create_table "estimation_values", :force => true do |t|
@@ -548,6 +548,8 @@ ActiveRecord::Schema.define(:version => 20140905143602) do
     t.datetime "updated_at"
     t.integer  "organization_technology_id"
     t.text     "description"
+    t.date     "start_date"
+    t.date     "end_date"
   end
 
   add_index "pbs_project_elements", ["ancestry"], :name => "index_components_on_ancestry"
