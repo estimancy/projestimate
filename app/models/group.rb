@@ -49,6 +49,9 @@ class Group < ActiveRecord::Base
 
   has_and_belongs_to_many :permissions
 
+  #Estimations permissions on Group according to the estimation status
+  has_many :estimation_status_group_roles
+
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 

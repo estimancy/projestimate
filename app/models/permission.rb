@@ -47,6 +47,9 @@ class Permission < ActiveRecord::Base
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
+  #Estimations permissions on Group according to the estimation status
+  has_many :estimation_status_group_roles
+
   validates_presence_of :record_status
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :name, :description, :alias, :presence => true

@@ -16,6 +16,9 @@
 
 $(document).ready(function() {
 
+    // Update the jscolor library Dir to resolve bug on images detection
+    jscolor.dir = '/assets/';
+
     $("form.send_feedback input[type=submit]").click(function() {
         var error=false;
         if($("#send_feedback_user_name").val() == "") {
@@ -260,7 +263,6 @@ $(document).ready(function() {
             $('.spiner').show();
             $.ajax({
                 url:'/selected_pbs_project_element',
-                //data:'pbs_id=' + this.value + '&project_id=' + $('#project_id').val()
                 data: {
                     pbs_id: this.value,
                     project_id: $('#project_id').val(),
@@ -641,7 +643,6 @@ $(document).ready(function() {
 
 
     $(".ui-resizable-handle").css("background-image", 'none');
-
 
 });
 
@@ -5075,7 +5076,6 @@ function select_or_unselect_all_permissions(clicked_elt, cols_data_name, rows_da
         }
     }
 }
-
 
 //Submit the search form
 function submit_search_form(){

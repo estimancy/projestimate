@@ -13,6 +13,7 @@
         <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
         <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
         <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
+        <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
   <% end %>
   </ul>
 
@@ -378,6 +379,15 @@
       </table>
     <% end %>
   </div>
+
+ <div id="tabs-estimations-statuses" style="min-height: 50px;">
+   <b><%= I18n.t(:manage_estimations_statuses_workflow) %></b>
+   <br>
+   <% if can? :edit_organizations, Organization %>
+       <%= link_to I18n.t('new_estimation_status'), new_estimation_status_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
+   <% end %>
+   <%= render "estimation_statuses/statuses_management", object: @organization %>
+ </div>
 
 <% end %>
 </div>

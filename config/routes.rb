@@ -38,6 +38,11 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :estimation_statuses
+  post '/set_estimation_status_workflow' => 'estimation_statuses#set_estimation_status_workflow', as: 'set_estimation_status_workflow'
+  post '/set_estimation_status_group_roles' => 'estimation_statuses#set_estimation_status_group_roles', as: 'set_estimation_status_group_roles'
+
+
   resources :profile_categories
 
 

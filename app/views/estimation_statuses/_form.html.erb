@@ -1,0 +1,27 @@
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= I18n.t(:estimations_statuses) %> </a></li>
+  </ul>
+
+  <div id="tabs-1">
+
+        <%= simple_form_for(@estimation_status) do |f| %>
+        <%= f.error_notification %>
+
+        <div class="form-inputs">
+          <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization.id } %>
+          <%= f.input :status_number, label: I18n.t(:status_number) %>
+          <%= f.input :status_alias, label: I18n.t(:alias) %>
+          <%= f.input :name, label: I18n.t(:name) %>
+          <%= f.input :status_color, label: I18n.t(:status_color), input_html: {class: 'color'} %>
+          <%= f.input :description, label: I18n.t(:status_number), input_html: {:class => 'input-xxlarge', :rows => 5} %>
+          <br>
+        </div>
+
+        <div class="actions">
+          <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <%= link_to I18n.t('back'), :back, :class => 'btn' %>
+        </div>
+    <% end %>
+  </div>
+</div>

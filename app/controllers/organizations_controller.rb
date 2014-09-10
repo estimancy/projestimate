@@ -166,6 +166,20 @@ class OrganizationsController < ApplicationController
         op.save
       end
 
+      # Add some Estimations statuses in organization
+      estimation_statuses = [
+          ['0', 'preliminary', "Préliminaire", "999999", "Statut initial lors de la création de l'estimation"],
+          ['1', 'in_progress', "En cours", "6EB1FF", "En cours de modification"],
+          ['2', 'in_review', "Relecture", "f89406", "En relecture"],
+          ['3', 'checkpoint', "Contrôle", "b94a48", "En phase de contrôle"],
+          ['4', 'released', "Confirmé", "468847", "Phase finale d'une estimation qui arrive à terme et qui sera retenue comme une version majeure"],
+          ['5', 'rejected', "Rejeté", "333333", "L'estimation dans ce statut est rejetée et ne sera pas poursuivi"]
+      ]
+      estimation_statuses.each do |i|
+        status = EstimationStatus.new(organization_id: @organization.id, status_number: i[0], status_alias: i[1], name: i[2], status_color: i[3], description: i[4])
+        status.save
+      end
+
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
     else
       render action: 'new'
@@ -526,7 +540,7 @@ class OrganizationsController < ApplicationController
   def duplicate_organization
     authorize! :create_organizations, Organization
     #begin
-    original_organization = Organization.find(params[:organization_id])
+      original_organization = Organization.find(params[:organization_id])
       new_organization = original_organization.amoeba_dup
       if new_organization.save
         flash[:notice] = I18n.t(:organization_successfully_copied)

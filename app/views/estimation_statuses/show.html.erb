@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Organization:</b>
+  <%= @estimation_status.organization_id %>
+</p>
+
+<p>
+  <b>Status number:</b>
+  <%= @estimation_status.status_number %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @estimation_status.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @estimation_status.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_estimation_status_path(@estimation_status) %> |
+<%= link_to 'Back', estimation_statuses_path %>
