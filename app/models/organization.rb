@@ -36,7 +36,7 @@
 
 #Organization of the User
 class Organization < ActiveRecord::Base
-  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate
+  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate, :limit1, :limit2, :limit3
 
   has_and_belongs_to_many :users
   has_many :wbs_activities, :dependent => :destroy
@@ -62,6 +62,7 @@ class Organization < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }###, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
   validates :currency_id, :presence => true
+  validates_presence_of :limit1, :limit2, :limit3
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]

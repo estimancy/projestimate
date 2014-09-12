@@ -87,13 +87,13 @@ module ProjectsHelper
   end
 
   def convert_delay(value, organization)
-    if value < 100
+    if value < organization.limit1.to_i
       value
-    elsif (value > 100) && (value < 1000)
+    elsif (value > organization.limit1.to_i) && (value < organization.limit2.to_i)
       value / organization.number_hours_per_day
-    elsif (value > 1000)# && (value < 10000)
+    elsif (value > organization.limit2.to_i)# && (value < organization.limit3.to_i)
       #value / organization.number_hours_per_day / 4
-    #elsif value > 10000
+    #elsif value > organization.limit3.to_i
       value / organization.number_hours_per_month
     else
       value
@@ -101,13 +101,13 @@ module ProjectsHelper
   end
 
   def convert_delay_label(value, organization)
-    if value < 100
+    if value < organization.limit1.to_i
       I18n.t(:hours)
-    elsif (value > 100) && (value < 1000)
+    elsif (value > organization.limit1.to_i) && (value < organization.limit2.to_i)
       I18n.t(:unit_days)
-    elsif (value > 1000)
+    elsif (value > organization.limit2.to_i)# && (value < organization.limit3.to_i)
       #I18n.t(:weeks)
-    #elsif value > 10000
+    #elsif value > organization.limit3.to_i
       I18n.t(:months)
     else
       I18n.t(:hours)
