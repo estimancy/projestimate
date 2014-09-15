@@ -62,6 +62,8 @@ class PeAttributesController < ApplicationController
     @attribute = PeAttribute.find(params[:id])
     @attribute_categories = AttributeCategory.defined.all
 
+    env["HTTP_REFERER"] += '#tabs-attribute'
+
     unless @attribute.child_reference.nil?
       if @attribute.child_reference.is_proposed_or_custom?
         flash[:warning] = I18n.t (:warning_attribute_cant_be_edit)
