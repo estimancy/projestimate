@@ -147,7 +147,7 @@ class Uow::InputsController < ApplicationController
   end
 
   def update_complexity_select_box
-    @complexities = OrganizationUowComplexity.where(unit_of_work_id: params[:uow_id]).all.map{|i| [i.name, i.id]}
+    @complexities = OrganizationUowComplexity.where(unit_of_work_id: params[:uow_id], organization_technology_id: params[:technology_id]).all.map{|i| [i.name, i.id]}
     @index = params[:index]
   end
 
