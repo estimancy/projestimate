@@ -142,12 +142,12 @@ module WbsActivityElementsHelper
     else
       if element.is_root?
         #"<span class=''>#{element.pe_wbs_project.name} WBS-Activity</span>"
-        "<span class=''>#{h @project.title} WBS-Activity </span>"
+        "<span class=''>#{h @project.title} effort breakdown </span>"
       else
         if element.wbs_activity_element.nil? && element.wbs_activity.nil?
           "<span class=''> * #{h element.name} </span>"
         else
-          "<span class=''> #{h element.name} </span>"
+          "<span class=''> #{h element.name}</span> #{element.wbs_activity_ratio.nil? ? '' : '(' + element.wbs_activity_ratio.name + ')' }"
         end
       end
     end
