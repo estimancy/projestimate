@@ -4,7 +4,7 @@
   <%= hidden_field_tag "input_id[#{i}]", @input.id, :class => "input_id" %>
 
   <td class="span2 center">
-    <%= link_to "", uow.new_item_path(params[:module_project_id], current_component.id, i), :class => "icon icon-plus", title: "New item", remote: true %>
+    <%= link_to "", uow.new_item_path(params[:module_project_id], current_component.id), :class => "icon icon-plus", title: "New item", remote: true %>
     <%= link_to "", uow.remove_item_path(params[:module_project_id], @input.id, current_component.id, i), :class => "icon icon-trash", title: "Remove item", remote: true %>
     <span class="icon icon-star <%= @input.flag.blank? ? 'black-question-mark' : @input.flag %>"></span>
     <%= hidden_field_tag "flag[#{i}]", @input.flag.blank? ? 'black-question-mark' : @input.flag %>

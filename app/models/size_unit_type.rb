@@ -11,3 +11,5 @@ class SizeUnitType < ActiveRecord::Base
 
   has_many :size_units
 end
+
+
