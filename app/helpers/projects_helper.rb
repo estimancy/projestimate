@@ -86,14 +86,14 @@ module ProjectsHelper
     end
   end
 
-  def convert_delay(value, organization)
+  def convert(value, organization)
     if value < organization.limit1.to_i
       value
     elsif (value > organization.limit1.to_i) && (value < organization.limit2.to_i)
       value / organization.number_hours_per_day
-    elsif (value > organization.limit2.to_i)# && (value < organization.limit3.to_i)
-      #value / organization.number_hours_per_day / 4
-    #elsif value > organization.limit3.to_i
+    elsif (value > organization.limit2.to_i) && (value < organization.limit3.to_i)
+      value / organization.number_hours_per_day / 4
+    elsif value > organization.limit3.to_i
       value / organization.number_hours_per_month
     else
       value
@@ -105,9 +105,9 @@ module ProjectsHelper
       I18n.t(:hours)
     elsif (value > organization.limit1.to_i) && (value < organization.limit2.to_i)
       I18n.t(:unit_days)
-    elsif (value > organization.limit2.to_i)# && (value < organization.limit3.to_i)
-      #I18n.t(:weeks)
-    #elsif value > organization.limit3.to_i
+    elsif (value > organization.limit2.to_i) && (value < organization.limit3.to_i)
+      I18n.t(:weeks)
+    elsif value > organization.limit3.to_i
       I18n.t(:months)
     else
       I18n.t(:hours)
@@ -925,7 +925,7 @@ module ProjectsHelper
       when 'float'
         begin
           if est_val_pe_attribute.alias == "delay"
-            "#{convert_delay(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+            "#{convert(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
           else
             "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))} #{get_attribute_unit(est_val_pe_attribute)}"
           end
