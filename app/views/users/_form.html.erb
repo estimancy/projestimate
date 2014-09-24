@@ -11,7 +11,6 @@
           <li><a href="#tabs-2"><%= I18n.t(:groups) %></a></li>
           <li><a href="#tabs-3"><%= I18n.t(:organizations) %></a></li>
           <li><a href="#tabs-4"><%= I18n.t(:estimate) %></a></li>
-          <li><a href="#tabs-projects_states"><%= I18n.t(:projects_states) %></a></li>
           <li><a href="#tabs-5"><%= I18n.t(:settings) %></a></li>
         </ul>
 
@@ -266,38 +265,6 @@
             <p><%= I18n.t(:export_preferences) %></p>
             -->
           </table>
-        </div>
-
-        <div id="tabs-projects_states">
-          <b><%= I18n.t(:text_user_associated_projects_states) %></b>
-          <br/>
-
-          <div id="user_projects" class="field_checkbox">
-            <table class="table table-striped table-bordered table-condensed">
-              <tr>
-                <th><%= I18n.t(:projects_states) %></th>
-                <% Project.aasm_states.each do |state| %>
-                    <th><span class="attribute_tooltip" title=''><%= I18n.t(state) %></span></th>
-                <% end %>
-              </tr>
-              <%# @user.projects.each do |project| %>
-                  <%#= hidden_field_tag "user_projects_states[#{project.id}][]" %>
-                  <%# states = @user.authorized_projects_states %>
-                  <tr>
-                    <td><%= "avoir les droits sur les projets dans les états suivants" %></td>
-                      <% Project.aasm_states.each do |prj_state| %>
-                        <%= hidden_field_tag "user_projects_states[#{prj_state}][]" %>
-                        <td style="text-align: center">
-                          <%#= radio_button_tag("user_projects_states_#{prj_state}", prj_state) %>
-                          <%= check_box_tag("user_projects_states[#{prj_state}][]") %>
-                          <%#= check_box_tag("permissions[#{group.id}][]", perm.id, (group.permissions.map(&:id).include? perm.id), :id => nil, :class => "group_global_id_#{group.id} permission_global_id_#{perm.id}") %>
-                        </td>
-                    <% end %>
-                  </tr>
-              <%# end %>
-            </table>
-
-          </div>
         </div>
 
 

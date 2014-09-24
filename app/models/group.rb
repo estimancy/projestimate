@@ -38,7 +38,7 @@
 #Special Data
 #Group class contains some User.
 class Group < ActiveRecord::Base
-  attr_accessible :name, :description, :for_global_permission, :for_project_security, :record_status_id, :custom_value, :change_comment
+  attr_accessible :name, :description, :for_global_permission, :for_project_security, :record_status_id, :custom_value, :change_comment, :organization_id
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
@@ -51,6 +51,9 @@ class Group < ActiveRecord::Base
 
   #Estimations permissions on Group according to the estimation status
   has_many :estimation_status_group_roles
+
+  # Group is attached to organization
+  belongs_to :organization
 
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'

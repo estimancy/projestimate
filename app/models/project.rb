@@ -35,11 +35,11 @@
 #############################################################################
 
 class Project < ActiveRecord::Base
-  attr_accessible :title, :description, :version, :alias, :state,
+  attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id,
                   :start_date, :is_model, :organization_id, :project_area_id,
                   :project_category_id, :acquisition_category_id, :platform_category_id, :parent_id
 
-  attr_accessor :product_name
+  attr_accessor :product_name, :project_organization_statuses
 
   include AASM
   include ActionView::Helpers
@@ -86,21 +86,114 @@ class Project < ActiveRecord::Base
   scoped_search :in => :pbs_project_elements, :on => :name
   scoped_search :in => :wbs_project_elements, :on => [:name, :description]
 
-  #ASSM needs
-  aasm :column => :state do # defaults to aasm_state
-    state :preliminary, :initial => true
-    state :in_progress
-    state :in_review
-    state :checkpoint
-    state :released
-    state :rejected
+  # Get project's organization statuses before each action using statuses
+  #after_find  :get_project_organization_statuses
 
-    event :commit do #promote project
-      transitions :to => :in_progress, :from => :preliminary
-      transitions :to => :in_review, :from => :in_progress
-      transitions :to => :released, :from => :in_review
+  #AASM needs
+  #aasm :column => :state do # defaults to aasm_state
+  #  state :preliminary, :initial => true
+  #  state :in_progress
+  #  state :in_review
+  #  state :checkpoint
+  #  state :released
+  #  state :rejected
+  #
+  #  event :commit do #promote project
+  #    transitions :to => :in_progress, :from => :preliminary
+  #    transitions :to => :in_review, :from => :in_progress
+  #    transitions :to => :released, :from => :in_review
+  #  end
+  #end
+
+
+  aasm :column => :state do   # defaults to aasm_state
+    state :preliminary, :preliminary => true, :before_enter => :get_initial_status
+    EstimationStatus.all.each do |status|
+      #Define aasm states
+      state status.status_alias.to_sym
+    end
+
+    # Workflow definition
+    event :commit do
+      # generate workflow according to the defining workflow in organizations
+      StatusTransition.all.each do |status_transition|
+        to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+        from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+        transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+      end
     end
   end
+
+  #  Estimation status name
+  def status_name
+    self.estimation_status.nil? ? nil : self.estimation_status.name
+  end
+
+  # The status background color for estimations list
+  def status_background_color
+    self.estimation_status.nil? ? "#999999" : "##{self.estimation_status.status_color}"
+  end
+
+  # Estimation statuses possible transitions according to the project status
+  def project_estimation_statuses
+    if new_record? || self.estimation_status.nil? || !self.organization.estimation_statuses.include?(self.estimation_status)
+      # Note: When estimation's organization changed, the status id won't be valid for the new selected organization
+      initial_status = self.organization.estimation_statuses.order(:status_number).first_or_create(organization_id: self.organization_id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
+      [[initial_status.name, initial_status.id]]
+    else
+      estimation_statuses = self.estimation_status.to_transition_statuses.map{ |i| [i.name, i.id]}
+      estimation_statuses << [self.estimation_status.name, self.estimation_status.id]
+      estimation_statuses.uniq
+    end
+  end
+
+
+  def get_project_organization_statuses
+    self.project_organization_statuses = self.organization.estimation_statuses
+
+    initial_state = EstimationStatus.order(:status_number).first
+
+    # Define existing estimation_status as aasm_state
+    self.project_organization_statuses.all.each do |status|
+      #aasm.state status.status_alias.to_sym
+      aasm  do # defaults to aasm_state
+
+        state status.status_alias.to_sym
+
+        # Workflow definition for the commit event   # Redesign the 'commit' event AASM workflow with the estimation_statuses workflow
+        event :commit do
+          # generate workflow according to the defining workflow in organizations
+          StatusTransition.all.each do |status_transition|
+            to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+            from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+
+            transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+          end
+        end
+      end
+    end
+
+  end
+
+  #aasm :column => :state do   # defaults to aasm_state
+  #  #for defining the state machine workflow initial status, we need at least one created status
+  #  inital_state = EstimationStatus.order(:status_number).first
+  #
+  #  EstimationStatus.all.each do |status|
+  #    #Define aasm states
+  #    state status.status_alias.to_sym
+  #  end
+  #
+  #  # Workflow definition
+  #  event :commit do
+  #    # generate workflow according to the defining workflow in organizations
+  #    StatusTransition.all.each do |status_transition|
+  #      transitions :from => status_transition.from_transition_status.status_alias.to_sym, :to => status_transition.to_transition_status.status_alias.to_sym
+  #    end
+  #  end
+  #end
+
+
 
   amoeba do
     enable
@@ -124,12 +217,18 @@ class Project < ActiveRecord::Base
   end
 
   #Return possible states of project
-  def states
+  def states_SAVE
     if self.preliminary? || self.in_progress? || self.in_review?
       Project.aasm.states_for_select
     else
       Project.aasm.states_for_select.reject { |i| i[0] == 'preliminary' || i[0] == 'in_progress' || i[0] == 'in_review'}
     end
+  end
+
+  #Return possible states of project based on the project's organization statuses workflow
+  def states
+    #self.aasm.states(:permissible => true).map(&:name)
+    Project.aasm.states_for_select
   end
 
   #Return the root pbs_project_element of the pe-wbs-project and consequently of the project.
@@ -176,6 +275,5 @@ class Project < ActiveRecord::Base
       {:id => node.id.to_s, :name => node.version, :data => {:title => node.title, :version => node.version, :state => node.state}, :children => json_tree(sub_nodes).compact}
     end
   end
-
 
 end

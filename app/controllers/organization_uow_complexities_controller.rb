@@ -43,7 +43,6 @@ class OrganizationUowComplexitiesController < ApplicationController
     @organization = @organization_uow_complexity.organization
 
     set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", @organization_uow_complexity.name => ""
-
   end
 
   def new

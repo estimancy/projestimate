@@ -1075,6 +1075,10 @@ de:
 #  notice_successful_collapse_project_version: "Projekt gew�hlte Version(en) wurden erfolgreich gel�scht"
 #  project_is_not_collapsible: "Projekt '%{project_title_version}' ist nicht zusammenklappbar.\n\n"
 #  collapsible_project_only: "Nur in Projekt 'Checkpoint' Staat k�nnte zusammengelegt werden."
+  warning_no_show_permission_on_project_status: "You do not have the right to show this project to its current status"
+  warning_no_edit_permission_on_project_status: "You do not have the right to edit/modify this project to its current status"
+  warning_no_delete_permission_on_project_status: "You do not have the right to delete this project to its current status"
+
 #
 #  #new added translations
 #  audit_users_activities: "Benutzer-Aktivit�ten"
@@ -1230,3 +1234,4 @@ de:
   label_delete_project_status: "Delete"
   status_color: "Associated color"
   groups_and_roles: "Groups and roles"
+  text_invalid_status_alias:  "Invalid alias: No empty spaces and no accent"

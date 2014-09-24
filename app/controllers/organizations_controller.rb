@@ -72,6 +72,9 @@ class OrganizationsController < ApplicationController
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
 
     @organization_profiles = @organization.organization_profiles
+
+    #Get the Master defined groups and the organization's group
+    @organization_group = (Group.defined.all + @organization.groups.all).flatten
   end
 
   def refresh_value_elements
@@ -169,7 +172,7 @@ class OrganizationsController < ApplicationController
       # Add some Estimations statuses in organization
       estimation_statuses = [
           ['0', 'preliminary', "Préliminaire", "999999", "Statut initial lors de la création de l'estimation"],
-          ['1', 'in_progress', "En cours", "6EB1FF", "En cours de modification"],
+          ['1', 'in_progress', "En cours", "3a87ad", "En cours de modification"],
           ['2', 'in_review', "Relecture", "f89406", "En relecture"],
           ['3', 'checkpoint', "Contrôle", "b94a48", "En phase de contrôle"],
           ['4', 'released', "Confirmé", "468847", "Phase finale d'une estimation qui arrive à terme et qui sera retenue comme une version majeure"],
@@ -536,20 +539,23 @@ class OrganizationsController < ApplicationController
     send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
   end
 
+
   # Duplicate the organization
   def duplicate_organization
     authorize! :create_organizations, Organization
-    #begin
+    begin
       original_organization = Organization.find(params[:organization_id])
       new_organization = original_organization.amoeba_dup
       if new_organization.save
+        ###original_organization_technologies = original_organization.organization_technologies
         flash[:notice] = I18n.t(:organization_successfully_copied)
       else
         flash[:error] = I18n.t(:errors_when_copying_organization)
       end
-    #rescue
-    #
-    #end
+    rescue Exception => e
+      #redirect_to organizationals_params_path(flash: {error: I18n.t(:errors_when_copying_organization)})
+      redirect_to organizationals_params_path(flash: {error: e.message})
+    end
     redirect_to organizationals_params_path
   end
 

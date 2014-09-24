@@ -54,6 +54,7 @@ class GroupsController < ApplicationController
 
     set_page_title 'New group'
     @group = Group.new
+    @organization = Organization.find_by_id(params[:organization_id])
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
     @enable_update_in_local = true
@@ -65,6 +66,7 @@ class GroupsController < ApplicationController
       @group = Group.find(params[:id])
       @users = User.all
       @projects = Project.all.reject { |i| !i.is_childless? }
+      @organization = @group.organization
 
       if is_master_instance?
         @enable_update_in_local = true
@@ -95,9 +97,10 @@ class GroupsController < ApplicationController
     @projects = Project.all.reject { |i| !i.is_childless? }
     @group = Group.new(params[:group])
     @enable_update_in_local = true
+    @organization = Organization.find_by_id(params['group']['organization_id'])
 
     #If we are on local instance, Status is set to "Local"
-    if is_master_instance?
+    if is_master_instance? && @organization.nil?
       @group.record_status = @proposed_status
     else
       @group.record_status = @local_status
@@ -172,6 +175,7 @@ class GroupsController < ApplicationController
     @projects = Project.all.reject { |i| !i.is_childless? }
     @group = nil
     current_group = Group.find(params[:id])
+    @organization = current_group.organization
 
     if current_group.is_defined? && is_master_instance?
       @enable_update_in_local = true
@@ -205,6 +209,8 @@ class GroupsController < ApplicationController
     authorize! :manage, User
 
     @group = Group.find(params[:id])
+    @organization = @group.organization
+
     if is_master_instance?
       if @group.is_defined? || @group.is_custom?
         #logical deletion: delete don't have to suppress records anymore on defined record
