@@ -31,8 +31,8 @@
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
-              <%= link_to "Aides", cocomo_expert.help_path(factor.id), remote: true %> |
-              <%= link_to "Notes", cocomo_expert.add_note_to_factor_path(factor.id), remote: true %>
+              <%= link_to "", cocomo_expert.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
+              <%= link_to "", cocomo_expert.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
             </td>
           </tr>
         <% end %>
@@ -52,8 +52,8 @@
             <td><%= factor.description %></td>
             <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
-              <%= link_to "Aides", cocomo_expert.help_path(factor.id), remote: true %> |
-              <%= link_to "Notes", cocomo_expert.add_note_to_factor_path(factor.id), remote: true %>
+              <%= link_to "", cocomo_expert.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
+              <%= link_to "", cocomo_expert.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
             </td>
           </tr>
         <% end %>
@@ -77,9 +77,6 @@
       <div class="modal-body">
         <div id="content">
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t :close %></button>
       </div>
     </div>
   </div>

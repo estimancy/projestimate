@@ -45,7 +45,7 @@ class Uow::InputsController < ApplicationController
     @input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
     @input.save(validate: false)
     @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
-    @input_index = params['row_index'].to_i+1
+    @input_index = @inputs.count.to_i
   end
 
   def remove_item
@@ -147,7 +147,7 @@ class Uow::InputsController < ApplicationController
   end
 
   def update_complexity_select_box
-    @complexities = OrganizationUowComplexity.where(unit_of_work_id: params[:uow_id]).all.map{|i| [i.name, i.id]}
+    @complexities = OrganizationUowComplexity.where(unit_of_work_id: params[:uow_id], organization_technology_id: params[:technology_id]).all.map{|i| [i.name, i.id]}
     @index = params[:index]
   end
 
@@ -155,7 +155,7 @@ class Uow::InputsController < ApplicationController
     @index = params[:index]
     @technology = OrganizationTechnology.find(params[:technology_id])
     @unit_of_works = @technology.unit_of_works
-    @complexities = OrganizationUowComplexity.where(organization_technology_id: params[:technology_id]).all.map{|i| [i.name, i.id]}
+    @complexities = OrganizationUowComplexity.where(organization_technology_id: params[:technology_id], unit_of_work_id: @technology.unit_of_works.first).all.map{|i| [i.name, i.id]}
 
     @index = params[:index]
   end

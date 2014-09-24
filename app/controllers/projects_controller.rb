@@ -2114,6 +2114,32 @@ public
           @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
         end
       end
+
+    elsif @module_project.pemodule.alias == "cocomo_advanced"
+
+      @aprod = Array.new
+      aliass = %w(rely data cplx ruse docu)
+      aliass.each do |a|
+        @aprod << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @aplat = Array.new
+      aliass = %w(time stor pvol)
+      aliass.each do |a|
+        @aplat << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @apers = Array.new
+      aliass = %w(acap aexp ltex pcap pexp pcon)
+      aliass.each do |a|
+        @apers << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @aproj = Array.new
+      aliass = %w(tool site sced)
+      aliass.each do |a|
+        @aproj << Factor.where(alias: a, factor_type: "advanced").first
+      end
     else
       set_breadcrumbs "Dashboard" => "/dashboard", "Cocomo Expert" => ""
 

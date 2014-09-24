@@ -113,7 +113,8 @@
     $("#uow_" + index).on("change", function(e){
       $.ajax({ url:'/uow/update_complexity_select_box',
         data: 'uow_id=' + $(this).val()
-                + "&index=" + index
+            + '&technology_id=' + $('#technology_' + index).val()
+            + "&index=" + index
       });
       return false;
     });
