@@ -2,6 +2,7 @@
   <ul>
     <li><a href="#tabs-organization"><%= I18n.t(:organizations) %> </a></li>
     <% if action_name.in?(%w(edit update)) %>
+        <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
         <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
         <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
         <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
@@ -61,6 +62,12 @@
   </div>
 
   <% if action_name.in?(%w(edit update)) %>
+
+    <div id="tabs-group">
+      <b><%= I18n.t(:groups) %></b>
+      <%= render :partial => 'organizations/groups' %>
+    </div>
+
 
     <div id="tabs-profile">
       <b><%= I18n.t(:profiles) %></b>

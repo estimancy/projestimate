@@ -31,13 +31,14 @@
       </table>
 
       <%= f.input :description, :label => "#{I18n.t 'description'}", :input_html => {:class => 'input-xxlarge', :rows => 5 } %>
+
       <table>
         <tr>
           <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
           <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
-            <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{states_order[i[1]]} - #{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-xlarge'} %></td>
+            <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'} %></td>
           <% else %>
-              <td><%= f.input :state, :label => "#{I18n.t 'state'}", :as => :select, :collection => @project.states.map { |i| ["#{states_order[i[1]]} - #{I18n.t(i[1].to_s)}", i[1]] }, :input_html => {:class => 'input-xlarge'}, :disable => true %></td>
+              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %></td>
           <% end %>
         </tr>
         <tr>

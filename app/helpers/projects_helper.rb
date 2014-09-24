@@ -1083,4 +1083,45 @@ module ProjectsHelper
     #module_graph.induced_subgraph(gv).write_to_graphic_file('jpg','module_graph_project')
     module_graph.write_to_graphic_file('jpg','graph_project_history')
   end
+
+
+  # Authorizations based on estimations's statuses roles
+  # Estimation status Role by groups
+  # The possible project_permission_action_alias = ("show_project", "edit_project", "delete_project")
+  def can_do_action_on_estimation?(estimation, project_permission_action_alias)
+    can_do_something = false
+    begin
+      permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
+      if can?(:show_project, estimation)
+        # if at least one of the current_user's groups is in the estimation's organization groups
+        groups_intersection = current_user.groups.all & estimation.organization.groups.all
+        unless groups_intersection.nil?
+          groups_intersection.each do |group|
+            if estimation.estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include?(permission_to_show_project.id)
+              can_do_something = true
+              break if can_do_something
+            end
+          end
+        end
+      end
+    rescue
+      false
+    end
+
+    can_do_something
+  end
+
+  def can_show_estimation?(estimation)
+    return can_do_action_on_estimation?(estimation, "show_project")
+  end
+
+  def can_modify_estimation?(estimation)
+    return can_do_action_on_estimation?(estimation, "edit_project")
+  end
+
+  def can_delete_estimation?(estimation)
+    return can_do_action_on_estimation?(estimation, "delete_project")
+  end
+
+
 end

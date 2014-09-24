@@ -1,0 +1,54 @@
+
+<%= hidden_field_tag "organization_id", params[:id] %>
+
+<table border="0" width="100%">
+  <tr>
+    <td style="text-align:right;">
+      <%= link_to I18n.t('new_group'), new_group_path(:organization_id => params[:id]), :class => 'btn' %>
+    </td>
+  </tr>
+</table>
+<table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+  <thead>
+  <tr>
+    <th><%= I18n.t(:name) %></th>
+    <th><%= I18n.t(:description) %></th>
+    <th><%= I18n.t(:global_permissions) %></th>
+    <th><%= I18n.t(:project_permissions) %></th>
+    <th  class="action"><%= I18n.t(:actions) %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+
+  <% @organization.groups.each do |group| %>
+      <tr>
+        <td><%= group.name %></td>
+        <td><%= group.description %></td>
+        <td class="center"><%= check_box_tag('org_group_global', group.for_global_permission, group.for_global_permission)  %></td>
+        <td class="center"><%= check_box_tag('org_group_est', group.for_project_security, group.for_project_security)  %></td>
+        <td class="center">
+          <%= link_to '', edit_group_path(group), :class => 'icon-pencil', :title => I18n.t('edit') %>
+          <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+        </td>
+      </tr>
+  <% end %>
+  <%= render :partial => 'layouts/footer_table' %>
+  </tbody>
+</table>
+
+
+<script>
+    <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js] %>
+</script>
+
+
+
+
+
+
+
+
+
+
+

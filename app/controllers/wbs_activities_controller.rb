@@ -82,7 +82,9 @@ class WbsActivitiesController < ApplicationController
   def index
     #No authorize required since everyone can access the list of ABS
     set_page_title 'WBS activities'
-    @wbs_activities = WbsActivity.all
+    #@wbs_activities = WbsActivity.all
+    # Need to show only wbs-activities of current_user's organizations
+    @wbs_activities = WbsActivity.where('organization_id IN (?)', current_user.organizations)
   end
 
   def edit

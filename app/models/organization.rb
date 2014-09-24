@@ -45,22 +45,26 @@ class Organization < ActiveRecord::Base
   has_many :organization_uow_complexities, :dependent => :destroy
   has_many :unit_of_works, :dependent => :destroy
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations
-  has_many :subcontractors
+  has_many :subcontractors, :dependent => :destroy
   has_many :abacus_organizations
   has_many :projects
-  has_many :organization_profiles
+  has_many :organization_profiles, :dependent => :destroy
   has_many :profile_categories
   has_many :size_unit_types
   has_many :technology_size_types, :through => :size_unit_types
 
+  #Groups created on local, will be attached to an organization
+  has_many :groups
+
   #Estimations statuses
-  has_many :estimation_statuses
+  has_many :estimation_statuses, :dependent => :destroy
   has_many :estimation_status_group_roles, :through => :estimation_statuses
+  ###has_many :status_transitions, :through => :estimation_statuses
 
   belongs_to :currency
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }###, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
+  validates :number_hours_per_day, :number_hours_per_month, :cost_per_hour, numericality: { greater_than: 0 }   ###, on: :update, :unless => Proc.new {|organization| organization.number_hours_per_day.nil? || organization.number_hours_per_month.nil? || organization.cost_per_hour.nil? }
   validates :currency_id, :presence => true
   validates_presence_of :limit1, :limit2, :limit3
 
@@ -75,7 +79,7 @@ class Organization < ActiveRecord::Base
   # Add the amoeba gem for the copy
   amoeba do
     enable
-    include_field [:attribute_organizations, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :abacus_organizations, :organization_uow_complexities]
+    include_field [:attribute_organizations, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :abacus_organizations, :organization_uow_complexities, :estimation_statuses]
 
     customize(lambda { |original_organization, new_organization|
       new_organization.name = "Copy of '#{original_organization.name}' at #{Time.now}"

@@ -51,8 +51,14 @@
              <tr>
                <td><%= estimation_status.libelle %></td>
                <% @organization.estimation_statuses.each do |status| %>
-                <td class="center"><%= check_box_tag("status_workflow[#{status.id}][]", estimation_status.id, (status.to_transition_statuses.map(&:id).include? estimation_status.id)) %></td>
-            <% end %>
+                   <% if estimation_status == status %>
+                        <td class="center">
+                          <%= check_box_tag("status_workflow[#{status.id}][]", estimation_status.id, true, :disabled => true ) %>
+                        </td>
+                   <% else %>
+                       <td class="center"><%= check_box_tag("status_workflow[#{status.id}][]", estimation_status.id, (status.to_transition_statuses.map(&:id).include? estimation_status.id)) %></td>
+                   <% end %>
+               <% end %>
             </tr>
             <% end %>
           </table>
@@ -77,14 +83,15 @@
             </tr>
             <tr>
               <th></th>
-              <% Group.all.each do |group| %>
+              <%# Group.all.each do |group| %>
+              <% @organization_group.each do |group| %>
                   <th scope='colgroup'><%= group.name %></th>
               <% end %>
             </tr>
 
             <tr>
               <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
-              <% Group.all.each do |group| %>
+              <% @organization_group.each do |group| %>
                 <th>
                   <% ['show_project', 'edit_project', 'delete_project'].each do |permission| %>
                       <span class="span4" style="font-weight: normal; color: darkorange"><%= I18n.t("label_#{permission}_status") %></span>
@@ -96,7 +103,7 @@
             <% @organization.estimation_statuses.each do |estimation_status| %>
                 <tr>
                   <td><%= estimation_status.libelle %></td>
-                  <% Group.all.each do |group| %>
+                  <% @organization_group.each do |group| %>
                     <td class="center">
                     <% ['show_project', 'edit_project', 'delete_project'].each do |permission_label| %>
                         <% permission = Permission.find_by_alias(permission_label) %>

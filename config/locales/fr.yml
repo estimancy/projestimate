@@ -559,7 +559,7 @@ fr:
   calendar: "Calendrier"
   resources: "Ressources"
   analyse: "Analyse"
-  state: "Etat"
+  state: "État"
   hidden_element: "Afficher l'élément caché"
   associate_pbs_element: "PBS-element associé"
   user_securities_resume: "Résumé des sécurités de l'utilisateur"
@@ -1079,6 +1079,9 @@ fr:
   notice_successful_collapse_project_version: "Le(s) version(s) de projet sélectionnée(s) ont été supprimée(s) avec succès"
   project_is_not_collapsible: "Le Project '%{project_title_version}' n'est pas collapsable.\n\n"
   collapsible_project_only: "Seul un projet dans l'état 'CHECKPOINT' peut être collapsé."
+  warning_no_show_permission_on_project_status: "Vous n'avez pas le droit d'afficher ce project dans son statut actuel"
+  warning_no_edit_permission_on_project_status: "Vous n'avez pas le droit de modifier ce project dans son statut actuel"
+  warning_no_delete_permission_on_project_status: "Vous n'avez pas le droit de supprimer ce project dans son statut actuel"
 
   #new added translations
   audit_users_activities: "Activités utilisateurs"
@@ -1277,6 +1280,7 @@ fr:
   label_delete_project_status: "Supprimer"
   status_color: "Couleur associée"
   groups_and_roles: "Groupes et privilèges"
+  text_invalid_status_alias:  "Alias invalide: espace et accent sont interdits"
 
   criteria: "Critères"
 

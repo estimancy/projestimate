@@ -200,10 +200,19 @@ public
 
     set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
 
-    if (cannot? :edit_project, @project) ||                                            # No write access to project
-        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||   # frozen project
-        (@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
+    if (cannot? :edit_project, @project) ||                                               # No write access to project
+        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||      # frozen project
+        (@project.in_review? && (cannot? :write_access_to_inreview_project, @project))    # InReview project
       redirect_to(:action => 'show')
+    end
+
+    # We need to verify user's groups rights on estimation according to the current estimation status
+    if !can_modify_estimation?(@project)
+      if can_show_estimation?(@project)
+        redirect_to(:action => 'show')
+      else
+        redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)})
+      end
     end
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -216,7 +225,8 @@ public
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
+    #defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
+    defined_wbs_activities = @project.organization.wbs_activities.where('record_status_id = ?', @defined_status.id).all
     @wbs_activities = defined_wbs_activities.reject { |i| @project.included_wbs_activities.include?(i.id) }
     @wbs_activity_elements = []
     @wbs_activities.each do |wbs_activity|
@@ -233,7 +243,6 @@ public
     array_json_tree = Project.json_tree(arranged_projects)
     @projects_json_tree = Hash[*array_json_tree.flatten]
     @projects_json_tree = @projects_json_tree.to_json
-
   end
 
   def update
@@ -242,8 +251,17 @@ public
 
     set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
 
+    # We need to verify user's groups rights on estimation according to the current estimation status
+    if !can_modify_estimation?(@project)
+      if can_show_estimation?(@project)
+        redirect_to(:action => 'show', flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+      else
+        redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+      end
+    end
+
     unless (cannot? :edit_project, @project) || # No write access to project
-        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) || # frozen project
+        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||   # frozen project
         (@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
 
       @product_name = params[:project][:product_name]
@@ -366,12 +384,18 @@ public
     end
   end
 
+
   def show
     @project = Project.find(params[:id])
     set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
 
     authorize! :show_project, @project
     set_page_title 'Show estimation'
+
+    # We need to verify user's groups rights on estimation according to the current estimation status
+    if !can_show_estimation?(@project)
+      redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)})
+    end
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -383,7 +407,8 @@ public
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
+    #defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
+    defined_wbs_activities = @project.organization.wbs_activities.where('record_status_id = ?', @defined_status.id).all
     @wbs_activities = defined_wbs_activities.reject { |i| @project.included_wbs_activities.include?(i.id) }
     @wbs_activity_elements = []
     @wbs_activities.each do |wbs_activity|
@@ -392,7 +417,6 @@ public
         @wbs_activity_elements << elements_root #wbs_activity.wbs_activity_elements.last.root
       end
     end
-
   end
 
   def destroy
