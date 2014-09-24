@@ -26,19 +26,19 @@ module EffortBreakdown
   class EffortBreakdown
     include PemoduleEstimationMethods
 
-    attr_accessor :pbs_project_element, :module_project, :input_effort_person_month #module input/output parameters
+    attr_accessor :pbs_project_element, :module_project, :input_effort #module input/output parameters
 
     def initialize(module_input_data)
-      #puts "INPUT_DATA = #{module_input_data}"   for ex. : INPUT_DATA = {:effort_person_month=>"10", :pbs_project_element_id=>271, :module_project_id=>265}
+      #puts "INPUT_DATA = #{module_input_data}"   for ex. : INPUT_DATA = {:effort=>"10", :pbs_project_element_id=>271, :module_project_id=>265}
       @pbs_project_element = PbsProjectElement.find(module_input_data[:pbs_project_element_id])
       @module_project = ModuleProject.find(module_input_data[:module_project_id])
-      module_input_data['effort_person_month'].blank? ? @input_effort_person_month = nil : @input_effort_person_month = module_input_data['effort_person_month'].to_f
+      module_input_data['effort'].blank? ? @input_effort = nil : @input_effort = module_input_data['effort'].to_f
     end
 
     # Getters for module outputs
 
     # Calculate each Wbs activity effort according to Ratio and Reference_Value and PBS effort
-    def get_effort_person_month(*args)
+    def get_effort(*args)
       # First build cache_depth
       WbsProjectElement.rebuild_depth_cache!
 
@@ -95,7 +95,7 @@ module EffortBreakdown
             if wbs_project_element.is_childless? || wbs_project_element.has_new_complement_child?
               # Get the ratio Value of current element
               corresponding_ratio_value = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first.ratio_value
-              current_output_effort = @input_effort_person_month.nil? ? nil : (@input_effort_person_month.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
+              current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
               output_effort[wbs_project_element.id] = current_output_effort
             else
               output_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, output_effort)
@@ -158,7 +158,7 @@ module EffortBreakdown
             if wbs_project_element.is_childless? || wbs_project_element.has_new_complement_child?
               # Get the ratio Value of current element
               corresponding_ratio_value = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first.ratio_value
-              current_output_effort = @input_effort_person_month.nil? ? nil : ((@input_effort_person_month.to_f * corresponding_ratio_value.to_f / 100) * referenced_ratio_element.ratio_value.to_f)
+              current_output_effort = @input_effort.nil? ? nil : ((@input_effort.to_f * corresponding_ratio_value.to_f / 100) * referenced_ratio_element.ratio_value.to_f)
               output_effort[wbs_project_element.id] = current_output_effort
             else
               output_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, output_effort)
@@ -168,7 +168,7 @@ module EffortBreakdown
       end
 
       # Update the one activity element effort
-      output_effort[project_one_activity_element.id] = @input_effort_person_month
+      output_effort[project_one_activity_element.id] = @input_effort
 
       # After treating all leaf and node elements, the root element is going to compute by aggregation
       #output_effort[project_wbs_project_elt_root.id] = output_effort.inject(0) {|sum, (key,value)| sum += value}
@@ -226,7 +226,7 @@ module EffortBreakdown
             if wbs_project_element.is_childless? || wbs_project_element.has_new_complement_child?
               # Get the ratio Value of current element
               corresponding_ratio_value = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first.ratio_value
-              current_output_effort = @input_effort_person_month.nil? ? nil : (@input_effort_person_month.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
+              current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
               output_effort[wbs_project_element.id] = current_output_effort
             else
               output_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, output_effort)
@@ -280,7 +280,7 @@ module EffortBreakdown
             if wbs_project_element.is_childless? || wbs_project_element.has_new_complement_child?
               # Get the ratio Value of current element
               corresponding_ratio_value = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first.ratio_value
-              current_output_effort = @input_effort_person_month.nil? ? nil : (@input_effort_person_month.to_f * corresponding_ratio_value.to_f / 100)
+              current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / 100)
               output_effort[wbs_project_element.id] = current_output_effort
             else
               output_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, output_effort)

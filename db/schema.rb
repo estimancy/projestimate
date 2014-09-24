@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140912061206) do
+ActiveRecord::Schema.define(:version => 20140923133815) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -357,26 +357,6 @@ ActiveRecord::Schema.define(:version => 20140912061206) do
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
     t.text     "notes"
-  end
-
-  create_table "inputs", :force => true do |t|
-    t.integer  "module_project_id"
-    t.integer  "technology_id"
-    t.integer  "unit_of_work_id"
-    t.integer  "complexity_id"
-    t.string   "flag"
-    t.string   "name"
-    t.integer  "weight"
-    t.integer  "size_low"
-    t.integer  "size_most_likely"
-    t.integer  "size_high"
-    t.integer  "gross_low"
-    t.integer  "gross_most_likely"
-    t.integer  "gross_high"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
-    t.integer  "pbs_project_element_id"
-    t.integer  "size_unit_type_id"
   end
 
   create_table "labor_categories", :force => true do |t|
@@ -984,6 +964,27 @@ ActiveRecord::Schema.define(:version => 20140912061206) do
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
     t.string   "state",           :limit => 20
+    t.integer  "display_order"
+  end
+
+  create_table "uow_inputs", :force => true do |t|
+    t.integer  "module_project_id"
+    t.integer  "technology_id"
+    t.integer  "unit_of_work_id"
+    t.integer  "complexity_id"
+    t.string   "flag"
+    t.string   "name"
+    t.integer  "weight"
+    t.integer  "size_low"
+    t.integer  "size_most_likely"
+    t.integer  "size_high"
+    t.integer  "gross_low"
+    t.integer  "gross_most_likely"
+    t.integer  "gross_high"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+    t.integer  "pbs_project_element_id"
+    t.integer  "size_unit_type_id"
     t.integer  "display_order"
   end
 

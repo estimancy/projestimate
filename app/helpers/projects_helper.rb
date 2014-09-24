@@ -69,8 +69,8 @@ module ProjectsHelper
     case pe_attribute.alias
       when "effort_person_hour"
         I18n.t(:unit_effort_person_hour)
-      when "effort_person_month"
-        I18n.t(:unit_effort_person_month)
+      when "effort"
+        I18n.t(:unit_effort)
       when "effort_person_week"
         I18n.t(:unit_effort_person_week)
       when "staffing"
@@ -408,7 +408,7 @@ module ProjectsHelper
                                                                                    #unless refer_module.empty?
 
             refer_module_potential_ids = current_module_project.associated_module_projects
-            refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_person_month", @defined_status.id).first
+            refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort", @defined_status.id).first
 
             refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, current_project.id, pbs_project_element.id)
             refer_module_project = refer_modules_project.where(["module_project_id IN (?)", refer_module_potential_ids]).last

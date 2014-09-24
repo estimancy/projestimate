@@ -178,7 +178,7 @@ def load_data!
       ['Effective technology', 'effective_technology', 'A composite metric that captures factors relating to the efficiency or productivity with which development can be carried out.', 'float', ['float','>=', '0'], 'average', nil],
       ['End date', 'end_date', 'End date for a task, a pbs_project_element. Dependent of delay.', 'date', ['date'], 'maxi', nil],
       ['Effort Person Hour', 'effort_person_hour', 'A man-hour or person-hour is the amount of work performed by an average worker in one hour.', 'float', ['float','>=', '0'], 'average', nil],
-      ['Effort Person Month', 'effort_person_month', 'A man-month or person-month is the amount of work performed by an average worker in one Month.', 'float', ['float','>=', '0'], 'average', nil],
+      ['Effort Person Month', 'effort', 'A man-month or person-month is the amount of work performed by an average worker in one Month.', 'float', ['float','>=', '0'], 'average', nil],
       ['Duration', 'duration', 'Duration of a task in hour', 'float', ['float','>=', '0'], 'average', nil],
       ['Complexity', 'complexity', 'classes of software projects (for COCOMO modules) - Organic projects: "small" teams with "good" experience working with "less than rigid" requirements - Semi-detached projects: "medium" teams with mixed experience working with a mix of rigid and less than rigid requirements - Embedded projects: developed within a set of "tight" constraints. It is also combination of organic and semi-detached projects.(hardware, software, operational, ...)', 'list', ['list','','Organic;Semi-detached;Embedded'], 'average', true],
       ['Schedule', 'schedule', 'Schedule in calendar months', 'integer', ['integer', '>=', '0'], 'sum', nil],

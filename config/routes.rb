@@ -98,6 +98,7 @@ Projestimate::Application.routes.draw do
 
   resources :audits
 
+  mount Uocl::Engine, :at => '/uocl'
   mount Uow::Engine, :at => '/uow'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'

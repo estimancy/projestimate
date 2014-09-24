@@ -34,7 +34,7 @@
 #
 #############################################################################
 
-class Uow::InputsController < ApplicationController
+class Uow::UowInputsController < ApplicationController
 
   before_filter :set_pemodule, only: [:index, :new_item, :remove_item, :import, :save_uow]
 
@@ -42,27 +42,37 @@ class Uow::InputsController < ApplicationController
   end
 
   def new_item
-    @input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
+    @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: params[:index].to_i + 1)
     @input.save(validate: false)
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
-    @input_index = @inputs.count.to_i
+    @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+    @uow_inputs.each_with_index do |input, i|
+      input.display_order = i
+      input.save(validate: false)
+    end
+    @count = @uow_inputs.count.to_i
+    @index = params[:index].to_i
   end
 
   def remove_item
     @deleted_input_id = params[:input_id]
-    @input = Input.find(params[:input_id])
+    @input = UowInput.find(params[:input_id])
     @input.delete
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+    @uow_inputs.each_with_index do |input, i|
+      input.display_order = i
+      input.save(validate: false)
+    end
+
     @input_index = params['row_index']
   end
 
   def export
-    csv_string = Input::export(params[:module_project_id], params[:pbs_id])
+    csv_string = UowInput::export(params[:module_project_id], params[:pbs_id])
     send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=uo.csv")
   end
 
   def import
-    csv_string = Input::import(params[:file], params[:separator], params[:encoding], current_component, @module_project)
+    csv_string = UowInput::import(params[:file], params[:separator], params[:encoding], current_component, @module_project)
     redirect_to main_app.root_url
   end
 
@@ -70,7 +80,7 @@ class Uow::InputsController < ApplicationController
     @gross = []
 
     params[:input_id].keys.each do |r|
-      input = Input.where(id: params[:input_id]["#{r}"].to_i).first
+      input = UowInput.where(id: params[:input_id]["#{r}"].to_i).first
       input.name = params[:name]["#{r}"]
       input.module_project_id = params[:module_project_id]
       input.technology_id = params[:technology]["#{r}"]
@@ -87,8 +97,8 @@ class Uow::InputsController < ApplicationController
       input.flag = params[:flag]["#{r}"]
       input.save
 
-      #inputs = Input.where(id: params[:input_id]["#{r}"].to_i)
-      @gross << input #inputs.first
+      #uow_inputs = UowInput.where(id: params[:input_id]["#{r}"].to_i)
+      @gross << input #uow_inputs.first
     end
 
     @module_project.pemodule.attribute_modules.each do |am|
@@ -96,7 +106,7 @@ class Uow::InputsController < ApplicationController
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
-          if am.pe_attribute.alias == "effort_person_month"
+          if am.pe_attribute.alias == "effort"
             level_est_val = ev.send("string_data_#{level}")
             level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
             tmp_prbl << level_est_val[current_component.id]
@@ -104,13 +114,13 @@ class Uow::InputsController < ApplicationController
           ev.update_attribute(:"string_data_#{level}", level_est_val)
         end
 
-        if am.pe_attribute.alias == "effort_person_month" and ev.in_out == "output"
+        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
           ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
       end
     end
 
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
 
   end
 
@@ -118,7 +128,7 @@ class Uow::InputsController < ApplicationController
 
     @module_project = current_module_project
     @pbs = current_component
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
 
     @size = Array.new
     @tmp_result = Hash.new
@@ -165,13 +175,13 @@ class Uow::InputsController < ApplicationController
   def set_pemodule
     @module_project = current_module_project
     @pbs = current_component
-    @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+    @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
     @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
     @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
     @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
     @module_project.pemodule.attribute_modules.each do |am|
-      if am.pe_attribute.alias ==  "effort_person_month"
+      if am.pe_attribute.alias ==  "effort"
         @size = EstimationValue.where(:module_project_id => @module_project.id,
                                       :pe_attribute_id => am.pe_attribute.id,
                                       :in_out => "input" ).first

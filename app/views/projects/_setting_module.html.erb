@@ -17,13 +17,17 @@
     <div class="collapse in" id="collapseIn">
       <div class="widget-content tab-content">
         <div class="" id="estimation_graph_box">
-          <% if current_module_project.pemodule.alias == "uow" %>
-            <%= render partial: "uow/inputs/settings" %>
+          <% if current_module_project.pemodule.alias == "uocl" %>
+            <%= render partial: "uocl/uocl_inputs/settings" %>
+          <% elsif current_module_project.pemodule.alias == "uow" %>
+            <%= render partial: "uow/uow_inputs/settings" %>
           <% elsif current_module_project.pemodule.alias == "cocomo_advanced" %>
             <%= render partial: "cocomo_advanced/input_cocomo/settings" %>
           <% else %>
             <%= render partial: "cocomo_expert/input_cocomo/settings" %>
           <% end %>
+
+          <%%>
         </div>
       </div>
     </div>

@@ -35,14 +35,14 @@
 #############################################################################
 
 Uow::Engine.routes.draw do
-  root :to => 'inputs#index'
-  post 'save_uow' => 'inputs#save_uow', :as => 'save_uow'
-  get 'load_gross' => 'inputs#load_gross', :as => 'load_gross'
-  get 'update_complexity_select_box' => 'inputs#update_complexity_select_box', :as => 'update_complexity_select_box'
-  get 'update_unit_of_works_select_box' => 'inputs#update_unit_of_works_select_box', :as => 'update_unit_of_works_select_box'
+  root :to => 'uow_inputs#index'
+  post 'save_uow' => 'uow_inputs#save_uow', :as => 'save_uow'
+  get 'load_gross' => 'uow_inputs#load_gross', :as => 'load_gross'
+  get 'update_complexity_select_box' => 'uow_inputs#update_complexity_select_box', :as => 'update_complexity_select_box'
+  get 'update_unit_of_works_select_box' => 'uow_inputs#update_unit_of_works_select_box', :as => 'update_unit_of_works_select_box'
 
-  get 'new_item/:module_project_id/:pbs_id' => 'inputs#new_item', :as => 'new_item'
-  get 'remove_item/:module_project_id/:input_id/:pbs_id/:row_index' => 'inputs#remove_item', :as => 'remove_item'
-  get 'export/:module_project_id/:pbs_id' => 'inputs#export', :as => 'export'
-  post 'import/:module_project_id/:pbs_id' => 'inputs#import', :as => 'import'
+  get 'new_item/:module_project_id/:pbs_id/:index' => 'uow_inputs#new_item', :as => 'new_item'
+  get 'remove_item/:module_project_id/:input_id/:pbs_id/:row_index' => 'uow_inputs#remove_item', :as => 'remove_item'
+  get 'export/:module_project_id/:pbs_id' => 'uow_inputs#export', :as => 'export'
+  post 'import/:module_project_id/:pbs_id' => 'uow_inputs#import', :as => 'import'
 end

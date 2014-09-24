@@ -22,20 +22,20 @@ require 'wbs_activity_completion/version'
 module WbsActivityCompletion
   # Module Class
   class WbsActivityCompletion
-    attr_accessor :pbs_project_element, :inputs_effort_person_month
+    attr_accessor :pbs_project_element, :inputs_effort
 
     # table_inputs_effort_per_hour : is table that contains values set on each wbs-activity by user (from the project estimation view)
     # module_input_data: is a Hash each activity  with its corresponding effort
     def initialize(module_input_data)
       @pbs_project_element = PbsProjectElement.find(module_input_data[:pbs_project_element_id])
-      @inputs_effort_person_month = module_input_data[:effort_person_month]
+      @inputs_effort = module_input_data[:effort]
     end
 
     # The Output result
-    def get_effort_person_month(*args)
-      output_effort_person_month = Hash.new
-      @inputs_effort_person_month.each {|key, value| output_effort_person_month[key.to_i] = value.blank? ? nil : value.to_f}
-      output_effort_person_month
+    def get_effort(*args)
+      output_effort = Hash.new
+      @inputs_effort.each {|key, value| output_effort[key.to_i] = value.blank? ? nil : value.to_f}
+      output_effort
     end
   end
 end
