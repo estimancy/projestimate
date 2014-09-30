@@ -75,6 +75,8 @@ class OrganizationsController < ApplicationController
 
     #Get the Master defined groups and the organization's group
     @organization_group = (Group.defined.all + @organization.groups.all).flatten
+
+    @guw_models = Guw::GuwModel.all
   end
 
   def refresh_value_elements

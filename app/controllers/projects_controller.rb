@@ -217,6 +217,8 @@ public
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
+    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }
+
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @wbs_activity_ratios = []
@@ -2088,7 +2090,7 @@ public
 
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
-    if @module_project.pemodule.alias == "uocl"
+    if @module_project.pemodule.alias == "guw"
 
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component

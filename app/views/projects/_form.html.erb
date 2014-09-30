@@ -134,10 +134,9 @@
           <div class="row-fluid">
             <div class="span12">
               <%= I18n.t(:label_add_a_module_to_project) %>
-              <%= select_tag 'select_module', options_for_select(Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }), :prompt => '' %>
+              <%= select_tag 'select_module', options_for_select(@modules_selected), :prompt => '' %>
             </div>
           </div>
-
 
           <div class="row-fluid">
             <div class="span12">
