@@ -130,11 +130,18 @@ class EstimationStatusesController < ApplicationController
   # DELETE /estimation_statuses/1.json
   def destroy
     @estimation_status = EstimationStatus.find(params[:id])
-
     organization_id = @estimation_status.organization_id
-    @estimation_status.destroy
+
+    # Before destroying, we should check if the status is used by one or more projects before to be able to delete it.
+    if @estimation_status.projects.empty? || @estimation_status.projects.nil?
+      @estimation_status.destroy
+      flash[:notice] = I18n.t(:notice_estimation_status_successful_deleted)
+    else
+      flash[:warning] = I18n.t(:warning_estimation_status_cannot_be_deleted)
+    end
+
     respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-estimations-statuses')), notice: "#{I18n.t (:notice_estimation_status_successful_deleted)}" }
+      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-estimations-statuses')) }
     end
   end
 end

@@ -568,6 +568,19 @@ $(document).ready(function() {
         });
     });
 
+   // Update the organization's estimation statuses
+    $("#project_organization_id").change(function(){
+        $.ajax({
+            url:"/update_organization_estimation_statuses",
+            method: 'GET',
+            data: {
+                project_organization_id: $(this).val(),
+                project_id: $("#project_id").val()
+            }
+        })
+    });
+
+
     $('html, body').animate({ scrollTop: 0 });
 
     $.ui.plugin.add("resizable", "alsoResizeReverse", {

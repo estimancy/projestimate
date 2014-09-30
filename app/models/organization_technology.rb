@@ -60,11 +60,12 @@ class OrganizationTechnology < ActiveRecord::Base
     name || ''
   end
 
+  # To definitively remove
   # Add the amoeba gem for the copy
-  amoeba do
-    enable
-    include_field [:unit_of_works, :abacus_organizations, :organization_uow_complexities]
-    #exclude_field [:pbs_project_elements, :inputs]
-    #propagate
-  end
+  #amoeba do
+  #  enable
+  #  include_field [:unit_of_works, :abacus_organizations, :organization_uow_complexities]
+  #  #exclude_field [:pbs_project_elements, :inputs]
+  #  #propagate
+  #end
 end

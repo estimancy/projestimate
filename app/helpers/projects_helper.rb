@@ -1099,7 +1099,8 @@ module ProjectsHelper
       permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
       if can?(:show_project, estimation)
         # if at least one of the current_user's groups is in the estimation's organization groups
-        groups_intersection = current_user.groups.all & estimation.organization.groups.all
+        groups_intersection1 = current_user.groups.all & estimation.organization.groups.all
+        groups_intersection = current_user.groups.all & estimation.organization.organization_groups
         unless groups_intersection.nil?
           groups_intersection.each do |group|
             if estimation.estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include?(permission_to_show_project.id)

@@ -1281,6 +1281,8 @@ fr:
   status_color: "Couleur associée"
   groups_and_roles: "Groupes et privilèges"
   text_invalid_status_alias:  "Alias invalide: espace et accent sont interdits"
+  warning_estimation_status_cannot_be_deleted: "Impossible de supprimer ce status car il est utilisé par un ou plusieurs estimations"
+  user_need_at_least_one_organization: "Veuillez créer votre première organisation avant de continuer"
 
   criteria: "Critères"
 

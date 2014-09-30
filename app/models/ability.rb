@@ -42,7 +42,7 @@ class Ability
   def initialize(user)
 
     #Uncomment in order to authorize everybody to manage all the app
-    can :manage, :all
+    ###can :manage, :all
     can :edit, Project
     can :update, Project
     cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, ProjectArea,

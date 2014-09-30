@@ -42,8 +42,6 @@ class OrganizationsController < ApplicationController
   include Roo
 
   def new
-    authorize! :create_organizations, Organization
-
     set_page_title 'Organizations'
     @organization = Organization.new
   end
@@ -74,8 +72,8 @@ class OrganizationsController < ApplicationController
     @organization_profiles = @organization.organization_profiles
 
     #Get the Master defined groups and the organization's group
-    @organization_group = (Group.defined.all + @organization.groups.all).flatten
-
+    #@organization_group = (Group.defined.all + @organization.groups.all).flatten
+    @organization_group = @organization.organization_groups
     @guw_models = Guw::GuwModel.all
   end
 
@@ -85,12 +83,14 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    authorize! :create_organizations, Organization
-
     @organization = Organization.new(params[:organization])
+
+    # Add current_user to the organization
+    @organization.users << current_user
 
     #A la sauvegarde, on crée des sous traitants
     if @organization.save
+
       #Create the organization's default subcontractor
       subcontractors = [
           ['Undefined', '_undefined', "Haven't a clue if it will be subcontracted or made internally"],

@@ -93,6 +93,13 @@ class ApplicationController < ActionController::Base
   before_filter :update_activity_time
   before_filter :initialization_module
 
+  # Organization verification: user need to have at least one organization before continue
+  def check_user_orgaization
+    if current_user.organizations.empty?
+      redirect_to(new_organization_path, flash: { warning: I18n.t(:user_need_at_least_one_organization)})
+    end
+  end
+
   def session_expiration
     unless load_admin_setting('session_maximum_lifetime').nil? && load_admin_setting('session_inactivity_timeout').nil?
       if current_user
