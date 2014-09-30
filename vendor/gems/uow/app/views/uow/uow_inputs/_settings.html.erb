@@ -1,5 +1,5 @@
-<%= render partial: "/uow/inputs/script" %>
-<%= render partial: "/uow/inputs/style" %>
+<%= render partial: "/uow/uow_inputs/script" %>
+<%= render partial: "/uow/uow_inputs/style" %>
 
 <div class="tabs">
   <%= form_tag uow.save_uow_path, remote: true do %>
@@ -52,7 +52,7 @@
           </td>
         </tr>
 
-        <%= render :partial => '/uow/inputs/row' %>
+        <%= render :partial => '/uow/uow_inputs/row' %>
       </table>
 
       <%= submit_tag I18n.t(:apply), :class => "btn" %>

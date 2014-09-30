@@ -55,6 +55,7 @@ module Projestimate
     config.autoload_paths += Dir["#{config.root}/vendor/gems/cocomo_advanced/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/cocomo_expert/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/uow/lib"]
+    config.autoload_paths += Dir["#{config.root}/vendor/gems/guw/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/real_size/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/expert_judgment/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/effort_breakdown/lib"]
@@ -68,6 +69,7 @@ module Projestimate
     config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_advanced/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_expert/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/uow/lib)
+    config.autoload_paths += %W(#{config.root}/vendor/gems/guw/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/real_size/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/expert_judgment/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/effort_breakdown/lib)
@@ -127,7 +129,7 @@ module Projestimate
     ALPHABETICAL = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
     INITIALIZATION = "initialization"
     EFFORT_PERSON_HOUR = "effort_person_hour"
-    EFFORT_PERSON_MONTH = "effort_person_month"
+    EFFORT = "effort"
     EFFORT_PERSON_WEEK = "effort_person_week"
     DELAY = "delay"
     STAFFING = "staffing"

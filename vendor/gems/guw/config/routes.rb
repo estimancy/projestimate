@@ -34,18 +34,8 @@
 #
 #############################################################################
 
-module InputsHelper
+Guw::Engine.routes.draw do
+  root :to => 'guw#index'
 
-  def display_uow_module(module_project_id)
-    "<h4>Estimation inputs</h4>
-    #{ link_to "Fill input data", "/uow?mp=#{module_project_id}" }"
-  end
-
-  def method_missing(method, *args, &block)
-    if (method.to_s.end_with?('_path') || method.to_s.end_with?('_url')) && main_app.respond_to?(method)
-      main_app.send(method, *args)
-    else
-      super
-    end
-  end
+  resources :guw_models
 end

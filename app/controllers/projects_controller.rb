@@ -217,6 +217,8 @@ public
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
+    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }
+
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @wbs_activity_ratios = []
@@ -1742,7 +1744,7 @@ public
       @ratio_reference = @current_component.wbs_activity_ratio
     end
 
-    @attribute = PeAttribute.find_by_alias_and_record_status_id("effort_person_month", @defined_record_status)
+    @attribute = PeAttribute.find_by_alias_and_record_status_id("effort", @defined_record_status)
     @estimation_values = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', @attribute.id, "output").first
     @estimation_probable_results = @estimation_values.send('string_data_probable')
     @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
@@ -1760,7 +1762,7 @@ public
       delay = PeAttribute.where(alias: "delay").first
       end_date = PeAttribute.where(alias: "end_date").first
       staffing = PeAttribute.where(alias: "staffing").first
-      effort = PeAttribute.where(alias: "effort_person_month").first
+      effort = PeAttribute.where(alias: "effort").first
 
       products = @project.root_component.subtree.sort_by(&:position)
       products.each_with_index do |element, i|
@@ -1859,7 +1861,7 @@ public
     # The CocomoII = Cocomo_Expert factors
     @cocomo2_factors_corresponding = []
     # Contains all attribute name according to their aliases
-    @all_attributes_names = {"effort_person_hour" => I18n.t(:effort_person_hour), "effort_person_month" => I18n.t(:effort_person_month), "effort_person_week" => I18n.t(:effort_person_week), "cost" => I18n.t(:cost),
+    @all_attributes_names = {"effort_person_hour" => I18n.t(:effort_person_hour), "effort" => I18n.t(:effort), "effort_person_week" => I18n.t(:effort_person_week), "cost" => I18n.t(:cost),
                             "delay" => I18n.t(:delay), "end_date" => I18n.t(:end_date), "staffing" => I18n.t(:staffing), "staffing_complexity" => I18n.t(:staffing_complexity), "duration" => I18n.t(:duration),
                             "effective_technology" => I18n.t(:effective_technology), "schedule" => I18n.t(:schedule), "defects"=>I18n.t(:defects), "note" => I18n.t(:note), "methodology" => I18n.t(:methodology),
                             "real_time_constraint" => I18n.t(:real_time_constraint), "platform_maturity" => I18n.t(:platform_maturity), "list_sandbox" => I18n.t(:list_sandbox), "date_sandbox"=>I18n.t(:date_sandbox),
@@ -1869,7 +1871,7 @@ public
     # Attributes Unit : Table of Attributes units according to their aliases
     @attribute_yAxisUnit_array =  {
         'cost' => (@project_organization.currency.nil? ? "Unit" : @project_organization.currency.name.capitalize),
-        'effort_person_month' => I18n.t(:unit_effort_person_month), 'effort_person_hour' =>  I18n.t(:unit_effort_person_hour),
+        'effort' => I18n.t(:unit_effort), 'effort_person_hour' =>  I18n.t(:unit_effort_person_hour),
         'delay' => I18n.t(:unit_delay), 'end_date' => I18n.t(:unit_end_date), 'staffing' => I18n.t(:unit_staffing),
         'sloc' => I18n.t(:unit_sloc), 'sloc' => I18n.t(:unit_sloc)
     }
@@ -1926,7 +1928,7 @@ public
       @staffing_labels = []
 
       #begin
-        attr_effort = PeAttribute.find_by_alias('effort_person_month')
+        attr_effort = PeAttribute.find_by_alias('effort')
         attr_delay = PeAttribute.find_by_alias('delay')
 
         delay = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: attr_delay.id).last.string_data_probable[current_component.id]
@@ -2056,7 +2058,7 @@ public
 
     # get the all project modules for the charts labels
     @project_modules = []
-    @corresponding_attributes_aliases_for_init = %w(effort_person_month effort_person_hour effort_person_week cost delay staffing sloc)
+    @corresponding_attributes_aliases_for_init = %w(effort effort_person_hour effort_person_week cost delay staffing sloc)
     # contains all the modules attributes labels
     @init_attributes_labels = []
     @attributes = []
@@ -2115,15 +2117,18 @@ public
 
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
-    if @module_project.pemodule.alias == "uow"
+    if @module_project.pemodule.alias == "guw"
+
+    elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 
-      @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+      @inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
       if @inputs.empty?
-        @input = Input.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id)
+        @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: 0)
         @input.save(validate: false)
-        @inputs = Input.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+        @inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
       end
+
       @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
       @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
       #@complexities = []
@@ -2133,7 +2138,7 @@ public
       #end
 
       @module_project.pemodule.attribute_modules.each do |am|
-        if am.pe_attribute.alias ==  "effort_person_month"
+        if am.pe_attribute.alias ==  "effort"
           @size = EstimationValue.where(:module_project_id => @module_project.id,
                                         :pe_attribute_id => am.pe_attribute.id,
                                         :in_out => "input" ).first

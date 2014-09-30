@@ -25,11 +25,11 @@ module ExpertJudgment
   class ExpertJudgment
     include PemoduleEstimationMethods
 
-    attr_accessor :effort_person_month, :pbs_project_element_id, :wbs_project_element_root
+    attr_accessor :effort, :pbs_project_element_id, :wbs_project_element_root
 
     def initialize(elem)
       WbsProjectElement.rebuild_depth_cache!
-      elem[:effort_person_month].blank? ? @effort_person_month = nil : @effort_person_month = elem[:effort_person_month]
+      elem[:effort].blank? ? @effort = nil : @effort = elem[:effort]
       set_wbs_project_element_root(elem)
     end
 
@@ -43,7 +43,7 @@ module ExpertJudgment
 
 
     #Set the WBS-activity node elements effort using aggregation (sum) of child elements (from the bottom up)
-    def set_node_effort_person_month(node)
+    def set_node_effort(node)
     end
 
     #Get the project WBS root
@@ -55,33 +55,33 @@ module ExpertJudgment
     end
 
     #GETTERS
-    def get_effort_person_month(*args)
-      new_effort_person_month = Hash.new
-      root_element_effort_person_month = 0.0
+    def get_effort(*args)
+      new_effort = Hash.new
+      root_element_effort = 0.0
 
       @wbs_project_element_root.children.each do |node|
         # Sort node subtree by ancestry_depth
         sorted_node_elements = node.subtree.order('ancestry_depth desc')
         sorted_node_elements.each do |wbs_project_element|
           if wbs_project_element.is_childless?
-            new_effort_person_month[wbs_project_element.id] = (@effort_person_month[wbs_project_element.id.to_s].blank? ? nil : @effort_person_month[wbs_project_element.id.to_s].to_f)
+            new_effort[wbs_project_element.id] = (@effort[wbs_project_element.id.to_s].blank? ? nil : @effort[wbs_project_element.id.to_s].to_f)
           else
             node_effort = 0.0
             wbs_project_element.children.each do |child|
-              node_effort = node_effort + new_effort_person_month[child.id].to_f
+              node_effort = node_effort + new_effort[child.id].to_f
             end
-            new_effort_person_month[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort_person_month)
+            new_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort)
           end
         end
       end
 
-      new_effort_person_month[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort_person_month)
+      new_effort[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort)
 
-      new_effort_person_month
+      new_effort
     end
 
-    def get_effort_person_month(*args)
-      get_effort_person_month(args)
+    def get_effort(*args)
+      get_effort(args)
     end
   end
 

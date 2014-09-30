@@ -1,6 +1,6 @@
 //$("#setting_module").html("<%#= j(render(:partial => 'projects/setting_module'))%>");
 
-$('#myTable tr:last').after("<%= j(render(:partial => 'new_item', object: [@input, @input_index]))%>");
+$('#myTable tr:nth-child(<%= @index %>)').after("<%= j(render(:partial => 'new_item', object: [@input, @input_index]))%>");
 
 $('.spiner').hide();
 

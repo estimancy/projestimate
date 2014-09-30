@@ -69,8 +69,8 @@ module ProjectsHelper
     case pe_attribute.alias
       when "effort_person_hour"
         I18n.t(:unit_effort_person_hour)
-      when "effort_person_month"
-        I18n.t(:unit_effort_person_month)
+      when "effort"
+        I18n.t(:unit_effort)
       when "effort_person_week"
         I18n.t(:unit_effort_person_week)
       when "staffing"
@@ -408,7 +408,7 @@ module ProjectsHelper
                                                                                    #unless refer_module.empty?
 
             refer_module_potential_ids = current_module_project.associated_module_projects
-            refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort_person_month", @defined_status.id).first
+            refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort", @defined_status.id).first
 
             refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, current_project.id, pbs_project_element.id)
             refer_module_project = refer_modules_project.where(["module_project_id IN (?)", refer_module_potential_ids]).last
@@ -819,7 +819,12 @@ module ProjectsHelper
     pbs_project_element = current_component
     res = String.new
 
-    if module_project.compatible_with(current_component.work_element_type.alias) || current_component
+    if module_project.pemodule.alias == "guw"
+      res << "<h4>Choix du modèle d'UO</h4>"
+      res << select_tag("guw_model", options_for_select(Guw::GuwModel.all))
+      res << "<br>"
+      res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini pull-right")
+    elsif module_project.compatible_with(current_component.work_element_type.alias) || current_component
 
       pemodule = Pemodule.find(module_project.pemodule.id)
       res << "<h4>#{ I18n.t(:label_input_data) }</h4>"

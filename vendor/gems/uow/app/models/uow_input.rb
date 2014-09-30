@@ -34,7 +34,7 @@
 #
 #############################################################################
 
-class Input < ActiveRecord::Base
+class UowInput < ActiveRecord::Base
   belongs_to :module_project
   belongs_to :organization_technology, :foreign_key => :technology_id
   belongs_to :unit_of_work
@@ -44,7 +44,7 @@ class Input < ActiveRecord::Base
   validates :technology_id, :unit_of_work_id, presence: true
 
   def self.export(mp, pbs)
-    @inputs = Input.where(module_project_id: mp, pbs_project_element_id: pbs).all
+    @inputs = UowInput.where(module_project_id: mp, pbs_project_element_id: pbs).all
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
       csv << ['id', 'Organization', 'Reference', 'Technology', 'Unit Of Work', 'Complexity', 'Type', 'Low', 'Most Likely', 'High', 'Weight']
       @inputs.each do |i|
@@ -67,7 +67,7 @@ class Input < ActiveRecord::Base
       csv.each_with_index do |row, i|
         unless row.empty? or i == 0
           #begin
-            @ware = Input.find_by_id(row[0])
+            @ware = UowInput.find_by_id(row[0])
             unless @ware.nil?
               #@ware.update_attribute('organization_id', row[1])
               @ware.update_attribute('name', row[2])
@@ -88,7 +88,7 @@ class Input < ActiveRecord::Base
               sut = SizeUnitType.where(name: row[6], organization_id: o.id).first
 
               begin
-                i = Input.new(name: row[2],
+                i = UowInput.new(name: row[2],
                               technology_id: t.id,
                               unit_of_work_id: u.id,
                               complexity_id: c.id,

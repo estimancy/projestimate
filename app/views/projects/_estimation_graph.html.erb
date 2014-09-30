@@ -238,7 +238,7 @@
 
             <%# if @current_module_project.pemodule.with_activities.in?(%w(yes_for_output_with_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio yes_for_input_output_without_ratio)) %>
             <% if !@current_mp_effort_per_activity.empty? && !@current_mp_effort_per_activity.nil? %>
-            if((value == "effort_person_month") || (value == "effort_person_hour")){
+            if((value == "effort") || (value == "effort_person_hour")){
                 graph_title = "Effort per activity (probable)";
             }
 

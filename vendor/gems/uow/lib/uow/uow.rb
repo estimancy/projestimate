@@ -43,35 +43,35 @@ module Uow
 
     include ApplicationHelper
 
-    attr_accessor :effort_person_month
+    attr_accessor :effort
 
     #Constructor
     def initialize(elem)
-      @effort_person_month = elem['effort_person_month']
+      @effort = elem['effort']
     end
 
     # Return effort
     #project.id, current_mp_to_execute.id, pbs_project_element_id)
-    def get_effort_person_month(*args)
-      Input.where(:module_project_id => args[1], pbs_project_element_id: args[2]).map(&:"gross_#{args[3]}").compact.sum
+    def get_effort(*args)
+      UowInput.where(:module_project_id => args[1], pbs_project_element_id: args[2]).map(&:"gross_#{args[3]}").compact.sum
     end
 
     def get_end_date(*args)
       @project = Project.find(args[0])
       @component = PbsProjectElement.find(args[2])
 
-      m = (3 * @effort_person_month.to_f ** 0.33).to_i
+      m = (3 * @effort.to_f ** 0.33).to_i
       @component.start_date + m.months
     end
 
     def get_delay(*args)
       @project = Project.find(args[0])
-      (3 * @effort_person_month.to_f ** 0.33) * @project.organization.number_hours_per_month.to_f
+      (3 * @effort.to_f ** 0.33) * @project.organization.number_hours_per_month.to_f
     end
 
     def get_cost(*args)
       @project = Project.find(args[0])
-      @effort_person_month.to_f * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
+      @effort.to_f * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
     end
   end
 
