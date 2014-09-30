@@ -74,7 +74,8 @@ class OrganizationsController < ApplicationController
     @organization_profiles = @organization.organization_profiles
 
     #Get the Master defined groups and the organization's group
-    @organization_group = (Group.defined.all + @organization.groups.all).flatten
+    #@organization_group = (Group.defined.all + @organization.groups.all).flatten
+    @organization_group = @organization.organization_groups
   end
 
   def refresh_value_elements
@@ -547,7 +548,6 @@ class OrganizationsController < ApplicationController
       original_organization = Organization.find(params[:organization_id])
       new_organization = original_organization.amoeba_dup
       if new_organization.save
-        ###original_organization_technologies = original_organization.organization_technologies
         flash[:notice] = I18n.t(:organization_successfully_copied)
       else
         flash[:error] = I18n.t(:errors_when_copying_organization)

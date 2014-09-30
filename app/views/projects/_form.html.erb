@@ -35,13 +35,7 @@
       <table>
         <tr>
           <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
-          <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
-            <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'} %></td>
-          <% else %>
-              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %></td>
-          <% end %>
-        </tr>
-        <tr>
+
           <td>
               <%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %>
           </td>
@@ -56,9 +50,18 @@
                   });
               });
           </script>
-
-          <td><%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-xlarge'} %></td>
         </tr>
+
+        <tr>
+          <td><%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-large'} %></td>
+
+          <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
+              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'} %></td>
+          <% else %>
+              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %></td>
+          <% end %>
+        </tr>
+
       </table>
 
       <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'} %>

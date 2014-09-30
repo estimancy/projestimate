@@ -277,6 +277,7 @@ Projestimate::Application.routes.draw do
   get 'add_filter_on_project_version' => 'projects#add_filter_on_project_version', :as => 'add_filter_on_project_version'
   get 'checkout' => 'projects#checkout', :as => 'checkout'
   get 'collapse_project_version' => 'projects#collapse_project_version', :as => 'collapse_project_version'
+  get 'update_organization_estimation_statuses' => 'projects#update_organization_estimation_statuses', as: 'update_organization_estimation_statuses'
 
   post 'add_wbs_activity_to_project' => 'projects#add_wbs_activity_to_project',  :as => 'add_wbs_activity_to_project'
   post 'update_project_security_level_group' => 'projects#update_project_security_level_group',  :as => 'update_project_security_level_group'

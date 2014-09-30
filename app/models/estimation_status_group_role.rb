@@ -29,8 +29,4 @@ class EstimationStatusGroupRole < ActiveRecord::Base
 
   validates :group_id, :estimation_status_id, :permission_id, :organization_id, presence: true
 
-  amoeba do
-    enable
-  end
-
 end

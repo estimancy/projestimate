@@ -60,9 +60,11 @@ class UnitOfWork < ActiveRecord::Base
     name || ''
   end
 
+  # To definitively remove ???
   # Add the amoeba gem for the copy
-  amoeba do
-    enable
-    include_field [:abacus_organizations, :organization_uow_complexities, :organization_technologies]
-  end
+  #amoeba do
+  #  enable
+  #  include_field [:abacus_organizations, :organization_uow_complexities, :organization_technologies]
+  #end
+
 end

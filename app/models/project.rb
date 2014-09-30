@@ -78,7 +78,7 @@ class Project < ActiveRecord::Base
   validates :title, :presence => true, :uniqueness => { :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :alias, :presence => true, :uniqueness => { :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => :title, :scope => :alias, case_sensitive: false, :message => I18n.t(:error_validation_project) }
-  validates_presence_of :organization_id
+  validates_presence_of :organization_id, :estimation_status_id
 
   #Search fields
   scoped_search :on => [:title, :alias, :description, :start_date, :created_at, :updated_at]
@@ -138,8 +138,9 @@ class Project < ActiveRecord::Base
   def project_estimation_statuses
     if new_record? || self.estimation_status.nil? || !self.organization.estimation_statuses.include?(self.estimation_status)
       # Note: When estimation's organization changed, the status id won't be valid for the new selected organization
-      initial_status = self.organization.estimation_statuses.order(:status_number).first_or_create(organization_id: self.organization_id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
-      [[initial_status.name, initial_status.id]]
+      #initial_status = self.organization.estimation_statuses.order(:status_number).first_or_create(organization_id: self.organization_id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
+      #[[initial_status.name, initial_status.id]]
+      nil
     else
       estimation_statuses = self.estimation_status.to_transition_statuses.map{ |i| [i.name, i.id]}
       estimation_statuses << [self.estimation_status.name, self.estimation_status.id]

@@ -89,7 +89,6 @@ public
     @projects = (@projects.flatten & current_user.projects).reject { |i| !i.is_childless? }
   end
 
-
   def new
     authorize! :create_project_from_scratch, Project
     set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path
@@ -191,6 +190,7 @@ public
       end
     end
   end
+
 
   #Edit a selected project
   def edit
@@ -450,6 +450,33 @@ public
         render :template => 'projects/confirm_deletion'
     end
   end
+
+
+  #Update the project's organization estimation statuses
+  def update_organization_estimation_statuses
+    @estimation_statuses = []
+
+    unless params[:project_organization_id].nil? || params[:project_organization_id].blank?
+      @organization = Organization.find(params[:project_organization_id])
+      @project = Project.find(params[:project_id])
+      unless @project.new_record?
+        # Editing project that does not have estimation status
+        if @project.estimation_status.nil? || !@organization.estimation_statuses.include?(@project.estimation_status)
+          # Note: When estimation's organization changed, the status id won't be valid for the new selected organization
+          initial_status = @organization.estimation_statuses.order(:status_number).first_or_create(organization_id: @project.organization_id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
+          @estimation_statuses = [[initial_status.name, initial_status.id]]
+        else
+          estimation_statuses = @project.estimation_status.to_transition_statuses.map{ |i| [i.name, i.id]}
+          estimation_statuses << [@project.estimation_status.name, @project.estimation_status.id]
+          @estimation_statuses = estimation_statuses.uniq
+        end
+      end
+    end
+
+    @estimation_statuses
+
+  end
+
 
   def confirm_deletion
     @project = Project.find(params[:project_id])

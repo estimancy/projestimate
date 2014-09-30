@@ -525,6 +525,9 @@ ActiveRecord::Schema.define(:version => 20140922141338) do
     t.integer  "currency_id"
     t.float    "cost_per_hour"
     t.float    "inflation_rate"
+    t.integer  "limit1"
+    t.integer  "limit2"
+    t.integer  "limit3"
   end
 
   create_table "organizations_users", :id => false, :force => true do |t|
