@@ -946,7 +946,7 @@ en:
   label_ratio_value: "Ratio value"
   label_is_completed: "Is completed"
   label_is_validated: "Is validated"
-  text_overloading_default_ratio_table: "To override (for this component) the default ratio table, select a WBS-activities and its associated ratio table"
+  text_overloading_default_ratio_table: "To override the default ratio table (for this component), select a WBS-activity and its associated ratio table"
   text_no_icon: "no icon selected"
   tooltip_run_estimation: "Execute the estimate"
   notice_no_estimation_saved: "No results has been save up in the project's database"
