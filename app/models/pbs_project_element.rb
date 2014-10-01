@@ -50,6 +50,7 @@ class PbsProjectElement < ActiveRecord::Base
 
   has_many :estimation_values
 
+  has_many :uow_inputs
   belongs_to :organization_technology
 
   has_and_belongs_to_many :module_projects
