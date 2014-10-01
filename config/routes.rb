@@ -287,6 +287,7 @@ Projestimate::Application.routes.draw do
   get 'refresh_wbs_project_elements' => 'projects#refresh_wbs_project_elements', :as => 'refresh_wbs_project_elements'
   get 'refresh_wbs_activity_ratios' => 'projects#refresh_wbs_activity_ratios',   :as => 'refresh_wbs_activity_ratios'
   get 'generate_wbs_project_elt_tree' => 'projects#generate_wbs_project_elt_tree', :as => 'generate_wbs_project_elt_tree'
+  get 'render_selected_wbs_activity_elements' => 'projects#render_selected_wbs_activity_elements', as: 'render_selected_wbs_activity_elements'
   match 'projects/:id/display_estimation_plan' => 'projects#display_estimation_plan', :as => 'display_estimation_plan'
 
   match 'projects/:project_id/duplicate' => 'projects#duplicate', :as => :duplicate

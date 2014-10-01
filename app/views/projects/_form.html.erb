@@ -19,9 +19,7 @@
      <div id="tabs-1">
 
       <% states_order = { preliminary: 1, in_progress: 2, in_review: 3, checkpoint: 4, released: 5, rejected: 6 }.with_indifferent_access %>
-
       <%= f.input :product_name, :label => I18n.t(:label_product_name), :input_html => {:class => 'input-xxlarge', value: @project.root_component.nil? ? '' : @project.root_component.name } %>
-
       <%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
       <table>
         <tr>
@@ -35,10 +33,7 @@
       <table>
         <tr>
           <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
-
-          <td>
-              <%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %>
-          </td>
+          <td><%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %></td>
 
           <script>
               $(document).ready(function () {

@@ -1363,6 +1363,17 @@ public
     end
   end
 
+  # On the project edit view, we are going to show to user the current selected WBS-Activity elements
+  # without adding it to the project until it saves it with the "Add" button
+  def render_selected_wbs_activity_elements
+    @project = Project.find(params[:project_id])
+    authorize! :edit_project, @project
+
+    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
+    @show_hidden = params[:show_hidden]
+    @is_project_show_view = params[:is_project_show_view]
+  end
+
   def choose_project
     u = current_user
     project = Project.find(params[:project_id])

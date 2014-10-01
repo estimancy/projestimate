@@ -137,7 +137,7 @@ class EstimationStatusesController < ApplicationController
       @estimation_status.destroy
       flash[:notice] = I18n.t(:notice_estimation_status_successful_deleted)
     else
-      flash[:warning] = I18n.t(:warning_estimation_status_cannot_be_deleted)
+      flash[:warning] = I18n.t(:warning_estimation_status_cannot_be_deleted, value: @estimation_status.name)
     end
 
     respond_to do |format|

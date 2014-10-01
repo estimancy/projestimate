@@ -356,7 +356,19 @@ $(document).ready(function() {
        }
        else{
            $("#add_activity_and_ratio_to_project").removeAttr("disabled");
+           // Update the project wbs-activity view (without saving the values until the user clicks on the "Add" button
+           $.ajax({
+               url: "/render_selected_wbs_activity_elements",
+               method: 'GET',
+               data: {
+                   project_id: $('#project_id').val(),
+                   wbs_activity_id: $('#wbs_activity_element').val(),
+                   wbs_activity_ratio_id: $('#project_default_wbs_activity_ratio').val(),
+                   is_project_show_view: $('#is_project_show_view').val()
+               }
+           })
        }
+        return false;
     });
 
     //ADD selected WBS-Activity to Project

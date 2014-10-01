@@ -225,10 +225,16 @@ class OrganizationsController < ApplicationController
 
   def destroy
     authorize! :manage, Organization
-
     @organization = Organization.find(params[:id])
-    @organization.destroy
-    flash[:notice] = I18n.t (:notice_organization_successful_deleted)
+
+    # Before destroying, we should check if the organization is used by one or more projects/estimations before to be able to delete it.
+    if @organization.projects.empty? || @organization.projects.nil?
+      @organization.destroy
+      flash[:notice] = I18n.t(:notice_organization_successful_deleted)
+    else
+      flash[:warning] = I18n.t(:warning_organization_cannot_be_deleted, value: @organization.name)
+    end
+
     redirect_to '/organizationals_params'
   end
 
