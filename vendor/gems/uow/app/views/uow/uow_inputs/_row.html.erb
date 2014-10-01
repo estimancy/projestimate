@@ -22,7 +22,7 @@
     </td>
     <td class="span1 center">
       <%# select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>
-      <%= select_tag "complexity[#{i+1}]", options_for_select(OrganizationUowComplexity.where(unit_of_work_id: input.unit_of_work_id).all, :selected => input.complexity_id ), :class => "complexity" %>
+      <%= select_tag "complexity[#{i+1}]", options_for_select(OrganizationUowComplexity.where(unit_of_work_id: input.unit_of_work_id, organization_technology_id: input.technology_id).all, :selected => input.complexity_id ), :class => "complexity" %>
     </td>
     <td class="span1 center">
       <%= select_tag "size_unit_type[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}, selected: input.size_unit_type_id) %>
