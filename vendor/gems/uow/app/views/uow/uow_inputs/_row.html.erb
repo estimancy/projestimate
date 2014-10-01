@@ -6,7 +6,7 @@
     <td class="span2 center">
       <%= link_to "", uow.new_item_path(params[:module_project_id], current_component.id, i + 4), :class => "icon icon-plus", title: "New item", remote: true %>
       <%= link_to "", uow.remove_item_path(params[:module_project_id], input.id, current_component.id, i+1), :class => "icon icon-trash", title: "Remove item", remote: true %>
-      <%= link_to "", "#", :class => "icon icon-question-sign", title: "Criteria", :"data-toggle" => "modal", :"data-target" => "#myModal" %>
+      <%= link_to "", "#", :class => "icon icon-question-sign", title: "Criteria", :"data-toggle" => "modal", :"data-target" => "#modal_description" %>
       <span class="icon icon-star <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></span>
       <%= hidden_field_tag "flag[#{i+1}]", input.flag.blank? ? 'black-question-mark' : input.flag %>
     </td>
@@ -22,7 +22,7 @@
     </td>
     <td class="span1 center">
       <%# select_tag "complexity[#{i+1}]", options_for_select(@complexities, :selected => input.complexity_id ), :class => "complexity" %>
-      <%= select_tag "complexity[#{i+1}]", options_for_select(OrganizationUowComplexity.where(unit_of_work_id: input.unit_of_work_id, organization_technology_id: input.technology_id).all, :selected => input.complexity_id ), :class => "complexity" %>
+      <%= select_tag "complexity[#{i+1}]", options_for_select(OrganizationUowComplexity.where(unit_of_work_id: input.unit_of_work_id, organization_technology_id: input.technology_id).all.map{|i| [i.name, i.id]}, :selected => input.complexity_id ), :class => "complexity" %>
     </td>
     <td class="span1 center">
       <%= select_tag "size_unit_type[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}, selected: input.size_unit_type_id) %>
