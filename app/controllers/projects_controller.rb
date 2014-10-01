@@ -2137,7 +2137,7 @@ public
       if @uow_inputs.empty?
         @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: 0)
         @input.save(validate: false)
-        @inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+        @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
       end
 
       @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
