@@ -59,7 +59,7 @@ protected
     end
     @projects = @projects.flatten.reject { |i| !i.is_childless? }
 
-    @organizations = Organization.all
+    @organizations = current_user.organizations
     @groups = Group.defined_or_local
     @project_users = @user.projects
     @project_groups = @user.groups
@@ -72,7 +72,7 @@ public
     authorize! :manage, User
 
     set_page_title 'Users'
-    @users = User.all
+    @users = current_user.organizations.map{|i| i.users }.flatten.uniq
 
     @audits = Audit.all
   end
@@ -84,6 +84,8 @@ public
 
     @user = User.new(:user_status => 'active')
     @user.auth_type = AuthMethod.first.id
+    @users = current_user.organizations
+
   end
 
   def create
@@ -108,6 +110,7 @@ public
 
   def edit
     @user = User.find(params[:id])
+    @users = current_user.organizations
     if current_user == @user
       set_page_title 'Edit your user account'
     else

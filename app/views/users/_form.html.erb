@@ -32,7 +32,6 @@
                     </tr>
                     <tr>
                       <td><%= f.input :initials, :label => I18n.t('initials'), :input_html => {:class => 'input-small'} %></td>
-
                       <td>
                         <% if can? :manage, User %>
                          <%= f.input :login_name, :label => I18n.t('login_name') %>
@@ -166,6 +165,7 @@
                   <th><%= I18n.t(:description) %></th>
                   <th class="filter-select"><%= I18n.t(:global_permissions) %></th>
                   <th class="filter-select"><%= I18n.t(:project_permissions) %></th>
+                  <th class="filter-select"><%= I18n.t(:organizations) %></th>
                   <th class="filter-select"><%= I18n.t(:selected) %></th>
                 </tr>
               </thead>
@@ -176,6 +176,7 @@
                     <td><%= group.description %></td>
                     <td><%= group.for_global_permission %></td>
                     <td><%= group.for_project_security %></td>
+                    <td><%= group.organization.nil? ? '-' : group.organization %></td>
                     <td class="align-center">
                       <span class="hidden">
                             <%= @project_groups.map(&:id).include?(group.id).to_s.humanize %>
