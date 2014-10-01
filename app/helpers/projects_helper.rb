@@ -382,7 +382,7 @@ module ProjectsHelper
         icon_class = "icon-green"
       end
     end
-    res << link_to('', add_note_to_attribute_path(:estimation_value_id => estimation_value.id, :pbs_project_elt_id => pbs_id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
+    res << link_to('', main_app.add_note_to_attribute_path(:estimation_value_id => estimation_value.id, :pbs_project_elt_id => pbs_id), :class => "icon-edit #{icon_class}", :title => "#{add_notes_title}" , :remote => true)
   end
 
   # Display Estimations output results according to the module behavior
