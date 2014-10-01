@@ -60,7 +60,7 @@ protected
     @projects = @projects.flatten.reject { |i| !i.is_childless? }
 
     @organizations = current_user.organizations
-    @groups = Group.defined_or_local
+    @groups = current_user.organizations.map{|i| i.groups }.flatten + Group.defined
     @project_users = @user.projects
     @project_groups = @user.groups
     @org_users = @user.organizations
