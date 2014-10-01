@@ -74,15 +74,15 @@
     <b><%= I18n.t(:users) %></b>
     <table class="table table-bordered table-condensed">
       <tr>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Groupes</th>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:email) %></th>
+        <th><%= I18n.t(:groups) %></th>
       </tr>
         <% @organization.users.each do |user| %>
           <tr>
             <td><%= user %></td>
-            <td><%= user.email %></td>
-            <td><%= user.groups.map(&:name).join(',') %></td>
+            <td class="center"><%= user.email %></td>
+            <td class="center"><%= user.groups.map(&:name).join(', ') %></td>
           </tr>
         <% end %>
     </table>
