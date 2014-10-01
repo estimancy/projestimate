@@ -1,4 +1,4 @@
-<% @inputs.each_with_index do |input, i| %>
+<% @uow_inputs.each_with_index do |input, i| %>
   <tr id="myTableRow_<%= i+1 %>">
     <%= hidden_field_tag "module_project_id", params[:module_project_id] %>
     <%= hidden_field_tag "input_id[#{i+1}]", input.id, :class => "input_id" %>
