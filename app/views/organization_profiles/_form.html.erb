@@ -15,7 +15,7 @@
           <div class="well input-xxlarge">
              <span><%= I18n.t(:select_profile_or_fill_text_fields) %></span><br>
              <%#= select_tag 'organization_profile_profile_category_id', options_for_select(@profile_categories.map { |i| [i.name, i.id] }, :selected => @organization_profile.profile_category_id||nil), prompt: "#{I18n.t("helpers.select.prompt")} #{I18n.t(:profile_category)}", :class => 'input-xxlarge btn btn-info' %>
-             <%= select_tag 'profile_id_for_organization', options_for_select(Profile.all.map { |i| [i.name, i.id] }, :selected => nil), prompt: "#{I18n.t("helpers.select.prompt")} #{I18n.t(:profile)}", :class => 'input-xlarge btn btn-info' %>
+             <%= select_tag 'profile_id_for_organization', options_for_select(Profile.defined.all.map { |i| [i.name, i.id] }, :selected => nil), prompt: "#{I18n.t("helpers.select.prompt")} #{I18n.t(:profile)}", :class => 'input-xlarge btn btn-info' %>
 
           </div>
 
@@ -34,7 +34,7 @@
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <%= link_to I18n.t('back'), edit_organization_path(@organization, :anchor => 'tabs-13'), :class => 'btn' %>
+          <%= link_to I18n.t('back'), edit_organization_path(@organization, :anchor => 'tabs-profile'), :class => 'btn' %>
         </div>
 
     <% end %>

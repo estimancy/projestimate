@@ -258,7 +258,7 @@ public
 
     # Get the project's current wbs-activity et its Ratio
     @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
-    if ! @project_current_wbs_activities.nil? && !@project_current_wbs_activities.empty?
+    if ! @project_current_wbs_activities.nil?
       @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
       @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
       unless @project_current_wbs_activity.nil?
