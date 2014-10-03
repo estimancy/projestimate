@@ -257,10 +257,13 @@ public
     end
 
     # Get the project's current wbs-activity et its Ratio
-    @project_current_wbs_activity_elts = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first.wbs_activity_elements
-    @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
-    unless @project_current_wbs_activity.nil?
-      @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+    @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
+    if ! @project_current_wbs_activities.nil? && !@project_current_wbs_activities.empty?
+      @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
+      @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
+      unless @project_current_wbs_activity.nil?
+        @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+      end
     end
     # Get the project default RATIO
     project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
