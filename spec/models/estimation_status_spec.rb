@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-RSpec.describe ProfileCategory, :type => :model do
+RSpec.describe EstimationStatus, :type => :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end
