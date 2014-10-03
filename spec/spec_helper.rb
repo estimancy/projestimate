@@ -1,17 +1,17 @@
-require 'database_cleaner'
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+#require 'database_cleaner'
+#require "codeclimate-test-reporter"
+#CodeClimate::TestReporter.start
 
-require 'coveralls'
-Coveralls.wear!('rails')
+#require 'coveralls'
+#Coveralls.wear!('rails')
 
 require 'simplecov'
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    Coveralls::SimpleCov::Formatter,
-    SimpleCov::Formatter::HTMLFormatter,
-    CodeClimate::TestReporter::Formatter
-]
+#SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+#    Coveralls::SimpleCov::Formatter,
+#    SimpleCov::Formatter::HTMLFormatter,
+#    CodeClimate::TestReporter::Formatter
+#]
 
 SimpleCov.start 'rails' do
   SimpleCov.merge_timeout 3600
