@@ -349,27 +349,8 @@ $(document).ready(function() {
         })
     });
 
-    $("#project_default_wbs_activity_ratio").change(function(){
-       var selection = $('#project_default_wbs_activity_ratio').val();
-       if(selection == ""){
-           $("#add_activity_and_ratio_to_project").attr("disabled", true);
-       }
-       else{
-           $("#add_activity_and_ratio_to_project").removeAttr("disabled");
-           // Update the project wbs-activity view (without saving the values until the user clicks on the "Add" button
-           $.ajax({
-               url: "/render_selected_wbs_activity_elements",
-               method: 'GET',
-               data: {
-                   project_id: $('#project_id').val(),
-                   wbs_activity_id: $('#wbs_activity_element').val(),
-                   wbs_activity_ratio_id: $('#project_default_wbs_activity_ratio').val(),
-                   is_project_show_view: $('#is_project_show_view').val()
-               }
-           })
-       }
-        return false;
-    });
+  // Pre-visualize the selected Wbs-Activity
+    preview_selected_wbs_activity();
 
     //ADD selected WBS-Activity to Project
     $("#form_select_and_add_wbs_activity").live("ajax:complete", function(event,xhr,status){
@@ -5187,6 +5168,31 @@ function update_wbs_activity_ratio_profiles(){
             else {
                 $('td#total_ratio_activity_'+activity_id).removeClass('red_color');
             }
+        }
+        return false;
+    });
+}
+
+// Function that Pre-vivisualize the selected WBS-Activity
+function preview_selected_wbs_activity(){
+    $("#project_default_wbs_activity_ratio").change(function(){
+        var selection = $('#project_default_wbs_activity_ratio').val();
+        if(selection == ""){
+            $("#add_activity_and_ratio_to_project").attr("disabled", true);
+        }
+        else{
+            $("#add_activity_and_ratio_to_project").removeAttr("disabled");
+            // Update the project wbs-activity view (without saving the values until the user clicks on the "Add" button
+            $.ajax({
+                url: "/render_selected_wbs_activity_elements",
+                method: 'GET',
+                data: {
+                    project_id: $('#project_id').val(),
+                    wbs_activity_elt_id: $('#wbs_activity_element').val(),
+                    wbs_activity_ratio_id: $('#project_default_wbs_activity_ratio').val(),
+                    is_project_show_view: $('#is_project_show_view').val()
+                }
+            })
         }
         return false;
     });

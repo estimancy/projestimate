@@ -43,9 +43,32 @@ class ProjectsController < ApplicationController
   load_resource
 
   helper_method :sort_direction, :is_collapsible?, :set_attribute_unit
+  helper_method :enable_update_in_local? #For the wbs-activity-element
 
   before_filter :load_data, :only => [:update, :edit, :new, :create, :show]
   before_filter :get_record_statuses
+
+
+  # This function is only use to show the WBS-Activity tree view
+  # in the link_activity_element function in wbs_activity_elements_helper
+  def enable_update_in_local?
+    #No authorize required since this method is protected and won't be call from route
+    if is_master_instance?
+      true
+    else
+      if params[:action] == 'new'
+        true
+      elsif params[:action] == 'edit'
+        @wbs_activity_element = WbsActivityElement.find(params[:id])
+        if @wbs_activity_element.is_defined? || @wbs_activity_element.defined?
+          false
+        else
+          true
+        end
+      end
+    end
+  end
+
 
 protected
 
@@ -229,7 +252,7 @@ public
 
     #defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
     defined_wbs_activities = @project.organization.wbs_activities.where('record_status_id = ?', @defined_status.id).all
-    @wbs_activities = defined_wbs_activities.reject { |i| @project.included_wbs_activities.include?(i.id) }
+    @wbs_activities = defined_wbs_activities #.reject { |i| @project.included_wbs_activities.include?(i.id) }
     @wbs_activity_elements = []
     @wbs_activities.each do |wbs_activity|
       elements_root = wbs_activity.wbs_activity_elements.elements_root.first
@@ -237,6 +260,19 @@ public
         @wbs_activity_elements << elements_root #wbs_activity.wbs_activity_elements.last.root
       end
     end
+
+    # Get the project's current wbs-activity et its Ratio
+    @project_current_wbs_activity_elts = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first.wbs_activity_elements
+    @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
+    unless @project_current_wbs_activity.nil?
+      @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+    end
+    # Get the project default RATIO
+    project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
+    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
+    @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
+
 
     #Project tree as JSON DATA for the graphical representation
     project_root = @project.root
@@ -276,6 +312,18 @@ public
       @wbs_activity_elements = []
       @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
       @wbs_activity_ratios = []
+
+      # Get the project's current wbs-activity et its Ratio
+      @project_current_wbs_activity_elts = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first.wbs_activity_elements
+      @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
+      unless @project_current_wbs_activity.nil?
+        @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+      end
+      # Get the project default RATIO
+      project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
+      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+      # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
+      @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
       @project.users.each do |u|
         ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
@@ -404,6 +452,18 @@ public
     @wbs_activity_elements = []
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
     @wbs_activity_ratios = []
+
+    # Get the project's current wbs-activity et its Ratio
+    @project_current_wbs_activity_elts = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first.wbs_activity_elements
+    @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
+    unless @project_current_wbs_activity.nil?
+      @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+    end
+    # Get the project default RATIO
+    project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
+    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
+    @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
     # Get the max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -1372,7 +1432,38 @@ public
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @show_hidden = params[:show_hidden]
     @is_project_show_view = params[:is_project_show_view]
+
+    @wbs_activity_element = WbsActivityElement.find(params[:wbs_activity_elt_id])
+    @wbs_activity = @wbs_activity_element.wbs_activity
+
+    #==========================
+    @wbs_activity_elements_list = @wbs_activity.wbs_activity_elements
+    @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
+    @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios
+    @wbs_activity_organization = @wbs_activity.organization
+    @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity_organization.organization_profiles
+
+    @wbs_activity_ratio_elements = []
+    @total = 0
+    if params[:Ratio]
+      @wbs_activity_elements.each do |wbs|
+        @wbs_activity_ratio_elements += wbs.wbs_activity_ratio_elements.where(:wbs_activity_ratio_id => params[:Ratio])
+        @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
+      end
+    else
+      unless @wbs_activity.wbs_activity_ratios.empty?
+        @wbs_activity_elements.each do |wbs|
+          @wbs_activity_ratio_elements += wbs.wbs_activity_ratio_elements.where(:wbs_activity_ratio_id => @wbs_activity.wbs_activity_ratios.first.id)
+        end
+        @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
+      end
+    end
+
+    #==========================
+
+
   end
+
 
   def choose_project
     u = current_user

@@ -136,18 +136,52 @@ module WbsActivityElementsHelper
       if element.is_root?
         "<span class='#{h element.record_status.to_s }'>#{h element.name} </span>"
       else
-        "<span class='#{h element.record_status.to_s }'> #{h element.name} </span>"
+        element_wbs_root = element.root
+        if params[:wbs_activity_ratio_id]
+          element_ratio_value = nil
+          strong_class = ""
+          corresponding_ratio_element = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? AND wbs_activity_element_id = ?', params[:wbs_activity_ratio_id].to_i, element.id).first
+          if !corresponding_ratio_element.nil?
+            element_ratio_value = corresponding_ratio_element.ratio_value
+            if corresponding_ratio_element.multiple_references == true
+              strong_class = "strong"
+            end
+          end
+          "<span class='#{h element.record_status.to_s } #{strong_class}'> #{h element.name} </span> <span class='darkseagreen'>#{corresponding_ratio_element.nil? ? '' : '(' + element_ratio_value.to_s + '%)'}</span> "
+        else
+          "<span class='#{h element.record_status.to_s }'> #{h element.name} </span>"
+        end
+
       end
 
     else
       if element.is_root?
-        #"<span class=''>#{element.pe_wbs_project.name} WBS-Activity</span>"
-        "<span class=''>#{h @project.title} effort breakdown </span>"
+        "<span class=''>#{element.pe_wbs_project.name} WBS-Activity</span>"
+        #"<span class=''>#{h @project.title} effort breakdown </span>"
+
       else
         if element.wbs_activity_element.nil? && element.wbs_activity.nil?
           "<span class=''> * #{h element.name} </span>"
         else
-          "<span class=''> #{h element.name}</span> #{element.wbs_activity_ratio.nil? ? '' : '(' + element.wbs_activity_ratio.name + ')' }"
+          # Get the element (Wbs_project_element) Ratio value
+          element_wbs_root = element.ancestors.select{|i| i.is_added_wbs_root}.first
+          element_wbs_root_ratio = element_wbs_root.nil? ? nil : element_wbs_root.wbs_activity_ratio
+          element_ratio_value = nil
+          strong_class = ""
+          unless element_wbs_root_ratio.nil?
+            element_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? AND wbs_activity_element_id = ?', element_wbs_root_ratio.id, element.wbs_activity_element_id).first
+            if !element_ratio_elt.nil?
+              element_ratio_value = element_ratio_elt.ratio_value
+              if element_ratio_elt.multiple_references == true
+                strong_class = "strong"
+              end
+            end
+          end
+          if element_ratio_elt.nil?
+            "<span class=''> #{h element.name}</span> <span class='darkseagreen'>#{element.wbs_activity_ratio.nil? ? '' : '(' + element.wbs_activity_ratio.name + ')' } </span>"
+          else
+            "<span class='#{strong_class}'> #{h element.name} </span> <span class='darkseagreen'>#{element_ratio_elt.nil? ? '' : '(' + element_ratio_value.to_s + '%)'}</span>"
+          end
         end
       end
     end

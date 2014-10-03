@@ -195,7 +195,6 @@ class Project < ActiveRecord::Base
   #end
 
 
-
   amoeba do
     enable
     include_field [:pe_wbs_projects, :module_projects, :groups, :users, :project_securities]
