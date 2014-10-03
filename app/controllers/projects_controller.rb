@@ -1882,7 +1882,9 @@ public
             @component.save
 
             unless dh.nan?
-              @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
+              @timeline << [element.name,
+                            element.start_date.nil? ? @project.start_date : element.start_date,
+                            element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
             else
               @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date : element.start_date]
             end
