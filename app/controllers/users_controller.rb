@@ -60,7 +60,7 @@ protected
     @projects = @projects.flatten.reject { |i| !i.is_childless? }
 
     @organizations = current_user.organizations
-    @groups = Group.defined_or_local
+    @groups = current_user.organizations.map{|i| i.groups }.flatten + Group.defined
     @project_users = @user.projects
     @project_groups = @user.groups
     @org_users = @user.organizations
@@ -72,7 +72,13 @@ public
     authorize! :manage, User
 
     set_page_title 'Users'
-    @users = current_user.organizations.map{|i| i.users }.flatten.uniq
+
+    #No authorize required since everyone can list
+    if current_user.groups.map(&:name).include?("MasterAdmin")
+      @users = User.all
+    else
+      @users = current_user.organizations.map{|i| i.users }.flatten.uniq
+    end
 
     @audits = Audit.all
   end
@@ -84,6 +90,7 @@ public
 
     @user = User.new(:user_status => 'active')
     @user.auth_type = AuthMethod.first.id
+
     @users = current_user.organizations
 
   end
