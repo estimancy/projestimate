@@ -1,3 +1,8 @@
 $("#notifications").html("");
-$("#wbs_project_elements_section").html("<%= escape_javascript(render :partial => 'generate_wbs_project_elt_tree', :object => [:pe_wbs_project_activity => @pe_wbs_project_activity, :show_hidden => @show_hidden, :is_project_show_view => params[:is_project_show_view] ]) %>");
+//$("#wbs_project_elements_section").html("<%#= escape_javascript(render :partial => 'generate_wbs_project_elt_tree', :object => [:pe_wbs_project_activity => @pe_wbs_project_activity, :show_hidden => @show_hidden, :is_project_show_view => params[:is_project_show_view] ]) %>");
+$("#wbs_project_elements_section").html("<%= raw j generate_activity_element_tree(@wbs_activity_elements.first, '') %>");
+$("#wbs_project_elements_section").prepend("<p style='color: blue'>Preview of the selected wbs-activity</p>");
 $("#notifications").html("<%= j(render 'layouts/notifications') %>");
+
+
+preview_selected_wbs_activity();
