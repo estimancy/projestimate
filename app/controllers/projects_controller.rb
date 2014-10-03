@@ -104,8 +104,7 @@ public
     set_breadcrumbs "Dashboard" => "/dashboard"
 
     # The current user can only see projects of its organizations
-    @projects = current_user.organizations.map{|i| i. organization.projects}
-    end
+    @projects = current_user.organizations.map{|i| i.projects }.flatten
   end
 
   def new
