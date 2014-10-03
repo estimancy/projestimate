@@ -81,12 +81,8 @@ public
     set_breadcrumbs "Dashboard" => "/dashboard"
 
     # The current user can only see projects of its organizations
-    @projects = []
-    current_user.organizations.each do |organization|
-      @projects << organization.projects.all
+    @projects = current_user.organizations.map{|i| i. organization.projects}
     end
-    # Then only projects on which the current is authorise to see will be displayed
-    @projects = (@projects.flatten & current_user.projects).reject { |i| !i.is_childless? }
   end
 
   def new

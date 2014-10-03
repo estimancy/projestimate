@@ -166,7 +166,6 @@
                   <th class="filter-select"><%= I18n.t(:global_permissions) %></th>
                   <th class="filter-select"><%= I18n.t(:project_permissions) %></th>
                   <th class="filter-select"><%= I18n.t(:organizations) %></th>
-                  <th class="filter-select"><%= I18n.t(:selected) %></th>
                 </tr>
               </thead>
               <tbody>
@@ -177,17 +176,6 @@
                     <td><%= group.for_global_permission %></td>
                     <td><%= group.for_project_security %></td>
                     <td><%= group.organization.nil? ? '-' : group.organization %></td>
-                    <td class="align-center">
-                      <span class="hidden">
-                            <%= @project_groups.map(&:id).include?(group.id).to_s.humanize %>
-                      </span>
-                      <% if can? :manage, User %>
-                        <%= check_box_tag 'user[group_ids][]', group.id, @project_groups.map(&:id).include?(group.id) ? true : false %>
-                      <% else %>
-                        <%= check_box_tag 'user[group_ids][]', group.id, @project_groups.map(&:id).include?(group.id) ? true : false, :disabled => true %>
-                      <% end %>
-                    </td>
-                  </tr>
                 <% end %>
               </tbody>
               <span class="user_groups_table_footer"><%= render :partial => 'layouts/footer_table' %></span>
@@ -205,7 +193,6 @@
                 <tr>
                   <th><%= I18n.t(:label_Organization) %></th>
                   <th><%= I18n.t(:description) %></th>
-                  <th class="filter-select"><%= I18n.t(:selected) %></th>
                 </tr>
               </thead>
               <tbody>
@@ -228,20 +215,6 @@
               </tbody>
               <%= render :partial => 'layouts/footer_table' %>
             </table>
-          </div>
-        </div>
-
-        <div id="tabs-4">
-          <b><%= I18n.t(:text_user_associated_projects) %></b>
-          <br/>
-
-          <div>
-            <%= I18n.t(:label_filter_on_projects_version) %>
-            <%= select_tag 'filter_user_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1), 1], [I18n.t(:label_filter_on_project_version_2), 2], [I18n.t(:label_filter_on_project_version_3), 3], [I18n.t(:label_filter_on_project_version_4), 4]], :selected => 1), :include_blank => false %>
-          </div>
-
-          <div id="user_projects" class="field_checkbox">
-            <%= render :partial => 'user_projects', :locals => {:projects => @projects, :project_users => @project_users} %>
           </div>
         </div>
 

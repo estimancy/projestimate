@@ -78,11 +78,11 @@
         <th><%= I18n.t(:email) %></th>
         <th><%= I18n.t(:groups) %></th>
       </tr>
-        <% @organization.users.each do |user| %>
+        <% @users.each do |user| %>
           <tr>
             <td><%= user %></td>
             <td class="center"><%= user.email %></td>
-            <td class="center"><%= user.groups.map(&:name).join(', ') %></td>
+            <td class="center"><%= user.groups.map(&:name).join(', ') %></td>-
           </tr>
         <% end %>
     </table>

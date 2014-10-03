@@ -59,7 +59,7 @@ protected
     end
     @projects = @projects.flatten.reject { |i| !i.is_childless? }
 
-    @organizations = current_user.organizations
+    @organizations = Organization.all
     @groups = current_user.organizations.map{|i| i.groups }.flatten + Group.defined
     @project_users = @user.projects
     @project_groups = @user.groups
@@ -122,7 +122,6 @@ public
       set_page_title 'Edit your user account'
     else
       authorize! :manage, User
-      #flash[:notice] = "You're not allowed to perform this action"
     end
   end
 
