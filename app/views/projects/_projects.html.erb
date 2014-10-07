@@ -35,7 +35,9 @@
             <td class="center">
               <% if can_modify_estimation?(project) %>
                 <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
+                <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
               <% end %>
+
               <% if can_show_estimation?(project) %>
                 <%= link_to('', {:controller => 'projects', :action => 'activate', :project_id => project.id}, :class => 'button_attribute_tooltip icon-star pull-left', :title => I18n.t('button_activate_project')) %>
               <% end %>

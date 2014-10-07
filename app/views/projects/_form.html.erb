@@ -51,9 +51,15 @@
           <td><%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-large'} %></td>
 
           <% if (can? :manage, :all) || (can? :admin_project_state, Project) %>
-              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'} %></td>
+              <td>
+                <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'} %>
+              </td>
+              <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
           <% else %>
-              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %></td>
+              <td>
+                <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %>
+                <%#= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %>
+              </td>
           <% end %>
         </tr>
 
@@ -109,8 +115,8 @@
             <p style="margin: 10px; ">
               <label><%= simple_format(I18n.t(:available_wbs_activity)) %></label>
               <%= hidden_field_tag :project_id, @project.id %>
-              <%= select_tag 'wbs_activity_element', options_for_select(@wbs_activity_elements.map {|i| [i.wbs_activity.name, i.id]}, selected: @project_current_wbs_activity.id), :prompt => "#{I18n.t('helpers.select.prompt')} #{I18n.t(:label_wbs_activity)}" %>
-              <%= select_tag 'project_default_wbs_activity_ratio', options_for_select(@wbs_activity_ratios.map { |i| [i.name, i.id] }, selected: @project_default_ratio.id), :prompt => "#{I18n.t('helpers.select.prompt')} #{I18n.t(:label_ratio)}" %>
+              <%= select_tag 'wbs_activity_element', options_for_select(@wbs_activity_elements.map {|i| [i.wbs_activity.name, i.id]}, selected: (@project_current_wbs_activity.nil? ? nil : @project_current_wbs_activity.id)), :prompt => "#{I18n.t('helpers.select.prompt')} #{I18n.t(:label_wbs_activity)}" %>
+              <%= select_tag 'project_default_wbs_activity_ratio', options_for_select(@wbs_activity_ratios.map { |i| [i.name, i.id] }, selected: (@project_default_ratio.nil? ? nill : @project_default_ratio.id)), :prompt => "#{I18n.t('helpers.select.prompt')} #{I18n.t(:label_ratio)}" %>
               <%= submit_tag I18n.t(:button_add), :class => 'btn', :id => 'add_activity_and_ratio_to_project', :disabled => true %>
             </p>
           <% end %>

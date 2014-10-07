@@ -282,7 +282,9 @@ Projestimate::Application.routes.draw do
   get 'checkout' => 'projects#checkout', :as => 'checkout'
   get 'collapse_project_version' => 'projects#collapse_project_version', :as => 'collapse_project_version'
   get 'update_organization_estimation_statuses' => 'projects#update_organization_estimation_statuses', as: 'update_organization_estimation_statuses'
+  get 'add_comment_on_status_change' => 'projects#add_comment_on_status_change', as: 'add_comment_on_status_change'
 
+  match 'update_comments_status_change' => 'projects#update_comments_status_change', as: 'update_comments_status_change'
   post 'add_wbs_activity_to_project' => 'projects#add_wbs_activity_to_project',  :as => 'add_wbs_activity_to_project'
   post 'update_project_security_level_group' => 'projects#update_project_security_level_group',  :as => 'update_project_security_level_group'
   post 'update_project_security_level' => 'projects#update_project_security_level',  :as => 'update_project_security_level'

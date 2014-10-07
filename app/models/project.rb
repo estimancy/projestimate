@@ -35,11 +35,13 @@
 #############################################################################
 
 class Project < ActiveRecord::Base
-  attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id,
+  attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
                   :start_date, :is_model, :organization_id, :project_area_id,
                   :project_category_id, :acquisition_category_id, :platform_category_id, :parent_id
 
   attr_accessor :product_name, :project_organization_statuses
+
+  ###around_update :update_project_status_comment
 
   include AASM
   include ActionView::Helpers
@@ -47,7 +49,7 @@ class Project < ActiveRecord::Base
 
   #define_attribute_methods :state
 
-  has_ancestry
+  has_ancestry  # For the Ancestry gem
 
   belongs_to :organization
   belongs_to :project_area
@@ -173,8 +175,31 @@ class Project < ActiveRecord::Base
         end
       end
     end
+  end
+
+
+  def update_project_status_comment
+    # Get the project status before updating the value
+    #last_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
+    last_estimation_status_id = estimation_status_id_was
+    last_estimation_status_name = last_estimation_status_id.nil? ? "" : EstimationStatus.find(last_estimation_status_id).name
+
+    # Get changes on the project estimation_status_id after the update (to be compra with the last one)
+    new_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
+    if new_estimation_status_name !=  last_estimation_status_name
+      current_comments = status_comment
+      if current_comments.nil? || current_comments.blank?
+        current_comments = "______________________________________________________________________\r\n \r\n"
+      end
+      ###new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: ApplicationController.current_user.name)}  \r\n"
+      new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: "")}  \r\n"
+      self.status_comment = current_comments.prepend(new_comments)
+    end
+
+    yield
 
   end
+
 
   #aasm :column => :state do   # defaults to aasm_state
   #  #for defining the state machine workflow initial status, we need at least one created status

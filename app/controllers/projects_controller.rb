@@ -43,10 +43,12 @@ class ProjectsController < ApplicationController
   load_resource
 
   helper_method :sort_direction, :is_collapsible?, :set_attribute_unit
-  helper_method :enable_update_in_local? #For the wbs-activity-element
+  helper_method :enable_update_in_local?  #For the wbs-activity-element
+  helper_method :show_status_change_comments
 
   before_filter :load_data, :only => [:update, :edit, :new, :create, :show]
   before_filter :get_record_statuses
+  around_filter :update_project_status_comment, only: [:update, :destroy, :commit]    # Update the status_comment attribute after
 
 
   # This function is only use to show the WBS-Activity tree view
@@ -70,7 +72,8 @@ class ProjectsController < ApplicationController
   end
 
 
-protected
+#protected
+private
 
   def load_data
     #No authorize required since this method protected and is used to load data and shared by the other one.
@@ -93,6 +96,28 @@ protected
     @project_modules = @project.pemodules
     @project_security_levels = ProjectSecurityLevel.all
     @module_project = ModuleProject.find_by_project_id(@project.id)
+  end
+
+
+  def update_project_status_comment
+    #@project = Project.find(params[:id]) if params[:id]
+    # Get the project status before updating the value
+    last_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
+
+    yield
+
+    # Get changes on the project estimation_status_id after the update (to be compra with the last one)
+    new_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
+    if new_estimation_status_name !=  last_estimation_status_name
+      current_comments = @project.status_comment
+      if current_comments.nil? || current_comments.blank?
+        current_comments = "______________________________________________________________________\r\n \r\n"
+      end
+      new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
+      new_status_comment_value = current_comments.prepend(new_comments)
+      @project.update_attribute(:status_comment, new_status_comment_value)
+    end
+
   end
 
 
@@ -317,10 +342,13 @@ public
       @wbs_activity_ratios = []
 
       # Get the project's current wbs-activity et its Ratio
-      @project_current_wbs_activity_elts = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first.wbs_activity_elements
-      @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
-      unless @project_current_wbs_activity.nil?
-        @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+      @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
+      if ! @project_current_wbs_activities.nil?
+        @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
+        @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
+        unless @project_current_wbs_activity.nil?
+          @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+        end
       end
       # Get the project default RATIO
       project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
@@ -457,10 +485,13 @@ public
     @wbs_activity_ratios = []
 
     # Get the project's current wbs-activity et its Ratio
-    @project_current_wbs_activity_elts = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first.wbs_activity_elements
-    @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
-    unless @project_current_wbs_activity.nil?
-      @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+    @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
+    if ! @project_current_wbs_activities.nil?
+      @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
+      @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
+      unless @project_current_wbs_activity.nil?
+        @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
+      end
     end
     # Get the project default RATIO
     project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
@@ -1256,6 +1287,7 @@ public
     end
   end
 
+
   def activate
     project = Project.find(params[:project_id])
     authorize! :show_project, project
@@ -1821,7 +1853,6 @@ public
   def show_module_configuration
   end
 
-
   # Display the estimation results with activities by profile
   def results_with_activities_by_profile
     @project = current_project
@@ -2294,4 +2325,45 @@ public
       end
     end
   end
+
+
+  # update and show comments regarding the estimation status changes
+  def add_comment_on_status_change
+    @project = Project.find(params[:project_id])
+    @text_comments = ""
+    if !@project.status_comment.nil?
+      @text_comments = @project.status_comment
+    end
+  end
+
+  # update comments on estimation status changes
+  def update_comments_status_change
+    @project = Project.find(params[:project_id])
+    current_comments = ""
+    # Add and update comments on estimation status change
+    current_comments = @project.status_comment.nil? ? "" : @project.status_comment
+    @project.status_comment =  show_status_change_comments(params["project"]["status_comment"], current_comments.to_s.length)
+
+    if @project.save
+      flash[:notice] = I18n.t(:notice_comment_status_successfully_updated)
+    else
+      flash[:error] = I18n.t(:errors)
+    end
+
+    redirect_to :back
+  end
+
+  # Display comments about estimation status changes
+  def show_status_change_comments(comments, current_note_length)
+    user_infos = ""
+    if current_note_length == 0
+      user_infos = "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n \r\n"
+      user_infos << "______________________________________________________________________\r\n \r\n"
+    else
+      user_infos = "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name}. \r\n"
+    end
+    comments.prepend(user_infos)
+  end
+
+
 end

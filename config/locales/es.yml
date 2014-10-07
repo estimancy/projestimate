@@ -1529,7 +1529,7 @@ es:
   label_ratio: "a ratio"
   label_wbs_activity: "a WBS-Activity"
   probable: "Probable"
-  new_size_unit_type: "New size unit type"
+  new_size_unit_type: "Action type"
   type: "Type"
   new_technology: "New technology"
   edit_technology: "Edit the \"%{value}\" technology ..."
@@ -1573,4 +1573,7 @@ es:
   warning_estimation_status_cannot_be_deleted: "The \"%{value}\" status cannot be deleted, it is used by one or more estimations"
   warning_organization_cannot_be_deleted: "The \"%{value}\" organization cannot be deleted, it is used by one or more estimations"
   user_need_at_least_one_organization: "Please create your first organization before continue"
+  label_add_status_change_comment: "Add new comment regarding the change in status of the estimate"
+  notice_comment_status_successfully_updated: "Comment on estimation status change is successfully updated"
+  change_estimation_status_from_to: "Estimate's status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
 
