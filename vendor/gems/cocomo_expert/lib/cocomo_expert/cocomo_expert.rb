@@ -71,7 +71,7 @@ module CocomoExpert
 
     #Return delay (in month)
     def get_delay(*args)
-      @effort = get_effort_personefforts[1], args[2])
+      @effort = get_effort(args[0], args[1], args[2])
 
       sf = Array.new
       aliass = %w(prec flex resl team pmat)
@@ -104,7 +104,7 @@ module CocomoExpert
 
     #Return staffing
     def get_staffing(*args)
-      @staffing = (get_effort(args[0effort) * @project.organization.number_hours_per_month.to_f) / get_delay(args[0], args[1], args[2])
+      @staffing = (get_effort(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f) / get_delay(args[0], args[1], args[2])
       if @staffing.nan?
         @staffing = nil
       end

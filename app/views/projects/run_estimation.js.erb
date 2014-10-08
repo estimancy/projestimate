@@ -12,6 +12,14 @@ $(".input_data").html("<%=raw j(display_input) %>");
 
 $(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr th td span title h4 strong), :attributes => %w(id class style title colspan rowspan))) %>");
 
+//Results by Profile for the EffortBreakdown module
+<% if current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN %>
+    $('#display_results_by_profile').hide();
+    $("#div_show_results_with_profiles").html("<%=raw j(render :partial => 'projects/activities_by_profile', :locals => { project: @project, effort_attribute: @attribute, module_project: @module_project, project_organization_profiles: @project_organization_profiles, estimation_pbs_probable_results: @estimation_pbs_probable_results, ratio_reference: @ratio_reference} ) %>");
+<% else %>
+    $(".effort_breakdown_activities_profiles").hide();
+<% end %>
+
 $(".component_name").html("<%=raw @current_component %>");
 
 $('.component_tree ul li, .widget-content ul li').hover(
