@@ -42,7 +42,6 @@ class Group < ActiveRecord::Base
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
-  has_and_belongs_to_many :users
   has_and_belongs_to_many :projects
 
   has_many :project_securities
@@ -52,8 +51,10 @@ class Group < ActiveRecord::Base
   #Estimations permissions on Group according to the estimation status
   has_many :estimation_status_group_roles
 
-  # Group is attached to organization
   belongs_to :organization
+
+  has_many :groups_users, class_name: 'GroupsUsers'
+  has_many :users, through: :groups_users
 
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'

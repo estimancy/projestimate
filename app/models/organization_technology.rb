@@ -48,7 +48,6 @@ class OrganizationTechnology < ActiveRecord::Base
   belongs_to :organization
   has_many :pbs_project_elements
   has_and_belongs_to_many :unit_of_works
-  has_many :abacus_organizations, :dependent => :destroy
   has_many :inputs, :foreign_key => :technology_id
   has_many :organization_uow_complexities
 

@@ -141,8 +141,8 @@ public
       begin
         @project.add_to_transaction
 
-        if @project.valid?
-          @project.save!
+        if @project.save
+
           #New default Pe-Wbs-Project
           pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
           pe_wbs_project_activity = @project.pe_wbs_projects.build(:name => "#{@project.title} WBS-Activity", :wbs_type => 'Activity')
@@ -218,11 +218,11 @@ public
 
     set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
 
-    if (cannot? :edit_project, @project) ||                                               # No write access to project
-        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||      # frozen project
-        (@project.in_review? && (cannot? :write_access_to_inreview_project, @project))    # InReview project
-      redirect_to(:action => 'show')
-    end
+    #if (cannot? :edit_project, @project) ||                                               # No write access to project
+    #    (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||      # frozen project
+    #    (@project.in_review? && (cannot? :write_access_to_inreview_project, @project))    # InReview project
+    #  redirect_to(:action => 'show')
+    #end
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_modify_estimation?(@project)
@@ -518,8 +518,9 @@ public
 
     unless params[:project_organization_id].nil? || params[:project_organization_id].blank?
       @organization = Organization.find(params[:project_organization_id])
-      @project = Project.find(params[:project_id])
-      unless @project.new_record?
+
+      if params[:project_id].present?
+        @project = Project.find(params[:project_id])
         # Editing project that does not have estimation status
         if @project.estimation_status.nil? || !@organization.estimation_statuses.include?(@project.estimation_status)
           # Note: When estimation's organization changed, the status id won't be valid for the new selected organization
@@ -530,6 +531,9 @@ public
           estimation_statuses << [@project.estimation_status.name, @project.estimation_status.id]
           @estimation_statuses = estimation_statuses.uniq
         end
+      else
+        initial_status = @organization.estimation_statuses.order(:status_number)
+        @estimation_statuses = [[initial_status.first.name, initial_status.first.id]]
       end
     end
 
@@ -1514,7 +1518,7 @@ public
           new_prj.title = old_prj.title
           new_prj.alias = old_prj.alias
           new_prj.description = old_prj.description
-          new_prj.state = 'preliminary'
+          #new_prj.state = 'preliminary'
           new_prj.version = set_project_version(old_prj)
           new_prj.parent_id = old_prj.id
 

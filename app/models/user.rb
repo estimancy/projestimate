@@ -60,9 +60,8 @@ class User < ActiveRecord::Base
   include AASM
 
   has_and_belongs_to_many :projects
-  has_and_belongs_to_many :groups
   has_and_belongs_to_many :permissions
-  has_and_belongs_to_many :organizations
+  #has_and_belongs_to_many :organizations
 
   belongs_to :language, :foreign_key => 'language_id', :touch => true
   belongs_to :auth_method, :foreign_key => 'auth_type', :touch => true
@@ -70,6 +69,11 @@ class User < ActiveRecord::Base
   has_many :project_securities
   has_many :wbs_project_elements, :foreign_key => 'author_id' ###has_many :authors, :foreign_key => 'author_id', :class_name => 'WbsProjectElement'
   has_one :creator, :class_name => 'User', :foreign_key => 'creator_id'
+
+  has_many :groups_users, class_name: 'GroupsUsers'
+  has_many :groups, through: :groups_users
+
+  has_many :organizations, through: :groups, :uniq => true
 
   #Master and Special Data Tables
   has_many :change_on_acquisition_categories, :foreign_key => 'owner_id', :class_name => 'AcquisitionCategory'
@@ -92,10 +96,6 @@ class User < ActiveRecord::Base
   has_many :change_on_auth_methods, :foreign_key => 'owner_id', :class_name => 'AuthMethod'
   has_many :change_on_groups, :foreign_key => 'owner_id', :class_name => 'Group'
   has_many :change_on_permissions, :foreign_key => 'owner_id', :class_name => 'Permission'
-
-  #attr_accessor :password, :password_confirmation
-  #before_save :encrypt_password
-  #before_create { generate_token(:auth_token) }
 
   serialize :ten_latest_projects, Array
 
@@ -569,9 +569,9 @@ class User < ActiveRecord::Base
   end
 
   #List of Admin group
-  def admin_groups
-    Group.find_all_by_name(['Admin', 'MasterAdmin'])
-  end
+  #def admin_groups
+    #Group.find_all_by_name(['Admin', 'MasterAdmin'])
+  #end
 
   def locale
     begin

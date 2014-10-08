@@ -13,7 +13,7 @@
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
-#
+# 
 #    ======================================================================
 #
 # ProjEstimate, Open Source project estimation web application

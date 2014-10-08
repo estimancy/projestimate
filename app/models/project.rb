@@ -35,13 +35,13 @@
 #############################################################################
 
 class Project < ActiveRecord::Base
-  attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id,
+  attr_accessible :title, :description, :version, :alias, :estimation_status_id,
                   :start_date, :is_model, :organization_id, :project_area_id,
                   :project_category_id, :acquisition_category_id, :platform_category_id, :parent_id
 
   attr_accessor :product_name, :project_organization_statuses
 
-  include AASM
+  #include AASM
   include ActionView::Helpers
   include ActiveModel::Dirty
 
@@ -74,7 +74,7 @@ class Project < ActiveRecord::Base
   serialize :included_wbs_activities, Array
 
   #serialize :ten_latest_projects
-  validates_presence_of :state
+  #validates_presence_of :state
   validates :title, :presence => true, :uniqueness => { :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :alias, :presence => true, :uniqueness => { :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => :title, :scope => :alias, case_sensitive: false, :message => I18n.t(:error_validation_project) }
@@ -105,24 +105,23 @@ class Project < ActiveRecord::Base
   #  end
   #end
 
-
-  aasm :column => :state do   # defaults to aasm_state
-    state :preliminary, :preliminary => true, :before_enter => :get_initial_status
-    EstimationStatus.all.each do |status|
-      #Define aasm states
-      state status.status_alias.to_sym
-    end
-
-    # Workflow definition
-    event :commit do
-      # generate workflow according to the defining workflow in organizations
-      StatusTransition.all.each do |status_transition|
-        to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
-        from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
-        transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
-      end
-    end
-  end
+  #aasm :column => :state do   # defaults to aasm_state
+  #  state :preliminary, :preliminary => true, :before_enter => :get_initial_status
+  #  EstimationStatus.all.each do |status|
+  #    #Define aasm states
+  #    state status.status_alias.to_sym
+  #  end
+  #
+  #  # Workflow definition
+  #  event :commit do
+  #    # generate workflow according to the defining workflow in organizations
+  #    StatusTransition.all.each do |status_transition|
+  #      to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+  #      from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+  #      transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+  #    end
+  #  end
+  #end
 
   #  Estimation status name
   def status_name
@@ -149,32 +148,31 @@ class Project < ActiveRecord::Base
   end
 
 
-  def get_project_organization_statuses
-    self.project_organization_statuses = self.organization.estimation_statuses
-
-    initial_state = EstimationStatus.order(:status_number).first
-
-    # Define existing estimation_status as aasm_state
-    self.project_organization_statuses.all.each do |status|
-      #aasm.state status.status_alias.to_sym
-      aasm  do # defaults to aasm_state
-
-        state status.status_alias.to_sym
-
-        # Workflow definition for the commit event   # Redesign the 'commit' event AASM workflow with the estimation_statuses workflow
-        event :commit do
-          # generate workflow according to the defining workflow in organizations
-          StatusTransition.all.each do |status_transition|
-            to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
-            from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
-
-            transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
-          end
-        end
-      end
-    end
-
-  end
+  #def get_project_organization_statuses
+  #  self.project_organization_statuses = self.organization.estimation_statuses
+  #
+  #  initial_state = EstimationStatus.order(:status_number).first
+  #
+  #  # Define existing estimation_status as aasm_state
+  #  self.project_organization_statuses.all.each do |status|
+  #    #aasm.state status.status_alias.to_sym
+  #    aasm  do # defaults to aasm_state
+  #
+  #      state status.status_alias.to_sym
+  #
+  #      # Workflow definition for the commit event   # Redesign the 'commit' event AASM workflow with the estimation_statuses workflow
+  #      event :commit do
+  #        # generate workflow according to the defining workflow in organizations
+  #        StatusTransition.all.each do |status_transition|
+  #          to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+  #          from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+  #
+  #          transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+  #        end
+  #      end
+  #    end
+  #  end
+  #end
 
   #aasm :column => :state do   # defaults to aasm_state
   #  #for defining the state machine workflow initial status, we need at least one created status

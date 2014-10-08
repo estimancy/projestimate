@@ -243,10 +243,15 @@ class OrganizationsController < ApplicationController
 
   def organizationals_params
     set_page_title 'Organizational Parameters'
-    @organizations = Organization.all
+    if can? :manage, :all
+      @organizations = Organization.all
+    else
+      @organizations = current_user.organizations
+    end
+
     @size_units = SizeUnit.all
     @factors = Factor.order("factor_type")
-    @organizations_labor_categories = OrganizationLaborCategory.all || []
+    @organizations_labor_categories = OrganizationLaborCategory.all
   end
 
   def set_technology_size_type_abacus

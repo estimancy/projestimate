@@ -36,8 +36,6 @@ class OrganizationUowComplexity < ActiveRecord::Base
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
   belongs_to :organization
 
-  has_many :abacus_organizations, :dependent => :destroy
-  has_many :organization_uow_complexities, :through => :abacus_organizations
   has_many :size_unit_type_complexities, :dependent => :destroy
 
   belongs_to :factor

@@ -1030,12 +1030,11 @@ module ProjectsHelper
   end
 
   def send_notice(project)
-    if project.state == "in_progress"
-      I18n.t(:warning_project_state_to_checkpoint, :value_b => 'RELEASED')
-    elsif project.state == "in_review"
-      I18n.t(:warning_project_state_to_released, :value_b => 'RELEASED')
-    end
-
+    #if project.state == "in_progress"
+    #  I18n.t(:warning_project_state_to_checkpoint, :value_b => 'RELEASED')
+    #elsif project.state == "in_review"
+    #  I18n.t(:warning_project_state_to_released, :value_b => 'RELEASED')
+    #end
   end
 
   #Helper method that build project history graph

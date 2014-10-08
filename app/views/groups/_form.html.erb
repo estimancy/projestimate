@@ -3,7 +3,6 @@
   <ul>
     <li><a href="#tabs-1"><%= I18n.t('global') %></a></li>
     <li><a href="#tabs-2"><%= I18n.t('users') %></a></li>
-    <li><a href="#tabs-3"><%= I18n.t('estimations') %></a></li>
   </ul>
 
   <div id="tabs-1">
@@ -105,31 +104,6 @@
             </tbody>
           </table>
         </div>
-        <div class="actions">
-          <% if action_name == 'new' || action_name=='create' %>
-              <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-          <% end %>
-          <%= submit_tag I18n.t('save'), :class => 'btn' %>
-          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-          <%= link_to I18n.t('back'), groups_path, :class => 'btn' %>
-        </div>
-    <% end -%>
-  </div>
-
-  <div id="tabs-3">
-    <%= form_tag('/update_selected_projects', :method => 'POST', :class => 'simple_form') do -%>
-        <b><%= I18n.t(:text_group_associated_projects) %></b>
-        <br/><br/>
-
-        <div>
-          <%= I18n.t(:label_filter_on_projects_version) %>
-          <%= select_tag 'filter_group_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1),1], [I18n.t(:label_filter_on_project_version_2),2], [I18n.t(:label_filter_on_project_version_3),3], [I18n.t(:label_filter_on_project_version_4),4]], :selected => 1), :include_blank => false %>
-        </div>
-
-        <div id="group_projects" class="field_checkbox">
-          <%= render :partial => 'group_projects', :locals => {:projects => @projects, :group => @group} %>
-        </div>
-
         <div class="actions">
           <% if action_name == 'new' || action_name=='create' %>
               <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
