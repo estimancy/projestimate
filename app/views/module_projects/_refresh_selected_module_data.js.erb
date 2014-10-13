@@ -32,9 +32,10 @@ $(".header_data").html("<h5><%= @current_component %> - <%= "#{current_module_pr
 
 // For the Effort-Breakdown moduel: show the effort per activity
 <% if current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN %>
+    $(".effort_breakdown_activities_profiles").show();
     $(".effort_breakdown_activities_profiles").html("<%= raw j(render('users/effort_per_activity')) %>");
 <% else %>
-    $('#display_results_by_profile').hide();
+    $(".effort_breakdown_activities_profiles").hide();
 <% end %>
 
 //Allow to copy value from one field to another

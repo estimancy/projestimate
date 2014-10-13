@@ -869,6 +869,26 @@ public
       end
     end
 
+    # Get the estimation results by profile for the EffortBreakdown module
+    if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+      ###results_with_activities_by_profile
+      @current_component = pbs_project_element
+      @project_organization = @project.organization
+      @project_organization_profiles = @project_organization.organization_profiles
+      @module_project = start_module_project
+      # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
+      @ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+      # If Another default ratio was defined in PBS, it will override the one defined in module-project
+      if !@current_component.wbs_activity_ratio.nil?
+        @ratio_reference = @current_component.wbs_activity_ratio
+      end
+
+      @attribute = PeAttribute.find_by_alias_and_record_status_id("effort", @defined_record_status)
+      @estimation_values = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', @attribute.id, "output").first
+      @estimation_probable_results = @estimation_values.send('string_data_probable')
+      @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
+    end
+
     #flash.now[:notice] = "Finish to execute estimation"
     #respond_to do |format|
     #  format.js { render :partial => 'pbs_project_elements/refresh'}
@@ -1935,7 +1955,7 @@ public
     unless @current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
       k = EstimationValue.where(pe_attribute_id: effort.id, module_project_id: @current_module_project.id).first.string_data_probable[current_component.id].to_i
       a = 2
-      m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: delay.id).first.string_data_probable[current_component.id] / current_project.organization.number_hours_per_month
+      m = EstimationValue.where(module_project_id: current_module_project.id, pe_attribute_id: delay.id).first.string_data_probable[current_component.id].to_f / current_project.organization.number_hours_per_month
       if !k.nil?
         @schedule_hash = {}
         ((0..m).to_a).each do |i|
