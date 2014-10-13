@@ -1,0 +1,16 @@
+<%#= form_tag url_for( {:action => 'destroy', :controller => 'projects', :id => @project.id}), {:method => 'delete', :class=>'simple_form'} do %>
+<%= simple_form_for @project, :url => update_comments_status_change_path(params[:id]) do |f| %>
+<%#= simple_form_for(@project, url: 'projects/update_comments_status_change', project_id: params[:id] ) do |f| %>
+
+<%#= form_tag '/update_comments_status_change', :method => :post, :project_id => params[:id], :remote => true do |f| %>
+  <%= hidden_field_tag :project_id, params[:project_id] %>
+
+  <%#= f.input :comment_status, :as => :text, label: I18n.t(:comment) , :input_html => { :value => @text_comments.to_s, :class => 'attribute_note_area'} %>
+  <%= f.input :status_comment, :as => :text, label: I18n.t(:comment) , :input_html => { :value => @text_comments.to_s, :class => 'attribute_note_area'} %>
+
+  <div class="modal-footer-left">
+    <%= f.submit I18n.t('save'), :class => 'btn', :id => 'add_comment_on_status_change' %>
+    <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
+  </div>
+
+<% end %>

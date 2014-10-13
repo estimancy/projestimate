@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model for Devise gem
   #attr_accessible :email, :password, :password_confirmation, :remember_me
 
-  audited # audit the users (comptes utilisateurs)
+  audited # audit the users (users account)
 
   #attr_accessible :email, :login_name, :first_name, :last_name, :initials, :auth_type, :auth_method_id, :user_status, :time_zone, :language_id, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token,:created_at,:updated_at, :organization_ids, :group_ids, :project_ids, :password, :password_confirmation, :project_security_ids
   attr_accessible :current_password, :email, :login_name, :id_connexion, :password, :password_confirmation, :remember_me, :provider, :uid, :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at, :updated_at, :auth_type, :number_precision #, :project_security_ids

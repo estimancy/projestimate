@@ -87,12 +87,12 @@ class Organization < ActiveRecord::Base
   amoeba do
     enable
     #include_field [:attribute_organizations, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :abacus_organizations, :organization_uow_complexities, :estimation_statuses]
-    include_field [:pe_attributes, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :technology_size_types, :organization_uow_complexities, :estimation_statuses, :groups]
+    #include_field [:pe_attributes, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :technology_size_types, :abacus_organizations, :organization_uow_complexities, :estimation_statuses, :groups]
+    include_field [ :organization_profiles, :pe_attributes, :organization_technologies,  :unit_of_works, :size_unit_types, :estimation_status_group_roles]
 
     customize(lambda { |original_organization, new_organization|
       new_organization.name = "Copy of '#{original_organization.name}' at #{Time.now}"
     })
-    propagate
   end
 
 end

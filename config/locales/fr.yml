@@ -1233,7 +1233,7 @@ fr:
   size_unit: "Unité de taille"
   unit_of_work_complexity: "Complexités unité d'oeuvres"
   factor_complexity: "Complexité des facteurs"
-  size_unit_type: "Type de d'unité de taille"
+  size_unit_type: "Type d'action"
   technology_size_type_abacus: "Convertisseur"
   technology_size_abacus: "SLOC / IFPUG"
   technology_uow_synthesis: "Abaque Unité d'oeuvre"
@@ -1284,6 +1284,9 @@ fr:
   warning_estimation_status_cannot_be_deleted: "Impossible de supprimer le status \"%{value}\", car il est utilisé par une ou plusieurs estimations"
   warning_organization_cannot_be_deleted: "Impossible de supprimer l'organisation \"%{value}\", car elle est liée à une ou plusieurs estimations"
   user_need_at_least_one_organization: "Veuillez créer votre première organisation avant de continuer"
+  label_add_status_change_comment: "Ajouter un nouveau commentaire concernant le changement de statut de l'estimation"
+  notice_comment_status_successfully_updated: "Le commentaire concernant le changement de status a été mis à jour avec succès"
+  change_estimation_status_from_to: "Estimate's status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
 
   criteria: "Critères"
 

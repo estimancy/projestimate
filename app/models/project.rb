@@ -35,7 +35,7 @@
 #############################################################################
 
 class Project < ActiveRecord::Base
-  attr_accessible :title, :description, :version, :alias, :estimation_status_id,
+  attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
                   :start_date, :is_model, :organization_id, :project_area_id,
                   :project_category_id, :acquisition_category_id, :platform_category_id, :parent_id
 
@@ -47,7 +47,7 @@ class Project < ActiveRecord::Base
 
   #define_attribute_methods :state
 
-  has_ancestry
+  has_ancestry  # For the Ancestry gem
 
   belongs_to :organization
   belongs_to :project_area
@@ -105,23 +105,6 @@ class Project < ActiveRecord::Base
   #  end
   #end
 
-  #aasm :column => :state do   # defaults to aasm_state
-  #  state :preliminary, :preliminary => true, :before_enter => :get_initial_status
-  #  EstimationStatus.all.each do |status|
-  #    #Define aasm states
-  #    state status.status_alias.to_sym
-  #  end
-  #
-  #  # Workflow definition
-  #  event :commit do
-  #    # generate workflow according to the defining workflow in organizations
-  #    StatusTransition.all.each do |status_transition|
-  #      to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
-  #      from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
-  #      transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
-  #    end
-  #  end
-  #end
 
   #  Estimation status name
   def status_name
@@ -148,31 +131,55 @@ class Project < ActiveRecord::Base
   end
 
 
-  #def get_project_organization_statuses
-  #  self.project_organization_statuses = self.organization.estimation_statuses
-  #
-  #  initial_state = EstimationStatus.order(:status_number).first
-  #
-  #  # Define existing estimation_status as aasm_state
-  #  self.project_organization_statuses.all.each do |status|
-  #    #aasm.state status.status_alias.to_sym
-  #    aasm  do # defaults to aasm_state
-  #
-  #      state status.status_alias.to_sym
-  #
-  #      # Workflow definition for the commit event   # Redesign the 'commit' event AASM workflow with the estimation_statuses workflow
-  #      event :commit do
-  #        # generate workflow according to the defining workflow in organizations
-  #        StatusTransition.all.each do |status_transition|
-  #          to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
-  #          from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
-  #
-  #          transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
-  #        end
-  #      end
-  #    end
-  #  end
-  #end
+  def get_project_organization_statuses
+    self.project_organization_statuses = self.organization.estimation_statuses
+
+    initial_state = EstimationStatus.order(:status_number).first
+
+    # Define existing estimation_status as aasm_state
+    self.project_organization_statuses.all.each do |status|
+      #aasm.state status.status_alias.to_sym
+      aasm  do # defaults to aasm_state
+
+        state status.status_alias.to_sym
+
+        # Workflow definition for the commit event   # Redesign the 'commit' event AASM workflow with the estimation_statuses workflow
+        event :commit do
+          # generate workflow according to the defining workflow in organizations
+          StatusTransition.all.each do |status_transition|
+            to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+            from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+
+            transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+          end
+        end
+      end
+    end
+  end
+
+
+  def update_project_status_comment
+    # Get the project status before updating the value
+    #last_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
+    last_estimation_status_id = estimation_status_id_was
+    last_estimation_status_name = last_estimation_status_id.nil? ? "" : EstimationStatus.find(last_estimation_status_id).name
+
+    # Get changes on the project estimation_status_id after the update (to be compra with the last one)
+    new_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
+    if new_estimation_status_name !=  last_estimation_status_name
+      current_comments = status_comment
+      if current_comments.nil? || current_comments.blank?
+        current_comments = "______________________________________________________________________\r\n \r\n"
+      end
+      ###new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: ApplicationController.current_user.name)}  \r\n"
+      new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: "")}  \r\n"
+      self.status_comment = current_comments.prepend(new_comments)
+    end
+
+    yield
+
+  end
+
 
   #aasm :column => :state do   # defaults to aasm_state
   #  #for defining the state machine workflow initial status, we need at least one created status
