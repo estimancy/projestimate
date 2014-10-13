@@ -361,6 +361,7 @@
        <tr>
          <td><%= i.name %></td>
          <td class="align-center">
+           <%= link_to '', guw.new_guw_model_guw_type_path(i), :class => 'icon-pencil', :title => I18n.t('edit') %>
            <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
          </td>
        </tr>

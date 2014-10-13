@@ -35,6 +35,4 @@
 #############################################################################
 
 class ModuleProjectsPbsProjectElement < ActiveRecord::Base
-  attr_accessible
-
 end

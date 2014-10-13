@@ -67,9 +67,9 @@ class ModuleProject < ActiveRecord::Base
     })
   end
 
-  #Return the common attributes (previous, next)
-  def self.common_attributes(mp1, mp2)
-    mp1.output_attributes & mp2.input_attributes
+  #Return in a array previous modules project of self.
+  def preceding
+    mps = ModuleProject.where("position_y < #{self.position_y.to_i} AND project_id = #{self.project.id}")
   end
 
   #Return in a array next modules project of self.
@@ -77,9 +77,15 @@ class ModuleProject < ActiveRecord::Base
     mps = ModuleProject.where("position_y > #{self.position_y.to_i} AND project_id = #{self.project.id}")
   end
 
-  #Return in a array previous modules project of self.
-  def preceding
-    mps = ModuleProject.where("position_y < #{self.position_y.to_i} AND project_id = #{self.project.id}")
+  #Return the inputs attributes of a module_projects
+  def input_attributes
+    res = Array.new
+    self.estimation_values.each do |est_val|
+      if est_val.in_out == 'input'
+        res << est_val.pe_attribute
+      end
+    end
+    res
   end
 
   #Return the outputs attributes of a module_projects
@@ -93,15 +99,9 @@ class ModuleProject < ActiveRecord::Base
     res
   end
 
-  #Return the inputs attributes of a module_projects
-  def input_attributes
-    res = Array.new
-    self.estimation_values.each do |est_val|
-      if est_val.in_out == 'input'
-        res << est_val.pe_attribute
-      end
-    end
-    res
+  #Return the common attributes (previous, next)
+  def self.common_attributes(mp1, mp2)
+    mp1.output_attributes & mp2.input_attributes
   end
 
   #Return the next pemodule with link
@@ -150,62 +150,15 @@ class ModuleProject < ActiveRecord::Base
     end
   end
 
-  def is_One_Activity_Element?
-    begin
-      if self.reference_value.value == I18n.t(:one_activity_element)
-        return true
-      else
-        return false
-      end
-    rescue
-      return false
-    end
-  end
-
-  def is_All_Activity_Elements?
-    begin
-      if self.reference_value.value == I18n.t(:all_activity_elements)
-        return true
-      else
-        return false
-      end
-    rescue
-      return false
-    end
-  end
-
-  def is_A_Set_Of_Activity_Elements?
-    begin
-      if self.reference_value.value == I18n.t(:all_activity_elements)
-        return true
-      else
-        return false
-      end
-    rescue
-      return false
-    end
-  end
-
-  def crawl(starting_node)
-    list = []
-    items=[starting_node]
-    until items.empty?
-      item = items.shift
-      list << item.id unless list.include?(item.id)
-      kids = item.next.sort{ |mp1, mp2| (mp1.position_y <=> mp2.position_y) && (mp1.position_x <=> mp2.position_x)} #Get next module_project
-      kids.each{ |kid| items << kid }
-    end
-    list - [starting_node.id]
-  end
-
-  # Show the module project project on dashbord
-  def show_module_project_positions
-    if self.pemodule.alias == Projestimate::Application::INITIALIZATION
-      # nothing to show as the "Initialization is always on the first position"
-      ""
-    else
-      "(#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
-    end
-  end
-
+  #def crawl(starting_node)
+  #  list = []
+  #  items=[starting_node]
+  #  until items.empty?
+  #    item = items.shift
+  #    list << item.id unless list.include?(item.id)
+  #    kids = item.next.sort{ |mp1, mp2| (mp1.position_y <=> mp2.position_y) && (mp1.position_x <=> mp2.position_x)} #Get next module_project
+  #    kids.each{ |kid| items << kid }
+  #  end
+  #  list - [starting_node.id]
+  #end
 end

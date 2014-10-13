@@ -168,11 +168,6 @@ public
     if current_user
       if params[:project_id]
         session[:current_project_id] = params[:project_id]
-
-        # tlp : ten latest projects
-        tlp = User.first.ten_latest_projects || Array.new
-        tlp = tlp.push(params[:project_id])
-        User.first.update_attribute(:ten_latest_projects, tlp.uniq)
       end
 
       @user = current_user

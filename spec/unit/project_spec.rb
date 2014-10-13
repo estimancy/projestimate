@@ -27,10 +27,6 @@ describe Project do
     @user.should be_valid
   end
 
-  #specify "should be a valid user (user2)" do
-  #  @user2.should be_valid
-  #end
-
   #validation
   it 'should not be valid without title' do
     @project.title=''

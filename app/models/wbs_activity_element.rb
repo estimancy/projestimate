@@ -78,7 +78,7 @@ class WbsActivityElement < ActiveRecord::Base
   end
 
 
-  def wbs_activity_name
+  def to_s
     self.wbs_activity.name
   end
 
@@ -152,16 +152,16 @@ class WbsActivityElement < ActiveRecord::Base
     end
   end
 
-  def self.rebuild(elements, activity_id)
-    elements.each do |elt|
-      ancestors = []
-      father = WbsActivityElement.find_by_wbs_activity_id(activity_id)
-      unless father.nil?
-        ancestors << father.ancestry
-        ancestors << father.id
-      end
-      elt.ancestry = ancestors.join('/')
-      elt.save(:validate => false)
-    end
-  end
+  #def self.rebuild(elements, activity_id)
+  #  elements.each do |elt|
+  #    ancestors = []
+  #    father = WbsActivityElement.find_by_wbs_activity_id(activity_id)
+  #    unless father.nil?
+  #      ancestors << father.ancestry
+  #      ancestors << father.id
+  #    end
+  #    elt.ancestry = ancestors.join('/')
+  #    elt.save(:validate => false)
+  #  end
+  #end
 end

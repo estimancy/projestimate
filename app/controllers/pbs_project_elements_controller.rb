@@ -91,6 +91,7 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.new(params[:pbs_project_element])
     @pbs_project_element.position = @pbs_project_element.siblings.length + 1
     @pbs_project_element.pe_wbs_project_id = @project.pe_wbs_projects.products_wbs.first.id
+    @pbs_project_element.start_date = params[:pbs_project_element][:start_date]
 
     if @pbs_project_element.save
       if params[:pbs_project_element][:ancestry]

@@ -1,6 +1,8 @@
 <%= simple_form_for(@guw_model) do |f| %>
   <%= f.error_notification %>
 
+  <%= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+
   <div class="form-inputs">
     <%= f.input :name %>
     <%= f.input :description %>
@@ -10,3 +12,9 @@
     <%= f.button :submit %>
   </div>
 <% end %>
+
+<% @guw_model.guw_types.each do |guw_type| %>
+  <%= guw_type %>
+<% end %>
+
+<%= link_to "eed", new_guw_type_path %>

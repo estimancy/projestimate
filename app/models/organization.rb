@@ -77,12 +77,6 @@ class Organization < ActiveRecord::Base
     name
   end
 
-  # Get master defined groups and organization's groups
-  def organization_groups
-    (Group.defined.all + self.groups.all).flatten
-  end
-
-
   # Add the amoeba gem for the copy
   amoeba do
     enable

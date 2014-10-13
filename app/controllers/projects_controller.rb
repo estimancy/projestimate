@@ -1291,8 +1291,6 @@ public
     project = Project.find(params[:project_id])
     authorize! :show_project, project
 
-    u = current_user
-    u.add_recent_project(params[:project_id])
     session[:current_project_id] = params[:project_id]
     session[:pbs_project_element_id] = project.root_component
 

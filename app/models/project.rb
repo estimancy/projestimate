@@ -41,11 +41,8 @@ class Project < ActiveRecord::Base
 
   attr_accessor :product_name, :project_organization_statuses
 
-  #include AASM
   include ActionView::Helpers
   include ActiveModel::Dirty
-
-  #define_attribute_methods :state
 
   has_ancestry  # For the Ancestry gem
 
@@ -89,23 +86,6 @@ class Project < ActiveRecord::Base
   # Get project's organization statuses before each action using statuses
   #after_find  :get_project_organization_statuses
 
-  #AASM needs
-  #aasm :column => :state do # defaults to aasm_state
-  #  state :preliminary, :initial => true
-  #  state :in_progress
-  #  state :in_review
-  #  state :checkpoint
-  #  state :released
-  #  state :rejected
-  #
-  #  event :commit do #promote project
-  #    transitions :to => :in_progress, :from => :preliminary
-  #    transitions :to => :in_review, :from => :in_progress
-  #    transitions :to => :released, :from => :in_review
-  #  end
-  #end
-
-
   #  Estimation status name
   def status_name
     self.estimation_status.nil? ? nil : self.estimation_status.name
@@ -129,7 +109,6 @@ class Project < ActiveRecord::Base
       estimation_statuses.uniq
     end
   end
-
 
   def get_project_organization_statuses
     self.project_organization_statuses = self.organization.estimation_statuses
@@ -157,7 +136,6 @@ class Project < ActiveRecord::Base
     end
   end
 
-
   def update_project_status_comment
     # Get the project status before updating the value
     #last_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
@@ -175,30 +153,8 @@ class Project < ActiveRecord::Base
       new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: "")}  \r\n"
       self.status_comment = current_comments.prepend(new_comments)
     end
-
     yield
-
   end
-
-
-  #aasm :column => :state do   # defaults to aasm_state
-  #  #for defining the state machine workflow initial status, we need at least one created status
-  #  inital_state = EstimationStatus.order(:status_number).first
-  #
-  #  EstimationStatus.all.each do |status|
-  #    #Define aasm states
-  #    state status.status_alias.to_sym
-  #  end
-  #
-  #  # Workflow definition
-  #  event :commit do
-  #    # generate workflow according to the defining workflow in organizations
-  #    StatusTransition.all.each do |status_transition|
-  #      transitions :from => status_transition.from_transition_status.status_alias.to_sym, :to => status_transition.to_transition_status.status_alias.to_sym
-  #    end
-  #  end
-  #end
-
 
   amoeba do
     enable
@@ -219,15 +175,6 @@ class Project < ActiveRecord::Base
 
   def self.encoding
     ['Big5', 'CP874', 'CP932', 'CP949', 'gb18030', 'ISO-8859-1', 'ISO-8859-13', 'ISO-8859-15', 'ISO-8859-2', 'ISO-8859-8', 'ISO-8859-9', 'UTF-8', 'Windows-874']
-  end
-
-  #Return possible states of project
-  def states_SAVE
-    if self.preliminary? || self.in_progress? || self.in_review?
-      Project.aasm.states_for_select
-    else
-      Project.aasm.states_for_select.reject { |i| i[0] == 'preliminary' || i[0] == 'in_progress' || i[0] == 'in_review'}
-    end
   end
 
   #Return possible states of project based on the project's organization statuses workflow

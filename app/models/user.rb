@@ -342,166 +342,26 @@ class User < ActiveRecord::Base
     end
   end
 
-
-  # Allow to identify the user before the connection.
-  def self.authenticate(login, password)
-    #login can be login_name or email
-    user = User.find(:first, :conditions => ['login_name = ? OR email = ?', login, login])
-
-    #if a user is found
-    if user and !user.auth_method.nil?
-      if user.auth_method.name != 'Application'
-        begin
-          user.ldap_authentication(password, login)
-        rescue
-          nil
-        end
-      else
-        if user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
-          if user.active?
-            user
-          else
-            return 5
-          end
-        else
-          nil
-        end
-      end
-
-    else
-      #else if the user is not found in the local base, we test all the LDAP servers sorted by priority order
-
-      AuthMethod.order('priority_order').each do |ldap_server|
-        if ldap_server.on_the_fly_user_creation?
-
-          if ldap_server.ldap_bind_dn.present? & ldap_server.ldap_bind_encrypted_password.present?
-            ldap_cn = Net::LDAP.new(:host => ldap_server.server_name,
-                                    :base => ldap_server.base_dn,
-                                    :port => ldap_server.port.to_i,
-                                    :encryption => ldap_server.encryption2,
-                                    :auth => {
-                                        :method => :simple,
-                                        :username => ldap_server.ldap_bind_dn,
-                                        :password => ldap_server.decrypt_password,
-                                    })
-            begin
-              if  ldap_cn.bind
-
-                if ldap_cn.bind_as(:base => ldap_server.base_dn.to_s,
-                                   :filter => ("#{ldap_server.user_name_attribute.to_s}=#{login}"),
-                                   :password => password,
-                )
-                  if !user
-                    user = User.new
-                    i = user.import_user_from_ldap(ldap_cn, login, ldap_server)
-                    if i.is_a? Integer
-                      #if an error occurs
-                      return i
-                    else
-                      UserMailer.account_created(user).deliver
-                    end
-                  else
-                    user.auth_method = ldap_server
-                    user.save!
-
-                  end
-                  if user.active?
-                    return user
-                  else
-                    UserMailer.account_request.deliver
-                    return 5
-                  end
-
-                end
-                if ldap_cn.bind_as(:base => ldap_server.base_dn.to_s,
-                                   :filter => ("#{ldap_server.email_attribute.to_s}=#{login}"),
-                                   :password => password)
-                  if !user
-                    user = User.new
-                    i = user.import_user_from_ldap_mail(ldap_cn, login, ldap_server)
-                    if i.is_a? Integer
-                      return i
-                  else
-                    UserMailer.account_created(user).deliver
-                    end
-                  else
-                    user.auth_method = ldap_server
-                    user.save!
-                  end
-                  if user.active?
-                    return user
-                  else
-                    UserMailer.account_request.deliver
-                    return 5
-                  end
-                end
-              end
-            rescue
-              next
-            end
-          else
-            #else if there is not a bind dn and a bind password to connect, we try to connect at the ldap server directly with the user's login
-            ldap_cn = Net::LDAP.new(:host => ldap_server.server_name,
-                                    :base => ldap_server.base_dn,
-                                    :port => ldap_server.port.to_i,
-                                    :encryption => ldap_server.encryption2,
-                                    :auth => {
-                                        :method => :simple,
-                                        :username => "#{ldap_server.user_name_attribute.to_s}=#{login},#{ldap_server.base_dn}",
-                                        :password => password,
-                                    }
-            )
-            if ldap_cn.bind
-
-              if !user
-                user = User.new
-                i = user.import_user_from_ldap(ldap_cn, login, ldap_server)
-                if i.is_a? Integer
-                  #if an error occurs
-                  return i
-                else
-                  UserMailer.account_created(user).deliver
-                  end
-              else
-                user.auth_method = ldap_server
-                user.save!
-              end
-              if user.active?
-                return user
-              else
-                UserMailer.account_request.deliver
-                return 5
-              end
-            end
-          end
-
-
-        end
-      end
-      nil
-    end
-  end
-
-  def ldap_authentication(password, login)
-    ldap_cn = Net::LDAP.new(:host => self.auth_method.server_name,
-                            :base => self.auth_method.base_dn,
-                            :port => self.auth_method.port.to_i,
-                            :encryption => self.auth_method.encryption2 ,
-                            :auth => {
-                                :method => :simple,
-                                :username => "#{self.auth_method.user_name_attribute.to_s}=#{self.login_name.to_s},#{self.auth_method.base_dn}",
-                                :password => password
-                            })
-    if ldap_cn.bind
-      if self.active?
-        self
-      else
-        nil
-      end
-    else
-      nil
-    end
-  end
+  #def ldap_authentication(password, login)
+  #  ldap_cn = Net::LDAP.new(:host => self.auth_method.server_name,
+  #                          :base => self.auth_method.base_dn,
+  #                          :port => self.auth_method.port.to_i,
+  #                          :encryption => self.auth_method.encryption2 ,
+  #                          :auth => {
+  #                              :method => :simple,
+  #                              :username => "#{self.auth_method.user_name_attribute.to_s}=#{self.login_name.to_s},#{self.auth_method.base_dn}",
+  #                              :password => password
+  #                          })
+  #  if ldap_cn.bind
+  #    if self.active?
+  #      self
+  #    else
+  #      nil
+  #    end
+  #  else
+  #    nil
+  #  end
+  #end
 
   #Override
   def to_s
@@ -516,62 +376,10 @@ class User < ActiveRecord::Base
     self.login_name
   end
 
-  #Send email in order to reset user password
-  def send_password_reset
-    generate_token(:password_reset_token)
-    self.password_reset_sent_at = Time.zone.now
-    self.save(:validate => false)
-    UserMailer.forgotten_password(self).deliver
-  end
-
-  #Generate a token field
-  def generate_token(column)
-    begin
-      self[column] = SecureRandom.urlsafe_base64
-    end while User.exists?(column => self[column])
-  end
-
-  #Search on first_name, last_name, email, login_name fields.
-  def self.table_search(search)
-    if search
-      where('first_name LIKE ? or last_name LIKE ? or email LIKE ? or login_name LIKE ? or user_status LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
-    else
-      scoped
-    end
-  end
-
-  #return the ten latest project
-  #TODO: change name of field. Use latest_project instead of ten_latest_project
-  def latest_project
-    self.ten_latest_projects
-  end
-
   #Load user project securities for selected project id
   def project_securities_for_select(prj_id)
     self.project_securities.select { |i| i.project_id == prj_id }.first
   end
-
-  #Add in the list of latest project a new project
-  def add_recent_project(project_id)
-    val = self.ten_latest_projects.delete(project_id.to_i)
-    if val
-      self.ten_latest_projects.insert(0, val.to_i)
-    else
-      self.ten_latest_projects.insert(0, project_id.to_i)
-    end
-    self.save
-  end
-
-  #Delete in the list of latest project a new project
-  def delete_recent_project(project_id)
-    self.ten_latest_projects.delete(project_id.to_i) if self.ten_latest_projects.include?(project_id.to_i)
-    self.save
-  end
-
-  #List of Admin group
-  #def admin_groups
-    #Group.find_all_by_name(['Admin', 'MasterAdmin'])
-  #end
 
   def locale
     begin

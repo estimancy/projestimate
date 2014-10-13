@@ -30,12 +30,6 @@ describe EstimationValue do
     @mpa.save
   end
 
-  it "should return custom attribute or not " do
-    expect(@mpa.custom_attribute?).to be_truthy
-  end
-  it "should return custom attribute or not " do
-    expect(@mpa2.custom_attribute?).to be_falsey
-  end
   #it "should be not valid" do
   #  @mpa2.to_s.should_not be_instance_of(String)
   #end

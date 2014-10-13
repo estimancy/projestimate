@@ -74,25 +74,24 @@ class WbsProjectElement < ActiveRecord::Base
     arr
   end
 
-  # TODO double-check it is an Unused Method, if so remove it
   #  !! looks to be used only on the /spec/unit/wbs_project_element_spec.rb
-  def is_from_library_and_is_leaf?
-    unless self.is_root
-      if self.wbs_activity.nil? && self.wbs_activity_element.nil? && self.parent.can_get_new_child.nil?
-        false
-      else
-        if self.has_children?
-          true
-        else
-          if self.parent.can_get_new_child?
-            true
-          else
-            false
-          end
-        end
-      end
-    end
-  end
+  #def is_from_library_and_is_leaf?
+  #  unless self.is_root
+  #    if self.wbs_activity.nil? && self.wbs_activity_element.nil? && self.parent.can_get_new_child.nil?
+  #      false
+  #    else
+  #      if self.has_children?
+  #        true
+  #      else
+  #        if self.parent.can_get_new_child?
+  #          true
+  #        else
+  #          false
+  #        end
+  #      end
+  #    end
+  #  end
+  #end
 
   # Test if element can have another children
   def update_can_get_new_child
