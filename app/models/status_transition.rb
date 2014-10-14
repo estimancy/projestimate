@@ -20,14 +20,11 @@
 #############################################################################
 
 class StatusTransition < ActiveRecord::Base
-  attr_accessible :transition_from, :transition_to
+  attr_accessible :from_transition_status_id, :to_transition_status_id
 
   belongs_to :from_transition_status, class_name: "EstimationStatus"
   belongs_to :to_transition_status, class_name: "EstimationStatus"
 
-  # Add the amoeba gem for the copy
-  amoeba do
-    enable
-  end
+  #validates :from_transition_status_id, :to_transition_status_id, presence: true
 
 end

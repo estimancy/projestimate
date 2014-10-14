@@ -4,7 +4,7 @@ class OrganizationProfile < ActiveRecord::Base
   belongs_to :organization
   belongs_to :profile_category
 
-  has_many :wbs_activity_ratio_profiles
+  has_many :wbs_activity_ratio_profiles, :dependent => :delete_all
 
   #validates :organization_id, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id

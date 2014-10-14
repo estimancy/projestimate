@@ -27,6 +27,6 @@ class EstimationStatusGroupRole < ActiveRecord::Base
   belongs_to :permission
   belongs_to :organization
 
-  validates :group_id, :estimation_status_id, :permission_id, :organization_id, presence: true
+  validates :group_id, :permission_id, :organization_id, presence: true
 
 end

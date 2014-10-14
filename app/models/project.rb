@@ -86,6 +86,41 @@ class Project < ActiveRecord::Base
   # Get project's organization statuses before each action using statuses
   #after_find  :get_project_organization_statuses
 
+  #AASM needs
+  #aasm :column => :state do # defaults to aasm_state
+  #  state :preliminary, :initial => true
+  #  state :in_progress
+  #  state :in_review
+  #  state :checkpoint
+  #  state :released
+  #  state :rejected
+  #
+  #  event :commit do #promote project
+  #    transitions :to => :in_progress, :from => :preliminary
+  #    transitions :to => :in_review, :from => :in_progress
+  #    transitions :to => :released, :from => :in_review
+  #  end
+  #end
+
+
+  #aasm :column => :state do   # defaults to aasm_state
+  #  state :preliminary, :preliminary => true, :before_enter => :get_initial_status
+  #  EstimationStatus.all.each do |status|
+  #    #Define aasm states
+  #    state status.status_alias.to_sym
+  #  end
+  #
+  #  # Workflow definition
+  #  event :commit do
+  #    # generate workflow according to the defining workflow in organizations
+  #    StatusTransition.all.each do |status_transition|
+  #      to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+  #      from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+  #      transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+  #    end
+  #  end
+  #end
+
   #  Estimation status name
   def status_name
     self.estimation_status.nil? ? nil : self.estimation_status.name
@@ -224,7 +259,7 @@ class Project < ActiveRecord::Base
     nodes.map do |node, sub_nodes|
       #{:id => node.id.to_s, :name => node.title, :title => node.title, :version => node.version, :data => {}, :children => json_tree(sub_nodes).compact}
       #{id: node.id.to_s, name: node.title, title: node.title, version: node.version, data: {}, children: json_tree(sub_nodes).compact}
-      {:id => node.id.to_s, :name => node.version, :data => {:title => node.title, :version => node.version, :state => node.state}, :children => json_tree(sub_nodes).compact}
+      {:id => node.id.to_s, :name => node.version, :data => {:title => node.title, :version => node.version, :state => node.status_name.to_s}, :children => json_tree(sub_nodes).compact}
     end
   end
 

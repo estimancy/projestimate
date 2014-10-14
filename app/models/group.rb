@@ -42,6 +42,7 @@ class Group < ActiveRecord::Base
 
   #include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
+  has_and_belongs_to_many :users
   has_and_belongs_to_many :projects
 
   has_many :project_securities
@@ -75,6 +76,11 @@ class Group < ActiveRecord::Base
   #Return group project_securities for selected project_id
   def project_securities_for_select(prj_id)
     self.project_securities.select { |i| i.project_id == prj_id }.first
+  end
+
+  amoeba do
+    enable
+    include_field [:permissions]
   end
 
 end

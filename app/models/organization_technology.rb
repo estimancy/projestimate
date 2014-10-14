@@ -46,8 +46,11 @@ class OrganizationTechnology < ActiveRecord::Base
   end
 
   belongs_to :organization
-  has_many :pbs_project_elements
+
   has_and_belongs_to_many :unit_of_works
+
+  has_many :pbs_project_elements
+  has_many :abacus_organizations, :dependent => :destroy
   has_many :inputs, :foreign_key => :technology_id
   has_many :organization_uow_complexities
 
@@ -63,8 +66,6 @@ class OrganizationTechnology < ActiveRecord::Base
   # Add the amoeba gem for the copy
   #amoeba do
   #  enable
-  #  include_field [:unit_of_works, :abacus_organizations, :organization_uow_complexities]
-  #  #exclude_field [:pbs_project_elements, :inputs]
-  #  #propagate
+  #  include_field [:unit_of_works]
   #end
 end

@@ -6,6 +6,7 @@ class SizeUnitType < ActiveRecord::Base
 
   belongs_to :organization
 
+  has_many :size_unit_type_complexities, dependent: :delete_all
   has_many :technology_size_types
   has_many :organization_technologies, through: :technology_size_types
   has_many :size_units
