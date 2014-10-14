@@ -181,8 +181,7 @@ class OrganizationsController < ApplicationController
           ['5', 'rejected', "Rejeté", "333333", "L'estimation dans ce statut est rejetée et ne sera pas poursuivi"]
       ]
       estimation_statuses.each do |i|
-        status = EstimationStatus.new(organization_id: @organization.id, status_number: i[0], status_alias: i[1], name: i[2], status_color: i[3], description: i[4])
-        status.save
+        status = EstimationStatus.create(organization_id: @organization.id, status_number: i[0], status_alias: i[1], name: i[2], status_color: i[3], description: i[4])
       end
 
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
@@ -568,7 +567,8 @@ class OrganizationsController < ApplicationController
       end
     rescue Exception => e
       #redirect_to organizationals_params_path(flash: {error: I18n.t(:errors_when_copying_organization)})
-      redirect_to organizationals_params_path(flash: {error: e.message})
+      flash[:error] = e.message
+      redirect_to(organizationals_params_path) and return
     end
     redirect_to organizationals_params_path
   end

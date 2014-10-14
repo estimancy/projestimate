@@ -100,24 +100,28 @@ private
 
 
   def update_project_status_comment
-    #@project = Project.find(params[:id]) if params[:id]
-    # Get the project status before updating the value
-    last_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
 
-    yield
+    if params[:id] && !params[:id].nil?
 
-    # Get changes on the project estimation_status_id after the update (to be compra with the last one)
-    new_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
-    if new_estimation_status_name !=  last_estimation_status_name
-      current_comments = @project.status_comment
-      if current_comments.nil? || current_comments.blank?
-        current_comments = "______________________________________________________________________\r\n \r\n"
+      @project = Project.find(params[:id]) if params[:id]
+
+      # Get the project status before updating the value
+      last_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
+
+      yield
+
+      # Get changes on the project estimation_status_id after the update (to be compra with the last one)
+      new_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
+      if new_estimation_status_name !=  last_estimation_status_name
+        current_comments = @project.status_comment
+        if current_comments.nil? || current_comments.blank?
+          current_comments = "______________________________________________________________________\r\n \r\n"
+        end
+        new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
+        new_status_comment_value = current_comments.prepend(new_comments)
+        @project.update_attribute(:status_comment, new_status_comment_value)
       end
-      new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
-      new_status_comment_value = current_comments.prepend(new_comments)
-      @project.update_attribute(:status_comment, new_status_comment_value)
     end
-
   end
 
 
@@ -1298,6 +1302,11 @@ public
   def commit
     project = Project.find(params[:project_id])
     authorize! :commit_project, project
+
+    if !can_modify_estimation?(project)
+      redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+    end
+
     project.commit!
 
     if params[:from_tree_history_view]
@@ -1312,6 +1321,10 @@ public
     project = Project.find(params[:project_id])
     authorize! :show_project, project
 
+    if !can_show_estimation?(project)
+      redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+    end
+
     u = current_user
     u.add_recent_project(params[:project_id])
     session[:current_project_id] = params[:project_id]
@@ -1323,6 +1336,7 @@ public
       redirect_to '/dashboard', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
     end
   end
+
 
   def find_use_project
     @project = Project.find(params[:project_id])
@@ -1548,6 +1562,11 @@ public
   def checkout
     old_prj = Project.find(params[:project_id])
 
+
+    if !can_modify_estimation?(project)
+      redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+    end
+
     if old_prj.checkpoint? || old_prj.released?
       if can?(:commit_project, old_prj) || can?(:manage, old_prj)
         begin
@@ -1757,17 +1776,13 @@ public
       case selected_filter_version
         when '1' #Display leaves projects only
           @projects = @projects.reject { |i| !i.is_childless? }
-
         when '2' #Display all versions
           @projects = @projects
-
         when '3' #Display root version only
           @projects = @projects.reject { |i| !i.is_root? }
-
         when '4' #Most recent version
           #@projects = @projects.reorder('updated_at DESC').uniq_by(&:title)
           @projects = @projects.sort{ |x,y| y.updated_at <=> x.updated_at }.uniq(&:title)
-
         else
           @projects = @projects #Project.all
       end

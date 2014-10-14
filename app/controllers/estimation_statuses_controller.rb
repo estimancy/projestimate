@@ -104,6 +104,8 @@ class EstimationStatusesController < ApplicationController
     @organization = Organization.find_by_id(params['estimation_status']['organization_id'])
 
     if @estimation_status.save
+      # Create the status self transition
+      StatusTransition.create(from_transition_status_id: @estimation_status.id, to_transition_status_id: @estimation_status.id)
       flash[:notice] = I18n.t (:notice_estimation_status_successful_created)
       redirect_to redirect_apply(nil, new_estimation_status_path(params[:estimation_status]), edit_organization_path(@organization, :anchor => 'tabs-estimations-statuses'))
     else

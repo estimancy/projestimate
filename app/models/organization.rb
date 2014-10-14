@@ -40,13 +40,13 @@ class Organization < ActiveRecord::Base
 
   has_and_belongs_to_many :users
   has_many :wbs_activities, :dependent => :destroy
-  has_many :attribute_organizations, :dependent => :destroy
+  has_many :attribute_organizations, :dependent => :delete_all
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations
 
   has_many :organization_technologies, :dependent => :destroy
   has_many :organization_uow_complexities, :dependent => :destroy
   has_many :unit_of_works, :dependent => :destroy
-  has_many :subcontractors, :dependent => :destroy
+  has_many :subcontractors, :dependent => :delete_all
   has_many :abacus_organizations
   has_many :projects
   has_many :organization_profiles, :dependent => :destroy
@@ -57,10 +57,10 @@ class Organization < ActiveRecord::Base
   #Estimations statuses
   has_many :estimation_statuses, :dependent => :destroy
   has_many :estimation_status_group_roles, :through => :estimation_statuses
-  ###has_many :status_transitions, :through => :estimation_statuses
+  has_many :status_transitions, :through => :estimation_statuses
 
   #Groups created on local, will be attached to an organization
-  has_many :groups
+  has_many :groups, dependent: :destroy
 
   belongs_to :currency
   #validates_presence_of :name
@@ -87,8 +87,7 @@ class Organization < ActiveRecord::Base
   amoeba do
     enable
     #include_field [:attribute_organizations, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :abacus_organizations, :organization_uow_complexities, :estimation_statuses]
-    #include_field [:pe_attributes, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :technology_size_types, :abacus_organizations, :organization_uow_complexities, :estimation_statuses, :groups]
-    include_field [ :organization_profiles, :pe_attributes, :organization_technologies,  :unit_of_works, :size_unit_types, :estimation_status_group_roles]
+    include_field [:groups, :organization_profiles, :pe_attributes, :organization_technologies,  :unit_of_works, :size_unit_types, :estimation_statuses, :status_transitions]
 
     customize(lambda { |original_organization, new_organization|
       new_organization.name = "Copy of '#{original_organization.name}' at #{Time.now}"

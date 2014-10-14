@@ -108,23 +108,23 @@ class Project < ActiveRecord::Base
   #end
 
 
-  aasm :column => :state do   # defaults to aasm_state
-    state :preliminary, :preliminary => true, :before_enter => :get_initial_status
-    EstimationStatus.all.each do |status|
-      #Define aasm states
-      state status.status_alias.to_sym
-    end
-
-    # Workflow definition
-    event :commit do
-      # generate workflow according to the defining workflow in organizations
-      StatusTransition.all.each do |status_transition|
-        to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
-        from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
-        transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
-      end
-    end
-  end
+  #aasm :column => :state do   # defaults to aasm_state
+  #  state :preliminary, :preliminary => true, :before_enter => :get_initial_status
+  #  EstimationStatus.all.each do |status|
+  #    #Define aasm states
+  #    state status.status_alias.to_sym
+  #  end
+  #
+  #  # Workflow definition
+  #  event :commit do
+  #    # generate workflow according to the defining workflow in organizations
+  #    StatusTransition.all.each do |status_transition|
+  #      to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
+  #      from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
+  #      transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
+  #    end
+  #  end
+  #end
 
   #  Estimation status name
   def status_name
@@ -297,7 +297,7 @@ class Project < ActiveRecord::Base
     nodes.map do |node, sub_nodes|
       #{:id => node.id.to_s, :name => node.title, :title => node.title, :version => node.version, :data => {}, :children => json_tree(sub_nodes).compact}
       #{id: node.id.to_s, name: node.title, title: node.title, version: node.version, data: {}, children: json_tree(sub_nodes).compact}
-      {:id => node.id.to_s, :name => node.version, :data => {:title => node.title, :version => node.version, :state => node.state}, :children => json_tree(sub_nodes).compact}
+      {:id => node.id.to_s, :name => node.version, :data => {:title => node.title, :version => node.version, :state => node.status_name.to_s}, :children => json_tree(sub_nodes).compact}
     end
   end
 

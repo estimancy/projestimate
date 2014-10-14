@@ -60,7 +60,7 @@ class Group < ActiveRecord::Base
 
   validates :record_status, :presence => true ##, :if => :on_master_instance?   #defined in MasterDataHelper
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
+  validates :name, :presence => true, :uniqueness => {:scope => [:record_status_id, :organization_id], :case_sensitive => false}
   validates :custom_value, :presence => true, :if => :is_custom?
 
   #Search fields
@@ -74,6 +74,11 @@ class Group < ActiveRecord::Base
   #Return group project_securities for selected project_id
   def project_securities_for_select(prj_id)
     self.project_securities.select { |i| i.project_id == prj_id }.first
+  end
+
+  amoeba do
+    enable
+    include_field [:permissions]
   end
 
 end

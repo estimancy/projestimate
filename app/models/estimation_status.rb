@@ -36,7 +36,7 @@ class EstimationStatus < ActiveRecord::Base
   has_many :projects
 
   #Estimations permissions on Group according to the estimation status
-  has_many :estimation_status_group_roles
+  has_many :estimation_status_group_roles, dependent: :delete_all
 
   #validates :organization_id, presence: true
   validates :name, presence: true
@@ -44,13 +44,13 @@ class EstimationStatus < ActiveRecord::Base
   validates :status_alias, presence: true, uniqueness: { scope: :organization_id, case_sensitive: false }
   validate  :check_status_alias
 
-
   # Add the amoeba gem for the copy
-  #amoeba do
-  #  enable
-  #  exclude_field [:projects]
-  #  #include_field [:from_transition_statuses, :to_transition_statuses]
-  #end
+  amoeba do
+    #enable
+    #exclude_field [:projects, :estimation_status_group_roles]
+    #include_field [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
+    include_field [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
+  end
 
   # Status alias validation
   def check_status_alias
