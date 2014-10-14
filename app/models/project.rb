@@ -144,9 +144,9 @@ class Project < ActiveRecord::Base
       #[[initial_status.name, initial_status.id]]
       nil
     else
-      estimation_statuses = self.estimation_status.to_transition_statuses.map{ |i| [i.name, i.id]}
-      estimation_statuses << [self.estimation_status.name, self.estimation_status.id]
-      estimation_statuses.uniq
+      estimation_statuses = self.estimation_status.to_transition_statuses.map{ |i| ["#{i.status_number} - #{i.name}", i.id]}
+      estimation_statuses << ["#{self.estimation_status.status_number} - #{self.estimation_status.name}", self.estimation_status.id]
+      estimation_statuses.uniq.sort
     end
   end
 
