@@ -247,11 +247,11 @@ public
 
     set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
 
-    #if (cannot? :edit_project, @project) ||                                               # No write access to project
-    #    (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||      # frozen project
-    #    (@project.in_review? && (cannot? :write_access_to_inreview_project, @project))    # InReview project
-    #  redirect_to(:action => 'show')
-    #end
+    if (cannot? :edit_project, @project) ||                                               # No write access to project
+        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) #||      # frozen project
+        #(@project.in_review? && (cannot? :write_access_to_inreview_project, @project))    # InReview project
+      redirect_to(:action => 'show')
+    end
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_modify_estimation?(@project)
