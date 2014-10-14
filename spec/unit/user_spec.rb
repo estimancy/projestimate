@@ -315,19 +315,6 @@ describe User, type: :model  do
   it 'should be delete recent projects' do
   end
 
-  it 'should add recent projects' do
-    project1 = FactoryGirl.create(:project)
-    @user.add_recent_project(project1.id)
-    @user.ten_latest_projects.first.should eql(project1.id)
-  end
-
-  it 'should be send password reset' do
-    #@user.generate_token(:password_reset_token).should_not be_nil
-    #@user.password_reset_sent_at.should eql?(Time.zone.now)
-    #@user.save.should be_false
-    #UserMailer.forgotten_password(@user).deliver
-  end
-
   it 'should return last projects' do
     user_last_project = @admin1.ten_latest_projects
   end

@@ -1324,8 +1324,6 @@ public
       redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
-    u = current_user
-    u.add_recent_project(params[:project_id])
     session[:current_project_id] = params[:project_id]
     session[:pbs_project_element_id] = project.root_component
 
@@ -1538,7 +1536,6 @@ public
     project = Project.find(params[:project_id])
     authorize! :edit_project, project
 
-    u.add_recent_project(params[:project_id])
     session[:current_project_id] = params[:project_id]
     redirect_to edit_project_path(params[:project_id])
   end
@@ -2290,7 +2287,7 @@ public
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
     if @module_project.pemodule.alias == "guw"
-
+      @guw_unit_of_works = current_project.organization.guw_models.first.guw_unit_or_works
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 
