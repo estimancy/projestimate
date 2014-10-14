@@ -34,7 +34,10 @@
 #
 #############################################################################
 
-require "guw/engine"
-
+require 'guw/version'
+require 'guw/engine'
 module Guw
+  class Guw
+
+  end
 end

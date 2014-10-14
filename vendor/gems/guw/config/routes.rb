@@ -37,5 +37,18 @@
 Guw::Engine.routes.draw do
   root :to => 'guw#index'
 
-  resources :guw_models
+  resources :guw_complexities
+  resources :guw_attributes
+  resources :guw_unit_of_works
+
+  resources :guw_types
+  resources :guw_attribute_complexities
+
+  resources :guw_models do
+    resources :guw_types do
+      resources :guw_attribute_complexities
+      resources :guw_complexities
+    end
+  end
+
 end

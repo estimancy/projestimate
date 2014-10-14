@@ -1,4 +1,4 @@
-#encoding: utf-8
+# encoding: UTF-8
 #############################################################################
 #
 # Estimancy, Open Source project estimation web application
@@ -34,11 +34,29 @@
 #
 #############################################################################
 
-class AbacusOrganization < ActiveRecord::Base
-  attr_accessible :organization_technology_id, :organization_uow_complexity_id, :unit_of_work_id, :value, :organization_id
 
-  belongs_to :unit_of_work
-  belongs_to :organization_uow_complexity
-  belongs_to :organization_technology
-  belongs_to :organization
+class Guw::GuwAttributeComplexitiesController < ApplicationController
+  def index
+    @guw_attribute_complexities = Guw::GuwAttributeComplexity.all
+  end
+
+  def new
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.new
+  end
+
+  def edit
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.find(params[:id])
+  end
+
+  def create
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.new(params[:guw_attribute_complexity])
+    @guw_attribute_complexity.save
+    redirect_to main_app.root_url
+  end
+
+  def update
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.find(params[:id])
+    @guw_attribute_complexity.update_attributes(params[:guw_attribute_complexity])
+    redirect_to main_app.root_url
+  end
 end

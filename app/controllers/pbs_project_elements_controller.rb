@@ -44,8 +44,7 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.new
     set_page_title("New #{@pbs_project_element.name}")
 
-    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-    @project_wbs_activities = @pe_wbs_project_activity.wbs_activities(:id).uniq   # Select only Wbs-Activities affected to current project
+    @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project
     @pbs_wbs_activity_ratios = []
 
     if params[:work_element_type] == "folder"
@@ -92,6 +91,7 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.new(params[:pbs_project_element])
     @pbs_project_element.position = @pbs_project_element.siblings.length + 1
     @pbs_project_element.pe_wbs_project_id = @project.pe_wbs_projects.products_wbs.first.id
+    @pbs_project_element.start_date = params[:pbs_project_element][:start_date]
 
     if @pbs_project_element.save
       if params[:pbs_project_element][:ancestry]

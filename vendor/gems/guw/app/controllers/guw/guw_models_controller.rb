@@ -35,14 +35,30 @@
 #############################################################################
 
 
-class Guw::GuwModelsController < ActionController::Base
+class Guw::GuwModelsController < ApplicationController
+
+  def show
+    @guw_model = Guw::GuwModel.find(params[:id])
+  end
+
   def new
     @guw_model = Guw::GuwModel.new
   end
 
+  def edit
+    @guw_model = Guw::GuwModel.find(params[:id])
+  end
+
   def create
     @guw_model = Guw::GuwModel.new(params[:guw_model])
+    @guw_model.organization_id = params[:guw_model][:organization_id].to_i
     @guw_model.save
+    redirect_to main_app.root_url
+  end
+
+  def update
+    @guw_model = Guw::GuwModel.find(params[:id])
+    @guw_model.update_attributes(params[:guw_model])
     redirect_to main_app.root_url
   end
 end

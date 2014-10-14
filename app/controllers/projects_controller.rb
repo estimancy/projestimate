@@ -133,12 +133,7 @@ public
     set_breadcrumbs "Dashboard" => "/dashboard"
 
     # The current user can only see projects of its organizations
-    @projects = []
-    current_user.organizations.each do |organization|
-      @projects << organization.projects.all
-    end
-    # Then only projects on which the current is authorise to see will be displayed
-    @projects = (@projects.flatten & current_user.projects).reject { |i| !i.is_childless? }
+    @projects = current_user.organizations.map{|i| i.projects }.flatten
   end
 
   def new
@@ -175,8 +170,8 @@ public
       begin
         @project.add_to_transaction
 
-        if @project.valid?
-          @project.save!
+        if @project.save
+
           #New default Pe-Wbs-Project
           pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
           pe_wbs_project_activity = @project.pe_wbs_projects.build(:name => "#{@project.title} WBS-Activity", :wbs_type => 'Activity')
@@ -558,8 +553,9 @@ public
 
     unless params[:project_organization_id].nil? || params[:project_organization_id].blank?
       @organization = Organization.find(params[:project_organization_id])
-      @project = Project.find(params[:project_id])
-      unless @project.new_record?
+
+      if params[:project_id].present?
+        @project = Project.find(params[:project_id])
         # Editing project that does not have estimation status
         if @project.estimation_status.nil? || !@organization.estimation_statuses.include?(@project.estimation_status)
           # Note: When estimation's organization changed, the status id won't be valid for the new selected organization
@@ -570,6 +566,9 @@ public
           estimation_statuses << [@project.estimation_status.name, @project.estimation_status.id]
           @estimation_statuses = estimation_statuses.uniq
         end
+      else
+        initial_status = @organization.estimation_statuses.order(:status_number)
+        @estimation_statuses = [[initial_status.first.name, initial_status.first.id]]
       end
     end
 
@@ -1590,7 +1589,7 @@ public
           new_prj.title = old_prj.title
           new_prj.alias = old_prj.alias
           new_prj.description = old_prj.description
-          new_prj.state = 'preliminary'
+          #new_prj.state = 'preliminary'
           new_prj.version = set_project_version(old_prj)
           new_prj.parent_id = old_prj.id
 
@@ -1953,7 +1952,9 @@ public
             @component.save
 
             unless dh.nan?
-              @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
+              @timeline << [element.name,
+                            element.start_date.nil? ? @project.start_date : element.start_date,
+                            element.start_date.nil? ? @project.start_date + dh : element.start_date + dh]
             else
               @timeline << [element.name, element.start_date.nil? ? @project.start_date : element.start_date, element.start_date.nil? ? @project.start_date : element.start_date]
             end

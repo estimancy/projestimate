@@ -1,0 +1,18 @@
+<%= simple_form_for(@guw_complexity) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+
+    <%= f.input :guw_type_id, as: :hidden, input_html: { value: params[:guw_type_id] } %>
+
+    <%= f.input :name %>
+    <%= f.input :alias %>
+    <%= f.input :bottom_range %>
+    <%= f.input :top_range %>
+    <%= f.input :weight %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

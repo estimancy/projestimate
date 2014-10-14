@@ -38,9 +38,9 @@
 #Special Data
 #Group class contains some User.
 class Group < ActiveRecord::Base
-  attr_accessible :name, :description, :for_global_permission, :for_project_security, :record_status_id, :custom_value, :change_comment, :organization_id
+  attr_accessible :name, :description, :for_global_permission, :for_project_security, :organization_id
 
-  include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
+  #include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :projects
@@ -52,16 +52,18 @@ class Group < ActiveRecord::Base
   #Estimations permissions on Group according to the estimation status
   has_many :estimation_status_group_roles
 
-  # Group is attached to organization
   belongs_to :organization
 
-  belongs_to :record_status
-  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
+  has_many :groups_users, class_name: 'GroupsUsers'
+  has_many :users, through: :groups_users
 
-  validates :record_status, :presence => true ##, :if => :on_master_instance?   #defined in MasterDataHelper
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true, :uniqueness => {:scope => [:record_status_id, :organization_id], :case_sensitive => false}
-  validates :custom_value, :presence => true, :if => :is_custom?
+  belongs_to :record_status
+  #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
+
+  #validates :record_status, :presence => true ##, :if => :on_master_instance?   #defined in MasterDataHelper
+  #validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
+  validates :name, :presence => true#, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
+  #validates :custom_value, :presence => true, :if => :is_custom?
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]

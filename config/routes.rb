@@ -108,10 +108,6 @@ Projestimate::Application.routes.draw do
   mount BalancingModule::Engine, at: '/balancing_module'
   mount RealSize::Engine, at: '/inputs'
 
-  resources :abacus_organizations
-  match 'organizations/:id/export_abacus' => 'organizations#export_abacus', :as => 'export_abacus'
-  match 'organizations/:id/import_abacus' => 'organizations#import_abacus', :as => 'import_abacus'
-
   resources :organization_abacus
 
   resources :organization_technologies

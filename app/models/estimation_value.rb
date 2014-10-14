@@ -57,14 +57,6 @@ class EstimationValue < ActiveRecord::Base
     end
   end
 
-  def custom_attribute?
-    if custom_attribute == 'user'
-      true
-    else
-      false
-    end
-  end
-
   def to_s
     self.pe_attribute.name
   end

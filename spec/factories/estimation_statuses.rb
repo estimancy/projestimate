@@ -5,6 +5,8 @@ FactoryGirl.define do
     organization_id 1
     status_number 1
     name "MyString"
+    status_alias "mystring"
     description "MyText"
+    #check_status_alias
   end
 end

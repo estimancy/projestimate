@@ -14,11 +14,11 @@ FactoryGirl.define do
     "Project number #{n}"
   end
 
-
   # Projects
   factory :new_project, :class => :project do |p|
     p.state 'preliminary'
     p.association :organization, :factory => :organization
+    p.association :estimation_status, :factory => :estimation_status
     p.start_date Time.now
     after :build do |proj|
       proj.title = FactoryGirl.generate(:project_title)
@@ -33,6 +33,7 @@ FactoryGirl.define do
     p.sequence(:alias) {|n| "P#{n}"}
     p.sequence(:description) {|n| "Project number #{n}"}
     p.association :organization, :factory => :organization
+    p.association :estimation_status, :factory => :estimation_status
     p.state 'preliminary'
     p.start_date Time.now
   end

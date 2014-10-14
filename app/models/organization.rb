@@ -38,7 +38,11 @@
 class Organization < ActiveRecord::Base
   attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate, :limit1, :limit2, :limit3
 
-  has_and_belongs_to_many :users
+  #has_and_belongs_to_many :users
+  #Groups created on local, will be attached to an organization
+  has_many :groups
+  has_many :users, through: :groups
+
   has_many :wbs_activities, :dependent => :destroy
   has_many :attribute_organizations, :dependent => :delete_all
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations
@@ -48,6 +52,7 @@ class Organization < ActiveRecord::Base
   has_many :unit_of_works, :dependent => :destroy
   has_many :subcontractors, :dependent => :delete_all
   has_many :abacus_organizations
+  has_many :subcontractors, :dependent => :destroy
   has_many :projects
   has_many :organization_profiles, :dependent => :destroy
   has_many :profile_categories
@@ -76,12 +81,6 @@ class Organization < ActiveRecord::Base
   def to_s
     name
   end
-
-  # Get master defined groups and organization's groups
-  def organization_groups
-    (Group.defined.all + self.groups.all).flatten
-  end
-
 
   # Add the amoeba gem for the copy
   amoeba do

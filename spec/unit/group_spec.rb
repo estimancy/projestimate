@@ -33,10 +33,10 @@ describe Group do
     group2.should_not be_valid
   end
 
-  it "should not be valid without custom_value when record_status='Custom'" do
-    @group.record_status = @custom_status
-    @group.should_not be_valid
-  end
+  #it "should not be valid without custom_value when record_status='Custom'" do
+  #  @group.record_status = @custom_status
+  #  @group.should_not be_valid
+  #end
 
   it "should be not valid" do
     @group.name=1

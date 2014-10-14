@@ -42,7 +42,10 @@ class Ability
   def initialize(user)
 
     #Uncomment in order to authorize everybody to manage all the app
-    can :manage, :all
+    if user.super_admin == true
+      can :manage, :all
+    end
+
     can :edit, Project
     can :update, Project
     cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, ProjectArea,
@@ -92,7 +95,6 @@ class Ability
           end
         end
       end
-
     end
   end
 end

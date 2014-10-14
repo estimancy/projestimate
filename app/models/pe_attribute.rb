@@ -78,14 +78,6 @@ class PeAttribute < ActiveRecord::Base
   scoped_search :on => [:name, :alias, :description, :created_at, :updated_at]
   scoped_search :in => :attribute_category, :on => :name
 
-  def self.attribute_list
-    PeAttribute.all.map(&:alias)
-  end
-
-  def self.attribute_updated_at
-    PeAttribute.all.map(&:updated_at)
-  end
-
   #Override
   def to_s
     name + ' - ' + description.truncate(20)

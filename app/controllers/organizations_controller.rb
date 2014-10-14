@@ -69,11 +69,14 @@ class OrganizationsController < ApplicationController
     @unitofworks = @organization.unit_of_works
     @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
 
+    @users = @organization.users
+    @groups = @organization.groups
+
     @organization_profiles = @organization.organization_profiles
 
     #Get the Master defined groups and the organization's group
     #@organization_group = (Group.defined.all + @organization.groups.all).flatten
-    @organization_group = @organization.organization_groups
+    @organization_group = @organization.groups
     @guw_models = Guw::GuwModel.all
   end
 
@@ -239,9 +242,7 @@ class OrganizationsController < ApplicationController
 
   def organizationals_params
     set_page_title 'Organizational Parameters'
-
-    #No authorize required since everyone can list
-    if current_user.groups.map(&:name).include?("MasterAdmin")
+    if can? :manage, :all
       @organizations = Organization.all
     else
       @organizations = current_user.organizations
@@ -249,7 +250,7 @@ class OrganizationsController < ApplicationController
 
     @size_units = SizeUnit.all
     @factors = Factor.order("factor_type")
-    @organizations_labor_categories = OrganizationLaborCategory.all || []
+    @organizations_labor_categories = OrganizationLaborCategory.all
   end
 
   def set_technology_size_type_abacus

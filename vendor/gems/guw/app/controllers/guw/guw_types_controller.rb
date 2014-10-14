@@ -34,25 +34,26 @@
 #
 #############################################################################
 
-require 'guw/version'
 
-module Guw
-  class Guw
-
-    include ApplicationHelper
-
-    attr_accessor :effort
-
-    #Constructor
-    def initialize(elem)
-      @effort = elem['effort']
-    end
-
-    # Return effort
-    #project.id, current_mp_to_execute.id, pbs_project_element_id)
-    def get_effort(*args)
-      42
-    end
+class Guw::GuwTypesController < ApplicationController
+  def new
+    @guw_type = Guw::GuwType.new
   end
 
+  def edit
+    @guw_type = Guw::GuwType.find(params[:id])
+  end
+
+  def create
+    @guw_type = Guw::GuwType.new(params[:guw_type])
+    @guw_type.guw_model_id = params[:guw_type][:guw_model_id]
+    @guw_type.save
+    redirect_to main_app.root_url
+  end
+
+  def update
+    @guw_type = Guw::GuwType.find(params[:id])
+    @guw_type.update_attributes(params[:guw_type])
+    redirect_to main_app.root_url
+  end
 end

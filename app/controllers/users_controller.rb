@@ -51,19 +51,6 @@ protected
       @user = User.new :user_status => 'active'
       @user.auth_type = AuthMethod.first.id
     end
-
-    # The current user can only see projects of its organizations
-    @projects = []
-    @user.organizations.each do |organization|
-      @projects << organization.projects.all
-    end
-    @projects = @projects.flatten.reject { |i| !i.is_childless? }
-
-    @organizations = current_user.organizations
-    @groups = current_user.organizations.map{|i| i.groups }.flatten + Group.defined
-    @project_users = @user.projects
-    @project_groups = @user.groups
-    @org_users = @user.organizations
   end
 
 public
@@ -72,14 +59,7 @@ public
     authorize! :manage, User
 
     set_page_title 'Users'
-
-    #No authorize required since everyone can list
-    if current_user.groups.map(&:name).include?("MasterAdmin")
-      @users = User.all
-    else
-      @users = current_user.organizations.map{|i| i.users }.flatten.uniq
-    end
-
+    @users = User.all
     @audits = Audit.all
   end
 
@@ -117,12 +97,10 @@ public
 
   def edit
     @user = User.find(params[:id])
-    @users = current_user.organizations
     if current_user == @user
       set_page_title 'Edit your user account'
     else
       authorize! :manage, User
-      #flash[:notice] = "You're not allowed to perform this action"
     end
   end
 
@@ -190,11 +168,6 @@ public
     if current_user
       if params[:project_id]
         session[:current_project_id] = params[:project_id]
-
-        # tlp : ten latest projects
-        tlp = User.first.ten_latest_projects || Array.new
-        tlp = tlp.push(params[:project_id])
-        User.first.update_attribute(:ten_latest_projects, tlp.uniq)
       end
 
       @user = current_user
