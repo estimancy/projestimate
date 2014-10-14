@@ -152,7 +152,7 @@ class PermissionsController < ApplicationController
     if params[:commit] == I18n.t('cancel')
       redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
     else
-      @groups = Group.defined_or_local
+      @groups = current_user.groups
       @permissions = Permission.defined
 
       @groups.each do |group|

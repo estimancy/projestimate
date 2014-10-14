@@ -67,25 +67,25 @@ class GroupsController < ApplicationController
     @projects = Project.all.reject { |i| !i.is_childless? }
     @organization = @group.organization
 
-    if is_master_instance?
-      @enable_update_in_local = true
-      unless @group.child_reference.nil?
-        if @group.child_reference.is_proposed_or_custom?
-          flash[:warning] = I18n.t (:warning_group_cant_be_edit)
-          redirect_to groups_path and return
-        end
-      end
-    else
-      if @group.is_local_record?
-        @group.record_status = @local_status
-        @enable_update_in_local = true
-        ##flash[:notice] = "testing"
-      else
-        @enable_update_in_local = false
-        #  flash[:error] = "Master record can not be edited, it is required for the proper functioning of the application"
-        #  redirect_to redirect(groups_path)
-      end
-    end
+    #if is_master_instance?
+    #  @enable_update_in_local = true
+    #  unless @group.child_reference.nil?
+    #    if @group.child_reference.is_proposed_or_custom?
+    #      flash[:warning] = I18n.t (:warning_group_cant_be_edit)
+    #      redirect_to groups_path and return
+    #    end
+    #  end
+    #else
+    #  if @group.is_local_record?
+    #    @group.record_status = @local_status
+    #    @enable_update_in_local = true
+    #    ##flash[:notice] = "testing"
+    #  else
+    #    @enable_update_in_local = false
+    #    #  flash[:error] = "Master record can not be edited, it is required for the proper functioning of the application"
+    #    #  redirect_to redirect(groups_path)
+    #  end
+    #end
   end
 
   def create

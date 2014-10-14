@@ -351,7 +351,13 @@
  </div>
 
  <div id="GuwModel" style="min-height: 50px;">
-   <table class="table table-striped table-bordered table-condensed">
+
+   <b>Modèle d'UO</b>
+
+   <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn pull-right' %>
+   <br>
+
+   <table class="table table-bordered">
      <tr>
        <th><%= I18n.t(:name) %></th>
        <th class="action"><%= I18n.t(:actions) %></th>
@@ -359,17 +365,16 @@
 
      <% @guw_models.each do |i| %>
        <tr>
-         <td><%= i.name %></td>
+         <td class="span5">
+           <%= i.name %>
+         </td>
          <td class="align-center">
-           <%= link_to '', guw.new_guw_model_guw_type_path(i), :class => 'icon-pencil', :title => I18n.t('edit') %>
-           <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
+           <%= link_to 'Show model', guw.guw_model_path(i), :class => 'btn btn-mini', :title => I18n.t('edit') %>
+           <%= link_to 'Edit model', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'btn btn-mini', :title => I18n.t('edit') %>
          </td>
        </tr>
      <% end %>
    </table>
-
-   <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn pull-right' %>
-
  </div>
 
 <% end %>

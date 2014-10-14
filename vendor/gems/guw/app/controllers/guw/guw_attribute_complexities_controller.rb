@@ -34,10 +34,29 @@
 #
 #############################################################################
 
-require 'guw/version'
-require 'guw/engine'
-module Guw
-  class Guw
 
+class Guw::GuwAttributeComplexitiesController < ApplicationController
+  def index
+    @guw_attribute_complexities = Guw::GuwAttributeComplexity.all
+  end
+
+  def new
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.new
+  end
+
+  def edit
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.find(params[:id])
+  end
+
+  def create
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.new(params[:guw_attribute_complexity])
+    @guw_attribute_complexity.save
+    redirect_to main_app.root_url
+  end
+
+  def update
+    @guw_attribute_complexity = Guw::GuwAttributeComplexity.find(params[:id])
+    @guw_attribute_complexity.update_attributes(params[:guw_attribute_complexity])
+    redirect_to main_app.root_url
   end
 end

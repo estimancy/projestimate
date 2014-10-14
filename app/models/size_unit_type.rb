@@ -8,7 +8,6 @@ class SizeUnitType < ActiveRecord::Base
 
   has_many :technology_size_types
   has_many :organization_technologies, through: :technology_size_types
-
   has_many :size_units
 end
 

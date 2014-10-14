@@ -1,0 +1,65 @@
+<table class="table table-bordered">
+  <tr>
+    <th>Name</th>
+    <th>UoType</th>
+    <th>Attributs</th>
+  </tr>
+    <% @guw_unit_of_works.each do |guow| %>
+      <tr>
+        <td style="vertical-align: middle">
+          <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
+            <span title="<%= guow.comments %>" class="attribute_tooltip">
+              <%= guow.name %>
+            </span>
+          </a>
+        </td>
+        <td style="vertical-align: middle">
+          <%= select_tag "guw_type", options_for_select(Guw::GuwType.all), selected: guow.id %>
+        </td>
+        <td>
+          <table class="table table-bordered">
+            <tr>
+              <th>Nom d'attribut</th>
+              <th>Low</th>
+              <th>ML</th>
+              <th>High</th>
+              <th>Result L</th>
+              <th>Result ML</th>
+              <th>Result H</th>
+            </tr>
+            <% Guw::GuwAttribute.all.each do |gac| %>
+              <tr>
+                <td>
+                  <%= gac.name %>
+                </td>
+
+                <td>
+                  <%= text_field_tag "low", guow.low, class: "input-mini" %>
+                </td>
+                <td>
+                  <%= text_field_tag "most_likely", guow.most_likely, class: "input-mini" %>
+                </td>
+                <td>
+                  <%= text_field_tag "high", guow.high, class: "input-mini" %>
+                </td>
+
+                <td>
+                  <%= text_field_tag "result_low", guow.low, class: "input-mini" %>
+                </td>
+                <td>
+                  <%= text_field_tag "result_most_likely", guow.most_likely, class: "input-mini" %>
+                </td>
+                <td>
+                  <%= text_field_tag "result_high", guow.high, class: "input-mini" %>
+                </td>
+
+              </tr>
+            <% end %>
+          </table>
+        </td>
+      </tr>
+    <% end %>
+  </tr>
+</table>
+
+<%= link_to "Ajouter un UO", guw.new_guw_unit_of_work_path, class: "btn btn-mini" %>

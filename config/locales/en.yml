@@ -415,8 +415,8 @@ en:
   event_types: "Event types"
 
   #events
-  start_date: "Start date"
-  end_date: "Date end"
+  start_date: "Project start date"
+  end_date: "Project end date"
   event_type_id: "Event id"
   project_id: "Project id"
   edit_event: "Edit an event"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141009142136) do
+ActiveRecord::Schema.define(:version => 20141014073855) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -348,11 +348,33 @@ ActiveRecord::Schema.define(:version => 20141009142136) do
     t.datetime "updated_at"
   end
 
+  create_table "guw_guw_attribute_complexities", :force => true do |t|
+    t.string   "name"
+    t.integer  "bottom_range"
+    t.integer  "top_range"
+    t.float    "value"
+    t.integer  "guw_attribute_id"
+    t.integer  "guw_type_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "guw_guw_attributes", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "guw_guw_complexities", :force => true do |t|
+    t.string   "name"
+    t.string   "alias"
+    t.integer  "weight"
+    t.integer  "bottom_range"
+    t.integer  "top_range"
+    t.integer  "guw_type_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "guw_guw_models", :force => true do |t|
@@ -370,6 +392,20 @@ ActiveRecord::Schema.define(:version => 20141009142136) do
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
     t.integer  "guw_model_id"
+  end
+
+  create_table "guw_guw_unit_of_works", :force => true do |t|
+    t.string   "name"
+    t.text     "comments"
+    t.integer  "low"
+    t.integer  "most_likely"
+    t.integer  "high"
+    t.integer  "result_low"
+    t.integer  "result_most_likely"
+    t.integer  "result_high"
+    t.integer  "guw_type_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "input_cocomos", :force => true do |t|
