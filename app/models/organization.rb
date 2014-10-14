@@ -67,6 +67,9 @@ class Organization < ActiveRecord::Base
   #Groups created on local, will be attached to an organization
   has_many :groups, dependent: :destroy
 
+  #Guw Model
+  has_many :guw_models, class_name: "Guw::GuwModel", dependent: :destroy
+
   belongs_to :currency
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
