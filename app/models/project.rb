@@ -36,8 +36,8 @@
 
 class Project < ActiveRecord::Base
   attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
-                  :start_date, :is_model, :organization_id, :project_area_id,
-                  :project_category_id, :acquisition_category_id, :platform_category_id, :parent_id
+                  :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
+                  :acquisition_category_id, :platform_category_id, :parent_id
 
   attr_accessor :product_name, :project_organization_statuses
 
@@ -139,9 +139,9 @@ class Project < ActiveRecord::Base
       #[[initial_status.name, initial_status.id]]
       nil
     else
-      estimation_statuses = self.estimation_status.to_transition_statuses.map{ |i| ["#{i.status_number} - #{i.name}", i.id]}
-      estimation_statuses << ["#{self.estimation_status.status_number} - #{self.estimation_status.name}", self.estimation_status.id]
-      estimation_statuses.uniq.sort
+      estimation_statuses = self.estimation_status.to_transition_statuses
+      estimation_statuses << self.estimation_status
+      estimation_statuses.uniq.sort{|s1, s2| s1 <=> s2 }
     end
   end
 
