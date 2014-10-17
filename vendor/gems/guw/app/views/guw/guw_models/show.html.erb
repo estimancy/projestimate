@@ -18,7 +18,7 @@
         <th></th>
         <% guw_type.guw_attribute_complexities.each do |cplx| %>
           <th>
-            <%= link_to cplx.name, guw.edit_guw_model_guw_type_guw_attribute_complexity_path(@guw_model, guw_type, cplx) %>
+            <%= link_to "#{cplx.name} (#{cplx.value})", guw.edit_guw_model_guw_type_guw_attribute_complexity_path(@guw_model, guw_type, cplx) %>
           </th>
         <% end %>
       </tr>

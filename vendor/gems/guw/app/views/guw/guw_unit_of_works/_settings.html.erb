@@ -1,65 +1,84 @@
-<table class="table table-bordered">
-  <tr>
-    <th>Name</th>
-    <th>UoType</th>
-    <th>Attributs</th>
-  </tr>
-    <% @guw_unit_of_works.each do |guow| %>
-      <tr>
-        <td style="vertical-align: middle">
-          <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
-            <span title="<%= guow.comments %>" class="attribute_tooltip">
-              <%= guow.name %>
-            </span>
-          </a>
-        </td>
-        <td style="vertical-align: middle">
-          <%= select_tag "guw_type", options_for_select(Guw::GuwType.all), selected: guow.id %>
-        </td>
-        <td>
-          <table class="table table-bordered">
-            <tr>
-              <th>Nom d'attribut</th>
-              <th>Low</th>
-              <th>ML</th>
-              <th>High</th>
-              <th>Result L</th>
-              <th>Result ML</th>
-              <th>Result H</th>
-            </tr>
-            <% Guw::GuwAttribute.all.each do |gac| %>
+<%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path, remote: true do %>
+  <h4>Choix du modèle d'UO</h4>
+  <%= select_tag("guw_model", options_for_select(Guw::GuwModel.all)) %>
+  <hr>
+  <table class="table table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>UoType</th>
+      <th>Attributs</th>
+      <th>Res. L</th>
+      <th>Res. ML</th>
+      <th>Res. H</th>
+      <th>Cplx. UO</th>
+      <th>RTU</th>
+      <th>Eff. ajusté</th>
+    </tr>
+      <% @guw_unit_of_works.each_with_index do |guow, i| %>
+        <tr>
+          <td style="vertical-align: middle">
+            <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
+              <span title="<%= guow.comments %>" class="attribute_tooltip">
+                <%= guow.name %>
+              </span>
+            </a>
+          </td>
+          <td style="vertical-align: middle">
+            <%= select_tag "guw_type[#{guow.id}]", options_for_select(Guw::GuwModel.first.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id ) %>
+          </td>
+          <td>
+            <table class="table table-bordered">
               <tr>
-                <td>
-                  <%= gac.name %>
-                </td>
-
-                <td>
-                  <%= text_field_tag "low", guow.low, class: "input-mini" %>
-                </td>
-                <td>
-                  <%= text_field_tag "most_likely", guow.most_likely, class: "input-mini" %>
-                </td>
-                <td>
-                  <%= text_field_tag "high", guow.high, class: "input-mini" %>
-                </td>
-
-                <td>
-                  <%= text_field_tag "result_low", guow.low, class: "input-mini" %>
-                </td>
-                <td>
-                  <%= text_field_tag "result_most_likely", guow.most_likely, class: "input-mini" %>
-                </td>
-                <td>
-                  <%= text_field_tag "result_high", guow.high, class: "input-mini" %>
-                </td>
-
+                <th>Nom d'attribut</th>
+                <th>Low</th>
+                <th>ML</th>
+                <th>High</th>
               </tr>
+              <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
+                <tr>
+                  <td>
+                    <%= uowa.guw_attribute.name %>
+                  </td>
+                  <td>
+                    <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
+                  </td>
+                  <td>
+                    <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
+                  </td>
+                  <td>
+                    <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </td>
+          <td style="vertical-align: middle">
+            <%= text_field_tag "result_low[#{guow.id}]", guow.result_low, class: "input-mini" %>
+          </td>
+          <td style="vertical-align: middle">
+            <%= text_field_tag "result_most_likely[#{guow.id}]", guow.result_most_likely, class: "input-mini" %>
+          </td>
+          <td style="vertical-align: middle">
+            <%= text_field_tag "result_high[#{guow.id}]", guow.result_high, class: "input-mini" %>
+          </td>
+          <td style="vertical-align: middle">
+            <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
+          </td>
+          <td style="vertical-align: middle">
+            <% if guow.guw_complexity.weight.nil? %>
+              <%= text_field_tag "effort[#{guow.id}]", '', class: "input-mini" %>
+            <% else %>
+              <%= text_field_tag "effort[#{guow.id}]", guow.guw_complexity.weight, class: "input-mini" %>
             <% end %>
-          </table>
-        </td>
-      </tr>
-    <% end %>
-  </tr>
-</table>
+          </td>
+          <td style="vertical-align: middle">
+            <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
+          </td>
+        </tr>
+      <% end %>
+    </tr>
+  </table>
 
-<%= link_to "Ajouter un UO", guw.new_guw_unit_of_work_path, class: "btn btn-mini" %>
+  <%= link_to "Ajouter un UO", guw.new_guw_unit_of_work_path, class: "btn btn-mini" %>
+  <%= submit_tag "Sauvegarder", class: "btn btn-mini" %>
+<% end %>

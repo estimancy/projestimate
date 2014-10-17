@@ -4,6 +4,7 @@ class CreateGuwUnitOfWorks < ActiveRecord::Migration
       t.string :name
       t.text :comments
 
+      #is now removed
       t.integer :low
       t.integer :most_likely
       t.integer :high

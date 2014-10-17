@@ -1,4 +1,4 @@
-<h2>Seuil de complexité de <%= @guw_model %></h2>
+<h2>Seuil de complexité de <%= @guw_type %></h2>
 
 <table class="table">
   <tr>
@@ -10,7 +10,7 @@
 
   <% @guw_complexities.each do |guw_cplx| %>
     <tr>
-      <td class="align-center"><%= guw_cplx.name %></td>
+      <td class="align-center"><%= link_to guw_cplx.name, edit_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type, guw_cplx) %></td>
       <td class="align-center"><%= guw_cplx.bottom_range %></td>
       <td class="align-center"><%= guw_cplx.top_range %></td>
       <td class="align-center"><%= guw_cplx.weight%></td>

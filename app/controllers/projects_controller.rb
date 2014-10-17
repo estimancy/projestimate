@@ -2287,7 +2287,7 @@ public
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
     if @module_project.pemodule.alias == "guw"
-      @guw_unit_of_works = current_project.organization.guw_models.first.guw_unit_or_works
+      @guw_unit_of_works = current_project.organization.guw_models.first.guw_types.map(&:guw_unit_of_works).flatten
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 

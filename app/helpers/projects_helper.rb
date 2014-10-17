@@ -820,10 +820,10 @@ module ProjectsHelper
     res = String.new
 
     if module_project.pemodule.alias == "guw"
-      res << "<h4>Choix du modèle d'UO</h4>"
-      res << select_tag("guw_model", options_for_select(Guw::GuwModel.all))
-      res << "<br>"
-      res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini pull-right")
+      #res << "<h4>Choix du modèle d'UO</h4>"
+      #res << select_tag("guw_model", options_for_select(Guw::GuwModel.all))
+      #res << "<br>"
+      res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini")
     elsif module_project.compatible_with(current_component.work_element_type.alias) || current_component
 
       pemodule = Pemodule.find(module_project.pemodule.id)
