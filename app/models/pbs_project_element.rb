@@ -38,8 +38,8 @@
 #Component use Ancestry gem (has_ancestry). See ancestry on github for more information.
 class PbsProjectElement < ActiveRecord::Base
   attr_accessible :name, :description, :pe_wbs_project_id, :is_completed, :is_validated, :position, :is_root,
-                  :work_element_type_id,:ancestry, :wbs_activity_id, :wbs_activity_ratio_id, :parent_id, :organization_technology_id,
-                  :start_date, :end_date
+                  :work_element_type_id, :ancestry, :wbs_activity_id, :wbs_activity_ratio_id, :parent_id,
+                  :organization_technology_id, :start_date, :end_date
 
   has_ancestry
 
@@ -55,7 +55,7 @@ class PbsProjectElement < ActiveRecord::Base
 
   has_and_belongs_to_many :module_projects
 
-  validates_presence_of :name, :start_date
+  validates :name, :start_date, presence: true
   #validates :wbs_activity_ratio_id, :uniqueness => { :scope => :wbs_activity_id }  #TODO Review validation
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)

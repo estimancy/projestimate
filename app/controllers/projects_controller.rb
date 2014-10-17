@@ -133,7 +133,7 @@ public
     set_breadcrumbs "Dashboard" => "/dashboard"
 
     # The current user can only see projects of its organizations
-    @projects = current_user.organizations.map{|i| i.projects }.flatten
+    @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |i| !i.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
   end
 
   def new
@@ -326,8 +326,8 @@ public
     end
 
     unless (cannot? :edit_project, @project) || # No write access to project
-        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) ||   # frozen project
-        (@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
+        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) #||   # frozen project
+        #(@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
 
       @product_name = params[:project][:product_name]
       project_root = @project.root_component
@@ -389,7 +389,8 @@ public
 
       if @project.update_attributes(params[:project])
         begin
-          date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
+          #start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
+          start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))
           @project.start_date = date
         rescue
           @project.start_date = Time.now.to_date

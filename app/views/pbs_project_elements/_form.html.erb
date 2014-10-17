@@ -19,8 +19,20 @@
       <%= f.input :description, :label => I18n.t('requirements'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
       <table>
         <tr>
-          <td><%= f.input :start_date, as: :string, :label => I18n.t('start_date'), :input_html => {:class => 'date-picker', rows: "2", value: (I18n.l(@pbs_project_element.start_date) unless @pbs_project_element.start_date.nil?) } %></td>
+          <td><%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => {:class => 'date-picker', rows: "2", :value => @pbs_project_element.start_date.nil? ? '' : I18n.l(@pbs_project_element.start_date) } %></td>
           <td><%= f.input :end_date, as: :string, disabled: true, :label => I18n.t('end_date'), :input_html => {:class => 'input-large', rows: "2"} %></td>
+
+          <script>
+
+              $(document).ready(function () {
+                  $(".date-picker").datepicker({
+                      language: '<%= set_user_language %>',
+                      autoclose: true,
+                      todayHighlight: true,
+                      todayBtn: true
+                  });
+              });
+          </script>
         </tr>
       </table>
     <% end %>
@@ -62,16 +74,5 @@
       <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
     </div>
   <% end %>
-
-  <script>
-      $(document).ready(function () {
-          $(".date-picker").datepicker({
-              language: '<%= set_user_language %>',
-              autoclose: true,
-              todayHighlight: true,
-              todayBtn: true
-          });
-      });
-  </script>
 
 </div>

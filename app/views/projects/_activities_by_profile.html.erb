@@ -32,6 +32,7 @@
       <% unless estimation_pbs_probable_results.nil? %>
         <% project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt| %>
           <% wbs_probable_value =  estimation_pbs_probable_results[wbs_project_elt.id] %>
+          <% unless wbs_probable_value.nil? %>
             <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
             <tr>
               <td><span style="float: left; margin-left:<%=wbs_project_elt.depth%>em"> <%= wbs_project_elt.name %> </span></td>
@@ -49,6 +50,7 @@
                   <td></td>
               <% end %>
             </tr>
+          <% end %>
         <% end %>
       <% end %>
     </table>
