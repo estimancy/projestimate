@@ -1,46 +1,44 @@
-<div class="">
+<h2>
+  <%= @guw_model %>
+</h2>
 
-  <h2>
-    <%= @guw_model %>
-  </h2>
-
-  <% @guw_model.guw_types.each do |guw_type| %>
-    <h4>
+<% @guw_model.guw_types.each do |guw_type| %>
+  <h4>
+    <b>
       <%= link_to guw_type.name, guw.edit_guw_model_guw_type_path(@guw_model, guw_type) %>
-    </h4>
+    </b>
+  </h4>
 
-    <%= link_to 'Créer un seuil de complexité', guw.new_guw_model_guw_type_guw_attribute_complexity_path(@guw_model, guw_type) %> -
-    <%= link_to "Voir les complexités de l'UO (#{guw_type.guw_complexities.count})", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
+  <%= link_to 'Créer un seuil de complexité', guw.new_guw_model_guw_type_guw_attribute_complexity_path(@guw_model, guw_type) %> -
+  <%= link_to "Voir les complexités de l'UO (#{guw_type.guw_complexities.count})", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
 
-    <br>
-    <table class="table table-bordered">
+  <br>
+  <table class="table table-bordered">
+    <tr>
+      <th></th>
+      <% guw_type.guw_attribute_complexities.each do |cplx| %>
+        <th>
+          <%= link_to "#{cplx.name} (#{cplx.value})", guw.edit_guw_model_guw_type_guw_attribute_complexity_path(@guw_model, guw_type, cplx) %>
+        </th>
+      <% end %>
+    </tr>
+
+    <% Guw::GuwAttribute.all.each do |guw_attribute| %>
       <tr>
-        <th></th>
+        <td>
+          <%= guw_attribute %>
+        </td>
         <% guw_type.guw_attribute_complexities.each do |cplx| %>
-          <th>
-            <%= link_to "#{cplx.name} (#{cplx.value})", guw.edit_guw_model_guw_type_guw_attribute_complexity_path(@guw_model, guw_type, cplx) %>
-          </th>
+          <td class="align-center">
+            <%= text_field_tag "bottom", cplx.bottom_range, class: "input-mini" %>
+            <%= text_field_tag "top", cplx.top_range, class: "input-mini"  %>
+          </td>
         <% end %>
       </tr>
+    <% end %>
+  </table>
+  <hr>
+<% end %>
 
-      <% Guw::GuwAttribute.all.each do |guw_attribute| %>
-        <tr>
-          <td>
-            <%= guw_attribute %>
-          </td>
-          <% guw_type.guw_attribute_complexities.each do |cplx| %>
-            <td class="align-center">
-              <%= text_field_tag "bottom", cplx.bottom_range, class: "input-mini" %>
-              <%= text_field_tag "top", cplx.top_range, class: "input-mini"  %>
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
-    </table>
-    <hr>
-  <% end %>
-
-  <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn'%>
-  <%= link_to "Gérer les critères (attributs)", guw.guw_attributes_path, :class => 'btn'  %>
-
-</div>
+<%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn'%>
+<%= link_to "Gérer les critères (attributs)", guw.guw_attributes_path, :class => 'btn'  %>

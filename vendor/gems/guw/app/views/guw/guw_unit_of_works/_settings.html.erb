@@ -1,6 +1,8 @@
 <%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path, remote: true do %>
+
   <h4>Choix du modèle d'UO</h4>
   <%= select_tag("guw_model", options_for_select(Guw::GuwModel.all)) %>
+
   <hr>
   <table class="table table-bordered">
     <tr>
