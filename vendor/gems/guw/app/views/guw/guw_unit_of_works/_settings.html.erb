@@ -64,10 +64,14 @@
             <%= text_field_tag "result_high[#{guow.id}]", guow.result_high, class: "input-mini" %>
           </td>
           <td style="vertical-align: middle">
-            <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
+            <% if guow.guw_complexity.nil? %>
+              <%= text_field_tag "cplx[#{guow.id}]", '', class: "input-mini", disabled: true %>
+            <% else %>
+              <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
+            <% end %>
           </td>
           <td style="vertical-align: middle">
-            <% if guow.guw_complexity.weight.nil? %>
+            <% if guow.guw_complexity.nil? %>
               <%= text_field_tag "effort[#{guow.id}]", '', class: "input-mini" %>
             <% else %>
               <%= text_field_tag "effort[#{guow.id}]", guow.guw_complexity.weight, class: "input-mini" %>

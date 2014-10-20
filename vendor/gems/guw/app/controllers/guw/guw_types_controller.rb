@@ -48,12 +48,12 @@ class Guw::GuwTypesController < ApplicationController
     @guw_type = Guw::GuwType.new(params[:guw_type])
     @guw_type.guw_model_id = params[:guw_type][:guw_model_id]
     @guw_type.save
-    redirect_to main_app.root_url
+    redirect_to guw.guw_model_path(@guw_type.guw_model)
   end
 
   def update
     @guw_type = Guw::GuwType.find(params[:id])
     @guw_type.update_attributes(params[:guw_type])
-    redirect_to main_app.root_url
+    redirect_to guw.guw_model_path(@guw_type.guw_model)
   end
 end

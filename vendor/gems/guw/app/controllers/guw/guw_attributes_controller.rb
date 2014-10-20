@@ -51,12 +51,12 @@ class Guw::GuwAttributesController < ApplicationController
   def create
     @guw_attribute = Guw::GuwAttribute.new(params[:guw_attribute])
     @guw_attribute.save
-    redirect_to main_app.root_url
+    redirect_to guw.guw_model_path(@guw_attribute.guw_model)
   end
 
   def update
     @guw_attribute = Guw::GuwAttribute.find(params[:id])
     @guw_attribute.update_attributes(params[:guw_attribute])
-    redirect_to main_app.root_url
+    redirect_to guw.guw_model_path(@guw_attribute.guw_model)
   end
 end

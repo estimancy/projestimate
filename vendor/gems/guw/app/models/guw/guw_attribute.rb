@@ -1,6 +1,7 @@
 module Guw
   class GuwAttribute < ActiveRecord::Base
-    has_many :guw_complexities
+    belongs_to :guw_model
+    has_many :guw_attribute_complexities
 
     def to_s
       name

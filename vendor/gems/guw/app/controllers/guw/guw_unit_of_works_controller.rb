@@ -30,6 +30,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_type = Guw::GuwType.find(params[:guw_unit_of_work][:guw_type_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.new(params[:guw_unit_of_work])
     @guw_unit_of_work.guw_model_id = Guw::GuwModel.first.id
+    @guw_unit_of_work.module_project_id = current_module_project.id
+    @guw_unit_of_work.pbs_project_element_id = current_component.id
     @guw_unit_of_work.save
 
     Guw::GuwAttribute.all.each do |gac|
@@ -65,16 +67,18 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
 
         @guw_type.guw_attribute_complexities.each do |guw_ac|
-          if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-            @lows << guw_ac.value
-          end
+          unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+            if low.between?(guw_ac.bottom_range, guw_ac.top_range)
+              @lows << guw_ac.value
+            end
 
-          if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
-            @mls << guw_ac.value
-          end
+            if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
+              @mls << guw_ac.value
+            end
 
-          if high.between?(guw_ac.bottom_range, guw_ac.top_range)
-            @highs << guw_ac.value
+            if high.between?(guw_ac.bottom_range, guw_ac.top_range)
+              @highs << guw_ac.value
+            end
           end
         end
 

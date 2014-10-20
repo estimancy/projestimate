@@ -36,27 +36,32 @@
 
 
 class Guw::GuwAttributeComplexitiesController < ApplicationController
-  def index
-    @guw_attribute_complexities = Guw::GuwAttributeComplexity.all
+
+  def save_attributs_complexities
+    params["bottom"].each do |attribute|
+      attribute.last.each do |type_complexity|
+        tc = Guw::GuwTypeComplexity.find(type_complexity.first.to_i)
+        a = Guw::GuwAttribute.find(attribute.first.to_i)
+
+        gac = Guw::GuwAttributeComplexity.where( guw_type_id: params[:guw_type_id],
+                                                 guw_attribute_id: a.id.to_i,
+                                                 guw_type_complexity_id: tc.id).first
+        if gac.nil?
+          Guw::GuwAttributeComplexity.create(name: tc.name,
+                                             value: tc.value,
+                                             bottom_range: params["bottom"]["#{a.id}"][type_complexity.first],
+                                             top_range: params["top"]["#{a.id}"][type_complexity.first],
+                                             guw_type_id: params[:guw_type_id],
+                                             guw_attribute_id: a.id.to_i,
+                                             guw_type_complexity_id: tc.id)
+        else
+          gac.bottom_range = params["bottom"]["#{a.id}"][type_complexity.first]
+          gac.top_range = params["top"]["#{a.id}"][type_complexity.first]
+          gac.save
+        end
+
+      end
+    end
   end
 
-  def new
-    @guw_attribute_complexity = Guw::GuwAttributeComplexity.new
-  end
-
-  def edit
-    @guw_attribute_complexity = Guw::GuwAttributeComplexity.find(params[:id])
-  end
-
-  def create
-    @guw_attribute_complexity = Guw::GuwAttributeComplexity.new(params[:guw_attribute_complexity])
-    @guw_attribute_complexity.save
-    redirect_to main_app.root_url
-  end
-
-  def update
-    @guw_attribute_complexity = Guw::GuwAttributeComplexity.find(params[:id])
-    @guw_attribute_complexity.update_attributes(params[:guw_attribute_complexity])
-    redirect_to main_app.root_url
-  end
 end

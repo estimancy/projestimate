@@ -1,23 +1,39 @@
-<h1>Listing</h1>
+<h4>
+  <b>
+    Liste des attributs (critères)
+  </b>
+</h4>
 
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Attributs
+      </a>
+    </li>
+  </ul>
 
-  <% @guw_attributes.each do |guw_attribute| %>
-    <tr>
-      <td><%= guw_attribute.name %></td>      
-      <td><%= guw_attribute.description %></td>
-      <td><%= link_to 'Edit', guw.edit_guw_attribute_path(guw_attribute) %></td>
-      <td><%= link_to 'Destroy', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    </tr>
-  <% end %>
-</table>
+  <div id="tabs-1">
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+        <th></th>
+      </tr>
 
-<br />
+      <% @guw_attributes.each do |guw_attribute| %>
+        <tr>
+          <td><%= guw_attribute.name %></td>
+          <td><%= guw_attribute.description %></td>
+          <td><%= link_to 'Edit', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute) %></td>
+          <td><%= link_to 'Destroy', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
 
-<%= link_to 'New attribute', guw.new_guw_attribute_path %>
+<br>
+
+<%= link_to 'New attribute', guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>

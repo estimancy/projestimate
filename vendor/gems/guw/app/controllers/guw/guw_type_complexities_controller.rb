@@ -35,30 +35,29 @@
 #############################################################################
 
 
-class Guw::GuwModelsController < ApplicationController
-
-  def show
-    @guw_model = Guw::GuwModel.find(params[:id])
+class Guw::GuwTypeComplexitiesController < ApplicationController
+  def index
+    @guw_attribute_complexities = Guw::GuwTypeComplexity.all
   end
 
   def new
-    @guw_model = Guw::GuwModel.new
+    @guw_type_complexity = Guw::GuwTypeComplexity.new
   end
 
   def edit
-    @guw_model = Guw::GuwModel.find(params[:id])
+    @guw_type_complexity = Guw::GuwTypeComplexity.find(params[:id])
   end
 
   def create
-    @guw_model = Guw::GuwModel.new(params[:guw_model])
-    @guw_model.organization_id = params[:guw_model][:organization_id].to_i
-    @guw_model.save
-    redirect_to main_app.edit_organization_path(@guw_model.id)
+    @guw_type_complexity = Guw::GuwTypeComplexity.new(params[:guw_type_complexity])
+    @guw_type_complexity.save
+    redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model)
   end
 
   def update
-    @guw_model = Guw::GuwModel.find(params[:id])
-    @guw_model.update_attributes(params[:guw_model])
-    redirect_to main_app.edit_organization_path(@guw_model.id)
+    @guw_type_complexity = Guw::GuwTypeComplexity.find(params[:id])
+    @guw_type_complexity.update_attributes(params[:guw_type_complexity])
+    redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model)
   end
+
 end

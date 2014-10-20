@@ -37,6 +37,7 @@
 Guw::Engine.routes.draw do
   root :to => 'guw#index'
 
+  resources :guw_type_complexities
   resources :guw_complexities
   resources :guw_attributes
   resources :guw_unit_of_works
@@ -45,9 +46,14 @@ Guw::Engine.routes.draw do
   resources :guw_attribute_complexities
 
   resources :guw_models do
+    resources :guw_attributes
     resources :guw_types do
       resources :guw_attribute_complexities
       resources :guw_complexities
+      resources :guw_type_complexities
+
+      post "guw_attribute_complexities/save_attributs_complexities"
+
     end
   end
 
