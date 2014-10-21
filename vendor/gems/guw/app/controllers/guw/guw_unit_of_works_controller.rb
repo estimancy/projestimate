@@ -54,7 +54,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     Guw::GuwModel.first.guw_unit_of_works.each do |guw_unit_of_work|
 
+      guw_unit_of_work.guw_type_id = params["guw_type"]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.save
+
+
       @guw_type = Guw::GuwType.find(params["guw_type"]["#{guw_unit_of_work.id}"])
+
 
       @lows = Array.new
       @mls = Array.new
@@ -101,6 +106,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         value_pert = (guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely + guw_unit_of_work.result_high)/6
         if value_pert.between?(guw_c.bottom_range, guw_c.top_range)
           guw_unit_of_work.guw_complexity_id = guw_c.id
+          guw_unit_of_work.save
         end
 
         #Save effective effort (or weight) of uo
@@ -128,25 +134,25 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       end
 
-      current_module_project.pemodule.attribute_modules.each do |am|
-        @evs = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).all
-        @evs.each do |ev|
-          tmp_prbl = Array.new
-          ["low", "most_likely", "high"].each do |level|
-            if am.pe_attribute.alias == "effort"
-              level_est_val = ev.send("string_data_#{level}")
-              level_est_val[current_component.id] = guw_unit_of_work.ajusted_effort
-              tmp_prbl << level_est_val[current_component.id]
-            end
-            ev.update_attribute(:"string_data_#{level}", level_est_val)
+      guw_unit_of_work.save
+    end
+
+    current_module_project.pemodule.attribute_modules.each do |am|
+      @evs = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+      @evs.each do |ev|
+        tmp_prbl = Array.new
+        ["low", "most_likely", "high"].each do |level|
+          if am.pe_attribute.alias == "effort"
+            level_est_val = ev.send("string_data_#{level}")
+            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(:module_project_id => current_module_project.id, pbs_project_element_id: current_component.id).map(&:ajusted_effort).compact.sum
+            tmp_prbl << level_est_val[current_component.id]
           end
-          if am.pe_attribute.alias == "effort" and ev.in_out == "output"
-            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-          end
+          ev.update_attribute(:"string_data_#{level}", level_est_val)
+        end
+        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
+          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
       end
-
-      guw_unit_of_work.save
     end
 
   end

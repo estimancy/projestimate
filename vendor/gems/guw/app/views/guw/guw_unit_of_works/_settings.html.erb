@@ -9,14 +9,11 @@
       <th>Name</th>
       <th>UoType</th>
       <th>Attributs</th>
-      <th>Res. L</th>
-      <th>Res. ML</th>
-      <th>Res. H</th>
       <th>Cplx. UO</th>
       <th>Valeur</th>
-      <th>Valeur ajusté</th>
+      <th>Valeur retenu</th>
     </tr>
-      <% @guw_unit_of_works.each_with_index do |guow, i| %>
+      <% @guw_unit_of_works.reverse.each_with_index do |guow, i| %>
         <tr>
           <td style="vertical-align: middle">
             <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
@@ -53,15 +50,6 @@
                 </tr>
               <% end %>
             </table>
-          </td>
-          <td style="vertical-align: middle">
-            <%= text_field_tag "result_low[#{guow.id}]", guow.result_low, class: "input-mini" %>
-          </td>
-          <td style="vertical-align: middle">
-            <%= text_field_tag "result_most_likely[#{guow.id}]", guow.result_most_likely, class: "input-mini" %>
-          </td>
-          <td style="vertical-align: middle">
-            <%= text_field_tag "result_high[#{guow.id}]", guow.result_high, class: "input-mini" %>
           </td>
           <td style="vertical-align: middle">
             <% if guow.guw_complexity.nil? %>
