@@ -4,7 +4,7 @@
   <%= select_tag("guw_model", options_for_select(Guw::GuwModel.all)) %>
 
   <hr>
-  <table class="table table-bordered">
+  <table class="table table-bordered table-condensed">
     <tr>
       <th>Name</th>
       <th>UoType</th>
@@ -26,7 +26,7 @@
             <%= select_tag "guw_type[#{guow.id}]", options_for_select(Guw::GuwModel.first.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id ) %>
           </td>
           <td>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-condensed">
               <tr>
                 <th>Nom d'attribut</th>
                 <th>Low</th>
