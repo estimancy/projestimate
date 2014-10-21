@@ -40,9 +40,8 @@ module Guw
   class Guw
     attr_accessor :effort
 
-    #Constructor
     def initialize(elem)
-
+      @effort = elem['effort']
     end
 
     def get_effort(*args)

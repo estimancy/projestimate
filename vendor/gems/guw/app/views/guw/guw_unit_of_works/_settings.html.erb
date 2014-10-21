@@ -13,8 +13,8 @@
       <th>Res. ML</th>
       <th>Res. H</th>
       <th>Cplx. UO</th>
-      <th>RTU</th>
-      <th>Eff. ajusté</th>
+      <th>Valeur</th>
+      <th>Valeur ajusté</th>
     </tr>
       <% @guw_unit_of_works.each_with_index do |guow, i| %>
         <tr>
@@ -71,11 +71,7 @@
             <% end %>
           </td>
           <td style="vertical-align: middle">
-            <% if guow.guw_complexity.nil? %>
-              <%= text_field_tag "effort[#{guow.id}]", '', class: "input-mini" %>
-            <% else %>
-              <%= text_field_tag "effort[#{guow.id}]", guow.guw_complexity.weight, class: "input-mini" %>
-            <% end %>
+            <%= guow.effort %>
           </td>
           <td style="vertical-align: middle">
             <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>

@@ -59,6 +59,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @lows = Array.new
       @mls = Array.new
       @highs = Array.new
+      @effort_pert = Array.new
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
@@ -66,7 +67,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
         high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
 
-        @guw_type.guw_attribute_complexities.each do |guw_ac|
+        Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id, guw_attribute_id: guowa.guw_attribute_id).all.each do |guw_ac|
           unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
             if low.between?(guw_ac.bottom_range, guw_ac.top_range)
               @lows << guw_ac.value
@@ -83,8 +84,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
 
         guowa.low = low
-        guowa.most_likely = low
-        guowa.high = low
+        guowa.most_likely = most_likely
+        guowa.high = high
         guowa.save
       end
 
@@ -92,27 +93,60 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.result_most_likely = @mls.sum
       guw_unit_of_work.result_high = @highs.sum
 
-      guw_unit_of_work.effort = params["effort"]["#{guw_unit_of_work.id}"]
-      guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
-
       guw_unit_of_work.save
 
       @guw_type.guw_complexities.each do |guw_c|
-        if guw_unit_of_work.result_low.between?(guw_c.bottom_range, guw_c.top_range)
+
+        #Save if uo is simple/ml/high
+        value_pert = (guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely + guw_unit_of_work.result_high)/6
+        if value_pert.between?(guw_c.bottom_range, guw_c.top_range)
           guw_unit_of_work.guw_complexity_id = guw_c.id
+        end
+
+        #Save effective effort (or weight) of uo
+        if guw_unit_of_work.result_low.between?(guw_c.bottom_range, guw_c.top_range)
+          uo_weight_low = guw_c.weight
         end
 
         if guw_unit_of_work.result_most_likely.between?(guw_c.bottom_range, guw_c.top_range)
-          guw_unit_of_work.guw_complexity_id = guw_c.id
+          uo_weight_ml = guw_c.weight
         end
 
         if guw_unit_of_work.result_high.between?(guw_c.bottom_range, guw_c.top_range)
-          guw_unit_of_work.guw_complexity_id = guw_c.id
+          uo_weight_high = guw_c.weight
+        end
+
+        @effort_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+      end
+
+      guw_unit_of_work.effort = @effort_pert.sum
+      guw_unit_of_work.ajusted_effort = @effort_pert.sum
+
+      if !params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+        if params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @effort_pert.sum
+          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
+        end
+      end
+
+      current_module_project.pemodule.attribute_modules.each do |am|
+        @evs = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+        @evs.each do |ev|
+          tmp_prbl = Array.new
+          ["low", "most_likely", "high"].each do |level|
+            if am.pe_attribute.alias == "effort"
+              level_est_val = ev.send("string_data_#{level}")
+              level_est_val[current_component.id] = guw_unit_of_work.ajusted_effort
+              tmp_prbl << level_est_val[current_component.id]
+            end
+            ev.update_attribute(:"string_data_#{level}", level_est_val)
+          end
+          if am.pe_attribute.alias == "effort" and ev.in_out == "output"
+            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+          end
         end
       end
 
       guw_unit_of_work.save
-
     end
 
   end
