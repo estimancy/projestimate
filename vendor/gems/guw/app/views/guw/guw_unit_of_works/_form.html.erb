@@ -1,13 +1,24 @@
-<%= simple_form_for(@guw_unit_of_work) do |f| %>
-  <%= f.error_notification %>
+<b>Unit of Work</b>
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        New Unit Of Work
+      </a>
+    </li>
+  </ul>
 
-  <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :comments %>
-    <%= f.input :guw_type_id, as: :select, collection: Guw::GuwType.all %>
-  </div>
+  <div id="tabs-1">
+    <%= simple_form_for(@guw_unit_of_work) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :comments %>
+        <%= f.input :guw_type_id, as: :select, collection: Guw::GuwType.all %>
+      </div>
+
+      <%= f.button :submit %>
+    <% end %>
   </div>
-<% end %>
+</div>

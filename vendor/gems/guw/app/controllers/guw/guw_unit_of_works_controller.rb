@@ -155,6 +155,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
+    flash[:notice] = "Vos données ont été correctement sauvegardés"
+    redirect_to main_app.root_url
   end
 
 end

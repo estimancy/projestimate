@@ -59,9 +59,9 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
           gac.top_range = params["top"]["#{a.id}"][type_complexity.first]
           gac.save
         end
-
       end
     end
+    redirect_to guw.guw_model_path(params[:guw_model_id])
   end
 
 end

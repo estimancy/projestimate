@@ -1,4 +1,4 @@
-<%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path, remote: true do %>
+<%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path do %>
 
   <h4>Choix du modèle d'UO</h4>
   <%= select_tag("guw_model", options_for_select(Guw::GuwModel.all)) %>
@@ -13,7 +13,7 @@
       <th>Valeur</th>
       <th>Valeur retenu</th>
     </tr>
-      <% @guw_unit_of_works.reverse.each_with_index do |guow, i| %>
+      <% @guw_unit_of_works.each_with_index do |guow, i| %>
         <tr>
           <td style="vertical-align: middle">
             <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
@@ -27,12 +27,6 @@
           </td>
           <td>
             <table class="table table-bordered table-condensed">
-              <tr>
-                <th>Nom d'attribut</th>
-                <th>Low</th>
-                <th>ML</th>
-                <th>High</th>
-              </tr>
               <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
                 <tr>
                   <td>
