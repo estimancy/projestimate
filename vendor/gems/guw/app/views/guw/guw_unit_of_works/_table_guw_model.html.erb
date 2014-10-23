@@ -1,0 +1,58 @@
+<table class="table table-bordered table-condensed">
+  <tr>
+    <th>Name</th>
+    <th>UoType</th>
+    <th>Attributs</th>
+    <th>Cplx. UO</th>
+    <th>Valeur</th>
+    <th>Valeur retenu</th>
+  </tr>
+  <% @guw_unit_of_works.each_with_index do |guow, i| %>
+    <tr>
+      <td style="vertical-align: middle">
+        <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
+                <span title="<%= guow.comments %>" class="attribute_tooltip">
+                  <%= guow.name %>
+                </span>
+        </a>
+      </td>
+      <td style="vertical-align: middle">
+        <%= select_tag "guw_type[#{guow.id}]", options_for_select(Guw::GuwModel.first.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id ) %>
+      </td>
+      <td>
+        <table class="table table-bordered table-condensed">
+          <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
+            <tr>
+              <td>
+                <%= uowa.guw_attribute.name %>
+              </td>
+              <td>
+                <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
+              </td>
+              <td>
+                <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
+              </td>
+              <td>
+                <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+      <td style="vertical-align: middle">
+        <% if guow.guw_complexity.nil? %>
+          <%= text_field_tag "cplx[#{guow.id}]", '', class: "input-mini", disabled: true %>
+        <% else %>
+          <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
+        <% end %>
+      </td>
+      <td style="vertical-align: middle">
+        <%= guow.effort %>
+      </td>
+      <td style="vertical-align: middle">
+        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
+      </td>
+    </tr>
+  <% end %>
+  </tr>
+</table>

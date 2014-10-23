@@ -58,5 +58,6 @@ Guw::Engine.routes.draw do
   end
 
   post "guw_unit_of_works/save_guw_unit_of_works"
+  get "/reload" => "guw_unit_of_works#reload", as: "reload"
 
 end

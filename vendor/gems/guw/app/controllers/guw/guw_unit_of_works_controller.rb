@@ -52,7 +52,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def save_guw_unit_of_works
 
-    Guw::GuwModel.first.guw_unit_of_works.each do |guw_unit_of_work|
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+
+    @guw_model.guw_unit_of_works.each do |guw_unit_of_work|
 
       guw_unit_of_work.guw_type_id = params["guw_type"]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.save
@@ -157,6 +159,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     flash[:notice] = "Vos données ont été correctement sauvegardés"
     redirect_to main_app.root_url
+  end
+
+  def reload
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_unit_of_works = @guw_model.guw_unit_of_works
   end
 
 end
