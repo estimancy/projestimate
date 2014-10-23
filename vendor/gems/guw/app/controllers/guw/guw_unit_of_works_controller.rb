@@ -20,16 +20,19 @@
 class Guw::GuwUnitOfWorksController < ApplicationController
   def new
     @guw_unit_of_work = Guw::GuwUnitOfWork.new
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
   end
 
   def edit
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
   end
 
   def create
     @guw_type = Guw::GuwType.find(params[:guw_unit_of_work][:guw_type_id])
+    @guw_model = Guw::GuwModel.find(params[:guw_unit_of_work][:guw_model_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.new(params[:guw_unit_of_work])
-    @guw_unit_of_work.guw_model_id = Guw::GuwModel.first.id
+    @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
     @guw_unit_of_work.save

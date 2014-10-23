@@ -12,10 +12,12 @@
     <%= simple_form_for(@guw_unit_of_work) do |f| %>
       <%= f.error_notification %>
 
+      <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
+
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :comments %>
-        <%= f.input :guw_type_id, as: :select, collection: Guw::GuwType.all %>
+        <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types %>
       </div>
 
       <%= f.button :submit %>
