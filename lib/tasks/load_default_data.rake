@@ -201,7 +201,14 @@ def load_data!
 
   puts '   - Modules'
   modules=[
-      ['initialization', 'initialization', 'The Initialization module.', 'no',]
+      ['initialization', 'initialization', 'The Initialization module.', 'no'],
+      ['Cocomo Basic', 'cocomo_basic', 'Cocomo Basic', 'no'],
+      ['Cocomo II', 'cocomo_expert', 'Cocomo II', 'no'],
+      ['Cocomo Intermediate', 'cocomo_advanced', 'Cocomo Intermediate', 'no'],
+      ['Effort Breakdown', 'effort_breakdown', 'Effort Breakdown', 'yes_for_output_with_ratio'],
+      ['Generic Unit Of Work', 'guw', 'Generic Unit Of Work', 'no'],
+      ['Real Size', 'real_size', 'Real Size', 'no'],
+      ['Activity Completion', 'wbs_activity_completion', 'Activity Completion', 'yes_for_input_output_without_ratio'],
   ]
 
   modules.each do |i|
@@ -276,9 +283,9 @@ def load_data!
 
     puts '   - Default groups'
     #Create default groups
-    Group.create(:name => 'MasterAdmin', :record_status_id => rsid)
-    Group.create(:name => 'Admin', :record_status_id => rsid)
-    Group.create(:name => 'Everyone', :record_status_id => rsid)
+    Group.create(:name => 'MasterAdmin')
+    Group.create(:name => 'Admin')
+    Group.create(:name => 'Everyone')
 
     #Associated default user with group MasterAdmin
     user.group_ids = [Group.first.id]
