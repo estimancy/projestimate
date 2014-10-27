@@ -72,7 +72,7 @@ class PbsProjectElementsController < ApplicationController
     set_page_title("Editing #{@pbs_project_element.name}")
 
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-    @project_wbs_activities = @pe_wbs_project_activity.wbs_activities(:id).uniq   # Select only Wbs-Activities affected to current project
+    @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project
     @pbs_wbs_activity_ratios = []
 
     unless @pbs_project_element.wbs_activity.nil?
