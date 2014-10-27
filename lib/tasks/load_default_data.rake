@@ -114,7 +114,7 @@ def load_data!
       rs.update_attribute(:record_status_id, rsid)
     end
 
-  puts '   - Currencies'
+    puts '   - Currencies'
     Currency.create(:name => 'Euro', :alias => 'euros', :description => 'European Union currency', :iso_code => 'EUR', :iso_code_number => '978', :sign => '€', :conversion_rate => 1.000000, :record_status_id => rsid)
     Currency.create(:name => 'Dollar', :alias => 'dollars', :description => 'United State Dollar', :iso_code => 'USD', :iso_code_number => '840', :sign => '$', :conversion_rate => 1.312100, :record_status_id => rsid)
     Currency.create(:name => 'Pound', :alias => 'pounds', :description => 'Great Britain currency', :iso_code => 'GBP', :iso_code_number => '826', :sign => '£', :conversion_rate => 0.851000, :record_status_id => rsid)
@@ -209,11 +209,10 @@ def load_data!
     pemodule.save(validate: false)
   end
 
-  # Get the Capitalization Module
-  initialization_module = Pemodule.find_by_alias_and_record_status_id("initialization", rsid)
+    # Get the Capitalization Module
+    initialization_module = Pemodule.find_by_alias_and_record_status_id("initialization", rsid)
 
     puts '   - Estimancy Icons'
-
     folder = Peicon.create(:name => 'Folder', :icon => File.new("#{Rails.root}/public/folder.png"), :record_status_id => rsid)
     link = Peicon.create(:name => 'Link', :icon => File.new("#{Rails.root}/public/link.png", 'r'), :record_status_id => rsid)
     undefined = Peicon.create(:name => 'Undefined', :icon => File.new("#{Rails.root}/public/undefined.png", 'r'), :record_status_id => rsid)
@@ -261,15 +260,26 @@ def load_data!
 
     puts '   - Admin user'
     #Create first user
-    user = User.new(:first_name => 'Administrator', :last_name => 'Estimancy', :login_name => 'admin', :initials => 'ad', :email => 'youremail@yourcompany.net', :auth_type => AuthMethod.first.id, :user_status => 'active', :language_id => Language.first.id, :time_zone => 'GMT')
+    user = User.new(:first_name => 'Administrator',
+                    :last_name => 'Estimancy',
+                    :login_name => 'admin',
+                    :initials => 'ad',
+                    :email => 'youremail@yourcompany.net',
+                    :auth_type => AuthMethod.first.id,
+                    :user_status => 'active',
+                    :language_id => Language.first.id,
+                    :time_zone => 'GMT')
     user.password = user.password_confirmation = 'projestimate'
+    user.super_admin = true
+    user.skip_confirmation!
     user.save
-    
+
     puts '   - Default groups'
     #Create default groups
     Group.create(:name => 'MasterAdmin', :record_status_id => rsid)
     Group.create(:name => 'Admin', :record_status_id => rsid)
     Group.create(:name => 'Everyone', :record_status_id => rsid)
+
     #Associated default user with group MasterAdmin
     user.group_ids = [Group.first.id]
     user.save
@@ -300,39 +310,65 @@ def load_data!
       array_labor_category.each do |i|
         LaborCategory.create(:name => i[0], :description => i[1], :record_status_id => rsid)
       end
-      #laborcategory=LaborCategory.first
-    
-  puts ' Creating organizations...'
-    Organization.create(:name => 'YourOrganization', :description => 'This must be update to match your organization')
-    organization = Organization.first
-    Organization.create(:name => 'Other', :description => 'This could be used to group users that are not members of any organization')
 
-    #puts "   - Inflation"
-    #Inflation.create(:organization_id => organization.id, :year => Time.now.strftime("%Y"), :labor_inflation => "1.0", :material_inflation => "1.0", :description => "TBD" )
-    
-    #puts "   - Organization Labor Category"
-    #OrganizationLaborCategory.create(:labor_category_id => laborcategory, :organization_id => organisation, :name=laborcategory.name)    
-    
+    puts ' Creating organizations...'
+    Organization.create(:name => 'YourOrganization',
+                        :description => 'This must be update to match your organization',
+                        :number_hours_per_day => 8,
+                        number_hours_per_month: 160,
+                        cost_per_hour: 100,
+                        currency_id: Currency.first.id,
+                        limit1: 10,
+                        limit2: 20,
+                        limit3: 30)
+
+  organization = Organization.first
+  organization.groups << Group.first
+  organization.save
+
   puts ' Creating Samples data ...'
+
+    # Add some Estimations statuses in organization
+    estimation_statuses = [
+        ['0', 'preliminary', "Préliminaire", "999999", "Statut initial lors de la création de l'estimation"],
+        ['1', 'in_progress', "En cours", "3a87ad", "En cours de modification"],
+        ['2', 'in_review', "Relecture", "f89406", "En relecture"],
+        ['3', 'checkpoint', "Contrôle", "b94a48", "En phase de contrôle"],
+        ['4', 'released', "Confirmé", "468847", "Phase finale d'une estimation qui arrive à terme et qui sera retenue comme une version majeure"],
+        ['5', 'rejected', "Rejeté", "333333", "L'estimation dans ce statut est rejetée et ne sera pas poursuivi"]
+    ]
+    estimation_statuses.each do |i|
+      status = EstimationStatus.create(organization_id: Organization.first.id, status_number: i[0], status_alias: i[1], name: i[2], status_color: i[3], description: i[4])
+    end
 
     puts '   - Demo project'
     #Create default project
-    Project.create(:title => 'Sample project', :description => 'This is a sample project for demonstration purpose', :alias => 'sample project', :state => 'preliminary', :start_date => Time.now.strftime('%Y/%m/%d'), :is_model => false, :organization_id => organization.id, :project_area_id => pjarea.id, :project_category_id => ProjectCategory.first.id, :platform_category_id => PlatformCategory.first.id, :acquisition_category_id =>  AcquisitionCategory.first.id)
+    Project.create(:title => 'Sample project',
+                   :description => 'This is a sample project for demonstration purpose',
+                   :alias => 'sample project',
+                   :state => 'preliminary',
+                   :start_date => Time.now.strftime('%Y/%m/%d'),
+                   :is_model => false,
+                   :organization_id => organization.id,
+                   :estimation_status_id => EstimationStatus.first.id)
+
     project = Project.first
-    #Associated default user with sample project     
-    user.project_ids = [project.id]
-    user.save
+
     #Create default Pe-wbs-Project associated with previous project
     PeWbsProject.create(:project_id => project.id, :name => "#{project.title} PBS-Product", :wbs_type => 'Product')
     pe_wbs_project = PeWbsProject.first
+
     #Create root pbs_project_element
-    PbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :work_element_type_id => wet.id, :position => 0, :name => 'Root folder')
+    PbsProjectElement.create(:is_root => true, start_date: Time.now, :pe_wbs_project_id => pe_wbs_project.id, :work_element_type_id => wet.id, :position => 0, :name => 'Root folder')
+
     #pbs_project_element = PbsProjectElement.first
     PeWbsProject.create(:project_id => project.id, :name => "#{project.title} WBS-Activity", :wbs_type => 'Activity')
     pe_wbs_project = PeWbsProject.last
+
     #Create root pbs_project_element
     WbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :description => 'WBS-Activity Root Element', :name => "Root Element - #{project.title} WBS-Activity)")
     #wbs_project_element = wbsProjectElement.first
+
   #create the initialization project module
   unless initialization_module.nil?
     cap_module_project = project.module_projects.build(:pemodule_id => initialization_module.id, :position_x => 0, :position_y => 0)
@@ -408,11 +444,15 @@ def load_data!
                    ['delete_an_attribute', 'Delete Attribute', true],
                    ['edit_an_attribute', 'Edit Attribute', true],
                    ['access_to_attributes', 'Access to Attributes', true],
-                   ['edit_own_profile_security', 'Edit profile security', false]
+                   ['edit_own_profile_security', 'Edit profile security', false],
+                   ['show_project', 'Show project', false],
+                   ['edit_project', 'Editer le project', false],
+                   ['delete_project', 'Editer le project', false]
                   ]
 
     permissions.each do |i|
-      Permission.create(:name => String.keep_clean_space(i[0]), :description => i[1], :is_permission_project => i[2], :record_status_id => rsid)
+      p = Permission.new(:name => String.keep_clean_space(i[0]), alias: String.keep_clean_space(i[0]), :description => i[1], :is_permission_project => i[2], :record_status_id => rsid)
+      p.save(validate: false)
     end
 
   #  puts "\n\n"

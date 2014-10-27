@@ -108,7 +108,6 @@
                     <% ['show_project', 'edit_project', 'delete_project'].each do |permission_label| %>
                         <% permission = Permission.find_by_alias(permission_label) %>
                         <span class="span4">
-                          <%#= check_box_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", permission.id, (estimation_status.estimation_status_group_roles.where(group_id: group.id).map{|role| [role.group_id, role.permission_id]}.include? [group.id, permission.id])) %>
                           <%= check_box_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", permission.id, (estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include? permission.id)) %>
                         </span>
                     <% end %>
