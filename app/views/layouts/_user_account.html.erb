@@ -104,13 +104,6 @@
           </a></li>
       <% end %>
 
-      <% if can? :manage, User or can? :create_and_edit_groups, Group %>
-        <li class="dropdown"><a href="<%= main_app.groups_path %>">
-          <!--<i class="icon-group icon-large pull-left"></i>-->
-          <%= I18n.t(:groups) %></a>
-        </li>
-      <% end %>
-
       <% if can? :manage_roles, :All %>
         <li class="dropdown"><a href="/globals_permissions">
           <!--<i class="icon-check-sign icon-large pull-left"></i>-->

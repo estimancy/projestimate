@@ -59,7 +59,7 @@
               <% end %>
           <% else %>
               <td>
-                <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %>
+                <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disabled => true %>
               </td>
           <% end %>
         </tr>
