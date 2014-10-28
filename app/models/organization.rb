@@ -41,7 +41,7 @@ class Organization < ActiveRecord::Base
   #has_and_belongs_to_many :users
   #Groups created on local, will be attached to an organization
   has_many :groups
-  has_many :users, through: :groups
+  has_many :users, through: :groups, uniq: true
 
   has_many :wbs_activities, :dependent => :destroy
   has_many :attribute_organizations, :dependent => :delete_all

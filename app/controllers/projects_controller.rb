@@ -151,7 +151,6 @@ public
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
-    @project.users << current_user
 
     #Give full control to project creator
     full_control_security_level = ProjectSecurityLevel.find_by_name('FullControl')
@@ -1361,8 +1360,8 @@ public
       @related_projects_inverse << i.pe_wbs_project.project
     end
 
-    @related_users = @project.users
-    @related_groups = @project.groups
+    @related_users = @project.organization.users
+    @related_groups = @project.organization.groups
   end
 
   def projects_global_params

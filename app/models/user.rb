@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
                   :password, :password_confirmation, :remember_me, :provider, :uid,
                   :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone,
                   :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at,
-                  :updated_at, :auth_type, :number_precision #, :project_security_ids
+                  :updated_at, :auth_type, :number_precision
 
   # Virtual attribute for authenticating by either login_name or email  # This is in addition to a real persisted field like 'login_name'
   attr_accessor :id_connexion, :updating_password, :current_password
