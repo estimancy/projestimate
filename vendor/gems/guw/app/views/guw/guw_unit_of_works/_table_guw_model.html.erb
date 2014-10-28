@@ -11,9 +11,9 @@
     <tr>
       <td style="vertical-align: middle">
         <a href=<%= guw.edit_guw_unit_of_work_path(guow) %>>
-                <span title="<%= guow.comments %>" class="attribute_tooltip">
-                  <%= guow.name %>
-                </span>
+          <span title="<%= guow.comments %>" class="attribute_tooltip">
+            <%= guow.name %>
+          </span>
         </a>
       </td>
       <td style="vertical-align: middle">
@@ -22,20 +22,22 @@
       <td>
         <table class="table table-bordered table-condensed">
           <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
-            <tr>
-              <td>
-                <%= uowa.guw_attribute.name %>
-              </td>
-              <td>
-                <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
-              </td>
-              <td>
-                <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
-              </td>
-              <td>
-                <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
-              </td>
-            </tr>
+            <% unless uowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first.nil? %>
+              <tr>
+                <td>
+                  <%= uowa.guw_attribute.name %>
+                </td>
+                <td>
+                  <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
+                </td>
+                <td>
+                  <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
+                </td>
+                <td>
+                  <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
+                </td>
+              </tr>
+            <% end %>
           <% end %>
         </table>
       </td>

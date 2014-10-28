@@ -151,12 +151,6 @@
               <%= link_to I18n.t(:button_configure_module_pbs_element), pbs_element_matrix_path(@project.id), :class => 'btn' %>
             </div>
           </div>
-
-
-        <!--<td class="pull-right">-->
-          <%# I18n.t(:label_filter_on_pbs_element) %>
-          <%# select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>
-        <!--</td>-->
         <% end %>
       <% end %>
 
@@ -185,7 +179,7 @@
                           <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                       <% end %>
                     </tr>
-                    <% @project.organization.users.each do |user| %>
+                    <% @project.organization.users.uniq.each do |user| %>
                         <%= hidden_field_tag "user_securities_#{user.id}" %>
                         <% securities = user.project_securities_for_select(@project.id) %>
                         <tr>

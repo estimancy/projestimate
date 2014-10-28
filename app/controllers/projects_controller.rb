@@ -355,7 +355,7 @@ public
       # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
       @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
-      @project.users.each do |u|
+      @project.organization.users.uniq.each do |u|
         ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
         if ps
           ps.project_security_level_id = params["user_securities_#{u.id}"]
@@ -367,7 +367,7 @@ public
         end
       end
 
-      @project.groups.each do |gpe|
+      @project.organization.groups.uniq.each do |gpe|
         ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
         if ps
           ps.project_security_level_id = params["group_securities_#{gpe.id}"]

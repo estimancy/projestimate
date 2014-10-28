@@ -69,7 +69,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @lows = Array.new
       @mls = Array.new
       @highs = Array.new
-      @effort_pert = Array.new
+      @weight_pert = Array.new
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
@@ -77,7 +77,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
         high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
 
-        Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id, guw_attribute_id: guowa.guw_attribute_id).all.each do |guw_ac|
+        Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
+                                          guw_attribute_id: guowa.guw_attribute_id).all.each do |guw_ac|
+
           unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
             if low.between?(guw_ac.bottom_range, guw_ac.top_range)
               @lows << guw_ac.value
@@ -127,14 +129,14 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           uo_weight_high = guw_c.weight
         end
 
-        @effort_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+        @weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
       end
 
-      guw_unit_of_work.effort = @effort_pert.sum
-      guw_unit_of_work.ajusted_effort = @effort_pert.sum
+      guw_unit_of_work.effort = @weight_pert.sum
+      guw_unit_of_work.ajusted_effort = @weight_pert.sum
 
       if !params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-        if params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @effort_pert.sum
+        if params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
           guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
         end
       end
