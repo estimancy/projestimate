@@ -84,12 +84,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
               if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-                if low < @guw_attribute_complexities.map(&:bottom_range).min || low < @guw_attribute_complexities.map(&:top_range).max
-                  @lows <<
-                else
+                #if low < @guw_attribute_complexities.map(&:bottom_range).min || low < @guw_attribute_complexities.map(&:top_range).max
+                #else
                   @lows << guw_ac.value
-                end
-
+                #end
               end
 
               if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
