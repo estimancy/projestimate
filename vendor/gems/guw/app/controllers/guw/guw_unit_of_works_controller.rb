@@ -77,22 +77,30 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
         high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
 
-        Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
-                                          guw_attribute_id: guowa.guw_attribute_id).all.each do |guw_ac|
+        @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
+                                                                        guw_attribute_id: guowa.guw_attribute_id).all
 
-          unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-            if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-              @lows << guw_ac.value
+        @guw_attribute_complexities.each do |guw_ac|
+
+            unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+              if low.between?(guw_ac.bottom_range, guw_ac.top_range)
+                if low < @guw_attribute_complexities.map(&:bottom_range).min || low < @guw_attribute_complexities.map(&:top_range).max
+                  @lows <<
+                else
+                  @lows << guw_ac.value
+                end
+
+              end
+
+              if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
+                @mls << guw_ac.value
+              end
+
+              if high.between?(guw_ac.bottom_range, guw_ac.top_range)
+                @highs << guw_ac.value
+              end
             end
 
-            if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
-              @mls << guw_ac.value
-            end
-
-            if high.between?(guw_ac.bottom_range, guw_ac.top_range)
-              @highs << guw_ac.value
-            end
-          end
         end
 
         guowa.low = low
