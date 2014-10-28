@@ -65,7 +65,7 @@ class PermissionsController < ApplicationController
     @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
 
     @project_security_levels = ProjectSecurityLevel.defined
-    @groups = current_user.groups
+    @groups = Group.all
 
     respond_to do |format|
       format.html # index.html.erb

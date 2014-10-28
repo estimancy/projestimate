@@ -147,33 +147,13 @@ class GroupsController < ApplicationController
 
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
-    @group = nil
-    current_group = Group.find(params[:id])
-    @organization = current_group.organization
-
-    if current_group.is_defined? && is_master_instance?
-      @enable_update_in_local = true
-      @group = current_group.amoeba_dup
-      @group.owner_id = current_user.id
-    else
-      @group = current_group
-    end
-
-    if is_master_instance?
-      @enable_update_in_local = true
-    else
-      if @group.is_local_record?
-        @enable_update_in_local = true
-        @group.custom_value = 'Locally edited'
-      else
-        @enable_update_in_local = false
-      end
-    end
+    @group = Group.find(params[:id])
+    @organization = @group.organization
 
     if @group.update_attributes(params[:group])
       #redirect_to redirect(groups_path), :notice => "#{I18n.t (:notice_group_successful_updated)}"
       flash[:notice] =  "#{I18n.t (:notice_group_successful_updated)}"
-      redirect_to redirect_apply(edit_group_path(@group), nil, groups_path)
+      redirect_to edit_organization_path(@organization)
     else
       render action: 'edit'
     end
