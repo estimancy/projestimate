@@ -37,7 +37,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.pbs_project_element_id = current_component.id
     @guw_unit_of_work.save
 
-    Guw::GuwAttribute.all.each do |gac|
+    @guw_model.guw_attributes.all.each do |gac|
       Guw::GuwUnitOfWorkAttribute.create(
           guw_type_id: @guw_type.id,
           guw_unit_of_work_id: @guw_unit_of_work.id,

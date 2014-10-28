@@ -37,7 +37,7 @@
 
 class Guw::GuwAttributesController < ApplicationController
   def index
-    @guw_attributes = Guw::GuwAttribute.all
+    @guw_attributes = Guw::GuwModel.find(params[:guw_model_id]).guw_attributes
   end
 
   def new

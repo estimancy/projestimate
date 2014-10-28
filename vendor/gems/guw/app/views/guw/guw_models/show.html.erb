@@ -26,7 +26,7 @@
         <% end %>
       </tr>
 
-      <% Guw::GuwAttribute.all.each do |guw_attribute| %>
+      <% @guw_model.guw_attributes.each do |guw_attribute| %>
         <tr>
           <td>
             <%= guw_attribute %>
