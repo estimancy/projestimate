@@ -157,7 +157,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         ["low", "most_likely", "high"].each do |level|
           if am.pe_attribute.alias == "effort"
             level_est_val = ev.send("string_data_#{level}")
-            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(:module_project_id => current_module_project.id, pbs_project_element_id: current_component.id).map(&:ajusted_effort).compact.sum
+            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
+                                                                           pbs_project_element_id: current_component.id,
+                                                                           guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
             tmp_prbl << level_est_val[current_component.id]
           end
           ev.update_attribute(:"string_data_#{level}", level_est_val)
