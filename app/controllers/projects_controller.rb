@@ -263,7 +263,10 @@ public
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
-    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }
+    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ? AND alias <> ?', @defined_status.id, 'initialization', 'guw').all.map { |i| [i.title, i.id] }
+
+    @guw_module = Pemodule.where(alias: "guw").first
+    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] } #bluurgh
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -681,6 +684,7 @@ public
   #Allow o add or append a pemodule to a estimation process
   def append_pemodule
     @project = Project.find(params[:project_id])
+    @pemodule = Pemodule.find(params[:module_selected].split(',').last.to_i)
     authorize! :alter_estimation_plan, @project
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -691,7 +695,7 @@ public
       @pbs_project_element = @project.root_component
     end
 
-    unless params[:module_selected].nil? || @project.nil?
+    unless @pemodule.nil? || @project.nil?
       @array_modules = Pemodule.defined
       @pemodules ||= Pemodule.defined
 
@@ -700,7 +704,10 @@ public
       @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.max
 
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
-      my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => params[:module_selected], :position_y => 1, :position_x => @module_positions_x.to_i+1)
+      my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
+      if @pemodule.alias == "guw"
+        my_module_project.guw_model_id = params[:module_selected].split(',').first
+      end
       my_module_project.save
 
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -2287,8 +2294,16 @@ public
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
     if @module_project.pemodule.alias == "guw"
-      @guw_model = current_project.organization.guw_models.first
-      @guw_unit_of_works = current_project.organization.guw_models.first.guw_types.map(&:guw_unit_of_works).flatten
+
+      if current_module_project.guw_model.nil?
+        @guw_model = current_project.organization.guw_models.first
+      else
+        @guw_model = current_module_project.guw_model
+      end
+
+      @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
+                                                    pbs_project_element_id: current_component,
+                                                    guw_model_id: @guw_model)
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 

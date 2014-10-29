@@ -56,8 +56,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   def save_guw_unit_of_works
 
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
+                                                  pbs_project_element_id: current_component.id,
+                                                  guw_model_id: @guw_model.id)
 
-    @guw_model.guw_unit_of_works.each do |guw_unit_of_work|
+    @guw_unit_of_works.each do |guw_unit_of_work|
 
       guw_unit_of_work.guw_type_id = params["guw_type"]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.save
@@ -150,14 +153,18 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.save
     end
 
-    current_module_project.pemodule.attribute_modules.each do |am|
-      @evs = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+    @module_project = current_module_project
+    @module_project.guw_model_id = @guw_model.id
+    @module_project.save
+
+    @module_project.pemodule.attribute_modules.each do |am|
+      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
           if am.pe_attribute.alias == "effort"
             level_est_val = ev.send("string_data_#{level}")
-            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
+            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
                                                                            pbs_project_element_id: current_component.id,
                                                                            guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
             tmp_prbl << level_est_val[current_component.id]
@@ -176,7 +183,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def reload
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_unit_of_works = @guw_model.guw_unit_of_works
+    @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
+                                             pbs_project_element_id: current_component.id,
+                                             guw_model_id: @guw_model.id)
   end
 
 end

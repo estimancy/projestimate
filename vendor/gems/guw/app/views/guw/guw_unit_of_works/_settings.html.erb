@@ -1,7 +1,7 @@
 <%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path do %>
 
   <h4>Choix du modèle d'UO</h4>
-  <%= select_tag("guw_model_id", options_for_select(current_project.organization.guw_models.map{|i| [i.name, i.id] })) %>
+  <%= select_tag("guw_model_id", options_for_select(current_project.organization.guw_models.map{|i| [i.name, i.id] }, selected: @guw_model.id)) %>
 
   <hr>
   <div id="table_guw_model">
