@@ -86,19 +86,28 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         @guw_attribute_complexities.each do |guw_ac|
 
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-              if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-                #if low < @guw_attribute_complexities.map(&:bottom_range).min || low < @guw_attribute_complexities.map(&:top_range).max
-                #else
+              if low.between?(@guw_attribute_complexities.map(&:bottom_range).min, @guw_attribute_complexities.map(&:top_range).max)
+                if low.between?(guw_ac.bottom_range, guw_ac.top_range)
                   @lows << guw_ac.value
-                #end
+                end
+              else
+                hb = true
               end
 
-              if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
-                @mls << guw_ac.value
+              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).min, @guw_attribute_complexities.map(&:top_range).max)
+                if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
+                  @mls << guw_ac.value
+                end
+              else
+                hb = true
               end
 
-              if high.between?(guw_ac.bottom_range, guw_ac.top_range)
-                @highs << guw_ac.value
+              if high.between?(@guw_attribute_complexities.map(&:bottom_range).min, @guw_attribute_complexities.map(&:top_range).max)
+                if high.between?(guw_ac.bottom_range, guw_ac.top_range)
+                  @highs << guw_ac.value
+                end
+              else
+                hb = true
               end
             end
 
@@ -177,7 +186,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    flash[:notice] = "Vos données ont été correctement sauvegardés"
+    if hb = true
+      flash[:error] = "Attention ! Vous avez des valeurs en dehors des bornes définis dans le modèle."
+    else
+      flash[:notice] = "Vos données ont été correctement sauvegardés"
+    end
+
     redirect_to main_app.root_url
   end
 
