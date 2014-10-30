@@ -7,6 +7,8 @@ module Guw
     has_many :guw_type_complexities, dependent: :destroy
     has_many :guw_unit_of_works, dependent: :destroy
 
+    validates_presence_of :name, :value, :guw_type_id
+
     def to_s
       name
     end

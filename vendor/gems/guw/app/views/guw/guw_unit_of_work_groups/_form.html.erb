@@ -1,0 +1,20 @@
+<b>Unit of Work Group</b>
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        New Unit Of Work
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <%= simple_form_for(@guw_unit_of_work_group) do |f| %>
+      <%= f.error_notification %>
+      <div class="form-inputs">
+        <%= f.input :name %>
+      </div>
+      <%= f.button :submit %>
+    <% end %>
+  </div>
+</div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141029143549) do
+ActiveRecord::Schema.define(:version => 20141030153030) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -417,6 +417,14 @@ ActiveRecord::Schema.define(:version => 20141029143549) do
     t.datetime "updated_at",                  :null => false
   end
 
+  create_table "guw_guw_unit_of_work_groups", :force => true do |t|
+    t.string   "name"
+    t.text     "comments"
+    t.integer  "module_project_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "guw_guw_unit_of_works", :force => true do |t|
     t.string   "name"
     t.text     "comments"
@@ -424,14 +432,15 @@ ActiveRecord::Schema.define(:version => 20141029143549) do
     t.integer  "result_most_likely"
     t.integer  "result_high"
     t.integer  "guw_type_id"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "guw_complexity_id"
     t.float    "effort"
     t.float    "ajusted_effort"
     t.integer  "guw_model_id"
     t.integer  "module_project_id"
     t.integer  "pbs_project_element_id"
+    t.integer  "guw_unit_of_work_group_id"
   end
 
   create_table "input_cocomos", :force => true do |t|

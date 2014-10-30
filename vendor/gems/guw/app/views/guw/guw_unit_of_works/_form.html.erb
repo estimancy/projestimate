@@ -16,8 +16,9 @@
 
       <div class="form-inputs">
         <%= f.input :name %>
-        <%= f.input :comments %>
+        <%= f.input :comments, input_html: { rows: "5"} %>
         <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types %>
+        <%= f.input :guw_unit_of_work_group_id, as: :select, collection: current_module_project.guw_unit_of_work_groups %>
       </div>
 
       <%= f.button :submit %>
