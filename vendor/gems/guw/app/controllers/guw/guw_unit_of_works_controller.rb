@@ -61,6 +61,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def save_guw_unit_of_works
 
+    hb = false
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: current_component.id,

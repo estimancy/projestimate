@@ -34,7 +34,8 @@
                 <td>
                   <table class="table table-bordered table-condensed">
                     <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
-                      <% unless uowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first.nil? %>
+                      <% sum_range = uowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first.nil? %>
+                      <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
                         <tr>
                           <td>
                             <%= uowa.guw_attribute.name %>
