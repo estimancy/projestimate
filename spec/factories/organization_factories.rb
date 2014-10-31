@@ -1,10 +1,15 @@
 #
 FactoryGirl.define do
 
+  sequence :organization_name do |n|
+    "Organization_#{n}"
+  end
+
   # Organizations
   factory :organization do
-    sequence(:name) {|n| "Organization_#{n}"}
-    sequence(:description) {|n| "Organisation number #{n}"}
+    #sequence(:name) {|n| "Organization_#{n}"}
+    name { generate(:organization_name) }
+    sequence(:description) {|n| "Organization number #{n}"}
     number_hours_per_day 7
     number_hours_per_month 140
     cost_per_hour 10

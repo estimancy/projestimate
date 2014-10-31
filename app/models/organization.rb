@@ -70,6 +70,9 @@ class Organization < ActiveRecord::Base
   #Guw Model
   has_many :guw_models, class_name: "Guw::GuwModel", dependent: :destroy
 
+  # Results view
+  has_many :views
+
   belongs_to :currency
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}

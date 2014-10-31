@@ -1287,6 +1287,25 @@ fr:
   label_add_status_change_comment: "Ajouter un nouveau commentaire concernant le changement de statut de l'estimation"
   notice_comment_status_successfully_updated: "Le commentaire concernant le changement de status a été mis à jour avec succès"
   change_estimation_status_from_to: "Estimate's status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
+  views_widgets: "Vues & Vignettes"
+  label_view: "Vue"
+  label_widget: "Vignette"
+  configure_views_widgets: "configurez les vues et les vignettes pour l'affichage des résultats des estimations"
+  new_view: "Nouvelle vue"
+  edit_view: "Editer la vue \"%{value}\" ..."
+  view_successfully_created: 'La vue a été créée avec succès.'
+  view_successfully_updated: 'La vue a été mise à jour avec succès.'
+  new_widget: "Nouvelle vignette"
+  edit_widget: "Editer la vignette \"%{value}\"..."
+  widget_successfully_created: 'La vignette a été créée avec succès.'
+  widget_successfully_updated: 'La vue a été mise à jour avec succès.'
+  widgets: "Vues"
+  widgets: "Vignettes"
+  views_widgets_parameters: "Paramètres Vues et Vignettes"
+  selected_view: "Vue sélectionnée"
+  title_hide_results_view: "Cacher/masquer la vue d'affichage des résultats du module \"%{value}\""
+  title_show_results_view: "Afficher la vue d'affichage des résultats du module \"%{value}\""
+
 
   criteria: "Critères"
 

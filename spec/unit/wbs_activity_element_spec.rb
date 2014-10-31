@@ -9,7 +9,7 @@ describe WbsActivityElement do
   end
 
   it 'should return wbs_activity name' do
-    @wbs_activity_element.wbs_activity_name.should eql(@wbs_activity_element.wbs_activity.name)
+    @wbs_activity_element.to_s.should eql(@wbs_activity_element.wbs_activity.name)
   end
 
   it 'should be not valid without wbs-activity' do

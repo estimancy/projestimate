@@ -1,7 +1,12 @@
 FactoryGirl.define do
 
+  sequence :group_name do |n|
+    "group#{n}"
+  end
+
+
   factory :group do
-    sequence(:name) {|n| "group#{n}"}
+    name { generate(:group_name) } #sequence(:name) {|n| "group#{n}"}
     sequence(:description) {|n| "Group number #{n}"}
     uuid
     association :record_status, :factory => :proposed_status, strategy: :build
@@ -9,7 +14,7 @@ FactoryGirl.define do
   end
 
   factory :defined_group, :class => :group do
-    sequence(:name) {|n| "group#{n}"}
+    name { generate(:group_name) }  #sequence(:name) {|n| "group#{n}"}
     sequence(:description) {|n| "Group number #{n}"}
     uuid
     association :record_status, :factory => :defined_status, strategy: :build

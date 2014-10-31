@@ -38,6 +38,15 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :views_widgets
+  get 'update_view_widget_positions_and_sizes' => 'views_widgets#update_view_widget_positions_and_sizes', :as => 'update_view_widget_positions_and_sizes'
+
+  resources :widgets
+
+
+  resources :views
+
+
   resources :plans
 
 
@@ -178,6 +187,7 @@ Projestimate::Application.routes.draw do
   post 'module_projects/associate'
   match 'module_projects/:module_project_id/activate_module_project' => 'module_projects#activate_module_project', :as => 'activate_module_project'
   get 'selected_balancing_attribute' => 'module_projects#selected_balancing_attribute', :as => 'selected_balancing_attribute'
+  get 'show_module_project_results_view' => 'module_projects#show_module_project_results_view', :as => 'show_module_project_results_view'
 
   resources :languages
 

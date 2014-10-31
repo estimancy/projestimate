@@ -85,6 +85,11 @@ class ModuleProjectsController < ApplicationController
 
     authorize! :alter_estimation_plan, @project
 
+    #Update selected view
+    if params['module_project']
+      @module_project.update_attributes(:view_id => params['module_project']['view_id'], :color => params['module_project']['color'])
+    end
+
     @module_project.estimation_values.each_with_index do |est_val, j|
       corresponding_am = AttributeModule.where('pemodule_id =? and pe_attribute_id = ?', @module_project.pemodule.id, est_val.pe_attribute.id).first
       unless corresponding_am.is_mandatory
@@ -214,6 +219,30 @@ class ModuleProjectsController < ApplicationController
     #  format.js { render :partial => "module_projects/refresh_selected_module_data"}
     #end
     render :partial => "pbs_project_elements/refresh"
+  end
+
+  # Show or not the module_project results view in dashboard
+  def show_module_project_results_view
+    if params[:module_project_id]
+      @module_project = ModuleProject.find(params[:module_project_id])
+      @project = @module_project.project
+      @project_organization = @project.organization
+      @module_projects = @project.module_projects
+      @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+      @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+      @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
+
+      # when get click on the show_module_project_results_view button
+      # if show_module_project_results_view is true, value will be changed to false and vice-versa
+      case @module_project.show_results_view
+        when true
+          @module_project.update_attribute(:show_results_view, false)
+        when false
+          @module_project.update_attribute(:show_results_view, true)
+        else
+          @module_project.update_attribute(:show_results_view, true)
+      end
+    end
   end
 
 end

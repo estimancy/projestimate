@@ -16,7 +16,7 @@ FactoryGirl.define do
 
   # Projects
   factory :new_project, :class => :project do |p|
-    p.state 'preliminary'
+    p.association :estimation_status, :factory => :estimation_status
     p.association :organization, :factory => :organization
     p.association :estimation_status, :factory => :estimation_status
     p.start_date Time.now
@@ -30,7 +30,7 @@ FactoryGirl.define do
   # Projects
   factory :project do |p|
     p.sequence(:title) {|n| "Project_#{n}"}
-    p.sequence(:alias) {|n| "P#{n}"}
+    p.alias FactoryGirl.generate(:project_alias)  #p.sequence(:alias) {|n| "P#{n}"}
     p.sequence(:description) {|n| "Project number #{n}"}
     p.association :organization, :factory => :organization
     p.association :estimation_status, :factory => :estimation_status

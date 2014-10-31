@@ -36,10 +36,11 @@
 
 
 class ModuleProject < ActiveRecord::Base
-  attr_accessible  :project_id, :pemodule_id, :pemodule, :position_x, :position_y, :nb_input_attr, :nb_output_attr
+  attr_accessible  :project_id, :pemodule_id, :pemodule, :position_x, :position_y, :nb_input_attr, :nb_output_attr, :view_id, :color
 
   belongs_to :pemodule
   belongs_to :project, :touch => true
+  belongs_to :view    # the current selected view
 
   has_many :estimation_values, :dependent => :destroy
   has_many :inputs

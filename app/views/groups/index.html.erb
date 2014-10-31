@@ -27,7 +27,7 @@
           <tr>
             <td><%= group.name %></td>
             <td><%= group.description %></td>
-            <td><%= group.record_status.name unless group.record_status.nil? %> <%= group.show_custom_value %></td>
+            <td><%= group.record_status.name unless group.record_status.nil? %> <%= group.show_custom_value unless group.is_local_record? %></td>
             <td class="center">
               <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
               <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>

@@ -1,0 +1,38 @@
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= I18n.t(:views_widgets) %> </a></li>
+  </ul>
+
+  <div id="tabs-1">
+
+    <%= simple_form_for(@views_widget) do |f| %>
+      <%= f.error_notification %>
+      <% #module_project_id:integer pe_attribute_id:integer pbs_project_element_id:integer view_id:integer widget_id:integer color:string icon_class:string name:string show_min_max:boolean %>
+      <div class="form-inputs">
+        <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
+        <%= f.input :pbs_project_element_id, as: :hidden, :input_html => { value: params[:pbs_project_element_id] } %>
+        <%= f.input :view_id, as: :hidden, :input_html => { value: params[:view_id] } %>
+        <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
+        <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
+
+        <table>
+          <tr><td><%= f.input :name, label: I18n.t(:name) %></td></tr>
+          <tr><td><%= f.association :pe_attribute, collection: PeAttribute.all, label: I18n.t(:pe_attribute_name) %></td></tr>
+          <tr><td><%= f.association :widget, label: I18n.t(:label_widget) %></td></tr>
+          <tr>
+            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES , label: I18n.t(:icon), input_html: {class: ''} %></td>
+            <td><div id="view_icon_class_image"></div></td>
+          </tr>
+          <tr><td><%= f.input :color, label: I18n.t(:status_color), input_html: {class: 'color'} %></td></tr>
+          <tr><td><%= f.input :show_min_max, as: :boolean %></td></tr>
+        </table>
+
+      </div>
+
+      <div class="actions">
+        <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <%= link_to I18n.t('back'), :back, :class => 'btn' %>
+      </div>
+    <% end %>
+  </div>
+</div>

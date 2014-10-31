@@ -11,7 +11,7 @@ describe Profile do
   end
 
   it 'should have name' do
-    @profile.to_s.should eql("MyString")
+    @profile.to_s.should include("Profile")
   end
 
 end

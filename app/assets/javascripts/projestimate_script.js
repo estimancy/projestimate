@@ -19,6 +19,45 @@ $(document).ready(function() {
     // Update the jscolor library Dir to resolve bug on images detection
     jscolor.dir = '/assets/';
 
+    //Draggable widgets
+    $(".view_widget").draggable({
+        containment: 'parent',
+        grid: [140, 140],
+        //helper: 'clone',
+        //distance: 100,
+        //refreshPositions: true,
+        scroll: true,
+
+        stop: function(event, ui){
+            var pos_x = ui.position.left;
+            var pos_y = ui.position.top;
+            //alert("pos_x = "+ pos_x+ "px \n" +"pos_y ="+ pos_y+"px");
+            //alert("Width = "+ ui.helper.width+ "px \n" +"Height ="+ ui.helper.height+"px");
+            //alert(ui.helper.width($(this).width()));
+            $.ajax({
+                url:"/update_view_widget_positions_and_sizes",
+                method: 'GET',
+                data: {
+                    view_widget_id: $(this).data('view_widget_id'),
+                    position_x: pos_x,
+                    position_y: pos_y
+                }
+            });
+
+        }
+    });
+
+//    $('[id^="view_widget_"]').each(function(){
+//        var container = $(this).data("view_id");
+//        $(this)
+//            .draggable({
+//            containment: container,
+//            distance: 100,
+//            refreshPositions: true,
+//            scroll: true
+//            });
+//    });
+
     $("form.send_feedback input[type=submit]").click(function() {
         var error=false;
         if($("#send_feedback_user_name").val() == "") {
@@ -573,6 +612,40 @@ $(document).ready(function() {
         })
     });
 
+    //SHow the selected icon-image on Widget
+
+    //$("option").hover($("#somplace").load($(this).attr("id")));
+
+//    $('#widget_icon_class').on('mouseover change','option',function(e) {
+//        $("#icon_class_image").removeClass();
+//        $("#icon_class_image").addClass( "icon-user");
+//        $("#icon_class_image").addClass( "icon-large" );
+//    });
+
+    $("#widget_icon_class").change(function(){
+        if ($(this).val() !== ""){
+            $("#icon_class_image").removeClass();
+            $("#icon_class_image").addClass( $(this).val());
+            $("#icon_class_image").addClass( "icon-large blue" );
+        }
+        else{
+            $("#icon_class_image").removeClass();
+        }
+        return false;
+    });
+
+
+    $("#views_widget_icon_class").change(function(){
+        if ($(this).val() !== ""){
+            $("#view_icon_class_image").removeClass();
+            $("#view_icon_class_image").addClass( $(this).val());
+            $("#view_icon_class_image").addClass( "icon-large blue" );
+        }
+        else{
+            $("#view_icon_class_image").removeClass();
+        }
+        return false;
+    });
 
     $('html, body').animate({ scrollTop: 0 });
 

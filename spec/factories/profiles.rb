@@ -5,10 +5,10 @@
 
 FactoryGirl.define do
   factory :profile do
-    name "MyString"
+    sequence(:name) {|n| "Profile_#{n}"}
     description "MyText"
     cost_per_hour 1.5
-    record_status_id 1
-    record_status 1
+    uuid
+    association :record_status, :factory => :proposed_status, strategy: :build
   end
 end

@@ -149,5 +149,9 @@ module Projestimate
     BALANCING_MODULE = "balancing_module"
     BALANCING_MODULES_NAME = [ EFFORT_BALANCING, SIZE_BALANCING ]
 
+    # icones for widgets
+    #ICON_CLASSES = ["icon-euro", "icon-usd", "icon-gbp", "icon-user", "icon-users", "icon-user-md", "icon-bell", "fa fa-clock-o", "icon-dashboard", "icon-calendar", "icon-bug", " icon-bomb", "icon-warning", "icon-line-chart", "icon-pie-chart", "icon-area-chart", "icon-bar-chart"]
+    ICON_CLASSES = ["icon-euro", "icon-usd", "icon-gbp", "fa-money", "icon-user", "icon-group", "icon-time", "icon-bell", "icon-calendar", "icon-eye-open", "icon-eye-close", "fa-bomb", "icon-bug", "icon-warning-sign", "icon-exclamation-sign", "icon-question-sign", "icon-fire", "fa-minus-circle", "icon-arrow-right", "icon-arrow-up", "icon-arrow-down", "icon-share-alt", "icon-comment", "icon-dashboard", "fa-wrench", "fa-cog", "fa-cogs", "fa-database", "fa-home", "fa-info", "fa-line-chart", "fa-pie-chart", "fa-area-chart", "fa-bar-chart"]
+
   end
 end

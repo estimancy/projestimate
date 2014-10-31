@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141014073855) do
+ActiveRecord::Schema.define(:version => 20141022142533) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -482,6 +482,9 @@ ActiveRecord::Schema.define(:version => 20141014073855) do
     t.integer  "copy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "view_id"
+    t.boolean  "show_results_view", :default => true
+    t.string   "color"
   end
 
   create_table "module_projects_pbs_project_elements", :id => false, :force => true do |t|
@@ -1101,6 +1104,33 @@ ActiveRecord::Schema.define(:version => 20141014073855) do
     t.datetime "updated_at",               :null => false
   end
 
+  create_table "views", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "views_widgets", :force => true do |t|
+    t.integer  "view_id"
+    t.integer  "widget_id"
+    t.string   "name"
+    t.integer  "module_project_id"
+    t.integer  "pe_attribute_id"
+    t.integer  "pbs_project_element_id"
+    t.string   "icon_class"
+    t.string   "color"
+    t.boolean  "show_min_max"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+    t.string    "position_x"
+    t.string    "position_y"
+    t.string    "width"
+    t.string    "height"
+    t.string   "widget_type"
+  end
+
   create_table "wbs_activities", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
@@ -1221,6 +1251,18 @@ ActiveRecord::Schema.define(:version => 20141014073855) do
     t.boolean  "is_added_wbs_root"
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
+  end
+
+  create_table "widgets", :force => true do |t|
+    t.string   "name"
+    t.string   "icon_class"
+    t.string   "color"
+    t.integer  "pe_attribute_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.string    "width"
+    t.string    "height"
+    t.string   "widget_type"
   end
 
   create_table "work_element_types", :force => true do |t|

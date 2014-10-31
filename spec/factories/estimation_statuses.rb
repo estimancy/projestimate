@@ -2,11 +2,10 @@
 
 FactoryGirl.define do
   factory :estimation_status do
-    organization_id 1
+    association :organization, :factory => :organization, strategy: :build
     status_number 1
-    name "MyString"
-    status_alias "mystring"
+    status_alias "Status_alias"
+    name "Status_name"
     description "MyText"
-    #check_status_alias
   end
 end

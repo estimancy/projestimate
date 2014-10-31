@@ -3,6 +3,7 @@
   <ul>
     <li><a href="#tabs-1"><%= I18n.t(:related_attributes) %></a></li>
     <li><a href="#tabs-2"><%= I18n.t(:module_links_settings) %> </a></li>
+    <li><a href="#tabs-view-widgets-parameters"><%= I18n.t(:views_widgets_parameters) %></a></li>
     <li><a href="#tabs-3"><%= I18n.t(:module_ratio_settings) %></a></li>
   </ul>
 
@@ -53,6 +54,11 @@
     <%# else %>
         <%= content_tag(:div, I18n.t('ratio_settings_message'), :class => "alert alert-info") %>
     <% end %>
+  </div>
+
+  <!--Paramètres d'affichage de la vue-->
+  <div id="tabs-view-widgets-parameters">
+    <%= render partial: "module_projects/views_and_widgets", object: @module_project %>
   </div>
 
 </div>

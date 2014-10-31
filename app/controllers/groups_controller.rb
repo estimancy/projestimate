@@ -45,7 +45,7 @@ class GroupsController < ApplicationController
   def index
     if (can? :create_and_edit_groups, Group) || (can? :manage, User)
       set_page_title 'Groups'
-      @groups = Group.defined
+      @groups = Group.all
     end
   end
 

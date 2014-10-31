@@ -16,6 +16,7 @@
         <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
         <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
         <li><a href="#GuwModel"> Modèle d'unité d'oeuvres génériques </a></li>
+        <li><a href="#tabs-views-widgets"><%= I18n.t(:views_widgets) %></a></li>
   <% end %>
   </ul>
 
@@ -376,6 +377,30 @@
      <% end %>
    </table>
  </div>
+
+<!-- Configure views and widgets for estimates results views -->
+<div id="tabs-views-widgets">
+  <b><%= I18n.t(:configure_views_widgets) %></b>
+  <%= link_to I18n.t(:new_view), new_view_path(organization_id: @organization.id), class: "btn pull-right" %>
+  <table class="table table-bordered">
+    <tr>
+      <th><%= I18n.t(:name) %></th>
+      <th class="action"><%= I18n.t(:actions) %></th>
+    </tr>
+
+    <% @organization.views.each do |view| %>
+        <tr>
+          <td class="span5">
+            <%= view.name %>
+          </td>
+          <td class="align-center">
+            <%= link_to "", edit_view_path(view, organization_id: @organization.id), :class => 'icon-pencil icon-large', :title => I18n.t('edit') %>
+            <%= link_to "", view, method: :delete, data: { confirm: I18n.t(:are_you_sure) }, class: "icon-trash icon-large" %>
+          </td>
+        </tr>
+    <% end %>
+  </table>
+</div>
 
 <% end %>
 </div>

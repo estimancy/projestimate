@@ -186,6 +186,7 @@ public
         # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
         @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
+        @project_organization = @project.organization
         @module_projects ||= @project.module_projects
         #Get the initialization module_project
         @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
@@ -197,6 +198,7 @@ public
       render :layout => 'login'
     end
   end
+
 
   #Create a inactive user if the demand is ok.
   def create_inactive_user

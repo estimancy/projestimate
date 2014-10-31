@@ -1576,4 +1576,23 @@ es:
   label_add_status_change_comment: "Add new comment regarding the change in status of the estimate"
   notice_comment_status_successfully_updated: "Comment on estimation status change is successfully updated"
   change_estimation_status_from_to: "Estimate's status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
+  views_widgets: "Views & Widgets"
+  label_view: "View"
+  label_widget: "Widget"
+  configure_views_widgets: "Configure views and widgets to display estimation results"
+  new_view: "New view"
+  edit_view: "Edit the \"%{value}\" view ..."
+  label_view: "View"
+  view_successfully_created: 'View was successfully created.'
+  view_successfully_updated: 'View was successfully updated.'
+  new_widget: "New widget"
+  edit_widget: "Edit the \"%{value}\" widget ..."
+  widget_successfully_created: 'Widget was successfully created.'
+  widget_successfully_updated: 'Widget was successfully updated.'
+  widgets: "Views"
+  widgets: "Widgets"
+  views_widgets_parameters: "Views & Widgets parameters"
+  selected_view: "Selected view"
+  title_hide_results_view: "Hide the \"%{value}\" module results view"
+  title_show_results_view: "Show the \"%{value}\" module results view"
 

@@ -3,7 +3,6 @@ require "spec_helper"
 describe Group do
   before :each do
     @group = FactoryGirl.create(:group)
-    @project = FactoryGirl.create(:project)
     @proposed_status = FactoryGirl.build(:proposed_status)
     @custom_status = FactoryGirl.build(:custom_status)
   end
@@ -52,6 +51,7 @@ describe Group do
   end
 
   it "should return group project_securities for selected project_id" do
+    @project = FactoryGirl.create(:project)
     @group.project_securities_for_select(@project.id).should eql(@group.project_securities.first)
   end
 

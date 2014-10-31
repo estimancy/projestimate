@@ -9,6 +9,7 @@ FactoryGirl.define do
   factory :pbs_project_element do
     name "Component"
     is_root false
+    start_date Time.now
 
     trait :pbs_trait_folder do
       name "Folder"
@@ -22,11 +23,13 @@ FactoryGirl.define do
   factory :pbs_folder, :class => PbsProjectElement do
     name "Folder"
     is_root false
+    start_date Time.now
   end
 
   factory :pbs_bad, :class => PbsProjectElement do |cl|
     cl.name ""
     cl.is_root false
+    start_date Time.now
   end
 
 end

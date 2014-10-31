@@ -83,44 +83,6 @@ class Project < ActiveRecord::Base
   scoped_search :in => :pbs_project_elements, :on => :name
   scoped_search :in => :wbs_project_elements, :on => [:name, :description]
 
-  # Get project's organization statuses before each action using statuses
-  #after_find  :get_project_organization_statuses
-
-  #AASM needs
-  #aasm :column => :state do # defaults to aasm_state
-  #  state :preliminary, :initial => true
-  #  state :in_progress
-  #  state :in_review
-  #  state :checkpoint
-  #  state :released
-  #  state :rejected
-  #
-  #  event :commit do #promote project
-  #    transitions :to => :in_progress, :from => :preliminary
-  #    transitions :to => :in_review, :from => :in_progress
-  #    transitions :to => :released, :from => :in_review
-  #  end
-  #end
-
-
-  #aasm :column => :state do   # defaults to aasm_state
-  #  state :preliminary, :preliminary => true, :before_enter => :get_initial_status
-  #  EstimationStatus.all.each do |status|
-  #    #Define aasm states
-  #    state status.status_alias.to_sym
-  #  end
-  #
-  #  # Workflow definition
-  #  event :commit do
-  #    # generate workflow according to the defining workflow in organizations
-  #    StatusTransition.all.each do |status_transition|
-  #      to_transition_status = EstimationStatus.find(status_transition.to_transition_status_id)
-  #      from_transitions = to_transition_status.from_transition_statuses.map(&:status_alias).map(&:to_sym)
-  #      transitions :from => from_transitions, :to => to_transition_status.status_alias.to_sym
-  #    end
-  #  end
-  #end
-
   #  Estimation status name
   def status_name
     self.estimation_status.nil? ? nil : self.estimation_status.name
@@ -210,12 +172,6 @@ class Project < ActiveRecord::Base
 
   def self.encoding
     ['Big5', 'CP874', 'CP932', 'CP949', 'gb18030', 'ISO-8859-1', 'ISO-8859-13', 'ISO-8859-15', 'ISO-8859-2', 'ISO-8859-8', 'ISO-8859-9', 'UTF-8', 'Windows-874']
-  end
-
-  #Return possible states of project based on the project's organization statuses workflow
-  def states
-    #self.aasm.states(:permissible => true).map(&:name)
-    Project.aasm.states_for_select
   end
 
   #Return the root pbs_project_element of the pe-wbs-project and consequently of the project.
