@@ -704,9 +704,8 @@ public
       @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.max
 
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
-      my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => params[:module_selected], :position_y => 1, :position_x => @module_positions_x.to_i+1)
-      my_module_project.build_view(name: "#{my_module_project.to_s} - Module project View", organization_id: @project.organization_id)
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
+      my_module_project.build_view(name: "#{my_module_project.to_s} - Module project View", organization_id: @project.organization_id)
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
       end
