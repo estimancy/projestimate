@@ -5,53 +5,68 @@
 <div class="tabs">
 
   <ul>
-    <% @guw_model.guw_types.each do |guw_type| %>
+    <% if @guw_model.guw_types.empty? %>
       <li>
-        <a href="#tabs-<%= guw_type %>">
-          <%= guw_type %>
+        <a href="#tabs-default">
+          <%= @guw_model %>
         </a>
       </li>
+    <% else %>
+      <% @guw_model.guw_types.each do |guw_type| %>
+        <li>
+          <a href="#tabs-<%= guw_type %>">
+            <%= guw_type %>
+          </a>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 
-  <% @guw_model.guw_types.each do |guw_type| %>
-    <div id="tabs-<%= guw_type %>">
-      <h4>
-        <%= link_to "Complexités de l'UO (#{guw_type.guw_complexities.count})", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
-      </h4>
+  <% if @guw_model.guw_types.empty? %>
+    <div id="tabs-default">
+      <p> Vous n'avez pas encore de type d'UO</p>
+      <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn'%>
+      <%= link_to "Gérer les critères (attributs)", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn'  %>
+    </div>
+  <% else %>
+    <% @guw_model.guw_types.each do |guw_type| %>
+      <div id="tabs-<%= guw_type %>">
+        <h4>
+          <%= link_to "Complexités de l'UO (#{guw_type.guw_complexities.count})", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
+        </h4>
 
-      <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini" %>
-      <hr>
+        <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini" %>
+        <hr>
 
-      <%= form_tag guw_model_guw_type_guw_attribute_complexities_save_attributs_complexities_path(@guw_model, guw_type.id), method: "POST" do %>
-        <table class="table table-bordered">
-          <tr>
-            <th></th>
-            <% guw_type.guw_type_complexities.each do |type_complexity| %>
-              <th>
-                <%= link_to "#{type_complexity.name} (#{type_complexity.value})", guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %>
-              </th>
-            <% end %>
-          </tr>
-
-          <% @guw_model.guw_attributes.each do |guw_attribute| %>
+        <%= form_tag guw_model_guw_type_guw_attribute_complexities_save_attributs_complexities_path(@guw_model, guw_type.id), method: "POST" do %>
+          <table class="table table-bordered">
             <tr>
-              <td>
-                <%= guw_attribute %>
-              </td>
+              <th></th>
               <% guw_type.guw_type_complexities.each do |type_complexity| %>
-                <td class="align-center">
-                  <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
-                  <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
-                  <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini"  %>
-                </td>
+                <th>
+                  <%= link_to "#{type_complexity.name} (#{type_complexity.value})", guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %>
+                </th>
               <% end %>
             </tr>
-          <% end %>
-        </table>
-        <%= submit_tag "Enregistrer", class: "btn btn-mini" %>
-        <hr>
-      <% end %>
+
+            <% @guw_model.guw_attributes.each do |guw_attribute| %>
+              <tr>
+                <td>
+                  <%= guw_attribute %>
+                </td>
+                <% guw_type.guw_type_complexities.each do |type_complexity| %>
+                  <td class="align-center">
+                    <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
+                    <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
+                    <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini"  %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </table>
+          <%= submit_tag "Enregistrer", class: "btn btn-mini" %>
+          <hr>
+        <% end %>
 
       <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn'%>
       <%= link_to "Gérer les critères (attributs)", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn'  %>
@@ -59,6 +74,7 @@
       <%= link_to "Supprimer #{guw_type}", guw.guw_type_path(guw_type), method: "delete", class: "btn" %>
       <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn' %>
 
-    </div>
+      </div>
+    <% end %>
   <% end %>
 </div>
