@@ -32,9 +32,11 @@
                             <% estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget.pe_attribute_id, "output").last %>
                             <% probable_value = ""; min_value = ""; max_value = "" %>
                             <% unless estimation_value.nil? %>
-                                <% probable_value =  display_value(estimation_value.string_data_probable[view_widget.pbs_project_element_id], estimation_value) %>
-                                <% max_value = "Max: #{estimation_value.string_data_high[view_widget.pbs_project_element_id].round(user_number_precision)}"  %>
-                                <% min_value = "Min: #{estimation_value.string_data_low[view_widget.pbs_project_element_id].round(user_number_precision)}"  %>
+                              <% data_max = estimation_value.string_data_high[view_widget.pbs_project_element_id]%>
+                              <% data_min = estimation_value.string_data_low[view_widget.pbs_project_element_id]%>
+                              <% probable_value =  display_value(estimation_value.string_data_probable[view_widget.pbs_project_element_id], estimation_value) %>
+                              <% max_value = "Max: #{data_max.nil? ? '-' : data_max.round(user_number_precision)}"  %>
+                              <% min_value = "Min: #{data_min.nil? ? '-' : data_min.round(user_number_precision)}"  %>
                             <% end %>
 
                             <div class="span3 text-center view_widget" data-view_widget_id="<%= view_widget.id %>" style="left: <%= view_widget.position_x%> ; top: <%= view_widget.position_y %> ; margin-left: 0px; margin-right:5px;  background-color: <%= "##{view_widget.color}" %>; height: <%= 3 * 50%>px; padding-top: <%= 2 * 2%>em; margin-bottom: 10px;">
