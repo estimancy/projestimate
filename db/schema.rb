@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141022142533) do
+ActiveRecord::Schema.define(:version => 20141030153030) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -344,17 +344,19 @@ ActiveRecord::Schema.define(:version => 20141022142533) do
     t.integer  "bottom_range"
     t.integer  "top_range"
     t.float    "value"
-    t.integer  "guw_attribute_id"
     t.integer  "guw_type_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+    t.integer  "guw_attribute_id"
+    t.integer  "guw_type_complexity_id"
   end
 
   create_table "guw_guw_attributes", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "guw_model_id"
   end
 
   create_table "guw_guw_complexities", :force => true do |t|
@@ -376,6 +378,15 @@ ActiveRecord::Schema.define(:version => 20141022142533) do
     t.datetime "updated_at",      :null => false
   end
 
+  create_table "guw_guw_type_complexities", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.float    "value"
+    t.integer  "guw_type_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "guw_guw_types", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -385,18 +396,42 @@ ActiveRecord::Schema.define(:version => 20141022142533) do
     t.integer  "guw_model_id"
   end
 
-  create_table "guw_guw_unit_of_works", :force => true do |t|
-    t.string   "name"
-    t.text     "comments"
+  create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
     t.integer  "low"
     t.integer  "most_likely"
     t.integer  "high"
+    t.integer  "guw_type_id"
+    t.integer  "guw_unit_of_work_id"
+    t.integer  "guw_attribute_id"
+    t.integer  "guw_attribute_complexity_id"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  create_table "guw_guw_unit_of_work_groups", :force => true do |t|
+    t.string   "name"
+    t.text     "comments"
+    t.integer  "module_project_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "guw_guw_unit_of_works", :force => true do |t|
+    t.string   "name"
+    t.text     "comments"
     t.integer  "result_low"
     t.integer  "result_most_likely"
     t.integer  "result_high"
     t.integer  "guw_type_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "guw_complexity_id"
+    t.float    "effort"
+    t.float    "ajusted_effort"
+    t.integer  "guw_model_id"
+    t.integer  "module_project_id"
+    t.integer  "pbs_project_element_id"
+    t.integer  "guw_unit_of_work_group_id"
   end
 
   create_table "input_cocomos", :force => true do |t|
@@ -485,6 +520,7 @@ ActiveRecord::Schema.define(:version => 20141022142533) do
     t.integer  "view_id"
     t.boolean  "show_results_view", :default => true
     t.string   "color"
+    t.integer  "guw_model_id"
   end
 
   create_table "module_projects_pbs_project_elements", :id => false, :force => true do |t|
@@ -1124,10 +1160,10 @@ ActiveRecord::Schema.define(:version => 20141022142533) do
     t.boolean  "show_min_max"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
-    t.string    "position_x"
-    t.string    "position_y"
-    t.string    "width"
-    t.string    "height"
+    t.string   "position_x"
+    t.string   "position_y"
+    t.string   "width"
+    t.string   "height"
     t.string   "widget_type"
   end
 
@@ -1260,8 +1296,8 @@ ActiveRecord::Schema.define(:version => 20141022142533) do
     t.integer  "pe_attribute_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
-    t.string    "width"
-    t.string    "height"
+    t.string   "width"
+    t.string   "height"
     t.string   "widget_type"
   end
 
