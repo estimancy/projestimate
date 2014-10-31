@@ -53,6 +53,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to main_app.root_url
   end
 
+  def destroy
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
+    @guw_unit_of_work.delete
+    redirect_to main_app.root_url
+  end
+
   def save_guw_unit_of_works
 
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
