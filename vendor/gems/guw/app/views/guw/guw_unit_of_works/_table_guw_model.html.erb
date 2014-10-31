@@ -16,6 +16,7 @@
               <th>Cplx. UO</th>
               <th>Valeur</th>
               <th>Valeur retenu</th>
+              <th>Actions</th>
             </tr>
 
             <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
@@ -64,6 +65,9 @@
                 </td>
                 <td style="vertical-align: middle">
                   <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
+                </td>
+                <td style="vertical-align: middle">
+                  <%= link_to "Supprimer", guw.guw_unit_of_work_path(guow), method: "delete", class: "btn btn-mini" %>
                 </td>
               </tr>
             <% end %>

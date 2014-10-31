@@ -7,7 +7,7 @@ module Guw
     belongs_to :guw_attribute_complexity
 
     def to_s
-      name
+      self.guw_attribute
     end
   end
 end
