@@ -11,7 +11,6 @@
           <% elsif current_module_project.pemodule.alias == "guw" %>
 
             <%= link_to 'Edit configuration', edit_organization_path(current_project.organization), :class => 'btn btn-mini' %>
-            <%= submit_tag('Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true) if can_modify_estimation?(current_project) %>
 
           <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
 
