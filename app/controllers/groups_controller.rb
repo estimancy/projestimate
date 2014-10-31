@@ -35,11 +35,7 @@
 ########################################################################
 
 class GroupsController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
   load_resource
-
-  before_filter :get_record_statuses
-
   helper_method :enable_update_in_local?
 
   def index
@@ -66,26 +62,6 @@ class GroupsController < ApplicationController
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
     @organization = @group.organization
-
-    #if is_master_instance?
-    #  @enable_update_in_local = true
-    #  unless @group.child_reference.nil?
-    #    if @group.child_reference.is_proposed_or_custom?
-    #      flash[:warning] = I18n.t (:warning_group_cant_be_edit)
-    #      redirect_to groups_path and return
-    #    end
-    #  end
-    #else
-    #  if @group.is_local_record?
-    #    @group.record_status = @local_status
-    #    @enable_update_in_local = true
-    #    ##flash[:notice] = "testing"
-    #  else
-    #    @enable_update_in_local = false
-    #    #  flash[:error] = "Master record can not be edited, it is required for the proper functioning of the application"
-    #    #  redirect_to redirect(groups_path)
-    #  end
-    #end
   end
 
   def create
@@ -171,33 +147,13 @@ class GroupsController < ApplicationController
 
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
-    @group = nil
-    current_group = Group.find(params[:id])
-    @organization = current_group.organization
-
-    if current_group.is_defined? && is_master_instance?
-      @enable_update_in_local = true
-      @group = current_group.amoeba_dup
-      @group.owner_id = current_user.id
-    else
-      @group = current_group
-    end
-
-    if is_master_instance?
-      @enable_update_in_local = true
-    else
-      if @group.is_local_record?
-        @enable_update_in_local = true
-        @group.custom_value = 'Locally edited'
-      else
-        @enable_update_in_local = false
-      end
-    end
+    @group = Group.find(params[:id])
+    @organization = @group.organization
 
     if @group.update_attributes(params[:group])
       #redirect_to redirect(groups_path), :notice => "#{I18n.t (:notice_group_successful_updated)}"
       flash[:notice] =  "#{I18n.t (:notice_group_successful_updated)}"
-      redirect_to redirect_apply(edit_group_path(@group), nil, groups_path)
+      redirect_to edit_organization_path(@organization)
     else
       render action: 'edit'
     end
@@ -208,22 +164,7 @@ class GroupsController < ApplicationController
 
     @group = Group.find(params[:id])
     @organization = @group.organization
-
-    if is_master_instance?
-      if @group.is_defined? || @group.is_custom?
-        #logical deletion: delete don't have to suppress records anymore on defined record
-        @group.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-      else
-        @group.destroy
-      end
-    else
-      if @group.is_local_record? || @group.is_retired?
-        @group.destroy
-      else
-        flash[:error] = I18n.t (:warning_master_record_cant_be_delete)
-        redirect_to redirect(groups_path) and return
-      end
-    end
+    @group.destroy
 
     flash[:notice] = I18n.t (:notice_group_successful_deleted)
     redirect_to groups_url

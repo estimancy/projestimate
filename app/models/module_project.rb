@@ -41,6 +41,8 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :pemodule
   belongs_to :project, :touch => true
   belongs_to :view    # the current selected view
+  belongs_to :guw_model, class_name: "Guw::GuwModel"
+  has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
 
   has_many :estimation_values, :dependent => :destroy
   has_many :inputs

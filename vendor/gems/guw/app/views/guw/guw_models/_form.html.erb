@@ -1,14 +1,24 @@
-<%= simple_form_for(@guw_model) do |f| %>
-  <%= f.error_notification %>
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Model d'Unité d'Oeuvres
+      </a>
+    </li>
+  </ul>
 
-  <%= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+  <div id="tabs-1">
+    <%= simple_form_for(@guw_model) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :description %>
+      <%= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :description, input_html: { rows: "5"} %>
+      </div>
+
+      <%= f.button :submit %>
+    <% end %>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
-<% end %>
+</div>

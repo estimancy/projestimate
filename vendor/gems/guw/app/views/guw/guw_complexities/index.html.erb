@@ -1,22 +1,43 @@
-<h2>Seuil de complexité de <%= @guw_model %></h2>
+<h4>
+  <b>
+    Seuils de complexité de <%= @guw_type %>
+  </b>
+</h4>
 
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Bottom range</th>
-    <th>Top range</th>
-    <th>Weight</th>
-  </tr>
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Complexities
+      </a>
+    </li>
+  </ul>
 
-  <% @guw_complexities.each do |guw_cplx| %>
-    <tr>
-      <td class="align-center"><%= guw_cplx.name %></td>
-      <td class="align-center"><%= guw_cplx.bottom_range %></td>
-      <td class="align-center"><%= guw_cplx.top_range %></td>
-      <td class="align-center"><%= guw_cplx.weight%></td>
-    </tr>
-  <% end %>
-</table>
+  <div id="tabs-1">
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <th>Bottom range</th>
+        <th>Top range</th>
+        <th>Weight</th>
+        <th>Actions</th>
+      </tr>
 
-<%= link_to "Créer une complexité pour #{@guw_type}", new_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type), class: "btn" %>
-<%= link_to "Retour", :back, class: "btn" %>
+      <% @guw_complexities.each do |guw_cplx| %>
+        <tr>
+          <td class="align-center"><%= link_to guw_cplx.name, edit_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type, guw_cplx) %></td>
+          <td class="align-center"><%= guw_cplx.bottom_range %></td>
+          <td class="align-center"><%= guw_cplx.top_range %></td>
+          <td class="align-center"><%= guw_cplx.weight%></td>
+          <td class="align-center">
+            <%= link_to "Editer", guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type, guw_cplx), class: "btn btn-mini" %>
+            <%= link_to "Supprimer", guw.guw_complexity_path(guw_cplx), method: :delete, class: "btn btn-mini" %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <%= link_to "Créer une nouvelle complexité pour #{@guw_type}", new_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type), class: "btn" %>
+    <%= link_to "Retour", :back, class: "btn" %>
+  </div>
+</div>

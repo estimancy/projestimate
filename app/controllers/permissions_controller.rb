@@ -65,7 +65,7 @@ class PermissionsController < ApplicationController
     @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
 
     @project_security_levels = ProjectSecurityLevel.defined
-    @groups = current_user.groups
+    @groups = Group.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -152,7 +152,7 @@ class PermissionsController < ApplicationController
     if params[:commit] == I18n.t('cancel')
       redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
     else
-      @groups = current_user.groups
+      @groups = Group.all
       @permissions = Permission.defined
 
       @groups.each do |group|

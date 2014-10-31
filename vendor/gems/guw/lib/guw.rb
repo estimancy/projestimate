@@ -38,6 +38,14 @@ require 'guw/version'
 require 'guw/engine'
 module Guw
   class Guw
+    attr_accessor :effort
 
+    def initialize(elem)
+      @effort = elem['effort']
+    end
+
+    def get_effort(*args)
+      Guw::GuwUnitOfWork.where(:module_project_id => args[1], pbs_project_element_id: args[2]).map(:effort).compact.sum
+    end
   end
 end

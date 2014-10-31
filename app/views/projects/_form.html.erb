@@ -59,7 +59,7 @@
               <% end %>
           <% else %>
               <td>
-                <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disable => true %>
+                <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses, :input_html => {:class => 'input-xlarge'}, :disabled => true %>
               </td>
           <% end %>
         </tr>
@@ -140,7 +140,8 @@
           <div class="row-fluid">
             <div class="span12">
               <%= I18n.t(:label_add_a_module_to_project) %>
-              <%= select_tag 'select_module', options_for_select(@modules_selected), :prompt => '' %>
+              <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation" => @modules_selected,
+                                                                          "Module d'UO" => @guw_modules}), :prompt => '' %>
             </div>
           </div>
 
@@ -151,12 +152,6 @@
               <%= link_to I18n.t(:button_configure_module_pbs_element), pbs_element_matrix_path(@project.id), :class => 'btn' %>
             </div>
           </div>
-
-
-        <!--<td class="pull-right">-->
-          <%# I18n.t(:label_filter_on_pbs_element) %>
-          <%# select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>
-        <!--</td>-->
         <% end %>
       <% end %>
 
@@ -185,7 +180,7 @@
                           <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                       <% end %>
                     </tr>
-                    <% @project.users.each do |user| %>
+                    <% @project.organization.users.uniq.each do |user| %>
                         <%= hidden_field_tag "user_securities_#{user.id}" %>
                         <% securities = user.project_securities_for_select(@project.id) %>
                         <tr>

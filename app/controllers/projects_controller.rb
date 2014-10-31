@@ -151,7 +151,6 @@ public
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
-    @project.users << current_user
 
     #Give full control to project creator
     full_control_security_level = ProjectSecurityLevel.find_by_name('FullControl')
@@ -264,7 +263,10 @@ public
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
-    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ?', @defined_status.id, 'initialization').all.map { |i| [i.title, i.id] }
+    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ? AND alias <> ?', @defined_status.id, 'initialization', 'guw').all.map { |i| [i.title, i.id] }
+
+    @guw_module = Pemodule.where(alias: "guw").first
+    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] } #bluurgh
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -355,7 +357,7 @@ public
       # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
       @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
-      @project.users.each do |u|
+      @project.organization.users.uniq.each do |u|
         ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
         if ps
           ps.project_security_level_id = params["user_securities_#{u.id}"]
@@ -367,7 +369,7 @@ public
         end
       end
 
-      @project.groups.each do |gpe|
+      @project.organization.groups.uniq.each do |gpe|
         ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
         if ps
           ps.project_security_level_id = params["group_securities_#{gpe.id}"]
@@ -682,6 +684,7 @@ public
   #Allow o add or append a pemodule to a estimation process
   def append_pemodule
     @project = Project.find(params[:project_id])
+    @pemodule = Pemodule.find(params[:module_selected].split(',').last.to_i)
     authorize! :alter_estimation_plan, @project
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -692,7 +695,7 @@ public
       @pbs_project_element = @project.root_component
     end
 
-    unless params[:module_selected].nil? || @project.nil?
+    unless @pemodule.nil? || @project.nil?
       @array_modules = Pemodule.defined
       @pemodules ||= Pemodule.defined
 
@@ -703,6 +706,10 @@ public
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => params[:module_selected], :position_y => 1, :position_x => @module_positions_x.to_i+1)
       my_module_project.build_view(name: "#{my_module_project.to_s} - Module project View", organization_id: @project.organization_id)
+      my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
+      if @pemodule.alias == "guw"
+        my_module_project.guw_model_id = params[:module_selected].split(',').first
+      end
       my_module_project.save
 
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -1362,8 +1369,8 @@ public
       @related_projects_inverse << i.pe_wbs_project.project
     end
 
-    @related_users = @project.users
-    @related_groups = @project.groups
+    @related_users = @project.organization.users
+    @related_groups = @project.organization.groups
   end
 
   def projects_global_params
@@ -2289,7 +2296,16 @@ public
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
     if @module_project.pemodule.alias == "guw"
-      @guw_unit_of_works = current_project.organization.guw_models.first.guw_unit_or_works
+
+      if current_module_project.guw_model.nil?
+        @guw_model = current_project.organization.guw_models.first
+      else
+        @guw_model = current_module_project.guw_model
+      end
+
+      @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
+                                                    pbs_project_element_id: current_component,
+                                                    guw_model_id: @guw_model)
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 

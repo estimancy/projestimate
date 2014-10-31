@@ -17,12 +17,18 @@ class Guw::GuwComplexitiesController < ApplicationController
   def create
     @guw_complexity = Guw::GuwComplexity.new(params[:guw_complexity])
     @guw_complexity.save
-    redirect_to main_app.root_url
+    redirect_to guw.guw_model_path(@guw_complexity.guw_type.guw_model)
   end
 
   def update
     @guw_complexity = Guw::GuwComplexity.find(params[:id])
     @guw_complexity.update_attributes(params[:guw_complexity])
-    redirect_to main_app.root_url
+    redirect_to guw.guw_model_path(@guw_complexity.guw_type.guw_model)
+  end
+
+  def destroy
+    @guw_complexity = Guw::GuwComplexity.find(params[:id])
+    @guw_complexity.delete
+    redirect_to guw.guw_model_guw_type_guw_complexities_path(@guw_complexity.guw_type.guw_model, @guw_complexity.guw_type)
   end
 end

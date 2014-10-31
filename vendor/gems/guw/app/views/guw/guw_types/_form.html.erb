@@ -1,15 +1,25 @@
-<%= simple_form_for(@guw_type) do |f| %>
-  <%= f.error_notification %>
+<div class="tabs">
 
-  <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Attribute Complexities
+      </a>
+    </li>
+  </ul>
 
-  <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :description %>
+  <div id="tabs-1">
+    <%= simple_form_for(@guw_type) do |f| %>
+      <%= f.error_notification %>
+
+      <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :description, input_html: { rows: "5"} %>
+      </div>
+
+      <%= f.button :submit %>
+    <% end %>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit %>
-    <%= link_to "Créer une complexité", guw.new_guw_complexity_path, class: "btn" %>
-  </div>
-<% end %>
+</div>

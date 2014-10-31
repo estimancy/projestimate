@@ -17,8 +17,8 @@
       <tr>
         <th><%= I18n.t(:name) %></th>
         <th><%= I18n.t(:description) %></th>
-        <th class="filter-select"><%= I18n.t(:record_status) %></th>
-        <th class="action"><%= I18n.t(:actions) %></th>
+        <th><%= I18n.t(:organization) %></th>
+        <th><%= I18n.t(:actions) %></th>
       </tr>
       </thead>
 
@@ -27,20 +27,12 @@
           <tr>
             <td><%= group.name %></td>
             <td><%= group.description %></td>
-            <td><%= group.record_status.name unless group.record_status.nil? %> <%= group.show_custom_value unless group.is_local_record? %></td>
+            <td><%= group.organization %></td>
             <td class="center">
               <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
               <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
-              <% if is_master_instance? && !group.is_local_record? %>
-                <% if group.is_retired? and can? :restore, :all %>
-                  <%= link_to(' ', "groups/#{group.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-                <% else %>
-                  <% if !group.is_defined? and can? :validate, :all  %>
-                    <%= link_to(' ', "groups/#{group.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                  <% end %>
-                <% end %>
-              <% end %>
             </td>
+        </td>
           </tr>
       <% end %>
       <%= render :partial => 'layouts/footer_table' %>

@@ -37,18 +37,29 @@
 Guw::Engine.routes.draw do
   root :to => 'guw#index'
 
+  resources :guw_type_complexities
   resources :guw_complexities
   resources :guw_attributes
   resources :guw_unit_of_works
+  resources :guw_unit_of_work_groups
 
   resources :guw_types
   resources :guw_attribute_complexities
 
   resources :guw_models do
+    resources :guw_attributes
+    resources :guw_unit_of_works
     resources :guw_types do
       resources :guw_attribute_complexities
       resources :guw_complexities
+      resources :guw_type_complexities
+
+      post "guw_attribute_complexities/save_attributs_complexities"
+
     end
   end
+
+  post "guw_unit_of_works/save_guw_unit_of_works"
+  get "/reload" => "guw_unit_of_works#reload", as: "reload"
 
 end

@@ -1,0 +1,42 @@
+<h4>
+  <b>
+    Seuils de complexité de <%= @guw_type %>
+  </b>
+</h4>
+
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Complexities
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <th>Bottom range</th>
+        <th>Top range</th>
+        <th>Weight</th>
+        <th>Actions</th>
+      </tr>
+
+      <% @guw_complexities.each do |guw_cplx| %>
+        <tr>
+          <td class="align-center"><%= link_to guw_cplx.name, edit_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type, guw_cplx) %></td>
+          <td class="align-center"><%= guw_cplx.bottom_range %></td>
+          <td class="align-center"><%= guw_cplx.top_range %></td>
+          <td class="align-center"><%= guw_cplx.weight%></td>
+          <td class="align-center">
+            <%= link_to "Editer", guw.edit_guw_complexity_path(guw_cplx) %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <%= link_to "Créer une nouvelle complexité pour #{@guw_type}", new_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type), class: "btn" %>
+    <%= link_to "Retour", :back, class: "btn" %>
+  </div>
+</div>
