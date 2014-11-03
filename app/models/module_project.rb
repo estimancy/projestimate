@@ -148,6 +148,8 @@ class ModuleProject < ActiveRecord::Base
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
       # nothing to show for position as the "Initialization is always on the first position"
       self.pemodule.title.humanize
+    elsif self.pemodule.alias == "guw"
+      self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s
     else
       "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
     end

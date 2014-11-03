@@ -18,7 +18,7 @@
                 <div class="widget-box collapsible">  <!-- One widget-box by module -->
                   <div class="widget-title" style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
                     <div class="header_data">
-                      <h5 style="font-size: large; color: #000000"><%= "#{module_project.pemodule.title}" %> </h5>
+                      <h5 style="font-size: large; color: #000000"><%= "#{module_project}" %> </h5>
                       <div class="buttons">
                         <%= link_to "Ajouter un widget", new_views_widget_path(module_project_id: module_project.id, pbs_project_element_id: current_component.id,  view_id: module_project.view_id || @project_organization.views.first), class: "btn btn-mini pull-right", remote: true %>
                       </div>
