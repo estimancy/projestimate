@@ -62,7 +62,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   def save_guw_unit_of_works
 
     hb = false
-    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_model = current_module_project.guw_model
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: current_component.id,
                                                   guw_model_id: @guw_model.id)
@@ -83,33 +83,43 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
-        low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
-        most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
-        high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i
+        low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
 
         @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
                                                                         guw_attribute_id: guowa.guw_attribute_id).all
 
-        @guw_attribute_complexities.each do |guw_ac|
+        sum_range = guowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first
 
-            unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-              if low.between?(@guw_attribute_complexities.map(&:bottom_range).min, @guw_attribute_complexities.map(&:top_range).max)
-                if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-                  @lows << guw_ac.value
+        if sum_range.nil? || sum_range.blank? || sum_range == 0
+          p "oedkok"
+        else
+          @guw_attribute_complexities.each do |guw_ac|
+            unless low.nil?
+              unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                if low.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
+                  if low.between?(guw_ac.bottom_range, guw_ac.top_range)
+                    @lows << guw_ac.value
+                  end
+                else
+                  hb = true
                 end
-              else
-                hb = true
               end
+            end
 
-              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).min, @guw_attribute_complexities.map(&:top_range).max)
+            unless most_likely.nil?
+              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
                 if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
                   @mls << guw_ac.value
                 end
               else
                 hb = true
               end
+            end
 
-              if high.between?(@guw_attribute_complexities.map(&:bottom_range).min, @guw_attribute_complexities.map(&:top_range).max)
+            unless high.nil?
+              if high.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
                 if high.between?(guw_ac.bottom_range, guw_ac.top_range)
                   @highs << guw_ac.value
                 end
@@ -117,7 +127,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                 hb = true
               end
             end
-
+          end
         end
 
         guowa.low = low
@@ -126,10 +136,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-      guw_unit_of_work.result_low = @lows.sum
-      guw_unit_of_work.result_most_likely = @mls.sum
-      guw_unit_of_work.result_high = @highs.sum
+      guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
 
+      guw_unit_of_work.result_low = @lows.sum * guw_work_unit.value.to_f
+      guw_unit_of_work.result_most_likely = @mls.sum * guw_work_unit.value
+      guw_unit_of_work.result_high = @highs.sum * guw_work_unit.value
+
+      guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
       guw_unit_of_work.save
 
       @guw_type.guw_complexities.each do |guw_c|
@@ -160,10 +173,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.effort = @weight_pert.sum
       guw_unit_of_work.ajusted_effort = @weight_pert.sum
 
-      if !params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-        if params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
-          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
-        end
+      if params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
       end
 
       guw_unit_of_work.save
@@ -193,20 +204,14 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    if hb = true
+    if hb == true
       flash[:error] = "Attention ! Vous avez des valeurs en dehors des bornes définis dans le modèle."
     else
+      flash[:error] = nil
       flash[:notice] = "Vos données ont été correctement sauvegardés"
     end
 
     redirect_to main_app.root_url
-  end
-
-  def reload
-    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
-                                             pbs_project_element_id: current_component.id,
-                                             guw_model_id: @guw_model.id)
   end
 
 end

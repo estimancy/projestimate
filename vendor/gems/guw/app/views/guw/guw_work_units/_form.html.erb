@@ -1,0 +1,26 @@
+<div class="tabs">
+
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        zdzd
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <%= simple_form_for(@guw_work_unit) do |f| %>
+      <%= f.error_notification %>
+
+      <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :value %>
+      </div>
+
+      <%= f.button :submit %>
+
+    <% end %>
+  </div>
+</div>

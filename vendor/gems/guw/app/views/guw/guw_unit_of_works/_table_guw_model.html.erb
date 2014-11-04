@@ -13,6 +13,7 @@
               <th>Name</th>
               <th>UoType</th>
               <th>Attributs</th>
+              <th>Work Unit</th>
               <th>Cplx. UO</th>
               <th>Valeur</th>
               <th>Valeur retenu</th>
@@ -23,18 +24,24 @@
               <tr>
                 <td style="vertical-align: middle">
                   <a href=<%= guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow) %>>
-            <span title="<%= guow.comments %>" class="attribute_tooltip">
-              <%= guow.name %>
-            </span>
+                    <span title="<%= guow.comments %>" class="attribute_tooltip">
+                      <%= guow.name %>
+                    </span>
                   </a>
                 </td>
                 <td style="vertical-align: middle">
                   <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id ) %>
                 </td>
                 <td>
-                  <table class="table table-bordered table-condensed">
+                  <table class="table table-bordered table-condensed"  style="vertical-align: middle; padding_top:1px;">
+                    <tr>
+                      <th></th>
+                      <th>L</th>
+                      <th>M</th>
+                      <th>H</th>
+                    </tr>
                     <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
-                      <% sum_range = uowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first.nil? %>
+                      <% sum_range = uowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first %>
                       <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
                         <tr>
                           <td>
@@ -53,6 +60,9 @@
                       <% end %>
                     <% end %>
                   </table>
+                </td>
+                <td style="vertical-align: middle">
+                  <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id ) %>
                 </td>
                 <td style="vertical-align: middle">
                   <% if guow.guw_complexity.nil? %>
