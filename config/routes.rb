@@ -86,7 +86,7 @@ Projestimate::Application.routes.draw do
 
   get 'awaiting_confirmation' => 'registrations#awaiting_confirmation', :as => 'awaiting_confirmation'
 
-  resources :userspath_prefix
+  resources :users
 
   get 'dashboard' => 'users#show', :as => 'dashboard'
   get 'validate' => 'users#validate', :as => 'validate'
