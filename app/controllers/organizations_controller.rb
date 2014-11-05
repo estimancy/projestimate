@@ -574,4 +574,8 @@ class OrganizationsController < ApplicationController
     redirect_to organizationals_params_path
   end
 
+
+  def show
+
+  end
 end
