@@ -82,14 +82,13 @@ Projestimate::Application.routes.draw do
 
   resources :factors
 
-  devise_for :users, :path_prefix => 'de', :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"} #, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
+  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}
 
   get 'awaiting_confirmation' => 'registrations#awaiting_confirmation', :as => 'awaiting_confirmation'
 
-  resources :users
+  resources :userspath_prefix
 
   get 'dashboard' => 'users#show', :as => 'dashboard'
-  ####get 'sign_up' => 'users#new', :as => 'sign_up'    #is replace with Devise
   get 'validate' => 'users#validate', :as => 'validate'
   post 'create_inactive_user' => 'users#create_inactive_user', :as => 'create_inactive_user'
   get 'find_use_user' => 'users#find_use_user', :as => 'find_use_user'
