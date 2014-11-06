@@ -1,4 +1,4 @@
-<% current_module_project.guw_unit_of_work_groups.each do |uowg| %>
+<% Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.each do |uowg| %>
   <div class="accordion" id="accordion2">
     <div class="accordion-group">
       <div class="accordion-heading">

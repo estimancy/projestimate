@@ -1,4 +1,5 @@
 #encoding: utf-8
+  #encoding: utf-8
 #############################################################################
 #
 # Estimancy, Open Source project estimation web application

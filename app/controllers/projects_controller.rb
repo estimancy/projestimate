@@ -2305,6 +2305,7 @@ public
       @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
                                                     pbs_project_element_id: current_component,
                                                     guw_model_id: @guw_model)
+
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 
