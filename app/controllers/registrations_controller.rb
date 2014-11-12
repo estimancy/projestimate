@@ -44,7 +44,7 @@ class RegistrationsController < Devise::RegistrationsController
       # Add default Authentication method and group to user
       resource.auth_type = auth_type.nil? ? nil : auth_type.id
       resource.groups << everyone_group
-      resource.plan_id = params['user']['plan_id'].to_i
+      #resource.plan_id = params['user']['plan_id'].to_i
       is_an_automatic_account_activation? ? status = 'active' : status = 'pending'
       resource.user_status = status
       resource.save

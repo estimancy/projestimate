@@ -34,32 +34,33 @@
 #
 #############################################################################
 
-Guw::Engine.routes.draw do
-  root :to => 'guw#index'
 
-  resources :guw_type_complexities
-  resources :guw_complexities
-  resources :guw_attributes
-  resources :guw_unit_of_works
-  resources :guw_unit_of_work_groups
-  resources :guw_work_units
+class Guw::GuwWorkUnitsController < ApplicationController
 
-  resources :guw_types
-  resources :guw_attribute_complexities
-
-  resources :guw_models do
-    resources :guw_attributes
-    resources :guw_unit_of_works
-    resources :guw_work_units
-    resources :guw_types do
-      resources :guw_attribute_complexities
-      resources :guw_complexities
-      resources :guw_type_complexities
-
-      post "guw_attribute_complexities/save_attributs_complexities"
-
-    end
+  def new
+    @guw_work_unit = Guw::GuwWorkUnit.new
   end
 
-  post "guw_unit_of_works/save_guw_unit_of_works"
+  def edit
+    @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+  end
+
+  def create
+    @guw_work_unit = Guw::GuwWorkUnit.new(params[:guw_work_unit])
+    @guw_work_unit.save
+    redirect_to main_app.root_url
+  end
+
+  def update
+    @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+    @guw_work_unit.update_attributes(params[:guw_work_unit])
+    redirect_to main_app.root_url
+  end
+
+  def destroy
+    guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+    guw_model_id = @guw_work_unit.guw_model.id
+    @guw_work_unit.delete
+    redirect_to main_app.root_url
+  end
 end

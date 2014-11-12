@@ -83,29 +83,92 @@ end
 private
 def load_data!
   #begin
-  puts ' Creating Master Parameters ...'
+  puts 'Creating Master Parameters ...'
 
-    # Version
-    puts '   - Version table'
-    Version.create :comment => 'No update data has been save'
+  #RecordStatus
+  record_status = Array.new
+  record_status = [
+      ['Proposed', 'TBD'],
+      ['InReview', 'TBD'],
+      ['Draft', 'TBD'],
+      ['Defined', 'TBD'],
+      ['Retired', 'TBD'],
+      ['Custom', 'TBD'],
+      ['Local', 'TBD']
+  ]
+  record_status.each do |i|
+    RecordStatus.create(:name => i[0], :description => i[1] )
+  end
 
-    #RecordStatus
-    record_status = Array.new
-    record_status = [
-        ['Proposed', 'TBD'],
-        ['InReview', 'TBD'],
-        ['Draft', 'TBD'],
-        ['Defined', 'TBD'],
-        ['Retired', 'TBD'],
-        ['Custom', 'TBD'],
-        ['Local', 'TBD']
-    ]
-    record_status.each do |i|
-      RecordStatus.create(:name => i[0], :description => i[1] )
+  #Find correct record status id
+  rsid = RecordStatus.find_by_name('Defined').id
+
+    puts 'Create project security level...'
+    #Default project Security Level
+    project_security_level = ['FullControl', 'Define', 'Modify', 'Comment', 'ReadOnly']
+    project_security_level.each do |i|
+      ProjectSecurityLevel.create(:name => i, :record_status_id => rsid)
     end
 
-    #Find correct record status id
-    rsid = RecordStatus.find_by_name('Defined').id
+    puts 'Create global permissions...'
+    #Default permissions
+    permissions= [ ['edit_own_profile', 'Edit your own profile', false],
+                   ['validate_user_account', 'Validate user accounts', false],
+                   ['edit_user_account_no_admin', 'Editing user accounts (except Admin and MasterAdmin accounts)', false],
+                   ['edit_account_super_admin', 'Editing Admin and MasterAdmin accounts', false],
+                   ['edit_account_admin', 'Editing Admin accounts (but not MasterAdmin accounts)', false],
+                   ['edit_groups', 'Editing groups', false],
+                   ['manage_permissions', 'Manage (all) permissions', true],
+                   ['manage_specific_permissions', 'Manage project permissions', false],
+                   ['manage_project_area', 'Manage Project Area', false],
+                   ['manage_currency', 'Manage Currency', false],
+                   ['manage_organizations', 'Manage Organizations', false],
+                   ['manage_labor_categories', 'Manage Labor Categories', false],
+                   ['manage_event_types', 'Manage Event types', true],
+                   ['manage_project_categories', 'Manage Project Categories', false],
+                   ['manage_platform_categories', 'Manage Platform Categories', false],
+                   ['manage_acquisition_categories', 'Manage Acquisition Categories', false],
+                   ['manage_wet', 'Manage Work Element Types', false],
+                   ['manage_attributes', 'Manage Attributes', false],
+                   ['manage_modules', 'Manage Modules', false],
+                   ['manage_activity_categories', 'Manage Activity Categories', false],
+                   ['manage_help_messages', 'Manage Help message', false],
+                   ['edit_languages', 'Manage languages of the application', false],
+                   ['access_to_admin', 'Access to administration page', false],
+                   ['create_new_project', 'Create new project', false],
+                   ['delete_a_project', 'Delete project', true],
+                   ['edit_a_project', 'Edit project', true],
+                   ['access_to_a_project', 'Access to project', true],
+                   ['list_project', 'View the list of Project (project index)', true],
+                   ['add_a_pbs_project_element', 'Add a PbsProjectElement', true],
+                   ['delete_a_pbs_project_element', 'Delete PbsProjectElement', true],
+                   ['move_a_pbs_project_element', 'Move PbsProjectElement', true],
+                   ['edit_a_pbs_project_element', 'Edit PbsProjectElement', true],
+                   ['access_to_a_pbs_project_element', 'Access PbsProjectElement', true],
+                   ['add_a_module_to_a_process', 'Add Module to project estimation process', true],
+                   ['delete_a_module_project', 'Delete a project module', true],
+                   ['move_a_module_project', 'Move a project module', true],
+                   ['edit_a_module_project', 'Edit a project module', true],
+                   ['run_estimation_process', 'Run an estimation process', true],
+                   ['access_to_a_module', 'Access Modules', true],
+                   ['add_an_attribute', 'Add attribute', true],
+                   ['delete_an_attribute', 'Delete Attribute', true],
+                   ['edit_an_attribute', 'Edit Attribute', true],
+                   ['access_to_attributes', 'Access to Attributes', true],
+                   ['edit_own_profile_security', 'Edit profile security', false],
+                   ['show_project', 'Show project', false],
+                   ['edit_project', 'Editer le project', false],
+                   ['delete_project', 'Editer le project', false]
+    ]
+
+    permissions.each do |i|
+      p = Permission.new(:name => String.keep_clean_space(i[0]), alias: String.keep_clean_space(i[0]), :description => i[1], :is_permission_project => i[2], :record_status_id => rsid)
+      p.save(validate: false)
+    end
+
+  # Version
+    puts '   - Version table'
+    Version.create :comment => 'No update data has been save'
 
     puts '   - Record Status'
     #Update record status to "Defined"
@@ -265,8 +328,8 @@ def load_data!
     authmethod = AuthMethod.new(:name => 'Application', :server_name => 'Not necessary', :port => 0, :base_dn => 'Not necessary', :certificate => 'false', :record_status_id => rsid)
     authmethod.save(validate: false)
 
-    puts '   - Admin user'
-    #Create first user
+    puts '   - Super Admin'
+      #Create first user
     user = User.new(:first_name => 'Administrator',
                     :last_name => 'Estimancy',
                     :login_name => 'admin',
@@ -276,65 +339,75 @@ def load_data!
                     :user_status => 'active',
                     :language_id => Language.first.id,
                     :time_zone => 'GMT')
+
     user.password = user.password_confirmation = 'projestimate'
     user.super_admin = true
     user.skip_confirmation!
     user.save
 
-    puts '   - Default groups'
-    #Create default groups
-    Group.create(:name => 'MasterAdmin')
-    Group.create(:name => 'Admin')
-    Group.create(:name => 'Everyone')
+    puts ' Creating organizations & unit of work model'
+    7.times do |i|
+      organization = Organization.create(name: Faker::Company.name,
+                                        description: Faker::Company.catch_phrase,
+                                        number_hours_per_day: 8,
+                                        number_hours_per_month: 160,
+                                        cost_per_hour: 100,
+                                        currency_id: Currency.first.id,
+                                        inflation_rate: 10,
+                                        limit1: 10,
+                                        limit2: 100,
+                                        limit3: 1000)
 
-    #Associated default user with group MasterAdmin
-    user.group_ids = [Group.first.id]
-    user.save
+      5.times do
+        guw_model = Guw::GuwModel.create(name: Faker::Lorem.word,
+                                         description: Faker::Lorem.paragraph,
+                                         organization_id: organization.id )
 
-    puts '   - Labor categories'
-    #Default labor category
-      array_labor_category = Array.new
-      array_labor_category = [
-        ['Director', 'TBD'],
-        ['Manager', 'TBD'],
-        ['Program Manager', 'TBD'],
-        ['Administrator', 'TBD'],
-        ['Project Manager', 'TBD'],
-        ['Team leader', 'TBD'],
-        ['Consultant', 'TBD'],
-        ['Analyst', 'TBD'],
-        ['System Analyst', 'TBD'],
-        ['Architect', 'TBD'],
-        ['Computer Programmer', 'TBD'],
-        ['Trainer', 'TBD'],
-        ['Technician', 'TBD'],
-        ['Operator', 'TBD'],
-        ['Support Agent', 'TBD'],
-        ['Document writer', 'TBD'],
-        ['Test Agent', 'TBD']
-      ]
-
-      array_labor_category.each do |i|
-        LaborCategory.create(:name => i[0], :description => i[1], :record_status_id => rsid)
+        6.times do
+          Guw::GuwType.create(name: Faker::Hacker.abbreviation,
+                              guw_model_id: guw_model.id)
+        end
       end
 
-    puts ' Creating organizations...'
-    Organization.create(:name => 'YourOrganization',
-                        :description => 'This must be update to match your organization',
-                        :number_hours_per_day => 8,
-                        number_hours_per_month: 160,
-                        cost_per_hour: 100,
-                        currency_id: Currency.first.id,
-                        limit1: 10,
-                        limit2: 20,
-                        limit3: 30)
+    end
 
-  organization = Organization.first
-  organization.groups << Group.first
-  organization.save
+    Organization.all.each do |organization|
+      g = Group.create(:name => 'Adminstration')
+      organization.groups << g
+      organization.save
+
+      Permission.all.each do |permission|
+
+        GroupsPermissions.create(group_id: g.id,
+                                 permission_id: permission.id)
+
+        ProjectSecurityLevel.all.each do |psl|
+          PermissionsProjectSecurityLevels.create(project_security_level_id: psl.id,
+                                                  permission_id: permission.id)
+        end
+      end
+    end
+
+  puts '   - User'
+    10.times do |i|
+      #Create user
+      user = User.new(:first_name => Faker::Name.first_name,
+                      :last_name => Faker::Name.last_name,
+                      :login_name => "user#{i}",
+                      :initials => 'JP',
+                      :email => Faker::Internet.email,
+                      :auth_type => AuthMethod.first.id,
+                      :user_status => 'active',
+                      :language_id => Language.first.id,
+                      :time_zone => 'GMT')
+
+      user.password = user.password_confirmation = 'demodemo'
+      user.groups << Group.all.sample(1)
+      user.skip_confirmation!
+      user.save
+    end
 
   puts ' Creating Samples data ...'
-
     # Add some Estimations statuses in organization
     estimation_statuses = [
         ['0', 'preliminary', "Préliminaire", "999999", "Statut initial lors de la création de l'estimation"],
@@ -349,117 +422,79 @@ def load_data!
     end
 
     puts '   - Demo project'
-    #Create default project
-    Project.create(:title => 'Sample project',
-                   :description => 'This is a sample project for demonstration purpose',
-                   :alias => 'sample project',
-                   :state => 'preliminary',
-                   :start_date => Time.now.strftime('%Y/%m/%d'),
-                   :is_model => false,
-                   :organization_id => organization.id,
-                   :estimation_status_id => EstimationStatus.first.id)
+    16.times do
+      #Create default project
+       project = Project.create(:title => Faker::App.name,
+                               :description => Faker::Lorem.sentence,
+                               :alias => Faker::Lorem.word.downcase,
+                               :start_date => Faker::Date.backward(200).strftime('%Y/%m/%d'),
+                               :is_model => [true, false].sample,
+                               :organization_id => Organization.all.sample.id,
+                               :estimation_status_id => EstimationStatus.first.id)
 
-    project = Project.first
+      #Create default Pe-wbs-Project associated with previous project
+      PeWbsProject.create(:project_id => project.id, :name => "#{project.title} PBS-Product", :wbs_type => 'Product')
+      pe_wbs_project = PeWbsProject.first
 
-    #Create default Pe-wbs-Project associated with previous project
-    PeWbsProject.create(:project_id => project.id, :name => "#{project.title} PBS-Product", :wbs_type => 'Product')
-    pe_wbs_project = PeWbsProject.first
+      #Create root pbs_project_element
+      PbsProjectElement.create(:is_root => true, start_date: Time.now, :pe_wbs_project_id => pe_wbs_project.id, :work_element_type_id => wet.id, :position => 0, :name => 'Root folder')
 
-    #Create root pbs_project_element
-    PbsProjectElement.create(:is_root => true, start_date: Time.now, :pe_wbs_project_id => pe_wbs_project.id, :work_element_type_id => wet.id, :position => 0, :name => 'Root folder')
+      #pbs_project_element = PbsProjectElement.first
+      PeWbsProject.create(:project_id => project.id, :name => "#{project.title} WBS-Activity", :wbs_type => 'Activity')
+      pe_wbs_project = PeWbsProject.last
 
-    #pbs_project_element = PbsProjectElement.first
-    PeWbsProject.create(:project_id => project.id, :name => "#{project.title} WBS-Activity", :wbs_type => 'Activity')
-    pe_wbs_project = PeWbsProject.last
+      #Create root pbs_project_element
+      WbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :description => 'WBS-Activity Root Element', :name => "Root Element - #{project.title} WBS-Activity)")
+      #wbs_project_element = wbsProjectElement.first
 
-    #Create root pbs_project_element
-    WbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :description => 'WBS-Activity Root Element', :name => "Root Element - #{project.title} WBS-Activity)")
-    #wbs_project_element = wbsProjectElement.first
+      project.save
 
-  #create the initialization project module
-  unless initialization_module.nil?
-    cap_module_project = project.module_projects.build(:pemodule_id => initialization_module.id, :position_x => 0, :position_y => 0)
-    if cap_module_project.save
-      #Create the corresponding EstimationValues
-      unless project.organization.nil? || project.organization.attribute_organizations.nil?
-        project.organization.attribute_organizations.each do |am|
-          ['input', 'output'].each do |in_out|
-            mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id,
-                                         :module_project_id => cap_module_project.id,
-                                         :in_out => in_out,
-                                         :is_mandatory => am.is_mandatory,
-                                         :description => am.pe_attribute.description,
-                                         :display_order => nil,
-                                         :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
-                                         :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
-                                         :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
-          end
+      ProjectSecurityLevel.all.each do |psl|
+        project.organization.users.each do |user|
+          p user
+          ps = ProjectSecurity.new(project_id: project.id,
+                                   user_id: user.id,
+                                   project_security_level_id: psl.id)
+          ps.save(validate: false)
         end
       end
-    end
-  end
 
-    puts 'Create project security level...'
-    #Default project Security Level
-    project_security_level = ['FullControl', 'Define', 'Modify', 'Comment', 'ReadOnly']
-    project_security_level.each do |i|
-      ProjectSecurityLevel.create(:name => i, :record_status_id => rsid)
-    end
+      #create the initialization project module
+      unless initialization_module.nil?
+       cap_module_project = project.module_projects.build(:pemodule_id => initialization_module.id, :position_x => 0, :position_y => 0)
+       if cap_module_project.save
+         #Create the corresponding EstimationValues
+         unless project.organization.nil? || project.organization.attribute_organizations.nil?
+           project.organization.attribute_organizations.each do |am|
+             ['input', 'output'].each do |in_out|
+               mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id,
+                                            :module_project_id => cap_module_project.id,
+                                            :in_out => in_out,
+                                            :is_mandatory => am.is_mandatory,
+                                            :description => am.pe_attribute.description,
+                                            :display_order => nil,
+                                            :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
+                                            :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
+                                            :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
+             end
+           end
+         end
+       end
+      end
 
-    puts 'Create global permissions...'
-    #Default permissions
-    permissions= [ ['edit_own_profile', 'Edit your own profile', false],
-                   ['validate_user_account', 'Validate user accounts', false],
-                   ['edit_user_account_no_admin', 'Editing user accounts (except Admin and MasterAdmin accounts)', false],
-                   ['edit_account_super_admin', 'Editing Admin and MasterAdmin accounts', false],
-                   ['edit_account_admin', 'Editing Admin accounts (but not MasterAdmin accounts)', false],
-                   ['edit_groups', 'Editing groups', false],
-                   ['manage_permissions', 'Manage (all) permissions', true],
-                   ['manage_specific_permissions', 'Manage project permissions', false],
-                   ['manage_project_area', 'Manage Project Area', false],
-                   ['manage_currency', 'Manage Currency', false],
-                   ['manage_organizations', 'Manage Organizations', false],
-                   ['manage_labor_categories', 'Manage Labor Categories', false],
-                   ['manage_event_types', 'Manage Event types', true],
-                   ['manage_project_categories', 'Manage Project Categories', false],
-                   ['manage_platform_categories', 'Manage Platform Categories', false],
-                   ['manage_acquisition_categories', 'Manage Acquisition Categories', false],
-                   ['manage_wet', 'Manage Work Element Types', false],
-                   ['manage_attributes', 'Manage Attributes', false],
-                   ['manage_modules', 'Manage Modules', false],
-                   ['manage_activity_categories', 'Manage Activity Categories', false],
-                   ['manage_help_messages', 'Manage Help message', false],
-                   ['edit_languages', 'Manage languages of the application', false],
-                   ['access_to_admin', 'Access to administration page', false],
-                   ['create_new_project', 'Create new project', false],
-                   ['delete_a_project', 'Delete project', true],
-                   ['edit_a_project', 'Edit project', true],
-                   ['access_to_a_project', 'Access to project', true],
-                   ['list_project', 'View the list of Project (project index)', true],
-                   ['add_a_pbs_project_element', 'Add a PbsProjectElement', true],
-                   ['delete_a_pbs_project_element', 'Delete PbsProjectElement', true],
-                   ['move_a_pbs_project_element', 'Move PbsProjectElement', true],
-                   ['edit_a_pbs_project_element', 'Edit PbsProjectElement', true],
-                   ['access_to_a_pbs_project_element', 'Access PbsProjectElement', true],
-                   ['add_a_module_to_a_process', 'Add Module to project estimation process', true],
-                   ['delete_a_module_project', 'Delete a project module', true],
-                   ['move_a_module_project', 'Move a project module', true],
-                   ['edit_a_module_project', 'Edit a project module', true],
-                   ['run_estimation_process', 'Run an estimation process', true],
-                   ['access_to_a_module', 'Access Modules', true],
-                   ['add_an_attribute', 'Add attribute', true],
-                   ['delete_an_attribute', 'Delete Attribute', true],
-                   ['edit_an_attribute', 'Edit Attribute', true],
-                   ['access_to_attributes', 'Access to Attributes', true],
-                   ['edit_own_profile_security', 'Edit profile security', false],
-                   ['show_project', 'Show project', false],
-                   ['edit_project', 'Editer le project', false],
-                   ['delete_project', 'Editer le project', false]
-                  ]
+      1.times do
+        mp = ModuleProject.create(pemodule_id: Pemodule.all.sample.id,
+                                   project_id: project.id,
+                                   position_x: 1,
+                                   position_Y: 1)
 
-    permissions.each do |i|
-      p = Permission.new(:name => String.keep_clean_space(i[0]), alias: String.keep_clean_space(i[0]), :description => i[1], :is_permission_project => i[2], :record_status_id => rsid)
-      p.save(validate: false)
+        if mp.pemodule == "guw"
+          mp.guw_model_id = project.organization.guw_models.sample.id
+          mp.save
+        end
+
+
+      end
     end
 
   #  puts "\n\n"

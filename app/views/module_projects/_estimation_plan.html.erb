@@ -42,7 +42,7 @@
                   <% if pmod.pemodule.alias == "guw" %>
                     <%= link_to pmod.guw_model.nil? ? 'Undefined model': pmod.guw_model , activate_module_project_path(pmod), :remote => true, class: "a_white" %>
                   <% else %>
-                    <%= link_to pmod.pemodule.title, activate_module_project_path(pmod), :remote => true, class: "a_white" %>
+                    <%= link_to pmod, activate_module_project_path(pmod), :remote => true, class: "a_white" %>
                     <%= link_to ' ', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip", class: "a_white" %>
                   <% end %>
 

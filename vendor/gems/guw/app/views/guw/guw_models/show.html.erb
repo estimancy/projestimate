@@ -27,6 +27,7 @@
       <p> Vous n'avez pas encore de type d'UO</p>
       <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn'%>
       <%= link_to "Gérer les critères (attributs)", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn'  %>
+      <%= link_to "Gérer les types de travaux", guw.new_guw_model_guw_work_unit_path(@guw_model), :class => 'btn'  %>
     </div>
   <% else %>
     <% @guw_model.guw_types.each do |guw_type| %>
@@ -70,6 +71,7 @@
 
       <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn'%>
       <%= link_to "Gérer les critères (attributs)", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn'  %>
+      <%= link_to "Gérer les types de travaux", guw.new_guw_model_guw_work_unit_path(@guw_model), :class => 'btn'  %>
       <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), :class => 'btn' %>
       <%= link_to "Supprimer #{guw_type}", guw.guw_type_path(guw_type), method: "delete", class: "btn" %>
       <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn' %>

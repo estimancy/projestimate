@@ -567,11 +567,64 @@ class OrganizationsController < ApplicationController
         flash[:error] = I18n.t(:errors_when_copying_organization)
       end
     rescue Exception => e
-      #redirect_to organizationals_params_path(flash: {error: I18n.t(:errors_when_copying_organization)})
+      redirect_to organizationals_params_path(flash: {error: I18n.t(:errors_when_copying_organization)})
       flash[:error] = e.message
       redirect_to(organizationals_params_path) and return
     end
     redirect_to organizationals_params_path
+  end
+
+  def show
+  end
+
+  def export
+    @organization = Organization.find(params[:organization_id])
+
+    p = Axlsx::Package.new
+
+    wb = p.workbook
+
+    @organization.groups.each_with_index do |group|
+      wb.add_worksheet(:name => group.name) do |sheet|
+
+        style_title = sheet.styles.add_style(:bg_color => 'B0E0E6', :sz => 14, :b => true, :alignment => {:horizontal => :center})
+        style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
+        style_title_red = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF0000', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
+        style_title_orange = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
+        style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 14, :b => true, :alignment => {:horizontal => :right})
+        style_title_right_red = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
+        style_title_right_orange = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
+        style_data = sheet.styles.add_style(:sz => 12, :alignment => {:horizontal => :center}, :locked => false)
+        style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS')
+
+        group.users.each_with_index do |user|
+          sheet.add_row([user.name],:style => style_title)
+        end
+      end
+    end
+
+    @organization.projects.each_with_index do |project|
+      wb.add_worksheet(:name => project.name) do |sheet|
+
+        style_title = sheet.styles.add_style(:bg_color => 'B0E0E6', :sz => 14, :b => true, :alignment => {:horizontal => :center})
+        style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
+        style_title_red = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF0000', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
+        style_title_orange = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
+        style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 14, :b => true, :alignment => {:horizontal => :right})
+        style_title_right_red = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
+        style_title_right_orange = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
+        style_data = sheet.styles.add_style(:sz => 12, :alignment => {:horizontal => :center}, :locked => false)
+        style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS')
+
+        group.users.each_with_index do |user|
+          sheet.add_row([user.name],:style => style_title)
+        end
+      end
+    end
+
+    send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
+
+    #redirect_to "/organizationals_params"
   end
 
 end
