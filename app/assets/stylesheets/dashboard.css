@@ -880,4 +880,56 @@ corresponding value from the list below*/
 
 .min_max{
     font-size: smaller;
+    margin-top: 3em;
 }
+
+.view_widget{
+    min-width: 150px;
+    min-height: 150px;
+    /*margin-left: 0px;*/
+    /*margin-right:5px;*/
+    /*padding-top: 4em;*/
+    /*margin-bottom: 10px;*/
+}
+
+h5.view_title{
+    font-size: large;
+    color: #000000;
+}
+
+.widget_icon_edit{
+    position: relative;
+    top: 0px;
+    right: 0px;
+    float: right;
+}
+
+.top_center{
+    vertical-align: 20%;
+    text-align: center;
+}
+
+.widget_text{
+    text-align: center;
+    font-size: 1.6em;
+    font-weight: bold;
+    padding-top: 20px;
+}
+
+.icon_size, .fa.icon_size{
+    text-align: center;
+    font-size: 4em;
+    vertical-align: middle;"
+}
+
+.height_width{
+    margin-left: 5px;
+    width: 60px;
+}
+
+.ui-resizable-handle {
+    height:5px;
+}
+
+
+

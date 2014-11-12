@@ -1305,5 +1305,15 @@ en:
   selected_view: "Selected view"
   title_hide_results_view: "Hide the \"%{value}\" module results view"
   title_show_results_view: "Show the \"%{value}\" module results view"
+  delete_widget: "Delete the \"%{value}\" widget ..."
+  delete_view: "Delete the \"%{value}\" view ..."
+  label_add_new_view_widget: "Add new widget"
+  label_widget_type: "Widget type"
+  associated_attribute: "Associated attribute"
+  width: "Width"
+  height: "Height"
+  show_min_max: "Show Min/Max values"
+  widget_size: "Widget size W x H : "
+
 
   criteria: "Critères"

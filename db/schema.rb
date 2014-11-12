@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141106134749) do
+ActiveRecord::Schema.define(:version => 20141112111637) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -198,8 +198,8 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
   add_index "currencies", ["uuid"], :name => "index_currencies_on_uuid", :unique => true
 
   create_table "estimation_status_group_roles", :force => true do |t|
-    t.integer  "estimation_status_id"
     t.integer  "group_id"
+    t.integer  "estimation_status_id"
     t.integer  "permission_id"
     t.integer  "organization_id"
     t.datetime "created_at",           :null => false
@@ -209,12 +209,12 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
   create_table "estimation_statuses", :force => true do |t|
     t.integer  "organization_id"
     t.integer  "status_number"
-    t.string   "status_alias"
     t.string   "name"
-    t.string   "status_color"
     t.text     "description"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.string   "status_color"
+    t.string   "status_alias"
   end
 
   create_table "estimation_values", :force => true do |t|
@@ -412,9 +412,8 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
     t.string   "name"
     t.text     "comments"
     t.integer  "module_project_id"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
-    t.integer  "pbs_project_element_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "guw_guw_unit_of_works", :force => true do |t|
@@ -433,15 +432,6 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
     t.integer  "module_project_id"
     t.integer  "pbs_project_element_id"
     t.integer  "guw_unit_of_work_group_id"
-    t.integer  "guw_work_unit_id"
-  end
-
-  create_table "guw_guw_work_units", :force => true do |t|
-    t.string   "name"
-    t.float    "value"
-    t.integer  "guw_model_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
   end
 
   create_table "input_cocomos", :force => true do |t|
@@ -498,6 +488,24 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
   add_index "languages", ["record_status_id"], :name => "index_languages_on_record_status_id"
   add_index "languages", ["reference_id"], :name => "index_languages_on_parent_id"
   add_index "languages", ["uuid"], :name => "index_languages_on_uuid", :unique => true
+
+  create_table "master_settings", :force => true do |t|
+    t.string   "key"
+    t.text     "value"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "master_settings", ["record_status_id"], :name => "index_master_settings_on_record_status_id"
+  add_index "master_settings", ["reference_id"], :name => "index_master_settings_on_parent_id"
+  add_index "master_settings", ["uuid"], :name => "index_master_settings_on_uuid", :unique => true
 
   create_table "module_projects", :force => true do |t|
     t.integer  "pemodule_id"
@@ -741,18 +749,6 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "plans", :force => true do |t|
-    t.string   "name"
-    t.string   "alias"
-    t.text     "description"
-    t.integer  "estimation_number"
-    t.integer  "organization_number"
-    t.integer  "user_number"
-    t.integer  "admin_number"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
   end
 
   create_table "platform_categories", :force => true do |t|
@@ -1127,7 +1123,6 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
     t.string   "uid"
     t.string   "avatar"
     t.integer  "number_precision"
-    t.integer  "plan_id"
     t.boolean  "super_admin",            :default => false
   end
 
@@ -1162,14 +1157,15 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
     t.integer  "pbs_project_element_id"
     t.string   "icon_class"
     t.string   "color"
+    t.boolean  "show_min_max"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.string   "position_x"
     t.string   "position_y"
     t.string   "width"
     t.string   "height"
     t.string   "widget_type"
-    t.boolean  "show_min_max"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.integer  "position"
   end
 
   create_table "wbs_activities", :force => true do |t|
@@ -1299,11 +1295,11 @@ ActiveRecord::Schema.define(:version => 20141106134749) do
     t.string   "icon_class"
     t.string   "color"
     t.integer  "pe_attribute_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "width"
     t.string   "height"
     t.string   "widget_type"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
   end
 
   create_table "work_element_types", :force => true do |t|

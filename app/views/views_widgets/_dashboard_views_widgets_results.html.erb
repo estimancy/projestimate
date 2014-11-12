@@ -4,84 +4,118 @@
     <div class="row-fluid"> <!-- div for Y position -->
       <!-- Iteration for each module in position_y -->
       <% @module_positions_x.times do |i| %>
-        <% position_x = i+1 %>
-        <% span_size =  12/@module_positions_x %>
+          <% position_x = i+1 %>
+          <% span_size =  12/@module_positions_x %>
 
-        <div class='<%= "span#{span_size}" %>'> <!-- div for X position -->
-          <!-- Get the ModuleProject in position (position_x, position_y)  -->
-          <% module_project = current_project.module_projects.find_by_position_x_and_position_y(position_x, position_y)  %>
+          <div class='<%= "span#{span_size}" %>'> <!-- div for X position -->
+            <!-- Get the ModuleProject in position (position_x, position_y)  -->
+            <% module_project = current_project.module_projects.find_by_position_x_and_position_y(position_x, position_y)  %>
 
-          <% if module_project.nil? || !module_project.show_results_view %>
-              <div class="widget-box collapsible none-module">  <!-- One widget-box when there is no module_project at that position -->
-              </div>
-          <% else %>
-              <div class="widget-box collapsible">  <!-- One widget-box by module -->
-                <div class="widget-title" style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
-                  <div class="header_data">
-                    <h5 style="font-size: large; color: #000000"><%= "#{module_project}" %> </h5>
-                    <div class="buttons">
-                      <%= link_to "Ajouter un widget", new_views_widget_path(module_project_id: module_project.id, pbs_project_element_id: current_component.id,  view_id: module_project.view_id || @project_organization.views.first), class: "btn btn-mini pull-right", remote: true %>
+            <% if module_project.nil? || !module_project.show_results_view %>
+                <div class="widget-box collapsible none-module">  <!-- One widget-box when there is no module_project at that position -->
+                </div>
+            <% else %>
+                <div class="widget-box collapsible">  <!-- One widget-box by module -->
+                  <div class="widget-title" style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
+                    <div class="header_data">
+                      <h5 class="view_title"><%= "#{module_project}" %></h5>
+                      <div>
+                        <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog pull-right", title: I18n.t(:label_add_new_view_widget), remote: true %>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="widget-content" id="<%= "module_project_widget_#{module_project.id}" %>">
-                  <div class="row-fluid">
-                    <!-- Show all widgets on the current view -->
-                    <% if module_project.view %>
-                        <% module_project.view.views_widgets.each do |view_widget| %>
-                          <% estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget.pe_attribute_id, "output").last %>
-                          <% probable_value = ""; min_value = ""; max_value = "" %>
-                          <% unless estimation_value.nil? %>
-                            <% data_max = estimation_value.string_data_high[view_widget.pbs_project_element_id]%>
-                            <% data_min = estimation_value.string_data_low[view_widget.pbs_project_element_id]%>
-                            <% probable_value =  display_value(estimation_value.string_data_probable[view_widget.pbs_project_element_id], estimation_value) %>
-                            <% max_value = "Max: #{data_max.nil? ? '-' : data_max.round(user_number_precision)}"  %>
-                            <% min_value = "Min: #{data_min.nil? ? '-' : data_min.round(user_number_precision)}"  %>
-                          <% end %>
+                  <div class="widget-content" class="<%= "module_project_widget_#{module_project.id}" %>">
+                    <div id="<%="view_widgets_container_#{module_project.id}"%>" class="row-fluid">
+                      <!-- Show all widgets on the current view -->
+                      <% if module_project.view %>
+                        <!--<ul id="<%#="view_widgets_container_#{module_project.id}"%>">-->
+                          <% module_project.view.views_widgets.each do |view_widget| %>
+                            <% estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget.pe_attribute_id, "output").last %>
+                            <% probable_value = ""; min_value = ""; max_value = "" %>
+                            <% unless estimation_value.nil? %>
+                              <% data_max = estimation_value.string_data_high[current_component.id] %>
+                              <% data_min = estimation_value.string_data_low[current_component.id] %>
+                              <% probable_value =  display_value(estimation_value.string_data_probable[current_component.id], estimation_value) %>
+                              <% max_value = "Max: #{data_max.nil? ? '-' : data_max.round(user_number_precision)}"  %>
+                              <% min_value = "Min: #{data_min.nil? ? '-' : data_min.round(user_number_precision)}"  %>
+                            <% end %>
 
-                          <div class="span3 text-center view_widget" data-view_widget_id="<%= view_widget.id %>" style="left: <%= view_widget.position_x%> ; top: <%= view_widget.position_y %> ; margin-left: 0px; margin-right:5px;  background-color: <%= "##{view_widget.color}" %>; height: <%= 3 * 50%>px; padding-top: <%= 2 * 2%>em; margin-bottom: 10px;">
-                            <div class="row-fluid">
-                              <% if view_widget.show_min_max %>
-                               <div class="row-fluid">
-                                  <div class="span6">
-                                      <span class="icon <%= view_widget.icon_class %> center" style="font-size: 30px; vertical-align: middle;" title="<%= view_widget.name %>"></span>
-                                      <div class="text-center strong" style="padding-top: 10px">
-                                          <%= probable_value %>
-                                      </div>
-                                  </div>
-                                  <div class="span6 min_max">
-                                      <p><%= max_value %></p>
-                                      <p><%= min_value %></p>
-                                  </div>
-                               </div>
+                            <% add_top_and_left = nil %>
+                            <% if  !view_widget.position_x.nil? && !view_widget.position_y.nil? %>
+                              <% add_top_and_left = "left: #{view_widget.position_x} ; top: #{view_widget.position_y}"; %>
+                            <%  end %>
 
-                              <% else %>
-                                  <span class="icon <%= view_widget.icon_class %> center" style="font-size: 30px; vertical-align: middle;" title="<%= view_widget.name %>"></span>
-                                  <div class="text-center strong" style="padding-top: 10px">
-                                    <%= probable_value %>
-                                  </div>
-                              <% end %>
+                            <!-- Calculate widget width and height -->
+                            <%
+                               width = 150
+                               height = 150
+                               if view_widget.height.to_i > 1
+                                 height = (150*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
+                               end
+
+                               if view_widget.width.to_i > 1
+                                 width = (150*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
+                               end
+                            %>
+
+                            <!--<li>-->
+                            <!--<div class="span3 text-center view_widget" data-view_widget_id="<%#= view_widget.id %>" style="<%#= add_top_and_left %>  margin-left: 0px; margin-right:5px;  background-color: <%#= view_widget.color %>; min-height: <%#= 3 * 50%>px; min-width: 120px; padding-top: <%#= 2 * 2%>em; margin-bottom: 10px;">-->
+                            <!--<div class="span3 text-center view_widget" data-view_widget_id="<%#= view_widget.id %>" data-container_id="<%#="view_widgets_container_#{module_project.id}"%>" style="<%= add_top_and_left %>  margin-left: 0px; margin-right:5px;  background-color: <%#= view_widget.color %>; min-height: 150px; min-width: 150px; height: <%#= view_widget.height.nil? ? "150px" : view_widget.height.to_i %>; width: <%#= view_widget.width.nil? ? "150px" : view_widget.width.to_i %>; padding-top: 2em; margin-bottom: 10px;">-->
+                            <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 text-center view_widget" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="<%#= add_top_and_left %>   margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; min-height: 150px; min-width: 150px; height: <%=height%>px; width: <%=width%>px;">
+                              <div id="show_view_widget_params_<%= view_widget.id %>" class="widget_icon_edit">
+                                <%= link_to '', edit_views_widget_path(view_widget, module_project_id: module_project.id, view_id: module_project.view_id), class: 'icon-pencil', title: I18n.t(:edit_widget), remote: true %>
+                                <%= link_to(' ', view_widget, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete')) %>
+                              </div>
+
+                              <div class="row-fluid" style="padding-top: 3em; ">
+                                <% if view_widget.show_min_max %>
+                                 <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="icon fa <%= view_widget.icon_class %> icon_size" title="<%= view_widget.name %>"></div>
+                                        <div class="widget_text">
+                                            <%= probable_value %>
+                                        </div>
+                                    </div>
+                                    <div class="span6 min_max">
+                                        <p><%= max_value %></p>
+                                        <p><%= min_value %></p>
+                                    </div>
+                                 </div>
+
+                                <% else %>
+                                    <span class="icon fa <%= view_widget.icon_class %> icon_size" title="<%= view_widget.name %>"></span>
+                                    <div class="widget_text">
+                                      <%= probable_value %>
+                                    </div>
+                                <% end %>
+                              </div>
                             </div>
-                          </div>
-                        <% end %>
-                    <% end %>
 
-                    <!--<div class="span3 text-center" style="background-color: #ffa07a; height: <%#= 3 * 80%>px; padding-top: <%#= 3 * 2%>em; margin-bottom: 10px;" >-->
-                      <!--<span class="icon icon-dollar " style="font-size: 30px; vertical-align: middle;"></span>-->
-                      <!--<div class="text-center" style="padding-top: 10px">-->
-                        <!--10264-->
+
+                                <!--</li>-->
+                          <% end %>
+                        <!--</ul>-->
+                      <% end %>
+                      <!--<div class="span3 text-center" style="background-color: #ffa07a; height: <%#= 3 * 80%>px; padding-top: <%#= 3 * 2%>em; margin-bottom: 10px;" >-->
+                        <!--<span class="icon icon-dollar " style="font-size: 30px; vertical-align: middle;"></span>-->
+                        <!--<div class="text-center" style="padding-top: 10px">-->
+                          <!--10264-->
+                        <!--</div>-->
                       <!--</div>-->
-                    <!--</div>-->
 
-                    <!--<div class="span9 text-center" style="height: <%#= 3 * 80%>px; " >-->
-                      <!--<%#= timeline [["Washington", "1789-04-29", "1797-03-03"], ["Adams", "1797-03-03", "1801-03-03"], ["Jefferson", "1801-03-03", "1809-03-03"]] %>-->
-                    <!--</div>-->
+                      <!--<div class="span9 text-center" style="height: <%#= 3 * 80%>px; " >-->
+                        <!--<%#= timeline [["Washington", "1789-04-29", "1797-03-03"], ["Adams", "1797-03-03", "1801-03-03"], ["Jefferson", "1801-03-03", "1809-03-03"]] %>-->
+                      <!--</div>-->
 
-                  </div>
-                </div>  <!-- end widget content -->
-              </div>  <!-- END widget-box by module -->
+                    </div>
+                  </div>  <!-- end widget content -->
+                </div>  <!-- END widget-box by module -->
             <% end %>
           </div>   <!-- END div for each X position -->
       <% end %>    <!-- Iteration for X position -->
     </div>  <!-- END div for Y position -->
 <% end %>   <!-- Iteration for Y position -->
+
+
+
+
