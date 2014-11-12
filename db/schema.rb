@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141112111637) do
+ActiveRecord::Schema.define(:version => 20141106134749) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -412,8 +412,9 @@ ActiveRecord::Schema.define(:version => 20141112111637) do
     t.string   "name"
     t.text     "comments"
     t.integer  "module_project_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+    t.integer  "pbs_project_element_id"
   end
 
   create_table "guw_guw_unit_of_works", :force => true do |t|
@@ -432,6 +433,15 @@ ActiveRecord::Schema.define(:version => 20141112111637) do
     t.integer  "module_project_id"
     t.integer  "pbs_project_element_id"
     t.integer  "guw_unit_of_work_group_id"
+    t.integer  "guw_work_unit_id"
+  end
+
+  create_table "guw_guw_work_units", :force => true do |t|
+    t.string   "name"
+    t.float    "value"
+    t.integer  "guw_model_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "input_cocomos", :force => true do |t|
@@ -1165,7 +1175,6 @@ ActiveRecord::Schema.define(:version => 20141112111637) do
     t.string   "width"
     t.string   "height"
     t.string   "widget_type"
-    t.integer  "position"
   end
 
   create_table "wbs_activities", :force => true do |t|
