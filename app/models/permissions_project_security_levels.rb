@@ -34,35 +34,8 @@
 #
 #############################################################################
 
-class UnitOfWork < ActiveRecord::Base
-  attr_accessible :alias, :description, :name, :organization_id, :organization_technology_ids, :state, :display_order
-
-  include AASM
-
-  aasm :column => :state do # defaults to aasm_state
-    state :draft, :initial => true
-    state :defined
-    state :retired
-  end
-
-  belongs_to :organization
-  has_and_belongs_to_many :organization_technologies
-
-  has_many :organization_uow_complexities, :dependent => :destroy
-
-  validates :name, :alias, :presence => true
-
-  default_scope { order('display_order ASC') }
-
-  def to_s
-    name || ''
-  end
-
-  # To definitively remove ???
-  # Add the amoeba gem for the copy
-  #amoeba do
-  #  enable
-  #  include_field [:organization_technologies]
-  #end
-
+class PermissionsProjectSecurityLevels < ActiveRecord::Base
+  attr_accessible  :project_security_level_id, :permission_id
+  belongs_to :project_security_level
+  belongs_to :permission
 end

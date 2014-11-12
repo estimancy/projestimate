@@ -73,11 +73,6 @@ describe AdminSettingsController do
   end
 
   describe 'DELETE destroy' do
-    #it "destroys the requested @admin_setting" do
-    #    @params = { :id => @admin_setting.id }
-    #    delete :destroy, @params
-    #    response.should be_success
-    #end
 
     it 'redirects to the @admin_setting list' do
       @params = { :id => @admin_setting.id }
