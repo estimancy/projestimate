@@ -1,7 +1,7 @@
 language: ruby
 cache: bundler
 rvm:
-- 1.9.3
+- 2.1.1
 env:
 - RAILS_ENV=test
 - SECRET_KEY_BASE="$(bundle exec rake secret)"
