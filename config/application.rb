@@ -151,7 +151,13 @@ module Projestimate
 
     # icones for widgets
     #ICON_CLASSES = ["icon-euro", "icon-usd", "icon-gbp", "icon-user", "icon-users", "icon-user-md", "icon-bell", "fa fa-clock-o", "icon-dashboard", "icon-calendar", "icon-bug", " icon-bomb", "icon-warning", "icon-line-chart", "icon-pie-chart", "icon-area-chart", "icon-bar-chart"]
-    ICON_CLASSES = ["icon-euro", "icon-usd", "icon-gbp", "fa-money", "icon-user", "icon-group", "icon-time", "icon-bell", "icon-calendar", "icon-eye-open", "icon-eye-close", "fa-bomb", "icon-bug", "icon-warning-sign", "icon-exclamation-sign", "icon-question-sign", "icon-fire", "fa-minus-circle", "icon-arrow-right", "icon-arrow-up", "icon-arrow-down", "icon-share-alt", "icon-comment", "icon-dashboard", "fa-wrench", "fa-cog", "fa-cogs", "fa-database", "fa-home", "fa-info", "fa-line-chart", "fa-pie-chart", "fa-area-chart", "fa-bar-chart"]
+    #ICON_CLASSES = ["icon-euro", "icon-usd", "icon-gbp", "fa-money", "icon-user", "icon-group", "icon-time", "icon-bell", "icon-calendar", "icon-eye-open", "icon-eye-close", "fa-bomb", "icon-bug", "icon-warning-sign", "icon-exclamation-sign", "icon-question-sign", "icon-fire", "fa-minus-circle", "icon-arrow-right", "icon-arrow-up", "icon-arrow-down", "icon-share-alt", "icon-comment", "icon-dashboard", "fa-wrench", "fa-cog", "fa-cogs", "fa-database", "fa-home", "fa-info", "fa-line-chart", "fa-pie-chart", "fa-area-chart", "fa-bar-chart"]
+    ICON_CLASSES = [["Euro", "fa-euro"], ["US-Dollar", "fa-usd"], ["GB-Pound", "fa-gbp"], ["User", "fa-user"], ["Users", "fa-users"], ["Clock", "fa-clock-o"], ["Tachometer", "fa-tachometer"], ["Bell", "fa-bell"], ["Calendar", "fa-calendar"], ["Eye-open", "fa-eye"], ["Eye-close", "fa-eye-slash"],
+                    ["Bug", "fa-bug"], ["Bomb", "fa-bomb"], ["Warning", "fa-warning"], ["Exclamation mark", "fa-exclamation"], ["Exclamation mark circle", "fa-exclamation-circle"], ["Question mark", "fa-question"], ["Question mark circle", "fa-question-circle"], ["Fire", "fa-fire"], ["Minus circle", "fa-minus-circle"], ["Arrow-right", "fa-arrow-right"],
+                    ["Arrow-up", "fa-arrow-up"], ["Arrow-down", "fa-arrow-down"], ["Arrow-left", "fa-arrow-left"], ["Share", "fa-share-alt"], ["Comment", "fa-comment"], ["Dashboard", "fa-dashboard"], ["Wrench", "fa-wrench"], ["Cog", "fa-cog"], ["Cogs", "fa-cogs"],
+                    ["Database", "fa-database"], ["Home", "fa-home"], ["Info", "fa-info"], ["Line chart", "fa-line-chart"], ["Pie chart", "fa-pie-chart"], ["Area chart", "fa-area-chart"], ["Bar chart", "fa-bar-chart"], ["Flag", "fa-flag"]
+                    ]
+    WIDGETS_TYPE = [["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ]
 
   end
 end

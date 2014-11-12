@@ -1,7 +1,7 @@
 <div class="tabs">
-  <ul>
-    <li><a href="#tabs-1"><%= I18n.t(:views_widgets) %> </a></li>
-  </ul>
+  <!--<ul>-->
+    <!--<li><a href="#tabs-1"><%#= I18n.t(:views_widgets) %> </a></li>-->
+  <!--</ul>-->
 
   <div id="tabs-1">
 
@@ -16,17 +16,45 @@
         <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
 
         <table>
-          <tr><td><%= f.input :name, label: I18n.t(:name) %></td></tr>
-          <tr><td><%= f.association :pe_attribute, collection: PeAttribute.all, label: I18n.t(:pe_attribute_name) %></td></tr>
           <tr><td><%= f.association :widget, label: I18n.t(:label_widget) %></td></tr>
           <tr>
-            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES , label: I18n.t(:icon), input_html: {class: ''} %></td>
+            <td><%= f.input :name, label: I18n.t(:name) %></td>
+            <td><%= f.association :pe_attribute, collection: PeAttribute.all, label: I18n.t(:associated_attribute) %></td>
+          </tr>
+          <tr>
+            <td><%= f.input :widget_type, as: :select, collection: Projestimate::Application::WIDGETS_TYPE , label: I18n.t(:label_widget_type) %></td>
+            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon), input_html: {class: ''} %></td>
             <td><div id="view_icon_class_image"></div></td>
           </tr>
-          <tr><td><%= f.input :color, label: I18n.t(:status_color), input_html: {class: 'color'} %></td></tr>
-          <tr><td><%= f.input :show_min_max, as: :boolean %></td></tr>
-        </table>
+          <!--<tr><td><%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "color {pickerPosition:'left', adjust:true}"} %></td></tr>-->
+          <tr>
+            <td>
+                <% if @views_widget.new_record? %>
+                    <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color', value: '#99ccff'} %>
+                <% else %>
+                    <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color'} %>
+                <% end %>
+            </td>
+            <td><%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %></td>
+          </tr>
 
+          <tr>
+            <td><%= I18n.t(:widget_size) %></td>
+            <td>
+              <div class="row-fluid" style="display: block">
+                <div class="span6 height_width"><%= f.input :width, as: :select, collection: [1, 2, 3], label: I18n.t(:width), input_html: {class: 'input-small'} %></div>
+                <div class="span6 height_width"><%= f.input :height, as: :select, collection: [1, 2, 3], label: I18n.t(:height), input_html: {class: 'input-small'} %></div>
+              </div>
+              <%#= f.input :width, label: I18n.t(:width) %>  <%#= f.input :height, label: I18n.t(:height) %>
+            </td>
+          </tr>
+          <!--<p style="margin-left:210px">Left:  <input class="color {pickerPosition:'left right'}">-->
+          <script>
+              $(document).ready(function () {
+                 //jscolor.init();
+              });
+          </script>
+        </table>
       </div>
 
       <div class="actions">

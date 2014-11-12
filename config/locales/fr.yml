@@ -1305,7 +1305,15 @@ fr:
   selected_view: "Vue sélectionnée"
   title_hide_results_view: "Cacher/masquer la vue d'affichage des résultats du module \"%{value}\""
   title_show_results_view: "Afficher la vue d'affichage des résultats du module \"%{value}\""
-
+  delete_widget: "Supprimer la vignette \"%{value}\" ..."
+  delete_view: "Supprimer la vue \"%{value}\" ..."
+  label_add_new_view_widget: "Add new widget"
+  label_widget_type: "Type de vignette"
+  associated_attribute: "Attribut associé"
+  width: "Longueur"
+  height: "Hauteur"
+  show_min_max: "Afficher les valeurs Min/Max"
+  widget_size: "Taille de la vignette L x H :"
 
   criteria: "Critères"
 

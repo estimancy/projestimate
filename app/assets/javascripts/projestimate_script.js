@@ -16,47 +16,93 @@
 
 $(document).ready(function() {
 
-    // Update the jscolor library Dir to resolve bug on images detection
+    // Update the jscolor library Dir to resolve bug on colors detection
     jscolor.dir = '/assets/';
 
-    //Draggable widgets
-    $(".view_widget").draggable({
-        containment: 'parent',
-        grid: [140, 140],
-        //helper: 'clone',
-        //distance: 100,
-        //refreshPositions: true,
-        scroll: true,
+    $(function() {
 
-        stop: function(event, ui){
-            var pos_x = ui.position.left;
-            var pos_y = ui.position.top;
-            //alert("pos_x = "+ pos_x+ "px \n" +"pos_y ="+ pos_y+"px");
-            //alert("Width = "+ ui.helper.width+ "px \n" +"Height ="+ ui.helper.height+"px");
-            //alert(ui.helper.width($(this).width()));
+        $('[id^="view_widgets_container_"]').each(function(){
+            //var container = $(this).data("view_id");
+            var container_id = $(this).attr('id');
+            var $widgets_container  = $('#'+container_id);
+
+            //$(this).sortable(); //$(this).disableSelection();
+            $widgets_container.sortable({
+                containment: 'parent',
+                revert: false,
+                dropOnEmpty: true,
+                forcePlaceholderSize: true,
+                scroll: true,
+
+                start: function(event, ui) {
+                    var start_pos = ui.item.index();
+                    ui.item.data('start_pos', start_pos);
+                    ui.item.startPos = ui.item.index();
+                },
+
+                update: function (event, ui) {
+                    var list =  $(this).sortable("toArray");
+                    $.ajax({
+                        method: 'GET',
+                        url: "/update_view_widget_positions_and_sizes",
+                        data: {
+                            'view_id': this.id,
+                            'widgets_orders': list
+                        }
+                    });
+                },
+
+                change: function(event, ui) {
+                    console.log("New position: " + ui.placeholder.index());
+                },
+
+                stop: function(event, ui) {
+                    var start_pos = ui.item.data('start_pos');
+                    var end_pos = ui.item.index();
+                    var idsInOrder = $($widgets_container).sortable("toArray");
+                    //alert(start_pos + ' - ' + end_pos);
+                    console.log(idsInOrder);
+                    //alert(idsInOrder);
+                }
+
+//                update: function( event, ui ) {
+//                    save_new_order($widgets_container);
+//                }
+            });
+
+        }).disableSelection();
+
+//        $(".view_widget").resizable({
+//            containment: 'parent'
+//        });
+
+        function save_new_order(sortable_id) {
+            var a = [];
+            $(sortable_id).children().each(function (i) {
+                a.push($(this).attr('id') + ':' + i);
+            });
+            var s = a.join(',');
+            alert(s);
+        }
+
+        //Function that update the widget's position in view
+        function saveWidgetPositions( $widget_ui ){
+            var pos_x = $widget_ui.position.left;
+            var pos_y = $widget_ui.position.top;
+            alert("pos_x = "+ pos_x+ "px \n" +"pos_y ="+ pos_y+"px");
             $.ajax({
                 url:"/update_view_widget_positions_and_sizes",
                 method: 'GET',
                 data: {
-                    view_widget_id: $(this).data('view_widget_id'),
+                    view_widget_id: $widget_ui.draggable.data('view_widget_id'),
                     position_x: pos_x,
                     position_y: pos_y
                 }
             });
-
         }
-    });
 
-//    $('[id^="view_widget_"]').each(function(){
-//        var container = $(this).data("view_id");
-//        $(this)
-//            .draggable({
-//            containment: container,
-//            distance: 100,
-//            refreshPositions: true,
-//            scroll: true
-//            });
-//    });
+   });
+
 
     $("form.send_feedback input[type=submit]").click(function() {
         var error=false;

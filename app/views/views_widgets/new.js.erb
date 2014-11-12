@@ -1,6 +1,8 @@
+
 $("#notifications").html("");
 $(".modal-body-inner").html("<%= j render(:partial => "views_widgets/form") %>");
 
+$("#myModalLabel").css('font-size', 'larger');
 $("#myModalLabel").html('<%= I18n.t(:new_widget) %>');
 
 $("#edit_component").modal({
@@ -8,6 +10,7 @@ $("#edit_component").modal({
   backdrop: "static",
   backdrop: false
 });
+
 
 $("#views_widget_icon_class").change(function(){
     if ($(this).val() !== ""){
@@ -22,3 +25,5 @@ $("#views_widget_icon_class").change(function(){
 });
 
 $("#notifications").html("<%= j(render "layouts/notifications") %>");
+$("#views_widget_color").colorpicker();
+

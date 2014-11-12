@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141030153030) do
+ActiveRecord::Schema.define(:version => 20141112111637) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1165,6 +1165,7 @@ ActiveRecord::Schema.define(:version => 20141030153030) do
     t.string   "width"
     t.string   "height"
     t.string   "widget_type"
+    t.integer  "position"
   end
 
   create_table "wbs_activities", :force => true do |t|
