@@ -353,6 +353,7 @@ def load_data!
                                         number_hours_per_month: 160,
                                         cost_per_hour: 100,
                                         currency_id: Currency.first.id,
+                                        inflation_rate: 10,
                                         limit1: 10,
                                         limit2: 100,
                                         limit3: 1000)

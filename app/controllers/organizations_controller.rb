@@ -557,7 +557,7 @@ class OrganizationsController < ApplicationController
   # Duplicate the organization
   def duplicate_organization
     authorize! :create_organizations, Organization
-    begin
+    #begin
       original_organization = Organization.find(params[:organization_id])
       new_organization = original_organization.amoeba_dup
       if new_organization.save
@@ -566,17 +566,15 @@ class OrganizationsController < ApplicationController
       else
         flash[:error] = I18n.t(:errors_when_copying_organization)
       end
-    rescue Exception => e
+    #rescue Exception => e
       #redirect_to organizationals_params_path(flash: {error: I18n.t(:errors_when_copying_organization)})
-      flash[:error] = e.message
-      redirect_to(organizationals_params_path) and return
-    end
+      #flash[:error] = e.message
+      #redirect_to(organizationals_params_path) and return
+    #end
     redirect_to organizationals_params_path
   end
 
-
   def show
-
   end
 
   def export

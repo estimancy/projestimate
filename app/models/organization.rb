@@ -51,7 +51,6 @@ class Organization < ActiveRecord::Base
   has_many :organization_uow_complexities, :dependent => :destroy
   has_many :unit_of_works, :dependent => :destroy
   has_many :subcontractors, :dependent => :delete_all
-  has_many :abacus_organizations
   has_many :subcontractors, :dependent => :destroy
   has_many :projects
   has_many :organization_profiles, :dependent => :destroy
@@ -91,8 +90,9 @@ class Organization < ActiveRecord::Base
   # Add the amoeba gem for the copy
   amoeba do
     enable
-    #include_field [:attribute_organizations, :organization_technologies, :organization_profiles, :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :abacus_organizations, :organization_uow_complexities, :estimation_statuses]
-    include_field [:groups, :organization_profiles, :pe_attributes, :organization_technologies,  :unit_of_works, :size_unit_types, :estimation_statuses, :status_transitions, :guw_models]
+    include_field [:attribute_organizations, :organization_technologies, :organization_profiles,
+                   :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :organization_uow_complexities, :estimation_statuses]
+
 
     customize(lambda { |original_organization, new_organization|
       new_organization.name = "Copy of '#{original_organization.name}' at #{Time.now}"
