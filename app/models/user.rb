@@ -60,8 +60,6 @@ class User < ActiveRecord::Base
   # Virtual attribute for authenticating by either login_name or email  # This is in addition to a real persisted field like 'login_name'
   attr_accessor :id_connexion, :updating_password, :current_password
 
-  include AASM
-
   has_and_belongs_to_many :projects
   has_and_belongs_to_many :permissions
   #has_and_belongs_to_many :organizations
@@ -232,7 +230,7 @@ class User < ActiveRecord::Base
   def import_user_from_ldap(ldap_cn, login, ldap_server)
     login_filter = Net::LDAP::Filter.eq ldap_server.user_name_attribute, "#{login}"
     object_filter = Net::LDAP::Filter.eq 'objectClass', '*'
-    is_an_automatic_account_activation? ? status = 'active' : status = 'pending'
+    #is_an_automatic_account_activation? ? status = 'active' : status = 'pending'
 
     search = ldap_cn.search(:base => ldap_server.base_dn,
                             :filter => object_filter & login_filter,
@@ -275,7 +273,7 @@ class User < ActiveRecord::Base
   def import_user_from_ldap_mail(ldap_cn, email, ldap_server)
     login_filter = Net::LDAP::Filter.eq ldap_server.email_attribute, "#{email}"
     object_filter = Net::LDAP::Filter.eq 'objectClass', '*'
-    is_an_automatic_account_activation?() ? status = 'active' : 'pending'
+    #is_an_automatic_account_activation? ? status = 'active' : 'pending'
 
     search = ldap_cn.search(:base => ldap_server.base_dn,
                             :filter => object_filter & login_filter,
