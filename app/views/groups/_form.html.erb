@@ -91,7 +91,6 @@
                   <td><%= group_user.first_name %></td>
                   <td><%= group_user.last_name %></td>
                   <td><%= group_user.login_name %></td>
-                  <td><%= group_user.user_status %></td>
                   <td class="align-center">
                     <span class="hidden">
                           <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>

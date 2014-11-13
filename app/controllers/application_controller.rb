@@ -202,15 +202,15 @@ class ApplicationController < ActionController::Base
     defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")
   end
 
-  def verify_authentication
-    unless self.request.format == 'application/json'
-      if session[:current_user_id].nil?
-        session[:remember_address] = self.request.fullpath
-      end
-    else
-      session[:remember_address] = '/dashboard'
-    end
-  end
+  #def verify_authentication
+  #  unless self.request.format == 'application/json'
+  #    if session[:current_user_id].nil?
+  #      session[:remember_address] = self.request.fullpath
+  #    end
+  #  else
+  #    session[:remember_address] = '/dashboard'
+  #  end
+  #end
 
   def redirect_apply(edit=nil, new=nil, index=nil)
     begin

@@ -36,7 +36,7 @@
 
 class UsersController < ApplicationController
 
-  before_filter :verify_authentication, :except => [:show, :create_inactive_user]
+  #before_filter :verify_authentication, :except => [:show, :create_inactive_user]
   before_filter :load_data, :only => [:update, :edit, :new, :create, :create_inactive_user]
   #load_and_authorize_resource :except => [:edit, :show, :update, :create_inactive_user]
   load_resource
@@ -165,37 +165,33 @@ public
 
     session[:anchor_value] = params[:anchor_value]
 
-    if current_user
-      if params[:project_id]
-        session[:current_project_id] = params[:project_id]
-      end
+    if params[:project_id]
+      session[:current_project_id] = params[:project_id]
+    end
 
-      @user = current_user
-      @project = current_project
-      @pemodules ||= Pemodule.all
-      @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first unless @project.nil?
-      @show_hidden = 'true'
+    @user = current_user
+    @project = current_project
+    @pemodules ||= Pemodule.all
+    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first unless @project.nil?
+    @show_hidden = 'true'
 
-      if @project
-        set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
+    if @project
+      set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
 
-        # Get the project default RATIO
-        # Get the wbs_project_element which contain the wbs_activity_ratio
-        project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first
-        wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-        # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
-        @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
+      # Get the project default RATIO
+      # Get the wbs_project_element which contain the wbs_activity_ratio
+      project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first
+      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+      # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
+      @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
-        @project_organization = @project.organization
-        @module_projects ||= @project.module_projects
-        #Get the initialization module_project
-        @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
+      @project_organization = @project.organization
+      @module_projects ||= @project.module_projects
+      #Get the initialization module_project
+      @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
 
-        @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-        @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-      end
-    else
-      render :layout => 'login'
+      @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+      @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
     end
   end
 
@@ -270,17 +266,6 @@ public
     @latest_repo_update = latest_record_version.repository_latest_update #Home::latest_repo_update
     @latest_local_update = latest_record_version.local_latest_update
     Rails.cache.write('latest_update', @latest_local_update)
-  end
-
-  def activate
-    authorize! :manage, User
-
-    @user = User.find(params[:id])
-    unless @user.active?
-      @user.user_status = 'active'
-      @user.save(:validate => false)
-    end
-    redirect_to users_path
   end
 
   def display_states

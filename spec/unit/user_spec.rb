@@ -184,12 +184,6 @@ describe User, type: :model  do
     @admin.should be_valid
   end
 
-  it 'should be in pending mode waiting for validation' do
-    @user.user_status.should eql('pending')
-    @user.user_status='pending'
-    @user.should be_valid
-  end
-
   #check admin status
   it 'should be in Admin or MasterAdmin groups to be an admin account' do
     @admin1.groups = [@master_group, @everyone_group, @admin_group]
