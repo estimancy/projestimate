@@ -76,9 +76,9 @@ class ViewsWidgetsController < ApplicationController
         if dashboard_widget_id != ""
           view_widget_id = dashboard_widget_id.split("dashboard_widget_").last.to_i
           view_widget = ViewsWidget.find(view_widget_id)
-          #if view_widget
-          #  view_widget.update_attribute('position', index+1)
-          #end
+          if view_widget
+            view_widget.update_attribute('position', index+1)
+          end
         end
       end
     end

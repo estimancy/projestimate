@@ -20,7 +20,7 @@
                     <div class="header_data">
                       <h5 class="view_title"><%= "#{module_project}" %></h5>
                       <div>
-                        <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog pull-right", title: I18n.t(:label_add_new_view_widget), remote: true %>
+                        <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus pull-right", title: I18n.t(:label_add_new_view_widget), remote: true %>
                       </div>
                     </div>
                   </div>
@@ -67,7 +67,7 @@
                                 <%= link_to(' ', view_widget, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete')) %>
                               </div>
 
-                              <div class="row-fluid" style="padding-top: 3em; ">
+                              <div class="row-fluid" style="padding-top: 2em; ">
                                 <% if view_widget.show_min_max %>
                                  <div class="row-fluid">
                                     <div class="span6">
