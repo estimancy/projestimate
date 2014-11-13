@@ -1314,6 +1314,7 @@ fr:
   height: "Hauteur"
   show_min_max: "Afficher les valeurs Min/Max"
   widget_size: "Taille de la vignette L x H :"
+  label_update_view_widgets_order: "Sauvegarder la vue"
 
   criteria: "Critères"
 

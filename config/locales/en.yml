@@ -1314,6 +1314,7 @@ en:
   height: "Height"
   show_min_max: "Show Min/Max values"
   widget_size: "Widget size W x H : "
+  label_update_view_widgets_order: "Save view"
 
 
   criteria: "Critères"
