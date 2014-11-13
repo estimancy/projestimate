@@ -112,15 +112,6 @@
                 <div class="accordion-inner">
                   <table>
                     <tr>
-                      <td colspan="2">
-                        <%= f.input :user_status,
-                                    :label => I18n.t('user_status'),
-                                    :as => :select,
-                                    :collection => [['Active', 'active'], ['Pending', 'pending'], ['Suspended', 'suspended'], ['Blacklisted', 'blacklisted']],
-                                    :input_html => {:class => 'input-medium'}, :disabled => !(can? :manage, User) %>
-                      </td>
-                    </tr>
-                    <tr>
                       <td>
                         <%= f.input :created_at, :label => I18n.t('created_at') do %>
                           <%= f.text_field :created_at, :value => (I18n.l(@user.created_at) unless @user.created_at.nil?), :disabled => true, :input_html => {:class => 'input-xxlarge'} %>

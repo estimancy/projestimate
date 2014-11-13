@@ -81,7 +81,6 @@
               <th><%= I18n.t(:first_name) %></th>
               <th><%= I18n.t(:last_name) %></th>
               <th><%= I18n.t(:login_name) %></th>
-              <th class="filter-select" data-value="active"><%= I18n.t(:user_status) %></th>
               <th class="filter-select"><%= I18n.t(:selected) %></th>
             </tr>
             </thead>
@@ -91,7 +90,6 @@
                   <td><%= group_user.first_name %></td>
                   <td><%= group_user.last_name %></td>
                   <td><%= group_user.login_name %></td>
-                  <td><%= group_user.user_status %></td>
                   <td class="align-center">
                     <span class="hidden">
                           <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>

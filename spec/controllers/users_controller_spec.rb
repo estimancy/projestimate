@@ -63,21 +63,4 @@ describe UsersController, 'Creating and managing user', :type => :controller do
     end
   end
 
-  #describe "GET 'activate'" do
-  #  it "returns http success" do
-  #    @user = FactoryGirl.create(:user, :user_status => "active")
-  #    @params = { :id => @user.id }
-  #    get 'activate', @params
-  #    response.should be_success
-  #  end
-  #end
-
-  describe "GET 'display_states'" do
-    it 'returns http success' do
-      @params = { :user_status => @user.user_status, :format => 'js' }
-      get 'display_states', @params
-      response.should be_success
-    end
-  end
-
 end

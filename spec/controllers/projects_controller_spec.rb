@@ -15,13 +15,13 @@ describe ProjectsController do
 
     @user = FactoryGirl.build(:user)
 
-    @user1 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin1', :email => 'youremail1@yourcompany.net', :user_status => 'active', :auth_type => AuthMethod.first.id, :password => 'test', :password_confirmation => 'test')
+    @user1 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin1', :email => 'youremail1@yourcompany.net', :auth_type => AuthMethod.first.id, :password => 'test', :password_confirmation => 'test')
     @project_security_1 = ProjectSecurity.new(:project_id => @project.id, :user_id => @user1.id)
     @project_security = ProjectSecurity.new(:project_id => @project.id, :user_id => @user1.id)
   end
 
   before :all do
-    @user2 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin2', :email => 'youremail2@yourcompany.net', :user_status => 'active', :auth_type => 6, :password => 'test', :password_confirmation => 'test')
+    @user2 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin2', :email => 'youremail2@yourcompany.net', :auth_type => 6, :password => 'test', :password_confirmation => 'test')
     @project2 = Project.new(:title => 'Project1', :description => 'project number 1', :alias => 'P1', :state => 'preliminary')
     @project2_security = ProjectSecurity.new(:project_id => @project2.id, :user_id => @user2.id)
   end

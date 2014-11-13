@@ -14,4 +14,19 @@ describe OrganizationsController do
     end
   end
 
+  describe 'Edit' do
+    it 'renders the edit template' do
+      @organization = FactoryGirl.create(:organization)
+      get 'edit', {:id => @organization.id}
+      response.should render_template('edit')
+    end
+  end
+
+  describe 'organizationals_params' do
+    it 'renders the organizationals_params template' do
+      get :organizationals_params
+      response.should render_template('organizationals_params')
+    end
+  end
+
 end
