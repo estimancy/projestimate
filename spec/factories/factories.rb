@@ -40,7 +40,6 @@ FactoryGirl.define do
     initials
     #time_zone  "GMT"
     association :auth_method, :factory => :auth_method
-    user_status 'pending'
     association :language, :factory => :en_language, strategy: :build
     password 'projestimate1'
     password_confirmation 'projestimate1'
@@ -62,7 +61,6 @@ FactoryGirl.define do
     initials
     association :auth_method, :factory => :auth_method
     time_zone 'GMT'
-    user_status 'pending'
     association :language, :factory => :language
     password 'projestimate'
     password_confirmation 'projestimate'

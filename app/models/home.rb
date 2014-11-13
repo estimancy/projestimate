@@ -664,7 +664,7 @@ class Home < ActiveRecord::Base
 
     puts '   - Admin user'
     #Create first user
-    user = User.new(:first_name => 'Administrator', :last_name => 'Estimancy', :login_name => 'admin', :initials => 'ad', :email => 'youremail@yourcompany.net', :auth_type => AuthMethod.first.id, :user_status => 'active', :language_id => Language.first.id, :time_zone => 'GMT')
+    user = User.new(:first_name => 'Administrator', :last_name => 'Estimancy', :login_name => 'admin', :initials => 'ad', :email => 'youremail@yourcompany.net', :auth_type => AuthMethod.first.id, :language_id => Language.first.id, :time_zone => 'GMT')
     user.password = user.password_confirmation = 'projestimate'
     user.confirm!
     user.save(:validate => false)

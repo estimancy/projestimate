@@ -43,7 +43,6 @@ class RegistrationsController < Devise::RegistrationsController
       everyone_group = Group.find_by_name_and_record_status_id("Everyone", @defined_record_status)
       resource.auth_type = auth_type.nil? ? nil : auth_type.id
       resource.groups << everyone_group
-      resource.user_status = status
       resource.save
     end
   end

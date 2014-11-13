@@ -10,7 +10,6 @@ FactoryGirl.define do
     time_zone  "GMT"
     initials   "ad"
     association :auth_method, :factory => :auth_method, strategy: :build
-    user_status "active"
     association :language, :factory => :language, :strategy => :build
     password   "projestimate"
     password_confirmation "projestimate"
@@ -24,7 +23,6 @@ FactoryGirl.define do
     email
     initials
     association :auth_method, :factory => :auth_method
-    user_status "active"
     association :language, :factory => :language, :strategy => :build
     password   "projestimate"
     password_confirmation "projestimate"
@@ -38,7 +36,6 @@ FactoryGirl.define do
     email      #"admin3@yourcompany.net"
     initials   #"ad3"
     association :auth_method, :factory => :auth_method, strategy: :build
-    user_status "active"
     association :language, :factory => :language, :strategy => :build
     password   "projestimate3"
     password_confirmation "projestimate3"

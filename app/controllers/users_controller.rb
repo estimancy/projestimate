@@ -48,7 +48,7 @@ protected
     if params[:id]
       @user = User.find(params[:id])
     else
-      @user = User.new :user_status => 'active'
+      @user = User.new
       @user.auth_type = AuthMethod.first.id
     end
   end
@@ -68,7 +68,7 @@ public
 
     set_page_title 'New user'
 
-    @user = User.new(:user_status => 'active')
+    @user = User.new
     @user.auth_type = AuthMethod.first.id
 
     @users = current_user.organizations
@@ -213,7 +213,6 @@ public
                         :login_name => params[:login_name],
                         :language_id => params[:language],
                         :initials => 'your_initials',
-                        :user_status => status,
                         :auth_type => AuthMethod.find_by_name('Application').id)
 
         user.password = Standards.random_string(8)
@@ -270,12 +269,7 @@ public
 
   def display_states
     #No authorize required since this method is not used since now
-
-    unless params[:state] == ''
-      @users = User.where(:user_status => params[:state]).page(params[:page])
-    else
-      @users = User.page(params[:page])
-    end
+    @users = User.page(params[:page])
   end
 
   def send_feedback

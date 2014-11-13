@@ -10,8 +10,8 @@ describe User, type: :model  do
     @everyone_group = FactoryGirl.create(:everyone_group)
     @admin_group = FactoryGirl.create(:admin_group)
 
-    @admin = FactoryGirl.build(:user, :last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'administrator', :email => 'admin@yourcompany.net', :user_status => 'active', :auth_type => 6, :password => 'testme_testme', :password_confirmation => 'testme_testme') ###User.new(admin_user_hash)  #defined below
-    @user = FactoryGirl.build(:user, :last_name => 'test_last_name', :first_name => 'test_first_name', :login_name => 'test', :email => 'email@test.fr', :user_status => 'pending', :auth_type => 1, :password => 'testme_testme', :password_confirmation => 'testme_testme') ###User.new(valid_user_hash)   #defined below
+    @admin = FactoryGirl.build(:user, :last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'administrator', :email => 'admin@yourcompany.net', :auth_type => 6, :password => 'testme_testme', :password_confirmation => 'testme_testme') ###User.new(admin_user_hash)  #defined below
+    @user = FactoryGirl.build(:user, :last_name => 'test_last_name', :first_name => 'test_first_name', :login_name => 'test', :email => 'email@test.fr', :auth_type => 1, :password => 'testme_testme', :password_confirmation => 'testme_testme') ###User.new(valid_user_hash)   #defined below
     @admin1.confirm!
     @admin.confirm!
     @user.confirm!
@@ -91,11 +91,6 @@ describe User, type: :model  do
       u1.save
       u1.should_not be_valid
     end
-  end
-
-  it 'should not be valid without user_status' do
-    @admin1.user_status=''
-    @admin1.should_not be_valid
   end
 
   it 'should not be valid without auth_type' do
@@ -178,12 +173,6 @@ describe User, type: :model  do
 
   #METHODS AND OTHERS VALIDATIONS
 
-  it 'should be activated by admin' do
-    @admin.user_status = 'active'
-    @admin.user_status.should eql('active')
-    @admin.should be_valid
-  end
-
   #check admin status
   it 'should be in Admin or MasterAdmin groups to be an admin account' do
     @admin1.groups = [@master_group, @everyone_group, @admin_group]
@@ -218,51 +207,7 @@ describe User, type: :model  do
   #it "should set user_status to 'active' as default status when admin is the author" do
   #  @user = User.new(:last_name => 'test_last_name', :first_name => 'test_first_name', :login_name => 'test', :email => 'email@test.fr', :user_status => 'pending', :auth_type => 1, :password => 'test', :password_confirmation => 'test')
   #  @user.user_status.should == 'active'
-  #end
-
-  describe 'testing user status transition' do
-    before do
-      @user_copy = @admin1
-      @user_copy.user_status = 'pending'
-    end
-    let(:user2) { @user_copy }
-
-    it "should set user_status to 'active' when transition to :active" do
-      user2.user_status = 'pending'
-      lambda { user2.switch_to_active! }.should change(user2, :user_status).from('pending').to('active')
-      user2.user_status = 'suspended'
-      lambda { user2.switch_to_active! }.should change(user2, :user_status).from('suspended').to('active')
-      user2.user_status = 'blacklisted'
-      lambda { user2.switch_to_active! }.should change(user2, :user_status).from('blacklisted').to('active')
-    end
-
-    it "should set user_status to 'suspended' when transition to :suspended" do
-      user2.user_status = 'pending'
-      lambda { user2.switch_to_suspended! }.should change(user2, :user_status).from('pending').to('suspended')
-      user2.user_status = 'active'
-      lambda { user2.switch_to_suspended! }.should change(user2, :user_status).from('active').to('suspended')
-      user2.user_status = 'blacklisted'
-      lambda { user2.switch_to_suspended! }.should change(user2, :user_status).from('blacklisted').to('suspended')
-    end
-
-    it "should set user_status to 'blacklisted' when transition to :blacklisted" do
-      user2.user_status = 'suspended'
-      lambda { user2.switch_to_blacklisted! }.should change(user2, :user_status).from('suspended').to('blacklisted')
-      user2.user_status = 'active'
-      lambda { user2.switch_to_blacklisted! }.should change(user2, :user_status).from('active').to('blacklisted')
-      user2.user_status = 'pending'
-      lambda { user2.switch_to_blacklisted! }.should change(user2, :user_status).from('pending').to('blacklisted')
-    end
-
-    it 'should set user_status to :pending when transition to :pending' do
-      user2.user_status = 'suspended'
-      lambda { user2.switch_to_pending! }.should change(user2, :user_status).from('suspended').to('pending')
-      user2.user_status = 'active'
-      lambda { user2.switch_to_pending! }.should change(user2, :user_status).from('active').to('pending')
-      user2.user_status = 'blacklisted'
-      lambda { user2.switch_to_pending! }.should change(user2, :user_status).from('blacklisted').to('pending')
-    end
-  end
+  #en
 
   it 'should be have LastName FirstName' do
     @admin.name.should eq('Administrator Projestimate')

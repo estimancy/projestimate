@@ -51,10 +51,9 @@ class User < ActiveRecord::Base
 
   audited # audit the users (users account)
 
-  #attr_accessible :email, :login_name, :first_name, :last_name, :initials, :auth_type, :auth_method_id, :user_status, :time_zone, :language_id, :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token,:created_at,:updated_at, :organization_ids, :group_ids, :project_ids, :password, :password_confirmation, :project_security_ids
   attr_accessible :current_password, :email, :login_name, :id_connexion,
                   :password, :password_confirmation, :remember_me, :provider, :uid,
-                  :avatar, :language_id, :first_name, :last_name, :initials, :user_status, :time_zone,
+                  :avatar, :language_id, :first_name, :last_name, :initials, :time_zone,
                   :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at,
                   :updated_at, :auth_type, :number_precision
 
@@ -103,7 +102,7 @@ class User < ActiveRecord::Base
 
   serialize :ten_latest_projects, Array
 
-  validates_presence_of :last_name, :first_name#, :auth_type #, :user_status
+  validates_presence_of :last_name, :first_name
   validates :login_name, :presence => true, :uniqueness => {case_sensitive: false}
   #validates :email, :presence => true, :format => {:with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/i}, :uniqueness => {case_sensitive: false}
   validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}, :uniqueness => {case_sensitive: false}
@@ -120,34 +119,6 @@ class User < ActiveRecord::Base
   scoped_search :on => [:last_name, :first_name, :login_name, :created_at, :updated_at]
   scoped_search :in => :groups, :on => :name
   scoped_search :in => :organizations, :on => :name
-
-  #AASM
-  aasm :column => :user_status do
-    state :active
-    state :suspended
-    state :blacklisted
-    state :pending, :initial => true
-
-    event :switch_to_suspended do
-      transitions :to => :suspended, :from => [:active, :blacklisted, :pending]
-    end
-
-    event :switch_to_active do
-      transitions :to => :active, :from => [:suspended, :blacklisted, :pending, :active]
-    end
-
-    event :switch_to_blacklisted do
-      transitions :to => :blacklisted, :from => [:suspended, :active, :pending]
-    end
-
-    event :switch_to_blacklisted do
-      transitions :to => :blacklisted, :from => [:suspended, :active, :pending]
-    end
-
-    event :switch_to_pending do
-      transitions :to => :pending, :from => [:suspended, :active, :blacklisted]
-    end
-  end
 
   scope :exists, lambda { |login|
     where('email >= ? OR login_name < ?', login, login)
@@ -295,7 +266,6 @@ class User < ActiveRecord::Base
       self.last_name = entry["#{ldap_server.last_name_attribute}"][0]
       self.group_ids = Group.find_by_name('Everyone').id
       self.initials = entry["#{ldap_server.initials_attribute}"][0]
-      self.user_status= status
       self.time_zone = 'GMT'
       self.save!
     end
@@ -340,7 +310,6 @@ class User < ActiveRecord::Base
       self.last_name = entry["#{ldap_server.last_name_attribute}"][0]
       self.group_ids = Group.find_by_name('Everyone').id
       self.initials = entry["#{ldap_server.initials_attribute}"][0]
-      self.user_status= status
       self.time_zone = 'GMT'
       self.save!
     end

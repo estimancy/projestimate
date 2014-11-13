@@ -336,7 +336,6 @@ def load_data!
                     :initials => 'ad',
                     :email => 'youremail@yourcompany.net',
                     :auth_type => AuthMethod.first.id,
-                    :user_status => 'active',
                     :language_id => Language.first.id,
                     :time_zone => 'GMT')
 
@@ -397,7 +396,6 @@ def load_data!
                       :initials => 'JP',
                       :email => Faker::Internet.email,
                       :auth_type => AuthMethod.first.id,
-                      :user_status => 'active',
                       :language_id => Language.first.id,
                       :time_zone => 'GMT')
 

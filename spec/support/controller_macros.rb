@@ -84,11 +84,16 @@ module ControllerMacros
       first_auth_method.save
     end
 
-    #user = User.new(:first_name => "Projestimate", :last_name => "Administrator", :login_name => "Admin", :email => "admin@example.com", :password => "secret", :password_confirmation => "secret", :language_id => first_language.id, :auth_type => first_auth_method.id, :user_status=>"active")
-    ###user = User.find_or_create_by_login_name(:first_name => "Projestimate", :last_name => "Administrator", :login_name => "admin", :email => "admin@example.com", :password => "secret1234", :password_confirmation => "secret1234", :language_id => first_language.id, :auth_type => first_auth_method.id, :user_status=>"active")
     @user = User.first
     if @user.nil?
-      @user = User.find_or_create_by_login_name(:first_name => "Projestimate", :last_name => "Administrator", :login_name => "admin", :email => "youremail@yourcompany.net", :password => "projestimate", :password_confirmation => "projestimate", :language_id => first_language.id, :auth_type => first_auth_method.id, :user_status=>"active")
+      @user = User.find_or_create_by_login_name(:first_name => "Projestimate",
+                                                :last_name => "Administrator",
+                                                :login_name => "admin",
+                                                :email => "youremail@yourcompany.net",
+                                                :password => "projestimate",
+                                                :password_confirmation => "projestimate",
+                                                :language_id => first_language.id,
+                                                :auth_type => first_auth_method.id)
       @user.save
     end
     session[:current_user_id] = @user.id
@@ -140,7 +145,7 @@ module ControllerMacros
   def login_user(options = {})
     language = first_language
     auth_method = first_auth_method
-    options = {:first_name => "Projestimate_test", :last_name => "Administrator_test", :login_name => "admin_test", :email => "admin_test@example.com", :password => "secret1234", :password_confirmation => "secret1234", :language_id => language.id, :auth_type => auth_method.id, :user_status=>"active"}
+    options = {:first_name => "Projestimate_test", :last_name => "Administrator_test", :login_name => "admin_test", :email => "admin_test@example.com", :password => "secret1234", :password_confirmation => "secret1234", :language_id => language.id, :auth_type => auth_method.id }
 
     @logged_in_user = Factory.create(:user, options)
     @controller.stub(:current_user).and_return(@logged_in_user)
@@ -151,7 +156,7 @@ module ControllerMacros
     #options[:admin] = true
     language = first_language
     auth_method = first_auth_method
-    options = {:first_name => "Projestimate_test", :last_name => "Administrator_test", :login_name => "admin_test", :email => "admin_test@example.com", :password => "secret1234", :password_confirmation => "secret1234", :language_id => language.id, :auth_type => auth_method.id, :user_status=>"active"}
+    options = {:first_name => "Projestimate_test", :last_name => "Administrator_test", :login_name => "admin_test", :email => "admin_test@example.com", :password => "secret1234", :password_confirmation => "secret1234", :language_id => language.id, :auth_type => auth_method.id}
 
     @logged_in_user = Factory.create(:user, options)
     @controller.stub(:current_user).and_return(@logged_in_user)
