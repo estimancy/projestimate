@@ -42,9 +42,9 @@ class Ability
   def initialize(user)
 
     #Uncomment in order to authorize everybody to manage all the app
-    #if user.super_admin == true
+    if user.super_admin == true
       can :manage, :all
-    #end
+    end
 
     can :edit, Project
     can :update, Project
