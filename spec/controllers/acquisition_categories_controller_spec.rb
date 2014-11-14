@@ -16,9 +16,17 @@ describe AcquisitionCategoriesController do
 
   describe 'Edit' do
     it 'renders the edit template' do
-      @acquisition_category = FactoryGirl.create(:acquisition_category)
+      @acquisition_category = FactoryGirl.create(:acquisition_category, :unknown)
       get 'edit', {:id => @acquisition_category.id}
       response.should render_template('edit')
+    end
+  end
+
+  describe 'Destroy' do
+    it 'renders the destroy template' do
+      @acquisition_category = FactoryGirl.create(:acquisition_category, :unknown)
+      expect { delete 'destroy', :id => @acquisition_category.id}.to change(AcquisitionCategory, :count).by(-1)
+      response.should render_template('/projects_global_params')
     end
   end
 

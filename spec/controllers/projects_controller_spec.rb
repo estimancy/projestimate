@@ -22,7 +22,8 @@ describe ProjectsController do
 
   before :all do
     @user2 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin2', :email => 'youremail2@yourcompany.net', :auth_type => 6, :password => 'test', :password_confirmation => 'test')
-    @project2 = Project.new(:title => 'Project1', :description => 'project number 1', :alias => 'P1', :state => 'preliminary')
+    #@project2 = Project.new(:title => 'Project1', :description => 'project number 1', :alias => 'P1', :state => 'preliminary')
+    @project2 = FactoryGirl.create(:project)
     @project2_security = ProjectSecurity.new(:project_id => @project2.id, :user_id => @user2.id)
   end
 

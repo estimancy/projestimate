@@ -128,12 +128,6 @@
           <%= I18n.t(:project_global_setting) %>
         </a>
       </li>
-
-      <% if can? :manage, Event %>
-        <li class="dropdown"><a href="<%= main_app.events_path %>">
-          <!--<i class="icon-calendar icon-large pull-left"></i>-->
-          <%= I18n.t(:events) %></a></li>
-      <% end %>
     </ul>
   </li>
 
