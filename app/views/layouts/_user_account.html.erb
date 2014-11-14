@@ -107,7 +107,9 @@
       <% if can? :manage_roles, :All %>
         <li class="dropdown"><a href="/globals_permissions">
           <!--<i class="icon-check-sign icon-large pull-left"></i>-->
-          Roles</a></li>
+            <%= I18n.t(:groups_and_roles) %>
+          </a>
+        </li>
       <% end %>
 
       <%# if can? :manage, :organizations %>
