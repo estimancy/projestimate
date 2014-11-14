@@ -41,7 +41,6 @@ class Currency < ActiveRecord::Base
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
-  has_many :organization_labor_categories
   has_many :organizations
 
   belongs_to :record_status

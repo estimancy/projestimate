@@ -44,7 +44,7 @@ class AuthMethodsController < ApplicationController
     authorize! :manage, AuthMethod
 
     set_page_title 'Authentications Method'
-    @auth_methods = AuthMethod.all.reject{|i| i.name == 'Application' }
+    @auth_methods = AuthMethod.all
   end
 
   def edit

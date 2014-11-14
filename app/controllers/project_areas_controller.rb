@@ -45,7 +45,6 @@ class ProjectAreasController < ApplicationController
   def get_associations_records
     #no authorize required since everyone can show this object
     @acquisition_categories = AcquisitionCategory.all
-    @labor_categories = LaborCategory.all
     @platform_categories = PlatformCategory.all
     @project_categories = ProjectCategory.all
   end

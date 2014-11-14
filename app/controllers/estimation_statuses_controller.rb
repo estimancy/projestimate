@@ -66,39 +66,16 @@ class EstimationStatusesController < ApplicationController
     redirect_to edit_organization_path(@organization, :anchor => "tabs-estimations-statuses"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
   end
 
-
-  # GET /estimation_statuses
-  # GET /estimation_statuses.json
-  def index
-    @estimation_statuses = EstimationStatus.all
-  end
-
-  # GET /estimation_statuses/1
-  # GET /estimation_statuses/1.json
-  def show
-    @estimation_status = EstimationStatus.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @estimation_status }
-    end
-  end
-
-  # GET /estimation_statuses/new
-  # GET /estimation_statuses/new.json
   def new
     @estimation_status = EstimationStatus.new
     @organization = Organization.find_by_id(params[:organization_id])
   end
 
-  # GET /estimation_statuses/1/edit
   def edit
     @estimation_status = EstimationStatus.find(params[:id])
     @organization = @estimation_status.organization
   end
 
-  # POST /estimation_statuses
-  # POST /estimation_statuses.json
   def create
     @estimation_status = EstimationStatus.new(params[:estimation_status])
     @organization = Organization.find_by_id(params['estimation_status']['organization_id'])
@@ -114,8 +91,6 @@ class EstimationStatusesController < ApplicationController
 
   end
 
-  # PUT /estimation_statuses/1
-  # PUT /estimation_statuses/1.json
   def update
     @estimation_status = EstimationStatus.find(params[:id])
     @organization = @estimation_status.organization
@@ -128,8 +103,6 @@ class EstimationStatusesController < ApplicationController
     end
   end
 
-  # DELETE /estimation_statuses/1
-  # DELETE /estimation_statuses/1.json
   def destroy
     @estimation_status = EstimationStatus.find(params[:id])
     organization_id = @estimation_status.organization_id

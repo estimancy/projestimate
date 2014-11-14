@@ -13,11 +13,11 @@ describe ProjectsController do
     @pbs_root = FactoryGirl.create(:pbs_folder, is_root: true, pe_wbs_project: @pe_wbs_product)
     @wbs_root = FactoryGirl.create(:wbs_project_element, is_root: true, pe_wbs_project: @pe_wbs_activity)
 
-    @user = FactoryGirl.build(:user)
+    @user = FactoryGirl.create(:user)
 
-    @user1 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin1', :email => 'youremail1@yourcompany.net', :auth_type => AuthMethod.first.id, :password => 'test', :password_confirmation => 'test')
-    @project_security_1 = ProjectSecurity.new(:project_id => @project.id, :user_id => @user1.id)
-    @project_security = ProjectSecurity.new(:project_id => @project.id, :user_id => @user1.id)
+    #@user1 = User.new(:last_name => 'Projestimate', :first_name => 'Administrator', :login_name => 'admin1', :email => 'youremail1@yourcompany.net', :auth_type => AuthMethod.first.id, :password => 'test', :password_confirmation => 'test')
+    #@project_security_1 = ProjectSecurity.new(:project_id => @project.id, :user_id => @user1.id)
+    #@project_security = ProjectSecurity.new(:project_id => @project.id, :user_id => @user1.id)
   end
 
   before :all do

@@ -250,7 +250,6 @@ class OrganizationsController < ApplicationController
 
     @size_units = SizeUnit.all
     @factors = Factor.order("factor_type")
-    @organizations_labor_categories = OrganizationLaborCategory.all
   end
 
   def set_technology_size_type_abacus
