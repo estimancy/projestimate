@@ -1108,7 +1108,6 @@ ActiveRecord::Schema.define(:version => 20141113152332) do
     t.datetime "password_reset_sent_at"
     t.integer  "language_id"
     t.integer  "auth_type"
-    t.string   "user_status"
     t.text     "ten_latest_projects"
     t.integer  "organization_id"
     t.datetime "created_at"
