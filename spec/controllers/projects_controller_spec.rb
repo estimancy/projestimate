@@ -6,6 +6,7 @@ describe ProjectsController do
     sign_in
     @connected_user = controller.current_user
 
+    @module_project = FactoryGirl.create(:module_project)
     @project = FactoryGirl.create(:project)
     @pe_wbs_product = FactoryGirl.create(:pe_wbs_project, :wbs_product, project: @project )
     @pe_wbs_activity = FactoryGirl.create(:pe_wbs_project, :wbs_activity, project: @project)
@@ -81,7 +82,7 @@ describe ProjectsController do
         @project.alias.should eq("My_new_Alias")
       end
 
-      it "should redirect to the peAttribute_paths list" do
+      it "should redirect to the projects list" do
         put :update, { id: @project.id }
         response.should redirect_to(session[:return_to])
       end
@@ -93,6 +94,16 @@ describe ProjectsController do
       delete :destroy, { :id => @project.id }
 
       response.should render_template('projects/confirm_deletion')
+    end
+  end
+
+  describe 'Load setting_module' do
+    it 'renders the module template' do
+      #response.should render_template("new")
+      #expect(:post => '/load_setting_module').to route_to(:controller => 'projects', :action => 'load_setting_module', module_project_id: @module_project.id)
+
+      post :load_setting_module, { module_project_id: @module_project.id, format: :js }
+      response.code.should eq "200"
     end
   end
 
