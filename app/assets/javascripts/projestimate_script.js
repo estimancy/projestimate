@@ -28,6 +28,7 @@ $(document).ready(function() {
 
             //$(this).sortable(); //$(this).disableSelection();
             $widgets_container.sortable({
+                items:'.view_widget',
                 containment: 'parent',
                 revert: false,
                 dropOnEmpty: true,
@@ -38,22 +39,23 @@ $(document).ready(function() {
                     var start_pos = ui.item.index();
                     ui.item.data('start_pos', start_pos);
                     ui.item.startPos = ui.item.index();
+                    console.log(event);
+                    console.log(ui);
                 },
 
                 update: function (event, ui) {
                     var list =  $(this).sortable("toArray");
                     $.ajax({
                         method: 'GET',
-                        url: "/update_view_widget_positions_and_sizes",
+                        url: "/update_view_widget_positions",
                         data: {
-                            'view_id': this.id,
-                            'widgets_orders': list
+                            view_id: this.id,
+                            view_widget_id: ui.item.data('view_widget_id'),
+                            position_x: ui.position.left,
+                            position_y: ui.position.top,
+                            widgets_orders: list
                         }
                     });
-                },
-
-                change: function(event, ui) {
-                    console.log("New position: " + ui.placeholder.index());
                 },
 
                 stop: function(event, ui) {
@@ -62,7 +64,11 @@ $(document).ready(function() {
                     var idsInOrder = $($widgets_container).sortable("toArray");
                     //alert(start_pos + ' - ' + end_pos);
                     console.log(idsInOrder);
+                    console.log("Test " + ui.item.prevAll().length);
+                    //ui.helper.css({'top' : ui.position.top + $(window).scrollTop() + 'px'});
+                    console.log("New position: " + ui.placeholder.index());
                     //alert(idsInOrder);
+                    //alert(ui.position.left);
                 }
 
 //                update: function( event, ui ) {
@@ -91,7 +97,7 @@ $(document).ready(function() {
             var pos_y = $widget_ui.position.top;
             alert("pos_x = "+ pos_x+ "px \n" +"pos_y ="+ pos_y+"px");
             $.ajax({
-                url:"/update_view_widget_positions_and_sizes",
+                url:"/update_view_widget_positions",
                 method: 'GET',
                 data: {
                     view_widget_id: $widget_ui.draggable.data('view_widget_id'),

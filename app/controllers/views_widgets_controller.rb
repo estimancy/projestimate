@@ -68,15 +68,28 @@ class ViewsWidgetsController < ApplicationController
     redirect_to '/dashboard'
   end
 
-  def update_view_widget_positions_and_sizes
+  def update_view_widget_positions
     view_id = params[:view_id]
+    pos_x = "#{params[:position_x]}px"
+    pos_y = "#{params[:position_y]}px"
+
     widgets_orders = params[:widgets_orders]
     if view_id != "" && view_id != "undefined"
+      #if params["view_widget_id"] != "" && params["view_widget_id"] != "undefined"
+      #  view_widget = ViewsWidget.find(params[:view_widget_id].to_i)
+      #  pos_x = "#{params[:position_x]}px"
+      #  pos_y = "#{params[:position_y]}px"
+      #
+      #  # Update the View Widget positions (left = position_x, top = position_y)
+      #  view_widget.update_attributes(position_x: pos_x, position_y: pos_y)
+      #end
+
       widgets_orders.each_with_index do |dashboard_widget_id, index|
         if dashboard_widget_id != ""
           view_widget_id = dashboard_widget_id.split("dashboard_widget_").last.to_i
           view_widget = ViewsWidget.find(view_widget_id)
           if view_widget
+            # Update the View Widget positions (left = position_x, top = position_y)
             view_widget.update_attribute('position', index+1)
           end
         end

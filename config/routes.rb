@@ -39,7 +39,7 @@ require 'sidekiq/web'
 Projestimate::Application.routes.draw do
 
   resources :views_widgets
-  get 'update_view_widget_positions_and_sizes' => 'views_widgets#update_view_widget_positions_and_sizes', :as => 'update_view_widget_positions_and_sizes'
+  get 'update_view_widget_positions' => 'views_widgets#update_view_widget_positions', :as => 'update_view_widget_positions'
 
   resources :widgets
 
