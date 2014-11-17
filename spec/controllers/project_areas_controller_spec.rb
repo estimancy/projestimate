@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 describe ProjectAreasController do
 
   before do
@@ -6,9 +7,11 @@ describe ProjectAreasController do
     @connected_user = controller.current_user
   end
 
-
-  before :each do
-    @project_area = FactoryGirl.create(:project_area)
+  describe 'Index' do
+    it 'renders the index template' do
+      get :index
+      response.should render_template('index')
+    end
   end
 
   describe 'New' do
@@ -16,37 +19,46 @@ describe ProjectAreasController do
       get :new
       response.should render_template('new')
     end
-    it 'assigns a new project_area as @project_area' do
-      get :new
-      assigns(:project_area).should be_a_new_record
+  end
+
+  describe 'Show' do
+    it 'renders the new template' do
+      @project_area = FactoryGirl.create(:project_area)
+      get :show, {:id => @project_area.id}
+      response.should render_template('show')
     end
   end
 
-  describe 'GET edit' do
-    it 'assigns the requested project_area as @project_area' do
-      get :edit, {:id => @project_area.to_param}
-      assigns(:project_area)==(@project_area)
+  describe 'Edit' do
+    it 'renders the edit template' do
+      @project_area = FactoryGirl.create(:project_area)
+      get 'edit', {:id => @project_area.id}
+      response.should render_template('edit')
     end
   end
 
-  describe 'DELETE destroy' do
-    it 'redirects to the project_area list' do
-      delete :destroy, {:id => @project_area.to_param}
-      response.should redirect_to ('/projects_global_params#tabs-1')
+  describe 'Destroy' do
+    it 'renders the destroy template' do
+      @project_area = FactoryGirl.create(:project_area)
+      expect { delete 'destroy',:id => @project_area.id}.to change(ProjectArea, :count).by(-1)
+      response.should redirect_to project_areas_path
     end
-    it 'destroys the requested event' do
-      expect {
-        delete :destroy, {:id => @project_area.to_param}
-      }.to change(ProjectArea, :count).by(-1)
-    end
-
-  end
-
-  describe 'Create' do
-
   end
 
   describe 'Update' do
-
+    it 'update project_area' do
+      @project_area = FactoryGirl.create(:project_area)
+      put 'update', { :id => @project_area.id }
+      response.code.should eq "200"
+    end
   end
+
+  describe 'Create' do
+    it 'create project_area' do
+      @project_area = FactoryGirl.create(:project_area)
+      post 'create', { :id => @project_area.id }
+      response.code.should eq "200"
+    end
+  end
+
 end
