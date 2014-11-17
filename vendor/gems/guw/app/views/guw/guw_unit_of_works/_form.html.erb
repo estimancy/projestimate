@@ -20,7 +20,7 @@
         <%= f.input :guw_unit_of_work_group_id, as: :select, collection: current_module_project.guw_unit_of_work_groups %>
       </div>
 
-      <%= f.button :submit %>
+      <%= f.button :submit, I18n.t('save') %>
     <% end %>
   </div>
 </div>

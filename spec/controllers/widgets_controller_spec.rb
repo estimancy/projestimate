@@ -45,4 +45,20 @@ describe WidgetsController do
     end
   end
 
+  describe 'Update' do
+    it 'update project_area' do
+      @widget = FactoryGirl.create(:widget)
+      put 'update', { :id => @view.id }
+      response.code.should eq "200"
+    end
+  end
+
+  describe 'Create' do
+    it 'create project_area' do
+      @widget = FactoryGirl.create(:widget)
+      post 'create', { :id => @view.id }
+      response.code.should eq "200"
+    end
+  end
+
 end
