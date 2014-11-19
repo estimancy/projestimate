@@ -116,8 +116,6 @@ Projestimate::Application.routes.draw do
   mount BalancingModule::Engine, at: '/balancing_module'
   mount RealSize::Engine, at: '/inputs'
 
-  resources :organization_abacus
-
   resources :organization_technologies
   post '/set_technology_uow_synthesis' => 'organizations#set_technology_uow_synthesis', :as => 'set_technology_uow_synthesis'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
@@ -205,7 +203,9 @@ Projestimate::Application.routes.draw do
 
   resources :currencies
 
-  resources :organizations
+  resources :organizations do
+    resources :groups
+  end
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'
   post '/set_technology_size_unit_abacus' => 'organizations#set_technology_size_unit_abacus', :as => 'set_technology_size_unit_abacus'

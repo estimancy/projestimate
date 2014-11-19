@@ -51,6 +51,9 @@ class GroupsController < ApplicationController
     set_page_title 'New group'
     @group = Group.new
     @organization = Organization.find_by_id(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization => edit_organization_path(@organization)
+
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
     @enable_update_in_local = true
@@ -58,10 +61,14 @@ class GroupsController < ApplicationController
 
   def edit
     set_page_title 'Edit group'
+
     @group = Group.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization => edit_organization_path(@organization)
+
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
-    @organization = @group.organization
   end
 
   def create

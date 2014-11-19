@@ -36,18 +36,23 @@
 
 
 class Guw::GuwTypesController < ApplicationController
+
   def new
     @guw_type = Guw::GuwType.new
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def edit
     @guw_type = Guw::GuwType.find(params[:id])
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
   end
 
   def create
     @guw_type = Guw::GuwType.new(params[:guw_type])
     @guw_type.guw_model_id = params[:guw_type][:guw_model_id]
     @guw_type.save
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
     redirect_to guw.guw_model_path(@guw_type.guw_model)
   end
 
