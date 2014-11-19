@@ -308,7 +308,7 @@ fr:
   save: "Sauvegarder"
   apply: "Appliquer"
   save_and_create: "Sauvegarder et créer un autre"
-  edit: ""
+  edit: "Editer"
   delete: "Supprimer"
   cancel: "Annuler"
   show: "Voir"
