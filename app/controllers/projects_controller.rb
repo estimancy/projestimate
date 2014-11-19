@@ -92,7 +92,11 @@ private
     @project_modules = @project.pemodules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    @organizations = current_user.organizations
+    if current_user.super_admin == true
+      @organizations = Organization.all
+    else
+      @organizations = current_user.organizations
+    end
     @project_modules = @project.pemodules
     @project_security_levels = ProjectSecurityLevel.all
     @module_project = ModuleProject.find_by_project_id(@project.id)
