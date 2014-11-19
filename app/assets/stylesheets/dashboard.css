@@ -879,17 +879,14 @@ corresponding value from the list below*/
 }
 
 .min_max{
-    font-size: smaller;
-    margin-top: 3em;
+    /*font-size: xx-small;*/
+    margin-top: 0.5em;
 }
 
 .view_widget{
-    min-width: 150px;
-    min-height: 150px;
-    /*margin-left: 0px;*/
-    /*margin-right:5px;*/
-    /*padding-top: 4em;*/
-    /*margin-bottom: 10px;*/
+    min-width: 60px;
+    min-height: 60px;
+    white-space: nowrap;
 }
 
 h5.view_title{
@@ -902,6 +899,7 @@ h5.view_title{
     top: 0px;
     right: 0px;
     float: right;
+
 }
 
 .top_center{
@@ -911,15 +909,22 @@ h5.view_title{
 
 .widget_text{
     text-align: center;
-    font-size: 1.6em;
+    /*font-size: 0.7em;*/
     font-weight: bold;
-    padding-top: 20px;
+    padding-top: 25px;
+
 }
 
 .icon_size, .fa.icon_size{
-    text-align: center;
-    font-size: 4em;
-    vertical-align: middle;"
+    float: left;
+    /*font-size: x-large;*/
+    /*font-size: 12px; font-size: 1.2rem;*/
+}
+
+.icon_smaller{
+    font-size: xx-small;
+    top: 0px;
+    float: right;
 }
 
 .height_width{
