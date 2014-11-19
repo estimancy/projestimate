@@ -491,7 +491,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
 
       # render view according to the selected attribute
       res << "<div class='attribute_balancing_input' style='margin-bottom:15px;'>"
@@ -601,7 +600,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
       res << "<table class='table table-condensed table-bordered'>"
 
       res << '<tr>
@@ -685,7 +683,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data)}</h4>"
       res << "<table class='table table-condensed table-bordered'>"
       res << '<tr>
                 <th></th>'
@@ -822,7 +819,6 @@ module ProjectsHelper
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
 
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
       res << "<table class='table table-condensed table-bordered'>
                       <tr>
                         <th></th>"
@@ -873,9 +869,9 @@ module ProjectsHelper
       end
       res << '</table>'
 
-      if module_project.pemodule.alias == "guw"
-        res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini")
-      end
+      #if module_project.pemodule.alias == "guw"
+      #  res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini")
+      #end
     end
     res
   end

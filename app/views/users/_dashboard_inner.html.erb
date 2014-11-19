@@ -42,7 +42,7 @@
       <div class="collapse in" id="collapseActivity">
         <div class="widget-content">
           <div class="estimation_plan_min overflow">
-            <%= render 'module_projects/estimation_plan_min', :locals => {:module_projects => @project.module_projects} %>
+            <%= render 'module_projects/estimation_plan_min', :locals => {:module_projects => current_project.module_projects} %>
           </div>
         </div>
       </div>
@@ -50,9 +50,9 @@
   </div>
 </div>
 
-<%= form_tag({:controller => 'projects', :action => 'run_estimation', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :remote => true, :class => 'simple_form') do -%>
+<%# form_tag({:controller => 'projects', :action => 'run_estimation', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :remote => true, :class => 'simple_form') do -%>
   <div class="row-fluid">
-    <div class="span6">
+    <div class="span12">
       <div class="widget-box collapsible">
         <div class="widget-title">
           <a href="#collapseIn" data-toggle="collapse">
@@ -61,22 +61,9 @@
             </span>
           </a>
 
-          <div class="header_data">
-            <h5>
-              <%= current_component %> - <%= "#{current_module_project}" %>
-              <% if current_module_project.pemodule.alias.to_s == Projestimate::Application::BALANCING_MODULE %>
-                  <% red_color = ""
-                     selected_attr = nil
-                  %>
-                  <% if !current_balancing_attribute.nil? %>
-                    <% red_color = "red_class"
-                       selected_attr = current_balancing_attribute.id
-                    %>
-                  <% end %>
-                  <%= select_tag('select_balancing_attribute', options_for_select(current_module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]},  :selected => selected_attr), :class => "balancing_attribute #{red_color}", :prompt => I18n.t(:text_select_balancing_attribute)) %>
-              <% end %>
-            </h5>
-          </div>
+          <h5>
+            <%= I18n.t(:label_input_data) %> - <%= current_component %> - <%= "#{current_module_project}" %>
+          </h5>
 
           <div id="buttons">
             <%= render 'buttons' %>
@@ -88,56 +75,7 @@
             <div class="input">
               <div class="input_data">
                 <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="span6">
-      <div class="widget-box collapsible">
-        <div class="widget-title">
-          <a href="#collapseIn2" data-toggle="collapse">
-              <span class="icon">
-                <i class="icon-align-left"></i>
-              </span>
-          </a>
-
-          <div class="header_data">
-            <h5>
-              <%= current_component %> - <%= "#{current_module_project}" %>
-              <% if current_module_project.pemodule.alias.to_s == Projestimate::Application::BALANCING_MODULE %>
-                <% red_color = ""
-                   selected_attr = nil
-                %>
-                <% if !current_balancing_attribute.nil? %>
-                  <% red_color = "red_class"
-                     selected_attr = current_balancing_attribute.id
-                  %>
-                <% end %>
-                <%= select_tag('select_balancing_attribute', options_for_select(current_module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]},  :selected => selected_attr), :class => "balancing_attribute #{red_color}", :prompt => I18n.t(:text_select_balancing_attribute)) %>
-              <% end %>
-            </h5>
-          </div>
-
-          <div class="buttons">
-            <a href="<%= show_estimation_graph_path %>" class="btn btn-mini" title="Estimation graph" data-remote="true"  id="see_estimation_graph">
-              <%= I18n.t :display_charts %>
-            </a>
-          </div>
-        </div>
-
-        <div class="collapse in" id="collapseIn2">
-          <div class="widget-content tab-content">
-            <div class="output">
-              <div class="output_data">
-                <%= raw display_results.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'alert alert-info')}" : display_results %>
-              </div>
-              <div class="effort_breakdown_activities_profiles">
-                <% if current_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN %>
-                  <%= render 'users/effort_per_activity' %>
-                <% end %>
+                <%= render :partial => 'projects/setting_module' %>
               </div>
             </div>
           </div>
@@ -145,11 +83,7 @@
       </div>
     </div>
   </div>
-<% end %>
-
-<!-- The configuration-->
-<div id="setting_module">
-</div>
+<%# end %>
 
 <!-- show selected view for each module project -->
 <!-- The results boxes will be arranged as in the estimation plan -->
@@ -158,8 +92,8 @@
 </div>
 
 <!-- The Estimation graph -->
-<div id="show_estimation_graph">
-</div>
+<!--<div id="show_estimation_graph">-->
+<!--</div>-->
 
 <script>
     $(document).ready(function () {

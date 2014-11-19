@@ -31,11 +31,11 @@ module CocomoAdvanced
     attr_accessor :coef_a, :coef_b, :coef_c, :coef_sloc, :complexity, :effort, :project
 
     #Constructor
-    def initialize(elem)
-      @coef_sloc = elem['sloc'].to_f / 1000
-      @project = Project.find(elem[:current_project_id])
+    def initialize(sloc, cplx, project)
+      @coef_sloc = sloc.to_f
+      @project = project
 
-      case elem['complexity']
+      case cplx
         when 'Organic'
           set_cocomo_organic
         when 'Semi-detached'
@@ -69,14 +69,16 @@ module CocomoAdvanced
     end
 
     # Return effort
-    def get_effort(*args)
+    def get_effort(pbs_project_element_id, module_project_id)
       sf = Array.new
-      aliass = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
-      aliass.each do |a|
-        input_cocomo = InputCocomo.where(factor_id: Factor.where(alias: a, factor_type: "advanced").first.id,
-                               pbs_project_element_id: args[2],
-                               module_project_id: args[1],
-                               project_id: @project.id).first
+      aliases = %w(rely data cplx ruse docu time stor pvol acap aexp ltex pcap pexp pcon tool site sced)
+      aliases.each do |a|
+        factor = Factor.where(alias: a, factor_type: "advanced").first
+
+        input_cocomo = InputCocomo.where(factor_id: factor.id,
+                                         pbs_project_element_id: pbs_project_element_id,
+                                         module_project_id: module_project_id,
+                                         project_id: @project.id).first
         ic = input_cocomo.nil? ? nil.to_f : input_cocomo.coefficient
         sf << ic
       end
@@ -85,31 +87,31 @@ module CocomoAdvanced
     end
 
     #Return delay (in hour)
-    def get_delay(*args)
-      @effort = get_effort(args[0], args[1], args[2])
+    def get_delay(pbs_project_element_id, module_project_id)
+      @effort = get_effort(pbs_project_element_id, module_project_id)
       @delay = (2.5*(@effort**@coef_c)).to_f
       @delay = @delay.to_f * @project.organization.number_hours_per_month.to_f
       @delay
     end
 
     #Return end date
-    def get_end_date(*args)
-      @end_date = (@project.start_date + ((get_delay(args[0], args[1], args[2])) / @project.organization.number_hours_per_month.to_f).to_i.months )
+    def get_end_date(pbs_project_element_id, module_project_id)
+      @end_date = (@project.start_date + ((get_delay(pbs_project_element_id, module_project_id)) / @project.organization.number_hours_per_month.to_f).to_i.months )
       @end_date
     end
 
     #Return staffing
-    def get_staffing(*args)
-      @staffing = (get_effort(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f / get_delay(args[0], args[1], args[2]))
-      @staffing.ceil
+    def get_staffing(pbs_project_element_id, module_project_id)
+      @staffing = (get_effort(pbs_project_element_id, module_project_id) * @project.organization.number_hours_per_month.to_f / get_delay(pbs_project_element_id, module_project_id))
+      @staffing
     end
 
-    def get_complexity(*args)
+    def get_complexity(pbs_project_element_id, module_project_id)
       @complexity
     end
 
-    def get_cost(*args)
-      @cost = get_effort(args[0], args[1], args[2]) * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
+    def get_cost(pbs_project_element_id, module_project_id)
+      @cost = get_effort(pbs_project_element_id, module_project_id) * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
       @cost
     end
   end

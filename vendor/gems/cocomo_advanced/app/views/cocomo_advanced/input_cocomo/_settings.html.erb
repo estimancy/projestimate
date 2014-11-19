@@ -1,117 +1,148 @@
-<h4><%= current_project.title %> - <%= current_component %></h4>
-<div class="tabs">
-  <ul>
-    <li>
-      <a href="#tabs-1">Cocomo Advanced</a>
-    </li>
-  </ul>
+<%= form_tag "/cocomo_advanced/cocomo_save" do %>
 
-  <div id="tabs-1" style="overflow-x: auto;">
-    <%= form_tag "/cocomo_advanced/cocomo_save" do %>
-      <table class="table table-bordered table-condensed">
-        <tr>
-          <th>Nom</th>
-          <th>Description</th>
-          <th>Valeur</th>
-          <th></th>
-        </tr>
+  <table class="table table-bordered table-condensed">
 
-        <tr>
-          <td colspan="3" style="text-align: center">
-            <b>
-              Attribut produit
-            </b>
-          </td>
-        </tr>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th colspan="3">Valeur</th>
+      <th>Actions</th>
+    </tr>
 
-        <% @aprod.compact.each do |factor| %>
-          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
-          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
-          <tr>
-            <td><%= factor.name %></td>
-            <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
-            <td>
-              <%= link_to "", cocomo_advanced.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
-              <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
-            </td>
-          </tr>
-        <% end %>
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <b>
+          Attribut générique
+        </b>
+      </td>
+    </tr>
 
-        <tr>
-          <td colspan="4" style="text-align: center">
-            <b>
-              Attribut plateforme
-            </b>
-          </td>
-        </tr>
+    <tr>
+      <td>Size (SLOC)</td>
+      <td>Sloc description</td>
+      <% ['low', 'most_likely', 'high'].each do |level| %>
+        <td>
+          <% size = PeAttribute.where(alias: "sloc").first %>
+          <%= text_field_tag "size_#{level}", EstimationValue.where(:module_project_id => current_module_project.id,
+                                                                    :pe_attribute_id => size.id).first.send("string_data_#{level}")[current_component.id] %>
+        </td>
+      <% end %>
+      <td>
+        <%= link_to "",  "#", remote: true, class: "icon icon-list-alt" %> |
+        <%= link_to "",  "#", remote: true, class: "icon icon-edit" %>
+      </td>
+    </tr>
 
-        <% @aplat.compact.each do |factor| %>
-          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
-          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
-          <tr>
-            <td><%= factor.name %></td>
-            <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
-            <td>
-              <%= link_to "", cocomo_advanced.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
-              <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
-            </td>
-          </tr>
-        <% end %>
+    <tr>
+      <td>Complexity</td>
+      <td>Complexity description</td>
+      <% ['low', 'most_likely', 'high'].each do |level| %>
+        <td>
+          <% cplx = PeAttribute.where(alias: "complexity").first %>
+          <%= select_tag "complexity_#{level}", options_for_select(["Organic", "Semi", "Embedded"], selected: EstimationValue.where(:module_project_id => current_module_project.id,
+                                                                                                                                    :pe_attribute_id => cplx.id).first.send("string_data_#{level}")[current_component.id]) %>
+        </td>
+      <% end %>
+      <td>
+        <%= link_to "",  "#", remote: true, class: "icon icon-list-alt" %> |
+        <%= link_to "",  "#", remote: true, class: "icon icon-edit" %>
+      </td>
+    </tr>
 
-        <tr>
-          <td colspan="4" style="text-align: center">
-            <b>
-              Attribut personnel
-            </b>
-          </td>
-        </tr>
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <b>
+          Attribut produit
+        </b>
+      </td>
+    </tr>
 
-        <% @apers.compact.each do |factor| %>
-          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
-          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
-          <tr>
-            <td><%= factor.name %></td>
-            <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
-            <td>
-              <%= link_to "", cocomo_advanced.help_path(factor.id), class: "", remote: true, class: "icon icon-list-alt" %> |
-              <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
-            </td>
-          </tr>
-        <% end %>
-
-        <tr>
-          <td colspan="4" style="text-align: center">
-            <b>
-              Attribut projet
-            </b>
-          </td>
-        </tr>
-
-        <% @aproj.compact.each do |factor| %>
-          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
-          <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
-          <tr>
-            <td><%= factor.name %></td>
-            <td><%= factor.description %></td>
-            <td><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
-            <td>
-              <%= link_to "", cocomo_advanced.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
-              <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
-
-      <%= submit_tag "Save", class: 'btn' %>
+    <% @aprod.compact.each do |factor| %>
+      <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+      <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
+      <tr>
+        <td><%= factor.name %></td>
+        <td><%= factor.description %></td>
+        <td colspan="3"><%= select_tag "factors[#{factor.id}]",
+                                       options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]},
+                                                          selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
+        <td>
+          <%= link_to "", cocomo_advanced.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
+          <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
+        </td>
+      </tr>
     <% end %>
 
-  </div>
-</div>
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <b>
+          Attribut plateforme
+        </b>
+      </td>
+    </tr>
 
-<!-- Modal -->
+    <% @aplat.compact.each do |factor| %>
+      <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+      <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
+      <tr>
+        <td><%= factor.name %></td>
+        <td><%= factor.description %></td>
+        <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
+        <td>
+          <%= link_to "", cocomo_advanced.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
+          <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <b>
+          Attribut personnel
+        </b>
+      </td>
+    </tr>
+
+    <% @apers.compact.each do |factor| %>
+      <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+      <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
+      <tr>
+        <td><%= factor.name %></td>
+        <td><%= factor.description %></td>
+        <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
+        <td>
+          <%= link_to "", cocomo_advanced.help_path(factor.id), class: "", remote: true, class: "icon icon-list-alt" %> |
+          <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <b>
+          Attribut projet
+        </b>
+      </td>
+    </tr>
+
+    <% @aproj.compact.each do |factor| %>
+      <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+      <% default = OrganizationUowComplexity.where(factor_id: factor.id, is_default: true).first %>
+      <tr>
+        <td><%= factor.name %></td>
+        <td><%= factor.description %></td>
+        <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? (default.nil? ? '' : default.id) : (selected.organization_uow_complexity_id)) %></td>
+        <td>
+          <%= link_to "", cocomo_advanced.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
+          <%= link_to "", cocomo_advanced.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <%= submit_tag "Save", class: 'btn' %>
+<% end %>
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

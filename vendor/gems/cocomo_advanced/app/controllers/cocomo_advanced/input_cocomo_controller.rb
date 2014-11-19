@@ -67,6 +67,41 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
                          coefficient: cmplx.value)
 
     end
+
+    current_module_project.pemodule.attribute_modules.each do |am|
+      @evs = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+      @evs.each do |ev|
+        tmp_prbl = Array.new
+        ["low", "most_likely", "high"].each do |level|
+
+          ca = CocomoAdvanced::CocomoAdvanced.new(params["size_#{level}"], params["complexity_#{level}"], current_project)
+
+          if am.pe_attribute.alias == "effort"
+            ev.send("string_data_#{level}")[current_component.id] = ca.get_effort(current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "sloc"
+            ev.send("string_data_#{level}")[current_component.id] = params["size_#{level}"].to_i
+          elsif am.pe_attribute.alias == "complexity"
+            ev.send("string_data_#{level}")[current_component.id] = params["complexity_#{level}"]
+          elsif am.pe_attribute.alias == "delay"
+            ev.send("string_data_#{level}")[current_component.id] = ca.get_delay(current_component, current_module_project)
+          elsif am.pe_attribute.alias == "cost"
+            ev.send("string_data_#{level}")[current_component.id] = ca.get_cost(current_component, current_module_project)
+          elsif am.pe_attribute.alias == "staffing"
+            ev.send("string_data_#{level}")[current_component.id] = ca.get_staffing(current_component, current_module_project)
+          elsif am.pe_attribute.alias == "end_date"
+            ev.send("string_data_#{level}")[current_component.id] = ca.get_end_date(current_component, current_module_project)
+          end
+
+          ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
+        end
+
+        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
+          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        end
+      end
+    end
+
     redirect_to main_app.root_url
   end
 
