@@ -60,4 +60,11 @@ class Guw::GuwTypeComplexitiesController < ApplicationController
     redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model)
   end
 
+  def destroy
+    @guw_type_complexity = Guw::GuwTypeComplexity.find(params[:id])
+    guw_model_id = @guw_type_complexity.guw_type.guw_model.id
+    @guw_type_complexity.delete
+    redirect_to guw.guw_model_path(guw_model_id)
+  end
+
 end

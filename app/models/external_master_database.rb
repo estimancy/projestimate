@@ -149,12 +149,6 @@ module ExternalMasterDatabase
     include ExternalInclude
   end
 
-  class ExternalLaborCategory < ActiveRecord::Base
-    attr_accessible
-    establish_connection HOST
-    include ExternalInclude
-  end
-
   class ExternalLanguage < ActiveRecord::Base
     attr_accessible
     establish_connection HOST

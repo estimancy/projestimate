@@ -92,7 +92,11 @@ private
     @project_modules = @project.pemodules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    @organizations = current_user.organizations
+    if current_user.super_admin == true
+      @organizations = Organization.all
+    else
+      @organizations = current_user.organizations
+    end
     @project_modules = @project.pemodules
     @project_security_levels = ProjectSecurityLevel.all
     @module_project = ModuleProject.find_by_project_id(@project.id)
@@ -2294,8 +2298,8 @@ public
 
   def load_setting_module
     @module_project = ModuleProject.find(params[:module_project_id])
-    if @module_project.pemodule.alias == "guw"
 
+    if @module_project.pemodule.alias == "guw"
       if current_module_project.guw_model.nil?
         @guw_model = current_project.organization.guw_models.first
       else
@@ -2305,7 +2309,6 @@ public
       @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
                                                     pbs_project_element_id: current_component,
                                                     guw_model_id: @guw_model)
-
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 

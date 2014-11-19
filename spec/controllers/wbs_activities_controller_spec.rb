@@ -29,4 +29,12 @@ describe WbsActivitiesController do
     end
   end
 
+  describe 'Destroy' do
+    it 'renders the destroy template' do
+      @wbs_activity = FactoryGirl.create(:wbs_activity)
+      expect { delete 'destroy', :id => @wbs_activity.id}.to change(WbsActivity, :count).by(-1)
+      response.should render_template('index')
+    end
+  end
+
 end

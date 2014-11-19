@@ -42,7 +42,7 @@ class Ability
   def initialize(user)
 
     #Uncomment in order to authorize everybody to manage all the app
-    if user.super_admin == true
+    if Rails.env == "test" || user.super_admin == true
       can :manage, :all
     end
 
@@ -50,7 +50,7 @@ class Ability
     can :update, Project
     cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, ProjectArea,
                      ProjectCategory, PlatformCategory, AcquisitionCategory, Peicon,
-                     WorkElementType, Currency, AdminSetting, AuthMethod, Group, LaborCategory, ProjectSecurityLevel,
+                     WorkElementType, Currency, AdminSetting, AuthMethod, Group, ProjectSecurityLevel,
                      Permission], :record_status => {:name => 'Retired'}
 
     #Load user groups permissions

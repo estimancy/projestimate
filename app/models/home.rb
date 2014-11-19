@@ -42,7 +42,7 @@ class Home < ActiveRecord::Base
   include ExternalMasterDatabase
 
   EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory,
-                    ExternalAcquisitionCategory, ExternalPeicon, ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalLaborCategory, ExternalProjectSecurityLevel,
+                    ExternalAcquisitionCategory, ExternalPeicon, ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalProjectSecurityLevel,
                     ExternalPermission, ExternalSizeUnit]
 
   def self.connect_external_database
@@ -216,9 +216,6 @@ class Home < ActiveRecord::Base
 
     puts '   - Default groups'
     self.update_records(ExternalMasterDatabase::ExternalGroup, Group, ['name', 'description', 'for_global_permission', 'for_project_security', 'uuid'])
-
-    puts '   - Labor categories'
-    self.update_records(ExternalMasterDatabase::ExternalLaborCategory, LaborCategory, ['name', 'description', 'uuid'])
 
     puts '   - Security level'
     self.update_records(ExternalMasterDatabase::ExternalProjectSecurityLevel, ProjectSecurityLevel, ['name', 'description', 'uuid'])

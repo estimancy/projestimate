@@ -24,7 +24,7 @@
         <td><%= group.name %></td>
         <td><%= group.description %></td>
         <td class="center">
-          <%= link_to '', edit_group_path(group), :class => 'icon-pencil', :title => I18n.t('edit') %>
+          <%= link_to '', edit_organization_group_path(@organization, group), :class => 'icon-pencil', :title => I18n.t('edit') %>
           <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
         </td>
       </tr>
@@ -35,7 +35,7 @@
 
 
 <script>
-    <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js] %>
+  <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js] %>
 </script>
 
 

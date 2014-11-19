@@ -26,37 +26,18 @@ class FactorsController < ApplicationController
 
   before_filter :get_record_statuses
 
-  # GET /factors
-  # GET /factors.json
   def index
     @factors = Factor.order("factor_type")
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @factors }
-    end
   end
 
-  # GET /factors/1
-  # GET /factors/1.json
   def show
     @factor = Factor.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @factor }
-    end
   end
 
   # GET /factors/new
   # GET /factors/new.json
   def new
     @factor = Factor.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @factor }
-    end
   end
 
   # GET /factors/1/edit

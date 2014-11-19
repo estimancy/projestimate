@@ -98,7 +98,7 @@ class PermissionsController < ApplicationController
 
     @permission = Permission.new(params[:permission])
 
-    @groups = Group.defined_or_local
+    @groups = Group.all
 
     @permission.alias = params[:permission][:alias].underscore.gsub(' ', '_')
 
@@ -140,10 +140,7 @@ class PermissionsController < ApplicationController
       @permission.destroy
     end
 
-    respond_to do |format|
-      format.html { redirect_to permissions_path, notice: "#{I18n.t (:notice_permission_successful_deleted)}" }
-      format.json { head :ok }
-    end
+    redirect_to permissions_path, notice: "#{I18n.t (:notice_permission_successful_deleted)}"
   end
 
   #Set all global rights
@@ -159,7 +156,7 @@ class PermissionsController < ApplicationController
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
       end
 
-      redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_saved)}"
+      redirect_to globals_permissions_path(:anchor => "tabs-projects"), :notice => "#{I18n.t (:notice_permission_successful_saved)}"
     end
   end
 

@@ -37,15 +37,21 @@
 
 class Guw::GuwAttributesController < ApplicationController
   def index
-    @guw_attributes = Guw::GuwModel.find(params[:guw_model_id]).guw_attributes
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_attributes = @guw_model.guw_attributes
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def new
     @guw_attribute = Guw::GuwAttribute.new
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def edit
     @guw_attribute = Guw::GuwAttribute.find(params[:id])
+    @guw_model = @guw_attribute.guw_model
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def create

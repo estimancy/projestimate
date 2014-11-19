@@ -367,7 +367,7 @@
      <% @guw_models.each do |i| %>
        <tr>
          <td class="span5">
-           <%= i.name %>
+           <%= link_to i.name, guw.guw_model_path(i), :title => I18n.t('edit') %>
          </td>
          <td class="align-center">
            <%= link_to 'Show model', guw.guw_model_path(i), :class => 'btn btn-mini', :title => I18n.t('edit') %>

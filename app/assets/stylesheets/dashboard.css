@@ -366,9 +366,9 @@ ul{
     font-size: 15px;
 }
 
-.ui-widget-content a:hover{
-    text-decoration: none;
-}
+/*.ui-widget-content a:hover{*/
+    /*text-decoration: none;*/
+/*}*/
 
 .module_project{
     /*border: 1px solid #ddd;*/

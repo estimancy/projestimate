@@ -33,10 +33,9 @@
     <% @guw_model.guw_types.each do |guw_type| %>
       <div id="tabs-<%= guw_type %>">
         <h4>
-          <%= link_to "Complexités de l'UO (#{guw_type.guw_complexities.count})", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
+          <%= link_to "Voir les #{pluralize(guw_type.guw_complexities.count, 'complexity')}", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
         </h4>
 
-        <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini" %>
         <hr>
 
         <%= form_tag guw_model_guw_type_guw_attribute_complexities_save_attributs_complexities_path(@guw_model, guw_type.id), method: "POST" do %>
@@ -45,7 +44,9 @@
               <th></th>
               <% guw_type.guw_type_complexities.each do |type_complexity| %>
                 <th>
-                  <%= link_to "#{type_complexity.name} (#{type_complexity.value})", guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %>
+                  <%= type_complexity.name %> -
+                  <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %> -
+                  <%= link_to I18n.t(:delete), type_complexity, method: :delete %>
                 </th>
               <% end %>
             </tr>
@@ -53,7 +54,7 @@
             <% @guw_model.guw_attributes.each do |guw_attribute| %>
               <tr>
                 <td>
-                  <%= guw_attribute %>
+                  <%= link_to guw_attribute, guw.edit_guw_model_guw_attribute_path(@guw_model, guw_attribute) %>
                 </td>
                 <% guw_type.guw_type_complexities.each do |type_complexity| %>
                   <td class="align-center">
@@ -65,6 +66,8 @@
               </tr>
             <% end %>
           </table>
+
+          <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini" %>
           <%= submit_tag "Enregistrer", class: "btn btn-mini" %>
           <hr>
         <% end %>

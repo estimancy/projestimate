@@ -45,10 +45,6 @@ class CurrenciesController < ApplicationController
     @currencies = Currency.all
   end
 
-  def show
-    @currency = Currency.find(params[:id])
-  end
-
   # GET /currencies/new
   # GET /currencies/new.json
   def new

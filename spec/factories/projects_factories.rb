@@ -30,6 +30,7 @@ FactoryGirl.define do
   # Projects
   factory :project do |p|
     p.sequence(:title) {|n| "Project_#{n}"}
+    p.sequence(:version) {|n| "v#{n}"}
     p.alias FactoryGirl.generate(:project_alias)  #p.sequence(:alias) {|n| "P#{n}"}
     p.sequence(:description) {|n| "Project number #{n}"}
     p.association :organization, :factory => :organization

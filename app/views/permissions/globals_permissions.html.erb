@@ -13,7 +13,7 @@
     <div id="tabs-global">
       <table class="table table-striped table-bordered table-condensed">
         <tr>
-          <th style="text-align:left;"><%= I18n.t(:permissions) %></th>
+          <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
           <% @groups.each_with_index do |group, i| %>
             <th>
               <span class="attribute_tooltip" title='<%= group.description %>'><%= group.name %></span>
@@ -63,7 +63,7 @@
       <div id="tabs-master">
         <table class="table table-striped table-bordered table-condensed">
           <tr>
-            <th style="text-align:left;"><%= I18n.t(:permissions) %></th>
+            <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
             <% @groups.each do |group| %>
                 <th style="text-align:center;">
                   <span class="attribute_tooltip" title='<%= group.description %>'><%= group.name %></span>
@@ -114,7 +114,7 @@
     <%= form_tag({:action => 'set_rights_project_security', :controller => 'permissions'}, :method => 'post', :class => 'simple_form') do %>
       <table class="table table-striped table-bordered table-condensed">
         <tr>
-          <th style="text-align:left;"><%= I18n.t(:permissions) %></th>
+          <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
           <% @project_security_levels.each do |ps| %>
             <th style="text-align:center;">
               <span class="attribute_tooltip" title='<%= ps.description %>'><%= ps.name %></span>

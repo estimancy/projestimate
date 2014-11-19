@@ -107,7 +107,9 @@
       <% if can? :manage_roles, :All %>
         <li class="dropdown"><a href="/globals_permissions">
           <!--<i class="icon-check-sign icon-large pull-left"></i>-->
-          Roles</a></li>
+            <%= I18n.t(:groups_and_roles) %>
+          </a>
+        </li>
       <% end %>
 
       <%# if can? :manage, :organizations %>
@@ -128,12 +130,6 @@
           <%= I18n.t(:project_global_setting) %>
         </a>
       </li>
-
-      <% if can? :manage, Event %>
-        <li class="dropdown"><a href="<%= main_app.events_path %>">
-          <!--<i class="icon-calendar icon-large pull-left"></i>-->
-          <%= I18n.t(:events) %></a></li>
-      <% end %>
     </ul>
   </li>
 
@@ -157,12 +153,6 @@
         <li class="dropdown"><a href="<%= main_app.pemodules_path %>">
           <!--<i class="icon-th icon-large pull-left"></i>-->
           <%= I18n.t(:projestimate_module) %></a></li>
-      <% end %>
-
-      <% if can? :manage, LaborCategory or can? :create_and_edit_labor_categories, LaborCategory %>
-        <li class="dropdown"><a href="<%= main_app.labor_categories_path %>">
-          <!--<i class="icon-user-md icon-large pull-left"></i>-->
-          <%= I18n.t(:labor_categories) %></a></li>
       <% end %>
 
       <% if can? :manage, WorkElementType or can? :create_and_edit_work_element_type, WorkElementType %>
