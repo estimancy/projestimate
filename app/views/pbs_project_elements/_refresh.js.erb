@@ -41,6 +41,7 @@ $("#pbs_list").val(<%= @current_component.nil? ? '' : @current_component.id %>);
 $("#select_balancing_attribute").val(<%= current_balancing_attribute.nil? ? '' : current_balancing_attribute.id %>);
 
 $(".header_data").html("<h5><%= @current_component %> - <%= current_module_project %></h5>");
+
 <% if current_module_project.pemodule.alias.to_s == Projestimate::Application::BALANCING_MODULE %>
     $(".header_data h5").append("<%= escape_javascript( select_tag('select_balancing_attribute', options_for_select(current_module_project.pemodule.pe_attributes.map{ |attr| [attr.to_s, attr.id]}, :selected => (current_balancing_attribute.id unless current_balancing_attribute.nil?)), :class => 'balancing_attribute', :prompt => I18n.t(:text_select_balancing_attribute)) ).html_safe %> ");
 <% end %>

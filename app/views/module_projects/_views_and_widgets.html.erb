@@ -25,14 +25,15 @@
             <td><%= view.name %></td>
             <td><%= view.description %></td>
             <td>
-              <% view.widgets.each do |widget| %>
-                  <%= check_box_tag "view_widget_#{widget.id}", widget.id, true %>
+              <% view.views_widgets.each do |widget| %>
+                  <%= check_box_tag "view_widget_#{widget.id}", widget.id, true, disabled: true %>
+                  <%= widget.name %>
               <% end %>
             </td>
             <td class="center"><%= f.radio_button :view_id, view.id, :checked => @module_project.view == view %></td>
             <td class="align-center">
               <%= link_to "", edit_view_path(view, organization_id: view.organization_id), :class => 'icon-pencil icon-large', :title => I18n.t('edit') %>
-              <%#= link_to "", view, method: :delete, data: { confirm: I18n.t(:are_you_sure) }, class: "icon-trash icon-large" %>
+              <%= link_to "", view, method: :delete, data: { confirm: I18n.t(:are_you_sure) }, class: "icon-trash icon-large" %>
             </td>
           </tr>
       <% end %>

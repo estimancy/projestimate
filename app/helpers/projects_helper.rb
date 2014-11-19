@@ -80,7 +80,8 @@ module ProjectsHelper
       when "delay"
         I18n.t(:delay)
       when "cost"
-        current_project.organization.currency.nil? ? nil.to_s : "#{current_project.organization.currency.name.underscore.pluralize}"
+        #current_project.organization.currency.nil? ? nil.to_s : "#{current_project.organization.currency.name.underscore.pluralize}"
+        current_project.organization.currency.nil? ? nil.to_s : "#{current_project.organization.currency.sign}"
     else
       ""
     end
@@ -917,7 +918,7 @@ module ProjectsHelper
 
 
   #Display pemodule output depending attribute type.
-  def display_value(value, est_val)
+  def display_value(value, est_val, get_with_unit=true)
     est_val_pe_attribute = est_val.pe_attribute
     case est_val_pe_attribute.attr_type
       when 'date'
@@ -925,9 +926,17 @@ module ProjectsHelper
       when 'float'
         begin
           if est_val_pe_attribute.alias == "delay"
-            "#{convert(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+            if get_with_unit
+              "#{convert(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+            else
+              "#{convert(value, current_project.organization).round}"
+            end
           else
-            "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))} #{get_attribute_unit(est_val_pe_attribute)}"
+            if get_with_unit
+              "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))} #{get_attribute_unit(est_val_pe_attribute)}"
+            else
+              "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))}"
+            end
           end
         rescue
           value

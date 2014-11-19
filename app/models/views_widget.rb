@@ -7,7 +7,7 @@ class ViewsWidget < ActiveRecord::Base
   belongs_to :pbs_project_element
   belongs_to :module_project
 
-  validates :name, :pe_attribute_id, :icon_class, presence: true
+  validates :name, :pe_attribute_id, presence: true
 
 end
 
