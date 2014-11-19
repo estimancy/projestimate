@@ -16,7 +16,7 @@
       <p style="text-align:center;"> <%= I18n.t('empty') %></p>
   <% else %>
       <% @projects.each do |project| %>
-        <% if can? :show_project, project || current_user.super_admin == true %>
+        <%# if can? :show_project, project || current_user.super_admin == true %>
           <tr>
             <td>
               <% if can_show_estimation?(project) %>
@@ -72,7 +72,7 @@
               <% end %>
             </td>
           </tr>
-        <% end %>
+        <%# end %>
       <% end %>
 
       <%= render :partial => 'layouts/footer_table' %>
