@@ -174,7 +174,7 @@ module ProjectsHelper
     module_project.estimation_values.order('display_order ASC').each do |est_val|
           if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
             probable_est_value_for_consistency = est_val.send("string_data_probable")
-        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
+            res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
 
         # For is_consistent purpose
         ['low', 'most_likely', 'high', 'probable'].each do |level|
@@ -492,7 +492,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
 
       # render view according to the selected attribute
       res << "<div class='attribute_balancing_input' style='margin-bottom:15px;'>"
@@ -602,7 +601,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
       res << "<table class='table table-condensed table-bordered'>"
 
       res << '<tr>
@@ -686,7 +684,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data)}</h4>"
       res << "<table class='table table-condensed table-bordered'>"
       res << '<tr>
                 <th></th>'
@@ -823,7 +820,6 @@ module ProjectsHelper
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
 
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_input_data) }</h4>"
       res << "<table class='table table-condensed table-bordered'>
                       <tr>
                         <th></th>"
@@ -874,9 +870,9 @@ module ProjectsHelper
       end
       res << '</table>'
 
-      if module_project.pemodule.alias == "guw"
-        res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini")
-      end
+      #if module_project.pemodule.alias == "guw"
+      #  res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini")
+      #end
     end
     res
   end

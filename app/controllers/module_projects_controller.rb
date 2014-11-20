@@ -190,9 +190,10 @@ class ModuleProjectsController < ApplicationController
 
     @results = nil
 
-    respond_to do |format|
-      format.js { render :partial => "module_projects/refresh_selected_module_data"}
-    end
+    redirect_to "/dashboard"
+    #respond_to do |format|
+    #  format.js { render :partial => "module_projects/refresh_selected_module_data"}
+    #end
   end
 
 

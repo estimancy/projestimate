@@ -51,6 +51,7 @@ class Uow::UowInputsController < ApplicationController
     end
     @count = @uow_inputs.count.to_i
     @index = params[:index].to_i
+    redirect_to "/dashboard"
   end
 
   def remove_item
@@ -97,8 +98,7 @@ class Uow::UowInputsController < ApplicationController
       input.flag = params[:flag]["#{r}"]
       input.save
 
-      #uow_inputs = UowInput.where(id: params[:input_id]["#{r}"].to_i)
-      @gross << input #uow_inputs.first
+      @gross << input
     end
 
     @module_project.pemodule.attribute_modules.each do |am|
