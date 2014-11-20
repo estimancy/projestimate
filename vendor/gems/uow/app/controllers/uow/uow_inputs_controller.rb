@@ -51,6 +51,7 @@ class Uow::UowInputsController < ApplicationController
     end
     @count = @uow_inputs.count.to_i
     @index = params[:index].to_i
+    redirect_to "/dashboard"
   end
 
   def remove_item

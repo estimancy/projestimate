@@ -43,7 +43,7 @@
                           <th>H</th>
                         </tr>
                         <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
-                          <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first %>
+                          <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
                           <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
                             <tr>
                               <td>
