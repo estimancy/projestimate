@@ -10,11 +10,15 @@
     </tr>
 
     <tr>
-      <td colspan="6" style="text-align: center">
-        <b>
+      <td colspan="2">
+        <b class="pull-left">
           Attribut générique
         </b>
       </td>
+      <td><%= I18n.t(:low) %></td>
+      <td><%= I18n.t(:most_likely) %></td>
+      <td><%= I18n.t(:high) %></td>
+      <td></td>
     </tr>
 
     <tr>
@@ -23,8 +27,8 @@
       <% ['low', 'most_likely', 'high'].each do |level| %>
         <td>
           <% size = PeAttribute.where(alias: "sloc").first %>
-          <%= text_field_tag "size_#{level}", EstimationValue.where(:module_project_id => current_module_project.id,
-                                                                    :pe_attribute_id => size.id).first.send("string_data_#{level}")[current_component.id] %>
+          <% ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => size.id).first %>
+          <%= text_field_tag "size_#{level}", ev.nil? ? '' : ev.send("string_data_#{level}")[current_component.id] %>
         </td>
       <% end %>
       <td>
@@ -39,8 +43,8 @@
       <% ['low', 'most_likely', 'high'].each do |level| %>
         <td>
           <% cplx = PeAttribute.where(alias: "complexity").first %>
-          <%= select_tag "complexity_#{level}", options_for_select(["Organic", "Semi", "Embedded"], selected: EstimationValue.where(:module_project_id => current_module_project.id,
-                                                                                                                                    :pe_attribute_id => cplx.id).first.send("string_data_#{level}")[current_component.id]) %>
+          <% ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => cplx.id).first %>
+          <%= select_tag "complexity_#{level}", options_for_select(["Organic", "Semi", "Embedded"], selected: ev.nil? ? '' : ev.send("string_data_#{level}")[current_component.id]) %>
         </td>
       <% end %>
       <td>
@@ -50,8 +54,8 @@
     </tr>
 
     <tr>
-      <td colspan="6" style="text-align: center">
-        <b>
+      <td colspan="6">
+        <b class="pull-left">
           Attribut produit
         </b>
       </td>
@@ -74,8 +78,8 @@
     <% end %>
 
     <tr>
-      <td colspan="6" style="text-align: center">
-        <b>
+      <td colspan="6">
+        <b class="pull-left">
           Attribut plateforme
         </b>
       </td>
@@ -96,8 +100,8 @@
     <% end %>
 
     <tr>
-      <td colspan="6" style="text-align: center">
-        <b>
+      <td colspan="6">
+        <b class="pull-left">
           Attribut personnel
         </b>
       </td>
@@ -118,8 +122,8 @@
     <% end %>
 
     <tr>
-      <td colspan="6" style="text-align: center">
-        <b>
+      <td colspan="6">
+        <b class="pull-left">
           Attribut projet
         </b>
       </td>

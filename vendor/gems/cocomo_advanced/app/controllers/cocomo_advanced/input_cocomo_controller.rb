@@ -54,10 +54,9 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
       cmplx = OrganizationUowComplexity.find(factor[1])
 
       old_cocomos = InputCocomo.where(factor_id: factor[0].to_i,
-                                     pbs_project_element_id: current_component.id,
-                                     project_id: current_project.id,
-                                     module_project_id: current_module_project.id)
-      old_cocomos.delete_all
+                                      pbs_project_element_id: current_component.id,
+                                      project_id: current_project.id,
+                                      module_project_id: current_module_project.id).delete_all
 
       InputCocomo.create(factor_id: factor[0].to_i,
                          organization_uow_complexity_id: cmplx.id,

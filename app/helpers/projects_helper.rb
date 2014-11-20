@@ -174,7 +174,7 @@ module ProjectsHelper
     module_project.estimation_values.order('display_order ASC').each do |est_val|
           if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
             probable_est_value_for_consistency = est_val.send("string_data_probable")
-        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
+            res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
 
         # For is_consistent purpose
         ['low', 'most_likely', 'high', 'probable'].each do |level|

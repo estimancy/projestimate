@@ -50,40 +50,40 @@
   </div>
 </div>
 
-<%# form_tag({:controller => 'projects', :action => 'run_estimation', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :remote => true, :class => 'simple_form') do -%>
-  <div class="row-fluid">
-    <div class="span12">
-      <div class="widget-box collapsible">
-        <div class="widget-title">
-          <a href="#collapseIn" data-toggle="collapse">
-            <span class="icon">
-              <i class="icon-align-left"></i>
-            </span>
-          </a>
+<div class="row-fluid">
+  <div class="span12">
+    <div class="widget-box collapsible">
+      <div class="widget-title">
+        <a href="#collapseIn" data-toggle="collapse">
+          <span class="icon">
+            <i class="icon-align-left"></i>
+          </span>
+        </a>
 
-          <h5>
-            <%= I18n.t(:label_input_data) %> - <%= current_component %> - <%= "#{current_module_project}" %>
-          </h5>
+        <h5>
+          <%= I18n.t(:label_input_data) %> - <%= current_component %> - <%= "#{current_module_project}" %>
+        </h5>
 
-          <div id="buttons">
-            <%= render 'buttons' %>
-          </div>
+        <div id="buttons">
+          <%= render 'buttons' %>
         </div>
+      </div>
 
-        <div class="collapse in" id="collapseIn">
-          <div class="widget-content tab-content">
-            <div class="input">
-              <div class="input_data">
+      <div class="collapse in" id="collapseIn">
+        <div class="widget-content tab-content">
+          <div class="input">
+            <div class="input_data">
+              <% if ["cocomo_basic", "real_size", "effort_breakdown"].include?(current_module_project.pemodule.alias) %>
                 <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
-                <%= render :partial => 'projects/setting_module' %>
-              </div>
+              <% end %>
+              <%= render :partial => 'projects/setting_module' %>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-<%# end %>
+</div>
 
 <!-- show selected view for each module project -->
 <!-- The results boxes will be arranged as in the estimation plan -->
