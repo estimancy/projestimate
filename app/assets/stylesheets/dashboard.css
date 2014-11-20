@@ -878,15 +878,25 @@ corresponding value from the list below*/
     left: 0;
 }
 
+p.min_max{
+   margin: 0px;
+   /*line-height: 15px;*/
+   float: right;
+}
+
 .min_max{
     /*font-size: xx-small;*/
-    margin-top: 0.5em;
+    /*margin-top: 0.5em;*/
+    float: right;
+    white-space: nowrap;
+    line-height: 12px;
 }
 
 .view_widget{
     min-width: 60px;
     min-height: 60px;
-    white-space: nowrap;
+    display: block;
+    /*white-space: nowrap;*/
 }
 
 h5.view_title{
@@ -911,7 +921,7 @@ h5.view_title{
     text-align: center;
     /*font-size: 0.7em;*/
     font-weight: bold;
-    padding-top: 25px;
+    white-space: nowrap;
 
 }
 

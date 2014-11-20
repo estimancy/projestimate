@@ -41,23 +41,55 @@ module ViewsWidgetsHelper
       data_most_likely = estimation_value.string_data_most_likely[pbs_project_elt.id]
       data_probable = estimation_value.string_data_probable[pbs_project_elt.id]
       probable_value_text =  display_value(data_probable, estimation_value)
-      max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, false)}"
-      min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, false)}"
-      #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
-      #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
+      max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, false)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
+      min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, false)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
     end
     widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
+
+    ft_maxFontSize_without_mm = 75
+    ft_maxFontSize_with_mm = 60
+    ft_minMax_maxFontSize = 20
+    icon_font_size = 2
 
     # The widget size with : margin-right = 10px
     if view_widget.width.to_i > 1
       width = (width*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
     end
+
     if view_widget.height.to_i > 1
       height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
+      icon_font_size = ((height+width)/2) * 0.025
+    else
+      icon_font_size = 2
+      ft_maxFontSize_without_mm = 30
+      ft_maxFontSize_with_mm = 30
+
+      ft_minMax_maxFontSize = 15
+
+      if view_widget.width.to_i <= 1
+        ft_minMax_minFontSize = 4.5
+      else
+        ft_minMax_minFontSize = 7.5
+      end
+
     end
+
+    text_size = ((height+width)/2) * 0.015
+    min_max_size = ((height+width)/2) * 0.009
+
+    # get the fitText minFontSize and maxFontSize
+
     # update size in the results hash
     widget_data[:width] = width
     widget_data[:height] = height
+    widget_data[:icon_font_size] = icon_font_size
+    widget_data[:text_size] = text_size
+    widget_data[:min_max_size] = min_max_size
+    # fitText parameters
+    widget_data[:ft_maxFontSize_without_mm] = ft_maxFontSize_without_mm
+    widget_data[:ft_maxFontSize_with_mm] = ft_maxFontSize_with_mm
+    widget_data[:ft_minMax_minFontSize] = ft_minMax_minFontSize
+    widget_data[:ft_minMax_maxFontSize] = ft_minMax_maxFontSize
 
     add_top_and_left = nil
     if  !view_widget.position_x.nil? && !view_widget.position_y.nil?
