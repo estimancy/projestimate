@@ -52,30 +52,55 @@ module ViewsWidgetsHelper
     icon_font_size = 2
 
     # The widget size with : margin-right = 10px
-    if view_widget.width.to_i > 1
-      width = (width*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
-    end
+    height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
+    width = (width*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
 
-    if view_widget.height.to_i > 1
-      height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
-      icon_font_size = ((height+width)/2) * 0.025
-    else
-      icon_font_size = 2
-      ft_maxFontSize_without_mm = 30
-      ft_maxFontSize_with_mm = 30
+    case view_widget.height.to_i
+      when 1..2
+        icon_font_size = 2
+        if view_widget.height.to_i == 3
+          icon_font_size = 3
+        end
+        ft_maxFontSize_without_mm = 30
+        ft_maxFontSize_with_mm = 30
+        ft_minMax_minFontSize = 6
+        ft_minMax_maxFontSize = 12
 
-      ft_minMax_maxFontSize = 15
+        if view_widget.width.to_i <= 1
+          ft_minMax_minFontSize = 4.5
+        else
+          ft_minMax_minFontSize = 7.5
+        end
 
-      if view_widget.width.to_i <= 1
-        ft_minMax_minFontSize = 4.5
+      when 3
+        icon_font_size = 3
+        ft_maxFontSize_without_mm = 30
+        ft_maxFontSize_with_mm = 30
+        ft_minMax_maxFontSize = 12
       else
-        ft_minMax_minFontSize = 7.5
-      end
-
+        height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
+        icon_font_size = ((height+width)/2) * 0.025
     end
 
     text_size = ((height+width)/2) * 0.015
     min_max_size = ((height+width)/2) * 0.009
+
+    #if view_widget.height.to_i > 2
+    #  height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
+    #  icon_font_size = ((height+width)/2) * 0.025
+    #else
+    #  icon_font_size = 2
+    #  ft_maxFontSize_without_mm = 30
+    #  ft_maxFontSize_with_mm = 30
+    #  ft_minMax_maxFontSize = 15
+    #
+    #  if view_widget.width.to_i <= 1
+    #    ft_minMax_minFontSize = 4.5
+    #  else
+    #    ft_minMax_minFontSize = 7.5
+    #  end
+    #
+    #end
 
     # get the fitText minFontSize and maxFontSize
 
@@ -90,11 +115,6 @@ module ViewsWidgetsHelper
     widget_data[:ft_maxFontSize_with_mm] = ft_maxFontSize_with_mm
     widget_data[:ft_minMax_minFontSize] = ft_minMax_minFontSize
     widget_data[:ft_minMax_maxFontSize] = ft_minMax_maxFontSize
-
-    add_top_and_left = nil
-    if  !view_widget.position_x.nil? && !view_widget.position_y.nil?
-      add_top_and_left = "left: #{view_widget.position_x} ; top: #{view_widget.position_y}";
-    end
 
     #WIDGETS_TYPE = [["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ]
     #According to the widget type, we will show simple text, charts, timeline, etc
