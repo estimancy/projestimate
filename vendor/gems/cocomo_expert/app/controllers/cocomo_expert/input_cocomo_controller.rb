@@ -66,7 +66,6 @@ class CocomoExpert::InputCocomoController < ApplicationController
 
           if am.pe_attribute.alias == "effort"
             ev.send("string_data_#{level}")[current_component.id] = ca.get_effort(current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           elsif am.pe_attribute.alias == "sloc"
             ev.send("string_data_#{level}")[current_component.id] = params["size_#{level}"].to_i
           elsif am.pe_attribute.alias == "delay"
@@ -77,13 +76,21 @@ class CocomoExpert::InputCocomoController < ApplicationController
             ev.send("string_data_#{level}")[current_component.id] = ca.get_staffing(current_component, current_module_project)
           elsif am.pe_attribute.alias == "end_date"
             ev.send("string_data_#{level}")[current_component.id] = ca.get_end_date(current_component, current_module_project)
+          elsif am.pe_attribute.alias == "defects"
+            ev.send("string_data_#{level}")[current_component.id] = ca.get_defects(current_component, current_module_project)
           end
+
+          tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
 
           ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
         end
 
-        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
-          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        if ev.in_out == "output"
+          begin
+            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+          rescue
+            #on ne gere pas les dates
+          end
         end
       end
     end
