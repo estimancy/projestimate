@@ -32,7 +32,7 @@ module CocomoAdvanced
 
     #Constructor
     def initialize(sloc, cplx, project)
-      @coef_sloc = sloc.to_f
+      @coef_sloc = sloc.to_f / 1000
       @project = project
 
       case cplx
