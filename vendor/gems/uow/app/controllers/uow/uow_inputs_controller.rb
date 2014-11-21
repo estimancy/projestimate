@@ -51,6 +51,7 @@ class Uow::UowInputsController < ApplicationController
     end
     @count = @uow_inputs.count.to_i
     @index = params[:index].to_i
+
     redirect_to "/dashboard"
   end
 
@@ -63,8 +64,9 @@ class Uow::UowInputsController < ApplicationController
       input.display_order = i
       input.save(validate: false)
     end
-
     @input_index = params['row_index']
+
+    redirect_to "/dashboard"
   end
 
   def export
@@ -83,7 +85,8 @@ class Uow::UowInputsController < ApplicationController
     params[:input_id].keys.each do |r|
       input = UowInput.where(id: params[:input_id]["#{r}"].to_i).first
       input.name = params[:name]["#{r}"]
-      input.module_project_id = params[:module_project_id]
+      input.module_project_id = current_module_project.id
+      input.pbs_project_element_id = current_component.id
       input.technology_id = params[:technology]["#{r}"]
       input.unit_of_work_id = params[:uow]["#{r}"]
       input.complexity_id = params[:complexity]["#{r}"] if params[:complexity]
@@ -121,6 +124,8 @@ class Uow::UowInputsController < ApplicationController
     end
 
     @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
+
+    redirect_to "/dashboard"
 
   end
 

@@ -1,2 +1,2 @@
 $("#complexity_<%= @index %>").parent().html("<%= j(select_tag "complexity[#{@index}]", options_for_select(@complexities), :class => "complexity") %>")
-<%= render partial: "uow_inputs/script" %>
+<%# render partial: "/uow/uow_inputs/script" %>
