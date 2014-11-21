@@ -91,10 +91,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
                                                                         guw_attribute_id: guowa.guw_attribute_id).all
 
-        sum_range = guowa.guw_attribute.guw_attribute_complexities.map{|i| [i.bottom_range, i.top_range]}.flatten.compact.first
+        sum_range = guowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: @guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
 
         if sum_range.nil? || sum_range.blank? || sum_range == 0
-          p "oedkok"
+          p "a supprimer"
         else
           @guw_attribute_complexities.each do |guw_ac|
             unless low.nil?
