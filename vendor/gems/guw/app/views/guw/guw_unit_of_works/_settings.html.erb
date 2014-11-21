@@ -21,80 +21,74 @@
                 <table class="table table-bordered table-condensed">
                   <tr>
                     <th>Name</th>
-                    <th>UoType</th>
-                    <th>Attributs</th>
-                    <th>Work Unit</th>
+                    <th>Unit of Work</th>
+                    <th colspan="4">Attributs</th>
                     <th>Cplx. UO</th>
-                    <th>Valeur</th>
-                    <th>Valeur retenu</th>
+                    <th>Effort</th>
+                    <th>Effort retenu</th>
                     <th>Actions</th>
                   </tr>
 
                   <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
                     <tr>
-                      <td style="vertical-align: middle">
+                      <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle">
                         <a href=<%= guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow) %>>
-                      <span title="<%= guow.comments %>" class="attribute_tooltip">
-                        <%= guow.name %>
-                      </span>
+                          <span title="<%= guow.comments %>" class="attribute_tooltip">
+                            <%= guow.name %>
+                          </span>
                         </a>
                       </td>
-                      <td style="vertical-align: middle">
-                        <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id ) %>
-                      </td>
-                      <td>
-                        <table class="table table-bordered table-condensed" style="vertical-align: middle; padding_top:1px;">
-                          <tr>
-                            <th></th>
-                            <th>L</th>
-                            <th>M</th>
-                            <th>H</th>
-                          </tr>
-                          <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
-                            <% unless guow.guw_type.nil? %>
-                              <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
-                            <% end %>
-                            <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
-                              <tr>
-                                <td>
-                                  <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description %>
-                                </td>
-                                <td>
-                                  <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
-                                </td>
-                                <td>
-                                  <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
-                                </td>
-                                <td>
-                                  <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
-                                </td>
-                              </tr>
-                            <% end %>
-                          <% end %>
-                        </table>
-                      </td>
-                      <td style="vertical-align: middle">
-                        <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id ) %>
-                      </td>
-                      <td style="vertical-align: middle">
-                        <% if guow.guw_complexity.nil? %>
-                          <%= text_field_tag "cplx[#{guow.id}]", '', class: "input-mini", disabled: true %>
-                        <% else %>
-                          <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
-                        <% end %>
-                      </td>
-                      <td style="vertical-align: middle">
-                        <%= guow.effort %>
-                      </td>
-                      <td style="vertical-align: middle">
-                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
-                      </td>
-                      <td style="vertical-align: middle">
-                        <%= link_to I18n.t('delete'), guw.guw_unit_of_work_path(guow), method: "delete", class: "btn btn-mini" %>
+                      <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle" class="span1">
+                        Unit of work's type
+                        <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), prompt: "Select an unit of of work type" %>
+                        <hr>
+                        Work unit
+                        <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit" %>
                       </td>
                     </tr>
+
+                    <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
+                      <tr>
+                        <% unless guow.guw_type.nil? %>
+                          <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
+                        <% end %>
+                        <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
+                          <td>
+                            <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description, class: "attribute_tooltip" %>
+                          </td>
+                          <td>
+                            <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
+                          </td>
+                          <td>
+                            <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
+                          </td>
+                          <td>
+                            <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
+                          </td>
+                        <% end %>
+
+                        <% if j == 0 %>
+                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
+                            <% if guow.guw_complexity.nil? %>
+                              <%= text_field_tag "cplx[#{guow.id}]", '', class: "input-mini", disabled: true %>
+                            <% else %>
+                              <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
+                            <% end %>
+                          </td>
+                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
+                            <%= guow.effort %>
+                          </td>
+                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
+                            <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
+                          </td>
+                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
+                            <%= link_to I18n.t('delete'), guw.guw_unit_of_work_path(guow), method: "delete", class: "btn btn-mini" %>
+                          </td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+
                   <% end %>
-                  </tr>
                 </table>
               </div>
             </div>
