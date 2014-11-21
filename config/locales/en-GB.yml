@@ -1283,3 +1283,6 @@ en-gb:
   factor_complexity: "Factor complexities"
   size_unit_type: "Action type"
 
+  add_new_unit_of_work_group: "Add new group"
+  add_unit_of_work: "Add unit of work"
+

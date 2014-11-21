@@ -122,7 +122,6 @@ module ProjectsHelper
     pbs_project_element = @pbs_project_element || current_component
 
     pemodule = Pemodule.find(module_project.pemodule.id)
-    res << "<h4>#{ I18n.t(:label_output_data) }</h4>"
     res << "<table class='table table-condensed table-bordered'>
                  <tr>
                    <th></th>"
@@ -162,7 +161,6 @@ module ProjectsHelper
     project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
 
     pemodule = Pemodule.find(module_project.pemodule.id)
-    res << " <h4>#{ I18n.t(:label_output_data) }</h4> "
     res << " <table class='table table-condensed table-bordered'>
                <tr>
                  <th></th>"
@@ -284,7 +282,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_output_data) }</h4>"
       res << "<table class='table table-condensed table-bordered'>"
 
       # Get the current balancing attribute
@@ -327,7 +324,6 @@ module ProjectsHelper
     res = String.new
     if module_project.compatible_with(current_component.work_element_type.alias) || current_component
       pemodule = Pemodule.find(module_project.pemodule.id)
-      res << "<h4>#{ I18n.t(:label_output_data) }</h4>"
       res << "<table class='table table-condensed table-bordered'>"
 
       res << '<tr>

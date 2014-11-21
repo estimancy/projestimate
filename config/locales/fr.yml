@@ -1317,4 +1317,6 @@ fr:
   label_update_view_widgets_order: "Sauvegarder la vue"
 
   criteria: "Critères"
+  add_new_unit_of_work_group: "Add new group"
+  add_unit_of_work: "Add unit of work"
 

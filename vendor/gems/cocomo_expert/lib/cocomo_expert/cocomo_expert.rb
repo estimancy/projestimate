@@ -30,7 +30,7 @@ module CocomoExpert
 
     #Constructor
     def initialize(sloc, cplx, project)
-      @coef_sloc = sloc.to_f
+      @coef_sloc = sloc.to_f / 1000
       @project = project
     end
 
@@ -119,6 +119,10 @@ module CocomoExpert
 
       @cost
     end
-  end
 
+    def get_defects(pbs_project_element_id, module_project_id)
+      @defects = 4.86 + 0.128 * (@coef_sloc*1000)
+      @defects
+    end
+  end
 end

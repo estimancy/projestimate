@@ -76,6 +76,9 @@
               <% if ["cocomo_basic", "real_size", "effort_breakdown"].include?(current_module_project.pemodule.alias) %>
                 <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
               <% end %>
+              <% if ["effort_breakdown"].include?(current_module_project.pemodule.alias) %>
+                <%= raw display_results_with_activities(current_module_project).blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'alert alert-info')}" : display_results_with_activities(current_module_project) %>
+              <% end %>
               <%= render :partial => 'projects/setting_module' %>
             </div>
           </div>
