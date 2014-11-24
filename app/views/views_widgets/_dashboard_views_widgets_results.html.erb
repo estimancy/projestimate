@@ -76,12 +76,12 @@
                                     <% one_height = "one_height" %>
                                     <div class="row-fluid">
                                       <!--<div class="span12">-->
-                                        <div class="widget_text with_min_max" style="font-size: <%=view_widget_text_size%>em">
+                                        <div class="widget_text with_min_max" style="font-size: <%=view_widget_text_size%>em; margin-bottom: 8%;">
                                           <%= value_to_show %>
                                         </div>
 
                                         <div>
-                                          <span class="min_max one_height" style="font-size: <%=view_widget_min_max_size%>em; float: left"><%= view_widget_data[:max_value_text] %></span>
+                                          <span class="min_max one_height" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:max_value_text] %></span><br>
                                           <span class="min_max one_height" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:min_value_text] %></span>
                                         </div>
 
@@ -104,13 +104,13 @@
                                   $("#fittext1").fitText();
                                   $(".without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%= max_without_min_max %>' });
                                   $(".with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%= max_with_min_max %>' });
+                                  $(".min_max").fitText(0.4, { minFontSize: '12px', maxFontSize: '15px' });
 
-//                                $(".min_max").fitText(1, { minFontSize: '<%#= ft_minMax_minFontSize %>', maxFontSize: '<%#= ft_minMax_maxFontSize %>' });
+                                $(".min_max").fitText(1, { minFontSize: '<%= ft_minMax_minFontSize %>', maxFontSize: '<%= ft_minMax_maxFontSize %>' });
 
                                   //$(".one_height").fitText(0.4, { minFontSize: '6px', maxFontSize: '6px' });
-                                  //$(".min_max").fitText(0.4, { minFontSize: '12px', maxFontSize: '15px' });
 
-                                  $('.min_max').css('fontSize', '14px');
+                                  //$('.min_max').css('fontSize', '14px');
 
                                     // $(".min_max").fitText(0.4, { maxFontSize: '<%#= ft_minMax_maxFontSize %>' });
 
