@@ -50,11 +50,11 @@ module Guw
     end
 
     def get_defects(effort, pbs_project_element_id, module_project_id)
-      @defects = effort*0.08
+      @defects = effort*0.08*100
     end
 
     def get_delay(effort, pbs_project_element_id, module_project_id)
-      @delay = (2.5 * (effort**0.32 )).to_f
+      @delay = (2.5 * (effort**0.32 )).to_f * @project.organization.number_hours_per_month.to_f
     end
 
     def get_cost(effort, pbs_project_element_id, module_project_id)
