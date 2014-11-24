@@ -201,18 +201,40 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
+
+          effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                            pbs_project_element_id: current_component.id,
+                                            guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
+
           if am.pe_attribute.alias == "effort"
-            level_est_val = ev.send("string_data_#{level}")
-            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                                           pbs_project_element_id: current_component.id,
-                                                                           guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
-            tmp_prbl << level_est_val[current_component.id]
+            ev.send("string_data_#{level}")[current_component.id] = effort
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
-          ev.update_attribute(:"string_data_#{level}", level_est_val)
+
+          guw = Guw::Guw.new(effort, params["complexity_#{level}"], current_project)
+
+          if am.pe_attribute.alias == "delay"
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "cost"
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "defects"
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          end
+
+          ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
         end
-        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
-          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+
+        if ev.in_out == "output"
+          begin
+            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+          rescue
+            #on ne gere pas les dates
+          end
         end
+
       end
     end
 

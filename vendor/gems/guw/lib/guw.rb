@@ -38,14 +38,27 @@ require 'guw/version'
 require 'guw/engine'
 module Guw
   class Guw
-    attr_accessor :effort
+    attr_accessor :effort, :project, :delay, :defects, :cost
 
-    def initialize(elem)
-      @effort = elem['effort']
+    def initialize(effort, cplx, project)
+      @effort = effort
+      @project = project
     end
 
-    def get_effort(*args)
+    def get_effort(pbs_project_element_id, module_project_id)
       Guw::GuwUnitOfWork.where(:module_project_id => args[1], pbs_project_element_id: args[2]).map(:effort).compact.sum
+    end
+
+    def get_defects(effort, pbs_project_element_id, module_project_id)
+      @defects = effort*0.08
+    end
+
+    def get_delay(effort, pbs_project_element_id, module_project_id)
+      @delay = (2.5 * (effort**0.32 )).to_f
+    end
+
+    def get_cost(effort, pbs_project_element_id, module_project_id)
+      @cost = effort * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
     end
   end
 end
