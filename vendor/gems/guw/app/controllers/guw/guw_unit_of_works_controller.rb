@@ -99,9 +99,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           @guw_attribute_complexities.each do |guw_ac|
             unless low.nil?
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-                if low.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
-                  if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-                    @lows << guw_ac.value
+                if low.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                  unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                    if low.between?(guw_ac.bottom_range, guw_ac.top_range)
+                      @lows << guw_ac.value
+                    end
                   end
                 else
                   hb = true
@@ -110,9 +112,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
 
             unless most_likely.nil?
-              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
-                if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
-                  @mls << guw_ac.value
+              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                  if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
+                    @mls << guw_ac.value
+                  end
                 end
               else
                 hb = true
@@ -120,9 +124,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
 
             unless high.nil?
-              if high.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
-                if high.between?(guw_ac.bottom_range, guw_ac.top_range)
-                  @highs << guw_ac.value
+              if high.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                  if high.between?(guw_ac.bottom_range, guw_ac.top_range)
+                    @highs << guw_ac.value
+                  end
                 end
               else
                 hb = true
