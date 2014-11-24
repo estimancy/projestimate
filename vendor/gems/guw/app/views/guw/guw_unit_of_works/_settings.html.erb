@@ -40,10 +40,9 @@
                       </td>
                       <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle" class="span1">
                         Unit of work's type
-                        <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), prompt: "Select an unit of of work type" %>
-                        <hr>
+                        <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), prompt: "Select an unit of of work type", required: true %>
                         Work unit
-                        <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit" %>
+                        <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit", required: true %>
                       </td>
                     </tr>
 
@@ -95,11 +94,15 @@
           <% end %>
           <div class="actions">
             <%= link_to I18n.t('add_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini" %>
-            <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini" %>
-            <%= submit_tag I18n.t('save'), class: "btn btn-mini" %>
           </div>
         </div >
       </div>
     </div>
   <% end %>
+
+    <div class="actions">
+      <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini" %>
+      <%= submit_tag I18n.t('save'), class: "btn btn-mini" %>
+    </div>
+
 <% end %>
