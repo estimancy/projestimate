@@ -1399,6 +1399,11 @@ public
 
     selected_wbs_activity_elt = WbsActivityElement.find(params[:wbs_activity_element])
 
+    # Delete all other wbs_project_elements when the wbs_project_element is valide
+    #wbs_project_elements_to_delete = @project.wbs_project_elements.where('id != ?', @wbs_project_elements_root.id)
+    #@project.wbs_project_elements.where('is_root != ?', true).destroy_all
+    @project.wbs_project_elements.where(:is_root => [nil, false]).destroy_all
+
     wbs_project_element = WbsProjectElement.new(:pe_wbs_project_id => @pe_wbs_project_activity.id, :wbs_activity_element_id => selected_wbs_activity_elt.id,
                                                 :wbs_activity_id => selected_wbs_activity_elt.wbs_activity_id, :name => selected_wbs_activity_elt.name,
                                                 :description => selected_wbs_activity_elt.description, :ancestry => @wbs_project_elements_root.id,
@@ -1538,7 +1543,6 @@ public
     end
 
     #==========================
-
 
   end
 
