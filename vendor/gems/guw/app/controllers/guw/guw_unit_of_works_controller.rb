@@ -99,9 +99,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           @guw_attribute_complexities.each do |guw_ac|
             unless low.nil?
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-                if low.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
-                  if low.between?(guw_ac.bottom_range, guw_ac.top_range)
-                    @lows << guw_ac.value
+                if low.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                  unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                    if low.between?(guw_ac.bottom_range, guw_ac.top_range)
+                      @lows << guw_ac.value
+                    end
                   end
                 else
                   hb = true
@@ -110,9 +112,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
 
             unless most_likely.nil?
-              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
-                if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
-                  @mls << guw_ac.value
+              if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                  if most_likely.between?(guw_ac.bottom_range, guw_ac.top_range)
+                    @mls << guw_ac.value
+                  end
                 end
               else
                 hb = true
@@ -120,9 +124,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
 
             unless high.nil?
-              if high.between?(@guw_attribute_complexities.map(&:bottom_range).min.to_i, @guw_attribute_complexities.map(&:top_range).max.to_i)
-                if high.between?(guw_ac.bottom_range, guw_ac.top_range)
-                  @highs << guw_ac.value
+              if high.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
+                  if high.between?(guw_ac.bottom_range, guw_ac.top_range)
+                    @highs << guw_ac.value
+                  end
                 end
               else
                 hb = true
@@ -137,48 +143,50 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-      guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
+      unless params[:work_unit]["#{guw_unit_of_work.id}"].blank?
+        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
 
-      guw_unit_of_work.result_low = @lows.sum * guw_work_unit.value.to_f
-      guw_unit_of_work.result_most_likely = @mls.sum * guw_work_unit.value
-      guw_unit_of_work.result_high = @highs.sum * guw_work_unit.value
+        guw_unit_of_work.result_low = @lows.sum * guw_work_unit.value.to_f
+        guw_unit_of_work.result_most_likely = @mls.sum * guw_work_unit.value
+        guw_unit_of_work.result_high = @highs.sum * guw_work_unit.value
 
-      guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
-      guw_unit_of_work.save
+        guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+        guw_unit_of_work.save
 
-      @guw_type.guw_complexities.each do |guw_c|
+        @guw_type.guw_complexities.each do |guw_c|
 
-        #Save if uo is simple/ml/high
-        value_pert = (guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely + guw_unit_of_work.result_high)/6
-        if value_pert.between?(guw_c.bottom_range, guw_c.top_range)
-          guw_unit_of_work.guw_complexity_id = guw_c.id
-          guw_unit_of_work.save
+          #Save if uo is simple/ml/high
+          value_pert = (guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely + guw_unit_of_work.result_high)/6
+          if value_pert.between?(guw_c.bottom_range, guw_c.top_range)
+            guw_unit_of_work.guw_complexity_id = guw_c.id
+            guw_unit_of_work.save
+          end
+
+          #Save effective effort (or weight) of uo
+          if guw_unit_of_work.result_low.between?(guw_c.bottom_range, guw_c.top_range)
+            uo_weight_low = guw_c.weight
+          end
+
+          if guw_unit_of_work.result_most_likely.between?(guw_c.bottom_range, guw_c.top_range)
+            uo_weight_ml = guw_c.weight
+          end
+
+          if guw_unit_of_work.result_high.between?(guw_c.bottom_range, guw_c.top_range)
+            uo_weight_high = guw_c.weight
+          end
+
+          @weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
         end
 
-        #Save effective effort (or weight) of uo
-        if guw_unit_of_work.result_low.between?(guw_c.bottom_range, guw_c.top_range)
-          uo_weight_low = guw_c.weight
-        end
-
-        if guw_unit_of_work.result_most_likely.between?(guw_c.bottom_range, guw_c.top_range)
-          uo_weight_ml = guw_c.weight
-        end
-
-        if guw_unit_of_work.result_high.between?(guw_c.bottom_range, guw_c.top_range)
-          uo_weight_high = guw_c.weight
-        end
-
-        @weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
-      end
-
-      guw_unit_of_work.effort = @weight_pert.sum
-      guw_unit_of_work.ajusted_effort = @weight_pert.sum
-
-
-      if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+        guw_unit_of_work.effort = @weight_pert.sum
         guw_unit_of_work.ajusted_effort = @weight_pert.sum
-      elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
-        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
+
+
+        if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+          guw_unit_of_work.ajusted_effort = @weight_pert.sum
+        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
+        end
       end
 
       guw_unit_of_work.save
@@ -193,18 +201,40 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
+
+          effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                            pbs_project_element_id: current_component.id,
+                                            guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
+
           if am.pe_attribute.alias == "effort"
-            level_est_val = ev.send("string_data_#{level}")
-            level_est_val[current_component.id] = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                                           pbs_project_element_id: current_component.id,
-                                                                           guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
-            tmp_prbl << level_est_val[current_component.id]
+            ev.send("string_data_#{level}")[current_component.id] = effort
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
-          ev.update_attribute(:"string_data_#{level}", level_est_val)
+
+          guw = Guw::Guw.new(effort, params["complexity_#{level}"], current_project)
+
+          if am.pe_attribute.alias == "delay"
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "cost"
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "defects"
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          end
+
+          ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
         end
-        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
-          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+
+        if ev.in_out == "output"
+          begin
+            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+          rescue
+            #on ne gere pas les dates
+          end
         end
+
       end
     end
 

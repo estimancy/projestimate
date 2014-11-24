@@ -281,7 +281,7 @@ public
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
     #defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
-    defined_wbs_activities = @project.organization.wbs_activities.where('record_status_id = ?', @defined_status.id).all
+    defined_wbs_activities = @project.organization.wbs_activities#.where('record_status_id = ?', @defined_status.id).all
     @wbs_activities = defined_wbs_activities #.reject { |i| @project.included_wbs_activities.include?(i.id) }
     @wbs_activity_elements = []
     @wbs_activities.each do |wbs_activity|
@@ -904,6 +904,8 @@ public
       @estimation_probable_results = @estimation_values.send('string_data_probable')
       @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
     end
+
+    redirect_to "/dashboard"
 
     #flash.now[:notice] = "Finish to execute estimation"
     #respond_to do |format|
