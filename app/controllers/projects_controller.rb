@@ -905,6 +905,8 @@ public
       @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
     end
 
+    redirect_to "/dashboard"
+
     #flash.now[:notice] = "Finish to execute estimation"
     #respond_to do |format|
     #  format.js { render :partial => 'pbs_project_elements/refresh'}
