@@ -1,141 +1,108 @@
 <% @module_positions.times do |j| %>    <!-- @module_positions is the Max Y position of last module -->
     <% position_y = j+1 %>
-
+    <!--Get the number of views to show -->
+    <% module_projects_to_show = current_project.module_projects.where('position_y = ? AND show_results_view = ?', position_y, true).order(:position_x) %>
+    <% nb_module_projects_to_show = current_project.module_projects.where('position_y = ? AND show_results_view = ?', position_y, true).length %>
+    <% if @nb_module_projects_to_show == 0
+         @nb_module_projects_to_show = 1
+    end %>
     <div class="row-fluid"> <!-- div for Y position -->
       <!-- Iteration for each module in position_y -->
-      <% @module_positions_x.times do |i| %>
-          <% position_x = i+1 %>
-          <% span_size =  12/@module_positions_x %>
+      <% module_projects_to_show.each do |module_project| %>
+          <% position_x = module_project.position_x %>
+          <% span_size =  12/nb_module_projects_to_show %>
 
           <div class='<%= "span#{span_size}" %>'> <!-- div for X position -->
-            <!-- Get the ModuleProject in position (position_x, position_y)  -->
-            <% module_project = current_project.module_projects.find_by_position_x_and_position_y(position_x, position_y)  %>
-
-            <% if module_project.nil? || !module_project.show_results_view %>
-                <div class="widget-box collapsible none-module">  <!-- One widget-box when there is no module_project at that position -->
-                </div>
-            <% else %>
-                <div class="widget-box collapsible">  <!-- One widget-box by module -->
-                  <div class="widget-title" style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
-                    <div class="view_header_data">
-                      <h5 class="view_title"><%= "#{module_project}" %></h5>
-                      <div class="pull-right">
-                        <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
-                        <%#= link_to "", "#", id: "update_view_widgets_order", class: "icon icon-save", title: I18n.t(:label_update_view_widgets_order), remote: true %>
-                      </div>
-                    </div>
+            <div class="widget-box collapsible">  <!-- One widget-box by module -->
+              <div class="widget-title" style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
+                <div class="view_header_data">
+                  <h5 class="view_title"><%= "#{module_project}" %></h5>
+                  <div class="pull-right">
+                    <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
+                    <%#= link_to "", "#", id: "update_view_widgets_order", class: "icon icon-save", title: I18n.t(:label_update_view_widgets_order), remote: true %>
                   </div>
-                  <div class="widget-content" class="<%= "module_project_widget_#{module_project.id}" %>">
-                    <div id="<%="view_widgets_container_#{module_project.id}"%>" class="row-fluid">
-                      <!-- Show all widgets on the current view -->
-                      <% if module_project.view %>
-                          <% module_project.view.views_widgets.order('position').each do |view_widget| %>
-                            <% view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
+                </div>
+              </div>
+              <div class="widget-content" class="<%= "module_project_widget_#{module_project.id}" %>">
+                <div id="<%="view_widgets_container_#{module_project.id}"%>" class="row-fluid">
+                  <!-- Show all widgets on the current view -->
+                  <% if module_project.view %>
+                      <% module_project.view.views_widgets.order('position').each do |view_widget| %>
+                        <% view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
 
-                            <% value_to_show = view_widget_data[:value_to_show] %>
-                            <% view_widget_height = view_widget_data[:height] ; view_widget_width = view_widget_data[:width] %>
-                            <% view_widget_font_size = view_widget_data[:icon_font_size] %>
-                            <% view_widget_text_size = view_widget_data[:text_size]  %>
-                            <% view_widget_min_max_size = view_widget_data[:min_max_size] %>
-                            <% min_without_min_max = '12px' ; one_height = ""
-                               min_with_min_max = '9px'
-                               max_without_min_max = '60px'
-                               max_with_min_max = '50px'
-                               ft_minMax_minFontSize = '12px'
-                               ft_minMax_maxFontSize = '15px'
-                               if view_widget.widget_type == "text"
-                                 if view_widget.height.to_i <= 1
-                                    max_with_min_max = '30px'
-                                    max_without_min_max = '30px'
-                                    ft_minMax_minFontSize = '6px'
-                                    ft_minMax_maxFontSize = '10px'
-                                    if view_widget.width.to_i <= 1
-                                      ft_minMax_minFontSize = '4.5px'
-                                      ft_minMax_maxFontSize = '10px'
-                                    end
-                                 end
-                               end
-                            %>
+                        <% value_to_show = view_widget_data[:value_to_show] %>
+                        <% view_widget_height = view_widget_data[:height] ; view_widget_width = view_widget_data[:width] %>
+                        <% view_widget_font_size = view_widget_data[:icon_font_size] %>
+                        <% view_widget_text_size = view_widget_data[:text_size]  %>
+                        <% view_widget_min_max_size = view_widget_data[:min_max_size] %>
+                        <% min_without_min_max = '12px' ; one_height = ""
+                           min_with_min_max = '9px'
+                           max_without_min_max = '60px'
+                           max_with_min_max = '50px'
+                           ft_minMax_minFontSize = '12px'
+                           ft_minMax_maxFontSize = '15px'
+                           if view_widget.widget_type == "text"
+                             if view_widget.height.to_i <= 1
+                                max_with_min_max = '30px'
+                                max_without_min_max = '30px'
+                                ft_minMax_minFontSize = '6px'
+                                ft_minMax_maxFontSize = '10px'
+                                if view_widget.width.to_i <= 1
+                                  ft_minMax_minFontSize = '4.5px'
+                                  ft_minMax_maxFontSize = '10px'
+                                end
+                             end
+                           end
+                        %>
 
-                            <!--<div class="span3 text-center view_widget" data-view_widget_id="<%#= view_widget.id %>" style="<%#= add_top_and_left %>  margin-left: 0px; margin-right:5px;  background-color: <%#= view_widget.color %>; min-height: <%#= 3 * 50%>px; min-width: 120px; padding-top: <%#= 2 * 2%>em; margin-bottom: 10px;">-->
-                            <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 text-center view_widget" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; height: <%=view_widget_height%>px; width: <%=view_widget_width%>px; max-width: 100%">
-                              <div class="row-fluid">
-                                <div class="span6">
-                                  <% unless view_widget.icon_class.empty? %>
-                                      <div class="fa <%= view_widget.icon_class %> icon_size" title="<%= view_widget.name %>" style="font-size: <%=view_widget_font_size%>em"></div>
-                                  <% end %>
-                                </div>
-                                <div id="show_view_widget_params_<%= view_widget.id %>" class="span6 widget_icon_edit">
-                                    <%= link_to(' ', view_widget, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash icon_smaller', :title => I18n.t('delete')) %>
-                                    <%= link_to '', edit_views_widget_path(view_widget, module_project_id: module_project.id, view_id: module_project.view_id), class: 'icon-pencil icon_smaller', title: I18n.t(:edit_widget, :value => view_widget.name), remote: true %>
-                                </div>
-                              </div>
-
-                              <div class="row-fluid widget_values">
-                                <% if view_widget.show_min_max %>
-                                    <% one_height = "one_height" %>
-                                    <div class="row-fluid">
-                                      <!--<div class="span12">-->
-                                        <div class="widget_text with_min_max" style="font-size: <%=view_widget_text_size%>em; margin-bottom: 8%;">
-                                          <%= value_to_show %>
-                                        </div>
-
-                                        <div>
-                                          <span class="min_max one_height" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:max_value_text] %></span><br>
-                                          <span class="min_max one_height" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:min_value_text] %></span>
-                                        </div>
-
-                                      <!--</div>-->
-                                      <!--<div class="span4" style="font-size: <%#=view_widget_min_max_size%>em">-->
-                                        <!--<p class="min_max"><%#= view_widget_data[:max_value_text] %></p>-->
-                                        <!--<p class="min_max"><%#= view_widget_data[:min_value_text] %></p>-->
-                                      <!--</div>-->
-                                    </div>
-                                <% else %>
-                                    <div class="widget_text without_min_max" style="font-size: <%=view_widget_text_size%>em" >
-                                      <%= value_to_show %>
-                                    </div>
-                                <% end %>
-                                <!--script-->
-                              </div>
-                              <!--script-->
-                              <script type="text/javascript">
-                                $("#fittext1").fitText();
-                                $(".without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%= max_without_min_max %>' });
-                                $(".with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%= max_with_min_max %>' });
-                                $(".min_max").fitText(0.4, { minFontSize: '12px', maxFontSize: '15px' });
-
-                                $(".min_max").fitText(1, { minFontSize: '<%= ft_minMax_minFontSize %>', maxFontSize: '<%= ft_minMax_maxFontSize %>' });
-
-                                  //$(".one_height").fitText(0.4, { minFontSize: '6px', maxFontSize: '6px' });
-
-                                  //$('.min_max').css('fontSize', '14px');
-
-                                    // $(".min_max").fitText(0.4, { maxFontSize: '<%#= ft_minMax_maxFontSize %>' });
-
-                                  //$(".without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%#=max_without_min_max %>' });
-                                  //$(".with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%#=max_with_min_max %>' });
-                                  // $(".min_max").fitText(1, { minFontSize: ft_minMax_minFontSize, maxFontSize: '15px' });
-
-                                  //$(".min_max").fitText(1, { minFontSize: '6px', maxFontSize: '15px' });
-
-                                  //                                $(".without_min_max").fitText(0.6, { minFontSize: '12px', maxFontSize: '<%#=view_widget_data[:ft_maxFontSize_without_mm]%>px' });
-                                  //                                $(".with_min_max").fitText(0.6, { minFontSize: '9px', maxFontSize: '<%#=view_widget_data[:ft_maxFontSize_with_mm]%>px' });
-                                  //                                $(".min_max").fitText(1, { minFontSize: '6px', maxFontSize: '15px' });
-
-                                  //                              $(".without_min_max").fitText(0.6, { minFontSize: '12px', maxFontSize: '75px' });
-                                  //                              $(".with_min_max").fitText(0.6, { minFontSize: '9px', maxFontSize: '60px' });
-                                  //                              $(".min_max").fitText(1, { minFontSize: '<%#=view_widget_data[:ft_minMax_minFontSize] %>px', maxFontSize: '<%#=view_widget_data[:ft_minMax_maxFontSize]%>px' });
-                              </script>
+                        <!--<div class="span3 text-center view_widget" data-view_widget_id="<%#= view_widget.id %>" style="<%#= add_top_and_left %>  margin-left: 0px; margin-right:5px;  background-color: <%#= view_widget.color %>; min-height: <%#= 3 * 50%>px; min-width: 120px; padding-top: <%#= 2 * 2%>em; margin-bottom: 10px;">-->
+                        <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 text-center view_widget" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; height: <%=view_widget_height%>px; width: <%=view_widget_width%>px; max-width: 100%">
+                          <div class="row-fluid">
+                            <div class="span6">
+                              <% unless view_widget.icon_class.empty? %>
+                                  <div class="fa <%= view_widget.icon_class %> icon_size" title="<%= view_widget.name %>" style="font-size: <%=view_widget_font_size%>em"></div>
+                              <% end %>
                             </div>
+                            <div id="show_view_widget_params_<%= view_widget.id %>" class="span6 widget_icon_edit">
+                                <%= link_to(' ', view_widget, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash icon_smaller', :title => I18n.t('delete')) %>
+                                <%= link_to '', edit_views_widget_path(view_widget, module_project_id: module_project.id, view_id: module_project.view_id), class: 'icon-pencil icon_smaller', title: I18n.t(:edit_widget, :value => view_widget.name), remote: true %>
+                            </div>
+                          </div>
 
-                          <% end %>
-                        <!--</ul>-->
+                          <div class="row-fluid widget_values">
+                            <% if view_widget.show_min_max %>
+                                <% one_height = "one_height" %>
+                                <div class="row-fluid">
+                                  <div class="widget_text with_min_max" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
+                                    <%= value_to_show %>
+                                  </div>
+                                  <div>
+                                    <span class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:max_value_text] %></span><br>
+                                    <span class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:min_value_text] %></span>
+                                  </div>
+                                </div>
+                            <% else %>
+                                <div class="widget_text without_min_max" style="font-size: <%=view_widget_text_size%>em" >
+                                  <%= value_to_show %>
+                                </div>
+                            <% end %>
+                            <!--script-->
+                          </div>
+                          <!--script-->
+                          <script type="text/javascript">
+                            $("#fittext1").fitText();
+                            $(".without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%= max_without_min_max %>' });
+                            $(".with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%= max_with_min_max %>' });
+                            //$(".min_max").fitText(0.4, { minFontSize: '12px', maxFontSize: '15px' });
+                            $(".min_max").fitText(1, { minFontSize: '<%= ft_minMax_minFontSize %>', maxFontSize: '<%= ft_minMax_maxFontSize %>' });
+                          </script>
+                        </div>
                       <% end %>
-                    </div>
-                  </div>  <!-- end widget content -->
-                </div>  <!-- END widget-box by module -->
-            <% end %>
+                    <!--</ul>-->
+                  <% end %>
+                </div>
+              </div>  <!-- end widget content -->
+            </div>  <!-- END widget-box by module -->
           </div>   <!-- END div for each X position -->
       <% end %>    <!-- Iteration for X position -->
     </div>  <!-- END div for Y position -->
