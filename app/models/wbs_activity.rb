@@ -38,7 +38,6 @@ class WbsActivity < ActiveRecord::Base
   attr_accessible :name, :description, :state, :record_status_id, :custom_value, :change_comment, :organization_id, :parent_id
 
   include AASM
-  include MasterDataHelper
 
   aasm :column => :state do # defaults to aasm_state
     state :draft, :initial => true
@@ -55,8 +54,8 @@ class WbsActivity < ActiveRecord::Base
   has_many :pe_wbs_projects
   has_many :pbs_project_elements
 
-  belongs_to :record_status
-  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
+  #belongs_to :record_status
+  #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   validates :organization_id, :presence => true
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}

@@ -123,17 +123,17 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
   end
 
   def notes_form
-    ic = InputCocomo.where( factor_id: params[:factor_id],
-                            pbs_project_element_id: current_component.id,
-                            project_id: current_project.id,
-                            module_project_id: current_module_project.id).first
+    ic = InputCocomo.where(factor_id: params[:factor_id],
+                           pbs_project_element_id: current_component.id,
+                           project_id: current_project.id,
+                           module_project_id: current_module_project.id).first
 
     if ic.nil?
-      InputCocomo.create( factor_id: params[:factor_id],
-                          pbs_project_element_id: current_component.id,
-                          project_id: current_project.id,
-                          module_project_id: current_module_project.id,
-                          notes: params[:notes])
+      InputCocomo.create(factor_id: params[:factor_id],
+                         pbs_project_element_id: current_component.id,
+                         project_id: current_project.id,
+                         module_project_id: current_module_project.id,
+                         notes: params[:notes])
     else
       ic.notes = params[:notes]
       ic.save

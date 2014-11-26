@@ -36,12 +36,12 @@
 
 class WbsActivityElementsController < ApplicationController
   include PeWbsHelper
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
-  helper_method :wbs_record_statuses_collection
-  helper_method :selected_record_status
+  #helper_method :wbs_record_statuses_collection
+  #helper_method :selected_record_status
 
-  before_filter :get_record_statuses
+  #before_filter :get_record_statuses
 
   def new
     authorize! :edit_wbs_activities, WbsActivity
@@ -72,14 +72,14 @@ class WbsActivityElementsController < ApplicationController
     end
 
     @selected_parent = @wbs_activity_element.parent
-    @selected_record_status = RecordStatus.where('id = ? ', @wbs_activity_element.record_status_id).first
+    #@selected_record_status = RecordStatus.where('id = ? ', @wbs_activity_element.record_status_id).first
 
-    unless is_master_instance?
-      if @wbs_activity_element.is_defined?
-        flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
-        redirect_to edit_wbs_activity_path(@wbs_activity_element.wbs_activity, :anchor => 'tabs-2') and return
-      end
-    end
+    #unless is_master_instance?
+    #  if @wbs_activity_element.is_defined?
+    #    flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
+    #    redirect_to edit_wbs_activity_path(@wbs_activity_element.wbs_activity, :anchor => 'tabs-2') and return
+      #end
+    #end
   end
 
   def create
@@ -93,15 +93,15 @@ class WbsActivityElementsController < ApplicationController
     @potential_parents = @wbs_activity.wbs_activity_elements
 
     #If we are on local instance, Status is set to "Local"
-    if @wbs_activity_element.is_root
-      if is_master_instance?   #so not on master
-        @wbs_activity_element.record_status = @proposed_status
-      else
-        @wbs_activity_element.record_status = @local_status
-      end
-    else
-      @wbs_activity_element.record_status = @wbs_activity_element.parent.record_status
-    end
+    #if @wbs_activity_element.is_root
+    #  if is_master_instance?   #so not on master
+    #    @wbs_activity_element.record_status = @proposed_status
+    #  else
+    #    @wbs_activity_element.record_status = @local_status
+    #  end
+    #else
+    #  @wbs_activity_element.record_status = @wbs_activity_element.parent.record_status
+    #end
 
     if @wbs_activity_element.save
       @wbs_activity.wbs_activity_ratios.each do |wbs_activity_ratio|
@@ -114,7 +114,7 @@ class WbsActivityElementsController < ApplicationController
       redirect_to edit_wbs_activity_path(@wbs_activity, :anchor => 'tabs-2'), notice: "#{I18n.t (:notice_wbs_activity_element_successful_created)}"
     else
       selected = WbsActivityElement.find(params[:wbs_activity_element][:parent_id]) #@selected = @wbs_activity_element.parent
-      @selected_record_status = RecordStatus.where('id = ? ', selected.record_status_id).first
+      #@selected_record_status = RecordStatus.where('id = ? ', selected.record_status_id).first
       render action: 'new'
     end
   end
@@ -127,13 +127,13 @@ class WbsActivityElementsController < ApplicationController
     @wbs_activity ||= WbsActivity.find_by_id(params[:wbs_activity_element][:wbs_activity_id])
     @potential_parents = @wbs_activity.wbs_activity_elements if @wbs_activity
     @selected_parent = @wbs_activity_element.parent
-    @selected_record_status = RecordStatus.where('id = ? ', @wbs_activity_element.record_status_id).first
+    #@selected_record_status = RecordStatus.where('id = ? ', @wbs_activity_element.record_status_id).first
 
-    unless is_master_instance?
-      if @wbs_activity_element.is_local_record?
-        @wbs_activity_element.custom_value = 'Locally edited'
-      end
-    end
+    #unless is_master_instance?
+    #  if @wbs_activity_element.is_local_record?
+    #    @wbs_activity_element.custom_value = 'Locally edited'
+    #  end
+    #end
 
     if params[:wbs_activity_element][:wbs_activity_id]
       @wbs_activity = WbsActivity.find(params[:wbs_activity_element][:wbs_activity_id])
@@ -151,20 +151,20 @@ class WbsActivityElementsController < ApplicationController
 
     @wbs_activity_element = WbsActivityElement.find(params[:id])
 
-    if is_master_instance?
-      if @wbs_activity_element.is_defined? || @wbs_activity_element.is_custom?
-        #logical deletion  delete don't have to suppress records anymore on Defined record
-        @wbs_activity_element.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-      else
+    #if is_master_instance?
+    #  if @wbs_activity_element.is_defined? || @wbs_activity_element.is_custom?
+    #    #logical deletion  delete don't have to suppress records anymore on Defined record
+    #    @wbs_activity_element.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
+    #  else
         @wbs_activity_element.destroy
-      end
-    else
-      if @wbs_activity_element.is_local_record? || @wbs_activity_element.is_retired?
-        @wbs_activity_element.destroy
-      else
-        flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
-      end
-    end
+    #  end
+    #else
+    #  if @wbs_activity_element.is_local_record? || @wbs_activity_element.is_retired?
+    #    @wbs_activity_element.destroy
+    #  else
+    #    flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
+    #  end
+    #end
 
     redirect_to edit_wbs_activity_path(@wbs_activity_element.wbs_activity, :anchor => 'tabs-2')
   end

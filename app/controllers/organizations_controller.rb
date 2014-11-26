@@ -59,6 +59,8 @@ class OrganizationsController < ApplicationController
 
     @complexities = @organization.organization_uow_complexities
 
+    @wbs_activities = @organization.wbs_activities
+
     @technologies = @organization.organization_technologies
     @size_units = SizeUnit.all
     @size_unit_types = @organization.size_unit_types

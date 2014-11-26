@@ -2,23 +2,79 @@
   <ul>
     <li><a href="#tabs-organization"><%= I18n.t(:organizations) %> </a></li>
     <% if action_name.in?(%w(edit update)) %>
-        <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
-        <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
-        <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
-        <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
-        <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
-        <!--<li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_of_work_complexity) %> </a></li>-->
-        <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
-        <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
-        <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
-        <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
-        <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
-        <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
-        <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
-        <li><a href="#GuwModel"> Modèle d'unité d'oeuvres génériques </a></li>
-        <li><a href="#tabs-views-widgets"><%= I18n.t(:views_widgets) %></a></li>
+      <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
+      <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
+      <li><a href="#wbs-activities"><%= I18n.t(:wbs_activities) %></a></li>
+      <li><a href="#tabs-views-widgets"><%= I18n.t(:views_widgets) %></a></li>
+      <li><a href="#GuwModel"> Modèle d'unité d'oeuvres génériques </a></li>
+      <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
+      <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
+      <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
+      <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
+      <!--<li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_of_work_complexity) %> </a></li>-->
+      <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
+      <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
+      <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
+      <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
+      <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
+      <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
   <% end %>
   </ul>
+
+  <div id="wbs-activities">
+
+    <h4><%= I18n.t :wbs_activities %></h4>
+
+    <table class="table table-bordered">
+        <tr>
+          <th><%= I18n.t(:name) %></th>
+          <th><%= I18n.t(:description) %></th>
+          <th><%= I18n.t(:organizations) %></th>
+          <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
+        </tr>
+
+        <% @wbs_activities.each do |wbs_activity| %>
+          <tr>
+            <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1')) %></td>
+            <td><%= wbs_activity.description %></td>
+            <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
+            <td class="center">
+              <%= link_to '', edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
+              <% if can? :create_wbs_activities, WbsActivity %>
+                <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+
+      <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <%= form_tag import_wbs_activities_path, :multipart => true, :class => 'simple_form' do %>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel"><%= I18n.t(:import) %> WBS Activity</h3>
+          </div>
+          <div class="modal-body">
+            <label><%= I18n.t(:file_csv) %></label>
+            <%= file_field_tag :file %>
+
+            <label><%= I18n.t(:separator) %>'<%= I18n.t(:general_csv_separator) %>') </label>
+            <%= text_field_tag :separator %>
+
+            <label><%= I18n.t(:encoding) %></label>
+            <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+          </div>
+          <div class="loading span11 hide">
+            <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %> </h4>
+          </div>
+        <% end %>
+      </div>
+
+  </div>
 
   <div id="tabs-organization">
     <%= simple_form_for(@organization) do |f| %>
