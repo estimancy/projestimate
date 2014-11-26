@@ -31,7 +31,7 @@ module ViewsWidgetsHelper
     estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget.pe_attribute_id, "output").last
     widget_data = {}
     data_probable = ""; min_value = ""; max_value = ""; value_to_show = ""
-    width = 60;  height = 60
+    initial_width = 60;  initial_height = 60
     value_to_show = nil # according to the widget type
     data_low = nil; data_most_likely=nil; data_high=nil; data_probable=nil
 
@@ -52,8 +52,8 @@ module ViewsWidgetsHelper
     icon_font_size = 2
 
     # The widget size with : margin-right = 10px
-    height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
-    width = (width*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
+    height = (initial_height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
+    width = (initial_width*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
 
     case view_widget.height.to_i
       when 1..2
@@ -78,7 +78,6 @@ module ViewsWidgetsHelper
         ft_maxFontSize_with_mm = 30
         ft_minMax_maxFontSize = 12
       else
-        height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
         icon_font_size = ((height+width)/2) * 0.025
         if icon_font_size > 6 && icon_font_size < 8
           icon_font_size = 6
