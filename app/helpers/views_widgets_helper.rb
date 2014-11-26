@@ -80,6 +80,11 @@ module ViewsWidgetsHelper
       else
         height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
         icon_font_size = ((height+width)/2) * 0.025
+        if icon_font_size > 6 && icon_font_size < 8
+          icon_font_size = 6
+        elsif icon_font_size > 8
+          icon_font_size = 8
+        end
     end
 
     text_size = ((height+width)/2) * 0.015

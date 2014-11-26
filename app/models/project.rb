@@ -133,26 +133,6 @@ class Project < ActiveRecord::Base
     end
   end
 
-  def update_project_status_comment
-    # Get the project status before updating the value
-    #last_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
-    last_estimation_status_id = estimation_status_id_was
-    last_estimation_status_name = last_estimation_status_id.nil? ? "" : EstimationStatus.find(last_estimation_status_id).name
-
-    # Get changes on the project estimation_status_id after the update (to be compra with the last one)
-    new_estimation_status_name = self.estimation_status_id.nil? ? "" : self.estimation_status.name
-    if new_estimation_status_name !=  last_estimation_status_name
-      current_comments = status_comment
-      if current_comments.nil? || current_comments.blank?
-        current_comments = "______________________________________________________________________\r\n \r\n"
-      end
-      ###new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: ApplicationController.current_user.name)}  \r\n"
-      new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: "")}  \r\n"
-      self.status_comment = current_comments.prepend(new_comments)
-    end
-    yield
-  end
-
   amoeba do
     enable
     include_field [:pe_wbs_projects, :module_projects, :groups, :users, :project_securities]

@@ -927,8 +927,7 @@ h5.view_title{
 
 .icon_size, .fa.icon_size{
     float: left;
-    /*font-size: x-large;*/
-    /*font-size: 12px; font-size: 1.2rem;*/
+    margin: 5px 0 5px 5px; /* top right bottom left */
 }
 
 .icon_smaller{
