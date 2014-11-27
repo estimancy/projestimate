@@ -106,7 +106,6 @@ class ProjectsController < ApplicationController
     set_page_title 'Dashboard'
 
     @user = current_user
-    @project = Project.find(params[:project_id])
     @pemodules ||= Pemodule.all
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @module_project = current_module_project

@@ -267,10 +267,12 @@ class ApplicationController < ActionController::Base
       session[:project_id] = params[:project_id]
       @project = Project.find(params[:project_id])
     elsif session[:project_id].blank?
-      @project = current_user.projects.first
-      session[:project_id] = @project.first.id
-    else
-      @project = Project.find(session[:project_id])
+      if user_signed_in?
+        @project = current_user.organizations.map(&:projects).flatten.first
+        session[:project_id] = @project.id
+      else
+        @project = nil
+      end
     end
 
       #if prj.nil?
@@ -286,13 +288,13 @@ class ApplicationController < ActionController::Base
 
   # Get the selected Pbs_Project_Element
   def current_component
-    #return if current_project.nil?
-    #
-    #begin
-      PbsProjectElement.find(session[:pbs_project_element_id])
-    #rescue
-    #  @component = current_project.root_component
-    #end
+    if @project
+      begin
+        PbsProjectElement.find(session[:pbs_project_element_id])
+      rescue
+        @component = @project.root_component
+      end
+    end
   end
 
   def current_wbs_project_element

@@ -322,5 +322,5 @@ Projestimate::Application.routes.draw do
   post 'update_selected_attribute_organizations' => 'attribute_organizations#update_selected_attribute_organizations'
   post 'save_cocomo_basic' => 'cocomo_basics#save_cocomo_basic', :as => 'EstimationControllers/save_cocomo_basic'
 
-  root :to => 'users#show'
+  root :to => 'projects#index'
 end
