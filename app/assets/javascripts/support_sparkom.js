@@ -57,14 +57,13 @@ function onSpkError(errMessage) {
     $('#errordiv').html(errMessage);
 }
 
-$(document).ready(function() {
-    //REAL CODE:
-    var multiWidget = new SpkMultiWidget(29508);
-    multiWidget.onWidgets(onWidgets);
-    multiWidget.onError(onSpkError);
-    multiWidget.start();
-
-});
+//$(document).ready(function() {
+//    //REAL CODE:
+//    var multiWidget = new SpkMultiWidget(29508);
+//    multiWidget.onWidgets(onWidgets);
+//    multiWidget.onError(onSpkError);
+//    multiWidget.start();
+//});
 
 // May use different displays
 function widgetLaunchUrl(widgetId) {
