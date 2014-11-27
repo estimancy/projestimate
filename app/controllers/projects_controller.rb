@@ -48,7 +48,6 @@ class ProjectsController < ApplicationController
 
   before_filter :load_data, :only => [:update, :edit, :new, :create, :show]
   before_filter :get_record_statuses
-  around_filter :update_project_status_comment, only: [:update, :destroy, :commit]    # Update the status_comment attribute after
 
 
   # This function is only use to show the WBS-Activity tree view
@@ -101,33 +100,6 @@ private
     @project_security_levels = ProjectSecurityLevel.all
     @module_project = ModuleProject.find_by_project_id(@project.id)
   end
-
-
-  def update_project_status_comment
-
-    if params[:id] && !params[:id].nil?
-
-      @project = Project.find(params[:id]) if params[:id]
-
-      # Get the project status before updating the value
-      last_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
-
-      yield
-
-      # Get changes on the project estimation_status_id after the update (to be compra with the last one)
-      new_estimation_status_name = @project.estimation_status_id.nil? ? "" : @project.estimation_status.name
-      if new_estimation_status_name !=  last_estimation_status_name
-        current_comments = @project.status_comment
-        if current_comments.nil? || current_comments.blank?
-          current_comments = "______________________________________________________________________\r\n \r\n"
-        end
-        new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
-        new_status_comment_value = current_comments.prepend(new_comments)
-        @project.update_attribute(:status_comment, new_status_comment_value)
-      end
-    end
-  end
-
 
 public
 
@@ -392,6 +364,12 @@ public
 
       #Get the project Organization before update
       project_organization = @project.organization
+
+      # Before saving project, update the project comment when the status has changed
+      new_status_id = params[:project][:estimation_status_id].to_i
+      if @project.estimation_status_id != new_status_id
+        @project.status_comment = auto_update_status_comment(params[:id], new_status_id)
+      end
 
       if @project.update_attributes(params[:project])
         begin
@@ -1401,6 +1379,11 @@ public
 
     selected_wbs_activity_elt = WbsActivityElement.find(params[:wbs_activity_element])
 
+    # Delete all other wbs_project_elements when the wbs_project_element is valide
+    #wbs_project_elements_to_delete = @project.wbs_project_elements.where('id != ?', @wbs_project_elements_root.id)
+    #@project.wbs_project_elements.where('is_root != ?', true).destroy_all
+    @project.wbs_project_elements.where(:is_root => [nil, false]).destroy_all
+
     wbs_project_element = WbsProjectElement.new(:pe_wbs_project_id => @pe_wbs_project_activity.id, :wbs_activity_element_id => selected_wbs_activity_elt.id,
                                                 :wbs_activity_id => selected_wbs_activity_elt.wbs_activity_id, :name => selected_wbs_activity_elt.name,
                                                 :description => selected_wbs_activity_elt.description, :ancestry => @wbs_project_elements_root.id,
@@ -1540,7 +1523,6 @@ public
     end
 
     #==========================
-
 
   end
 
@@ -2313,7 +2295,8 @@ public
     current_comments = ""
     # Add and update comments on estimation status change
     current_comments = @project.status_comment.nil? ? "" : @project.status_comment
-    @project.status_comment =  show_status_change_comments(params["project"]["status_comment"], current_comments.to_s.length)
+    # Add and update comments on estimation status change
+    @project.status_comment =  show_status_change_comments(params["project"]["status_comment"])
 
     if @project.save
       flash[:notice] = I18n.t(:notice_comment_status_successfully_updated)
@@ -2325,16 +2308,33 @@ public
   end
 
   # Display comments about estimation status changes
-  def show_status_change_comments(comments, current_note_length)
+  def show_status_change_comments(comments, current_note_length = 0)
+    current_comments = ""
     user_infos = ""
-    if current_note_length == 0
-      user_infos = "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n \r\n"
-      user_infos << "______________________________________________________________________\r\n \r\n"
-    else
-      user_infos = "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name}. \r\n"
-    end
-    comments.prepend(user_infos)
+    current_comments = @project.status_comment.nil? ? "" : @project.status_comment
+    appended_text = comments.sub(current_comments, '')
+
+    user_infos << "#{current_comments} \r\n"
+    user_infos << "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n"
+    user_infos << "#{appended_text} \r\n"
+    user_infos << "____________________________________________________________________\r\n"
   end
 
+  # Automatically update the project's comment when estimation_status has changed
+  def auto_update_status_comment(project_id, new_status_id)
+    project = Project.find(project_id)
+    if project
+      # Get the project status before updating the value
+      last_estimation_status_name = project.estimation_status_id.nil? ? "" : project.estimation_status.name
+      # Get changes on the project estimation_status_id after the update (to be compra with the last one)
+      new_estimation_status_name = new_status_id.nil? ? "" : EstimationStatus.find(new_status_id).name
+
+      current_comments = project.status_comment.to_s
+      new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
+      new_comments << "______________________________________________________________________\r\n \r\n"
+
+      current_comments << new_comments
+    end
+  end
 
 end

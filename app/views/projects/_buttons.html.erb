@@ -1,0 +1,36 @@
+<% if @project %>
+  <div class="buttons">
+    <% if can? :execute_estimation_plan, @project %>
+      <% if current_module_project %>
+        <% unless current_component.folder? %>
+          <% if current_module_project.pemodule.alias == "uow" %>
+
+            <%= link_to 'Configure', load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true %>
+            <%= submit_tag 'Actualiser', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true %>
+
+          <% elsif current_module_project.pemodule.alias == "guw" %>
+
+            <%= link_to 'Edit configuration', edit_organization_path(@project.organization), :class => 'btn btn-mini' %>
+            <%= submit_tag('Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true) if can_modify_estimation?(@project) %>
+
+          <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
+
+            <%= link_to 'Configure', load_setting_module_path(current_module_project.id.to_s), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true %>
+            <%= submit_tag('Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true) if can_modify_estimation?(@project) %>
+
+          <% elsif current_module_project.pemodule.alias == "cocomo_advanced" %>
+
+            <%= link_to 'Configure', load_setting_module_path(current_module_project.id.to_s), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true %>
+            <%= submit_tag('Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true) if can_modify_estimation?(@project) %>
+
+          <% elsif current_module_project.pemodule.alias == "real_size" %>
+            <%= link_to 'Configure', "/inputs?mp=#{current_module_project.id.to_s}", :class => 'btn btn-mini', :id => 'run_estimation' %>
+            <%= submit_tag('Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true) if can_modify_estimation?(@project) %>
+          <% else %>
+            <%= submit_tag('Run estimation', :class => 'btn btn-mini', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation', :remote => true) if can_modify_estimation?(@project) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
