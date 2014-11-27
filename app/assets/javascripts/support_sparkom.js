@@ -14,9 +14,9 @@ function onWidgets(widgets) {
         hline += widgetLaunchUrl(wi.widgetId);
         hline += '">';
         if(wi.available) {
-            hline += '<span class="glyphicon glyphicon-user" aria-hidden="true" style="color:green;"></span> ';
+            hline += '<span class="fa fa-user" aria-hidden="true" style="color:green;"></span> ';
         } else {
-            hline += '<span class="glyphicon glyphicon-user" aria-hidden="true" style="color:red;"></span> ';
+            hline += '<span class="fa fa-user" aria-hidden="true" style="color:red;"></span> ';
         }
         hline += wi.displayName;
         hline += ' </a>';
@@ -26,7 +26,7 @@ function onWidgets(widgets) {
         hline += '#';
         hline += '"> ';
         hline += 'Voir les conseillers ';
-        hline += '<span class="glyphicon glyphicon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
+        hline += '<span class="icon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
         hline += '</a>';
         /*
          hline += '<ul class="dropdown-menu">';
