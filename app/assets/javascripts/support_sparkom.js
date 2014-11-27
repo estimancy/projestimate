@@ -10,24 +10,29 @@ function onWidgets(widgets) {
     for(var i=0; i < widgets.length; i++) {
         var wi = widgets[i];
         var hline = '<li role="presentation">';
-        hline += '<a style="color:#206A7C;" role="menuitem" tabindex="-1" href="';
+        hline += '<a style="color:#206A7C;" role="menuitem" tabindex="-1" onclick="';
         hline += widgetLaunchUrl(wi.widgetId);
         hline += '">';
         if(wi.available) {
-            hline += '<span class="glyphicon glyphicon-user" aria-hidden="true" style="color:green;"></span> ';
+            hline += '<span class="fa fa-user" aria-hidden="true" style="color:green;"></span> ';
         } else {
-            hline += '<span class="glyphicon glyphicon-user" aria-hidden="true" style="color:red;"></span> ';
+            hline += '<span class="fa fa-user" aria-hidden="true" style="color:red;"></span> ';
         }
         hline += wi.displayName;
         hline += ' </a>';
 
+        var wmUrl = "https://www.spark-angels.com/rss3/custom/generic/wmembers.jsp?wid=" + wi.widgetId;
+        var wmembersUrl = "javascript:void(window.open('";
+        wmembersUrl += wmUrl;
+        wmembersUrl += "','', 'resizable=yes,location=no,menubar=no,scrollbars=yes,status=no, toolbar=no,fullscreen=no,dependent=no,width=300,height=400'))";
         hline += '<li class="dropdown-submenu">';
         hline += '<a role="menuitem" class="dropdown-toggle" style="text-align:right;font-size:80%;color:#6396A3;" tabindex="-1" href="';
-        hline += '#';
+        hline += wmembersUrl;
         hline += '"> ';
         hline += 'Voir les conseillers ';
         hline += '<span class="glyphicon glyphicon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
         hline += '</a>';
+
         /*
          hline += '<ul class="dropdown-menu">';
          for(var j=0; j < wi.members.length; j++) {
@@ -51,6 +56,14 @@ function onWidgets(widgets) {
 function onSpkError(errMessage) {
     $('#errordiv').html(errMessage);
 }
+
+//$(document).ready(function() {
+//    //REAL CODE:
+//    var multiWidget = new SpkMultiWidget(29508);
+//    multiWidget.onWidgets(onWidgets);
+//    multiWidget.onError(onSpkError);
+//    multiWidget.start();
+//});
 
 // May use different displays
 function widgetLaunchUrl(widgetId) {

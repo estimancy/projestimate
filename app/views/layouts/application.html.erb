@@ -31,6 +31,11 @@
         <div class="pull-left">
           <%= link_to(image_tag("/assets/Logo 200x75.png"), projects_path) %>
         </div>
+        <!--Support with Sparkom-->
+        <div class="pull-right" style="margin-top:16px; margin-left: 10px">
+          <%= render 'layouts/sparkom_support' %>
+        </div>
+
         <div class="pull-right" style="margin-top:16px; margin-left: 10px">
           <% if defined?(current_user)  %>
             <%= render 'layouts/send_feedback', :handlers => [:erb], :formats => [:html] %>
@@ -38,10 +43,6 @@
         </div>
         <div style="margin-top:16px" class="pull-right">
           <%= render 'layouts/search_input' %>
-        </div>
-        <!--Support with Sparkom-->
-        <div>
-          <%= render 'layouts/sparkom_support' %>
         </div>
       </div>
     </div>
