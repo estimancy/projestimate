@@ -161,10 +161,6 @@ class PbsProjectElementsController < ApplicationController
     @project = Project.find(params[:project_id])
     @is_project_view = params[:is_project_show_view]
 
-    if @project.nil?
-      @project = current_project
-    end
-
     @module_projects = @project.module_projects
     @pbs_project_element = current_component
 

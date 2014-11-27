@@ -71,9 +71,8 @@ class ProjectsController < ApplicationController
   end
 
 
-#protected
-private
-
+  #protected
+  private
   def load_data
     #No authorize required since this method protected and is used to load data and shared by the other one.
     if params[:id]
@@ -101,7 +100,112 @@ private
     @module_project = ModuleProject.find_by_project_id(@project.id)
   end
 
-public
+  public
+
+  def dashboard
+    set_page_title 'Dashboard'
+
+    @user = current_user
+    @project = Project.find(params[:project_id])
+    @pemodules ||= Pemodule.all
+    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
+    @module_project = current_module_project
+    @show_hidden = 'true'
+
+    set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
+
+    # Get the project default RATIO
+    # Get the wbs_project_element which contain the wbs_activity_ratio
+    project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first
+    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
+    @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
+
+    @project_organization = @project.organization
+    @module_projects = @project.module_projects
+    #Get the initialization module_project
+    @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
+
+    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+
+    if @module_project.pemodule.alias == "guw"
+      if current_module_project.guw_model.nil?
+        #@guw_model = @project.organization.guw_models.first
+        @guw_model = GuwModel::GuwModel.first
+      else
+        @guw_model = current_module_project.guw_model
+      end
+
+      @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
+                                                    pbs_project_element_id: current_component,
+                                                    guw_model_id: @guw_model)
+    elsif @module_project.pemodule.alias == "uow"
+      @pbs = current_component
+
+      @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+      if @uow_inputs.empty?
+        @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: 0)
+        @input.save(validate: false)
+        @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+      end
+
+      @organization_technologies = @project.organization.organization_technologies.map{|i| [i.name, i.id]}
+      @unit_of_works = @project.organization.unit_of_works.map{|i| [i.name, i.id]}
+      @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
+
+      @module_project.pemodule.attribute_modules.each do |am|
+        if am.pe_attribute.alias ==  "effort"
+          @size = EstimationValue.where(:module_project_id => @module_project.id,
+                                        :pe_attribute_id => am.pe_attribute.id,
+                                        :in_out => "input" ).first
+
+          @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+        end
+      end
+
+    elsif @module_project.pemodule.alias == "cocomo_advanced"
+
+      @aprod = Array.new
+      aliass = %w(rely data cplx ruse docu)
+      aliass.each do |a|
+        @aprod << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @aplat = Array.new
+      aliass = %w(time stor pvol)
+      aliass.each do |a|
+        @aplat << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @apers = Array.new
+      aliass = %w(acap aexp ltex pcap pexp pcon)
+      aliass.each do |a|
+        @apers << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @aproj = Array.new
+      aliass = %w(tool site sced)
+      aliass.each do |a|
+        @aproj << Factor.where(alias: a, factor_type: "advanced").first
+      end
+    else
+      set_breadcrumbs "Dashboard" => "/dashboard", "Cocomo Expert" => ""
+
+      @sf = []
+      @em = []
+
+      aliass = %w(pers rcpx ruse pdif prex fcil sced)
+      aliass.each do |a|
+        @em << Factor.where(alias: a).first
+      end
+
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        @sf << Factor.where(alias: a).first
+      end
+    end
+  end
 
   def index
     #No authorize required since everyone can access the list (permission will be managed project per project)
@@ -509,7 +613,6 @@ public
           if ((can? :delete_project, @project) || (can? :manage, @project)) && (@project.is_childless? && !@project.rejected? && !@project.released? && !@project.checkpoint?)
             @project.destroy
             current_user.delete_recent_project(@project.id)
-            session[:current_project_id] = current_user.projects.first
             flash[:notice] = I18n.t(:notice_project_successful_deleted, :value => 'Project')
             if !params[:from_tree_history_view].blank? && params['current_showed_project_id'] != params[:id]
               redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
@@ -639,9 +742,8 @@ public
   def update_project_security_level
     #TODO check if No authorize is required
     set_page_title 'Project securities'
-    @project = Project.find(params[:project_id])
     @user = User.find(params[:user_id].to_i)
-    @prj_scrt = ProjectSecurity.find_by_user_id_and_project_id(@user.id, current_project.id)
+    @prj_scrt = ProjectSecurity.find_by_user_id_and_project_id(@user.id, @project.id)
     @prj_scrt.update_attribute('project_security_level_id', params[:project_security_level])
 
     respond_to do |format|
@@ -653,9 +755,8 @@ public
   def update_project_security_level_group
     #TODO check if No authorize is required
     set_page_title 'Project securities'
-    @project = Project.find(params[:project_id])
     @group = Group.find(params[:group_id].to_i)
-    @prj_scrt = ProjectSecurity.find_by_group_id_and_project_id(@group.id, current_project.id)
+    @prj_scrt = ProjectSecurity.find_by_group_id_and_project_id(@group.id, @project.id)
     @prj_scrt.update_attribute('project_security_level_id', params[:project_security_level])
 
     respond_to do |format|
@@ -764,7 +865,7 @@ public
 
   #Run estimation process
   def run_estimation(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
-    @project = current_project
+    #@project = current_project
     authorize! :execute_estimation_plan, @project
 
     @my_results = Hash.new
@@ -883,7 +984,7 @@ public
       @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
     end
 
-    redirect_to "/dashboard"
+    redirect_to dashboard_path(@project)
 
     #flash.now[:notice] = "Finish to execute estimation"
     #respond_to do |format|
@@ -895,7 +996,7 @@ public
   # Function that save current module_project estimation result in DB
   #Save output values: only for current pbs_project_element
   def save_estimation_results(start_module_project, input_attributes, output_data)
-    @project = current_project
+    #@project = current_project
     authorize! :alter_estimation_plan, @project
 
     @pbs_project_element = current_component
@@ -1111,7 +1212,6 @@ private
 
   #This method set result in DB with the :value key for node estimation value
   def set_element_value_with_activities(estimation_result, module_project)
-    @project = current_project
     authorize! :alter_estimation_plan, @project
 
     result_with_consistency = Hash.new
@@ -1141,7 +1241,7 @@ private
 
   # After estimation, need to know if node value are consistent or not for WBS-Completion modules
   def set_wbs_completion_node_consistency(estimation_result, wbs_project_element)
-    @project = current_project
+    #@project = current_project
     authorize! :alter_wbsproducts, @project
 
     consistency = true
@@ -1308,23 +1408,23 @@ public
   end
 
 
-  def activate
-    project = Project.find(params[:project_id])
-    authorize! :show_project, project
-
-    if !can_show_estimation?(project)
-      redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
-    end
-
-    session[:current_project_id] = params[:project_id]
-    session[:pbs_project_element_id] = project.root_component
-
-    if params[:from_tree_history_view]
-     redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
-    else
-      redirect_to '/dashboard', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
-    end
-  end
+  #def activate
+  #  project = Project.find(params[:project_id])
+  #  authorize! :show_project, project
+  #
+  #  if !can_show_estimation?(project)
+  #    redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+  #  end
+  #
+  #  session[:current_project_id] = params[:project_id]
+  #  session[:pbs_project_element_id] = project.root_component
+  #
+  #  if params[:from_tree_history_view]
+  #   redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
+  #  else
+  #    redirect_to '/dashboard', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
+  #  end
+  #end
 
 
   def find_use_project
@@ -1524,16 +1624,6 @@ public
 
     #==========================
 
-  end
-
-
-  def choose_project
-    u = current_user
-    project = Project.find(params[:project_id])
-    authorize! :edit_project, project
-
-    session[:current_project_id] = params[:project_id]
-    redirect_to edit_project_path(params[:project_id])
   end
 
   def locked_plan
@@ -1882,7 +1972,6 @@ public
 
   # Display the estimation results with activities by profile
   def results_with_activities_by_profile
-    @project = current_project
     authorize! :alter_estimation_plan, @project
 
     @current_component = current_component

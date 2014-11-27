@@ -48,19 +48,19 @@ class Guw::GuwWorkUnitsController < ApplicationController
   def create
     @guw_work_unit = Guw::GuwWorkUnit.new(params[:guw_work_unit])
     @guw_work_unit.save
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def update
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     @guw_work_unit.update_attributes(params[:guw_work_unit])
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def destroy
     guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     guw_model_id = @guw_work_unit.guw_model.id
     @guw_work_unit.delete
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 end

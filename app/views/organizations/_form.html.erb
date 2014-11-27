@@ -2,21 +2,22 @@
   <ul>
     <li><a href="#tabs-organization"><%= I18n.t(:organizations) %> </a></li>
     <% if action_name.in?(%w(edit update)) %>
-        <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
-        <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
-        <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
-        <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
-        <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
-        <!--<li><a href="#tabs-cplx-uow"><%= I18n.t(:unit_of_work_complexity) %> </a></li>-->
-        <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
-        <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
-        <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
-        <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
-        <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
-        <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
-        <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
-        <li><a href="#GuwModel"> Modèle d'unité d'oeuvres génériques </a></li>
-  <% end %>
+      <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
+      <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
+      <li><a href="#wbs-activities"><%= I18n.t(:wbs_activities) %></a></li>
+      <li><a href="#GuwModel"> Modèle d'unité d'oeuvres génériques </a></li>
+      <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
+      <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
+      <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
+      <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
+      <!--<li><a href="#tabs-cplx-uow"><%# I18n.t(:unit_of_work_complexity) %> </a></li>-->
+      <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
+      <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
+      <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
+      <li><a href="#tabs-abacus-sut"><%= I18n.t(:technology_size_abacus) %></a></li>
+      <li><a href="#tabs-sub"><%= I18n.t(:organization_subcontractor) %> </a></li>
+      <li><a href="#tabs-cplx-factor"><%= I18n.t(:factor_complexity) %> </a></li>
+    <% end %>
   </ul>
 
   <div id="wbs-activities">

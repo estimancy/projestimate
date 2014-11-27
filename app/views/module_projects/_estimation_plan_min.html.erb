@@ -1,4 +1,4 @@
-<% module_projects = current_project.module_projects %>
+<% module_projects = @project.module_projects %>
 <% @alphabet = %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) %>
 
 <% unless module_projects.empty? %>
@@ -11,7 +11,7 @@
         <tr>
           <% for x in 1..@module_positions_x.to_i do %>
             <td>
-              <% pmod = current_project.module_projects.where("position_x = ? AND position_y = ?", x, y).first %>
+              <% pmod = @project.module_projects.where("position_x = ? AND position_y = ?", x, y).first %>
 
               <% unless current_module_project.nil? or pmod.nil? %>
                 <% (current_module_project.id == pmod.id) ? select_pemodule = 'selected_module_project' : 'unselected_module_project' %>

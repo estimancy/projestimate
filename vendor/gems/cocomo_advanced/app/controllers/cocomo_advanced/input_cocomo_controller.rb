@@ -55,13 +55,13 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
 
       old_cocomos = InputCocomo.where(factor_id: factor[0].to_i,
                                       pbs_project_element_id: current_component.id,
-                                      project_id: current_project.id,
+                                      project_id: @project.id,
                                       module_project_id: current_module_project.id).delete_all
 
       InputCocomo.create(factor_id: factor[0].to_i,
                          organization_uow_complexity_id: cmplx.id,
                          pbs_project_element_id: current_component.id,
-                         project_id: current_project.id,
+                         project_id: @project.id,
                          module_project_id: current_module_project.id,
                          coefficient: cmplx.value)
 
@@ -73,7 +73,7 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
 
-          ca = CocomoAdvanced::CocomoAdvanced.new(params["size_#{level}"], params["complexity_#{level}"], current_project)
+          ca = CocomoAdvanced::CocomoAdvanced.new(params["size_#{level}"], params["complexity_#{level}"], @project)
 
           if am.pe_attribute.alias == "effort"
             ev.send("string_data_#{level}")[current_component.id] = ca.get_effort(current_component, current_module_project)
@@ -101,7 +101,7 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
       end
     end
 
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def help
@@ -113,7 +113,7 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
     @factor = Factor.find(params[:factor_id])
     ic = InputCocomo.where( factor_id: params[:factor_id],
                             pbs_project_element_id: current_component.id,
-                            project_id: current_project.id,
+                            project_id: @project.id,
                             module_project_id: current_module_project.id).first
     if ic.nil?
       @notes = ""
@@ -125,13 +125,13 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
   def notes_form
     ic = InputCocomo.where(factor_id: params[:factor_id],
                            pbs_project_element_id: current_component.id,
-                           project_id: current_project.id,
+                           project_id: @project.id,
                            module_project_id: current_module_project.id).first
 
     if ic.nil?
       InputCocomo.create(factor_id: params[:factor_id],
                          pbs_project_element_id: current_component.id,
-                         project_id: current_project.id,
+                         project_id: @project.id,
                          module_project_id: current_module_project.id,
                          notes: params[:notes])
     else
@@ -139,7 +139,7 @@ class CocomoAdvanced::InputCocomoController < ApplicationController
       ic.save
     end
 
-    redirect_to "/cocomo_advanced"
+    redirect_to main_app.dashboard_path(@project)
   end
 
 end

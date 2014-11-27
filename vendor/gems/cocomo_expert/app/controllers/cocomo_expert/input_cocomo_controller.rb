@@ -44,13 +44,13 @@ class CocomoExpert::InputCocomoController < ApplicationController
 
       old_cocomos = InputCocomo.where(factor_id: factor[0].to_i,
                                       pbs_project_element_id: current_component.id,
-                                      project_id: current_project.id,
+                                      project_id: @project.id,
                                       module_project_id: current_module_project.id).delete_all
 
       InputCocomo.create(factor_id: factor[0].to_i,
                          organization_uow_complexity_id: cmplx.id,
                          pbs_project_element_id: current_component.id,
-                         project_id: current_project.id,
+                         project_id: @project.id,
                          module_project_id: current_module_project.id,
                          coefficient: cmplx.value)
 
@@ -62,7 +62,7 @@ class CocomoExpert::InputCocomoController < ApplicationController
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
 
-          ca = CocomoExpert::CocomoExpert.new(params["size_#{level}"], params["complexity_#{level}"], current_project)
+          ca = CocomoExpert::CocomoExpert.new(params["size_#{level}"], params["complexity_#{level}"], @project)
 
           if am.pe_attribute.alias == "effort"
             ev.send("string_data_#{level}")[current_component.id] = ca.get_effort(current_component, current_module_project)
@@ -85,17 +85,13 @@ class CocomoExpert::InputCocomoController < ApplicationController
           ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
         end
 
-        if ev.in_out == "output"
-          begin
-            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-          rescue
-            #on ne gere pas les dates
-          end
+        if ev.in_out == "output" && am.pe_attribute.alias != "end_date"
+          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
       end
     end
 
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def help
@@ -106,7 +102,7 @@ class CocomoExpert::InputCocomoController < ApplicationController
     @factor = Factor.find(params[:factor_id])
     ic = InputCocomo.where( factor_id: params[:factor_id],
                             pbs_project_element_id: current_component.id,
-                            project_id: current_project.id,
+                            project_id: @project.id,
                             module_project_id: current_module_project.id).first
     if ic.nil?
       @notes = ""
@@ -118,13 +114,13 @@ class CocomoExpert::InputCocomoController < ApplicationController
   def notes_form
     ic = InputCocomo.where( factor_id: params[:factor_id],
                             pbs_project_element_id: current_component.id,
-                            project_id: current_project.id,
+                            project_id: @project.id,
                             module_project_id: current_module_project.id).first
 
     if ic.nil?
       InputCocomo.create( factor_id: params[:factor_id],
                           pbs_project_element_id: current_component.id,
-                          project_id: current_project.id,
+                          project_id: @project.id,
                           module_project_id: current_module_project.id,
                           notes: params[:notes])
     else
@@ -132,6 +128,6 @@ class CocomoExpert::InputCocomoController < ApplicationController
       ic.save
     end
 
-    redirect_to "/cocomo_expert"
+    redirect_to main_app.dashboard_path(@project)
   end
 end

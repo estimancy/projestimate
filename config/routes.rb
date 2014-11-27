@@ -260,6 +260,8 @@ Projestimate::Application.routes.draw do
   resources :pe_wbs_projects
 
   resources :projects
+  match 'dashboard/:project_id/' => 'projects#dashboard', :as => 'dashboard'
+
   get 'append_pemodule' => 'projects#append_pemodule'
   get 'select_categories' => 'projects#select_categories', :as => 'select_categories'
   post 'run_estimation' => 'projects#run_estimation', :as => 'run_estimation'

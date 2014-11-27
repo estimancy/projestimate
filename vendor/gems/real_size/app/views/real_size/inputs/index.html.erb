@@ -1,4 +1,4 @@
-<h4><%= current_project.title %> - <%= current_component %></h4>
+<h4><%= @project.title %> - <%= current_component %></h4>
 
 <div class="tabs">
   <ul>
@@ -28,7 +28,7 @@
                                            module_project_id: current_module_project.id,
                                            size_unit_id: su.id,
                                            size_unit_type_id: sut.id,
-                                           project_id: current_project.id).first %>
+                                           project_id: @project.id).first %>
             <tr>
               <td class="span2"><%= sut.name %></td>
               <td class="center span1"><%= text_field_tag "value_low[#{su.id}][#{sut.id}]", i.nil? ? '' : i.value_low %></td>
@@ -44,19 +44,19 @@
                 <%= RealSize::Input.where( pbs_project_element_id: current_component.id,
                                            module_project_id: current_module_project.id,
                                            size_unit_id: su.id,
-                                           project_id: current_project.id).map(&:value_low).sum %>
+                                           project_id: @project.id).map(&:value_low).sum %>
               </td>
               <td class="center span1">
                 <%= RealSize::Input.where( pbs_project_element_id: current_component.id,
                                            module_project_id: current_module_project.id,
                                            size_unit_id: su.id,
-                                           project_id: current_project.id).map(&:value_most_likely).sum %>
+                                           project_id: @project.id).map(&:value_most_likely).sum %>
               </td>
               <td class="center span1">
                 <%= RealSize::Input.where( pbs_project_element_id: current_component.id,
                                            module_project_id: current_module_project.id,
                                            size_unit_id: su.id,
-                                           project_id: current_project.id).map(&:value_high).sum %>
+                                           project_id: @project.id).map(&:value_high).sum %>
               </td>
             </tr>
           </table>

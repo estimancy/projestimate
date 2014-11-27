@@ -80,7 +80,7 @@
             </td>
             <td class="span1 center">
 
-              <%= select_tag "size_unit_type[#{i+1}]", options_for_select(current_project.organization.size_unit_types.map{|i| [i.name, i.id]}, selected: input.size_unit_type_id) %>
+              <%= select_tag "size_unit_type[#{i+1}]", options_for_select(@project.organization.size_unit_types.map{|i| [i.name, i.id]}, selected: input.size_unit_type_id) %>
             </td>
             <td class="span1 center">
               <%= text_field_tag "size_low[#{i+1}]", input.size_low, :class => "size_low compressed" %>
@@ -152,7 +152,7 @@
       <h3 id="myModalLabel"><%= I18n.t :how_to_use_uow %></h3>
     </div>
     <div class="modal-body">
-      <% current_project.organization.unit_of_works.each do |uow| %>
+      <% @project.organization.unit_of_works.each do |uow| %>
         <h4><%= uow.name %></h4>
 
         <p>

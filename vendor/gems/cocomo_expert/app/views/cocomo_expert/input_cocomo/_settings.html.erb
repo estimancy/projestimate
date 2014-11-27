@@ -45,11 +45,11 @@
         </tr>
 
         <% @sf.compact.each do |factor| %>
-          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: @project.id).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: @project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
               <%= link_to "", cocomo_expert.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
               <%= link_to "", cocomo_expert.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>
@@ -66,11 +66,11 @@
         </tr>
 
         <% @em.compact.each do |factor| %>
-          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: current_project.id).first %>
+          <% selected = InputCocomo.where(factor_id: factor.id, pbs_project_element_id: current_component.id, project_id: @project.id).first %>
           <tr>
             <td><%= factor.name %></td>
             <td><%= factor.description %></td>
-            <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: current_project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
+            <td colspan="3"><%= select_tag "factors[#{factor.id}]", options_for_select(factor.organization_uow_complexities.where(organization_id: @project.organization.id).map{|i| [i.name, i.id]}, selected: selected.nil? ? '' : selected.organization_uow_complexity_id) %></td>
             <td>
               <%= link_to "", cocomo_expert.help_path(factor.id), remote: true, class: "icon icon-list-alt" %> |
               <%= link_to "", cocomo_expert.add_note_to_factor_path(factor.id), remote: true, class: "icon icon-edit" %>

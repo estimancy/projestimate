@@ -17,13 +17,13 @@
         </a>
       </li>
 
-      <% if current_project %>
-        <% if can? :write_access_to_inreview_project, current_project %>
+      <% if @project %>
+        <% if can? :write_access_to_inreview_project, @project %>
           <li class="dropdown">
-            <a href="<%= main_app.edit_project_path(current_project, :anchor => 'tabs-1') %>">
+            <a href="<%= main_app.edit_project_path(@project, :anchor => 'tabs-1') %>">
               <!--<i class="icon-edit icon-large pull-left"></i>-->
               <%= I18n.t('edit') %>
-              <%= current_project.title %>
+              <%= @project.title %>
             </a>
           </li>
         <% end %>
@@ -61,11 +61,11 @@
         <!--<i class="icon-globe icon-large pull-left"></i>-->
         <%= I18n.t(:organization_setting) %></a>
       </li>
-      <% if current_project %>
-        <% if !current_project.organization.nil? %>
+      <% if @project %>
+        <% if !@project.organization.nil? %>
           <li class="dropdown">
-            <a href="<%= main_app.edit_organization_path(current_project.organization)%>">
-              <%= current_project.organization %>
+            <a href="<%= main_app.edit_organization_path(@project.organization)%>">
+              <%= @project.organization %>
             </a>
           </li>
         <% end %>
@@ -220,7 +220,7 @@
 
   <li>
     <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
-      <%= current_user %> > <%= current_project.nil? ? "" : current_project.title %>
+      <%= current_user %> > <%= @project.nil? ? "" : @project.title %>
     </a>
   </li>
 
