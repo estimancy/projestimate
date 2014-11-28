@@ -2,6 +2,7 @@
   <ul>
     <li><a href="#tabs-organization"><%= I18n.t(:organizations) %> </a></li>
     <% if action_name.in?(%w(edit update)) %>
+      <li><a href="#tabs-estimations"><%= I18n.t(:estimate) %></a></li>
       <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
       <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
       <li><a href="#wbs-activities"><%= I18n.t(:wbs_activities) %></a></li>
@@ -10,7 +11,6 @@
       <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
       <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
       <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
-      <!--<li><a href="#tabs-cplx-uow"><%# I18n.t(:unit_of_work_complexity) %> </a></li>-->
       <li><a href="#tabs-synthesis-uow-techno"><%= I18n.t(:technology_uow_synthesis) %></a></li>
       <li><a href="#tabs-sut"><%= I18n.t(:size_unit_type) %></a></li>
       <li><a href="#tabs-abacus-tsu"><%= I18n.t(:technology_size_type_abacus) %></a></li>
@@ -20,58 +20,173 @@
     <% end %>
   </ul>
 
-  <div id="wbs-activities">
+  <div id="tabs-estimations">
 
-    <h4><%= I18n.t :wbs_activities %></h4>
+    <b><%= I18n.t :estimate %></b>
+
+    <table border="0" width="100%">
+      <tr>
+        <td>
+          <%= I18n.t(:label_filter_on_projects_version) %>
+          <%= select_tag 'filter_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1),1], [I18n.t(:label_filter_on_project_version_2),2], [I18n.t(:label_filter_on_project_version_3),3], [I18n.t(:label_filter_on_project_version_4),4]], :selected => 1), :include_blank => false %>
+        </td>
+
+        <td colspan=2 style="text-align:right;">
+          <% if can? :create_project_from_template, Project %>
+            <%= link_to I18n.t('new_project_from'), projects_from_path, :class => 'btn' %>
+          <% end %>
+
+          <% if can? :create_project_from_scratch, Project %>
+            <%= link_to I18n.t('new_project'), new_project_path, :class => 'btn' %>
+          <% end %>
+        </td>
+      </tr>
+    </table>
+
+    <br>
+
+    <div id="projects">
+      <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+        <thead>
+        <tr>
+          <th><%= I18n.t(:label_project_name) %></th>
+          <th><%= I18n.t(:label_project_version) %></th>
+          <th><%= I18n.t(:label_product_name) %></th>
+          <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
+          <th class="filter-select"><%= I18n.t(:organizations) %></th>
+          <th class="filter-select"><%= I18n.t(:creator) %></th>
+          <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
+          <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if @projects.empty? %>
+          <p style="text-align:center;"> <%= I18n.t('empty') %></p>
+        <% else %>
+          <% @projects.each do |project| %>
+            <tr>
+              <td>
+                <% if can_show_estimation?(project) %>
+                  <%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %>
+                <% else %>
+                  <%= project.title %>
+                <% end %>
+              </td>
+              <td class="span2"><%= project.version %></td>
+              <td><%= project.root_component %></td>
+              <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
+              <td class="span3"><%= project.organization %></td>
+              <td class="span2"><%= project.creator.nil? ? 'N/A' : project.creator.to_s %></td>
+              <td><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
+
+              <td class="center">
+                <% if can_modify_estimation?(project) %>
+                  <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
+                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
+                <% end %>
+
+                <% if can_show_estimation?(project) %>
+                  <%= link_to('', dashboard_path(project), :class => 'button_attribute_tooltip icon-star pull-left', :title => I18n.t('button_activate_project')) %>
+                <% end %>
+
+                <%# if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
+                <% if ((can? :write_access_to_inreview_project, project) && (can? :commit_project, project)||(can? :manage, project)) %>
+                  <% if can_modify_estimation?(project) %>
+                    <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
+                  <% end %>
+                <% end %>
+
+                <%# if (project.checkpoint? || project.released?) && ((can? :commit_project, project)||(can? :manage, project)) %>
+                <% if can?(:commit_project, project) || can?(:manage, project) %>
+                  <%= link_to('', {:controller => 'projects', :action => 'checkout', :project_id => project.id}, :class => 'icon-step-forward pull-left button_attribute_tooltip', :title => I18n.t('button_checkout_project'), :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?)) %>
+                <% end %>
+
+                <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'button_attribute_tooltip icon-info pull-left', :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
+                <% if (can? :create_project_from_template, Project) || (can? :manage, project )%>
+                  <%= link_to('', "projects/#{project.id}/duplicate", :class => 'button_attribute_tooltip icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
+                <% end %>
+
+                <% if (can? :delete_project, project) || (can? :manage, project) %>
+                  <% if project.is_childless? && can_delete_estimation?(project) %>   <%# if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
+                    <%= (link_to('', "projects/#{project.id}/confirm_deletion", :class => 'button_attribute_tooltip icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
+                  <% end %>
+                <% end %>
+
+                <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart pull-left', :title => I18n.t('label_project_history')) %>
+
+              </td>
+            </tr>
+          <% end %>
+
+          <%= render :partial => 'layouts/footer_table' %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+
+    <script>
+      <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js]%>
+    </script>
+  </div>
+
+  <div id="wbs-activities">
+    <b><%= I18n.t :wbs_activities %></b>
+
+    <% if can? :create_wbs_activities, WbsActivity %>
+      <a href="#myWBSModal" role="button" class="btn pull-right" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal"><%= I18n.t(:import_wbs_activity) %></a>
+      <%= link_to I18n.t(:new_wbs_activity), new_wbs_activity_path, :class => 'btn pull-right', :title => "#{I18n.t(:guide_create_wbs_activity)}" %>
+    <% end %>
+    <br>
 
     <table class="table table-bordered">
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:description) %></th>
+        <th><%= I18n.t(:organizations) %></th>
+        <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
+      </tr>
+
+      <% @wbs_activities.each do |wbs_activity| %>
         <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th><%= I18n.t(:description) %></th>
-          <th><%= I18n.t(:organizations) %></th>
-          <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
+          <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1')) %></td>
+          <td><%= wbs_activity.description %></td>
+          <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
+          <td class="center">
+            <%= link_to '', edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
+            <% if can? :create_wbs_activities, WbsActivity %>
+              <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
+            <% end %>
+          </td>
         </tr>
+      <% end %>
+    </table>
 
-        <% @wbs_activities.each do |wbs_activity| %>
-          <tr>
-            <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1')) %></td>
-            <td><%= wbs_activity.description %></td>
-            <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
-            <td class="center">
-              <%= link_to '', edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
-              <% if can? :create_wbs_activities, WbsActivity %>
-                <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
+    <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <%= form_tag import_wbs_activities_path, :multipart => true, :class => 'simple_form' do %>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalLabel"><%= I18n.t(:import) %> WBS Activity</h3>
+        </div>
+        <div class="modal-body">
+          <label><%= I18n.t(:file_csv) %></label>
+          <%= file_field_tag :file %>
 
-      <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <%= form_tag import_wbs_activities_path, :multipart => true, :class => 'simple_form' do %>
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel"><%= I18n.t(:import) %> WBS Activity</h3>
-          </div>
-          <div class="modal-body">
-            <label><%= I18n.t(:file_csv) %></label>
-            <%= file_field_tag :file %>
+          <label><%= I18n.t(:separator) %>'<%= I18n.t(:general_csv_separator) %>') </label>
+          <%= text_field_tag :separator %>
 
-            <label><%= I18n.t(:separator) %>'<%= I18n.t(:general_csv_separator) %>') </label>
-            <%= text_field_tag :separator %>
-
-            <label><%= I18n.t(:encoding) %></label>
-            <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
-          </div>
-          <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
-          </div>
-          <div class="loading span11 hide">
-            <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %> </h4>
-          </div>
-        <% end %>
-      </div>
+          <label><%= I18n.t(:encoding) %></label>
+          <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+        </div>
+        <div class="loading span11 hide">
+          <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %> </h4>
+        </div>
+      <% end %>
+    </div>
 
   </div>
 

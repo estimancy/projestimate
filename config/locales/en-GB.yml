@@ -238,7 +238,7 @@ en-gb:
   label_menu_projects: "Projects"
   project: "Project"
   recent_project: "Recent projects"
-  home: "Home"
+  home: "My last estimate"
   all_projects: "All projects"
   create_new_project: "Create a new project"
   label_user_security_resume: "User securities resume"

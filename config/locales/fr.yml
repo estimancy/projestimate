@@ -238,7 +238,7 @@ fr:
   label_menu_projects: "Projets"
   project: "Projet"
   recent_project: "Projets récents"
-  home: "Mon estimation"
+  home: "Ma dernière estimation"
   all_projects: "Toutes les estimations"
   create_new_project: "Nouvelle estimation"
   label_user_security_resume: "Gestion des droits utilisateurs de l'estimation"

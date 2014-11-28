@@ -263,6 +263,7 @@ class ApplicationController < ActionController::Base
   #end
 
   def set_current_project
+
     if params[:project_id].present?
       session[:project_id] = params[:project_id]
       @project = Project.find(params[:project_id])
@@ -273,9 +274,11 @@ class ApplicationController < ActionController::Base
       else
         @project = nil
       end
+    else
+      @project = nil
     end
 
-      #if prj.nil?
+    #if prj.nil?
     #  if current_user.nil?
     #    return nil
     #  else

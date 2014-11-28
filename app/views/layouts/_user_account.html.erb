@@ -11,24 +11,6 @@
     </a>
     <ul class="dropdown-menu">
       <li class="dropdown">
-        <a href="/dashboard">
-        <!--<i class="icon-home icon-large pull-left"></i>-->
-          <%= I18n.t('home') %>
-        </a>
-      </li>
-
-      <% if @project %>
-        <% if can? :write_access_to_inreview_project, @project %>
-          <li class="dropdown">
-            <a href="<%= main_app.edit_project_path(@project, :anchor => 'tabs-1') %>">
-              <!--<i class="icon-edit icon-large pull-left"></i>-->
-              <%= I18n.t('edit') %>
-              <%= @project.title %>
-            </a>
-          </li>
-        <% end %>
-      <% end %>
-      <li class="dropdown">
         <a href="<%= main_app.projects_url %>">
           <!--<i class=" icon-list icon-large pull-left"></i> -->
           <%= I18n.t('all_projects') %>

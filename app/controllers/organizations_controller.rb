@@ -41,6 +41,7 @@ class OrganizationsController < ApplicationController
   require 'roo'
   include Roo
 
+
   def new
     set_page_title 'Organizations'
     @organization = Organization.new
@@ -58,6 +59,7 @@ class OrganizationsController < ApplicationController
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
     @complexities = @organization.organization_uow_complexities
+    @projects = @organization.projects.reject { |i| !i.is_childless? }
 
     @wbs_activities = @organization.wbs_activities
 

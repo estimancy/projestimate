@@ -311,7 +311,7 @@ class ProjectsController < ApplicationController
         #raise ActiveRecord::Rollback
       rescue ActiveRecord::UnknownAttributeError, ActiveRecord::StatementInvalid, ActiveRecord::RecordInvalid => error
         flash[:error] = "#{I18n.t (:error_project_creation_failed)} #{@project.errors.full_messages.to_sentence}"
-        redirect_to projects_url
+        redirect_to edit_organization_path(@project.organization)
       end
     end
   end
@@ -544,7 +544,8 @@ class ProjectsController < ApplicationController
 
         @project.save
 
-        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, projects_path), notice: "#{I18n.t(:notice_project_successful_updated)}"
+        #redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, projects_path), notice: "#{I18n.t(:notice_project_successful_updated)}"
+        redirect_to edit_organization_path(@project.organization)
       else
         @wbs_activity_ratios = WbsActivityRatio.all
         render :action => 'edit'
