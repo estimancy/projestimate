@@ -3,10 +3,11 @@
     <% Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.each do |uowg| %>
       <div class="accordion" id="accordion2">
         <div class="accordion-group">
-          <div class="accordion-heading">
+          <div class="accordion-heading" style="margin-top: 10px; margin-bottom: 10px;">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_<%= uowg.id %>" href="#collapse<%= uowg.id %>">
               <%= uowg %>
             </a>
+            <%= link_to '', guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "fa fa-plus" %>
           </div>
 
           <% if uowg.guw_unit_of_works.empty? %>
@@ -92,9 +93,6 @@
               </div>
             </div>
           <% end %>
-          <div class="actions">
-            <%= link_to I18n.t('add_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini" %>
-          </div>
         </div >
       </div>
     </div>

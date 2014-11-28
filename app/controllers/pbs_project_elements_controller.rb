@@ -158,7 +158,6 @@ class PbsProjectElementsController < ApplicationController
     session[:pbs_project_element_id] = params[:pbs_id]
 
     @user = current_user
-    @project = Project.find(params[:project_id])
     @is_project_view = params[:is_project_show_view]
 
     @module_projects = @project.module_projects
@@ -172,7 +171,7 @@ class PbsProjectElementsController < ApplicationController
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
     @results = nil
-    render :partial => "pbs_project_elements/refresh"
+    redirect_to dashboard_path(@project)
   end
 
 
