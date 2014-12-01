@@ -25,7 +25,7 @@
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <%= link_to I18n.t('back'), edit_organization_path(@wbs_activity.organization.id), :class => 'btn back' %>
+          <%= link_to I18n.t('back'), edit_organization_path(params[:organization_id]), :class => 'btn back' %>
       <% end %>
     </div>
 

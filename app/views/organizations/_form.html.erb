@@ -135,7 +135,7 @@
 
     <% if can? :create_wbs_activities, WbsActivity %>
       <a href="#myWBSModal" role="button" class="btn pull-right" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal"><%= I18n.t(:import_wbs_activity) %></a>
-      <%= link_to I18n.t(:new_wbs_activity), new_wbs_activity_path, :class => 'btn pull-right', :title => "#{I18n.t(:guide_create_wbs_activity)}" %>
+      <%= link_to I18n.t(:new_wbs_activity), new_organization_wbs_activity_path(@organization), :class => 'btn pull-right', :title => "#{I18n.t(:guide_create_wbs_activity)}" %>
     <% end %>
     <br>
 
@@ -153,7 +153,7 @@
           <td><%= wbs_activity.description %></td>
           <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
           <td class="center">
-            <%= link_to '', edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
+            <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
             <% if can? :create_wbs_activities, WbsActivity %>
               <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
             <% end %>

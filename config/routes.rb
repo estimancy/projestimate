@@ -204,6 +204,7 @@ Projestimate::Application.routes.draw do
   resources :currencies
 
   resources :organizations do
+    resources :wbs_activities
     resources :groups
   end
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'

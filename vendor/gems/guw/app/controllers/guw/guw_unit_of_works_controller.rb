@@ -249,4 +249,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
+  def create_notes
+
+  end
+
 end
