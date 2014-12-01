@@ -2,7 +2,7 @@
 <script>
     $(document).ready(function() {
         //REAL CODE:
-        var multiWidget = new SpkMultiWidget(29508);
+        var multiWidget = new SpkMultiWidget(<%= SETTINGS['SPARKOM_SUPPORT_ID'] %>);
         multiWidget.onWidgets(onWidgets);
         multiWidget.onError(onSpkError);
         multiWidget.start();

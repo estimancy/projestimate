@@ -26,12 +26,13 @@ module EffortBreakdown
   class EffortBreakdown
     include PemoduleEstimationMethods
 
-    attr_accessor :pbs_project_element, :module_project, :input_effort #module input/output parameters
+    attr_accessor :pbs_project_element, :module_project, :input_effort, :project #module input/output parameters
 
     def initialize(module_input_data)
       #puts "INPUT_DATA = #{module_input_data}"   for ex. : INPUT_DATA = {:effort=>"10", :pbs_project_element_id=>271, :module_project_id=>265}
       @pbs_project_element = PbsProjectElement.find(module_input_data[:pbs_project_element_id])
       @module_project = ModuleProject.find(module_input_data[:module_project_id])
+      @project = @module_project.project
       module_input_data['effort'].blank? ? @input_effort = nil : @input_effort = module_input_data['effort'].to_f
     end
 
@@ -45,6 +46,23 @@ module EffortBreakdown
       efforts_man_month = nil
       efforts_man_month = get_effort_with_activities_elements
       efforts_man_month
+    end
+
+    # Calculate the Cost for each WBS-Project-Element/Phase
+    def get_cost(*arg)
+      cost = Hash.new
+      # Project pe_wbs_activity
+      pe_wbs_activity = @module_project.project.pe_wbs_projects.activities_wbs.first
+      # Get the wbs_project_element which contain the wbs_activity_ratio
+      project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+      # Get the efforts hash for all Wbs_project_element effort
+      efforts_man_month = get_effort
+
+      efforts_man_month.each do |key, value|
+        cost[key]  = value.to_f * @project.organization.cost_per_hour.to_f
+      end
+
+      cost
     end
 
     # Calculate the WBS-Activity effort according to the selected value as ratio
@@ -94,9 +112,12 @@ module EffortBreakdown
             # Element effort is really computed only on leaf element
             if wbs_project_element.is_childless? || wbs_project_element.has_new_complement_child?
               # Get the ratio Value of current element
-              corresponding_ratio_value = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first.ratio_value
-              current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
-              output_effort[wbs_project_element.id] = current_output_effort
+              corresponding_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first
+              unless corresponding_ratio_elt.nil?
+                corresponding_ratio_value = corresponding_ratio_elt.ratio_value
+                current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
+                output_effort[wbs_project_element.id] = current_output_effort
+              end
             else
               output_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, output_effort)
             end

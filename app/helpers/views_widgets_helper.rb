@@ -193,9 +193,19 @@ module ViewsWidgetsHelper
 
           end
         end
-
         #value_to_show = timeline([["Washington", "1789-04-29", "1797-03-03"], ["Adams", "1797-03-03", "1801-03-03"], ["Jefferson", "1801-03-03", "1809-03-03"]], height: "#{chart_height}px")
         value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
+
+      when "table_effort_per_phase"
+
+      when "histogram_effort_per_phase"
+      when "histogram_cost_per_phase"
+      when "pie_chart_effort_per_phase"
+      when "pie_chart_cost_per_phase"
+      when "effort_per_phases_profiles_table"
+      when "cost_per_phases_profiles_table"
+      when "stacked_bar_chart_effort_per_phases_profiles"
+      when "stacked_bar_chart_cost_per_phases_profiles"
 
       else
         value_to_show = probable_value_text

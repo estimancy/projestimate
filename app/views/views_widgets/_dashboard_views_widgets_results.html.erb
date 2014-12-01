@@ -41,8 +41,8 @@
                            max_with_min_max = '50px'
                            ft_minMax_minFontSize = '12px'
                            ft_minMax_maxFontSize = '15px'
-                           if view_widget.widget_type == "text"
-                             if view_widget.height.to_i <= 1
+                           if view_widget.widget_type == "text" || view_widget.widget_type==""
+                             if view_widget.height.to_i == 1
                                 max_with_min_max = '30px'
                                 max_without_min_max = '30px'
                                 ft_minMax_minFontSize = '6px'

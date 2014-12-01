@@ -30,7 +30,7 @@ function onWidgets(widgets) {
         hline += wmembersUrl;
         hline += '"> ';
         hline += 'Voir les conseillers ';
-        hline += '<span class="glyphicon glyphicon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
+        hline += '<span class="icon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
         hline += '</a>';
 
         /*
