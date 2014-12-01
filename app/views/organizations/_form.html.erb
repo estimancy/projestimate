@@ -154,7 +154,6 @@
               <td class="center span3">
                 <% if can_modify_estimation?(project) %>
                   <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
-                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
                 <% end %>
 
                 <% if can_show_estimation?(project) %>
@@ -187,7 +186,7 @@
                 <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart pull-left', :title => I18n.t('label_project_history')) %>
 
                 <% if can_modify_estimation?(project) %>
-                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
+                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "button_attribute_tooltip icon-comment pull-left", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
                 <% end %>
 
               </td>
