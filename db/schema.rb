@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141128161600) do
+ActiveRecord::Schema.define(:version => 20141201095734) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -275,6 +275,13 @@ ActiveRecord::Schema.define(:version => 20141128161600) do
     t.string   "reference_uuid"
     t.string   "factor_type"
     t.text     "helps"
+  end
+
+  create_table "fields", :force => true do |t|
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "groups", :force => true do |t|

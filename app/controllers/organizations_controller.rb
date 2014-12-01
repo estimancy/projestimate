@@ -75,6 +75,7 @@ class OrganizationsController < ApplicationController
 
     @users = @organization.users
     @groups = @organization.groups
+    @fields = @organization.fields
 
     @organization_profiles = @organization.organization_profiles
 

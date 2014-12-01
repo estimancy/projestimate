@@ -1,0 +1,19 @@
+
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= I18n.t(:fields) %> </a></li>
+  </ul>
+
+  <div id="tabs-1">
+    <%= simple_form_for(@field) do |f| %>
+      <%= f.error_notification %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+      </div>
+
+      <%= f.button :submit %>
+    <% end %>
+  </div>
+</div>
