@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141201095734) do
+ActiveRecord::Schema.define(:version => 20141202135335) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -836,6 +836,15 @@ ActiveRecord::Schema.define(:version => 20141201095734) do
   add_index "project_categories", ["record_status_id"], :name => "index_project_categories_on_record_status_id"
   add_index "project_categories", ["reference_id"], :name => "index_project_categories_on_parent_id"
   add_index "project_categories", ["uuid"], :name => "index_project_categories_on_uuid", :unique => true
+
+  create_table "project_fields", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "field_id"
+    t.integer  "views_widget_id"
+    t.string   "value"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "project_ressources", :force => true do |t|
     t.string "name"

@@ -17,6 +17,8 @@
 #############################################################################
 
 class ViewsWidgetsController < ApplicationController
+  include ViewsWidgetsHelper
+  include ProjectsHelper
   before_filter :load_current_project_data, only: [:create, :update, :destroy]
 
   def load_current_project_data
@@ -42,6 +44,11 @@ class ViewsWidgetsController < ApplicationController
   def create
     @views_widget = ViewsWidget.new(params[:views_widget])
     if @views_widget.save
+      ProjectField.create( project_id: @project.id,
+                           field_id: params["field"],
+                           views_widget_id: @views_widget.id,
+                           value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+
       flash[:notice] = "Widget ajouté avec succès"
     else
       flash[:error] = "Erreur d'ajout de Widget"
@@ -51,6 +58,19 @@ class ViewsWidgetsController < ApplicationController
 
   def update
     @views_widget = ViewsWidget.find(params[:id])
+
+    pf = ProjectField.where(field_id: params["field"]).first
+
+    if pf.nil?
+      ProjectField.create(project_id: @project.id,
+                          field_id: params["field"],
+                          views_widget_id: @views_widget.id,
+                          value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+    else
+      pf.value = get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show]
+      pf.save
+    end
+
     if @views_widget.update_attributes(params[:views_widget])
       flash[:notice] = "Widget mis à jour avec succès"
     else

@@ -38,7 +38,7 @@ class FieldsController < ApplicationController
 
     respond_to do |format|
       if @field.update_attributes(params[:field])
-        format.html { redirect_to @field.organization_id, notice: 'Field was successfully updated.' }
+        format.html { redirect_to edit_organization_path(@field.organization_id), notice: 'Field was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -55,7 +55,7 @@ class FieldsController < ApplicationController
     @field.destroy
 
     respond_to do |format|
-      format.html { redirect_to organization_id }
+      format.html { redirect_to edit_organization_path(@field.organization_id) }
       format.json { head :no_content }
     end
   end

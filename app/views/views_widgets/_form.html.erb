@@ -26,16 +26,22 @@
             <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon), input_html: {class: ''} %></td>
             <td><div id="view_icon_class_image"></div></td>
           </tr>
-          <!--<tr><td><%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "color {pickerPosition:'left', adjust:true}"} %></td></tr>-->
           <tr>
             <td>
-                <% if @views_widget.new_record? %>
-                    <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color', value: '#99ccff'} %>
-                <% else %>
-                    <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color'} %>
-                <% end %>
+              <% if @views_widget.new_record? %>
+                <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color', value: '#99ccff'} %>
+              <% else %>
+                <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color'} %>
+              <% end %>
             </td>
             <td><%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %></td>
+          </tr>
+          <tr>
+            <td>
+              <label><%= I18n.t :fields %></label>
+              <% selected = @views_widget.project_fields.first %>
+              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "Choose a custom field." %>
+            </td>
           </tr>
 
           <tr>
