@@ -38,13 +38,6 @@ class GroupsController < ApplicationController
   load_resource
   helper_method :enable_update_in_local?
 
-  def index
-    if (can? :create_and_edit_groups, Group) || (can? :manage, User)
-      set_page_title 'Groups'
-      @groups = Group.all
-    end
-  end
-
   def new
     authorize! :create_and_edit_groups, Group
 
@@ -88,7 +81,7 @@ class GroupsController < ApplicationController
     end
 
     if @group.save
-      redirect_to redirect_apply(edit_group_path(@group, :anchor => session[:anchor]), new_group_path(), groups_path())
+      redirect_to edit_organization_path(@organization)
     else
       render action: 'new'
     end
@@ -145,7 +138,7 @@ class GroupsController < ApplicationController
       flash[:notice] = I18n.t(:error_group_failed_update)
     end
 
-    redirect_to redirect(groups_path)
+    redirect_to edit_organization_path(@organization)
   end
 
 
@@ -174,7 +167,7 @@ class GroupsController < ApplicationController
     @group.destroy
 
     flash[:notice] = I18n.t (:notice_group_successful_deleted)
-    redirect_to groups_url
+    redirect_to edit_organization_path(@organization)
   end
 
 protected

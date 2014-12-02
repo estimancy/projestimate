@@ -116,7 +116,12 @@ module ModuleProjectsHelper
         end
       end
       # Calculate the probable value according to the number of not null value (sum is divide by the number od not null values)
-      computed_probable_value = sum_of_not_null / number_of_not_null
+      if number_of_not_null.zero?
+        computed_probable_value = 0
+      else
+        computed_probable_value = sum_of_not_null / number_of_not_null
+      end
+
     end
 
     unless estimation_value.nil?
