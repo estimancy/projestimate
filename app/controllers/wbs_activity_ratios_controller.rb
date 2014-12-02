@@ -149,7 +149,7 @@ class WbsActivityRatiosController < ApplicationController
         @wbs_activity_ratio.destroy
       else
         flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
-        redirect_to redirect(groups_path)  and return
+        redirect_to redirect(edit_organization_path(@wbs_activity_ratio.wbs_activity.organization_id))  and return
       end
     end
 

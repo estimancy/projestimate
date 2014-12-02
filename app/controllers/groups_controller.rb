@@ -111,7 +111,7 @@ class GroupsController < ApplicationController
       flash[:notice] = I18n.t(:error_group_failed_update)
     end
 
-    redirect_to redirect(groups_path)
+    redirect_to root_url
   end
 
   # #Update the selected users in the project's securities
@@ -138,7 +138,7 @@ class GroupsController < ApplicationController
       flash[:notice] = I18n.t(:error_group_failed_update)
     end
 
-    redirect_to edit_organization_path(@organization)
+    redirect_to root_url
   end
 
 
