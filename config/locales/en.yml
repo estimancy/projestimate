@@ -511,9 +511,9 @@ en:
   actions: "Actions"
 
   #pemodules
-  low: "Default value (Low)"
-  likely: "Default value (Most Likely)"
-  high: "Default value (High)"
+  low: "Low"
+  likely: "Most Likely"
+  high: "High"
   custom_attribute: "Custom attribute"
   attributes_settings: "Attributes settings"
   label_compatibility: "Compatible PBS element (for data input)"
@@ -1320,3 +1320,4 @@ en:
   add_new_unit_of_work_group: "Add new group"
   add_unit_of_work: "Add unit of work"
   fields: "Custom fields"
+  most_likely: "Most likely"

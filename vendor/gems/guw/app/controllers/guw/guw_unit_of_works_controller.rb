@@ -176,7 +176,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             uo_weight_high = guw_c.weight
           end
 
-          @weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+          @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)
         end
 
         guw_unit_of_work.effort = @weight_pert.sum
