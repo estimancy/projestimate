@@ -44,31 +44,36 @@ class ViewsWidgetsController < ApplicationController
   def create
     @views_widget = ViewsWidget.new(params[:views_widget])
     if @views_widget.save
-      ProjectField.create( project_id: @project.id,
-                           field_id: params["field"],
-                           views_widget_id: @views_widget.id,
-                           value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+
+      unless params["field"].blank?
+        ProjectField.create( project_id: @project.id,
+                             field_id: params["field"],
+                             views_widget_id: @views_widget.id,
+                             value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+      end
 
       flash[:notice] = "Widget ajouté avec succès"
     else
       flash[:error] = "Erreur d'ajout de Widget"
     end
+
     redirect_to dashboard_path(@project)
   end
 
   def update
     @views_widget = ViewsWidget.find(params[:id])
 
-    pf = ProjectField.where(field_id: params["field"]).first
-
-    if pf.nil?
-      ProjectField.create(project_id: @project.id,
-                          field_id: params["field"],
-                          views_widget_id: @views_widget.id,
-                          value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
-    else
-      pf.value = get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show]
-      pf.save
+    unless params["field"].blank?
+      pf = ProjectField.where(field_id: params["field"]).first
+      if pf.nil?
+        ProjectField.create(project_id: @project.id,
+                            field_id: params["field"],
+                            views_widget_id: @views_widget.id,
+                            value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+      else
+        pf.value = get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show]
+        pf.save
+      end
     end
 
     if @views_widget.update_attributes(params[:views_widget])
