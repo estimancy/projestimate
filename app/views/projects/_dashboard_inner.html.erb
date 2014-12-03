@@ -15,7 +15,7 @@
       </div>
       <div class="collapse in" id="collapseProduct">
         <div class="widget-content resizableProduct">
-          <%= render :partial => 'users/pe_wbs', :object => @project_default_ratio %>
+          <%= render :partial => 'pe_wbs', :object => @project_default_ratio %>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
           - <%= current_module_project.nil? ? I18n.t(:notice_no_active_module) : current_module_project %></h5>
 
         <div class="buttons">
-          <a href="<%= edit_project_path(current_project.id, :anchor => 'tabs-4') %>" class="btn btn-mini">
+          <a href="<%= edit_project_path(@project.id, :anchor => 'tabs-4') %>" class="btn btn-mini">
             <%= I18n.t(:button_estimation_plan) %>
           </a>
         </div>
@@ -44,7 +44,7 @@
       <div class="collapse in" id="collapseActivity">
         <div class="widget-content">
           <div class="estimation_plan_min overflow">
-            <%= render 'module_projects/estimation_plan_min', :locals => {:module_projects => current_project.module_projects} %>
+            <%= render 'module_projects/estimation_plan_min', :locals => {:module_projects => @project.module_projects} %>
           </div>
         </div>
       </div>
@@ -79,10 +79,10 @@
                 <%= form_tag({:controller => 'projects', :action => 'run_estimation', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :class => 'simple_form') do -%>
                   <% if ["cocomo_basic", "real_size", "effort_breakdown", "balancing_module"].include?(current_module_project.pemodule.alias) %>
                     <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
+                    <%= submit_tag('Run estimation', :class => 'btn btn-mini pull-right', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation') if can_modify_estimation?(@project) %>
                   <% end %>
                   <% if ["effort_breakdown", "balancing_module"].include?(current_module_project.pemodule.alias) %>
                     <%= raw display_results.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'alert alert-info')}" : display_results %>
-                    <%= submit_tag('Run estimation', :class => 'btn btn-mini pull-right', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation') if can_modify_estimation?(current_project) %>
                   <% end %>
                 <% end %>
               <% end %>

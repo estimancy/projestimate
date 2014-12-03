@@ -13,24 +13,6 @@
         <%= f.input :dotted_id, :label => 'Outline', :input_html => {:class => 'input-large'} %>
         <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 3} %>
 
-        <% if is_master_instance? %>
-            <table>
-              <tr>
-                <td>
-                  <%= f.association :record_status, :label => I18n.t('record_status'), :required => (is_master_instance? ? true : false),
-                                    :collection => wbs_record_statuses_collection,
-                                    :input_html => {:class => 'record_status'},
-                                    :selected => @selected_record_status,
-                                    :disabled => (true if @wbs_activity_element.is_retired?) %>
-                </td>
-                <td>
-                  <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @wbs_activity_element.is_custom?) %>
-                </td>
-              </tr>
-            </table>
-            <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
-        <% end %>
-
         <div class="actions-tabs">
           <%= submit_tag I18n.t('save'), :class => 'btn' %>
           <%= link_to I18n.t('back'), edit_wbs_activity_path(@wbs_activity, :anchor => 'tabs-2'), :class => 'btn' %>

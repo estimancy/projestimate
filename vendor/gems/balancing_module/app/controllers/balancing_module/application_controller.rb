@@ -23,30 +23,29 @@ module BalancingModule
   class ApplicationController < ActionController::Base
     def selected_balancing_attribute
 
-        #No authorize required since everyone can select a PBS
+      #No authorize required since everyone can select a PBS
+      session[:pbs_project_element_id] = params[:pbs_id]
 
-        session[:pbs_project_element_id] = params[:pbs_id]
+      @user = current_user
+      @project = Project.find(params[:project_id])
+      @is_project_view = params[:is_project_show_view]
 
-        @user = current_user
-        @project = Project.find(params[:project_id])
-        @is_project_view = params[:is_project_show_view]
+      if @project.nil?
+        @project = current_project
+      end
 
-        if @project.nil?
-          @project = current_project
-        end
+      @module_projects = @project.module_projects
+      @pbs_project_element = current_component
 
-        @module_projects = @project.module_projects
-        @pbs_project_element = current_component
+      #Get the initialization module_project
+      @initialization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @initialization_module.id, @project.id).first  unless @initialization_module.nil?
 
-        #Get the initialization module_project
-        @initialization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @initialization_module.id, @project.id).first  unless @initialization_module.nil?
+      # Get the max X and Y positions of modules
+      @module_positions = ModuleProject.where(:project_id => @project.id).sort_by{|i| i.position_y}.map(&:position_y).uniq.max || 1
+      @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-        # Get the max X and Y positions of modules
-        @module_positions = ModuleProject.where(:project_id => @project.id).sort_by{|i| i.position_y}.map(&:position_y).uniq.max || 1
-        @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-
-        @results = nil
-        render :partial => "refresh_attribute_balancing_input"
+      @results = nil
+      render :partial => "refresh_attribute_balancing_input"
     end
 
   end

@@ -1,69 +1,83 @@
-
-var multiWidget = new SpkMultiWidget(helperId);
-
+var dropdownCreated = false;
 function onWidgets(widgets) {
-    var html = '<div class="dropdown clearfix"><button style="width:200px;" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">';
-    html += 'Accès Conseillers';
-    html += '&nbsp;&nbsp;<span class="caret"></span></button>';
+    if(dropdownCreated) {
+        updateDropdownAvailabilities(widgets);
+    } else {
+        drawDropdown(widgets);
+        dropdownCreated = true;
+    }
+}
+function drawDropdown(widgets) {
+    var width = '250px';
+    var textColor = '#206A7C';
+    var html='<div class="dropdown">';
+    html += '<a id="dLabel" role="button" style="width:'+width+';" data-toggle="dropdown" class="btn btn-default" data-target="#" href="/page.html">';
+    html += 'Accès conseillers ';
+    html += '<span class="caret"></span></a>';
 
-    html += '<ul class="dropdown-menu" style="width:200px;" role="menu" aria-labelledby="dropdownMenu1">';
+    html += '<ul class="dropdown-menu multi-level" style="width:'+width+';" role="menu" aria-labelledby="dropdownMenu">';
     for(var i=0; i < widgets.length; i++) {
         var wi = widgets[i];
-        var hline = '<li role="presentation">';
-        hline += '<a style="color:#206A7C;" role="menuitem" tabindex="-1" onclick="';
-        hline += widgetLaunchUrl(wi.widgetId);
-        hline += '">';
+        html += '<li><a style="color:'+textColor+';" href="" onclick="';
+        html += widgetLaunchUrl(wi.widgetId);
+        html += '">';
         if(wi.available) {
-            hline += '<span class="fa fa-user" aria-hidden="true" style="color:green;"></span> ';
+            html += '<span id="spk_wi_'+wi.widgetId+'" class="fa fa-user" aria-hidden="true" style="color:green;"></span> ';
         } else {
-            hline += '<span class="fa fa-user" aria-hidden="true" style="color:red;"></span> ';
+            html += '<span id="spk_wi_'+wi.widgetId+'" class="fa fa-user" aria-hidden="true" style="color:gray;"></span> ';
         }
-        hline += wi.displayName;
-        hline += ' </a>';
-
-        var wmUrl = "https://www.spark-angels.com/rss3/custom/generic/wmembers.jsp?wid=" + wi.widgetId;
-        var wmembersUrl = "javascript:void(window.open('";
-        wmembersUrl += wmUrl;
-        wmembersUrl += "','', 'resizable=yes,location=no,menubar=no,scrollbars=yes,status=no, toolbar=no,fullscreen=no,dependent=no,width=300,height=400'))";
-        hline += '<li class="dropdown-submenu">';
-        hline += '<a role="menuitem" class="dropdown-toggle" style="text-align:right;font-size:80%;color:#6396A3;" tabindex="-1" href="';
-        hline += wmembersUrl;
-        hline += '"> ';
-        hline += 'Voir les conseillers ';
-        hline += '<span class="icon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
-        hline += '</a>';
-
-        /*
-         hline += '<ul class="dropdown-menu">';
-         for(var j=0; j < wi.members.length; j++) {
-         hline += '<li><a style="color:#206A7C;" role="menuitem" tabindex="-1" href="';
-         hline += memberLaunchUrl(wi.widgetId, wi.members[j].laid);
-         hline += '">';
-         hline += wi.members[j].displayName;
-         hline += ' </a></li>';
-         }
-         hline += '</ul>';
-         */
-
-        hline += '</li>';
-        html += '\n' + hline;
+        html += wi.displayName;
+        html += '</a></li>';
+        html += '<li class="dropdown-submenu">';
+        html += '<a style="text-align:right;font-size:80%;color:'+textColor+';" tabindex="-1" href="" onclick="';
+        html += widgetLaunchUrl(wi.widgetId);
+        html += '">';
+        html += 'Voir les conseillers ';
+        //html += '<span class="glyphicon glyphicon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
+        html += '</a>';
+        html += '<ul class="dropdown-menu">';
+        for(var j=0; j < wi.members.length; j++) {
+            var wmb = wi.members[j];
+            html += '<li><a style="color:'+textColor+';" tabindex="-1" href="" onclick="';
+            html += memberLaunchUrl(wi.widgetId, wmb.laid);
+            html += '">';
+            if(wmb.available) {
+                html += '<span id="spk_wmb_'+wmb.laid+'" class="fa fa-user" aria-hidden="true" style="color:green;"></span> ';
+            } else {
+                html += '<span id="spk_wmb_'+wmb.laid+'" class="fa fa-user" aria-hidden="true" style="color:gray;"></span> ';
+            }
+            html += wmb.displayName;
+            html += '</a></li>';
+        }
+        html += '</ul>';
+        html += '</li>';
     }
     html += '</ul></div>';
 
     $('#spktargetdiv').html(html);
     onSpkError("");
 }
+function updateDropdownAvailabilities(widgets) {
+    for(var i=0; i < widgets.length; i++) {
+        var wi = widgets[i];
+        if(wi.available) {
+            $('#spk_wi_'+wi.widgetId).css('color','green');
+        } else {
+            $('#spk_wi_'+wi.widgetId).css('color','gray');
+        }
+        for(var j=0; j < wi.members.length; j++) {
+            var wmb = wi.members[j];
+            if(wmb.available) {
+                $('#spk_wmb_'+wmb.laid).css('color','green');
+            } else {
+                $('#spk_wmb_'+wmb.laid).css('color','gray');
+            }
+        }
+    }
+}
 function onSpkError(errMessage) {
     $('#errordiv').html(errMessage);
 }
-
-//$(document).ready(function() {
-//    //REAL CODE:
-//    var multiWidget = new SpkMultiWidget(29508);
-//    multiWidget.onWidgets(onWidgets);
-//    multiWidget.onError(onSpkError);
-//    multiWidget.start();
-//});
 
 // May use different displays
 function widgetLaunchUrl(widgetId) {
@@ -79,3 +93,4 @@ function memberLaunchUrl(widgetId, laid) {
     tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
     return tUrl;
 }
+  

@@ -21,39 +21,24 @@
       <tr>
         <th><%= I18n.t(:name) %></th>
         <th><%= I18n.t(:description) %></th>
-        <th class="filter-select"><%= I18n.t(:organizations) %></th>
-        <th class="filter-select"><%= I18n.t(:state) %></th>
-        <th class="filter-select"><%= I18n.t(:record_status) %></th>
         <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
       </tr>
       </thead>
 
       <% @wbs_activities.each do |wbs_activity| %>
-          <tr>
-            <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1')) %></td>
-            <td><%= wbs_activity.description %></td>
-            <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
-            <td><%= wbs_activity.state %></td>
-            <td><%= wbs_activity.record_status.name unless wbs_activity.record_status.nil? %><%= wbs_activity.show_custom_value %></td>
-            <td class="center">
-              <%= link_to '', edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit), confirm: (I18n.t(:text_master_force_edit) if wbs_activity.is_defined?) %>
-              <% if can? :create_wbs_activities, WbsActivity %>
-                  <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
-              <% end %>
-              <% if can? :manage, WbsActivity %>
-                  <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-remove', :style => 'color:red', :title => I18n.t(:delete) %>
-                  <% if is_master_instance? && !wbs_activity.is_local_record? %>
-                      <% if wbs_activity.is_retired? and can? :restore, :all %>
-                          <%= link_to('', "wbs_activities/#{wbs_activity.id}/restore_change", confirm: I18n.t(:actions), :title => I18n.t(:restore_title), :class => 'button_attribute_tooltip icon-undo', :style => 'color:orange') %>
-                      <% else %>
-                          <% unless wbs_activity.is_defined? and can? :validate, :all %>
-                              <%= link_to('', "/wbs_activities/#{wbs_activity.id}/validate_change_with_children", confirm: 'Do you confirm changes validation on this record and all its elements?', :title => I18n.t(:validate_title), :class => 'button_attribute_tooltip icon-ok', :style => 'color:green') %>
-                          <% end %>
-                      <% end %>
-                  <% end %>
-              <% end %>
-            </td>
-          </tr>
+        <tr>
+          <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1')) %></td>
+          <td><%= wbs_activity.description %></td>
+          <td class="center">
+            <%= link_to '', edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
+            <% if can? :create_wbs_activities, WbsActivity %>
+              <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
+            <% end %>
+            <% if can? :manage, WbsActivity %>
+              <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-remove', :style => 'color:red', :title => I18n.t(:delete) %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
       <%= render :partial => 'layouts/footer_table' %>
     </table>

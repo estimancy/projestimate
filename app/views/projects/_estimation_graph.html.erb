@@ -3,7 +3,7 @@
     $(document).ready(function() {
         // Get the current module estimation results
         <% attributes_array = current_module_project.pemodule.pe_attributes.all.map(&:alias).to_json.html_safe %>
-        <% modules = current_project.pemodules.map(&:alias).to_json.html_safe %>
+        <% modules = @project.pemodules.map(&:alias).to_json.html_safe %>
         var module_labels = <%= modules %>;
 
         <% data_array = []

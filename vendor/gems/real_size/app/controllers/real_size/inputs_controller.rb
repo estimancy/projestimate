@@ -22,12 +22,11 @@
 class RealSize::InputsController < ApplicationController
 
   def index
-    @size_unit_types = current_project.organization.size_unit_types
+    @size_unit_types = @project.organization.size_unit_types
   end
 
   def save
-    project = current_project
-    organization = current_project.organization
+    organization = @project.organization
     pbs_element = current_component
     module_project = current_module_project
     technology = current_component.organization_technology

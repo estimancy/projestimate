@@ -20,15 +20,15 @@ class ViewsWidgetsController < ApplicationController
   before_filter :load_current_project_data, only: [:create, :update, :destroy]
 
   def load_current_project_data
-    @project = current_project
-    if @project
+    #@project = Project.find(params[:project_id])
+    #if @project
       @project_organization = @project.organization
       @module_projects ||= @project.module_projects
       #Get the initialization module_project
       @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
       @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    end
+    #end
   end
 
   def new
@@ -46,8 +46,7 @@ class ViewsWidgetsController < ApplicationController
     else
       flash[:error] = "Erreur d'ajout de Widget"
     end
-    #render :partial => "views_widgets/refresh_views_widgets_results"
-    redirect_to '/dashboard'
+    redirect_to dashboard_path(@project)
   end
 
   def update
@@ -57,15 +56,14 @@ class ViewsWidgetsController < ApplicationController
     else
       flash[:error] = "Erreur lors de la mise à jour du Widget dans la vue"
     end
-    #render :partial => "views_widgets/refresh_views_widgets_results"
-    redirect_to '/dashboard'
+    redirect_to dashboard_path(@project)
   end
 
   def destroy
     @views_widget = ViewsWidget.find(params[:id])
     @views_widget.destroy
     #render :partial => "views_widgets/refresh_views_widgets_results"
-    redirect_to '/dashboard'
+    redirect_to dashboard_path(@project)
   end
 
   def update_view_widget_positions

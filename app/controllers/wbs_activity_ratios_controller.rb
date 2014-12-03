@@ -35,10 +35,10 @@
 #############################################################################
 
 class WbsActivityRatiosController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
-  before_filter :get_record_statuses
-  helper_method :enable_update_in_local?
+  #before_filter :get_record_statuses
+  #helper_method :enable_update_in_local?
 
   def export
     #No authorize required since everyone can access the list

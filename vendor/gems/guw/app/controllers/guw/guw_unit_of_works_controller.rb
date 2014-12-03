@@ -33,6 +33,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_type = Guw::GuwType.find(params[:guw_unit_of_work][:guw_type_id])
     @guw_model = Guw::GuwModel.find(params[:guw_unit_of_work][:guw_model_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.new(params[:guw_unit_of_work])
+
     @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
@@ -45,19 +46,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_attribute_id: gac.id)
     end
 
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def update
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
     @guw_unit_of_work.update_attributes(params[:guw_unit_of_work])
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def destroy
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
     @guw_unit_of_work.delete
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def save_guw_unit_of_works
@@ -211,7 +212,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
 
-          guw = Guw::Guw.new(effort, params["complexity_#{level}"], current_project)
+          guw = Guw::Guw.new(effort, params["complexity_#{level}"], @project)
 
           if am.pe_attribute.alias == "delay"
             ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(effort, current_component, current_module_project)
@@ -245,7 +246,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       flash[:notice] = "Vos données ont été correctement sauvegardés"
     end
 
-    redirect_to main_app.root_url
+    redirect_to main_app.dashboard_path(@project)
   end
 
 end

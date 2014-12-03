@@ -23,18 +23,17 @@
 
 </head>
 <body>
-
   <%= render 'layouts/modal' %>
 
   <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
         <div class="pull-left">
-          <%= link_to(image_tag("/assets/Logo 200x75.png"), '/dashboard') %>
+          <%= link_to(image_tag("/assets/Logo 200x75.png"), main_app.projects_path) %>
         </div>
-        <!--Support with Sparkom-->
+
         <div class="pull-right" style="margin-top:16px; margin-left: 10px">
-          <%= render 'layouts/sparkom_support' %>
+          <%= render 'layouts/search_input' %>
         </div>
 
         <div class="pull-right" style="margin-top:16px; margin-left: 10px">
@@ -42,9 +41,12 @@
             <%= render 'layouts/send_feedback', :handlers => [:erb], :formats => [:html] %>
           <% end %>
         </div>
-        <div style="margin-top:16px" class="pull-right">
-          <%= render 'layouts/search_input' %>
+
+        <!--Support with Sparkom-->
+        <div class="pull-right" style="margin-top:16px; margin-left: 10px">
+          <%= render 'layouts/sparkom_support' %>
         </div>
+
       </div>
     </div>
   </div>
@@ -78,12 +80,5 @@
 
 </body>
 </html>
-<script type="text/javascript">
-
-  $(document).ready(function() {
-    $(".output_data").html("<%=raw j(sanitize(display_results, :tags => %w(table tr th td span title h4 strong), :attributes => %w(id class style title colspan rowspan))) %>");
-  });
-
-</script>
 
 <%= render 'layouts/notifications' %>

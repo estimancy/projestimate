@@ -40,8 +40,8 @@ module ProjectsHelper
   # This helper method will display Estimation Result according the estimation purpose (PBS and/or Activities)
   def display_results
     res = String.new
-    unless current_project.nil?
-      #pbs_project_element = @pbs_project_element || current_project.root_component
+    unless @project.nil?
+      #pbs_project_element = @pbs_project_element || @project.root_component
       pbs_project_element = @pbs_project_element || current_component
       #get the current module_project
       module_project_to_display = current_module_project
@@ -80,8 +80,8 @@ module ProjectsHelper
       when "delay"
         I18n.t(:delay)
       when "cost"
-        #current_project.organization.currency.nil? ? nil.to_s : "#{current_project.organization.currency.name.underscore.pluralize}"
-        current_project.organization.currency.nil? ? nil.to_s : "#{current_project.organization.currency.sign}"
+        #@project.organization.currency.nil? ? nil.to_s : "#{@project.organization.currency.name.underscore.pluralize}"
+        @project.organization.currency.nil? ? nil.to_s : "#{@project.organization.currency.sign}"
     else
       ""
     end
@@ -276,7 +276,7 @@ module ProjectsHelper
 
   # The Balancing module output
   def display_balancing_output(module_project)
-    #pbs_project_element = @pbs_project_element || current_project.root_component
+    #pbs_project_element = @pbs_project_element || @project.root_component
     pbs_project_element = current_component
 
     res = String.new
@@ -385,10 +385,10 @@ module ProjectsHelper
   # Display Estimations output results according to the module behavior
   def display_input
     res = String.new
-    unless current_project.nil?
+    unless @project.nil?
       pbs_project_element = current_component
 
-      current_project = current_module_project.project
+      @project = current_module_project.project
       current_module_project_pemodule = current_module_project.pemodule
 
       ##if module_project.pemodule.with_activities
@@ -407,7 +407,7 @@ module ProjectsHelper
             refer_module_potential_ids = current_module_project.associated_module_projects
             refer_attribute = PeAttribute.where("alias = ? AND record_status_id = ?", "effort", @defined_status.id).first
 
-            refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, current_project.id, pbs_project_element.id)
+            refer_modules_project = ModuleProject.joins(:project, :pbs_project_elements).where("pemodule_id = ? AND  project_id =? AND pbs_project_elements.id = ?", effort_breakdown_module.id, @project.id, pbs_project_element.id)
             refer_module_project = refer_modules_project.where(["module_project_id IN (?)", refer_module_potential_ids]).last
 
             unless refer_module_project.nil?
@@ -419,7 +419,7 @@ module ProjectsHelper
               else
                 last_estimation_result = last_estimation_results
 
-                pe_wbs_project_activity = current_project.pe_wbs_projects.activities_wbs.first
+                pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
                 project_wbs_root = pe_wbs_project_activity.wbs_project_elements.where("is_added_wbs_root = ?", true).first
 
                 # Get all complement children
@@ -923,9 +923,9 @@ module ProjectsHelper
         begin
           if est_val_pe_attribute.alias == "delay"
             if get_with_unit
-              "#{convert(value, current_project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, current_project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+              "#{convert(value, @project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, @project.organization) : get_attribute_unit(est_val_pe_attribute)}"
             else
-              "#{convert(value, current_project.organization).round}"
+              "#{convert(value, @project.organization).round}"
             end
           else
             if get_with_unit

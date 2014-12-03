@@ -148,6 +148,8 @@ class ModuleProjectsController < ApplicationController
       mp = @project.module_projects.where('position_x = ?', position_x).order('position_y ASC').first
       mp.update_attribute('associated_module_project_ids', @initialization_module_project.id) unless mp.nil?
     end
+
+    session[:module_project_id] = nil
     redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
   end
 
@@ -174,7 +176,8 @@ class ModuleProjectsController < ApplicationController
   # Function to activate the current/selected module_project
   def activate_module_project
     session[:module_project_id] = params[:module_project_id]
-    @project = current_project
+    @module_project = ModuleProject.find(params[:module_project_id])
+    @project = @module_project.project
 
     authorize! :alter_estimation_plan, @project
 
@@ -190,22 +193,19 @@ class ModuleProjectsController < ApplicationController
 
     @results = nil
 
-    redirect_to "/dashboard"
-    #respond_to do |format|
-    #  format.js { render :partial => "module_projects/refresh_selected_module_data"}
-    #end
+    redirect_to dashboard_path(@project)
   end
 
 
   # Set the current balancing attribute for the Balancing-Module
   def selected_balancing_attribute
     session[:balancing_attribute_id] = params[:attribute_id]
-    @project = current_project
+
+    @project = Project.find(params[:project_id])
+    @module_projects = @project.module_projects
+    @pbs_project_element = current_component
 
     authorize! :alter_estimation_plan, @project
-
-    @module_projects ||= @project.module_projects
-    @pbs_project_element = current_component
 
     #Get the initialization module_project
     @initialization_module_project ||= ModuleProject.where("pemodule_id = ? AND project_id = ?", @initialization_module.id, @project.id).first  unless @initialization_module.nil?

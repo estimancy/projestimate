@@ -3,47 +3,25 @@
     <li><a href="#tabs-1"><%= I18n.t(:label_wbs_activity_ratio) %> </a></li>
   </ul>
 
-  <div class="div_tabs_to_disable" data-enable_update="<%= enable_update_in_local? %>">
-      <div id="tabs-1">
-        <%= simple_form_for(@wbs_activity_ratio) do |f| %>
-            <%= f.error_notification %>
-            <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-            <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-            <%= f.input :wbs_activity_id, :label => 'WBS Activity', :as => :hidden, :input_html => {:class => 'input-xxlarge', :rows => 5, :value => @activity_id} %>
-            <% if is_master_instance? %>
+  <div id="tabs-1">
+    <%= simple_form_for(@wbs_activity_ratio) do |f| %>
+      <%= f.error_notification %>
+      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      <%= f.input :wbs_activity_id, :label => 'WBS Activity', :as => :hidden, :input_html => {:class => 'input-xxlarge', :rows => 5, :value => @activity_id} %>
 
-                <table>
-                  <tr>
-                    <td>
-                      <%= f.association :record_status, :label => I18n.t('record_status'), :required => (is_master_instance? ? true : false),
-                                        :collection => @wbs_activity_ratio.record_status_collection,
-                                        :input_html => {:class => 'record_status'},
-                                        :selected => (@wbs_activity_ratio.is_defined_or_nil? ? @proposed_status.id : @wbs_activity_ratio.record_status_id),
-                                        :disabled => (true if @wbs_activity_ratio.is_retired?) %>
-                    </td>
-                    <td>
-                      <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @wbs_activity_ratio.is_custom?) %>
-                    </td>
-                  </tr>
-                </table>
-
-                <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
-                <br/>
-            <% end %>
-
-            <div class="actions-tabs">
-              <% if can? :edit_wbs_activities, WbsActivity and action_name.in?(%w(new create)) %>
-                  <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
-              <% elsif can? :update_wbs_activities, WbsActivity and (action_name == 'edit' || action_name=='update') %>
-                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                  <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-              <% end %>
-              <% params[:activity_id].nil? ? @activity_id=@wbs_activity_ratio.wbs_activity_id : @activity_id=params[:activity_id] %>
-              <%= link_to I18n.t('back'), edit_wbs_activity_path(@activity_id , :anchor => 'tabs-3'), :class => 'btn back' %>
-            </div>
+      <div class="actions-tabs">
+        <% if can? :edit_wbs_activities, WbsActivity and action_name.in?(%w(new create)) %>
+            <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+            <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <% elsif can? :update_wbs_activities, WbsActivity and (action_name == 'edit' || action_name=='update') %>
+            <%= submit_tag I18n.t('save'), :class => 'btn' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
+        <% params[:activity_id].nil? ? @activity_id=@wbs_activity_ratio.wbs_activity_id : @activity_id=params[:activity_id] %>
+        <%= link_to I18n.t('back'), edit_wbs_activity_path(@activity_id , :anchor => 'tabs-3'), :class => 'btn back' %>
       </div>
+    <% end %>
   </div>
 </div>
 

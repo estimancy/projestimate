@@ -52,7 +52,7 @@ class Uow::UowInputsController < ApplicationController
     @count = @uow_inputs.count.to_i
     @index = params[:index].to_i
 
-    redirect_to "/dashboard"
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def remove_item
@@ -66,7 +66,7 @@ class Uow::UowInputsController < ApplicationController
     end
     @input_index = params['row_index']
 
-    redirect_to "/dashboard"
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def export
@@ -125,7 +125,7 @@ class Uow::UowInputsController < ApplicationController
 
     @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
 
-    redirect_to "/dashboard"
+    redirect_to main_app.dashboard_path(@project)
 
   end
 
@@ -181,8 +181,8 @@ class Uow::UowInputsController < ApplicationController
     @module_project = current_module_project
     @pbs = current_component
     @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
-    @organization_technologies = current_project.organization.organization_technologies.map{|i| [i.name, i.id]}
-    @unit_of_works = current_project.organization.unit_of_works.map{|i| [i.name, i.id]}
+    @organization_technologies = @project.organization.organization_technologies.map{|i| [i.name, i.id]}
+    @unit_of_works = @project.organization.unit_of_works.map{|i| [i.name, i.id]}
     @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
     @module_project.pemodule.attribute_modules.each do |am|

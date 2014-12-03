@@ -72,7 +72,6 @@ class ApplicationController < ActionController::Base
   helper_method :send_feedback
   helper_method :allow_feedback?
   ###helper_method :current_user
-  helper_method :current_project
   helper_method :current_component
   helper_method :current_module_project
   helper_method :current_balancing_attribute
@@ -89,6 +88,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_return_to
   before_filter :previous_page
   before_filter :set_breadcrumbs
+  before_filter :set_current_project
   ###before_filter :session_expiration
   before_filter :update_activity_time
   before_filter :initialization_module
@@ -262,30 +262,43 @@ class ApplicationController < ActionController::Base
   #  end
   #end
 
-  def current_project
-    prj = Project.where(:id => session[:current_project_id])
-    if prj.nil?
-      if current_user.nil?
-        return nil
+  def set_current_project
+
+    if params[:project_id].present?
+      session[:project_id] = params[:project_id]
+      @project = Project.find(params[:project_id])
+    elsif !session[:project_id].blank?
+      if user_signed_in?
+        @project = Project.find(session[:project_id])
       else
-        current_user.projects.first
+        @project = current_user.organizations.map(&:projects).flatten.first
+        session[:project_id] = @project.id
       end
     else
-      return prj.first
+      @project = nil
     end
+
+    #if prj.nil?
+    #  if current_user.nil?
+    #    return nil
+    #  else
+    #    current_user.projects.first
+    #  end
+    #else
+    #  return prj.first
+    #end
   end
 
   # Get the selected Pbs_Project_Element
   def current_component
-    return if current_project.nil?
-
-    begin
-      PbsProjectElement.find(session[:pbs_project_element_id])
-    rescue
-      @component = current_project.root_component
+    if @project
+      begin
+        PbsProjectElement.find(session[:pbs_project_element_id])
+      rescue
+        @component = @project.root_component
+      end
     end
   end
-
 
   def current_wbs_project_element
     if current_project
@@ -297,21 +310,21 @@ class ApplicationController < ActionController::Base
   def current_module_project
     @defined_record_status = RecordStatus.find_by_name('Defined')
     pemodule = Pemodule.find_by_alias_and_record_status_id('initialization', @defined_record_status)
-    begin
-      default_current_module_project = ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
-      if current_project.module_projects.map(&:id).include?(session[:module_project_id].to_i)
+    #begin
+      default_current_module_project = ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, @project.id).first
+      if @project.module_projects.map(&:id).include?(session[:module_project_id].to_i)
         session[:module_project_id].nil? ? default_current_module_project : ModuleProject.find(session[:module_project_id])
       else
         begin
           pemodule = Pemodule.find_by_alias('initialization')
           ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
         rescue
-          current_project.module_projects.first
+          @project.module_projects.first
         end
       end
-    rescue
-      nil
-    end
+    #rescue
+    #  nil
+    #end
   end
 
   # Get the current selected attribute for the Balancing Module
