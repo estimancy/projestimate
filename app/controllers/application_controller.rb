@@ -263,7 +263,6 @@ class ApplicationController < ActionController::Base
   #end
 
   def set_current_project
-
     if params[:project_id].present?
       session[:project_id] = params[:project_id]
       @project = Project.find(params[:project_id])
@@ -277,16 +276,6 @@ class ApplicationController < ActionController::Base
     else
       @project = nil
     end
-
-    #if prj.nil?
-    #  if current_user.nil?
-    #    return nil
-    #  else
-    #    current_user.projects.first
-    #  end
-    #else
-    #  return prj.first
-    #end
   end
 
   # Get the selected Pbs_Project_Element
@@ -297,12 +286,6 @@ class ApplicationController < ActionController::Base
       rescue
         @component = @project.root_component
       end
-    end
-  end
-
-  def current_wbs_project_element
-    if current_project
-      session[:wbs_project_element_id].nil? ? current_project.wbs_project_element_root : WbsProjectElement.find(session[:wbs_project_element_id])
     end
   end
 
@@ -317,7 +300,7 @@ class ApplicationController < ActionController::Base
       else
         begin
           pemodule = Pemodule.find_by_alias('initialization')
-          ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, current_project.id).first
+          ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, @project.id).first
         rescue
           @project.module_projects.first
         end
@@ -405,14 +388,6 @@ class ApplicationController < ActionController::Base
     @defined_status = RecordStatus.find_by_name('Defined')
     @custom_status = RecordStatus.find_by_name('Custom')
     @local_status = RecordStatus.find_by_name('Local')
-  end
-
-  #before filter only pemodules move functions
-  def project_locked?
-    if current_project.locked?
-      flash[:notice] = 'Project locked.'
-      redirect_save(root_url)
-    end
   end
 
   def set_locale_from_browser

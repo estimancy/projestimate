@@ -35,17 +35,4 @@
 #############################################################################
 
 module EstimationValuesHelper
-
-  #def generate_chart
-  #array = Array.new
-  #current_project.module_projects.each do |mp|
-  #  a = Array.new
-  #  mp.estimation_values.each do |est_val|
-  #    a << est_val.string_data_low[current_component.id]
-  #  end
-  #  array << a
-  #end
-  #array
-  #end
-
 end
