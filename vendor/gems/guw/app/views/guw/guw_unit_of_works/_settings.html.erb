@@ -21,13 +21,13 @@
               <div class="accordion-inner">
                 <table class="table table-bordered table-condensed">
                   <tr>
-                    <th>Name</th>
-                    <th>Unit of Work</th>
+                    <th>Nom</th>
+                    <th>Unité d'oeuvre</th>
                     <th colspan="4">Attributs</th>
-                    <th>Cplx. UO</th>
+                    <th>Complexité d'UO</th>
                     <th>Effort</th>
                     <th>Effort retenu</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                   </tr>
 
                   <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
@@ -40,9 +40,9 @@
                         </a>
                       </td>
                       <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle" class="span1">
-                        Unit of work's type
+                        Type d'UO
                         <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), prompt: "Select an unit of of work type", required: true %>
-                        Work unit
+                        Type d'action
                         <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit", required: true %>
                       </td>
                     </tr>
