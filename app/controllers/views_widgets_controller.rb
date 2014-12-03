@@ -90,7 +90,6 @@ class ViewsWidgetsController < ApplicationController
 
   def destroy
     @views_widget = ViewsWidget.find(params[:id])
-    @module_project = ModuleProject.find(params[:module_project_id])
     @views_widget.destroy
     #render :partial => "views_widgets/refresh_views_widgets_results"
     redirect_to dashboard_path(@project)

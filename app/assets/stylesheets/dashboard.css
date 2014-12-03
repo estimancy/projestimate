@@ -924,7 +924,7 @@ h5.view_title{
 .widget_text{
     text-align: center;
     /*font-size: 0.7em;*/
-    font-weight: bold;
+    /*font-weight: bold;*/
     white-space: nowrap;
 
 }
@@ -948,7 +948,7 @@ h5.view_title{
 .no_estimation_value{
     font-size: 10px;
     line-height: 2px;
-    font-weight: 100;
+    font-weight: 400;
 }
 
 .table_effort_per_phase{
@@ -959,6 +959,14 @@ h5.view_title{
 
 .effort_per_phase{
     overflow: auto;
+}
+
+.normal_font_weight{
+    font-weight: normal;
+}
+
+.bold_font_weight{
+    font-weight: bold;
 }
 
 .ui-resizable-handle {

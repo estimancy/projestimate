@@ -25,6 +25,7 @@
               </div>
               <div class="widget-content" class="<%= "module_project_widget_#{module_project.id}" %>">
                 <div id="<%="view_widgets_container_#{module_project.id}"%>" class="row-fluid">
+                  <% font_weight = "normal_font_weight" %>
                   <!-- Show all widgets on the current view -->
                   <% if module_project.view %>
                       <% module_project.view.views_widgets.order('position').each do |view_widget| %>
@@ -42,6 +43,8 @@
                            ft_minMax_minFontSize = '12px'
                            ft_minMax_maxFontSize = '15px'
                            if view_widget.widget_type == "text" || view_widget.widget_type==""
+                             font_weight = "bold_font_weight"
+
                              if view_widget.height.to_i == 1
                                 max_with_min_max = '30px'
                                 max_without_min_max = '30px'
@@ -57,7 +60,7 @@
 
                         <% view_widget.widget_type.in?(["table_effort_per_phase", "table_cost_per_phase"]) ? (effort_per_phase_class="effort_per_phase") : (effort_per_phase_class="") %>
                         <!--<div class="span3 text-center view_widget" data-view_widget_id="<%#= view_widget.id %>" style="<%#= add_top_and_left %>  margin-left: 0px; margin-right:5px;  background-color: <%#= view_widget.color %>; min-height: <%#= 3 * 50%>px; min-width: 120px; padding-top: <%#= 2 * 2%>em; margin-bottom: 10px;">-->
-                        <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 text-center view_widget <%= "#{effort_per_phase_class}" %>" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; height: <%=view_widget_height%>px; width: <%=view_widget_width%>px; max-width: 100%; position: relative;">
+                        <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 text-center view_widget <%= "#{effort_per_phase_class}" %>" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; height: <%=view_widget_height%>px; width: <%=view_widget_width%>px; max-width: 100%">
                           <div class="row-fluid">
                             <div class="span6">
                               <% unless view_widget.icon_class.empty? %>
@@ -72,20 +75,20 @@
 
                           <div class="row-fluid widget_values">
                             <% if view_widget.show_min_max && effort_per_phase_class.empty? %>
-                              <% one_height = "one_height" %>
-                              <div class="row-fluid">
-                                <div class="widget_text with_min_max" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
+                                <% one_height = "one_height" %>
+                                <div class="row-fluid">
+                                  <div class="widget_text with_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
+                                    <%= value_to_show %>
+                                  </div>
+                                  <div>
+                                    <span class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:max_value_text] %></span><br>
+                                    <span class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:min_value_text] %></span>
+                                  </div>
+                                </div>
+                            <% else %>
+                                <div class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
                                   <%= value_to_show %>
                                 </div>
-                                <div>
-                                  <span class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:max_value_text] %></span><br>
-                                  <span class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:min_value_text] %></span>
-                                </div>
-                              </div>
-                            <% else %>
-                              <div class="widget_text without_min_max" style="font-size: <%=view_widget_text_size%>em" >
-                                <%= value_to_show %>
-                              </div>
                             <% end %>
 
                             <% if !view_widget.project_fields.empty? %>
@@ -98,7 +101,7 @@
                             $("#fittext1").fitText();
                             $(".without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%= max_without_min_max %>' });
                             $(".with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%= max_with_min_max %>' });
-                            $(".no_estimation_value").fitText(2, { minFontSize: '9px', maxFontSize: '12px' });
+                            $(".no_estimation_value").fitText(2, { minFontSize: '12px', maxFontSize: '12px' });
 
                             //$(".min_max").fitText(0.4, { minFontSize: '12px', maxFontSize: '15px' });
                             $(".min_max").fitText(1, { minFontSize: '<%= ft_minMax_minFontSize %>', maxFontSize: '<%= ft_minMax_maxFontSize %>' });

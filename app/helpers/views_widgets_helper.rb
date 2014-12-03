@@ -73,16 +73,16 @@ module ViewsWidgetsHelper
         end
 
       when 3
-        icon_font_size = 3
+        icon_font_size = 2.5 #3
         ft_maxFontSize_without_mm = 30
         ft_maxFontSize_with_mm = 30
         ft_minMax_maxFontSize = 12
       else
         icon_font_size = ((height+width)/2) * 0.025
-        if icon_font_size > 5 && icon_font_size < 7
-          icon_font_size = 5
-        elsif icon_font_size > 7
-          icon_font_size = 6
+        if icon_font_size > 3 && icon_font_size < 6
+          icon_font_size = 3 #4
+        elsif icon_font_size > 6
+          icon_font_size = 4 #5
         end
     end
 
@@ -130,7 +130,7 @@ module ViewsWidgetsHelper
 
     widget_data[:chart_level_values] = chart_level_values
     chart_height = height-50
-    chart_width = width -50
+    chart_width = width -40
     chart_title = view_widget.name
     chart_vAxis = view_widget.pe_attribute.name
     chart_hAxis = "Level"
@@ -197,15 +197,19 @@ module ViewsWidgetsHelper
         value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
 
       when "table_effort_per_phase", "table_cost_per_phase"
-        if module_project.pemodule.alias == "effort_breakdown"
-          value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
-        end
+        value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
+
       when "histogram_effort_per_phase", "histogram_cost_per_phase"
+        chart_height = height-90
+        chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+        value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
 
       when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
+        chart_height = height-90
+        chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+        value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {title: chart_title})
 
       when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
-
       when "stacked_bar_chart_effort_per_phases_profiles"
       when "stacked_bar_chart_cost_per_phases_profiles"
 
@@ -221,48 +225,78 @@ module ViewsWidgetsHelper
 
 
   # Get the BAR or PIE CHART data for effort per phase or Cost per phase
-  def get_chart_data_effort_and_cost(pbs_project_element, module_project, estimation_value, view_widget, type="histogram")
-    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
-    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-    probable_est_value = estimation_value.send("string_data_probable")
+  def get_chart_data_effort_and_cost(pbs_project_element, module_project, estimation_value, view_widget)
     chart_data = []
 
-    unless probable_est_value.nil?
+    return chart_data if (!module_project.pemodule.alias.eql?(Projestimate::Application::EFFORT_BREAKDOWN) || estimation_value.nil?)
+
+    #effort_breakdown_stacked_bar_dataset = {}
+    #effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
+
+    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
+    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    view_widget.show_min_max ? (levels = ['low', 'most_likely', 'high', 'probable']) : (levels = ['probable'])
+
+    #if view_widget.show_min_max
+      #  # get all project's wbs-project_elements
+      #  @project_wbs_project_elts = @project.wbs_project_elements
+      #  @project_wbs_project_elts.each do |wbs_project_elt|
+      #    @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
+      #  end
+
+      # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
+      #            pbs_level_with_activities = level_value[@current_component.id]
+      #            sum_of_value = 0.0
+      #            if !pbs_level_with_activities.nil?
+      #              pbs_level_with_activities.each do |wbs_activity_elt_id, hash_value|
+      #                sum_of_value = sum_of_value + hash_value[:value]
+      #                wbs_project_elt = WbsProjectElement.find(wbs_activity_elt_id)
+      #                unless wbs_project_elt.is_root || wbs_project_elt.has_children?
+      #                  @current_mp_effort_per_activity[level]["#{wbs_project_elt.name.parameterize.underscore}"] = hash_value[:value]
+      #                  @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] << hash_value[:value]
+      #                end
+      #              end
+      #            end
+      #            pbs_level_value = sum_of_value
+
+      #module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
+      #  levels.each do |level|
+      #    level_estimation_values = Hash.new
+      #    level_estimation_values = estimation_value.send("string_data_#{level}")
+      #    if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
+      #      chart_data << ["#{wbs_project_elt.name}", 0]
+      #    else
+      #      wbs_value = level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value]
+      #      chart_data << ["#{wbs_project_elt.name}", wbs_value]
+      #    end
+      #  end
+      #end
+    #else
+      probable_est_value = estimation_value.send("string_data_probable")
+      pbs_probable_for_consistency = probable_est_value.nil? ? nil : probable_est_value[pbs_project_element.id]
       module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
-        pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
-        wbs_project_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_project_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_project_elt.id][:is_consistent]
-        show_consistency_class = nil
-        unless wbs_project_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
-          show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_project_elt.name)}'></span>"
-        end
-
-        #For wbs-activity-completion node consistency
-        completion_consistency = ""
-        title = ""
-        res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
-
-        levels.each do |level|
-          res << '<td>'
-          level_estimation_values = Hash.new
-          level_estimation_values = estimation_value.send("string_data_#{level}")
+        if wbs_project_elt != project_wbs_project_elt_root && !wbs_project_elt.is_added_wbs_root
+          level_estimation_values = probable_est_value
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
-            res << ' - '
+            chart_data << ["#{wbs_project_elt.name}", 0]
           else
-            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value)}"
+            wbs_value = level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value]
+            chart_data << ["#{wbs_project_elt.name}", wbs_value]
           end
-          res << '</td>'
         end
-        res << '</tr>'
       end
-    end
+    #end
+    chart_data
   end
 
   #The view to display result with ACTIVITIES : EFFORT PER PHASE AND COST PER PHASE TABLE
   def display_effort_or_cost_per_phase(pbs_project_element, module_project_id, estimation_value, view_widget_id)
     res = String.new
-
     view_widget = ViewsWidget.find(view_widget_id)
     module_project = ModuleProject.find(module_project_id)
+
+    return res if module_project.pemodule.alias != Projestimate::Application::EFFORT_BREAKDOWN
+
     pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
     project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
     if view_widget.show_min_max
