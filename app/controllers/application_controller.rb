@@ -365,7 +365,7 @@ class ApplicationController < ActionController::Base
 
   def set_breadcrumbs(*args)
     if args.empty?
-      @breacrumbs = { "Dashboard" => '/dashboard', "#{action_name.humanize} #{controller_name.humanize}" => request.original_url}
+      @breacrumbs = { "Estimates" => main_app.root_url, "#{action_name.humanize} #{controller_name.humanize}" => request.original_url}
     else
       @breacrumbs = args.first
     end

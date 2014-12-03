@@ -111,7 +111,7 @@ class ProjectsController < ApplicationController
     @module_project = current_module_project
     @show_hidden = 'true'
 
-    set_breadcrumbs "Dashboard" => "/dashboard", @project.title => edit_project_path(@project)
+    set_breadcrumbs @project.title => edit_project_path(@project)
 
     # Get the project default RATIO
     # Get the wbs_project_element which contain the wbs_activity_ratio
@@ -189,7 +189,7 @@ class ProjectsController < ApplicationController
         @aproj << Factor.where(alias: a, factor_type: "advanced").first
       end
     else
-      set_breadcrumbs "Dashboard" => "/dashboard", "Cocomo Expert" => ""
+      set_breadcrumbs "Cocomo Expert" => ""
 
       @sf = []
       @em = []
@@ -209,7 +209,6 @@ class ProjectsController < ApplicationController
   def index
     #No authorize required since everyone can access the list (permission will be managed project per project)
     set_page_title 'Estimations'
-    set_breadcrumbs "Dashboard" => "/dashboard"
 
     # The current user can only see projects of its organizations
     @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |i| !i.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
@@ -217,7 +216,7 @@ class ProjectsController < ApplicationController
 
   def new
     authorize! :create_project_from_scratch, Project
-    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path
+    set_breadcrumbs "Estimations" => projects_path
     set_page_title 'New estimation'
   end
 
@@ -323,7 +322,7 @@ class ProjectsController < ApplicationController
 
     @project = Project.find(params[:id])
 
-    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
 
     if (cannot? :edit_project, @project) ||                                               # No write access to project
         (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) #||      # frozen project
@@ -395,7 +394,7 @@ class ProjectsController < ApplicationController
     set_page_title 'Edit estimation'
     @project = Project.find(params[:id])
 
-    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_modify_estimation?(@project)
@@ -556,7 +555,7 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    set_breadcrumbs "Dashboard" => "/dashboard", "Estimations" => projects_path, @project => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
 
     authorize! :show_project, @project
     set_page_title 'Show estimation'
@@ -692,16 +691,6 @@ class ProjectsController < ApplicationController
     @platform_categories = PlatformCategory.defined
     @acquisition_categories = AcquisitionCategory.defined
     @project_categories = ProjectCategory.defined
-  end
-
-  #Change selected project ("Jump to a project" select box)
-  def change_selected_project
-    if params[:project_id]
-      project = Project.find(params[:project_id])
-      authorize! :edit_project, project
-      session[:current_project_id] = params[:project_id]
-    end
-    redirect_to '/dashboard'
   end
 
   #Load specific security depending of user selected (last tabs on project editing page)

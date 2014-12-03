@@ -280,7 +280,6 @@ Projestimate::Application.routes.draw do
   get 'update_project_security_level' => 'projects#update_project_security_level', :as => 'update_project_security_level'
   get 'update_project_security_level_group' => 'projects#update_project_security_level_group', :as => 'update_project_security_level_group'
   get 'projects_global_params' => 'projects#projects_global_params', :as => 'projects_global_params'
-  get 'change_selected_project' => 'projects#change_selected_project', :as => 'change_selected_project'
   get 'commit' => 'projects#commit', :as => 'commit'
   get 'activate' => 'projects#activate', :as => 'activate'
   get 'activate_project' => 'projects#activate', :as => 'activate_project'
