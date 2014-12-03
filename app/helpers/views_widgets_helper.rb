@@ -79,10 +79,10 @@ module ViewsWidgetsHelper
         ft_minMax_maxFontSize = 12
       else
         icon_font_size = ((height+width)/2) * 0.025
-        if icon_font_size > 6 && icon_font_size < 8
+        if icon_font_size > 5 && icon_font_size < 7
+          icon_font_size = 5
+        elsif icon_font_size > 7
           icon_font_size = 6
-        elsif icon_font_size > 8
-          icon_font_size = 8
         end
     end
 
@@ -193,9 +193,21 @@ module ViewsWidgetsHelper
 
           end
         end
-
         #value_to_show = timeline([["Washington", "1789-04-29", "1797-03-03"], ["Adams", "1797-03-03", "1801-03-03"], ["Jefferson", "1801-03-03", "1809-03-03"]], height: "#{chart_height}px")
         value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
+
+      when "table_effort_per_phase", "table_cost_per_phase"
+        if module_project.pemodule.alias == "effort_breakdown"
+          value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
+        end
+      when "histogram_effort_per_phase", "histogram_cost_per_phase"
+
+      when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
+
+      when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
+
+      when "stacked_bar_chart_effort_per_phases_profiles"
+      when "stacked_bar_chart_cost_per_phases_profiles"
 
       else
         value_to_show = probable_value_text
@@ -205,6 +217,136 @@ module ViewsWidgetsHelper
 
     # Return the view_widget HASH
     widget_data
+  end
+
+
+  # Get the BAR or PIE CHART data for effort per phase or Cost per phase
+  def get_chart_data_effort_and_cost(pbs_project_element, module_project, estimation_value, view_widget, type="histogram")
+    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
+    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    probable_est_value = estimation_value.send("string_data_probable")
+    chart_data = []
+
+    unless probable_est_value.nil?
+      module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
+        pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
+        wbs_project_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_project_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_project_elt.id][:is_consistent]
+        show_consistency_class = nil
+        unless wbs_project_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
+          show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_project_elt.name)}'></span>"
+        end
+
+        #For wbs-activity-completion node consistency
+        completion_consistency = ""
+        title = ""
+        res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
+
+        levels.each do |level|
+          res << '<td>'
+          level_estimation_values = Hash.new
+          level_estimation_values = estimation_value.send("string_data_#{level}")
+          if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
+            res << ' - '
+          else
+            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value)}"
+          end
+          res << '</td>'
+        end
+        res << '</tr>'
+      end
+    end
+  end
+
+  #The view to display result with ACTIVITIES : EFFORT PER PHASE AND COST PER PHASE TABLE
+  def display_effort_or_cost_per_phase(pbs_project_element, module_project_id, estimation_value, view_widget_id)
+    res = String.new
+
+    view_widget = ViewsWidget.find(view_widget_id)
+    module_project = ModuleProject.find(module_project_id)
+    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
+    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    if view_widget.show_min_max
+      levels = ['low', 'most_likely', 'high', 'probable']
+      colspan = 4
+      rowspan = 2
+    else
+      levels = ['probable']
+      colspan = 1
+      rowspan = 1
+    end
+
+    res << " <table class='table table-condensed table-bordered table_effort_per_phase'>
+               <tr><th rowspan=#{rowspan}>Phases</th>"
+    # Get the module_project probable estimation values for showing element consistency
+    probable_est_value_for_consistency = nil
+    pbs_level_data_for_consistency = Hash.new
+    probable_est_value_for_consistency = estimation_value.send("string_data_probable")
+    res << "<th colspan='#{colspan}'><span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'> #{estimation_value.pe_attribute.name} (#{get_attribute_unit(estimation_value.pe_attribute)})</span></th>"
+
+    # For is_consistent purpose
+    levels.each do |level|
+      unless level.eql?("probable")
+        pbs_data_level = estimation_value.send("string_data_#{level}")
+        pbs_data_level.nil? ? pbs_level_data_for_consistency[level] = nil : pbs_level_data_for_consistency[level] = pbs_data_level[pbs_project_element.id]
+      end
+    end
+    res << '</tr>'
+
+    # We are showing for each PBS and/or ACTIVITY the (low, most_likely, high) values
+    if view_widget.show_min_max
+      res << '<tr>'
+      levels.each do |level|
+        res << "<th>#{level.humanize}</th>"
+      end
+      res << '</tr>'
+    end
+    module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
+      pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
+      wbs_project_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_project_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_project_elt.id][:is_consistent]
+      show_consistency_class = nil
+      unless wbs_project_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
+        show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_project_elt.name)}'></span>"
+      end
+
+      #For wbs-activity-completion node consistency
+      completion_consistency = ""
+      title = ""
+      res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
+
+      levels.each do |level|
+        res << '<td>'
+        level_estimation_values = Hash.new
+        level_estimation_values = estimation_value.send("string_data_#{level}")
+        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
+          res << ' - '
+        else
+          res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value)}"
+        end
+        res << '</td>'
+      end
+      res << '</tr>'
+    end
+
+    #Show the global result of the PBS
+    res << '<tr><td><strong> </strong></td>'
+    levels.each do |level|
+      res << '<td></td>'
+    end
+    res << '</tr>'
+
+    # Show the probable values
+    res << "<tr><td colspan='#{colspan}'><strong> #{current_component.name} (Probable Value) </strong> </td>"
+    res << "<td>"
+    level_probable_value = estimation_value.send('string_data_probable')
+    if level_probable_value.nil? || level_probable_value[pbs_project_element.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value].nil?
+      res << '-'
+    else
+      res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], estimation_value)}</strong></div>"
+    end
+    res << '</td>'
+    res << '</tr>'
+    res << '</table>'
+    res
   end
 
 end

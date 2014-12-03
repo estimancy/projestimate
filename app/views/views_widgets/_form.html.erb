@@ -19,7 +19,7 @@
           <!--<tr><td><%#= f.association :widget, label: I18n.t(:label_widget) %></td></tr>-->
           <tr>
             <td><%= f.input :name, label: I18n.t(:name) %></td>
-            <td><%= f.association :pe_attribute, collection: PeAttribute.all, label: I18n.t(:associated_attribute) %></td>
+            <td><%= f.association :pe_attribute, collection: @module_project.pemodule.pe_attributes, label: I18n.t(:associated_attribute) %></td>
           </tr>
           <tr>
             <td><%= f.input :widget_type, as: :select, collection: Projestimate::Application::WIDGETS_TYPE , label: I18n.t(:label_widget_type) %></td>

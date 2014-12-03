@@ -1319,5 +1319,6 @@ en:
   criteria: "Critères"
   add_new_unit_of_work_group: "Add new group"
   add_unit_of_work: "Add unit of work"
+  preview_selected_wbs_activity: "Preview of the selected wbs-activity"
   fields: "Custom fields"
   most_likely: "Most likely"

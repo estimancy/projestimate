@@ -62,7 +62,7 @@ class Group < ActiveRecord::Base
 
   #validates :record_status, :presence => true ##, :if => :on_master_instance?   #defined in MasterDataHelper
   #validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true #, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
+  validates :name, :presence => true , :uniqueness => {:scope => :organization_id, :case_sensitive => false}
   #validates :custom_value, :presence => true, :if => :is_custom?
 
   #Search fields

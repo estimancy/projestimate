@@ -945,6 +945,22 @@ h5.view_title{
     width: 60px;
 }
 
+.no_estimation_value{
+    font-size: 10px;
+    line-height: 2px;
+    font-weight: 100;
+}
+
+.table_effort_per_phase{
+    width: auto;
+    font-size:12px;
+    font-weight:normal
+}
+
+.effort_per_phase{
+    overflow: auto;
+}
+
 .ui-resizable-handle {
     height:5px;
 }

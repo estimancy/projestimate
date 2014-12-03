@@ -1268,3 +1268,4 @@ de:
   show_min_max: "Show Min/Max values"
   widget_size: "Widget size W x H : "
   label_update_view_widgets_order: "Save view"
+  preview_selected_wbs_activity: "Preview of the selected wbs-activity"

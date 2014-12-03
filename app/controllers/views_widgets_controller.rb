@@ -24,25 +24,28 @@ class ViewsWidgetsController < ApplicationController
   def load_current_project_data
     #@project = Project.find(params[:project_id])
     #if @project
-      @project_organization = @project.organization
-      @module_projects ||= @project.module_projects
-      #Get the initialization module_project
-      @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
-      @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-      @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+    @project_organization = @project.organization
+    @module_projects ||= @project.module_projects
+    #Get the initialization module_project
+    @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
+    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
     #end
   end
 
   def new
     @views_widget = ViewsWidget.new(params[:views_widget])
+    @module_project = ModuleProject.find(params[:module_project_id])
   end
 
   def edit
     @views_widget = ViewsWidget.find(params[:id])
+    @module_project = ModuleProject.find(params[:module_project_id])
   end
 
   def create
     @views_widget = ViewsWidget.new(params[:views_widget])
+    #@module_project = ModuleProject.find(params[:views_widget][:module_project_id])
     if @views_widget.save
 
       unless params["field"].blank?
@@ -62,6 +65,7 @@ class ViewsWidgetsController < ApplicationController
 
   def update
     @views_widget = ViewsWidget.find(params[:id])
+    #@module_project = ModuleProject.find(params[:views_widget][:module_project_id])
 
     unless params["field"].blank?
       pf = ProjectField.where(field_id: params["field"]).first
@@ -86,6 +90,7 @@ class ViewsWidgetsController < ApplicationController
 
   def destroy
     @views_widget = ViewsWidget.find(params[:id])
+    @module_project = ModuleProject.find(params[:module_project_id])
     @views_widget.destroy
     #render :partial => "views_widgets/refresh_views_widgets_results"
     redirect_to dashboard_path(@project)
