@@ -81,7 +81,7 @@
                     <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
                   <% end %>
                   <% if ["effort_breakdown", "balancing_module"].include?(current_module_project.pemodule.alias) %>
-                    <%= raw display_results.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'alert alert-info')}" : display_results %>
+                    <%#= raw display_results.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'alert alert-info')}" : display_results %>
                     <%= submit_tag('Run estimation', :class => 'btn btn-mini pull-right', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation') if can_modify_estimation?(current_project) %>
                   <% end %>
                 <% end %>
