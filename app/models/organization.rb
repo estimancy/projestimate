@@ -43,6 +43,7 @@ class Organization < ActiveRecord::Base
   has_many :groups
   has_many :users, through: :groups, uniq: true
 
+  has_many :fields, :dependent => :destroy
   has_many :wbs_activities, :dependent => :destroy
   has_many :attribute_organizations, :dependent => :delete_all
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations

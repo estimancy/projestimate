@@ -75,6 +75,7 @@ class OrganizationsController < ApplicationController
 
     @users = @organization.users
     @groups = @organization.groups
+    @fields = @organization.fields
 
     @organization_profiles = @organization.organization_profiles
 
@@ -224,6 +225,14 @@ class OrganizationsController < ApplicationController
       @factors = Factor.order("factor_type")
       @technologies = OrganizationTechnology.all
       @size_unit_types = SizeUnitType.all
+      @organization_profiles = @organization.organization_profiles
+      @groups = @organization.groups
+      @organization_group = @organization.groups
+      @wbs_activities = @organization.wbs_activities
+      @projects = @organization.projects
+      @fields = @organization.fields
+      @size_units = SizeUnit.all
+      @guw_models = @organization.guw_models
 
       render action: 'edit'
     end

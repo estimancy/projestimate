@@ -43,6 +43,9 @@ Guw::Engine.routes.draw do
   resources :guw_unit_of_works
   resources :guw_unit_of_work_groups
   resources :guw_work_units
+  resources :guw_work_units do
+    post "create_notes"
+  end
 
   resources :guw_types
   resources :guw_attribute_complexities
@@ -57,7 +60,6 @@ Guw::Engine.routes.draw do
       resources :guw_type_complexities
 
       post "guw_attribute_complexities/save_attributs_complexities"
-
     end
   end
 

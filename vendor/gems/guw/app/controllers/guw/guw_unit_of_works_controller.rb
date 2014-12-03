@@ -19,6 +19,8 @@
 
 class Guw::GuwUnitOfWorksController < ApplicationController
 
+  include ModuleProjectsHelper
+
   def new
     @guw_unit_of_work = Guw::GuwUnitOfWork.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
@@ -157,7 +159,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         @guw_type.guw_complexities.each do |guw_c|
 
           #Save if uo is simple/ml/high
-          value_pert = (guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely + guw_unit_of_work.result_high)/6
+          value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
           if value_pert.between?(guw_c.bottom_range, guw_c.top_range)
             guw_unit_of_work.guw_complexity_id = guw_c.id
             guw_unit_of_work.save
@@ -176,7 +178,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             uo_weight_high = guw_c.weight
           end
 
-          @weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+          @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
+          #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
         end
 
         guw_unit_of_work.effort = @weight_pert.sum
@@ -247,6 +250,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
 
     redirect_to main_app.dashboard_path(@project)
+  end
+
+  def create_notes
+
   end
 
 end

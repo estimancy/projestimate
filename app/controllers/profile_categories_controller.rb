@@ -131,7 +131,7 @@ class ProfileCategoriesController < ApplicationController
         @profile_category.destroy
       else
         flash[:error] = I18n.t (:warning_master_record_cant_be_delete)
-        redirect_to redirect(groups_path) and return
+        redirect_to redirect(profile_categories_path) and return
       end
     end
 

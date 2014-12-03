@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141114161918) do
+ActiveRecord::Schema.define(:version => 20141202135335) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -277,6 +277,13 @@ ActiveRecord::Schema.define(:version => 20141114161918) do
     t.text     "helps"
   end
 
+  create_table "fields", :force => true do |t|
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
   create_table "groups", :force => true do |t|
     t.integer  "organization_id"
     t.string   "name"
@@ -394,6 +401,7 @@ ActiveRecord::Schema.define(:version => 20141114161918) do
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
     t.integer  "pbs_project_element_id"
+    t.string   "notes"
   end
 
   create_table "guw_guw_unit_of_works", :force => true do |t|
@@ -828,6 +836,15 @@ ActiveRecord::Schema.define(:version => 20141114161918) do
   add_index "project_categories", ["record_status_id"], :name => "index_project_categories_on_record_status_id"
   add_index "project_categories", ["reference_id"], :name => "index_project_categories_on_parent_id"
   add_index "project_categories", ["uuid"], :name => "index_project_categories_on_uuid", :unique => true
+
+  create_table "project_fields", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "field_id"
+    t.integer  "views_widget_id"
+    t.string   "value"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "project_ressources", :force => true do |t|
     t.string "name"

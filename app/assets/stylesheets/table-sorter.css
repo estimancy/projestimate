@@ -11,7 +11,7 @@
 .tablesorter-bootstrap tfoot td {
 	/*font: bold 14px/20px Arial, Sans-serif;*/
 	position: relative;
-	padding: 8px;
+	padding: 0px;
 	margin: 0 0 18px;
 	list-style: none;
 	background-color: #FBFBFB;
@@ -83,7 +83,7 @@ caption {
 	width: 98%;
 	height: auto;
 	margin: 0 auto;
-	padding: 4px 6px;
+	padding: 0px 6px;
 	background-color: #fff;
 	color: #333;
 	-webkit-box-sizing: border-box;

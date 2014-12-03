@@ -83,6 +83,7 @@
                           </td>
                           <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
                             <%= link_to I18n.t('delete'), guw.guw_unit_of_work_path(guow), method: "delete", class: "btn btn-mini" %>
+                            <%= link_to '', guw.guw_work_unit_create_notes_path(guow), method: "delete", class: "" %>
                           </td>
                         <% end %>
                       </tr>
