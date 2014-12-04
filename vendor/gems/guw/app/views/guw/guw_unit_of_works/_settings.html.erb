@@ -40,9 +40,18 @@
                         </a>
                       </td>
                       <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle" class="span1">
-                        Type d'UO
+
+                        <span class="pull-left">
+                          Type d'UO
+                        </span>
                         <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), prompt: "Select an unit of of work type", required: true %>
-                        Type d'action
+
+                        <hr class="table">
+
+                        <span class="pull-left">
+                          Type d'action
+                        </span>
+
                         <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit", required: true %>
                       </td>
                     </tr>
@@ -88,7 +97,6 @@
                         <% end %>
                       </tr>
                     <% end %>
-
                   <% end %>
                 </table>
               </div>
