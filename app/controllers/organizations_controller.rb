@@ -284,13 +284,13 @@ class OrganizationsController < ApplicationController
           unless value.nil?
             t = TechnologySizeType.where( organization_id: @organization.id,
                                           organization_technology_id: technology.id,
-                                          size_unit_id: size_unit,
+                                          size_unit_id: size_unit.id,
                                           size_unit_type_id: sut.id).first
 
             if t.nil?
               TechnologySizeType.create(organization_id: @organization.id,
                                         organization_technology_id: technology.id,
-                                        size_unit_id: size_unit,
+                                        size_unit_id: size_unit.id,
                                         size_unit_type_id: sut.id,
                                         value: value)
             else
