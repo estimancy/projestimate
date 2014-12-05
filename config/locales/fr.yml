@@ -230,6 +230,11 @@ fr:
     errors:
       <<: *errors
   activerecord:
+    attributes:
+      organization:
+        limit1: "Affichage de l'effort en jour à partir de"
+        limit2: "Affichage de l'effort en semaine à partir de"
+        limit3: "Affichage de l'effort en mois à partir de"
     errors:
       <<: *errors
       

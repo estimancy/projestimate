@@ -230,6 +230,11 @@ en-gb:
     errors:
       <<: *errors
   activerecord:
+    attributes:
+      organization:
+        limit1: "Display effort in day from"
+        limit2: "Display effort in week from"
+        limit3: "Display effort in month from"
     errors:
       <<: *errors
       
