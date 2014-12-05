@@ -40,7 +40,7 @@
             <td>
               <label><%= I18n.t :fields %></label>
               <% selected = @views_widget.project_fields.first %>
-              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "Choose a custom field." %>
+              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "None" %>
             </td>
           </tr>
 
