@@ -179,7 +179,6 @@ module ViewsWidgetsHelper
                 dh = d.hours
               end
               ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
-
               #pbs_project_elt.end_date = ed
               #pbs_project_elt.save
 
@@ -210,7 +209,11 @@ module ViewsWidgetsHelper
         value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {title: chart_title})
 
       when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
+        value_to_show = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+
       when "stacked_bar_chart_effort_per_phases_profiles"
+        #value_to_show = column_chart(data, stacked: true)
+
       when "stacked_bar_chart_cost_per_phases_profiles"
 
       else
@@ -224,25 +227,63 @@ module ViewsWidgetsHelper
   end
 
 
+  # Get Effort and Cost data by Phases and by Profiles
+  def get_chart_data_by_phase_and_profile(pbs_project_element, module_project, estimation_value, view_widget)
+    result = String.new
+    stacked_data = Array.new
+
+    probable_est_value = estimation_value.send("string_data_probable")
+    pbs_probable_est_value = probable_est_value[pbs_project_element.id]
+    project_organization = module_project.project.organization
+    project_wbs_project_elements = module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements
+    project_organization_profiles = module_project.project.organization.organization_profiles
+
+    # get the ratio_reference
+    ratio_reference = nil
+    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
+    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    if project_wbs_project_elt_root
+      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+      ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+    end
+    case view_widget.widget_type
+      when "effort_per_phases_profiles_table"
+        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference} )
+
+      when "cost_per_phases_profiles_table"
+        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference} )
+
+      when "stacked_bar_chart_effort_per_phases_profiles"
+        #data = [
+        #    {"name" => "Workout", "data"=> {"2013-02-10 00:00:00 -0800" => 3, "2013-02-17 00:00:00 -0800" => 4}},
+        #    {"name" =>"Call parents", "data"=> {"2013-02-10 00:00:00 -0800" => 5, "2013-02-17 00:00:00 -0800" => 3}}
+        #]
+        #value_to_show = column_chart(data, stacked: true)
+
+
+      when "stacked_bar_chart_cost_per_phases_profiles"
+    end
+    result
+  end
+
+
   # Get the BAR or PIE CHART data for effort per phase or Cost per phase
   def get_chart_data_effort_and_cost(pbs_project_element, module_project, estimation_value, view_widget)
     chart_data = []
+    effort_breakdown_stacked_bar_dataset = {}
 
     return chart_data if (!module_project.pemodule.alias.eql?(Projestimate::Application::EFFORT_BREAKDOWN) || estimation_value.nil?)
-
-    #effort_breakdown_stacked_bar_dataset = {}
-    #effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
 
     pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
     project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
     view_widget.show_min_max ? (levels = ['low', 'most_likely', 'high', 'probable']) : (levels = ['probable'])
 
-    #if view_widget.show_min_max
+    if view_widget.show_min_max
       #  # get all project's wbs-project_elements
-      #  @project_wbs_project_elts = @project.wbs_project_elements
-      #  @project_wbs_project_elts.each do |wbs_project_elt|
-      #    @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
-      #  end
+      project_wbs_project_elts = module_project.project.wbs_project_elements
+      project_wbs_project_elts.each do |wbs_project_elt|
+        effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
+      end
 
       # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
       #            pbs_level_with_activities = level_value[@current_component.id]
@@ -271,7 +312,7 @@ module ViewsWidgetsHelper
       #    end
       #  end
       #end
-    #else
+    else
       probable_est_value = estimation_value.send("string_data_probable")
       pbs_probable_for_consistency = probable_est_value.nil? ? nil : probable_est_value[pbs_project_element.id]
       module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
@@ -285,7 +326,7 @@ module ViewsWidgetsHelper
           end
         end
       end
-    #end
+    end
     chart_data
   end
 

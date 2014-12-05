@@ -97,6 +97,10 @@ class WbsActivitiesController < ApplicationController
     @wbs_activity_elements_list = @wbs_activity.wbs_activity_elements
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
     @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios
+
+    unless @wbs_activity_ratios.empty?
+      @wbs_activity_organization = @wbs_activity_ratios.first.wbs_activity.organization  #@wbs_activity_ratio.wbs_activity.organization
+    end
     @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity_organization.organization_profiles
 
     @wbs_activity_ratio_elements = []

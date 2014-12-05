@@ -1606,4 +1606,10 @@ es:
   widget_size: "Widget size W x H : "
   label_update_view_widgets_order: "Save view"
   preview_selected_wbs_activity: "Preview of the selected wbs-activity"
+  phases: "Phases"
+  effort_per_phase: "Effort per phase"
+  cost_per_phase: "Cost per phase"
+  cost_hour: "Cost %{value}/hour"
+  effort_per_phases_and_profiles: "EFFORT PER PHASES AND PROFILES"
+  cost_per_phases_and_profiles: "COST PER PHASES AND PROFILES"
 

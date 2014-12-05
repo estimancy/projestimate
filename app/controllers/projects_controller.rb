@@ -964,7 +964,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    # Get the estimation results by profile for the EffortBreakdown module
+    # Get the estimation results by profile for the EffortBreakdown module and save data
     if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
       ###results_with_activities_by_profile
       @current_component = pbs_project_element
@@ -973,6 +973,7 @@ class ProjectsController < ApplicationController
       @module_project = start_module_project
       # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
       @ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+
       # If Another default ratio was defined in PBS, it will override the one defined in module-project
       if !@current_component.wbs_activity_ratio.nil?
         @ratio_reference = @current_component.wbs_activity_ratio
@@ -985,7 +986,6 @@ class ProjectsController < ApplicationController
     end
 
     redirect_to dashboard_path(@project)
-
     #flash.now[:notice] = "Finish to execute estimation"
     #respond_to do |format|
     #  format.js { render :partial => 'pbs_project_elements/refresh'}
@@ -1030,87 +1030,85 @@ class ProjectsController < ApplicationController
           # compute the probable value for each node
           probable_estimation_value = Hash.new
           probable_estimation_value = est_val.send('string_data_probable')
-
           if est_val_attribute_type == 'numeric'
-
             probable_estimation_value[@pbs_project_element.id] = probable_value(@my_results, est_val)
 
             ######### if module_project use Ratio for output (like the Effort breakdown estimation module) ###############
             # Get the effort per Activity by profile
             if start_module_project.pemodule.yes_for_output_with_ratio? || start_module_project.pemodule.yes_for_input_output_with_ratio?
 
-              ####### Get the project referenced ratio #####
+              if (start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN) && (est_val.pe_attribute.alias == Projestimate::Application::EFFORT)
+                ####### Get the project referenced ratio #####
+                # Project pe_wbs_activity
+                pe_wbs_activity = @project.pe_wbs_projects.activities_wbs.first
+                # Get the wbs_project_element which contain the wbs_activity_ratio
+                project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+                #wbs_project_elt_with_ratio = WbsProjectElement.where("pe_wbs_project_id = ? and wbs_activity_id = ? and is_added_wbs_root = ?", pe_wbs_activity.id, @pbs_project_element.wbs_activity_id, true).first
+                # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
+                wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
 
-              # Project pe_wbs_activity
-              pe_wbs_activity = @project.pe_wbs_projects.activities_wbs.first
+                # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
+                ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
 
-              # Get the wbs_project_element which contain the wbs_activity_ratio
-              project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-              #wbs_project_elt_with_ratio = WbsProjectElement.where("pe_wbs_project_id = ? and wbs_activity_id = ? and is_added_wbs_root = ?", pe_wbs_activity.id, @pbs_project_element.wbs_activity_id, true).first
-              # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
-              wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+                # If Another default ratio was defined in PBS, it will override the one defined in module-project
+                if !@pbs_project_element.wbs_activity_ratio.nil?
+                  ratio_reference = @pbs_project_element.wbs_activity_ratio
+                end
+                # Get the referenced ratio wbs_activity_ratio_profiles
+                referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles
+                profiles_probable_value = {}
+                parent_profile_est_value = {}
 
-              # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
-              ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+                # get the wbs_project_elements that have at least one child
+                wbs_project_elt_with_children = pe_wbs_activity.wbs_project_elements.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
 
-              # If Another default ratio was defined in PBS, it will override the one defined in module-project
-              if !@pbs_project_element.wbs_activity_ratio.nil?
-                ratio_reference = @pbs_project_element.wbs_activity_ratio
-              end
-              # Get the referenced ratio wbs_activity_ratio_profiles
-              referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles
-              profiles_probable_value = {}
-              parent_profile_est_value = {}
+                @project.organization.organization_profiles.each do |profile|
+                  profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
+                  # Parent values are reset to zero
+                  wbs_project_elt_with_children.each{ |elt| parent_profile_est_value["#{elt}"] = 0 }
 
-              # get the wbs_project_elements that have at least one child
-              wbs_project_elt_with_children = pe_wbs_activity.wbs_project_elements.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
+                  probable_estimation_value[@pbs_project_element.id].each do |wbs_project_elt_id, hash_value|
+                    # Get the probable value profiles values
 
-              @project.organization.organization_profiles.each do |profile|
-                profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
-                # Parent values are reset to zero
-                wbs_project_elt_with_children.each{ |elt| parent_profile_est_value["#{elt}"] = 0 }
+                    if hash_value["profiles"].nil?
+                      # create a new hash for profiles estimations results
+                      probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"] = Hash.new
+                    end
 
-                probable_estimation_value[@pbs_project_element.id].each do |wbs_project_elt_id, hash_value|
-                  # Get the probable value profiles values
+                    current_probable_profiles = probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"]
 
-                  if hash_value["profiles"].nil?
-                    # create a new hash for profiles estimations results
-                    probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"] = Hash.new
-                  end
+                    wbs_project_elt = WbsProjectElement.find(wbs_project_elt_id)
+                    wbs_activity_elt_id = wbs_project_elt.wbs_activity_element_id
 
-                  current_probable_profiles = probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"]
+                    # Wbs_project_element root element doesn't have a wbs_activity_element
+                    unless wbs_activity_elt_id.nil?
+                      wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
+                      if !wbs_activity_ratio_elt.nil?
+                        # get the wbs_activity_ratio_profile
+                        corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
+                        # Get current profile ratio value for the referenced ratio
+                        corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
+                        estimation_value_profile = nil
+                        unless corresponding_ratio_profile_value.nil?
+                          estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
 
-                  wbs_project_elt = WbsProjectElement.find(wbs_project_elt_id)
-                  wbs_activity_elt_id = wbs_project_elt.wbs_activity_element_id
+                          #the update the parent's value
+                          ###parent_profile_est_value["#{wbs_project_elt.parent_id}"] += estimation_value_profile
+                          parent_profile_est_value["#{wbs_project_elt.parent_id}"] = parent_profile_est_value["#{wbs_project_elt.parent_id}"].to_f + estimation_value_profile
+                        end
 
-                  # Wbs_project_element root element doesn't have a wbs_activity_element
-                  unless wbs_activity_elt_id.nil?
-                    wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
-                    if !wbs_activity_ratio_elt.nil?
-                      # get the wbs_activity_ratio_profile
-                      corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
-                      # Get current profile ratio value for the referenced ratio
-                      corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
-                      estimation_value_profile = nil
-                      unless corresponding_ratio_profile_value.nil?
-                        estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
-
-                        #the update the parent's value
-                        ###parent_profile_est_value["#{wbs_project_elt.parent_id}"] += estimation_value_profile
-                        parent_profile_est_value["#{wbs_project_elt.parent_id}"] = parent_profile_est_value["#{wbs_project_elt.parent_id}"].to_f + estimation_value_profile
+                        #if current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil?
+                          current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => estimation_value_profile} }
+                        #else
+                          #current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"] = { :value => estimation_value_profile }
+                        #end
                       end
-
-                      #if current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil?
-                        current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => estimation_value_profile} }
-                      #else
-                        #current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"] = { :value => estimation_value_profile }
-                      #end
                     end
                   end
-                end
-                #Need to calculate the parents effort by profile : addition of its children values
-                wbs_project_elt_with_children.each do |wbs_project_elt_id|
-                  probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_project_elt_id}"]} }
+                  #Need to calculate the parents effort by profile : addition of its children values
+                  wbs_project_elt_with_children.each do |wbs_project_elt_id|
+                    probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_project_elt_id}"]} }
+                  end
                 end
               end
             end

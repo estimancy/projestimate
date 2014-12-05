@@ -49,6 +49,7 @@ module EffortBreakdown
     end
 
     # Calculate the Cost for each WBS-Project-Element/Phase
+    # Cout Moyen
     def get_cost(*arg)
       cost = Hash.new
       # Project pe_wbs_activity

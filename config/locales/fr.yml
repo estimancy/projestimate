@@ -1322,4 +1322,10 @@ fr:
   preview_selected_wbs_activity: "Prévisualisation du WBS-Activity sélectionné"
   fields: "Champs personnalisé"
   most_likely: "Le plus probable"
+  phases: "Phases"
+  effort_per_phase: "Effort par phase"
+  cost_per_phase: "Coûts par phase"
+  cost_hour: "Coût %{value}/heure"
+  effort_per_phases_and_profiles: "EFFORT PAR PHASES ET PROFILS"
+  cost_per_phases_and_profiles: "COÛTS PAR PHASES ET PROFILS"
 
