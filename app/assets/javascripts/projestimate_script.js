@@ -619,6 +619,17 @@ $(document).ready(function() {
         });
     });
 
+    $("#jump_project_id").change(function() {
+        return $.ajax({
+            url: "change_selected_project",
+            method: "get",
+            data: "project_id=" + $(this).val(),
+            success: function(data) {
+                return document.location.href = "dashboard";
+            }
+        });
+    });
+
     $(".select_ratio").change(function() {
         return $.ajax({
             url: "/refresh_ratio_elements",
