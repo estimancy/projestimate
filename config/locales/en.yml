@@ -230,6 +230,11 @@ en:
     errors:
       <<: *errors
   activerecord:
+    attributes:
+      organization:
+        limit1: "Display effort in day from"
+        limit2: "Display effort in week from"
+        limit3: "Display effort in month from"
     errors:
       <<: *errors
 
@@ -545,7 +550,7 @@ en:
   new_project_security_level: "New project security level"
 
   #projects
-  edit_project: "Edit project \"%{value}\" ..."
+  edit_project: "Edit project \"%{value}\""
   new_project: "New estimation"
   new_project_from: "New estimation from template"
   wbs_product: "PBS-Product"

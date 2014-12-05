@@ -726,6 +726,11 @@ div.block_label.selected_pbs {
 .table th,
 .table td.center {
     text-align: center;
+    vertical-align: middle;
+}
+
+hr.table{
+    margin: 5px 0;
 }
 
 .notifications_fixed_top {

@@ -1,4 +1,4 @@
-$("#uow_<%= @index %>").html("<%= j(select_tag "uow[#{@index}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}), :class => "uow") %>");
-$("#complexity_<%= @index %>").html("<%= j(select_tag "complexity[#{@index}]", options_for_select(@complexities), :class => "complexity") %>")
+$("#uow_<%= @index %>").html("<%= j(select_tag "uow[#{@index}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}), :class => "uow input-small") %>");
+$("#complexity_<%= @index %>").html("<%= j(select_tag "complexity[#{@index}]", options_for_select(@complexities), :class => "complexity input-small") %>")
 $('.spiner').hide();
 <%# render partial: "/uow/uow_inputs/script" %>

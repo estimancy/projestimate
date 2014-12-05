@@ -53,7 +53,7 @@ class OrganizationsController < ApplicationController
     set_page_title 'Organizations'
     @organization = Organization.find(params[:id])
 
-    set_breadcrumbs "Dashboard" => "/dashboard", "Organizations" => "/organizationals_params", @organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization => ""
 
     @attributes = PeAttribute.defined.all
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
@@ -80,7 +80,6 @@ class OrganizationsController < ApplicationController
     @organization_profiles = @organization.organization_profiles
 
     #Get the Master defined groups and the organization's group
-    #@organization_group = (Group.defined.all + @organization.groups.all).flatten
     @organization_group = @organization.groups
     @guw_models = @organization.guw_models
   end
@@ -116,6 +115,7 @@ class OrganizationsController < ApplicationController
           ['Reused', 'new', ""],
       ]
       size_unit_types.each do |i|
+
         sut = SizeUnitType.create(:name => i[0],
                                   :alias => i[1],
                                   :description => i[2],
@@ -284,13 +284,13 @@ class OrganizationsController < ApplicationController
           unless value.nil?
             t = TechnologySizeType.where( organization_id: @organization.id,
                                           organization_technology_id: technology.id,
-                                          size_unit_id: size_unit,
+                                          size_unit_id: size_unit.id,
                                           size_unit_type_id: sut.id).first
 
             if t.nil?
               TechnologySizeType.create(organization_id: @organization.id,
                                         organization_technology_id: technology.id,
-                                        size_unit_id: size_unit,
+                                        size_unit_id: size_unit.id,
                                         size_unit_type_id: sut.id,
                                         value: value)
             else
@@ -372,12 +372,6 @@ class OrganizationsController < ApplicationController
         end
       end
     end
-
-    #array << technology.id
-    #
-    #unit =
-    #unit.organization_technology_ids = array
-    #unit.save
 
     redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-synthesis-uow-techno'), nil, '/organizationals_params')
   end
@@ -572,10 +566,9 @@ class OrganizationsController < ApplicationController
     original_organization = Organization.find(params[:organization_id])
     new_organization = original_organization.amoeba_dup
     if new_organization.save
-      ###original_organization_technologies = original_organization.organization_technologies
       flash[:notice] = I18n.t(:organization_successfully_copied)
     else
-      flash[:error] = "#{ I18n.t(:errors_when_copying_organization)} : #{new_organization.errors.messages.keys.join(', ')}"
+      flash[:error] = "#{ I18n.t(:errors_when_copying_organization)} : #{new_organization.errors.full_messages.join(', ')}"
     end
     redirect_to organizationals_params_path
   end

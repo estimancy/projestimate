@@ -44,9 +44,9 @@
               <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
               <%= f.input :inflation_rate, :label => I18n.t('inflation_rate'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
 
-              <%= f.input :limit1, :label => "Affichage de l'effort en jour à partir de", :required => true, :input_html => {:class => 'input-xxlarge'} %>
-              <%= f.input :limit2, :label => "Affichage de l'effort en semaine à partir de", :required => true, :input_html => {:class => 'input-xxlarge'} %>
-              <%= f.input :limit3, :label => "Affichage de l'effort en mois à partir de", :required => true, :input_html => {:class => 'input-xxlarge'} %>
+              <%= f.input :limit1, :required => true, :input_html => {:class => 'input-xxlarge'} %>
+              <%= f.input :limit2, :required => true, :input_html => {:class => 'input-xxlarge'} %>
+              <%= f.input :limit3, :required => true, :input_html => {:class => 'input-xxlarge'} %>
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@
 
     <div id="tabs-fields">
 
-      <b>Listing fields</b>
+      <b>Custom fields</b>
       <br />
 
       <%= link_to 'New Field', new_organization_field_path(@organization), class: "btn pull-right" %>
@@ -84,8 +84,10 @@
         <% @fields.each do |field| %>
           <tr>
             <td><%= field.name %></td>
-            <td><%= link_to 'Edit', edit_organization_field_path(@organization, field) %></td>
-            <td><%= link_to 'Destroy', field, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td class="center span3">
+              <%= link_to '', edit_organization_field_path(@organization, field), :class => 'icon-edit' %>
+              <%= link_to '', field, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'icon-trash' %>
+            </td>
           </tr>
         <% end %>
       </table>
@@ -127,7 +129,6 @@
               <th><%= field.name  %></th>
             <% end %>
             <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
-            <th class="filter-select"><%= I18n.t(:organizations) %></th>
             <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
             <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
           </tr>
@@ -149,7 +150,6 @@
                 <td><%= pf.nil? ? '-' : pf.value.to_f.round(2) %></td>
               <% end %>
               <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
-              <td class="span3"><%= project.organization %></td>
               <td><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
 
               <td class="center span3">

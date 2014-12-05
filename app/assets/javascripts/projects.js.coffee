@@ -34,14 +34,6 @@ jQuery ->
       url: "/select_categories"
       data: "project_area_selected=" + $(this).val()
 
-  $("#jump_project_id").change ->
-    $.ajax
-      url: "change_selected_project"
-      method: "get"
-      data: "project_id=" + $(this).val()
-      success: (data) ->
-        document.location.href = "dashboard"
-
   $(".select_ratio").change ->
     $.ajax
       url: "/refresh_ratio_elements"

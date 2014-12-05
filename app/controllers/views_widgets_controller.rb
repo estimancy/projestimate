@@ -67,15 +67,18 @@ class ViewsWidgetsController < ApplicationController
     @views_widget = ViewsWidget.find(params[:id])
     #@module_project = ModuleProject.find(params[:views_widget][:module_project_id])
 
-    unless params["field"].blank?
+    if params["field"].blank?
+      pfs = @views_widget.project_fields
+      pfs.destroy_all
+    else
       pf = ProjectField.where(field_id: params["field"]).first
       if pf.nil?
         ProjectField.create(project_id: @project.id,
                             field_id: params["field"],
                             views_widget_id: @views_widget.id,
-                            value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+                            value: get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show])
       else
-        pf.value = get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show]
+        pf.value = get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show]
         pf.save
       end
     end

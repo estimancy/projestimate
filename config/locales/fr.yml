@@ -230,6 +230,11 @@ fr:
     errors:
       <<: *errors
   activerecord:
+    attributes:
+      organization:
+        limit1: "Affichage de l'effort en jour à partir de"
+        limit2: "Affichage de l'effort en semaine à partir de"
+        limit3: "Affichage de l'effort en mois à partir de"
     errors:
       <<: *errors
       
@@ -545,7 +550,7 @@ fr:
   new_project_security_level: "Créer un nouveau niveau de sécurité sur le projet"
 
   #projects
-  edit_project: "Editer le projet \"%{value}\" ..."
+  edit_project: "Editer le projet \"%{value}\""
   new_project: "Créer une estimation"
   new_project_from: "Créer une estimation à partir d'un modèle"
   wbs_product: "PBS-Produits"

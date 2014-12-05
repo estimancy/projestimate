@@ -90,9 +90,6 @@
         <% if !@project.is_model %>
           <%= link_to I18n.t('delete'), @project, method: :delete, confirm: "Etes vous sur de vouloir annuler le projet ?", :class => 'btn' %>
         <% end %>
-        <% unless controller.action_name == 'new' %>
-          <%= link_to I18n.t(:label_activate_project), dashboard_path(@project), class: "btn pull-right" %>
-        <% end %>
       </div>
   <% end %>
 </div>

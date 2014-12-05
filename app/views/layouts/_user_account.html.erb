@@ -14,14 +14,26 @@
         <a href="<%= main_app.projects_url %>">
           <!--<i class=" icon-list icon-large pull-left"></i> -->
           <%= I18n.t('all_projects') %>
-        </a></li>
+        </a>
+      </li>
+
+      <% if @project %>
+        <% if !@project.nil? && !@project.new_record? %>
+          <li class="dropdown">
+            <a href="<%= main_app.dashboard_path(@project)%>">
+              <%= @project %>
+            </a>
+          </li>
+        <% end %>
+      <% end %>
+
       <% if (can? :create_project_from_scratch, Project) or (can? :create_project_from_template, Project) %>
         <li class="dropdown">
           <a href="<%= main_app.new_project_path %>">
-            <!--<i class="icon-plus icon-large pull-left"></i>-->
             <%= I18n.t('create_new_project') %></a>
         </li>
       <% end %>
+
       <% if (can? :create_project_from_scratch, Project) or (can? :create_project_from_template, Project) %>
         <li class="dropdown">
           <a href="/projects_from">
