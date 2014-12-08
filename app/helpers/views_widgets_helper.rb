@@ -132,7 +132,7 @@ module ViewsWidgetsHelper
     chart_height = height-50
     chart_width = width -40
     chart_title = view_widget.name
-    chart_vAxis = view_widget.pe_attribute.name
+    chart_vAxis = "#{view_widget.pe_attribute.name} (#{get_attribute_unit(view_widget.pe_attribute)})"
     chart_hAxis = "Level"
 
     case view_widget.widget_type
@@ -212,7 +212,9 @@ module ViewsWidgetsHelper
         value_to_show = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
 
       when "stacked_bar_chart_effort_per_phases_profiles"
-        #value_to_show = column_chart(data, stacked: true)
+        chart_height = height-90
+        stacked_chart_data = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+        value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
 
       when "stacked_bar_chart_cost_per_phases_profiles"
 
@@ -231,9 +233,13 @@ module ViewsWidgetsHelper
   def get_chart_data_by_phase_and_profile(pbs_project_element, module_project, estimation_value, view_widget)
     result = String.new
     stacked_data = Array.new
-
+    profiles_wbs_data = Hash.new
     probable_est_value = estimation_value.send("string_data_probable")
+
     pbs_probable_est_value = probable_est_value[pbs_project_element.id]
+
+    return result if probable_est_value.nil? || pbs_probable_est_value.nil?
+
     project_organization = module_project.project.organization
     project_wbs_project_elements = module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements
     project_organization_profiles = module_project.project.organization.organization_profiles
@@ -246,7 +252,9 @@ module ViewsWidgetsHelper
       wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
       ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
     end
+
     case view_widget.widget_type
+
       when "effort_per_phases_profiles_table"
         result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference} )
 
@@ -254,16 +262,57 @@ module ViewsWidgetsHelper
         result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference} )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
+        #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
         #data = [
         #    {"name" => "Workout", "data"=> {"2013-02-10 00:00:00 -0800" => 3, "2013-02-17 00:00:00 -0800" => 4}},
         #    {"name" =>"Call parents", "data"=> {"2013-02-10 00:00:00 -0800" => 5, "2013-02-17 00:00:00 -0800" => 3}}
         #]
         #value_to_show = column_chart(data, stacked: true)
 
+        if project_organization_profiles.length > 0
+          project_organization_profiles.each do |profile|
+            #Create individual hash for the profile data
+            profiles_wbs_data["profile_id_#{profile.id}"] = Hash.new
+          end
+
+          #Update chart data
+          project_wbs_project_elements.each do |wbs_project_elt|
+            wbs_probable_value = pbs_probable_est_value[wbs_project_elt.id]
+            unless wbs_probable_value.nil?
+              wbs_estimation_profiles_values = wbs_probable_value["profiles"]
+              project_organization_profiles.each do |profile|
+                wbs_profiles_value = nil
+                unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?
+                  wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value]
+                end
+                if !wbs_project_elt.is_root? && !wbs_project_elt.is_added_wbs_root
+                  if wbs_profiles_value.nil?
+                    profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = 0
+                  else
+                    value = number_with_delimiter(wbs_profiles_value.round(view_widget.pe_attribute.precision.nil? ? user_number_precision : view_widget.pe_attribute.precision))
+                    profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = value
+                  end
+                end
+              end
+            end
+          end
+
+          # Update stacked chart data
+          project_organization_profiles.each do |profile|
+            #Prepare the final Stacked data hash for each profile
+            profile_hash = Hash.new
+            profile_hash["name"] = profile.name
+            profile_hash["data"] = Hash.new
+            profile_hash["data"] = profiles_wbs_data["profile_id_#{profile.id}"]
+            stacked_data << profile_hash
+          end
+        end
+        stacked_data
 
       when "stacked_bar_chart_cost_per_phases_profiles"
+
     end
-    result
+    ###result
   end
 
 
@@ -284,38 +333,10 @@ module ViewsWidgetsHelper
       project_wbs_project_elts.each do |wbs_project_elt|
         effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
       end
-
-      # Data structure : test = {"5" => {"36" => {:value => 10} , "37"=> {:value => 20} },  "6" => {"36" => {:value => 5}, "37"=> {:value => 15} } }
-      #            pbs_level_with_activities = level_value[@current_component.id]
-      #            sum_of_value = 0.0
-      #            if !pbs_level_with_activities.nil?
-      #              pbs_level_with_activities.each do |wbs_activity_elt_id, hash_value|
-      #                sum_of_value = sum_of_value + hash_value[:value]
-      #                wbs_project_elt = WbsProjectElement.find(wbs_activity_elt_id)
-      #                unless wbs_project_elt.is_root || wbs_project_elt.has_children?
-      #                  @current_mp_effort_per_activity[level]["#{wbs_project_elt.name.parameterize.underscore}"] = hash_value[:value]
-      #                  @effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] << hash_value[:value]
-      #                end
-      #              end
-      #            end
-      #            pbs_level_value = sum_of_value
-
-      #module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
-      #  levels.each do |level|
-      #    level_estimation_values = Hash.new
-      #    level_estimation_values = estimation_value.send("string_data_#{level}")
-      #    if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
-      #      chart_data << ["#{wbs_project_elt.name}", 0]
-      #    else
-      #      wbs_value = level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value]
-      #      chart_data << ["#{wbs_project_elt.name}", wbs_value]
-      #    end
-      #  end
-      #end
     else
       probable_est_value = estimation_value.send("string_data_probable")
       pbs_probable_for_consistency = probable_est_value.nil? ? nil : probable_est_value[pbs_project_element.id]
-      module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
+      pe_wbs_activity.wbs_project_elements.each do |wbs_project_elt|
         if wbs_project_elt != project_wbs_project_elt_root && !wbs_project_elt.is_added_wbs_root
           level_estimation_values = probable_est_value
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
