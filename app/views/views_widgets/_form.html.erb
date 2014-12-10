@@ -7,24 +7,24 @@
 
     <%= simple_form_for(@views_widget) do |f| %>
       <%= f.error_notification %>
-      <% #module_project_id:integer pe_attribute_id:integer pbs_project_element_id:integer view_id:integer widget_id:integer color:string icon_class:string name:string show_min_max:boolean %>
       <div class="form-inputs">
-        <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
-        <%= f.input :pbs_project_element_id, as: :hidden, :input_html => { value: params[:pbs_project_element_id] } %>
+        <%#= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
+        <%#= f.input :pbs_project_element_id, as: :hidden, :input_html => { value: params[:pbs_project_element_id] } %>
         <%= f.input :view_id, as: :hidden, :input_html => { value: params[:view_id] } %>
-        <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
-        <%= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
 
         <table>
           <!--<tr><td><%#= f.association :widget, label: I18n.t(:label_widget) %></td></tr>-->
           <tr>
             <td><%= f.input :name, label: I18n.t(:name) %></td>
-            <td><%= f.association :pe_attribute, collection: @module_project.pemodule.pe_attributes, label: I18n.t(:associated_attribute) %></td>
+            <td><%= f.input :show_name, label: I18n.t(:show_name) %></td>
           </tr>
           <tr>
-            <td><%= f.input :widget_type, as: :select, collection: Projestimate::Application::WIDGETS_TYPE , label: I18n.t(:label_widget_type) %></td>
-            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon), input_html: {class: ''} %></td>
-            <td><div id="view_icon_class_image"></div></td>
+            <td><%= f.association :pbs_project_element, label: I18n.t(:associate_pbs_element), collection: @project_pbs_project_elements, selected: @pbs_project_element_id, include_blank: false  %></td>
+            <td><%= f.association :module_project, label: "Module", collection: @module_project.project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false %></td>
+          </tr>
+          <tr>
+            <td><%= f.input :widget_type, as: :select, collection: Projestimate::Application::WIDGETS_TYPE , label: I18n.t(:label_widget_type), include_blank: false %></td>
+            <td><%= f.association :pe_attribute, collection: @module_project.pemodule.pe_attributes, label: I18n.t(:associated_attribute) %></td>
           </tr>
           <tr>
             <td>
@@ -34,7 +34,8 @@
                 <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color'} %>
               <% end %>
             </td>
-            <td><%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %></td>
+            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon), input_html: {class: ''} %></td>
+            <td><div id="view_icon_class_image"></div></td>
           </tr>
           <tr>
             <td>
@@ -42,6 +43,7 @@
               <% selected = @views_widget.project_fields.first %>
               <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "None" %>
             </td>
+            <td><%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %></td>
           </tr>
 
           <tr>
@@ -54,12 +56,6 @@
               <%#= f.input :width, label: I18n.t(:width) %>  <%#= f.input :height, label: I18n.t(:height) %>
             </td>
           </tr>
-          <!--<p style="margin-left:210px">Left:  <input class="color {pickerPosition:'left right'}">-->
-          <script>
-              $(document).ready(function () {
-                 //jscolor.init();
-              });
-          </script>
         </table>
       </div>
 

@@ -1,3 +1,4 @@
+
 var dropdownCreated = false;
 function onWidgets(widgets) {
     if(dropdownCreated) {
@@ -55,7 +56,6 @@ function drawDropdown(widgets) {
     html += '</ul></div>';
 
     $('#spktargetdiv').html(html);
-    onSpkError("");
 }
 function updateDropdownAvailabilities(widgets) {
     for(var i=0; i < widgets.length; i++) {
@@ -76,21 +76,34 @@ function updateDropdownAvailabilities(widgets) {
     }
 }
 function onSpkError(errMessage) {
-    $('#errordiv').html(errMessage);
+    $('#spktargetdiv').html(errMessage);
 }
 
-// May use different displays
-function widgetLaunchUrl(widgetId) {
-    var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
-    tUrl = tUrl + widgetId;
-    tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
-    return tUrl;
-}
-function memberLaunchUrl(widgetId, laid) {
-    var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
-    tUrl = tUrl + widgetId;
-    tUrl += '&tolaid=' + laid;
-    tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
-    return tUrl;
-}
-  
+//$(document).ready(function() {
+//    if(helperId == null) {
+//        $('#spktargetdiv').html("MISSING helperId.");
+//    } else {
+//        var multiWidget = new SpkMultiWidget(helperId);
+//        multiWidget.onWidgets(onWidgets);
+//        multiWidget.onError(onSpkError);
+//        multiWidget.start();
+//    }
+//});
+
+//// May use different displays
+//function widgetLaunchUrl(widgetId) {
+//    var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
+//    tUrl = tUrl + widgetId;
+//    //tUrl += '&peCode=' + "<%= current_user.id %>";
+//    tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
+//    return tUrl;
+//}
+//function memberLaunchUrl(widgetId, laid) {
+//    var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
+//    tUrl = tUrl + widgetId;
+//    tUrl += '&tolaid=' + laid;
+//    tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
+//    return tUrl;
+//}
+
+

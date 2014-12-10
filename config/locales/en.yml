@@ -1333,3 +1333,4 @@ en:
   cost_hour: "Cost %{value}/hour"
   effort_per_phases_and_profiles: "EFFORT PER PHASES AND PROFILES"
   cost_per_phases_and_profiles: "COST PER PHASES AND PROFILES"
+  show_name: "Show name in widget"

@@ -28,6 +28,7 @@ module ViewsWidgetsHelper
     pbs_project_elt = current_component
     module_project = ModuleProject.find(module_project_id)
     project = module_project.project
+    pemodule = module_project.pemodule
     estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget.pe_attribute_id, "output").last
     widget_data = {}
     data_probable = ""; min_value = ""; max_value = ""; value_to_show = ""
@@ -40,10 +41,22 @@ module ViewsWidgetsHelper
       data_high = estimation_value.string_data_high[pbs_project_elt.id]
       data_most_likely = estimation_value.string_data_most_likely[pbs_project_elt.id]
       data_probable = estimation_value.string_data_probable[pbs_project_elt.id]
+
+      # Get the project wbs_project_element root if module with activities
+      #if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+      if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
+        wbs_project_elt_root = project.wbs_project_elements.elements_root.first
+        data_low = data_low.nil? ? nil : data_low[wbs_project_elt_root.id][:value]
+        data_high = data_high.nil? ? nil : data_high[wbs_project_elt_root.id][:value]
+        data_probable = data_probable.nil? ? nil : data_probable[wbs_project_elt_root.id][:value]
+      end
+
       probable_value_text =  display_value(data_probable, estimation_value)
       max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, false)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
       min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, false)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
+
     end
+
     widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
 
     ft_maxFontSize_without_mm = 75
@@ -256,10 +269,10 @@ module ViewsWidgetsHelper
     case view_widget.widget_type
 
       when "effort_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference} )
+        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
 
       when "cost_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference} )
+        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
         #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
@@ -267,7 +280,6 @@ module ViewsWidgetsHelper
         #    {"name" => "Workout", "data"=> {"2013-02-10 00:00:00 -0800" => 3, "2013-02-17 00:00:00 -0800" => 4}},
         #    {"name" =>"Call parents", "data"=> {"2013-02-10 00:00:00 -0800" => 5, "2013-02-17 00:00:00 -0800" => 3}}
         #]
-        #value_to_show = column_chart(data, stacked: true)
 
         if project_organization_profiles.length > 0
           project_organization_profiles.each do |profile|
@@ -356,11 +368,17 @@ module ViewsWidgetsHelper
     res = String.new
     view_widget = ViewsWidget.find(view_widget_id)
     module_project = ModuleProject.find(module_project_id)
+    pemodule = module_project.pemodule
 
-    return res if module_project.pemodule.alias != Projestimate::Application::EFFORT_BREAKDOWN
+    # Only the Modules with activities
+    with_activities = pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
+    return res unless with_activities #module_project.pemodule.alias != Projestimate::Application::EFFORT_BREAKDOWN
 
     pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
-    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    project_wbs_project_elements = pe_wbs_activity.wbs_project_elements
+    #project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    added_wbs_root = project_wbs_project_elements.where(is_added_wbs_root: true).first
+
     if view_widget.show_min_max
       levels = ['low', 'most_likely', 'high', 'probable']
       colspan = 4
@@ -409,8 +427,16 @@ module ViewsWidgetsHelper
       title = ""
       res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
 
+      # Value is in bold for the WBS root element
+      bold_class = ""
+      unless added_wbs_root.nil?
+        if wbs_project_elt.id == added_wbs_root.id
+          bold_class = "strong"
+        end
+      end
+
       levels.each do |level|
-        res << '<td>'
+        res << "<td class=#{bold_class} >"
         level_estimation_values = Hash.new
         level_estimation_values = estimation_value.send("string_data_#{level}")
         if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
@@ -418,31 +444,41 @@ module ViewsWidgetsHelper
         else
           res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value)}"
         end
-        res << '</td>'
+        res << "</td>"
       end
       res << '</tr>'
     end
 
     #Show the global result of the PBS
-    res << '<tr><td><strong> </strong></td>'
-    levels.each do |level|
-      res << '<td></td>'
-    end
-    res << '</tr>'
+    #res << '<tr><td><strong> </strong></td>'
+    #levels.each do |level|
+    #  res << '<td></td>'
+    #end
+    #res << '</tr>'
 
     # Show the probable values
-    res << "<tr><td colspan='#{colspan}'><strong> #{current_component.name} (Probable Value) </strong> </td>"
-    res << "<td>"
-    level_probable_value = estimation_value.send('string_data_probable')
-    if level_probable_value.nil? || level_probable_value[pbs_project_element.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value].nil?
-      res << '-'
-    else
-      res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], estimation_value)}</strong></div>"
-    end
-    res << '</td>'
-    res << '</tr>'
+    #res << "<tr><td colspan='#{colspan}'><strong> #{current_component.name} (Probable Value) </strong> </td>"
+    #res << "<td>"
+    #level_probable_value = estimation_value.send('string_data_probable')
+    #if level_probable_value.nil? || level_probable_value[pbs_project_element.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value].nil?
+    #  res << '-'
+    #else
+    #  res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], estimation_value)}</strong></div>"
+    #end
+    #res << '</td>'
+    #res << '</tr>'
     res << '</table>'
     res
+  end
+
+  def view_widget_title(view_widget)
+    title = String.new
+    #title ="<div>"
+    title << "#{view_widget.name} \n"
+    title << "#{I18n.t(:associate_pbs_element)} : #{view_widget.pbs_project_element} \n"
+    title << "Module : #{view_widget.module_project}"
+    #title << "</div>"
+    title
   end
 
 end

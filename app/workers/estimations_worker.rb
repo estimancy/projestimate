@@ -18,6 +18,7 @@
 #
 ########################################################################
 
+# After each update of estimation value, this worker will be call to recompute estimation value for its parent component
 class EstimationsWorker
   include Sidekiq::Worker
   sidekiq_options :queue => :often, :retry => true, :backtrace => true

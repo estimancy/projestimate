@@ -7,7 +7,7 @@
   <tr>
     <td colspan="<%= @module_positions_x %>">
       <div class="<%= select_pemodule %> module_project_min <%= "#{@initialization_module.alias}_#{@initialization_module_project.position_x}_#{@initialization_module_project.position_y}" %> text-center">
-        <%= link_to @initialization_module.title, activate_module_project_path(pmod), :remote => true %>
+        <%= link_to @project, activate_module_project_path(pmod), :remote => true %>   <%#= link_to @initialization_module.title, activate_module_project_path(pmod), :remote => true %>
       </div>
     </td>
   </tr>

@@ -928,10 +928,12 @@ h5.view_title{
 
 .widget_text{
     text-align: center;
-    /*font-size: 0.7em;*/
-    /*font-weight: bold;*/
     white-space: nowrap;
+}
 
+.widget_name{
+    overflow-x: hidden;
+    width: 100%;
 }
 
 .icon_size, .fa.icon_size{

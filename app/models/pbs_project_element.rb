@@ -47,11 +47,11 @@ class PbsProjectElement < ActiveRecord::Base
   belongs_to :work_element_type
   belongs_to :wbs_activity
   belongs_to :wbs_activity_ratio
+  belongs_to :organization_technology
 
   has_many :estimation_values
-
   has_many :uow_inputs
-  belongs_to :organization_technology
+  has_many :views_widgets, dependent: :destroy
 
   has_and_belongs_to_many :module_projects
 

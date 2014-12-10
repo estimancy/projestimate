@@ -824,6 +824,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # Select component on project/estimation dashbord
   def select_pbs_project_elements
     #No authorize required
     @project = Project.find(params[:project_id])

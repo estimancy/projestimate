@@ -36,11 +36,15 @@ class ViewsWidgetsController < ApplicationController
   def new
     @views_widget = ViewsWidget.new(params[:views_widget])
     @module_project = ModuleProject.find(params[:module_project_id])
+    @pbs_project_element_id = current_component.id
+    @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
   end
 
   def edit
     @views_widget = ViewsWidget.find(params[:id])
-    @module_project = ModuleProject.find(params[:module_project_id])
+    @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
+    @pbs_project_element_id = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
+    @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
   end
 
   def create
@@ -58,6 +62,9 @@ class ViewsWidgetsController < ApplicationController
       flash[:notice] = "Widget ajouté avec succès"
     else
       flash[:error] = "Erreur d'ajout de Widget"
+      @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
+      @pbs_project_element_id = params[:views_widget][:module_project_id].nil? ? current_component.id : params[:views_widget][:module_project_id]
+      @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
     end
 
     redirect_to dashboard_path(@project)
@@ -65,7 +72,6 @@ class ViewsWidgetsController < ApplicationController
 
   def update
     @views_widget = ViewsWidget.find(params[:id])
-    #@module_project = ModuleProject.find(params[:views_widget][:module_project_id])
 
     if params["field"].blank?
       pfs = @views_widget.project_fields
@@ -87,6 +93,9 @@ class ViewsWidgetsController < ApplicationController
       flash[:notice] = "Widget mis à jour avec succès"
     else
       flash[:error] = "Erreur lors de la mise à jour du Widget dans la vue"
+      @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:views_widget][:module_project_id]) : @views_widget.module_project
+      @pbs_project_element = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
+      @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
     end
     redirect_to dashboard_path(@project)
   end
@@ -128,14 +137,4 @@ class ViewsWidgetsController < ApplicationController
 
   end
 
-  def update_view_widget_positions_and_sizes_SAVE
-    if params["view_widget_id"] != "" && params["view_widget_id"] != "undefined"
-      view_widget = ViewsWidget.find(params[:view_widget_id].to_i)
-      pos_x = "#{params[:position_x]}px"
-      pos_y = "#{params[:position_y]}px"
-
-      # Update the View Widget positions (left = position_x, top = position_y)
-      view_widget.update_attributes(position_x: pos_x, position_y: pos_y)
-    end
-  end
 end

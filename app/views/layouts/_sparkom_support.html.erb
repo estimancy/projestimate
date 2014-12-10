@@ -1,10 +1,39 @@
 <div id="spktargetdiv" class="pull-right"></div>
 <script>
+//    $(document).ready(function() {
+//        if(helperId == null) {
+//            $('#spktargetdiv').html("MISSING helperId.");
+//        } else {
+//            var multiWidget = new SpkMultiWidget(29508);
+//            multiWidget.onWidgets(onWidgets);
+//            multiWidget.onError(onSpkError);
+//            multiWidget.start();
+//        }
+//    });
+
     $(document).ready(function() {
         var multiWidget = new SpkMultiWidget(29508);
         multiWidget.onWidgets(onWidgets);
         multiWidget.onError(onSpkError);
         multiWidget.start();
     });
+
+    // May use different displays
+    function widgetLaunchUrl(widgetId) {
+        var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
+        tUrl = tUrl + widgetId;
+        tUrl += '&peCode=' + "<%= current_user.id %>";
+        tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
+        return tUrl;
+    }
+    function memberLaunchUrl(widgetId, laid) {
+        var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
+        tUrl = tUrl + widgetId;
+        tUrl += '&peCode=' + "<%= current_user.id %>";
+        tUrl += '&tolaid=' + laid;
+        tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
+        return tUrl;
+    }
+
 </script>
 

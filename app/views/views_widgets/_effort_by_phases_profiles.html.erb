@@ -35,7 +35,14 @@
                 <% unless wbs_activity_elt_id.nil?
                      wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
                 end %>
-
+                <% # Value is in bold for the WBS root element
+                   bold_class = ""
+                   unless wbs_elt_with_ratio.nil?
+                     if wbs_project_elt.id == wbs_elt_with_ratio.id
+                        bold_class = "strong"
+                     end
+                   end
+                %>
                 <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
                 <tr>
                   <td><span style="float: left; margin-left:<%=wbs_project_elt.depth%>em"> <%= wbs_project_elt.name %> </span></td>
