@@ -111,7 +111,8 @@ class GroupsController < ApplicationController
       flash[:notice] = I18n.t(:error_group_failed_update)
     end
 
-    redirect_to root_url
+    #redirect_to root_url
+    redirect_to redirect_apply("organizations/#{@group.organization_id}/groups/#{@group.id}/edit#tabs-2", nil, edit_organization_path(@group.organization_id, :anchor => 'tabs-group'))
   end
 
   # #Update the selected users in the project's securities

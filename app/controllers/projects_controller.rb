@@ -151,7 +151,8 @@ class ProjectsController < ApplicationController
 
       @organization_technologies = @project.organization.organization_technologies.map{|i| [i.name, i.id]}
       @unit_of_works = @project.organization.unit_of_works.map{|i| [i.name, i.id]}
-      @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
+      current_component_technology = current_component.organization_technology
+      @complexities = current_component_technology.nil? ? [] : current_component_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
       @module_project.pemodule.attribute_modules.each do |am|
         if am.pe_attribute.alias ==  "effort"

@@ -21,7 +21,7 @@
 
   <% @groups.each do |group| %>
       <tr>
-        <td><%= group.name %></td>
+        <td><%= link_to group.name, edit_organization_group_path(@organization, group), :title => I18n.t('edit')  %></td>
         <td><%= group.description %></td>
         <td class="center">
           <%= link_to '', edit_organization_group_path(@organization, group), :class => 'icon-pencil', :title => I18n.t('edit') %>
