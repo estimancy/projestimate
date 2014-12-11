@@ -8,8 +8,6 @@
     <%= simple_form_for(@views_widget) do |f| %>
       <%= f.error_notification %>
       <div class="form-inputs">
-        <%#= f.input :module_project_id, as: :hidden, :input_html => { value: params[:module_project_id] } %>
-        <%#= f.input :pbs_project_element_id, as: :hidden, :input_html => { value: params[:pbs_project_element_id] } %>
         <%= f.input :view_id, as: :hidden, :input_html => { value: params[:view_id] } %>
 
         <table>
