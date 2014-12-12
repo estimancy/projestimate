@@ -41,8 +41,6 @@ class Ability
   #Initialize Ability then load permissions
   def initialize(user)
 
-    can :manage, :all
-
     #Uncomment in order to authorize everybody to manage all the app
     if Rails.env == "test" || user.super_admin == true
       can :manage, :all
@@ -58,7 +56,9 @@ class Ability
     #Load user groups permissions
     if user && !user.groups.empty?
       permissions_array = []
-      user.group_for_global_permissions.map do |grp|
+
+      #user.group_for_global_permissions.map do |grp|   # Only the groups for global_permissions will take on account
+      user.groups.map do |grp|                          # All the groups will take on account
         grp.permissions.map do |i|
           if i.object_associated.blank?
             permissions_array << [i.alias.to_sym, :all]
@@ -86,11 +86,13 @@ class Ability
         end
       end
 
-      user.group_for_project_securities.each do |grp|
+      ###user.group_for_project_securities.each do |grp|       # Only the groups for project_securities will take on account
+      user.groups.each do |grp|       # Only the groups will take on account
         prj_scrts = ProjectSecurity.find_all_by_group_id(grp.id)
         unless prj_scrts.empty?
           specific_permissions_array = []
           prj_scrts.each do |prj_scrt|
+            # Get the project/estimation permissions
             prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
               can i.alias.to_sym, prj_scrt.project
             end

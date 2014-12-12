@@ -64,10 +64,12 @@
           </li>
         <% end %>
       <% end %>
-      <li class="dropdown"><a href="<%= main_app.factors_path %>">
-        <!--<i class="icon-globe icon-large pull-left"></i>-->
-        <%= I18n.t(:factors) %></a>
-      </li>
+      <% if can? :manage, Factor %>
+          <li class="dropdown"><a href="<%= main_app.factors_path %>">
+            <!--<i class="icon-globe icon-large pull-left"></i>-->
+            <%= I18n.t(:factors) %></a>
+          </li>
+      <% end %>
     </ul>
   </li>
 

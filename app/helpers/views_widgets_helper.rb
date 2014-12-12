@@ -294,7 +294,7 @@ module ViewsWidgetsHelper
               wbs_estimation_profiles_values = wbs_probable_value["profiles"]
               project_organization_profiles.each do |profile|
                 wbs_profiles_value = nil
-                unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?
+                unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty? || wbs_estimation_profiles_values["profile_id_#{profile.id}"].nil?
                   wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value]
                 end
                 if !wbs_project_elt.is_root? && !wbs_project_elt.is_added_wbs_root

@@ -5298,7 +5298,7 @@ function update_wbs_activity_ratio_profiles(){
     });
 }
 
-// Function that Pre-vivisualize the selected WBS-Activity
+// Function that Preview the selected WBS-Activity
 function preview_selected_wbs_activity(){
     $("#project_default_wbs_activity_ratio").change(function(){
         var selection = $('#project_default_wbs_activity_ratio').val();
