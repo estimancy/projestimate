@@ -1619,7 +1619,6 @@ public
     end
 
     #==========================
-
   end
 
   def locked_plan
