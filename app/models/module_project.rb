@@ -148,7 +148,7 @@ class ModuleProject < ActiveRecord::Base
     #self.pemodule.title.humanize
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
       # nothing to show for position as the "Initialization is always on the first position"
-      self.pemodule.title.humanize
+      self.project.title #self.pemodule.title.humanize
     elsif self.pemodule.alias == "guw"
       self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s
     else

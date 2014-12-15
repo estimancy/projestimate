@@ -263,17 +263,21 @@ class ApplicationController < ActionController::Base
   #end
 
   def set_current_project
-    if params[:project_id].present?
-      session[:project_id] = params[:project_id]
-      @project = Project.find(params[:project_id])
-    elsif !session[:project_id].blank?
-      if user_signed_in?
-        @project = Project.find(session[:project_id])
+    begin
+      if params[:project_id].present? && !params[:project_id].nil?
+        session[:project_id] = params[:project_id]
+        @project = Project.find(params[:project_id])
+      elsif !session[:project_id].blank?
+        if user_signed_in? && !session[:project_id].nil?
+          @project = Project.find(session[:project_id])
+        else
+          @project = current_user.organizations.map(&:projects).flatten.first
+          session[:project_id] = @project.id
+        end
       else
-        @project = current_user.organizations.map(&:projects).flatten.first
-        session[:project_id] = @project.id
+        @project = nil
       end
-    else
+    rescue
       @project = nil
     end
   end
@@ -282,7 +286,12 @@ class ApplicationController < ActionController::Base
   def current_component
     if @project
       begin
-        PbsProjectElement.find(session[:pbs_project_element_id])
+        pbs = PbsProjectElement.find(session[:pbs_project_element_id])
+        if pbs.pe_wbs_project.project_id == @project.id
+          @component = pbs
+        else
+          @component = @project.root_component
+        end
       rescue
         @component = @project.root_component
       end

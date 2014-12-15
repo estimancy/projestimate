@@ -180,7 +180,7 @@
 
                 <% if (can? :delete_project, project) || (can? :manage, project) %>
                   <% if project.is_childless? && can_delete_estimation?(project) %>   <%# if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
-                    <%= (link_to('', "projects/#{project.id}/confirm_deletion", :class => 'button_attribute_tooltip icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
+                    <%= (link_to('', confirm_deletion_path(project.id), :class => 'button_attribute_tooltip icon-remove pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
                   <% end %>
                 <% end %>
 

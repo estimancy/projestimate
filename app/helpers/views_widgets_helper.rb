@@ -256,6 +256,8 @@ module ViewsWidgetsHelper
     project_organization = module_project.project.organization
     project_wbs_project_elements = module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements
     project_organization_profiles = module_project.project.organization.organization_profiles
+    profiles_with_ratio_value = []
+    project_organization_profiles
 
     # get the ratio_reference
     ratio_reference = nil

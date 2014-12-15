@@ -282,7 +282,11 @@ class ProjectsController < ApplicationController
           #Get the initialization module from ApplicationController
           #When creating project, we need to create module_projects for created initialization
           unless @initialization_module.nil?
-            cap_module_project = @project.module_projects.build(:pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0)
+            # Create the project's Initialization module
+            cap_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0, show_results_view: true)
+            # Create the Initialization module view
+            cap_module_project.build_view(name: "#{cap_module_project.to_s} - Module project View", organization_id: @project.organization_id)
+
             if cap_module_project.save!
               #Create the corresponding EstimationValues
               unless @project.organization.nil? || @project.organization.attribute_organizations.nil?
@@ -610,9 +614,11 @@ class ProjectsController < ApplicationController
     case params[:commit]
       when I18n.t('delete')
         if params[:yes_confirmation] == 'selected'
-          if ((can? :delete_project, @project) || (can? :manage, @project)) && (@project.is_childless? && !@project.rejected? && !@project.released? && !@project.checkpoint?)
+          #if ((can? :delete_project, @project) || (can? :manage, @project)) && (@project.is_childless? && !@project.rejected? && !@project.released? && !@project.checkpoint?)
+          if ((can? :delete_project, @project) || (can? :manage, @project)) && @project.is_childless?
             @project.destroy
-            current_user.delete_recent_project(@project.id)
+            ###current_user.delete_recent_project(@project.id)
+            session[:project_id] = current_user.projects.first
             flash[:notice] = I18n.t(:notice_project_successful_deleted, :value => 'Project')
             if !params[:from_tree_history_view].blank? && params['current_showed_project_id'] != params[:id]
               redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
@@ -671,7 +677,8 @@ class ProjectsController < ApplicationController
     @from_tree_history_view = params[:from_tree_history_view]
     @current_showed_project_id = params['current_showed_project_id']
 
-    if @project.has_children? || @project.rejected? || @project.released? || @project.checkpoint?
+    #if @project.has_children? || @project.rejected? || @project.released? || @project.checkpoint?
+    if @project.has_children?
       if @from_tree_history_view
         redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'), :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
       else
@@ -1916,8 +1923,9 @@ public
             project_child.update_attribute(:parent, project_parent)
             project_child.save
             project.destroy
-            current_user.delete_recent_project(project.id)
+            ###current_user.delete_recent_project(project.id)
             session[:current_project_id] = current_user.projects.first
+            session[:project_id] = current_user.projects.first
           else
             flash_error += "\n\n" + I18n.t('project_is_not_collapsible', :project_title_version => "#{project.title}-#{project.version}")
             next
