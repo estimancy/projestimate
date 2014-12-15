@@ -41,8 +41,6 @@ class Ability
   #Initialize Ability then load permissions
   def initialize(user)
 
-    can :manage, :all
-
     #Uncomment in order to authorize everybody to manage all the app
     if Rails.env == "test" || user.super_admin == true
       can :manage, :all

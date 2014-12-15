@@ -123,9 +123,10 @@ public
     end
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
-    @user.project_ids = params[:user][:project_ids]
-    @user.group_ids = params[:user][:group_ids]
-    @user.organization_ids = params[:user][:organization_ids]
+
+    #@user.project_ids = params[:user][:project_ids]
+    #@user.group_ids = params[:user][:group_ids]
+    #@user.organization_ids = params[:user][:organization_ids]
 
     #validation conditions
     if params[:user][:password].blank?
