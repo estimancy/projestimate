@@ -44,7 +44,7 @@ class Guw::GuwModelsController < ApplicationController
 
   def new
     @guw_model = Guw::GuwModel.new
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(params['organization_id']), @guw_model.organization => ""
   end
 
   def edit

@@ -1836,7 +1836,15 @@ public
     case params[:project_list_name]
       when "filter_projects_version"
         # Then only projects on which the current is authorise to see will be displayed
-        @projects = @organization_user_projects.flatten & current_user.projects
+        @projects = @organization_user_projects.flatten ###& current_user.projects
+
+      when "filter_organization_projects_version"
+        # The current organizations's projects
+        organization_id = params['organization_id']
+        if organization_id.present? && organization_id != 'undefined'
+          @organization = Organization.find(organization_id.to_i)
+          @projects = @organization.projects.all
+        end
 
       when "filter_user_projects_version"
         # The current_user organizations's projects

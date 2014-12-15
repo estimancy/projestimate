@@ -543,7 +543,7 @@ $(document).ready(function() {
     });
 
 
-    $("#filter_projects_version, #filter_user_projects_version, #filter_group_projects_version").on('change', function() {
+    $("#filter_projects_version, #filter_organization_projects_version, #filter_user_projects_version, #filter_group_projects_version").on('change', function() {
         //if ($("#filter_projects_version").val() !== "") {
         if ($(this).val() !== "") {
             return $.ajax({
@@ -552,6 +552,7 @@ $(document).ready(function() {
                 data: {
                     filter_selected: $(this).val(),
                     project_list_name: $(this).attr('id'),
+                    organization_id: $(this).data('organization_id'),
                     group_id: $("#group_id").val()
                 },
                 success: function(data) {
