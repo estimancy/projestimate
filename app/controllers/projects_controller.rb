@@ -1854,7 +1854,7 @@ public
         # The current_user organizations's projects
         @projects = @organization_user_projects.flatten
       else
-        @projects = @organization_user_projects.flatten & current_user.projects
+        @projects = @organization_user_projects.flatten ###& current_user.projects
     end
 
     unless selected_filter_version.empty?
