@@ -6,9 +6,10 @@
           <div class="accordion-heading" style="margin-top: 10px; margin-bottom: 10px;">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_<%= uowg.id %>" href="#collapse<%= uowg.id %>">
               <%= uowg %>
+              <%#= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg) %>
             </a>
             <%= link_to '', guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "fa fa-plus" %>
-            <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'icon-trash', :title => I18n.t('delete') %>
+            <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'fa fa-trash-o', :title => I18n.t('delete') %>
           </div>
 
           <% if uowg.guw_unit_of_works.empty? %>
