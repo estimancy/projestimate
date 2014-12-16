@@ -8,6 +8,7 @@
               <%= uowg %>
             </a>
             <%= link_to '', guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "fa fa-plus" %>
+            <%= link_to '', uowg, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
           </div>
 
           <% if uowg.guw_unit_of_works.empty? %>

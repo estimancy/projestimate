@@ -425,7 +425,6 @@ module ViewsWidgetsHelper
       unless wbs_project_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
         show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_project_elt.name)}'></span>"
       end
-
       #For wbs-activity-completion node consistency
       completion_consistency = ""
       title = ""

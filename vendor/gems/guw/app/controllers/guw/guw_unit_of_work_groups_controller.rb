@@ -41,4 +41,10 @@ class Guw::GuwUnitOfWorkGroupsController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
+  def destroy
+    @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.find(params[:id])
+    @guw_unit_of_work_group.destroy
+    redirect_to main_app.dashboard_path(@project)
+  end
+
 end
