@@ -543,7 +543,8 @@ $(document).ready(function() {
     });
 
 
-    $("#filter_projects_version, #filter_organization_projects_version, #filter_user_projects_version, #filter_group_projects_version").on('change', function() {
+    //Filter estimations according to the estimation version
+    $("#filter_projects_version, #filter_organization_projects_version").on('change', function() {
         //if ($("#filter_projects_version").val() !== "") {
         if ($(this).val() !== "") {
             return $.ajax({

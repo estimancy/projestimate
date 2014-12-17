@@ -25,7 +25,7 @@
   <% end -%>
 
   <!-- for devise flash -->
-  <% if alert %>
+  <% if alert && !alert.empty? %>
     <div class='alert alert-danger pull-left' style="width: 50%">
       <button type="button" class="close" data-dismiss="alert">x</button>
       <%= flash[:alert] %>

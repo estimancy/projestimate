@@ -1,4 +1,3 @@
-
 var dropdownCreated = false;
 function onWidgets(widgets) {
     if(dropdownCreated) {
@@ -9,11 +8,17 @@ function onWidgets(widgets) {
     }
 }
 function drawDropdown(widgets) {
+    var userLang = navigator.language || navigator.userLanguage;
+    var isEnglish = (userLang.indexOf("en")===0);
     var width = '250px';
     var textColor = '#206A7C';
     var html='<div class="dropdown">';
     html += '<a id="dLabel" role="button" style="width:'+width+';" data-toggle="dropdown" class="btn btn-default" data-target="#" href="/page.html">';
-    html += 'Accès conseillers ';
+    if(isEnglish) {
+        html += 'Live chat support ';
+    } else {
+        html += 'Accès conseillers ';
+    }
     html += '<span class="caret"></span></a>';
 
     html += '<ul class="dropdown-menu multi-level" style="width:'+width+';" role="menu" aria-labelledby="dropdownMenu">';
@@ -33,8 +38,12 @@ function drawDropdown(widgets) {
         html += '<a style="text-align:right;font-size:80%;color:'+textColor+';" tabindex="-1" href="" onclick="';
         html += widgetLaunchUrl(wi.widgetId);
         html += '">';
-        html += 'Voir les conseillers ';
-        //html += '<span class="glyphicon glyphicon-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
+        if(isEnglish) {
+            html += 'See helpers ';
+        } else {
+            html += 'Voir les conseillers ';
+        }
+        //html += '<span class="fa fa-chevron-right" style="color:#6396A3;" aria-hidden="true"></span>';
         html += '</a>';
         html += '<ul class="dropdown-menu">';
         for(var j=0; j < wi.members.length; j++) {
@@ -89,12 +98,11 @@ function onSpkError(errMessage) {
 //        multiWidget.start();
 //    }
 //});
-
+//
 //// May use different displays
 //function widgetLaunchUrl(widgetId) {
 //    var tUrl = PAN_SERVER_BASE_URL + 'wchat/sparkom/wchat.html?wid=';
 //    tUrl = tUrl + widgetId;
-//    //tUrl += '&peCode=' + "<%= current_user.id %>";
 //    tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
 //    return tUrl;
 //}
@@ -105,5 +113,4 @@ function onSpkError(errMessage) {
 //    tUrl = 'javascript:window.open(\''+ tUrl + '\', \'chat\', \'scrollbars=no,location=no,width=700,height=450,location=no,menubar=no,status=no,toolbar=no\');';
 //    return tUrl;
 //}
-
 

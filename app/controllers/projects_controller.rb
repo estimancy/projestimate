@@ -969,12 +969,13 @@ class ProjectsController < ApplicationController
       @project_organization = @project.organization
       @project_organization_profiles = @project_organization.organization_profiles
       @module_project = start_module_project
-      # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
-      @ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
 
       # If Another default ratio was defined in PBS, it will override the one defined in module-project
       if !@current_component.wbs_activity_ratio.nil?
         @ratio_reference = @current_component.wbs_activity_ratio
+      else
+        # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
+        @ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
       end
 
       @attribute = PeAttribute.find_by_alias_and_record_status_id("effort", @defined_record_status)
@@ -1045,12 +1046,12 @@ class ProjectsController < ApplicationController
                 # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
                 wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
 
-                # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
-                ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
-
                 # If Another default ratio was defined in PBS, it will override the one defined in module-project
                 if !@pbs_project_element.wbs_activity_ratio.nil?
                   ratio_reference = @pbs_project_element.wbs_activity_ratio
+                else
+                  # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
+                  ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
                 end
                 # Get the referenced ratio wbs_activity_ratio_profiles
                 referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles
@@ -1833,6 +1834,7 @@ public
       @organization_user_projects << organization.projects.all
     end
 
+    # Differents parameters according to the page on witch the filter is set ("filter_projects_version", "filter_organization_projects_version", "filter_user_projects_version","filter_group_projects_version")
     case params[:project_list_name]
       when "filter_projects_version"
         # Then only projects on which the current is authorise to see will be displayed
@@ -1845,14 +1847,6 @@ public
           @organization = Organization.find(organization_id.to_i)
           @projects = @organization.projects.all
         end
-
-      when "filter_user_projects_version"
-        # The current_user organizations's projects
-        @projects = @organization_user_projects.flatten
-
-      when "filter_group_projects_version"
-        # The current_user organizations's projects
-        @projects = @organization_user_projects.flatten
       else
         @projects = @organization_user_projects.flatten ###& current_user.projects
     end

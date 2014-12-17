@@ -1,5 +1,3 @@
-<div class="span5" xmlns="http://www.w3.org/1999/html">
-
   <%= simple_form_for(@pbs_project_element, :remote => true) do |f| %>
     <%= f.error_notification %>
     <%= hidden_field_tag :project_id, @project.id %>
@@ -23,7 +21,6 @@
           <td><%= f.input :end_date, as: :string, disabled: true, :label => I18n.t('end_date'), :input_html => {:class => 'input-large', rows: "2"} %></td>
 
           <script>
-
               $(document).ready(function () {
                   $(".date-picker").datepicker({
                       language: '<%= set_user_language %>',
@@ -74,5 +71,3 @@
       <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
     </div>
   <% end %>
-
-</div>

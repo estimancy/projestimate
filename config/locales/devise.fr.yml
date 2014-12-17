@@ -16,7 +16,7 @@ fr:
       locked: Votre compte est verrouillé.
       not_found_in_database: Courriel ou mot de passe incorrect.
       timeout: Votre session est périmée, veuillez vous reconnecter pour continuer.
-      unauthenticated: Vous devez vous connecter ou vous enregistrer pour continuer.
+      unauthenticated: '' #Vous devez vous connecter ou vous enregistrer pour continuer.
       unconfirmed: Vous devez confirmer votre compte par courriel.
     mailer:
       confirmation_instructions:
@@ -43,8 +43,8 @@ fr:
       update_needs_confirmation: Vous avez modifié votre compte avec succès, mais nous devons vérifier votre nouvelle adresse de courriel. Veuillez consulter vos courriels et cliquer sur le lien de confirmation pour confirmer votre nouvelle adresse.
       updated: Votre compte a été modifié avec succès.
     sessions:
-      signed_in: Connecté(e) avec succès.
-      signed_out: Déconnecté(e) avec succès.
+      signed_in: ''  #Connecté(e) avec succès.
+      signed_out: '' #Déconnecté(e) avec succès.
     unlocks:
       send_instructions: Vous allez recevoir sous quelques minutes un courriel comportant des instructions pour déverrouiller votre compte.
       send_paranoid_instructions: Si votre courriel existe sur notre base de données, vous recevrez sous quelques minutes un message avec des instructions pour déverrouiller votre compte.

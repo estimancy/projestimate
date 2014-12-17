@@ -231,7 +231,6 @@ class ModuleProjectsController < ApplicationController
       @module_projects = @project.module_projects
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
       @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-      @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
       # when get click on the show_module_project_results_view button
       # if show_module_project_results_view is true, value will be changed to false and vice-versa
@@ -244,6 +243,7 @@ class ModuleProjectsController < ApplicationController
           @module_project.update_attribute(:show_results_view, true)
       end
     end
+    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
   end
 
 end

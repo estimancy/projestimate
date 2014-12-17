@@ -44,7 +44,7 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.new
     set_page_title("New #{@pbs_project_element.name}")
 
-    @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project
+    @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
     @pbs_wbs_activity_ratios = []
 
     if params[:work_element_type] == "folder"
@@ -84,6 +84,7 @@ class PbsProjectElementsController < ApplicationController
     @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
   end
 
+
   def create
     @project = Project.find(params[:project_id])
     authorize! :alter_wbsproducts, @project
@@ -101,11 +102,30 @@ class PbsProjectElementsController < ApplicationController
       else
         @pbs_project_element.update_attribute :parent, nil
       end
+      render :partial => "pbs_project_elements/refresh_tree"
+
     else
       flash.now[:error] = I18n.t (:error_pbs_project_element_failed_update)
+      @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
+      @pbs_wbs_activity_ratios = []
+
+      if params[:work_element_type] == "folder"
+        @work_element_type = WorkElementType.find_by_alias("folder")
+      elsif params[:work_element_type] == "link"
+        @work_element_type = WorkElementType.find_by_alias("link")
+      else
+        @work_element_type = WorkElementType.find_by_alias("undefined")
+      end
+
+      @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
+
+      unless @pbs_project_element.wbs_activity.nil?
+        @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
+      end
+      render :new
     end
 
-    render :partial => "pbs_project_elements/refresh_tree"
+
   end
 
   def update
@@ -120,11 +140,25 @@ class PbsProjectElementsController < ApplicationController
       else
         @pbs_project_element.update_attribute :parent, nil
       end
+
+      render :partial => "pbs_project_elements/refresh_tree"
+
     else
       flash[:error] = I18n.t (:error_pbs_project_element_failed_update)
-    end
+      @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
+      @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
+      @pbs_wbs_activity_ratios = []
 
-    render :partial => "pbs_project_elements/refresh_tree"
+      unless @pbs_project_element.wbs_activity.nil?
+        @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
+      end
+
+      #Select folders which could be a parent of a pbs_project_element
+      #a pbs_project_element cannot be its own parent
+      @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
+
+      render :edit
+    end
   end
 
   def destroy
