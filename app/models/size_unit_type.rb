@@ -2,7 +2,7 @@ class SizeUnitType < ActiveRecord::Base
 
   validates :name, :presence => true
 
-  attr_accessible :description, :name, :alias, :organization_id#, :record_status_id, :custom_value, :change_comment
+  attr_accessible :description, :name, :alias, :organization_id #, :record_status_id, :custom_value, :change_comment
 
   belongs_to :organization
 

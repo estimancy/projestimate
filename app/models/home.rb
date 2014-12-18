@@ -90,17 +90,17 @@ class Home < ActiveRecord::Base
       end
     end
 
-    puts '   - WBS Activity'
-    self.update_records(ExternalMasterDatabase::ExternalWbsActivity, WbsActivity, ['name', 'description', 'uuid', 'state'])
+    puts '   - WBS Activity'   # The WBS Activity is no longer a master table
+    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivity, WbsActivity, ['name', 'description', 'uuid', 'state'])
 
-    puts '   - WBS Activity Elements'
-    self.update_records(ExternalMasterDatabase::ExternalWbsActivityElement, WbsActivityElement, ['name', 'description', 'dotted_id', 'uuid', 'is_root'])
+    puts '   - WBS Activity Elements'  # The WBS Activity Elements is no longer a master table
+    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityElement, WbsActivityElement, ['name', 'description', 'dotted_id', 'uuid', 'is_root'])
 
-    puts '   - Wbs Activity Ratio'
-    self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatio, WbsActivityRatio, ['name', 'description', 'uuid'])
+    puts '   - Wbs Activity Ratio'  # The WBS Activity Ratio is no longer a master table
+    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatio, WbsActivityRatio, ['name', 'description', 'uuid'])
 
-    puts '   - Wbs Activity Ratio Elements'
-    self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatioElement, WbsActivityRatioElement, ['ratio_value', 'simple_reference', 'multiple_references', 'uuid'])
+    puts '   - Wbs Activity Ratio Elements' # The WBS Activity Ratio Elements is no longer a master table
+    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatioElement, WbsActivityRatioElement, ['ratio_value', 'simple_reference', 'multiple_references', 'uuid'])
 
     puts '   - Project areas'
     self.update_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])
@@ -214,8 +214,8 @@ class Home < ActiveRecord::Base
     puts '   - Auth Method'
     self.update_records(ExternalMasterDatabase::ExternalAuthMethod, AuthMethod, ['name', 'server_name', 'port', 'base_dn', 'uuid'])
 
-    puts '   - Default groups'
-    self.update_records(ExternalMasterDatabase::ExternalGroup, Group, ['name', 'description', 'for_global_permission', 'for_project_security', 'uuid'])
+    puts '   - Default groups'   # The Group table is no longer a master table
+    ###self.update_records(ExternalMasterDatabase::ExternalGroup, Group, ['name', 'description', 'for_global_permission', 'for_project_security', 'uuid'])
 
     puts '   - Security level'
     self.update_records(ExternalMasterDatabase::ExternalProjectSecurityLevel, ProjectSecurityLevel, ['name', 'description', 'uuid'])

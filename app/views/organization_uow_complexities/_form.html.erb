@@ -67,7 +67,7 @@
       <% end %>
 
       <% if @organization %>
-        <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => params[:anchortab]), :class => 'btn' %>
+        <%= link_to I18n.t('back'), edit_organization_path(@organization || params[:organization_id], :anchor => 'tabs-cplx-factor'), :class => 'btn' %>
       <% else %>
         <%= link_to I18n.t('back'), factors_path, :class => 'btn' %>
       <% end %>

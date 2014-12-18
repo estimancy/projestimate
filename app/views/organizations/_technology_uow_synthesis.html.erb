@@ -15,7 +15,7 @@
         <th>Unit of Work</th>
         <th>Complexity</th>
         <% @organization.size_unit_types.each do |sut| %>
-          <th><%= link_to "#{sut.name} (hours)", edit_size_unit_type_path(sut) %></th>
+          <th><%= link_to "#{sut.name} (hours)", edit_size_unit_type_path(sut, organization_id: @organization.id) %></th>
         <% end %>
       </tr>
 
@@ -24,15 +24,15 @@
           <% OrganizationUowComplexity.where(organization_technology_id: ot.id, unit_of_work_id: uow.id).all.each do |cplx| %>
             <tr>
               <td>
-                <%= link_to ot.name, edit_organization_technology_path(ot) %>
+                <%= link_to ot.name, edit_organization_technology_path(ot, organization_id: @organization.id) %>
               </td>
 
               <td>
-                <%= link_to uow.name, edit_unit_of_work_path(uow) %>
+                <%= link_to uow.name, edit_unit_of_work_path(uow, organization_id: @organization.id) %>
               </td>
 
               <td>
-                <%= link_to cplx.name, edit_unit_of_work_path(uow, organization_id: @organization.id), anchor: "#tabs-2" %>
+                <%= link_to cplx.name, edit_unit_of_work_path(uow, organization_id: @organization.id, anchor: "#tabs-2") %>
               </td>
 
               <% @organization.size_unit_types.each do |sut| %>

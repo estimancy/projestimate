@@ -17,12 +17,13 @@ class SizeUnitTypesController < ApplicationController
 
   def edit
     @size_unit_type = SizeUnitType.find(params[:id])
-    @organization = Organization.find(params[:organization_id])
+    @organization = @size_unit_type.organization #|| Organization.find(params[:organization_id])
   end
 
   def create
     @size_unit_type = SizeUnitType.new(params[:size_unit_type])
-    @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
+    #@size_unit_type.organization_id = params[:size_unit_type][:organization_id]
+    @organization = Organization.find_by_id(params['size_unit_type']['organization_id'])
 
     if @size_unit_type.save
 
@@ -38,18 +39,19 @@ class SizeUnitTypesController < ApplicationController
 
       redirect_to edit_organization_path(@size_unit_type.organization_id, anchor: "tabs-sut"), notice: 'Size unit type was successfully created.'
     else
-      render action: "new"
+      render action: "new", :organization_id => @organization.id
     end
   end
 
   def update
     @size_unit_type = SizeUnitType.find(params[:id])
-    @size_unit_type.organization_id = params[:size_unit_type][:organization_id]
+    #@size_unit_type.organization_id = params[:size_unit_type][:organization_id]
+    @organization = @size_unit_type.organization
 
     if @size_unit_type.update_attributes(params[:size_unit_type])
       redirect_to edit_organization_path(@size_unit_type.organization_id, anchor: "tabs-sut"), notice: 'Size unit type was successfully updated.'
     else
-      render action: "edit"
+      render action: "edit", :organization_id => @organization.id
     end
   end
 

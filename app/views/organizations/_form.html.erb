@@ -424,13 +424,11 @@
 
   <div id="tabs-cplx-factor">
     <h4>Factors Complexities</h4>
-
     <br>
 
     <% if can? :edit_organizations, Organization %>
       <%= link_to I18n.t('new_factor_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.nil? ? nil : @organization.id, :anchortab => 'tabs-7'), :class => 'btn pull-right' %>
     <% end %>
-
 
     <% @factors.each do |factor| %>
 
