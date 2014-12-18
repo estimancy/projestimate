@@ -36,7 +36,6 @@
 
 class WbsActivityElement < ActiveRecord::Base
   attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment,:is_root,:wbs_activity,:record_status,:wbs_activity_id, :dotted_id, :parent_id
-  include MasterDataHelper
 
   has_ancestry :cache_depth => true
 
@@ -53,9 +52,7 @@ class WbsActivityElement < ActiveRecord::Base
   scope :is_ok_for_validation, lambda { |de, re| where('record_status_id <> ? and record_status_id <> ?', de, re) }
   scope :elements_root, where(:is_root => true)
 
-  validates :name, :presence => true, :uniqueness => {:scope => [:wbs_activity_id, :ancestry, :record_status_id], :case_sensitive => false}
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :custom_value, :presence => true, :if => :is_custom?
+  validates :name, :presence => true, :uniqueness => {:scope => [:wbs_activity_id, :ancestry], :case_sensitive => false}
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do

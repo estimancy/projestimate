@@ -58,9 +58,7 @@ class WbsActivity < ActiveRecord::Base
   #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   validates :organization_id, :presence => true
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :name, :presence => true, :uniqueness => { :scope => :organization_id }
-  validates :custom_value, :presence => true, :if => :is_custom?
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do

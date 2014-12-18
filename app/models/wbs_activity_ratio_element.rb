@@ -36,8 +36,7 @@
 
 class WbsActivityRatioElement < ActiveRecord::Base
   attr_accessible :ratio_value,:simple_reference, :multiple_references, :wbs_activity_ratio_id, :record_status_id, :custom_value, :change_comment, :wbs_activity_element_id
-
-  include MasterDataHelper
+  ###include MasterDataHelper
 
   belongs_to :wbs_activity_ratio
   belongs_to :wbs_activity_element
@@ -45,9 +44,9 @@ class WbsActivityRatioElement < ActiveRecord::Base
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
-  has_many :wbs_activity_ratio_profiles
+  has_many :wbs_activity_ratio_profiles, dependent: :delete_all
 
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
+  #validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   #validates :ratio_value, :numericality => { :greater_than => 0, :less_than => 100 }
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)
@@ -55,13 +54,11 @@ class WbsActivityRatioElement < ActiveRecord::Base
     enable
 
     customize(lambda { |original_wbs_activity_ratio_elt, new_wbs_activity_ratio_elt|
-
       if defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")
         new_wbs_activity_ratio_elt.record_status_id = RecordStatus.find_by_name('Proposed').id
       else
         new_wbs_activity_ratio_elt.record_status_id = RecordStatus.find_by_name('Local').id
       end
-
     })
 
   end

@@ -153,6 +153,9 @@
               <% if can? :create_wbs_activities, WbsActivity %>
                 <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
               <% end %>
+              <% if can? :manage, WbsActivity %>
+                  <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t(:delete) %>
+              <% end %>
             </td>
           </tr>
         <% end %>

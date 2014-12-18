@@ -137,21 +137,21 @@ class WbsActivityRatiosController < ApplicationController
     authorize! :manage, WbsActivity
     @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
 
-    if is_master_instance?
-      if @wbs_activity_ratio.is_defined? || @wbs_activity_ratio.is_custom?
-        #logical deletion: delete don't have to suppress records anymore on defined record
-        @wbs_activity_ratio.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-      else
+    #if is_master_instance?
+    #  if @wbs_activity_ratio.is_defined? || @wbs_activity_ratio.is_custom?
+    #    #logical deletion: delete don't have to suppress records anymore on defined record
+    #    @wbs_activity_ratio.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
+    #  else
+    #    @wbs_activity_ratio.destroy
+    #  end
+    #else
+    #  if @wbs_activity_ratio.is_local_record? || @wbs_activity_ratio.is_retired?
         @wbs_activity_ratio.destroy
-      end
-    else
-      if @wbs_activity_ratio.is_local_record? || @wbs_activity_ratio.is_retired?
-        @wbs_activity_ratio.destroy
-      else
-        flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
-        redirect_to redirect(edit_organization_path(@wbs_activity_ratio.wbs_activity.organization_id))  and return
-      end
-    end
+    #  else
+    #    flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
+    #    redirect_to redirect(edit_organization_path(@wbs_activity_ratio.wbs_activity.organization_id))  and return
+    #  end
+    #end
 
     flash[:notice] = I18n.t (:notice_wbs_activity_successful_deleted)
     redirect_to redirect(edit_wbs_activity_path(@wbs_activity_ratio.wbs_activity, :anchor => 'tabs-3'))

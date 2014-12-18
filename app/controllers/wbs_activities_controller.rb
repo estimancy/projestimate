@@ -93,6 +93,7 @@ class WbsActivitiesController < ApplicationController
 
     set_page_title 'WBS activities'
     @wbs_activity = WbsActivity.find(params[:id])
+    @organization_id = @wbs_activity.organization_id
 
     @wbs_activity_elements_list = @wbs_activity.wbs_activity_elements
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
@@ -129,6 +130,7 @@ class WbsActivitiesController < ApplicationController
     @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios
     @wbs_activity_organization = @wbs_activity.organization || Organization.find(params[:wbs_activity][:organization_id])
     @wbs_organization_profiles =  @wbs_activity_organization.organization_profiles
+    @organization_id = @wbs_activity_organization.id
 
     unless @wbs_activity.wbs_activity_ratios.empty?
       @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements
@@ -145,7 +147,8 @@ class WbsActivitiesController < ApplicationController
     #end
 
     if @wbs_activity.update_attributes(params[:wbs_activity])
-      redirect_to redirect(wbs_activities_path), :notice => "#{I18n.t(:notice_wbs_activity_successful_updated)}"
+      #redirect_to redirect(wbs_activities_path), :notice => "#{I18n.t(:notice_wbs_activity_successful_updated)}"
+      redirect_to redirect_apply(edit_organization_wbs_activity_path(@organization_id, @wbs_activity), nil, edit_organization_path(@organization_id, :anchor => 'wbs-activities')), :notice => "#{I18n.t(:notice_wbs_activity_successful_added)}"
     else
       render :edit
     end
@@ -156,12 +159,15 @@ class WbsActivitiesController < ApplicationController
 
     set_page_title 'WBS activities'
     @wbs_activity = WbsActivity.new
+    @organization_id = params['organization_id']
   end
 
   def create
     authorize! :create_wbs_activities, WbsActivity
 
     @wbs_activity = WbsActivity.new(params[:wbs_activity])
+    @organization_id = params['wbs_activity']['organization_id']
+
     #If we are on local instance, Status is set to "Local"
     #if is_master_instance?
     #  @wbs_activity.record_status = @proposed_status
@@ -172,14 +178,13 @@ class WbsActivitiesController < ApplicationController
 
     if @wbs_activity.save
       #if @wbs_activity.is_local_record?
-        @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity => @wbs_activity, :description => 'Root Element', :is_root => true)
+        @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity_id => @wbs_activity.id, :description => 'Root Element', :is_root => true)
       #else
       #  @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity => @wbs_activity, :description => 'Root Element', :record_status => @proposed_status, :is_root => true)
       #end
 
       @wbs_activity_element.save
-
-      redirect_to redirect_apply(edit_wbs_activity_path(@wbs_activity)), :notice => "#{I18n.t(:notice_wbs_activity_successful_added)}"
+        redirect_to edit_organization_wbs_activity_path(@organization_id, @wbs_activity), :notice => "#{I18n.t(:notice_wbs_activity_successful_added)}"
     else
       render :new
     end
@@ -189,12 +194,14 @@ class WbsActivitiesController < ApplicationController
     authorize! :manage, WbsActivity
 
     @wbs_activity = WbsActivity.find(params[:id])
+    @organization_id = @wbs_activity.organization_id
+    @wbs_activity.destroy
 
     #if is_master_instance?
     #  if @wbs_activity.is_defined?
     #    @wbs_activity.update_attribute(:record_status_id, @retired_status.id)
     #  else
-        @wbs_activity.destroy
+    #    @wbs_activity.destroy
     #  end
     #else
     #  if @wbs_activity.is_local_record? #|| @wbs_activity.is_retired?
@@ -202,15 +209,15 @@ class WbsActivitiesController < ApplicationController
     #      @wbs_activity.update_attribute(:state, 'retired')
     #    else
     #        @wbs_activity.destroy
-    #    end
     #  else
-        flash[:warning] = I18n.t(:warning_master_record_cant_be_delete)
-        redirect_to redirect(wbs_activities_path)  and return
+    #    end
+    #    flash[:warning] = I18n.t(:warning_master_record_cant_be_delete)
+    #    redirect_to redirect(wbs_activities_path)  and return
       #end
     #end
 
     flash[:notice] = I18n.t(:notice_wbs_activity_successful_deleted)
-    redirect_to wbs_activities_path
+    redirect_to edit_organization_path(@organization_id, anchor: 'wbs-activities')
   end
 
 

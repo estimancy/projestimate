@@ -37,8 +37,6 @@
 class WbsActivityRatio < ActiveRecord::Base
   attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment, :wbs_activity_id
 
-  include MasterDataHelper
-
   has_many :wbs_project_elements
   has_many :pbs_project_elements
   has_many :wbs_activity_ratio_elements, :dependent => :destroy
@@ -49,9 +47,7 @@ class WbsActivityRatio < ActiveRecord::Base
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :custom_value, :presence => true, :if => :is_custom?
-  validates :name, :presence => true, :uniqueness => {:scope => [:wbs_activity_id, :record_status_id], :case_sensitive => false}
+  validates :name, :presence => true, :uniqueness => {:scope => [:wbs_activity_id], :case_sensitive => false}
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do

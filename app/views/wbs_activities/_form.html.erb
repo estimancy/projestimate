@@ -12,6 +12,7 @@
       <%= simple_form_for(@wbs_activity) do |f| %>
           <%= f.error_notification %>
 
+          <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization_id } %>
           <% if controller.action_name == 'edit' and @wbs_activity.retired? %>
               <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm.states_for_select, :input_html => {:class => 'input-xxlarge'} %>
           <% else %>
