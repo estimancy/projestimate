@@ -53,7 +53,7 @@ class OrganizationsController < ApplicationController
     set_page_title 'Organizations'
     @organization = Organization.find(params[:id])
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
     @attributes = PeAttribute.defined.all
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
@@ -364,8 +364,8 @@ class OrganizationsController < ApplicationController
       sut.last.each do |ot|
         ot.last.each do |uow|
           uow.last.each do |cplx|
-            sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i,
-                                                organization_uow_complexity_id: cplx.first.to_i).first
+            #sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i, organization_uow_complexity_id: cplx.first.to_i).first
+            sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i, organization_uow_complexity_id: cplx.first.to_i).first_or_create
             sutc.value = cplx.last
             sutc.save
           end
@@ -566,6 +566,7 @@ class OrganizationsController < ApplicationController
     original_organization = Organization.find(params[:organization_id])
     new_organization = original_organization.amoeba_dup
     if new_organization.save
+      original_organization.save #Original organization copy number will be incremented to 1
       flash[:notice] = I18n.t(:organization_successfully_copied)
     else
       flash[:error] = "#{ I18n.t(:errors_when_copying_organization)} : #{new_organization.errors.full_messages.join(', ')}"

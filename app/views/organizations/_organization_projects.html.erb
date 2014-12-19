@@ -54,7 +54,7 @@
 
           <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'button_attribute_tooltip icon-info pull-left', :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
           <% if (can? :create_project_from_template, Project) || (can? :manage, project )%>
-              <%= link_to('', "projects/#{project.id}/duplicate", :class => 'button_attribute_tooltip icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
+              <%= link_to('', duplicate_path(project.id), :class => 'button_attribute_tooltip icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
           <% end %>
 
           <% if (can? :delete_project, project) || (can? :manage, project) %>

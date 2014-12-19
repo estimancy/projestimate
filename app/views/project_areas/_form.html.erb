@@ -38,10 +38,10 @@
               </div>
               <div id="collapseThree" class="accordion-body in collapse">
                 <div class="accordion-inner">
-                  <% @labor_categories.each do |ac| %>
-                      <%= check_box_tag 'project_area[labor_category_ids][]', ac.id, @project_area.labor_categories.include?(ac) %>
-                      <%= ac.name %>
-                  <% end %>
+                  <%# @labor_categories.each do |ac| %>
+                      <%#= check_box_tag 'project_area[labor_category_ids][]', ac.id, @project_area.labor_categories.include?(ac) %>
+                      <%#= ac.name %>
+                  <%# end %>
                 </div>
               </div>
             </div>

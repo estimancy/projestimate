@@ -111,7 +111,8 @@ class ProjectsController < ApplicationController
     @module_project = current_module_project
     @show_hidden = 'true'
 
-    set_breadcrumbs @project.title => edit_project_path(@project)
+    #set_breadcrumbs @project.title => edit_project_path(@project)
+    set_breadcrumbs "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}" => edit_project_path(@project)
 
     # Get the project default RATIO
     # Get the wbs_project_element which contain the wbs_activity_ratio
@@ -190,7 +191,7 @@ class ProjectsController < ApplicationController
         @aproj << Factor.where(alias: a, factor_type: "advanced").first
       end
     else
-      set_breadcrumbs "Cocomo Expert" => ""
+      ###set_breadcrumbs "Cocomo Expert" => ""
 
       @sf = []
       @em = []
@@ -327,7 +328,8 @@ class ProjectsController < ApplicationController
 
     @project = Project.find(params[:id])
 
-    set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     if (cannot? :edit_project, @project) ||                                               # No write access to project
         (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) #||      # frozen project
@@ -399,7 +401,8 @@ class ProjectsController < ApplicationController
     set_page_title 'Edit estimation'
     @project = Project.find(params[:id])
 
-    set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_modify_estimation?(@project)
@@ -560,7 +563,8 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     authorize! :show_project, @project
     set_page_title 'Show estimation'
@@ -1378,6 +1382,7 @@ public
         end
       end
 
+      flash[:success] = I18n.t(:notice_project_successful_duplicated)
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
       redirect_to edit_project_path(new_prj) and return
     #rescue

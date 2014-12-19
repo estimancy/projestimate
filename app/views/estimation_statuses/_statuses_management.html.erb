@@ -81,37 +81,54 @@
               <th></th>
               <th colspan="<%= Group.all.length %>"> <%= I18n.t(:groups_and_roles) %> </th>
             </tr>
-            <tr>
-              <th></th>
-              <%# Group.all.each do |group| %>
-              <% @organization_group.each do |group| %>
-                  <th scope='colgroup'><%= group.name %></th>
-              <% end %>
-            </tr>
 
-            <tr>
-              <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
-              <% @organization_group.each do |group| %>
-                <th>
-                  <% ['show_project', 'edit_project', 'delete_project'].each do |permission| %>
-                      <span class="span4" style="font-weight: normal; color: darkorange"><%= I18n.t("label_#{permission}_status") %></span>
+            <% if @organization_group.length > 1 %>
+                <tr>
+                  <th></th>
+                  <% @organization_group.each do |group| %>
+                      <th scope='colgroup'><%= group.name %></th>
                   <% end %>
-                </th>
-              <% end %>
-            </tr>
+                </tr>
+
+                <tr>
+                  <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
+                  <% @organization_group.each do |group| %>
+                    <th>
+                      <% ['show_project', 'edit_project', 'delete_project'].each do |permission| %>
+                          <span class="span4" style="font-weight: normal; color: darkorange"><%= I18n.t("label_#{permission}_status") %></span>
+                      <% end %>
+                    </th>
+                  <% end %>
+                </tr>
+
+            <% else %>
+                <tr>
+                  <th></th>
+                 <th><%= I18n.t(:no_group_in_organization, value: @organization.name) %></th>
+                </tr>
+
+                <tr>
+                  <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
+                  <th></th>
+                </tr>
+            <% end %>
 
             <% @organization.estimation_statuses.each do |estimation_status| %>
                 <tr>
                   <td><%= estimation_status.libelle %></td>
-                  <% @organization_group.each do |group| %>
-                    <td class="center">
-                    <% ['show_project', 'edit_project', 'delete_project'].each do |permission_label| %>
-                        <% permission = Permission.find_by_alias(permission_label) %>
-                        <span class="span4">
-                          <%= check_box_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", permission.id, (estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include? permission.id)) %>
-                        </span>
-                    <% end %>
-                    </td>
+                  <% if @organization_group.length > 1 %>
+                      <% @organization_group.each do |group| %>
+                        <td class="center">
+                        <% ['show_project', 'edit_project', 'delete_project'].each do |permission_label| %>
+                            <% permission = Permission.find_by_alias(permission_label) %>
+                            <span class="span4">
+                              <%= check_box_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", permission.id, (estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include? permission.id)) %>
+                            </span>
+                        <% end %>
+                        </td>
+                      <% end %>
+                  <% else %>
+                    <td></td>
                   <% end %>
                 </tr>
             <% end %>

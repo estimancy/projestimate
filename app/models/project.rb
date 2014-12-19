@@ -138,13 +138,14 @@ class Project < ActiveRecord::Base
     include_field [:pe_wbs_projects, :module_projects, :groups, :users, :project_securities]
 
     customize(lambda { |original_project, new_project|
-      new_project.title = "Copy_#{ original_project.copy_number.to_i+1} of #{original_project.title}"
-      new_project.alias = "Copy_#{ original_project.copy_number.to_i+1} of #{original_project.alias}"
+      new_copy_number = original_project.copy_number.to_i+1
+      new_project.title = "#{original_project.title}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.title}"
+      new_project.alias = "#{original_project.alias}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.alias}"
       new_project.version = '1.0'
       new_project.description = " #{original_project.description} \n \n This project is a duplication of project \"#{original_project.title} (#{original_project.alias}) - #{original_project.version}\" "
       new_project.copy_number = 0
       new_project.is_model = false
-      original_project.copy_number = original_project.copy_number.to_i+1
+      original_project.copy_number = new_copy_number
     })
 
     propagate

@@ -1334,4 +1334,5 @@ fr:
   effort_per_phases_and_profiles: "EFFORT PAR PHASES ET PROFILS"
   cost_per_phases_and_profiles: "COÛTS PAR PHASES ET PROFILS"
   show_name: "Afficher le nom dans la vignette"
+  no_group_in_organization: "Il n'y a aucun groupe dans l'organisation '%{value}'"
 

@@ -32,7 +32,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     @organization = Organization.find(params[:id])
 
-    set_breadcrumbs @organization => edit_organization_path(@organization)
+    set_breadcrumbs @organization.to_s => edit_organization_path(@organization)
 
     @organization_uow_complexities = @organization.organization_uow_complexities
   end

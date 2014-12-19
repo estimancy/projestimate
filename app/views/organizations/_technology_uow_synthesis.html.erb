@@ -41,7 +41,7 @@
                   <% if sutc %>
                     <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", sutc.value %>
                   <% else %>
-                    -
+                     <%= text_field_tag "abacus[#{sut.id}][#{ot.id}][#{uow.id}][#{cplx.id}]", nil %>
                   <% end %>
                 </td>
               <% end %>

@@ -98,11 +98,7 @@ class ViewsController < ApplicationController
   def destroy
     @view = View.find(params[:id])
     organization_id = @view.organization_id
-
     @view.destroy
-
-    respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-view-widgets')) }
-    end
+    redirect_to edit_module_project_path(params['module_project_id'], :anchor => 'tabs-view-widgets-parameters')
   end
 end

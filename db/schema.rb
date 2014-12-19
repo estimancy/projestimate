@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141209160748) do
+ActiveRecord::Schema.define(:version => 20141219104026) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -562,6 +562,7 @@ ActiveRecord::Schema.define(:version => 20141209160748) do
     t.integer  "limit1"
     t.integer  "limit2"
     t.integer  "limit3"
+    t.integer  "copy_number",            :default => 0
   end
 
   create_table "organizations_users", :id => false, :force => true do |t|

@@ -94,9 +94,10 @@ class Organization < ActiveRecord::Base
     include_field [:attribute_organizations, :organization_technologies, :organization_profiles,
                    :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :organization_uow_complexities, :estimation_statuses]
 
-
     customize(lambda { |original_organization, new_organization|
-      new_organization.name = "Copy of '#{original_organization.name}' at #{Time.now}"
+      new_copy_number = original_organization.copy_number.to_i+1
+      new_organization.name = "#{original_organization.name}(#{new_copy_number})" ###"Copy of '#{original_organization.name}' at #{Time.now}"
+      original_organization.copy_number = new_copy_number
     })
   end
 

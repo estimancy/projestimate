@@ -47,6 +47,7 @@ class ProjectAreasController < ApplicationController
     @acquisition_categories = AcquisitionCategory.all
     @platform_categories = PlatformCategory.all
     @project_categories = ProjectCategory.all
+    @labor_categories = []
   end
 
   def new
