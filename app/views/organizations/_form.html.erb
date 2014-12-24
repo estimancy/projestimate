@@ -470,7 +470,7 @@
    <% if can? :edit_organizations, Organization %>
        <%= link_to I18n.t('new_estimation_status'), new_estimation_status_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
    <% end %>
-   <%= render "estimation_statuses/statuses_management", object: @organization %>
+   <%= render "estimation_statuses/statuses_management", object: [@organization, @organization_group] %>
  </div>
 
  <div id="GuwModel" style="min-height: 50px;">

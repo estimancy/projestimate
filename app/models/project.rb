@@ -116,7 +116,6 @@ class Project < ActiveRecord::Base
     self.project_organization_statuses.all.each do |status|
       #aasm.state status.status_alias.to_sym
       aasm  do # defaults to aasm_state
-
         state status.status_alias.to_sym
 
         # Workflow definition for the commit event   # Redesign the 'commit' event AASM workflow with the estimation_statuses workflow
@@ -167,6 +166,28 @@ class Project < ActiveRecord::Base
   #Override
   def to_s
     "#{title} - #{version}"
+  end
+
+  # Change project status according to the project's organization estimation statuses
+  def commit_status
+    #Get the project's current status
+    current_status_number = self.estimation_status.status_number
+    # According to the status transitions map, only possible statuses will consider
+    possible_statuses = self.project_estimation_statuses.map(&:status_number).sort #self.estimation_status.to_transition_statuses.map(&:status_number).uniq.sort
+    current_status_index = possible_statuses.index(current_status_number)
+    # By default the first possible status is candidate
+    next_status_number = possible_statuses.first
+    # If the current status is not the last element of the array, the next status is next element after the current status
+    if current_status_number != possible_statuses.last
+      next_status_number = possible_statuses[current_status_index+1]
+    end
+
+    begin
+      # Get the next status
+      next_status = self.organization.estimation_statuses.find_by_status_number(next_status_number)
+      self.update_attribute(:estimation_status_id, next_status.id)
+    rescue
+    end
   end
 
   #Return project value

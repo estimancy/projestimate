@@ -37,6 +37,8 @@ function SpkMultiWidget(helperId) {
     this.setRefreshInterval = function(refreshSeconds) {
         if(refreshSeconds >= 2) {
             this.refreshIntervalSecs = refreshSeconds;
+        } else if(refreshSeconds === 0) {
+            this.refreshIntervalSecs = 0;
         }
     };
 

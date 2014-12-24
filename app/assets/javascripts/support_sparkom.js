@@ -88,6 +88,8 @@ function onSpkError(errMessage) {
     $('#spktargetdiv').html(errMessage);
 }
 
+// La partie du code qui suit est migrée vers la page '/layouts/_sparkom_support.html.erb'
+
 //$(document).ready(function() {
 //    if(helperId == null) {
 //        $('#spktargetdiv').html("MISSING helperId.");

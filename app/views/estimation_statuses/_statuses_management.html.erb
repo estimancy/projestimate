@@ -82,7 +82,7 @@
               <th colspan="<%= Group.all.length %>"> <%= I18n.t(:groups_and_roles) %> </th>
             </tr>
 
-            <% if @organization_group.length > 1 %>
+            <% if @organization_group.length >= 1 %>
                 <tr>
                   <th></th>
                   <% @organization_group.each do |group| %>
@@ -116,7 +116,7 @@
             <% @organization.estimation_statuses.each do |estimation_status| %>
                 <tr>
                   <td><%= estimation_status.libelle %></td>
-                  <% if @organization_group.length > 1 %>
+                  <% if @organization_group.length >= 1 %>
                       <% @organization_group.each do |group| %>
                         <td class="center">
                         <% ['show_project', 'edit_project', 'delete_project'].each do |permission_label| %>
