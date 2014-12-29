@@ -58,7 +58,8 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @organization = Organization.find(params[:organization_id])
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
+    #set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
+    set_breadcrumbs "Organizations" => "/organizationals_params", "#{@organization.to_s} / #{I18n.t(:groups)} / #{@group.to_s}" => edit_organization_path(@organization)
 
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }

@@ -105,6 +105,11 @@ class ProjectsController < ApplicationController
   def dashboard
     set_page_title 'Dashboard'
 
+    # return if user doesn't have the rigth to consult the estimation
+    if !can_show_estimation?(@project)
+      redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+    end
+
     @user = current_user
     @pemodules ||= Pemodule.all
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -213,7 +218,7 @@ class ProjectsController < ApplicationController
     set_page_title 'Estimations'
 
     # The current user can only see projects of its organizations
-    @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |i| !i.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
+    @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |j| !j.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
   end
 
   def new
@@ -836,7 +841,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # Select component on project/estimation dashbord
+  # Select component on project/estimation dashboard
   def select_pbs_project_elements
     #No authorize required
     @project = Project.find(params[:project_id])

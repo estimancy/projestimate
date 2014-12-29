@@ -14,9 +14,10 @@
   </thead>
   <tbody>
   <% @projects.each do |project| %>
+    <% if can_see_estimation?(project) %>
       <tr>
         <td>
-          <% if can_show_estimation?(project) %>
+          <% if can_show_estimation?(project) %>   <!-- Have the rigth to consult the project -->
               <%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %>
           <% else %>
               <%= project.title %>
@@ -71,6 +72,7 @@
 
         </td>
       </tr>
+    <% end %>
   <% end %>
 
   <%= render :partial => 'layouts/footer_table' %>
