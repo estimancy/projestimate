@@ -1097,7 +1097,7 @@ module ProjectsHelper
     begin
       permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
       ###if can?(:show_project, estimation)
-      if can?(:see_project, estimation)
+      #if can?(:see_project, estimation)
         # if at least one of the current_user's groups is in the estimation's organization groups
         groups_intersection = current_user.groups.all & estimation.organization.groups
         unless groups_intersection.nil?
@@ -1108,7 +1108,7 @@ module ProjectsHelper
             end
           end
         end
-      end
+      #end
     rescue
       false
     end
@@ -1118,12 +1118,12 @@ module ProjectsHelper
 
   # Got the right to see the estimation from estimations list
   def can_see_estimation?(estimation)
-    can_do_action_on_estimation?(estimation, "see_project")
+    can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
   end
 
   # Got the right to show the estimation details
   def can_show_estimation?(estimation)
-    return can_do_action_on_estimation?(estimation, "show_project")
+    return can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
   end
 
   # Got the right to edit and modify the estimation details
