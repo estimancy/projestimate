@@ -36,12 +36,6 @@
 
 class WbsActivityElementsController < ApplicationController
   include PeWbsHelper
-  #include DataValidationHelper #Module for master data changes validation
-
-  #helper_method :wbs_record_statuses_collection
-  #helper_method :selected_record_status
-
-  #before_filter :get_record_statuses
 
   def new
     authorize! :edit_wbs_activities, WbsActivity

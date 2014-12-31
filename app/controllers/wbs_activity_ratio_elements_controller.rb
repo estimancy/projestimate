@@ -90,7 +90,6 @@ class WbsActivityRatioElementsController < ApplicationController
     #keep current ratio
     @selected_ratio = wbs_activity_ratio
     @wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements.all
-    #@wbs_activity_ratio_elements = WbsActivityRatioElement.where(:wbs_activity_ratio_id => wbs_activity_ratio.id).all
 
     #sum total ratio_value
     @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
