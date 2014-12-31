@@ -16,10 +16,6 @@
           <% if can? :create_project_from_template, Project %>
             <%= link_to I18n.t('new_project_from'), projects_from_path, :class => 'btn' %>
           <% end %>
-
-          <% if can? :create_project_from_scratch, Project %>
-            <%= link_to I18n.t('new_project'), new_project_path, :class => 'btn' %>
-          <% end %>
         </td>
       </tr>
     </table>
