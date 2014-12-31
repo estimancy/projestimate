@@ -60,7 +60,9 @@
 
                           <% wbs_profiles_value = nil %>
                           <% unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty? || wbs_estimation_profiles_values["profile_id_#{profile.id}"].nil? %>
-                              <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
+                              <% if !wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil? %>
+                                <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
+                              <% end %>
                           <% end %>
                           <td class='attribute_tooltip2' title='<%= profile_ratio_percentage %>' style="text-align: center"><%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{number_with_delimiter(wbs_profiles_value.round(pe_attribute.precision.nil? ? user_number_precision : pe_attribute.precision))} #{get_attribute_unit(pe_attribute)}" %></td>
                       <% end %>
