@@ -94,12 +94,16 @@ class Project < ActiveRecord::Base
   end
 
   # Estimation statuses possible transitions according to the project status
-  def project_estimation_statuses
-    if new_record? || self.estimation_status.nil? || !self.organization.estimation_statuses.include?(self.estimation_status)
-      # Note: When estimation's organization changed, the status id won't be valid for the new selected organization
-      #initial_status = self.organization.estimation_statuses.order(:status_number).first_or_create(organization_id: self.organization_id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
-      #[[initial_status.name, initial_status.id]]
-      nil
+  def project_estimation_statuses(organization=nil)
+    if new_record? || self.estimation_status.nil? #|| !self.organization.estimation_statuses.include?(self.estimation_status)
+      # For new record
+      if organization.nil?
+        nil
+      else
+        initial_status = organization.estimation_statuses.order(:status_number).first_or_create(organization_id: organization.id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
+        [[initial_status.name, initial_status.id]]
+      end
+      #nil
     else
       estimation_statuses = self.estimation_status.to_transition_statuses
       estimation_statuses << self.estimation_status

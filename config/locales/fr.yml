@@ -429,7 +429,7 @@ fr:
 
   #groups
   global: "Global"
-  text_group_associated_users: "Utilisateurs associés (utilisateurs membres du groupe)"
+  text_group_associated_users: "Utilisateurs associés (utilisateurs membres) du groupe \"%{value}\""
   edit_group: "Editer le groupe \"%{value}\" ... "
   new_group: "Créer un nouveau groupe ... "
 
@@ -1082,7 +1082,7 @@ fr:
   notice_successful_collapse_project_version: "Le(s) version(s) de projet sélectionnée(s) ont été supprimée(s) avec succès"
   project_is_not_collapsible: "Le Project '%{project_title_version}' n'est pas collapsable.\n\n"
   collapsible_project_only: "Seul un projet dans l'état 'CHECKPOINT' peut être collapsé."
-  warning_no_show_permission_on_project_status: "Vous n'avez pas le droit d'afficher ce project dans son statut actuel"
+  warning_no_show_permission_on_project_status: "Vous n'avez pas le droit de consulter ce project dans son statut actuel"
   warning_no_edit_permission_on_project_status: "Vous n'avez pas le droit de modifier ce project dans son statut actuel"
   warning_no_delete_permission_on_project_status: "Vous n'avez pas le droit de supprimer ce project dans son statut actuel"
 
@@ -1334,4 +1334,6 @@ fr:
   cost_per_phases_and_profiles: "COÛTS PAR PHASES ET PROFILS"
   show_name: "Afficher le nom dans la vignette"
   no_group_in_organization: "Il n'y a aucun groupe dans l'organisation '%{value}'"
+  custom_fields: "Champs personnalisés"
+  new_field: "Nouveau champ"
 

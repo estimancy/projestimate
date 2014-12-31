@@ -1,7 +1,7 @@
 <div class="tabs">
 
   <ul>
-    <li><a href="#tabs-1"><%= I18n.t('new_group') %></a></li>
+    <li><a href="#tabs-1"><%= @group.new_record? ? I18n.t('new_group') : "#{I18n.t(:edit_group, value: @group)}" %></a></li>
     <li><a href="#tabs-2"><%= I18n.t('users') %></a></li>
   </ul>
 
@@ -65,7 +65,7 @@
 
   <div id="tabs-2">
     <%= form_tag('/update_selected_users', :method => 'POST', :class => 'simple_form') do -%>
-        <b><%= I18n.t(:text_group_associated_users) %></b>
+        <b style="color: darkorange "><%= I18n.t(:text_group_associated_users, value: @group) %></b>
         <br/><br/>
 
         <div class="field_checkbox">

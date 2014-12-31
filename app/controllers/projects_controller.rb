@@ -105,6 +105,11 @@ class ProjectsController < ApplicationController
   def dashboard
     set_page_title 'Dashboard'
 
+    # return if user doesn't have the rigth to consult the estimation
+    if !can_show_estimation?(@project)
+      redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+    end
+
     @user = current_user
     @pemodules ||= Pemodule.all
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -211,11 +216,12 @@ class ProjectsController < ApplicationController
     set_page_title 'Estimations'
 
     # The current user can only see projects of its organizations
-    @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |i| !i.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
+    @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |j| !j.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
   end
 
   def new
     authorize! :create_project_from_scratch, Project
+    @organization = Organization.find(params[:organization_id])
     set_breadcrumbs "Estimations" => projects_path
     set_page_title 'New estimation'
   end
@@ -229,6 +235,7 @@ class ProjectsController < ApplicationController
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
+    @organization = Organization.find(params[:project][:organization_id])
 
     #Give full control to project creator
     full_control_security_level = ProjectSecurityLevel.find_by_name('FullControl')
@@ -325,6 +332,7 @@ class ProjectsController < ApplicationController
     set_page_title 'Edit estimation'
 
     @project = Project.find(params[:id])
+    @organization = @project.organization
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
@@ -398,6 +406,7 @@ class ProjectsController < ApplicationController
   def update
     set_page_title 'Edit estimation'
     @project = Project.find(params[:id])
+    @organization = @project.organization
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
@@ -834,7 +843,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # Select component on project/estimation dashbord
+  # Select component on project/estimation dashboard
   def select_pbs_project_elements
     #No authorize required
     @project = Project.find(params[:project_id])

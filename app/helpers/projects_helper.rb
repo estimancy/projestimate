@@ -1091,14 +1091,14 @@ module ProjectsHelper
 
   # Authorizations based on estimations's statuses roles
   # Estimation status Role by groups
-  # The possible project_permission_action_alias = ("show_project", "edit_project", "delete_project")
+  # The possible project_permission_action_alias = ("see_project", "show_project", "edit_project", "delete_project")
   def can_do_action_on_estimation?(estimation, project_permission_action_alias)
     can_do_something = false
     begin
       permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
-      if can?(:show_project, estimation)
+      ###if can?(:show_project, estimation)
+      #if can?(:see_project, estimation)
         # if at least one of the current_user's groups is in the estimation's organization groups
-        #groups_intersection1 = current_user.groups.all & estimation.organization.groups.all
         groups_intersection = current_user.groups.all & estimation.organization.groups
         unless groups_intersection.nil?
           groups_intersection.each do |group|
@@ -1108,7 +1108,7 @@ module ProjectsHelper
             end
           end
         end
-      end
+      #end
     rescue
       false
     end
@@ -1116,14 +1116,22 @@ module ProjectsHelper
     can_do_something
   end
 
-  def can_show_estimation?(estimation)
-    return can_do_action_on_estimation?(estimation, "show_project")
+  # Got the right to see the estimation from estimations list
+  def can_see_estimation?(estimation)
+    can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
   end
 
+  # Got the right to show the estimation details
+  def can_show_estimation?(estimation)
+    return can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+  end
+
+  # Got the right to edit and modify the estimation details
   def can_modify_estimation?(estimation)
     return can_do_action_on_estimation?(estimation, "edit_project")
   end
 
+  # Got the right to delete the estimation
   def can_delete_estimation?(estimation)
     return can_do_action_on_estimation?(estimation, "delete_project")
   end

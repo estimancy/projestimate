@@ -429,7 +429,7 @@ en-gb:
 
   #groups
   global: "Global"
-  text_group_associated_users: "Associated users (users member of the group)"
+  text_group_associated_users: "Associated users (users member) of the \"%{value}\" group"
   edit_group: "Edit the group \"%{value}\" ..."
   new_group: "New group"
 
@@ -1300,4 +1300,6 @@ en-gb:
   cost_per_phases_and_profiles: "COST PER PHASES AND PROFILES"
   show_name: "Show name in widget"
   no_group_in_organization: "There is no group in the '%{value}' organization"
+  custom_fields: "Custom fields"
+  new_field: "New field"
 

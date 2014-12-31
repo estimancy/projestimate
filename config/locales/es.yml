@@ -1613,4 +1613,6 @@ es:
   cost_per_phases_and_profiles: "COST PER PHASES AND PROFILES"
   show_name: "Show name in widget"
   no_group_in_organization: "There is no group in the '%{value}' organization"
+  custom_fields: "Custom fields"
+  new_field: "New field"
 
