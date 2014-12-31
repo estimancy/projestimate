@@ -111,6 +111,18 @@ class CocomoExpert::InputCocomoController < ApplicationController
     end
   end
 
+  def add_note_to_size
+    ic = InputCocomo.where( factor_id: nil,
+                            pbs_project_element_id: current_component.id,
+                            project_id: @project.id,
+                            module_project_id: current_module_project.id).first
+    if ic.nil?
+      @notes = ""
+    else
+      @notes = ic.notes
+    end
+  end
+
   def notes_form
     ic = InputCocomo.where( factor_id: params[:factor_id],
                             pbs_project_element_id: current_component.id,
@@ -119,6 +131,26 @@ class CocomoExpert::InputCocomoController < ApplicationController
 
     if ic.nil?
       InputCocomo.create( factor_id: params[:factor_id],
+                          pbs_project_element_id: current_component.id,
+                          project_id: @project.id,
+                          module_project_id: current_module_project.id,
+                          notes: params[:notes])
+    else
+      ic.notes = params[:notes]
+      ic.save
+    end
+
+    redirect_to main_app.dashboard_path(@project)
+  end
+
+  def notes_form_size
+    ic = InputCocomo.where( factor_id: nil,
+                            pbs_project_element_id: current_component.id,
+                            project_id: @project.id,
+                            module_project_id: current_module_project.id).first
+
+    if ic.nil?
+      InputCocomo.create( factor_id: nil,
                           pbs_project_element_id: current_component.id,
                           project_id: @project.id,
                           module_project_id: current_module_project.id,

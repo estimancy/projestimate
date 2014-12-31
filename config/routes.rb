@@ -159,9 +159,6 @@ Projestimate::Application.routes.draw do
 
   resources :record_statuses
 
-  resources :peicons
-  match 'peicons/:id/choose_icon' => 'peicons#choose_icon', :as => 'choose_icon'
-
   resources :auth_methods
 
   resources :admin_settings

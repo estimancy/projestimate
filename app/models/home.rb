@@ -42,7 +42,7 @@ class Home < ActiveRecord::Base
   include ExternalMasterDatabase
 
   EXTERNAL_BASES = [ExternalWbsActivityElement, ExternalWbsActivity, ExternalLanguage, ExternalPeAttribute, ExternalProjectArea, ExternalProjectCategory, ExternalPlatformCategory,
-                    ExternalAcquisitionCategory, ExternalPeicon, ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalProjectSecurityLevel,
+                    ExternalAcquisitionCategory, ExternalWorkElementType, ExternalCurrency, ExternalAdminSetting, ExternalAuthMethod, ExternalGroup, ExternalProjectSecurityLevel,
                     ExternalPermission, ExternalSizeUnit]
 
   def self.connect_external_database
@@ -114,9 +114,6 @@ class Home < ActiveRecord::Base
     puts '   - Acquisition categories'
     self.update_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
 
-    puts '   - Attribute Category'
-    self.update_records(ExternalMasterDatabase::ExternalAttributeCategory, AttributeCategory, ['name', 'alias','uuid'])
-
     puts '   - Factor'
     self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])
 
@@ -148,59 +145,8 @@ class Home < ActiveRecord::Base
       end
     end
 
-    puts '   - Estimancy Icons'
-    #self.update_records(ExternalMasterDatabase::ExternalPeicon, Peicon, ['name', 'icon_file_name', 'icon_content_type', 'icon_updated_at', 'icon_file_size', 'uuid'])
-    external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
-
-    external_icons.each do |ext_icon|
-      icon_name = ext_icon.icon_file_name
-      icon_url=ext_icon.icon.url
-      icon_id=icon_url.split('/')[7]
-      #unless Dir.entries("#{Rails.root}/public/").include?(icon_name)
-      #  url = "http://forge.estimancy.com:8888/system/peicons/icons/000/000/#{icon_id}/small/#{icon_name}"
-      #  File.open("#{Rails.root}/public/#{icon_name}", 'wb') do |saved_file|
-      #    # the following "open" is provided by open-uri
-      #    open(url, 'rb') do |read_file|
-      #      saved_file.write(read_file.read)
-      #    end
-      #  end
-      #end
-      #end
-      #self.update_records(ExternalMasterDatabase::ExternalPeicon, Peicon, ['name', 'icon_file_name', 'icon_content_type', 'icon_updated_at', 'icon_file_size', 'uuid'])
-
-      peicon=Peicon.find_by_uuid(ext_icon.uuid)
-      unless peicon.nil?
-        id_icon=peicon.id
-        icon = Peicon.find(id_icon)
-        icon.update_attributes(:name => ext_icon.name, :icon => File.new("#{Rails.root}/public/#{icon_name}"), :record_status_id => local_defined_rs_id,:uuid=> ext_icon.uuid)
-      else
-        icon = Peicon.create(:name => ext_icon.name, :icon => File.open("#{Rails.root}/public/#{icon_name}"), :record_status_id => local_defined_rs_id, :uuid => ext_icon.uuid )
-        icon.uuid=ext_icon.uuid
-        icon.save
-      end
-    end
-
     puts '   - WorkElementType'
-    self.update_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'peicon_id', 'uuid'])
-    ext_defined_rs_id = ExternalMasterDatabase::ExternalRecordStatus.find_by_name('Defined').id
-    local_defined_rs_id = RecordStatus.find_by_name('Defined').id
-    external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
-    external_work_element_type = ExternalMasterDatabase::ExternalWorkElementType.send(:defined, ext_defined_rs_id).send(:all)
-
-    external_work_element_type.each do |ext_work_element_type|
-      ext_peicon_id= ext_work_element_type.peicon_id
-      rows = db.query("SELECT uuid FROM peicons where id='#{ext_peicon_id}'")
-      peicon_uuid=0
-      rows.each do |row|
-        peicon_uuid=row
-      end
-      peicon=Peicon.find_by_uuid(peicon_uuid['uuid'])
-      unless peicon.nil?
-        id_icon=peicon.id
-        loc_workElementType = WorkElementType.find_by_uuid(ext_work_element_type.uuid)
-        loc_workElementType.update_attributes(:peicon_id => id_icon, :record_status_id => local_defined_rs_id)
-      end
-    end
+    self.update_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'uuid'])
 
     puts '   - Currencies'
     self.update_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])
@@ -458,9 +404,6 @@ class Home < ActiveRecord::Base
     puts '   - Attribute...'
     self.create_records(ExternalMasterDatabase::ExternalPeAttribute, PeAttribute, ['name', 'alias', 'description', 'attr_type', 'aggregation', 'options', 'uuid', 'precision', 'single_entry_attribute'])
 
-    puts '   - Attribute Category'
-    self.create_records(ExternalMasterDatabase::ExternalAttributeCategory, AttributeCategory, ['name', 'alias','uuid'])
-
     puts '   - Attribute Module'
     self.create_records(ExternalMasterDatabase::ExternalAttributeModule, AttributeModule, ['description', 'default_low', 'default_most_likely', 'default_high', 'in_out', 'is_mandatory', 'uuid'])
 
@@ -567,49 +510,8 @@ class Home < ActiveRecord::Base
     puts '   - Acquisition categories'
     self.create_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
 
-    puts '   - Estimancy Icons'
-    #Need to have same UUID as Master Instance Icons
-    external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
-
-    #external_icons.each do |ext_icon|
-    #    icon_name = ext_icon.icon_file_name
-    #    icon_url=ext_icon.icon.url
-    #    icon_id=icon_url.split('/')[7]
-    #    url = "http://forge.estimancy.com:8888/system/peicons/icons/000/000/#{icon_id}/small/#{icon_name}"
-    #    File.open("#{Rails.root}/public/#{icon_name}", 'wb') do |saved_file|
-    #      # the following "open" is provided by open-uri
-    #      open(url, 'rb') do |read_file|
-    #        saved_file.write(read_file.read)
-    #      end
-    #    end
-    #    icon = Peicon.create(:name => ext_icon.name, :icon => File.new("#{Rails.root}/public/#{icon_name}"), :record_status_id => local_defined_rs_id)
-    #    icon.update_attribute(:uuid, ext_icon.uuid)
-    #end
-
     puts '   - WBS structure'
-    self.create_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'peicon_id', 'uuid'])
-
-    wet = WorkElementType.first
-
-    ext_defined_rs_id = ExternalMasterDatabase::ExternalRecordStatus.find_by_name('Defined').id
-    local_defined_rs_id = RecordStatus.find_by_name('Defined').id
-    external_icons = ExternalMasterDatabase::ExternalPeicon.send(:defined, ext_defined_rs_id).send(:all)
-    external_work_element_type = ExternalMasterDatabase::ExternalWorkElementType.send(:defined, ext_defined_rs_id).send(:all)
-
-    external_work_element_type.each do |ext_work_element_type|
-      ext_peicon_id= ext_work_element_type.peicon_id
-      rows = db.query("SELECT uuid FROM peicons where id='#{ext_peicon_id}'")
-      peicon_uuid=0
-      rows.each do |row|
-        peicon_uuid=row
-      end
-      peicon=Peicon.find_by_uuid(peicon_uuid['uuid'])
-      unless peicon.nil?
-        id_icon=peicon.id
-        loc_workElementType = WorkElementType.find_by_uuid(ext_work_element_type.uuid)
-        loc_workElementType.update_attributes(:peicon_id => id_icon, :record_status_id => local_defined_rs_id)
-      end
-    end
+    self.create_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'uuid'])
 
     puts '   - Currencies'
     self.create_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])

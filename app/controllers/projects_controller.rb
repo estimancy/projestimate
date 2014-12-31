@@ -191,8 +191,6 @@ class ProjectsController < ApplicationController
         @aproj << Factor.where(alias: a, factor_type: "advanced").first
       end
     else
-      ###set_breadcrumbs "Cocomo Expert" => ""
-
       @sf = []
       @em = []
 

@@ -29,7 +29,6 @@
             <td><%= work_element_type.name %></td>
             <td><%= work_element_type.alias %></td>
             <td><%= work_element_type.description %></td>
-            <td><%= work_element_type.peicon.nil? ? 'None' : image_tag(work_element_type.peicon.icon.url) %></td>
             <td><%= work_element_type.record_status.name unless work_element_type.record_status.nil? %> <%= work_element_type.show_custom_value %> </td>
             <td class="center">
               <%= link_to '', edit_work_element_type_path(work_element_type), :class => 'icon-pencil', :title => I18n.t('edit') %>

@@ -151,6 +151,7 @@ module ViewsWidgetsHelper
     case view_widget.widget_type
       when "text"
         value_to_show = probable_value_text
+        is_simple_text = true
 
       when "line_chart"
         #value_to_show = line_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: view_widget.color})

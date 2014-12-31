@@ -47,7 +47,6 @@ class RecordStatus < ActiveRecord::Base
   has_many :event_types
   has_many :labor_categories
   has_many :languages
-  has_many :peicons
   has_many :pemodules
   has_many :platform_categories
   has_many :project_areas

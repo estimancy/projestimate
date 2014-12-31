@@ -83,7 +83,6 @@ class User < ActiveRecord::Base
   has_many :change_on_currencies, :foreign_key => 'owner_id', :class_name => 'Currency'
   has_many :change_on_event_types, :foreign_key => 'owner_id', :class_name => 'EventType'
   has_many :change_on_languages, :foreign_key => 'owner_id', :class_name => 'Language'
-  has_many :change_on_peicons, :foreign_key => 'owner_id', :class_name => 'Peicon'
   has_many :change_on_pemodules, :foreign_key => 'owner_id', :class_name => 'Pemodule'
   has_many :change_on_platform_categories, :foreign_key => 'owner_id', :class_name => 'PlatformCategory'
   has_many :change_on_project_areas, :foreign_key => 'owner_id', :class_name => 'ProjectArea'

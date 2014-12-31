@@ -506,8 +506,6 @@ fr:
   add_link: "Ajouter un lien"
   add_component: "Ajouter un composant"
 
-  #peicons
-  icon: "Icône"
   text_icon_message: "Vous pouvez télécharger tous les fichiers PNG de moins de 10 Kbytes depuis votre disque dur.Toutes vos images seront automatiquement redimensionnées en 16x16 pixels."
   edit_icon: "Editer l'icône \"%{value}\" ..."
   new_icon: "Ajouter un icône"

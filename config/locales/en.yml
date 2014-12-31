@@ -506,8 +506,6 @@ en:
   add_link: "Add a link"
   add_component: "Add a component"
 
-  #peicons
-  icon: "Icon"
   text_icon_message: "You can upload any PNG image file smaller than 10 kilobytes from your hard drive.We will automatically resize large images to 16x16 pixels."
   edit_icon: "Edit the \"%{value}\" icon ..."
   new_icon: "Add an icon"

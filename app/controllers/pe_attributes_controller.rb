@@ -52,7 +52,6 @@ class PeAttributesController < ApplicationController
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.new
-    @attribute_categories = AttributeCategory.defined.all
   end
 
   def edit
@@ -60,7 +59,6 @@ class PeAttributesController < ApplicationController
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.find(params[:id])
-    @attribute_categories = AttributeCategory.defined.all
 
     env["HTTP_REFERER"] += '#tabs-attribute'
 
@@ -79,7 +77,6 @@ class PeAttributesController < ApplicationController
     @attribute = PeAttribute.new(params[:pe_attribute])
     @attribute.options = params[:options]
     @attribute.attr_type = params[:options][0]
-    @attribute_categories = AttributeCategory.defined.all
 
     if @attribute.save
       flash[:notice] = I18n.t (:notice_pe_attribute_successful_created)
@@ -93,7 +90,6 @@ class PeAttributesController < ApplicationController
     authorize! :create_and_edit_attributes, PeAttribute
 
     set_page_title 'Attributes'
-    @attribute_categories = AttributeCategory.defined.all
 
     @attribute = nil
     current_attribute = PeAttribute.find(params[:id])
