@@ -498,8 +498,6 @@ it:
 #  add_link: "Aggiunga un collegamento"
 #  add_component: "Aggiunga un componente"
 #
-#  #peicons
-#  icon: "Icona"
 #  text_icon_message: " Lei può telecaricare alcun archivio di immagine di PNG più piccolo di 10 kilobyte dalla Sua passeggiata dura.Noi ridimensioneremo immagini automaticamente grandi a 16x16 pixel."
 #
 #  edit_icon: "Compili un \"%{value}\" icona ..."

@@ -500,8 +500,6 @@ es:
 #  add_link: "A�adir un enlace"
 #  add_component: "A�adir un componente"
 #
-#  #peicons
-#  icon: "Icono"
 #  text_icon_message: "Puedes subir cualquier imagen PNG archivo m�s peque�o que 10 kilobytes desde tu hard drive. Redimensionaramos autom�ticamente grandes imagenes en 16x16 pixels."
 #  edit_icon: "Editar el icono...\"%{value}\" "
 #  new_icon: "A�adir un icono"

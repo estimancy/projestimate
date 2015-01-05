@@ -19,7 +19,6 @@
             </tr>
           </table>
 
-          <%= f.input :attribute_category_id, :label => I18n.t('category'), :as => :select, :collection => @attribute_categories %>
           <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 6} %>
           <%= f.input :aggregation, :label => I18n.t('aggregation'), :as => :select, :collection => PeAttribute::type_aggregation %>
 

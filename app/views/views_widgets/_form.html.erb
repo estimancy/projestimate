@@ -39,7 +39,7 @@
             <td>
               <label><%= I18n.t :fields %></label>
               <% selected = @views_widget.project_fields.first %>
-              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "None" %>
+              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "None", disabled: !(@views_widget.widget_type == "text") %>
             </td>
             <td><%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %></td>
           </tr>
@@ -64,3 +64,9 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  $("#views_widget_widget_type").on("change", function(){
+    $("#field").prop('disabled',!$("#field").prop('disabled'))
+  })
+</script>

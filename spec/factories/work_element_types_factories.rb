@@ -40,27 +40,6 @@ FactoryGirl.define do
       sequence(:alias) {|n| "Developed_software__alias#{n}"}
       uuid
     end
-
   end
-
-
-  #
-  #  factory :purchased_software_wet, :class => WorkElementType do |wet|
-  #    wet.name        "Purchased Software"
-  #    wet.alias       "$SW"
-  #    wet.association :peicon, :factory => :default_icon
-  #  end
-  #
-  #  factory :default_wet, :class => WorkElementType do |wet|
-  #    wet.name        "Purchased Hardware"
-  #    wet.alias       "$HW"
-  #    wet.association :peicon, :factory => :default_icon
-  #  end
-  #
-  #  factory :misc_wet, :class => WorkElementType do |wet|
-  #    wet.name        "Purchased Miscellaneous"
-  #    wet.alias       "$Misc"
-  #    wet.association :peicon, :factory => :default_icon
-  #  end
 end
 

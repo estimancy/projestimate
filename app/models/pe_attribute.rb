@@ -38,7 +38,7 @@
 #Global attributes of project. Ex : size, cost, result, date etc...
 #Those attributes are used into AttributeModule
 class PeAttribute < ActiveRecord::Base
-  attr_accessible :name, :alias, :attribute_category_id, :aggregation, :attr_type, :options, :precision, :description, :record_status_id, :custom_value, :change_comment, :single_entry_attribute
+  attr_accessible :name, :alias, :aggregation, :attr_type, :options, :precision, :description, :record_status_id, :custom_value, :change_comment, :single_entry_attribute
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
@@ -54,7 +54,6 @@ class PeAttribute < ActiveRecord::Base
 
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
-  belongs_to :attribute_category
 
   validates_presence_of :description, :attr_type, :record_status
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
@@ -76,7 +75,6 @@ class PeAttribute < ActiveRecord::Base
 
   #Search fields
   scoped_search :on => [:name, :alias, :description, :created_at, :updated_at]
-  scoped_search :in => :attribute_category, :on => :name
 
   #Override
   def to_s

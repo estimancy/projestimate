@@ -36,7 +36,6 @@
                 <td><%= attribute.alias %></td>
                 <td><%= attribute.description %></td>
                 <td><%= attribute.attr_type.humanize %></td>
-                <td><%= attribute.attribute_category %></td>
                 <td><%= attribute.record_status.name unless attribute.record_status.nil? %> <%= attribute.show_custom_value %></td>
                 <td class="center" style="min-width: 105px;">
                   <%= link_to '', edit_pe_attribute_path(attribute), :class => 'icon-pencil', :title => I18n.t('edit') %>

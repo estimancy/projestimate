@@ -266,7 +266,7 @@ def load_data!
   modules=[
       ['initialization', 'initialization', 'The Initialization module.', 'no'],
       ['Cocomo Basic', 'cocomo_basic', 'Cocomo Basic', 'no'],
-      ['Cocomo II', 'cocomo_expert', 'Cocomo II', 'no'],
+      ['Cocomo 2', 'cocomo_expert', 'Cocomo 2', 'no'],
       ['Cocomo Intermediate', 'cocomo_advanced', 'Cocomo Intermediate', 'no'],
       ['Effort Breakdown', 'effort_breakdown', 'Effort Breakdown', 'yes_for_output_with_ratio'],
       ['Generic Unit Of Work', 'guw', 'Generic Unit Of Work', 'no'],
@@ -282,21 +282,15 @@ def load_data!
     # Get the Capitalization Module
     initialization_module = Pemodule.find_by_alias_and_record_status_id("initialization", rsid)
 
-    puts '   - Estimancy Icons'
-    folder = Peicon.create(:name => 'Folder', :icon => File.new("#{Rails.root}/public/folder.png"), :record_status_id => rsid)
-    link = Peicon.create(:name => 'Link', :icon => File.new("#{Rails.root}/public/link.png", 'r'), :record_status_id => rsid)
-    undefined = Peicon.create(:name => 'Undefined', :icon => File.new("#{Rails.root}/public/undefined.png", 'r'), :record_status_id => rsid)
-    default = Peicon.create(:name => 'Default', :icon => File.new("#{Rails.root}/public/default.png", 'r'), :record_status_id => rsid)
-
     puts '   - WBS structure'
     #Create first work element type (type of a pbs_project_element)
-    WorkElementType.create(:name => 'Folder', :alias => 'folder', :peicon_id => folder.id, :record_status_id => rsid)
-    WorkElementType.create(:name => 'Link', :alias => 'link', :peicon_id => link.id, :record_status_id => rsid)
-    WorkElementType.create(:name => 'Undefined', :alias => 'undefined', :peicon_id => undefined.id, :record_status_id => rsid)
-    WorkElementType.create(:name => 'Developed Software', :alias => 'DevSW', :peicon_id => default.id, :record_status_id => rsid)
-    WorkElementType.create(:name => 'Purchased Software', :alias => '$SW', :peicon_id => default.id, :record_status_id => rsid)
-    WorkElementType.create(:name => 'Purchased Hardware', :alias => '$HW', :peicon_id => default.id, :record_status_id => rsid)
-    WorkElementType.create(:name => 'Purchased Miscellaneous', :alias => '$SMisc', :peicon_id => default.id, :record_status_id => rsid)
+    WorkElementType.create(:name => 'Folder', :alias => 'folder', :record_status_id => rsid)
+    WorkElementType.create(:name => 'Link', :alias => 'link', :record_status_id => rsid)
+    WorkElementType.create(:name => 'Undefined', :alias => 'undefined', :record_status_id => rsid)
+    WorkElementType.create(:name => 'Developed Software', :alias => 'DevSW', :record_status_id => rsid)
+    WorkElementType.create(:name => 'Purchased Software', :alias => '$SW', :record_status_id => rsid)
+    WorkElementType.create(:name => 'Purchased Hardware', :alias => '$HW',:record_status_id => rsid)
+    WorkElementType.create(:name => 'Purchased Miscellaneous', :alias => '$SMisc', :record_status_id => rsid)
 
     wet = WorkElementType.first
            

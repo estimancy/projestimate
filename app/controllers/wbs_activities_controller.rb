@@ -72,11 +72,7 @@ class WbsActivitiesController < ApplicationController
 
     wbs_activity_elements_list = WbsActivityElement.where(:wbs_activity_id => @wbs_activity_ratio.wbs_activity.id).all
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list)
-
-    @wbs_activity_elements.each do |wbs|
-      @wbs_activity_ratio_elements += wbs.wbs_activity_ratio_elements.where(:wbs_activity_ratio_id => params[:wbs_activity_ratio_id]).all
-    end
-
+    @wbs_activity_ratio_elements = @wbs_activity_ratio.wbs_activity_ratio_elements.all
     @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
   end
 
@@ -100,26 +96,17 @@ class WbsActivitiesController < ApplicationController
     @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios
 
     unless @wbs_activity_ratios.empty?
-      @wbs_activity_organization = @wbs_activity_ratios.first.wbs_activity.organization  #@wbs_activity_ratio.wbs_activity.organization
+      @wbs_activity_organization = @wbs_activity_ratios.first.wbs_activity.organization
     end
     @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity_organization.organization_profiles
 
     @wbs_activity_ratio_elements = []
-    @total = 0
-    if params[:Ratio]
-      @wbs_activity_elements.each do |wbs|
-        @wbs_activity_ratio_elements += wbs.wbs_activity_ratio_elements.where(:wbs_activity_ratio_id => params[:Ratio])
-        @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
-      end
+    unless @wbs_activity.wbs_activity_ratios.empty?
+      @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements.all
+      @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
     else
-      unless @wbs_activity.wbs_activity_ratios.empty?
-        @wbs_activity_elements.each do |wbs|
-            @wbs_activity_ratio_elements += wbs.wbs_activity_ratio_elements.where(:wbs_activity_ratio_id => @wbs_activity.wbs_activity_ratios.first.id)
-        end
-        @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
-      end
+      @total = 0
     end
-
   end
 
   def update
@@ -135,16 +122,6 @@ class WbsActivitiesController < ApplicationController
     unless @wbs_activity.wbs_activity_ratios.empty?
       @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements
     end
-
-    #if is_master_instance?
-    #  if @wbs_activity.is_defined?
-    #    @wbs_activity.owner_id = current_user.id
-    #  end
-    #else
-    #  if @wbs_activity.is_local_record?
-    #    @wbs_activity.custom_value = 'Locally edited'
-    #  end
-    #end
 
     if @wbs_activity.update_attributes(params[:wbs_activity])
       #redirect_to redirect(wbs_activities_path), :notice => "#{I18n.t(:notice_wbs_activity_successful_updated)}"
@@ -168,21 +145,8 @@ class WbsActivitiesController < ApplicationController
     @wbs_activity = WbsActivity.new(params[:wbs_activity])
     @organization_id = params['wbs_activity']['organization_id']
 
-    #If we are on local instance, Status is set to "Local"
-    #if is_master_instance?
-    #  @wbs_activity.record_status = @proposed_status
-    #  @wbs_activity.state = 'defined'
-    # else #so not on master
-    #  @wbs_activity.record_status = @local_status
-    #end
-
     if @wbs_activity.save
-      #if @wbs_activity.is_local_record?
-        @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity_id => @wbs_activity.id, :description => 'Root Element', :is_root => true)
-      #else
-      #  @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity => @wbs_activity, :description => 'Root Element', :record_status => @proposed_status, :is_root => true)
-      #end
-
+      @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity_id => @wbs_activity.id, :description => 'Root Element', :is_root => true)
       @wbs_activity_element.save
         redirect_to edit_organization_wbs_activity_path(@organization_id, @wbs_activity), :notice => "#{I18n.t(:notice_wbs_activity_successful_added)}"
     else
@@ -196,25 +160,6 @@ class WbsActivitiesController < ApplicationController
     @wbs_activity = WbsActivity.find(params[:id])
     @organization_id = @wbs_activity.organization_id
     @wbs_activity.destroy
-
-    #if is_master_instance?
-    #  if @wbs_activity.is_defined?
-    #    @wbs_activity.update_attribute(:record_status_id, @retired_status.id)
-    #  else
-    #    @wbs_activity.destroy
-    #  end
-    #else
-    #  if @wbs_activity.is_local_record? #|| @wbs_activity.is_retired?
-    #    if @wbs_activity.defined?
-    #      @wbs_activity.update_attribute(:state, 'retired')
-    #    else
-    #        @wbs_activity.destroy
-    #  else
-    #    end
-    #    flash[:warning] = I18n.t(:warning_master_record_cant_be_delete)
-    #    redirect_to redirect(wbs_activities_path)  and return
-      #end
-    #end
 
     flash[:notice] = I18n.t(:notice_wbs_activity_successful_deleted)
     redirect_to edit_organization_path(@organization_id, anchor: 'wbs-activities')
@@ -232,15 +177,6 @@ class WbsActivitiesController < ApplicationController
       old_wbs_activity = WbsActivity.find(params[:wbs_activity_id])
       new_wbs_activity = old_wbs_activity.amoeba_dup   #amoeba gem is configured in WbsActivity class model
 
-      #if is_master_instance?
-      #  new_wbs_activity.record_status = @proposed_status
-      #  new_wbs_activity.state = 'defined'
-      #else
-      #  new_wbs_activity.record_status = @local_status
-      #  new_wbs_activity.state = 'draft'
-      #end
-      #
-      #new_wbs_activity.uuid =  UUIDTools::UUID.random_create.to_s
       new_wbs_activity.transaction do
         if new_wbs_activity.save(:validate => false)
           old_wbs_activity.save  #Original WbsActivity copy number will be incremented to 1
@@ -311,9 +247,6 @@ class WbsActivitiesController < ApplicationController
 
           wbs_activity_root_element.transaction do
             subtree = wbs_activity_root_element.subtree #all descendants (direct and indirect children) and itself
-            #subtree_for_validation = subtree.is_ok_for_validation(@defined_status.id, @retired_status.id)
-            #subtree_for_validation.update_all(:record_status_id => @defined_status.id)
-            #flash[:notice] =  "Wbs-Activity-Element and all its children were successfully validated."
           end
 
           #TODO : Validate also Ratio and Ratio_Element of each wbs_activity_element

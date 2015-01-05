@@ -117,10 +117,6 @@ describe Project do
 
   it 'should be a folder component' do
     pe_wbs_project = FactoryGirl.create(:wbs_1, :project_id => @project.id)
-    #peicon_folder = FactoryGirl.create(:peicon_folder)
-    #peicon_link = FactoryGirl.create(:peicon_link)
-    #wet_folder = FactoryGirl.create(:work_element_type_folder, :peicon => FactoryGirl.create(:peicon_folder))
-
     #project.pe_wbs_project.pbs_project_elements << FactoryGirl.create(:pbs_project_element_folder)
     #project.pe_wbs_project.pbs_project_elements << FactoryGirl.create(:pbs_project_element_link)
 

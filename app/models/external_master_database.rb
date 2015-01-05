@@ -113,12 +113,6 @@ module ExternalMasterDatabase
     serialize :options, Array
   end
 
-  class ExternalAttributeCategory < ActiveRecord::Base
-    attr_accessible
-    establish_connection HOST
-    include ExternalInclude
-  end
-
   class ExternalAttributeModule < ActiveRecord::Base
     attr_accessible
     establish_connection HOST
@@ -153,18 +147,6 @@ module ExternalMasterDatabase
     attr_accessible
     establish_connection HOST
     include ExternalInclude
-  end
-
-  class ExternalPeicon < ActiveRecord::Base
-    attr_accessible
-    establish_connection HOST
-    include ExternalInclude
-
-    has_attached_file :icon, :styles => {:small => '16x16'}
-
-    validates_attachment :icon, :presence => true,
-                         :content_type => {:content_type => 'image/png'},
-                         :size => {:in => 0..10.kilobytes}
   end
 
   class ExternalPemodule < ActiveRecord::Base

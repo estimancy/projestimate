@@ -499,7 +499,6 @@ de:
 #  add_link: "Link hinzuf�gen"
 #  add_component: "Eine Komponente hinzuf�gen"
 #
-#  #peicons
 #  icon: "Symbol"
 #  text_icon_message: "Sie k�nnen jedes Bild hochladen PNG-Datei kleiner als 10 Kilobyte von Ihrer Fest drive.We wird automatisch die Gr��e gro�e Bilder auf 16x16 Pixel."
 #  edit_icon: "Bearbeiten Sie die \"%{value}\" Symbol..."

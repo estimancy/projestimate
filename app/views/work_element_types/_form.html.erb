@@ -14,23 +14,8 @@
               <td>
                 <%= f.input :alias, :label => I18n.t('alias') %>
               </td>
-              <td>&nbsp;&nbsp;&nbsp;</td>
-              <td>
-                <div class="my_peicon">
-                  <% if @work_element_type.peicon %>
-                    <%= image_tag @work_element_type.peicon.icon.url %>
-                  <% else %>
-                    <%= I18n.t(:text_no_icon) %>
-                  <% end %>
-                </div>
-              </td>
-              <td>&nbsp;&nbsp;&nbsp;</td>
-              <td>
-                <%= link_to I18n.t(:choose_icon), '#change_peicon', :'data-toggle' => 'modal', :class => 'btn' %>
-              </td>
             </tr>
           </table>
-          <%= f.input :peicon_id, :as => :hidden %>
           <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
           <table>
@@ -64,12 +49,5 @@
         </div>
     <% end %>
 
-    <div id="change_peicon" class=" modal hide fade">
-      <div class="modal-body">
-        <% @peicons.each do |i| %>
-            <%= link_to image_tag(i.icon.url), choose_icon_path(i), :remote => true %>
-        <% end %>
-      </div>
-    </div>
   </div>
 </div>
