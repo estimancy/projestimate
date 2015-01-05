@@ -2229,33 +2229,33 @@ $(function table_sorter_filter() {
 
 }( window.jQuery );
 
-// ################################# WARN TEXT #################################
+// ################################# WARNING TEXT FOR UNSAVED INPUT #################################
 
 var warnLeavingUnsavedMessage;
 
 function warn_me(message){
     warnLeavingUnsavedMessage = message;
     $('.simple_form').submit(function(){
-        $('textarea').not("table.tablesorterPager textarea").not("#send_feedback_description").not(".tree_node_checkbox").removeData('changed');
-        $('input').not("table.tablesorterPager input").not("#send_feedback_user_name").not(".tree_node_checkbox").removeData('changed');
+        $('textarea').not("table.tablesorterPager textarea").not("#send_feedback_description").not(".tree_node_checkbox").not(".uow_form input").removeData('changed');
+        $('input').not("table.tablesorterPager input").not("#send_feedback_user_name").not(".tree_node_checkbox").not(".uow_form input").removeData('changed');
     });
-    $('textarea').not("table.tablesorterPager textarea").not("#send_feedback_description").not(".tree_node_checkbox").change(function(){
+    $('textarea').not("table.tablesorterPager textarea").not("#send_feedback_description").not(".tree_node_checkbox").not(".uow_form input").change(function(){
         $(this).data('changed', 'changed');
     });
-    $('input').not("table.tablesorterPager input").not("#send_feedback_user_name").not(".tree_node_checkbox input").change(function(){
+    $('input').not("table.tablesorterPager input").not("#send_feedback_user_name").not(".tree_node_checkbox input").not(".uow_form input").change(function(){
         $(this).data('changed', 'changed');
     });
 
     window.onbeforeunload = function(){
         var warn = false;
-        $('textarea').not("table.tablesorterPager textarea").not("#send_feedback_description").not(".tree_node_checkbox").blur().each(function(){
+        $('textarea').not("table.tablesorterPager textarea").not("#send_feedback_description").not(".tree_node_checkbox").not(".uow_form input").blur().each(function(){
             if ($(this).data('changed')) {
                 warn = true;
             }
         });
 
 
-        $('input').not("table.tablesorterPager input").not("#send_feedback_user_name").not(".tree_node_checkbox").blur().each(function(){
+        $('input').not("table.tablesorterPager input").not("#send_feedback_user_name").not(".tree_node_checkbox").not(".uow_form input").blur().each(function(){
             if ($(this).data('changed')) {
                 warn = true;
             }
