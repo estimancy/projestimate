@@ -180,36 +180,42 @@ module ViewsWidgetsHelper
         end_date = PeAttribute.where(alias: "end_date").first
         staffing = PeAttribute.where(alias: "staffing").first
         effort = PeAttribute.where(alias: "effort").first
+        is_ok = false
 
         # Get the component/PBS children
         products = pbs_project_elt.root.subtree.all
 
         products.each_with_index do |element, i|
-          #begin
-            dev = module_project.estimation_values.where(pe_attribute_id: delay.id).first.string_data_probable[element.id]
-            if !dev.nil?
+          dev = module_project.estimation_values.where(pe_attribute_id: delay.id).first.string_data_probable[element.id]
+          if !dev.nil?
 
-              d = dev.to_f
+            d = dev.to_f
 
-              if d.nil?
-                dh = 1.hours
-              else
-                dh = d.hours
-              end
-
-              ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
-
-              begin
-                  timeline_data << [
-                    element.name,
-                    element.start_date,
-                    element.start_date + dh
-                  ]
-                  value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
-              rescue
-                value_to_show = I18n.t(:error_invalid_date)
-              end
+            if d.nil?
+              dh = 1.hours
+            else
+              dh = d.hours
             end
+
+            ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
+
+            begin
+              timeline_data << [
+                element.name,
+                element.start_date,
+                element.start_date + dh
+              ]
+              is_ok = true
+            rescue
+              is_ok = false
+            end
+          end
+        end
+
+        if is_ok == true
+          value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
+        else
+          value_to_show = I18n.t(:error_invalid_date)
         end
 
       when "table_effort_per_phase", "table_cost_per_phase"
