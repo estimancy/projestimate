@@ -212,7 +212,6 @@
             <tr>
               <th><%= I18n.t(:pe_attribute_name) %></th>
               <th class="filter-select"><%= I18n.t(:selected) %></th>
-              <th class="filter-select"><%= I18n.t(:attribute_categories) %></th>
               <th><%= I18n.t(:description) %></th>
               <th><%= I18n.t(:mandatory) %></th>
             </tr>
@@ -227,7 +226,6 @@
                     </span>
                     <%= check_box_tag 'organization[pe_attribute_ids][]', attr.id, @attribute_settings.map(&:pe_attribute_id).include?(attr.id) %>
                   </td>
-                  <td><%= attr.attribute_category %></td>
                   <td><%= attr.description %></td>
                   <td class="center">
                     <% ao = AttributeOrganization.where("organization_id = ? AND pe_attribute_id = ?", @organization.id, attr.id).first %>
