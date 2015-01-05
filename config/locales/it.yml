@@ -409,6 +409,7 @@ it:
 #
 #  #event_types
 #  icon_url: "Url icon"
+#  icon: "Icon"
 #  edit_event_type: " Compili un tipo di evento "
 #  new_event_type: "nuovo typo di evento"
 #  event_types: "Typo di evento"

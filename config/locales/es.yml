@@ -410,6 +410,7 @@ es:
 #
 #  #event_types
 #  icon_url: "icono del Url"
+#  icon: "Icon"
 #  edit_event_type: "Editar un tipo de evento"
 #  new_event_type: "Nuevo tipo de evento"
 #  event_types: "Tipo de evento"

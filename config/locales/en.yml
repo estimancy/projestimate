@@ -415,6 +415,7 @@ en:
 
   #event_types
   icon_url: "Url icon"
+  icon: "Icon"
   edit_event_type: "Edit an event type"
   new_event_type: "New event type"
   event_types: "Event types"

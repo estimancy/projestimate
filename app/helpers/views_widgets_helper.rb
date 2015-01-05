@@ -186,7 +186,13 @@ module ViewsWidgetsHelper
         products = pbs_project_elt.root.subtree.all
 
         products.each_with_index do |element, i|
-          dev = module_project.estimation_values.where(pe_attribute_id: delay.id).first.string_data_probable[element.id]
+          dev = nil
+          est_val = module_project.estimation_values.where(pe_attribute_id: delay.id).first
+          unless est_val.nil?
+            str_data_probable = est_val.string_data_probable
+            str_data_probable.nil? ? nil : (dev = str_data_probable[element.id])
+          end
+
           if !dev.nil?
 
             d = dev.to_f
@@ -263,14 +269,6 @@ module ViewsWidgetsHelper
 
     return result if probable_est_value.nil? || pbs_probable_est_value.nil?
 
-    project_organization = module_project.project.organization
-    project_wbs_project_elements = module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements
-    project_organization_profiles = module_project.project.organization.organization_profiles
-    profiles_with_ratio_value = []
-    #project_organization_profiles.each do |profile|
-    #  profile
-    #end
-
     # get the ratio_reference
     ratio_reference = nil
     pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
@@ -279,6 +277,26 @@ module ViewsWidgetsHelper
       wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
       ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
     end
+
+    project_organization = module_project.project.organization
+    project_wbs_project_elements = module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements
+    #project_organization_profiles = module_project.project.organization.organization_profiles
+
+    # We don't want to show element with nil ratio value
+    project_organization_profiles = []
+    ratio_profiles_with_nil_ratio = []
+    wbs_activity_ratio_profiles = []
+    unless ratio_reference.nil?
+      ratio_reference.wbs_activity_ratio_elements.each do |ratio_elt|
+        ratio_profiles_with_nil_ratio << ratio_elt.wbs_activity_ratio_profiles
+      end
+      # Reject all RatioProfile with nil ratio_value
+      wbs_activity_ratio_profiles = ratio_profiles_with_nil_ratio.flatten.reject!{|i| i.ratio_value.nil? }
+    end
+    wbs_activity_ratio_profiles.each do |ratio_profile|
+      project_organization_profiles << ratio_profile.organization_profile
+    end
+    project_organization_profiles = project_organization_profiles.uniq
 
     case view_widget.widget_type
 
