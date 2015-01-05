@@ -39,8 +39,7 @@
 class PbsProjectElement < ActiveRecord::Base
   attr_accessible :name, :description, :pe_wbs_project_id, :is_completed, :is_validated, :position, :is_root,
                   :work_element_type_id, :ancestry, :wbs_activity_id, :wbs_activity_ratio_id, :parent_id,
-                  :organization_technology_id
-                  #, :start_date, :end_date
+                  :organization_technology_id, :start_date, :end_date
 
   has_ancestry
 
