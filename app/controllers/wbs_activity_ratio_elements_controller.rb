@@ -122,10 +122,17 @@ class WbsActivityRatioElementsController < ApplicationController
 
     @wbs_activity_ratio_elements.each do |activity|
       @wbs_organization_profiles.each do |profile|
-        activity_profile = WbsActivityRatioProfile.where(wbs_activity_ratio_element_id: activity.id, organization_profile_id: profile.id).first_or_create
         percentage = params["activity_profile_percentage"]["#{activity.id}"]["#{profile.id}"].empty? ? nil : params["activity_profile_percentage"]["#{activity.id}"]["#{profile.id}"].to_f
-        activity_profile.ratio_value = percentage
-        activity_profile.save
+        activity_profile = WbsActivityRatioProfile.where(wbs_activity_ratio_element_id: activity.id, organization_profile_id: profile.id).first
+        if percentage.nil?
+          if activity_profile
+            activity_profile.destroy
+          end
+        else
+          activity_profile = activity_profile.nil? ? WbsActivityRatioProfile.create(wbs_activity_ratio_element_id: activity.id, organization_profile_id: profile.id) : activity_profile
+          activity_profile.ratio_value = percentage
+          activity_profile.save
+        end
       end
     end
 

@@ -45,6 +45,7 @@ class WbsActivityRatioElement < ActiveRecord::Base
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   has_many :wbs_activity_ratio_profiles, dependent: :delete_all
+  has_many :organization_profiles, through: :wbs_activity_ratio_profiles
 
   #validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   #validates :ratio_value, :numericality => { :greater_than => 0, :less_than => 100 }
