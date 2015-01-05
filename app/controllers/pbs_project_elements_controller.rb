@@ -130,10 +130,16 @@ class PbsProjectElementsController < ApplicationController
   def update
     @pbs_project_element = PbsProjectElement.find(params[:id])
     @project = @pbs_project_element.pe_wbs_project.project
+
     authorize! :alter_wbsproducts, @project
 
+    start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], '%m/%d/%Y')
+    @pbs_project_element.start_date = start_date
+
+    params[:pbs_project_element].delete(:start_date)
+
     if @pbs_project_element.update_attributes(params[:pbs_project_element])
-      # Another update attributes...
+
       if params[:pbs_project_element][:ancestry]
         @pbs_project_element.update_attribute :parent, PbsProjectElement.find(params[:pbs_project_element][:ancestry])
       else
@@ -147,15 +153,12 @@ class PbsProjectElementsController < ApplicationController
       @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
       @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
       @pbs_wbs_activity_ratios = []
-
       unless @pbs_project_element.wbs_activity.nil?
         @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
       end
-
       #Select folders which could be a parent of a pbs_project_element
       #a pbs_project_element cannot be its own parent
       @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
-
       render :edit
     end
   end

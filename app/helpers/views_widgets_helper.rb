@@ -175,39 +175,48 @@ module ViewsWidgetsHelper
 
       when "timeline"
         timeline_data = []
+
         delay = PeAttribute.where(alias: "delay").first
         end_date = PeAttribute.where(alias: "end_date").first
         staffing = PeAttribute.where(alias: "staffing").first
         effort = PeAttribute.where(alias: "effort").first
+        is_ok = false
 
         # Get the component/PBS children
-        products = pbs_project_elt.subtree.sort_by(&:position)
+        products = pbs_project_elt.root.subtree.all
+
         products.each_with_index do |element, i|
-          begin
-            dev = dev = module_project.estimation_values.where(pe_attribute_id: delay.id).first.string_data_probable[element.id]
-            if !dev.nil?
-              d = dev.to_f
-              if d.nil?
-                dh = 1.hours
-              else
-                dh = d.hours
-              end
-              ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
-              #pbs_project_elt.end_date = ed
-              #pbs_project_elt.save
+          dev = module_project.estimation_values.where(pe_attribute_id: delay.id).first.string_data_probable[element.id]
+          if !dev.nil?
 
-              unless dh.nan?
-                timeline_data << [element.name, element.start_date.nil? ? project.start_date : element.start_date, element.start_date.nil? ? project.start_date + dh : element.start_date + dh]
-              else
-                timeline_data << [element.name, element.start_date.nil? ? project.start_date : element.start_date, element.start_date.nil? ? project.start_date : element.start_date]
-              end
+            d = dev.to_f
+
+            if d.nil?
+              dh = 1.hours
+            else
+              dh = d.hours
             end
-          rescue
 
+            ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
+
+            begin
+              timeline_data << [
+                element.name,
+                element.start_date,
+                element.start_date + dh
+              ]
+              is_ok = true
+            rescue
+              is_ok = false
+            end
           end
         end
-        #value_to_show = timeline([["Washington", "1789-04-29", "1797-03-03"], ["Adams", "1797-03-03", "1801-03-03"], ["Jefferson", "1801-03-03", "1809-03-03"]], height: "#{chart_height}px")
-        value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
+
+        if is_ok == true
+          value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
+        else
+          value_to_show = I18n.t(:error_invalid_date)
+        end
 
       when "table_effort_per_phase", "table_cost_per_phase"
         value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
