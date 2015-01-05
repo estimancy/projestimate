@@ -186,7 +186,13 @@ module ViewsWidgetsHelper
         products = pbs_project_elt.root.subtree.all
 
         products.each_with_index do |element, i|
-          dev = module_project.estimation_values.where(pe_attribute_id: delay.id).first.string_data_probable[element.id]
+          dev = nil
+          est_val = module_project.estimation_values.where(pe_attribute_id: delay.id).first
+          unless est_val.nil?
+            str_data_probable = est_val.string_data_probable
+            str_data_probable.nil? ? nil : (dev = str_data_probable[element.id])
+          end
+
           if !dev.nil?
 
             d = dev.to_f
