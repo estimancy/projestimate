@@ -47,9 +47,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
                                                  guw_attribute_id: a.id.to_i,
                                                  guw_type_complexity_id: tc.id).first
         if gac.nil?
-          Guw::GuwAttributeComplexity.create(name: tc.name,
-                                             value: tc.value,
-                                             bottom_range: params["bottom"]["#{a.id}"][type_complexity.first],
+          Guw::GuwAttributeComplexity.create(bottom_range: params["bottom"]["#{a.id}"][type_complexity.first],
                                              top_range: params["top"]["#{a.id}"][type_complexity.first],
                                              guw_type_id: params[:guw_type_id],
                                              guw_attribute_id: a.id.to_i,

@@ -42,6 +42,7 @@ Guw::Engine.routes.draw do
   resources :guw_attributes
   resources :guw_unit_of_works
   resources :guw_unit_of_work_groups
+
   resources :guw_work_units
   resources :guw_work_units do
     post "create_notes"

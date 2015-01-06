@@ -1,7 +1,9 @@
-<h2>
+<h3>
   <%= @guw_model %>
-  <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn pull-right'%>
-</h2>
+  <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right'%>
+  <%= link_to "Gérer les types d'acquisitons", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right' %>
+  <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right' %>
+</h3>
 
 <div class="tabs">
 
@@ -31,12 +33,63 @@
     </div>
   <% else %>
     <% @guw_model.guw_types.each do |guw_type| %>
+
       <div id="tabs-<%= guw_type %>">
-        <h4>
-          <%= link_to "Voir les #{pluralize(guw_type.guw_complexities.count, 'complexity')}", guw.guw_model_guw_type_guw_complexities_path(@guw_model, guw_type) %>
-        </h4>
+
+        <b>
+          <%= guw_type.description %>
+        </b>
+        <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
 
         <hr>
+
+        <h4>
+          <b>
+            Seuils de complexité de <%= guw_type %>
+          </b>
+
+          <%= link_to "Créer un seuil", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+        </h4>
+
+        <table class="table table-bordered">
+          <tr>
+            <th></th>
+            <% guw_type.guw_complexities.each do |guw_cplx| %>
+              <th>
+                <%= link_to guw_cplx.name, edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %>
+              </th>
+            <% end %>
+          </tr>
+
+          <tr>
+            <td>Seuils</td>
+            <% guw_type.guw_complexities.each do |guw_cplx| %>
+              <td class="align-center">
+                <%= guw_cplx.bottom_range %> - <%= guw_cplx.top_range %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+            <td>Poids</td>
+            <% guw_type.guw_complexities.each do |guw_cplx| %>
+              <td class="align-center">
+                <%= guw_cplx.weight %>
+              </td>
+            <% end %>
+          </tr>
+          <tr>
+
+          </tr>
+        </table>
+
+        <hr>
+
+        <h4>
+          <b>
+            Seuils de complexité des attributs de <%= guw_type %>
+          </b>
+          <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+        </h4>
 
         <%= form_tag guw_model_guw_type_guw_attribute_complexities_save_attributs_complexities_path(@guw_model, guw_type.id), method: "POST" do %>
           <table class="table table-bordered">
@@ -44,9 +97,17 @@
               <th></th>
               <% guw_type.guw_type_complexities.each do |type_complexity| %>
                 <th>
-                  <%= type_complexity.name %> -
-                  <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %> -
-                  <%= link_to I18n.t(:delete), type_complexity, method: :delete %>
+                  <%= type_complexity.name %>
+                  <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity), class: "btn btn-mini" %>
+                  <%= link_to I18n.t(:delete), type_complexity, method: :delete, class: "btn btn-mini" %>
+                </th>
+              <% end %>
+            </tr>
+            <tr>
+              <th></th>
+              <% guw_type.guw_type_complexities.each do |type_complexity| %>
+                <th>
+                  Poids : <%= type_complexity.value.to_i %>
                 </th>
               <% end %>
             </tr>
@@ -67,18 +128,13 @@
             <% end %>
           </table>
 
-          <%# unless @guw_model.guw_attributes.empty? %>
-            <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini" %>
-            <%= submit_tag "Enregistrer", class: "btn btn-mini" %>
-          <%# end %>
-          <hr>
-        <% end %>
+          <% unless @guw_model.guw_attributes.empty? %>
+            <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
+            <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right' %>
+          <% end %>
 
-      <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn'  %>
-      <%= link_to "Gérer les types d'acquisitons", guw.new_guw_model_guw_work_unit_path(@guw_model), :class => 'btn'  %>
-      <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), :class => 'btn' %>
-      <%= link_to "Supprimer #{guw_type}", guw.guw_type_path(guw_type), method: "delete", class: "btn" %>
-      <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn' %>
+          <br>
+        <% end %>
 
       </div>
     <% end %>
