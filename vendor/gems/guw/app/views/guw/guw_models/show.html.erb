@@ -28,9 +28,6 @@
   <% if @guw_model.guw_types.empty? %>
     <div id="tabs-default">
       <p> Vous n'avez pas encore de type d'UO</p>
-      <%= link_to "Gérer les critères (attributs)", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn'  %>
-      <%= link_to "Gérer les types de travaux", guw.new_guw_model_guw_work_unit_path(@guw_model), :class => 'btn'  %>
-    </div>
   <% else %>
     <% @guw_model.guw_types.each do |guw_type| %>
 
@@ -76,9 +73,6 @@
                 <%= guw_cplx.weight %>
               </td>
             <% end %>
-          </tr>
-          <tr>
-
           </tr>
         </table>
 
