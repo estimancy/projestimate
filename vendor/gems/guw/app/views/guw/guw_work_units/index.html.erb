@@ -1,0 +1,33 @@
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Type d'acquisitions
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Actions</th>
+      </tr>
+
+      <% @guw_work_units.each do |guw_work_unit| %>
+        <tr>
+          <td class="align-center"><%= link_to guw_work_unit.name, edit_guw_model_guw_work_unit_path(@guw_model, guw_work_unit) %></td>
+          <td class="align-center"><%= guw_work_unit.value %></td>
+          <td class="align-center">
+            <%= link_to "Editer", guw.edit_guw_model_guw_work_unit_path(@guw_model, guw_work_unit), class: "btn btn-mini" %>
+            <%= link_to "Supprimer", guw.guw_work_unit_path(guw_work_unit), method: :delete, class: "btn btn-mini" %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <%= link_to "Nouveau type d'acquisition", guw.new_guw_model_guw_work_unit_path(@guw_model), class: "btn" %>
+    <%= link_to "Retour", :back, class: "btn" %>
+  </div>
+</div>

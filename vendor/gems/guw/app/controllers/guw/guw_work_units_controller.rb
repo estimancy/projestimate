@@ -37,6 +37,11 @@
 
 class Guw::GuwWorkUnitsController < ApplicationController
 
+  def index
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_work_units = @guw_model.guw_work_units
+  end
+
   def new
     @guw_work_unit = Guw::GuwWorkUnit.new
   end
@@ -48,13 +53,13 @@ class Guw::GuwWorkUnitsController < ApplicationController
   def create
     @guw_work_unit = Guw::GuwWorkUnit.new(params[:guw_work_unit])
     @guw_work_unit.save
-    redirect_to main_app.dashboard_path(@project)
+    redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
   end
 
   def update
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     @guw_work_unit.update_attributes(params[:guw_work_unit])
-    redirect_to main_app.dashboard_path(@project)
+    redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
   end
 
   def destroy
