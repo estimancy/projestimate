@@ -105,7 +105,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                 if low.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                   unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                     if (low >= guw_ac.bottom_range) and (low < guw_ac.top_range)
-                      @lows << guw_ac.value
+                      @lows << guw_ac.guw_type_complexity.value
                     end
                   end
                 else
@@ -118,7 +118,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               if most_likely.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                 unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                   if (most_likely >= guw_ac.bottom_range) and (most_likely < guw_ac.top_range)
-                    @mls << guw_ac.value
+                    @mls << guw_ac.guw_type_complexity.value
                   end
                 end
               else
@@ -130,7 +130,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               if high.between?(@guw_attribute_complexities.map(&:bottom_range).compact.min.to_i, @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                 unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                   if (high >= guw_ac.bottom_range) and (high < guw_ac.top_range)
-                    @highs << guw_ac.value
+                    @highs << guw_ac.guw_type_complexity.value
                   end
                 end
               else
