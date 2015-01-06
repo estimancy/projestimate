@@ -1,117 +1,111 @@
 <%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path do %>
   <div id="table_guw_model">
     <% Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.each do |uowg| %>
-      <div class="accordion" id="accordion2">
-        <div class="accordion-group">
-          <div class="accordion-heading" style="margin-top: 10px; margin-bottom: 10px;">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_<%= uowg.id %>" href="#collapse<%= uowg.id %>">
-              <%#= uowg %>
-              <%= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg), title: I18n.t(:edit) %>
-            </a>
-            <%= link_to '', guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "fa fa-plus" %>
-            <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'fa fa-trash-o', :title => I18n.t('delete') %>
-          </div>
 
-          <% if uowg.guw_unit_of_works.empty? %>
-            <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
-              <div class="accordion-inner">
-                <h4>There are not unit of works in <% uowg %>.</h4>
-              </div>
-            </div>
-          <% else %>
-            <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
-              <div class="accordion-inner">
-                <table class="table table-bordered table-condensed">
-                  <tr>
-                    <th>Nom</th>
-                    <th>Unité d'oeuvre</th>
-                    <th colspan="4">Attributs</th>
-                    <th>Complexité d'UO</th>
-                    <th>Effort</th>
-                    <th>Effort retenu</th>
-                    <th>Action</th>
-                  </tr>
+      <h4>
+        <%= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg), title: I18n.t(:edit) %>
+        - <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'fa fa-trash-o', :title => I18n.t('delete') %>
+      </h4>
 
-                  <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
-                    <tr>
-                      <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle">
-                        <a href=<%= guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow) %>>
-                          <span title="<%= guow.comments %>" class="attribute_tooltip">
-                            <%= guow.name %>
-                          </span>
-                        </a>
-                      </td>
-                      <td rowspan="<%= guow.guw_unit_of_work_attributes.size + 1 %>" style="vertical-align: middle" class="span1">
+      <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right" %>
+      <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-right" %>
+      <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right" %>
 
-                        <span class="pull-left">
-                          Type d'UO
-                        </span>
-                        <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), prompt: "Select an unit of of work type", required: true %>
+      <br>
 
-                        <hr class="table">
 
-                        <span class="pull-left">
-                          Type d'action
-                        </span>
+      <table class="table table-condensed table-striped" style="margin-bottom: 0px;">
+        <tr>
+          <th>Nom</th>
+          <th>Description</th>
+          <th>Cotation</th>
+          <th>Résultat</th>
+          <th>Retenu</th>
+          <th>Type d'acquisition</th>
+          <th>Actions</th>
+        </tr>
 
-                        <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit", required: true %>
-                      </td>
-                    </tr>
+        <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
+          <tr>
+            <td>
+              <%= guow.name %>
+            </td>
 
-                    <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
-                      <tr>
-                        <% unless guow.guw_type.nil? %>
-                          <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
-                        <% end %>
-                        <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
-                          <td>
-                            <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description, class: "attribute_tooltip" %>
-                          </td>
-                          <td>
-                            <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
-                          </td>
-                          <td>
-                            <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
-                          </td>
-                          <td>
-                            <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
-                          </td>
-                        <% end %>
+            <td>
+              <%= guow.comments %>
+            </td>
 
-                        <% if j == 0 %>
-                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
-                            <% if guow.guw_complexity.nil? %>
-                              <%= text_field_tag "cplx[#{guow.id}]", '', class: "input-mini", disabled: true %>
-                            <% else %>
-                              <%= text_field_tag "cplx[#{guow.id}]", guow.guw_complexity.name , class: "input-mini", disabled: true %>
+            <td>
+              <% if guow.guw_complexity.nil? %>
+                '-'
+              <% else %>
+                <%= guow.guw_complexity.name %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to guow.effort.nil? ? '-' : guow.effort, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+            </td>
+
+            <td>
+              <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
+            </td>
+
+            <td>
+              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit", required: true %>
+            </td>
+
+            <td>
+              <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
+            </td>
+
+            <td>
+              <div class="modal fade" id="modal<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel<%= guow.id %>" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="ModalLabel<%= guow.id %>">Attributs de <%= guow %> </h4>
+                    </div>
+                    <div class="modal-body">
+                      <table class="table table-condensed table-striped">
+                        <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
+                          <tr>
+                            <% unless guow.guw_type.nil? %>
+                              <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
                             <% end %>
-                          </td>
-                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
-                            <%= guow.effort %>
-                          </td>
-                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
-                            <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
-                          </td>
-                          <td rowspan="<%= guow.guw_unit_of_work_attributes.size %>" style="vertical-align: middle">
-                            <%= link_to I18n.t('delete'), guw.guw_unit_of_work_path(guow), method: "delete", class: "btn btn-mini" %>
-                            <%= link_to '', guw.guw_work_unit_create_notes_path(guow), method: "delete", class: "" %>
-                          </td>
+                            <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
+                              <td>
+                                <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description, class: "attribute_tooltip pull-left" %>
+                              </td>
+                              <td>
+                                <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
+                              </td>
+                              <td>
+                                <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
+                              </td>
+                              <td>
+                                <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
+                              </td>
+                            <% end %>
+                          </tr>
                         <% end %>
-                      </tr>
-                    <% end %>
-                  <% end %>
-                </table>
+                      </table>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Fermer sans calculer</button>
+                      <button type="submit" class="btn btn-default">Calculer</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          <% end %>
-        </div >
-      </div>
-    </div>
-  <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
 
-  <div class="actions">
-    <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini" %>
-    <%= submit_tag I18n.t('save'), class: "btn btn-mini" %>
-  </div>
+      <button type="submit" class="btn btn-default btn-mini pull-right">Sauvegarder</button>
+
+      </div>
+  <% end %>
 
 <% end %>
