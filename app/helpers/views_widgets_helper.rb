@@ -221,7 +221,7 @@ module ViewsWidgetsHelper
         if is_ok == true
           value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
         else
-          value_to_show = I18n.t(:error_invalid_date)
+          value_to_show = "" #I18n.t(:error_invalid_date)
         end
 
       when "table_effort_per_phase", "table_cost_per_phase"

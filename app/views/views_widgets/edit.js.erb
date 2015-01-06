@@ -22,4 +22,14 @@ $("#views_widget_icon_class").change(function(){
     return false;
 });
 
+$("#views_widget_module_project_id").change(function() {
+    if ($(this).val() !== ""){
+        return $.ajax({
+            url: "/update_widget_module_project_data",
+            method: "GET",
+            data: "module_project_id=" + $(this).val()
+        });
+    }
+});
+
 $("#notifications").html("<%= j(render "layouts/notifications") %>");
