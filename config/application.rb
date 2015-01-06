@@ -158,11 +158,28 @@ module Projestimate
                     ["Database", "fa-database"], ["Home", "fa-home"], ["Info", "fa-info"], ["Line chart", "fa-line-chart"], ["Pie chart", "fa-pie-chart"], ["Area chart", "fa-area-chart"], ["Bar chart", "fa-bar-chart"], ["Flag", "fa-flag"]
                     ]
     WIDGETS_TYPE = [["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"],
-                    ["Effort per phase : table", "table_effort_per_phase"], ["Effort per phase : histogram", "histogram_effort_per_phase"], ["Effort per phase : pie chart", "pie_chart_effort_per_phase"],
-                    ["Cost per phase : table", "table_cost_per_phase"], ["Cost per phase : histogram", "histogram_cost_per_phase"], ["Cost per phase : pie chart", "pie_chart_cost_per_phase"],
-                    ["Effort per phases & profiles : table", "effort_per_phases_profiles_table"], ["Cost per phases & profiles : table", "cost_per_phases_profiles_table"],
-                    ["Effort per phases & profiles : Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"], ["Cost per phases & profiles : Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"]
-                  ]
+                           ["Effort per phase : table", "table_effort_per_phase"], ["Effort per phase : histogram", "histogram_effort_per_phase"], ["Effort per phase : pie chart", "pie_chart_effort_per_phase"],
+                           ["Cost per phase : table", "table_cost_per_phase"], ["Cost per phase : histogram", "histogram_cost_per_phase"], ["Cost per phase : pie chart", "pie_chart_cost_per_phase"],
+                           ["Effort per phases & profiles : table", "effort_per_phases_profiles_table"], ["Cost per phases & profiles : table", "cost_per_phases_profiles_table"],
+                           ["Effort per phases & profiles : Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"], ["Cost per phases & profiles : Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"]
+    ]
 
+    GLOBAL_WIDGETS_TYPE_SAVE = [ ["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ]
+
+    BREAKDOWN_WIDGETS_TYPE_SAVE = [ ["Effort per phase : table", "table_effort_per_phase"], ["Effort per phase : histogram", "histogram_effort_per_phase"], ["Effort per phase : pie chart", "pie_chart_effort_per_phase"],
+                               ["Cost per phase : table", "table_cost_per_phase"], ["Cost per phase : histogram", "histogram_cost_per_phase"], ["Cost per phase : pie chart", "pie_chart_cost_per_phase"],
+                               ["Effort per phases & profiles : table", "effort_per_phases_profiles_table"], ["Cost per phases & profiles : table", "cost_per_phases_profiles_table"],
+                               ["Effort per phases & profiles : Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"], ["Cost per phases & profiles : Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"]
+                            ]
+
+    GLOBAL_WIDGETS_TYPE = [ ["", [  ["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ] ] ]
+
+    BREAKDOWN_WIDGETS_TYPE = [ ["Effort per phase", [ ["Table", "table_effort_per_phase"], ["Histogram", "histogram_effort_per_phase"], ["Pie chart", "pie_chart_effort_per_phase"] ] ],
+                               ["Cost per phase", [ ["Table", "table_cost_per_phase"], ["Histogram", "histogram_cost_per_phase"], ["Pie chart", "pie_chart_cost_per_phase"] ] ],
+                               ["Effort per phases and profiles", [ ["Table", "effort_per_phases_profiles_table"],["Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"] ] ],
+                               ["Cost per phases and profiles", [ ["Table", "cost_per_phases_profiles_table"], ["Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"] ] ]
+                               #["Effort per phase & Profiles", [ ["Effort per phases & profiles : table", "effort_per_phases_profiles_table"], ["Cost per phases & profiles : table", "cost_per_phases_profiles_table"] ] ],
+                               #["Effort per phase & Profiles Stacked", [ ["Effort per phases & profiles : Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"], ["Cost per phases & profiles : Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"] ] ]
+    ]
   end
 end

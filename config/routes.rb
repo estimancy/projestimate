@@ -43,6 +43,7 @@ Projestimate::Application.routes.draw do
 
   resources :views_widgets
   get 'update_view_widget_positions' => 'views_widgets#update_view_widget_positions', :as => 'update_view_widget_positions'
+  get 'update_widget_module_project_data' => 'views_widgets#update_widget_module_project_data', :as => 'update_widget_module_project_data'
 
   resources :widgets
 

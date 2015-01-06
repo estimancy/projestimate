@@ -5,10 +5,10 @@
 
   <div id="tabs-1">
 
-    <%= simple_form_for(@views_widget) do |f| %>
+    <%= simple_form_for(@views_widget, :remote => true) do |f| %>
       <%= f.error_notification %>
       <div class="form-inputs">
-        <%= f.input :view_id, as: :hidden, :input_html => { value: params[:view_id] } %>
+        <%= f.input :view_id, as: :hidden, :input_html => { value: @view_id } %>
 
         <table>
           <!--<tr><td><%#= f.association :widget, label: I18n.t(:label_widget) %></td></tr>-->
@@ -21,8 +21,10 @@
             <td><%= f.association :module_project, label: "Module", collection: @module_project.project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false %></td>
           </tr>
           <tr>
-            <td><%= f.input :widget_type, as: :select, collection: Projestimate::Application::WIDGETS_TYPE , label: I18n.t(:label_widget_type), include_blank: false %></td>
-            <td><%= f.association :pe_attribute, collection: @module_project.pemodule.pe_attributes, label: I18n.t(:associated_attribute) %></td>
+            <!--<td><%#= f.input :widget_type, as: :select, collection: @views_widget_types , label: I18n.t(:label_widget_type), include_blank: false %></td>-->
+            <!--<td><%#= f.association :pe_attribute, collection: @module_project.pemodule.pe_attributes, label: I18n.t(:associated_attribute), include_blank: false %></td>-->
+            <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false %></td>
+            <td><%= f.association :pe_attribute, collection: @module_project_attributes, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false %></td>
           </tr>
           <tr>
             <td>

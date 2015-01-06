@@ -1337,4 +1337,6 @@ fr:
   no_group_in_organization: "Il n'y a aucun groupe dans l'organisation '%{value}'"
   custom_fields: "Champs personnalisés"
   new_field: "Nouveau champ"
+  inputs: "Entrées"
+  outputs: "Sorties"
 
