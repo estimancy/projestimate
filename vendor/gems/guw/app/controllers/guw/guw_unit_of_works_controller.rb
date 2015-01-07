@@ -73,11 +73,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     @guw_unit_of_works.each do |guw_unit_of_work|
 
-      #guw_unit_of_work.guw_type_id = params["guw_type"]["#{guw_unit_of_work.id}"]
-      #guw_unit_of_work.save
-
       @guw_type = guw_unit_of_work.guw_type
-
 
       @lows = Array.new
       @mls = Array.new
@@ -181,8 +177,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
         end
 
-
-
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
 
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
@@ -190,8 +184,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
 
         if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-          guw_unit_of_work.ajusted_effort = @weight_pert.sum
-        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+          guw_unit_of_work.ajusted_effort = @weight_pert.sum  * guw_work_unit.value.to_f
+        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum * guw_work_unit.value.to_f)
           guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
         end
 

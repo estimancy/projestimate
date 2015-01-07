@@ -4,7 +4,7 @@
 
     <% Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.each do |uowg| %>
 
-      <h5 class="well">
+      <h5 class="">
         <%= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg), title: I18n.t(:edit) %>
 
         <span class="pull-right">
