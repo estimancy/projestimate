@@ -4,28 +4,31 @@
 
       <h4>
         <%= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg), title: I18n.t(:edit) %>
-        - <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'fa fa-trash-o', :title => I18n.t('delete') %>
+
+        <span class="pull-right">
+          <%= uowg.guw_unit_of_works.map(&:ajusted_effort).sum %> Unité fonctionnelle
+        </span>
+
+        <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'fa fa-trash-o pull-right', :title => I18n.t('delete') %>
       </h4>
 
-      <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right" %>
-      <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-right" %>
-      <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right" %>
+        <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right button_margin_left" %>
+        <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-right button_margin_left" %>
+        <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right button_margin_left" %>
 
-      <br>
-
-
-      <table class="table table-condensed table-striped" style="margin-bottom: 0px;">
+      <table class="table table-condensed table-striped" style="margin-top: 45px;">
         <tr>
           <th>Sélection</th>
           <th>Modifié</th>
+          <th>Hors seuil</th>
           <th>Nom</th>
           <th>Description</th>
+          <th>Type d'UO</th>
+          <th>Acquisition</th>
           <th>Tracabilité</th>
           <th>Cotation</th>
-          <th>Hors seuil</th>
           <th>Résultat</th>
           <th>Retenu</th>
-          <th>Acquisition</th>
           <th>Actions</th>
         </tr>
 
@@ -41,16 +44,29 @@
                 <span class="fa fa-star red_color"></span>
               <% end %>
             </td>
+
+            <td>
+              <span class="fa fa-sign-out <%= (guow.off_line == false) ? 'icon-green' : 'red_color' %>"></span>
+            </td>
+
             <td>
               <%= guow.name %>
             </td>
 
             <td>
-              <%= link_to guow.comments.nil? ? '' : guow.comments.truncate(25), "#", title: guow.comments, class: "attribute_tooltip" %>
+              <%= link_to guow.comments.nil? ? '' : guow.comments.truncate(25), "#", title: guow.comments, class: "pull-left attribute_tooltip" %>
             </td>
 
             <td>
-              <%= link_to guow.tracking.nil? ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}"  %>
+              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-medium", required: true %>
+            </td>
+
+            <td>
+              <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "input-medium", required: true %>
+            </td>
+
+            <td>
+              <%= link_to guow.tracking.nil? ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
               <div class="modal fade" id="tracking<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= guow.id %>" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -70,26 +86,18 @@
 
             <td>
               <% if guow.guw_complexity.nil? %>
-                '-'
+                <%= link_to "---", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
               <% else %>
-                <%= guow.guw_complexity.name %>
+                <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
               <% end %>
             </td>
 
             <td>
-              <span class="fa fa-sign-out <%= (guow.off_line == false) ? 'icon-green' : 'red_color' %>"></span>
-            </td>
-
-            <td>
-              <%= link_to guow.effort.nil? ? '-' : guow.effort, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+              <%= guow.effort %>
             </td>
 
             <td>
               <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini" %>
-            </td>
-
-            <td>
-              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-medium", required: true %>
             </td>
 
             <td>
@@ -98,7 +106,7 @@
             </td>
 
             <td>
-              <div class="modal fade" id="modal<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel<%= guow.id %>" aria-hidden="true">
+              <div class="modal fade" id="modal<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel<%= guow.id %>" aria-hidden="true" backdrop="static">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -154,3 +162,17 @@
   <% end %>
 
 <% end %>
+
+<script>
+//  $(document).ready(function () {
+//    $('.modal').css("left","2000px");
+//
+//    $('.modal').on('hidden', function (e) {
+//      $('.modal.in').css("left","2000px");
+//    })
+//
+//    $('.modal').on('shown', function (e) {
+//      $('.modal.in').css("left","0");
+//    })
+//  });
+</script>
