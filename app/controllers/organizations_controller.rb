@@ -192,6 +192,9 @@ class OrganizationsController < ApplicationController
         status = EstimationStatus.create(organization_id: @organization.id, status_number: i[0], status_alias: i[1], name: i[2], status_color: i[3], description: i[4])
       end
 
+      #Add a default view for widgets
+      view = View.create(:name => "Default view", :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.", :organization_id => @organization.id)
+
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
     else
       render action: 'new'

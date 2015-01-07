@@ -116,6 +116,8 @@ class ProjectsController < ApplicationController
     @module_project = current_module_project
     @show_hidden = 'true'
 
+    @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+
     #set_breadcrumbs @project.title => edit_project_path(@project)
     set_breadcrumbs "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}" => edit_project_path(@project)
 
@@ -776,6 +778,7 @@ class ProjectsController < ApplicationController
   def append_pemodule
     @project = Project.find(params[:project_id])
     @pemodule = Pemodule.find(params[:module_selected].split(',').last.to_i)
+
     authorize! :alter_estimation_plan, @project
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -796,10 +799,15 @@ class ProjectsController < ApplicationController
 
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
-      my_module_project.build_view(name: "#{my_module_project.to_s} - Module project View", organization_id: @project.organization_id)
+
+      #Select the default view for module_project
+      default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+      my_module_project.view_id = default_view_for_widgets.id
+
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
       end
+
       my_module_project.save
 
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
