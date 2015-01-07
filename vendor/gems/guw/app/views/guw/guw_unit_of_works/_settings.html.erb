@@ -71,7 +71,7 @@
 
             <td>
               <span class="pull-left">
-                <%= link_to guow.tracking.nil? ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
+                <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
               </span>
               <div class="modal fade" id="tracking<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= guow.id %>" aria-hidden="true">
                 <div class="modal-dialog">
@@ -83,6 +83,7 @@
                       <%= text_area_tag "tracking[#{guow.id}]", guow.tracking, class: "attribute_note_area" %>
                     </div>
                     <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
                       <button type="submit" class="btn btn-default">Sauvegarder</button>
                     </div>
                   </div>
