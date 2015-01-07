@@ -150,8 +150,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
 
         guw_unit_of_work.result_low = @lows.sum * guw_work_unit.value.to_f
-        guw_unit_of_work.result_most_likely = @mls.sum * guw_work_unit.value
-        guw_unit_of_work.result_high = @highs.sum * guw_work_unit.value
+        guw_unit_of_work.result_most_likely = @mls.sum * guw_work_unit.value.to_f
+        guw_unit_of_work.result_high = @highs.sum * guw_work_unit.value.to_f
 
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
