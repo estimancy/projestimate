@@ -17,7 +17,7 @@
     <% else %>
       <% @guw_model.guw_types.each do |guw_type| %>
         <li>
-          <a href="#tabs-<%= guw_type %>">
+          <a href="#tabs-<%= guw_type.name.gsub(" ", "-") %>">
             <%= guw_type %>
           </a>
         </li>
@@ -28,10 +28,11 @@
   <% if @guw_model.guw_types.empty? %>
     <div id="tabs-default">
       <p> Vous n'avez pas encore de type d'UO</p>
+    </div>
   <% else %>
     <% @guw_model.guw_types.each do |guw_type| %>
 
-      <div id="tabs-<%= guw_type %>">
+      <div id="tabs-<%= guw_type.name.gsub(" ", "-") %>">
 
         <b>
           <%= guw_type.description %>
@@ -82,7 +83,7 @@
           <b>
             Seuils de complexité des attributs de <%= guw_type %>
           </b>
-          <%= link_to 'Ajouter un seuil de complexité', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+          <%= link_to 'Créer un seuil', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
         </h4>
 
         <%= form_tag guw_model_guw_type_guw_attribute_complexities_save_attributs_complexities_path(@guw_model, guw_type.id), method: "POST" do %>
@@ -91,9 +92,9 @@
               <th></th>
               <% guw_type.guw_type_complexities.each do |type_complexity| %>
                 <th>
-                  <%= type_complexity.name %>
-                  <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity), class: "btn btn-mini" %>
-                  <%= link_to I18n.t(:delete), type_complexity, method: :delete, class: "btn btn-mini" %>
+                  <%= type_complexity.name %> -
+                  <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %> -
+                  <%= link_to I18n.t(:delete), type_complexity, method: :delete %>
                 </th>
               <% end %>
             </tr>
