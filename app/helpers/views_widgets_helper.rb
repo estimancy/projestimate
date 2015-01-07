@@ -25,6 +25,8 @@ module ViewsWidgetsHelper
   def get_view_widget_data(module_project_id, view_widget_id)
 
     view_widget = ViewsWidget.find(view_widget_id)
+    view_widget_attribute = view_widget.pe_attribute
+    view_widget_attribute_name = view_widget_attribute.nil? ? "" : view_widget_attribute.name
     pbs_project_elt = current_component
     module_project = ModuleProject.find(module_project_id)
     project = module_project.project
@@ -145,7 +147,7 @@ module ViewsWidgetsHelper
     chart_height = height-50
     chart_width = width -40
     chart_title = view_widget.name
-    chart_vAxis = "#{view_widget.pe_attribute.name} (#{get_attribute_unit(view_widget.pe_attribute)})"
+    chart_vAxis = "#{view_widget_attribute_name} (#{get_attribute_unit(view_widget_attribute)})"
     chart_hAxis = "Level"
 
     case view_widget.widget_type
@@ -159,7 +161,7 @@ module ViewsWidgetsHelper
             {name: "Low", data: {Time.new => data_low} },  #10
             {name: "Most likely", data: {Time.new => data_most_likely} }, #30
             {name: "High", data: {Time.new => data_high} } ],  #50
-            {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: view_widget.pe_attribute.name}}})
+            {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: view_widget_attribute_name}}})
 
       when "bar_chart"
         value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
@@ -219,7 +221,7 @@ module ViewsWidgetsHelper
         end
 
         if is_ok == true
-          value_to_show = timeline(timeline_data, library: {title: view_widget.pe_attribute.name})
+          value_to_show = timeline(timeline_data, library: {title: view_widget_attribute_name})
         else
           value_to_show = "" #I18n.t(:error_invalid_date)
         end
