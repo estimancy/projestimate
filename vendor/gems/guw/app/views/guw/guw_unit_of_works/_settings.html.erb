@@ -16,23 +16,56 @@
 
       <table class="table table-condensed table-striped" style="margin-bottom: 0px;">
         <tr>
+          <th>Sélection</th>
+          <th>Modifié</th>
           <th>Nom</th>
           <th>Description</th>
+          <th>Tracabilité</th>
           <th>Cotation</th>
+          <th>Hors seuil</th>
           <th>Résultat</th>
           <th>Retenu</th>
-          <th>Type d'acquisition</th>
+          <th>Acquisition</th>
           <th>Actions</th>
         </tr>
 
         <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
           <tr>
             <td>
+              <%= check_box_tag 'accept' %>
+            </td>
+            <td>
+              <% if guow.effort == guow.ajusted_effort %>
+                <span class="fa fa-star icon-green"></span>
+              <% else %>
+                <span class="fa fa-star red_color"></span>
+              <% end %>
+            </td>
+            <td>
               <%= guow.name %>
             </td>
 
             <td>
-              <%= guow.comments %>
+              <%= link_to guow.comments.nil? ? '' : guow.comments.truncate(25), "#", title: guow.comments, class: "attribute_tooltip" %>
+            </td>
+
+            <td>
+              <%= link_to guow.tracking.nil? ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}"  %>
+              <div class="modal fade" id="tracking<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= guow.id %>" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="tracking_label<%= guow.id %>">Attributs de <%= guow %> </h4>
+                    </div>
+                    <div class="modal-body">
+                      <%= text_area_tag "tracking[#{guow.id}]", guow.tracking, class: "attribute_note_area" %>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-default">Sauvegarder</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </td>
 
             <td>
@@ -44,6 +77,10 @@
             </td>
 
             <td>
+              <span class="fa fa-sign-out <%= (guow.off_line == false) ? 'icon-green' : 'red_color' %>"></span>
+            </td>
+
+            <td>
               <%= link_to guow.effort.nil? ? '-' : guow.effort, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
             </td>
 
@@ -52,10 +89,11 @@
             </td>
 
             <td>
-              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), prompt: "Select a work unit", required: true %>
+              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-medium", required: true %>
             </td>
 
             <td>
+              <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-edit" %>
               <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
             </td>
 
@@ -64,10 +102,17 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title" id="ModalLabel<%= guow.id %>">Attributs de <%= guow %> </h4>
+                      <h4 class="modal-title" id="myModalLabel<%= guow.id %>">Attributs de <%= guow %> </h4>
                     </div>
                     <div class="modal-body">
                       <table class="table table-condensed table-striped">
+                        <tr>
+                          <th>Attributs</th>
+                          <th>L</th>
+                          <th>M</th>
+                          <th>H</th>
+                        </tr>
+
                         <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
                           <tr>
                             <% unless guow.guw_type.nil? %>
