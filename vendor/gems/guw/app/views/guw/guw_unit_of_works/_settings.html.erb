@@ -9,7 +9,6 @@
           <%= uowg.guw_unit_of_works.map(&:ajusted_effort).sum %> Unité fonctionnelle
         </span>
 
-        <%= link_to '', guw.guw_unit_of_work_group_path(uowg), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'fa fa-trash-o pull-right', :title => I18n.t('delete') %>
       </h4>
 
         <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-right button_margin_left" %>
@@ -23,8 +22,8 @@
           <th>Hors seuil</th>
           <th>Nom</th>
           <th>Description</th>
-          <th>Type d'UO</th>
           <th>Acquisition</th>
+          <th>Type d'UO</th>
           <th>Tracabilité</th>
           <th>Cotation</th>
           <th>Résultat</th>
@@ -50,7 +49,9 @@
             </td>
 
             <td>
-              <%= guow.name %>
+              <span class="pull-left">
+                <%= guow.name %>
+              </span>
             </td>
 
             <td>
@@ -58,15 +59,17 @@
             </td>
 
             <td>
-              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-medium", required: true %>
+              <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-small", required: true %>
             </td>
 
             <td>
-              <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "input-medium", required: true %>
+              <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "input-small", required: true %>
             </td>
 
             <td>
-              <%= link_to guow.tracking.nil? ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
+              <span class="pull-left">
+                <%= link_to guow.tracking.nil? ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
+              </span>
               <div class="modal fade" id="tracking<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= guow.id %>" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
