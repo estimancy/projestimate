@@ -8,7 +8,6 @@
         <%= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg), title: I18n.t(:edit) %>
 
         <span class="pull-right">
-          <%= uowg.guw_unit_of_works.map(&:ajusted_effort).to_f.sum %> Unités fonctionnelles
           <%= uowg.guw_unit_of_works.map{|i| i.ajusted_effort.to_f}.sum %> Unités fonctionnelles
         </span>
 
