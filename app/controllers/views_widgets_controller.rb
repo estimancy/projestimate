@@ -44,11 +44,13 @@ class ViewsWidgetsController < ApplicationController
     input_attributes = []
     output_attributes = []
     input_attribute_modules.each do |attr_module|
-      input_attributes << attr_module.pe_attribute
+      pe_attribute = attr_module.pe_attribute
+      input_attributes << [pe_attribute, pe_attribute.id]
     end
 
     output_attribute_modules.each do |attr_module|
-      output_attributes << attr_module.pe_attribute
+      pe_attribute = attr_module.pe_attribute
+      output_attributes << [pe_attribute, pe_attribute.id]
     end
 
     module_project_attributes << ["#{I18n.t(:inputs)}", input_attributes]
