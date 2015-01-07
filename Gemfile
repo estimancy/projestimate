@@ -153,9 +153,6 @@ gem 'groupdate'
 #Faker
 gem 'faker'
 
-#Rails auto-link
-gem 'rinku'
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
