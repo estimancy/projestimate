@@ -4,7 +4,7 @@
     <li><a href="#tabs-1"><%= I18n.t(:related_attributes) %></a></li>
     <li><a href="#tabs-2"><%= I18n.t(:module_links_settings) %> </a></li>
     <li><a href="#tabs-view-widgets-parameters"><%= I18n.t(:views_widgets_parameters) %></a></li>
-    <li><a href="#tabs-3"><%= I18n.t(:module_ratio_settings) %></a></li>
+    <!--<li><a href="#tabs-3"><%#= I18n.t(:module_ratio_settings) %></a></li>-->
   </ul>
 
   <div id="tabs-1">
@@ -33,7 +33,8 @@
               <tr class="">
                 <td><%= est_val.pe_attribute.nil? ? '-' : est_val.pe_attribute.name %></td>
                 <td><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => est_val.in_out), :prompt => I18n.t('helpers.select.prompt'), :disabled => true %> </td>
-                <td><%= select_tag "is_mandatory_#{est_val.id}_#{est_val.in_out}", options_for_select([['yes', true], ['no', false]], :selected => est_val.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :disabled => AttributeModule.where("pemodule_id =? and pe_attribute_id = ?", @module_project.pemodule.id, est_val.pe_attribute.id).first.is_mandatory %></td>
+                <% attr_module = AttributeModule.where("pemodule_id =? and pe_attribute_id = ?", @module_project.pemodule.id, est_val.pe_attribute.id).first %>
+                <td><%= select_tag "is_mandatory_#{est_val.id}_#{est_val.in_out}", options_for_select([['yes', true], ['no', false]], :selected => est_val.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :disabled => attr_module.nil? ? false : attr_module.is_mandatory %></td>
                 <td><%= text_field_tag "description_#{est_val.id}_#{est_val.in_out}", est_val.description.blank? ? '-' : est_val.description %></td>
               </tr>
           <% end %>
@@ -48,13 +49,13 @@
   </div>
 
 
-  <div id="tabs-3">
-    <% if @module_project.pemodule.yes_for_output_with_ratio? || @module_project.pemodule.yes_for_input_output_with_ratio? %>
-        <%#= render :partial => 'module_projects/module_settings' %>
-    <%# else %>
-        <%= content_tag(:div, I18n.t('ratio_settings_message'), :class => "alert alert-info") %>
-    <% end %>
-  </div>
+  <!--<div id="tabs-3">-->
+    <!--<%# if @module_project.pemodule.yes_for_output_with_ratio? || @module_project.pemodule.yes_for_input_output_with_ratio? %>-->
+        <!--<%#= render :partial => 'module_projects/module_settings' %>-->
+    <!--<%# else %>-->
+        <!--<%#= content_tag(:div, I18n.t('ratio_settings_message'), :class => "alert alert-info") %>-->
+    <!--<%# end %>-->
+  <!--</div>-->
 
   <!-- Parametres d'affichage de la vue -->
   <div id="tabs-view-widgets-parameters">
