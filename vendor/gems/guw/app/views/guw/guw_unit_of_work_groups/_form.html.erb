@@ -15,7 +15,9 @@
         <%= f.input :name %>
       </div>
       <%= f.button :submit, I18n.t('save') %>
-      <%= link_to 'Supprimer', guw.guw_unit_of_work_group_path(@guw_unit_of_work_group), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'btn' %>
+      <% unless controller.action_name == "new" %>
+        <%= link_to 'Supprimer', guw.guw_unit_of_work_group_path(@guw_unit_of_work_group), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'btn' %>
+      <% end %>
   <% end %>
   </div>
 </div>
