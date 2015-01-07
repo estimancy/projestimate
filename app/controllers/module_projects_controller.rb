@@ -92,8 +92,10 @@ class ModuleProjectsController < ApplicationController
 
     @module_project.estimation_values.each_with_index do |est_val, j|
       corresponding_am = AttributeModule.where('pemodule_id =? and pe_attribute_id = ?', @module_project.pemodule.id, est_val.pe_attribute.id).first
-      unless corresponding_am.is_mandatory
-        est_val.update_attribute('is_mandatory', params["is_mandatory_#{est_val.id}_#{est_val.in_out}"])
+      if !corresponding_am.nil?
+        unless corresponding_am.is_mandatory
+          est_val.update_attribute('is_mandatory', params["is_mandatory_#{est_val.id}_#{est_val.in_out}"])
+        end
       end
       est_val.update_attribute('description', params["description_#{est_val.id}_#{est_val.in_out}"])
     end
