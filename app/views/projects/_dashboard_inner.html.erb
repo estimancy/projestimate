@@ -66,7 +66,7 @@
 
         <h5 class="total_unit_of_work">
           <% begin %>
-            Total général : <%= Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.map(&:ajusted_effort) }.flatten.sum %> Unités Fonctionnelles
+            Total général : <%= Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.map(&:ajusted_effort).to_f }.flatten.sum %> Unités Fonctionnelles
           <% rescue %>
 
           <% end %>
