@@ -90,13 +90,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
         high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
 
+        guw_unit_of_work.off_line = false
+
         @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
                                                                         guw_attribute_id: guowa.guw_attribute_id).all
 
         sum_range = guowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: @guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
 
         if sum_range.nil? || sum_range.blank? || sum_range == 0
-          p "a supprimer"
+          # ??
         else
           @guw_attribute_complexities.each do |guw_ac|
             unless low.nil?
@@ -108,7 +110,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                     end
                   end
                 else
-                  hb = true
+                  guw_unit_of_work.off_line = true
                 end
               end
             end
@@ -121,7 +123,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                   end
                 end
               else
-                hb = true
+                guw_unit_of_work.off_line = true
               end
             end
 
@@ -133,7 +135,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                   end
                 end
               else
-                hb = true
+                guw_unit_of_work.off_line = true
               end
             end
           end
@@ -145,7 +147,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-      #unless params[:work_unit]["#{guw_unit_of_work.id}"].blank?
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
 
         guw_unit_of_work.result_low = @lows.sum * guw_work_unit.value.to_f
@@ -153,6 +154,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.result_high = @highs.sum * guw_work_unit.value
 
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+
+        guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
         guw_unit_of_work.save
 
         @guw_type.guw_complexities.each do |guw_c|
@@ -195,8 +198,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.save
 
     end
-
-    #end
 
     @module_project = current_module_project
     @module_project.guw_model_id = @guw_model.id
@@ -242,13 +243,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
 
       end
-    end
-
-    if hb == true
-      flash[:error] = "Attention ! Vous avez des valeurs en dehors des bornes définis dans le modèle."
-    else
-      flash[:error] = nil
-      flash[:notice] = "Vos données ont été correctement sauvegardés"
     end
 
     redirect_to main_app.dashboard_path(@project)

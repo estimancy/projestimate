@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150105171112) do
+ActiveRecord::Schema.define(:version => 20150107085738) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -421,6 +421,10 @@ ActiveRecord::Schema.define(:version => 20150105171112) do
     t.integer  "pbs_project_element_id"
     t.integer  "guw_unit_of_work_group_id"
     t.integer  "guw_work_unit_id"
+    t.text     "tracking"
+    t.boolean  "off_line"
+    t.boolean  "selected"
+    t.boolean  "flagged"
   end
 
   create_table "guw_guw_work_units", :force => true do |t|
