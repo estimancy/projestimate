@@ -64,6 +64,14 @@
           <%= I18n.t(:label_input_data) %> - <%= current_component %> - <%= "#{current_module_project}" %>
         </h5>
 
+        <h5 class="total_unit_of_work">
+          <% begin %>
+            Total général : <%= Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.map(&:ajusted_effort) }.flatten.sum %> Unités Fonctionnelles
+          <% rescue %>
+
+          <% end %>
+        </h5>
+
         <div id="buttons">
           <%# render 'buttons' %>
         </div>

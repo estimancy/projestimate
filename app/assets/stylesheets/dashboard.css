@@ -104,6 +104,15 @@ div.actions-tabs {
     line-height: 12px;
     margin: 0;
 }
+.widget-title h5.total_unit_of_work {
+    color: white;
+    float: right;
+    font-size: 13px;
+    font-weight: inherit;
+    padding: 12px;
+    line-height: 12px;
+    margin: 0;
+}
 .widget-title .buttons {
     float: right;
     margin: 8px 10px 0 0;
