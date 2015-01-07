@@ -187,7 +187,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
         guw_unit_of_work.effort = @weight_pert.sum * guw_work_unit.value.to_f
-        guw_unit_of_work.ajusted_effort = @weight_pert.sum
+        guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
 
         if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
           guw_unit_of_work.ajusted_effort = @weight_pert.sum
