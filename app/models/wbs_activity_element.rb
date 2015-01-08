@@ -110,13 +110,14 @@ class WbsActivityElement < ActiveRecord::Base
                           \"#{Time.now.utc.to_s(:db)}\",
                           \"#{ !row[2].nil? ? row[2].gsub("\"", "\"\"") : row[2] }\",
                           \"#{ !row[0].nil? ? row[0].gsub("\"", "\"\"") : row[0] }\",
-                          \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\", #{@localstatus.id}, #{@wbs_activity.id}, \"#{UUIDTools::UUID.random_create.to_s}\")")
+                          \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\",
+                          #{@wbs_activity.id}")
 
         end
       end
     end
 
-    ActiveRecord::Base.connection.execute("INSERT INTO wbs_activity_elements(created_at,updated_at,description,dotted_id,name,record_status_id,wbs_activity_id,uuid) VALUES  #{@inserts.join(',')}")
+    ActiveRecord::Base.connection.execute("INSERT INTO wbs_activity_elements(created_at,updated_at,description,dotted_id,name,wbs_activity_id) VALUES #{@inserts.join(',')}")
 
     elements = @wbs_activity.wbs_activity_elements
     build_ancestry(elements, @wbs_activity.id)
@@ -148,17 +149,4 @@ class WbsActivityElement < ActiveRecord::Base
       end
     end
   end
-
-  #def self.rebuild(elements, activity_id)
-  #  elements.each do |elt|
-  #    ancestors = []
-  #    father = WbsActivityElement.find_by_wbs_activity_id(activity_id)
-  #    unless father.nil?
-  #      ancestors << father.ancestry
-  #      ancestors << father.id
-  #    end
-  #    elt.ancestry = ancestors.join('/')
-  #    elt.save(:validate => false)
-  #  end
-  #end
 end

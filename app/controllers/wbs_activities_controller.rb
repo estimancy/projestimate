@@ -41,11 +41,6 @@ class WbsActivitiesController < ApplicationController
 
   load_resource
 
-  #helper_method :wbs_record_statuses_collection
-  #helper_method :enable_update_in_local?
-
-  #before_filter :get_record_statuses
-
   #Import a new WBS-Activities from a CVS file
   def import
     authorize! :create_wbs_activities, WbsActivity
@@ -58,7 +53,7 @@ class WbsActivitiesController < ApplicationController
       flash[:warning] = "#{e}"
     end
 
-    redirect_to wbs_activities_path
+    redirect_to :back
   end
 
   def refresh_ratio_elements
