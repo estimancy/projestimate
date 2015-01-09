@@ -2,7 +2,6 @@
 
   <ul>
     <li><a href="#tabs-1">Edit module project path</a></li>
-    <li><a href="#tabs-2"><%= I18n.t(:estimation_plan) %></a></li>
   </ul>
 
   <div id="tabs-1">
@@ -53,10 +52,11 @@
       <%= link_to I18n.t('back'), edit_project_path(@project, :anchor => 'tabs-4'), :class => 'btn' %>
 
     <% end %>
-  </div>
 
-  <div id="tabs-2">
+
+    <h4>Prévisualisation</h4>
+    <hr>
     <%= render 'module_projects/widget_estimation_plan', :locals => {:project => @project} %>
-    <%= link_to I18n.t('back'), edit_project_path(@project, :anchor => 'tabs-4'), :class => 'btn' %>
+
   </div>
  </div>

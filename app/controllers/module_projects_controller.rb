@@ -127,7 +127,7 @@ class ModuleProjectsController < ApplicationController
     @module_projects.each do |mp|
       mp.update_attribute('associated_module_project_ids', params[:module_projects][mp.id.to_s])
     end
-    redirect_to module_projects_matrix_path(@project.id, :anchor => 'tabs-2'), notice: "#{I18n.t (:notice_module_project_successful_updated)}"
+    redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
   end
 
 

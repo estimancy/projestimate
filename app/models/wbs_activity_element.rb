@@ -74,7 +74,6 @@ class WbsActivityElement < ActiveRecord::Base
     propagate
   end
 
-
   def to_s
     self.wbs_activity.name
   end
@@ -86,15 +85,14 @@ class WbsActivityElement < ActiveRecord::Base
     #create wbs_activity
     @wbs_activity = WbsActivity.new(:name => "#{file.original_filename} - #{Time.now.to_s}",
                                     :state => 'draft',
-                                    :record_status => @localstatus)
+                                    :record_status => @localstatus.id)
     @wbs_activity.save
 
     #create root element
     @root_element = WbsActivityElement.new(:name => @wbs_activity.name,
                                            :description => 'The root element corresponds to the wbs activity.',
                                            :dotted_id => '0',
-                                           :wbs_activity => @wbs_activity,
-                                           :record_status => @localstatus,
+                                           :wbs_activity_id => @wbs_activity.id,
                                            :parent => nil,
                                            :is_root => true)
     @root_element.save
@@ -106,13 +104,7 @@ class WbsActivityElement < ActiveRecord::Base
       @inserts = []
       csv.each_with_index do |row, i|
         unless row.empty? or i == 0
-          @inserts.push("(\"#{Time.now.utc.to_s(:db)}\",
-                          \"#{Time.now.utc.to_s(:db)}\",
-                          \"#{ !row[2].nil? ? row[2].gsub("\"", "\"\"") : row[2] }\",
-                          \"#{ !row[0].nil? ? row[0].gsub("\"", "\"\"") : row[0] }\",
-                          \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\",
-                          #{@wbs_activity.id}")
-
+          @inserts.push("(\"#{Time.now.utc.to_s(:db)}\", \"#{Time.now.utc.to_s(:db)}\", \"#{ !row[2].nil? ? row[2].gsub("\"", "\"\"") : row[2] }\", \"#{ !row[0].nil? ? row[0].gsub("\"", "\"\"") : row[0] }\", \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\", #{@wbs_activity.id})")
         end
       end
     end
@@ -121,7 +113,6 @@ class WbsActivityElement < ActiveRecord::Base
 
     elements = @wbs_activity.wbs_activity_elements
     build_ancestry(elements, @wbs_activity.id)
-
   end
 
   def self.build_ancestry(elements, activity_id)

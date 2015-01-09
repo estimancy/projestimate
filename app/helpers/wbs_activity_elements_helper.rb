@@ -55,7 +55,7 @@ module WbsActivityElementsHelper
 
       if element.has_children?
         tree << "<ul class='sortable'>"
-        element.children.each do |e|
+        element.children.order("dotted_id ASC").each do |e|
           tree << "
                    <li style='margin-left:#{element.depth}px;' >
                     <div class='block_label'>

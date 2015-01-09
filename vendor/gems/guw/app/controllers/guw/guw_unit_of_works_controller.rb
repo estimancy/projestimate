@@ -82,9 +82,24 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
-        low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        if params["low"]["#{guw_unit_of_work.id}"].nil?
+          low = 0
+        else
+          low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        end
+
+        if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
+          most_likely = 0
+        else
+          most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        end
+
+        if params["high"]["#{guw_unit_of_work.id}"].nil?
+          high = 0
+        else
+          high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        end
+
 
         guw_unit_of_work.off_line = false
 
@@ -177,16 +192,18 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
         end
 
-        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
+        unless params[:work_unit]["#{guw_unit_of_work.id}"].nil?
+          guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+          guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+          guw_unit_of_work.effort = @weight_pert.sum * guw_work_unit.value.to_f
+          guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
 
-        guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
-        guw_unit_of_work.effort = @weight_pert.sum * guw_work_unit.value.to_f
-        guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
+          if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+            guw_unit_of_work.ajusted_effort = @weight_pert.sum  * guw_work_unit.value.to_f
+          elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum * guw_work_unit.value.to_f)
+            guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
+          end
 
-        if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-          guw_unit_of_work.ajusted_effort = @weight_pert.sum  * guw_work_unit.value.to_f
-        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum * guw_work_unit.value.to_f)
-          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
         end
 
       guw_unit_of_work.save

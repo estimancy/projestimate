@@ -46,42 +46,42 @@ module ExpertJudgment
     def set_node_effort(node)
     end
 
-    #Get the project WBS root
-    def set_wbs_project_element_root(elem)
-      @pbs_project_element = PbsProjectElement.find(elem[:pbs_project_element_id])
-      current_project = @pbs_project_element.pe_wbs_project.project
-      pe_wbs_project_activity = current_project.pe_wbs_projects.activities_wbs.first
-      @wbs_project_element_root = pe_wbs_project_activity.wbs_project_elements.where('is_root = ?', true).first
-    end
+    ##Get the project WBS root
+    #def set_wbs_project_element_root(elem)
+    #  @pbs_project_element = PbsProjectElement.find(elem[:pbs_project_element_id])
+    #  current_project = @pbs_project_element.pe_wbs_project.project
+    #  pe_wbs_project_activity = current_project.pe_wbs_projects.activities_wbs.first
+    #  @wbs_project_element_root = pe_wbs_project_activity.wbs_project_elements.where('is_root = ?', true).first
+    #end
+    #
+    ##GETTERS
+    #def get_effort(*args)
+    #  new_effort = Hash.new
+    #  root_element_effort = 0.0
+    #
+    #  @wbs_project_element_root.children.each do |node|
+    #    # Sort node subtree by ancestry_depth
+    #    sorted_node_elements = node.subtree.order('ancestry_depth desc')
+    #    sorted_node_elements.each do |wbs_project_element|
+    #      if wbs_project_element.is_childless?
+    #        new_effort[wbs_project_element.id] = (@effort[wbs_project_element.id.to_s].blank? ? nil : @effort[wbs_project_element.id.to_s].to_f)
+    #      else
+    #        node_effort = 0.0
+    #        wbs_project_element.children.each do |child|
+    #          node_effort = node_effort + new_effort[child.id].to_f
+    #        end
+    #        new_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort)
+    #      end
+    #    end
+    #  end
+    #
+    #  new_effort[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort)
+    #
+    #  new_effort
+    #end
 
-    #GETTERS
     def get_effort(*args)
-      new_effort = Hash.new
-      root_element_effort = 0.0
-
-      @wbs_project_element_root.children.each do |node|
-        # Sort node subtree by ancestry_depth
-        sorted_node_elements = node.subtree.order('ancestry_depth desc')
-        sorted_node_elements.each do |wbs_project_element|
-          if wbs_project_element.is_childless?
-            new_effort[wbs_project_element.id] = (@effort[wbs_project_element.id.to_s].blank? ? nil : @effort[wbs_project_element.id.to_s].to_f)
-          else
-            node_effort = 0.0
-            wbs_project_element.children.each do |child|
-              node_effort = node_effort + new_effort[child.id].to_f
-            end
-            new_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, new_effort)
-          end
-        end
-      end
-
-      new_effort[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort)
-
-      new_effort
-    end
-
-    def get_effort(*args)
-      get_effort(args)
+      @effort
     end
   end
 

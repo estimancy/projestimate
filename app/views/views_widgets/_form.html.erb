@@ -21,8 +21,6 @@
             <td><%= f.association :module_project, label: "Module", collection: @module_project.project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false %></td>
           </tr>
           <tr>
-            <!--<td><%#= f.input :widget_type, as: :select, collection: @views_widget_types , label: I18n.t(:label_widget_type), include_blank: false %></td>-->
-            <!--<td><%#= f.association :pe_attribute, collection: @module_project.pemodule.pe_attributes, label: I18n.t(:associated_attribute), include_blank: false %></td>-->
             <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false %></td>
             <td><%= f.association :pe_attribute, collection: @module_project_attributes, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false %></td>
           </tr>
