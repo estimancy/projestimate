@@ -101,7 +101,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
         end
 
-
         guw_unit_of_work.off_line = false
 
         @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
@@ -159,53 +158,54 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-        guw_unit_of_work.result_low = @lows.sum
-        guw_unit_of_work.result_most_likely = @mls.sum
-        guw_unit_of_work.result_high = @highs.sum
+      guw_unit_of_work.result_low = @lows.sum
+      guw_unit_of_work.result_most_likely = @mls.sum
+      guw_unit_of_work.result_high = @highs.sum
 
-        guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
-        guw_unit_of_work.save
+      guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.save
 
-        @guw_type.guw_complexities.each do |guw_c|
+      @guw_type.guw_complexities.each do |guw_c|
 
-          #Save if uo is simple/ml/high
-          value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
+        #Save if uo is simple/ml/high
+        value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
 
-          if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
-            guw_unit_of_work.guw_complexity_id = guw_c.id
-            guw_unit_of_work.save
-          end
-
-          #Save effective effort (or weight) of uo
-          if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
-            uo_weight_low = guw_c.weight
-          end
-
-          if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
-            uo_weight_ml = guw_c.weight
-          end
-
-          if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
-            uo_weight_high = guw_c.weight
-          end
-
-          @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
-          #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
+          guw_unit_of_work.guw_complexity_id = guw_c.id
+          guw_unit_of_work.save
         end
 
-        unless params[:work_unit]["#{guw_unit_of_work.id}"].nil?
-          guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
-          guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
-          guw_unit_of_work.effort = @weight_pert.sum * guw_work_unit.value.to_f
-          guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
-
-          if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-            guw_unit_of_work.ajusted_effort = @weight_pert.sum  * guw_work_unit.value.to_f
-          elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum * guw_work_unit.value.to_f)
-            guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
-          end
-
+        #Save effective effort (or weight) of uo
+        if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
+          uo_weight_low = guw_c.weight
         end
+
+        if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
+          uo_weight_ml = guw_c.weight
+        end
+
+        if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
+          uo_weight_high = guw_c.weight
+        end
+
+        @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
+        #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+      end
+
+      unless params[:work_unit]["#{guw_unit_of_work.id}"].nil?
+        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+        guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+        guw_unit_of_work.effort = @weight_pert.sum * guw_work_unit.value.to_f
+        guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
+
+        if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+          guw_unit_of_work.ajusted_effort = @weight_pert.sum  * guw_work_unit.value.to_f
+        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum * guw_work_unit.value.to_f)
+          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
+        end
+
+      end
 
       guw_unit_of_work.save
 
