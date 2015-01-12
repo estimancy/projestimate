@@ -8,7 +8,10 @@
         <%= link_to uowg, guw.edit_guw_unit_of_work_group_path(uowg), title: I18n.t(:edit) %>
 
         <span class="pull-right">
-          <%= uowg.guw_unit_of_works.map{|i| i.ajusted_effort.to_f}.sum %> Unités fonctionnelles
+          <span class="<%= uowg.id %>_result">
+            <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f}.sum %>
+          </span>
+          Unités Fonctionnelles
         </span>
 
       </h5>
@@ -22,7 +25,6 @@
         <tr>
           <th>Sélection</th>
           <th>Modifié</th>
-          <th>Hors seuil</th>
           <th>Nom</th>
           <th>Description</th>
           <th>Acquisition</th>
@@ -37,18 +39,16 @@
         <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
           <tr>
             <td>
-              <%= check_box_tag 'accept' %>
+              <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected" %>
+              <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
             </td>
+
             <td>
               <% if guow.effort == guow.ajusted_effort %>
                 <span class="fa fa-star icon-green"></span>
               <% else %>
                 <span class="fa fa-star red_color"></span>
               <% end %>
-            </td>
-
-            <td>
-              <span class="fa fa-sign-out <%= (guow.off_line == false) ? 'icon-green' : 'red_color' %>"></span>
             </td>
 
             <td>
@@ -174,15 +174,12 @@
 <% end %>
 
 <script>
-//  $(document).ready(function () {
-//    $('.modal').css("left","2000px");
-//
-//    $('.modal').on('hidden', function (e) {
-//      $('.modal.in').css("left","2000px");
-//    })
-//
-//    $('.modal').on('shown', function (e) {
-//      $('.modal.in').css("left","0");
-//    })
-//  });
+  $(document).ready(function () {
+    $('.selected').change(function(){
+      $.ajax({
+        url: "<%= guw.change_selected_state_path %>",
+        data: "guw_unit_of_work_id=" + this.value + "&guw_unit_of_work_group_id=" + $("." + this.value + "_group").val()
+      });
+    });
+  });
 </script>

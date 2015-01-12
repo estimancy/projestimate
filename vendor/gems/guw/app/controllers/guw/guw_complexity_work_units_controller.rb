@@ -34,39 +34,18 @@
 #
 #############################################################################
 
-Guw::Engine.routes.draw do
-  root :to => 'guw#index'
 
-  resources :guw_type_complexities
-  resources :guw_complexities
-  resources :guw_complexity_work_units
-  resources :guw_attributes
-  resources :guw_unit_of_works
-  resources :guw_unit_of_work_groups
+class Guw::GuwComplexityWorkUnitsController < ApplicationController
 
-  resources :guw_work_units
-  resources :guw_work_units do
-    post "create_notes"
-  end
-
-  resources :guw_types
-  resources :guw_attribute_complexities
-
-  resources :guw_models do
-    resources :guw_attributes
-    resources :guw_unit_of_works
-    resources :guw_work_units
-    resources :guw_types do
-      resources :guw_attribute_complexities
-      resources :guw_complexities
-      resources :guw_type_complexities
-
-      post "guw_attribute_complexities/save_attributs_complexities"
+  def save_complexity_work_units
+    params[:value].each do |i|
+      i.each do |j|
+        cplx = Guw::GuwComplexity.find(j).id
+        wu = Guw::GuwWorkUnit.find(i).id
+        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx, guw_work_unit_id: wu, value: 18)
+      end
     end
+
+    redirect_to guw.guw_model_path(complexity)
   end
-
-  post "guw_unit_of_works/save_guw_unit_of_works"
-  post "guw_complexity_work_units/save_complexity_work_units"
-
-  get "change_selected_state" => "guw_unit_of_works#change_selected_state", as: "change_selected_state"
 end

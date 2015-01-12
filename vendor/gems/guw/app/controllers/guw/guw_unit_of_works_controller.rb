@@ -69,7 +69,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_model = current_module_project.guw_model
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: current_component.id,
-                                                  guw_model_id: @guw_model.id)
+                                                  guw_model_id: @guw_model.id,
+                                                  selected: true)
 
     @guw_unit_of_works.each do |guw_unit_of_work|
 
@@ -259,8 +260,23 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
-  def create_notes
+  def change_selected_state
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    if @guw_unit_of_work.selected == false
+      @guw_unit_of_work.selected = true
+    else
+      @guw_unit_of_work.selected = false
+    end
 
+    @guw_unit_of_work.save
+
+    @group = Guw::GuwUnitOfWorkGroup.find(params[:guw_unit_of_work_group_id])
+    @group_result = Guw::GuwUnitOfWork.where(selected: true, guw_unit_of_work_group_id: @group.id).map{|i| i.ajusted_effort }.sum
+    @total_result = Guw::GuwUnitOfWork.where(selected: true).map{|i| i.ajusted_effort }.sum
+
+  end
+
+  def create_notes
   end
 
 end

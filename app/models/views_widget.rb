@@ -7,7 +7,7 @@ class ViewsWidget < ActiveRecord::Base
   belongs_to :pbs_project_element
   belongs_to :module_project
 
-  has_many :project_fields
+  has_many :project_field
 
   validates :name, :pe_attribute_id, :pbs_project_element_id, :module_project_id, :widget_type,  presence: true
 

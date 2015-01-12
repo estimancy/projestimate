@@ -49,37 +49,81 @@
           <%= link_to "Créer un seuil", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
         </h4>
 
-        <table class="table table-bordered">
-          <tr>
-            <th></th>
-            <% guw_type.guw_complexities.each do |guw_cplx| %>
-              <th>
-                <%= guw_cplx.name %> -
-                <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %> -
-                <%= link_to I18n.t(:delete), guw_cplx, method: :delete %>
-              </th>
-            <% end %>
-          </tr>
+        <%= form_tag guw_complexity_work_units_save_complexity_work_units_path do %>
+          <table class="table table-bordered">
+            <tr>
+              <th></th>
+              <% guw_type.guw_complexities.each do |guw_cplx| %>
+                <th>
+                  <%= guw_cplx.name %> -
+                  <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %> -
+                  <%= link_to I18n.t(:delete), guw_cplx, method: :delete %>
+                </th>
+              <% end %>
+            </tr>
 
-          <tr>
-            <td>Seuils</td>
-            <% guw_type.guw_complexities.each do |guw_cplx| %>
-              <td class="align-center">
-                <%= guw_cplx.bottom_range %> - <%= guw_cplx.top_range %>
-              </td>
-            <% end %>
-          </tr>
-          <tr>
-            <td>Poids</td>
-            <% guw_type.guw_complexities.each do |guw_cplx| %>
-              <td class="align-center">
-                <%= guw_cplx.weight %>
-              </td>
-            <% end %>
-          </tr>
-        </table>
+            <tr>
+              <td>Seuils</td>
+              <% guw_type.guw_complexities.each do |guw_cplx| %>
+                <td class="align-center">
+                  <%= guw_cplx.bottom_range %> - <%= guw_cplx.top_range %>
+                </td>
+              <% end %>
+            </tr>
 
-        <hr>
+            <tr>
+              <td colspan="4">
+                <b>
+                  Poids
+                </b>
+              </td>
+            </tr>
+
+            <% @guw_model.guw_work_units.each do |work_unit| %>
+              <tr>
+                <td>
+                  <%= work_unit.name %>
+                </td>
+
+                <% guw_type.guw_complexities.each do |guw_cplx| %>
+                  <td class="align-center">
+                    <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id, guw_work_unit_id: work_unit.id).first %>
+                    <%= text_field_tag "value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
+                  </td>
+                <% end %>
+                </td>
+              </tr>
+            <% end %>
+
+            <tr>
+              <td colspan="4">
+                <b>
+                  Tecnologies
+                </b>
+              </td>
+            </tr>
+
+            <% @guw_model.organization.organization_technologies.each do |technology| %>
+              <tr>
+                <td>
+                  <%= technology.name %>
+                </td>
+
+                <% guw_type.guw_complexities.each do |guw_cplx| %>
+                  <% tcplx = nil %>
+                  <td class="align-center">
+                    <%= text_field_tag "technology_coef[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : cwu.value, class: "input-mini" %>
+                  </td>
+                <% end %>
+                </td>
+              </tr>
+            <% end %>
+
+          </table>
+          <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
+        <% end %>
+
+        <br>
 
         <h4>
           <b>

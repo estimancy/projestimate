@@ -16,6 +16,14 @@
 
 $(document).ready(function() {
 
+    // Modal bug
+    $('.modal-backdrop').remove();
+    $(".modal").hide();
+    $(".close").on('click', function(){
+        $('.modal-backdrop').remove();
+        $(".modal").hide();
+    });
+
     // Update the jscolor library Dir to resolve bug on colors detection
     jscolor.dir = '/assets/';
 
