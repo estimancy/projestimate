@@ -39,6 +39,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
+    @guw_unit_of_work.selected = true
     @guw_unit_of_work.save
 
     @guw_model.guw_attributes.all.each do |gac|
@@ -69,8 +70,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_model = current_module_project.guw_model
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: current_component.id,
-                                                  guw_model_id: @guw_model.id,
-                                                  selected: true)
+                                                  guw_model_id: @guw_model.id)
 
     @guw_unit_of_works.each do |guw_unit_of_work|
 
@@ -271,8 +271,16 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.save
 
     @group = Guw::GuwUnitOfWorkGroup.find(params[:guw_unit_of_work_group_id])
-    @group_result = Guw::GuwUnitOfWork.where(selected: true, guw_unit_of_work_group_id: @group.id).map{|i| i.ajusted_effort }.sum
-    @total_result = Guw::GuwUnitOfWork.where(selected: true).map{|i| i.ajusted_effort }.sum
+    @group_result = Guw::GuwUnitOfWork.where(selected: true,
+                                             guw_unit_of_work_group_id: @group.id,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
+
+    @total_result = Guw::GuwUnitOfWork.where(selected: true,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
 
   end
 
