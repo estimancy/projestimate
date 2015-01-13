@@ -36,7 +36,7 @@
 
 #Master Table
 class AcquisitionCategory < ActiveRecord::Base
-  attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment
+  attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment, :organization_id
   #include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
   has_many :projects

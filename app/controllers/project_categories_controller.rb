@@ -67,10 +67,11 @@ class ProjectCategoriesController < ApplicationController
     authorize! :manage, ProjectCategory
 
     @project_category = ProjectCategory.new(params[:project_category])
+    @organization = Organization.find(params[:organization_id])
 
     if @project_category.save
       flash[:notice] = I18n.t (:notice_project_categories_successful_created)
-      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(:anchor => 'tabs-project-categories'))
+      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-project-categories'))
     else
       render action: 'new'
     end
@@ -79,6 +80,7 @@ class ProjectCategoriesController < ApplicationController
   def update
     authorize! :manage, ProjectCategory
 
+    @organization = Organization.find(params[:organization_id])
     @project_category = nil
     current_project_category = ProjectCategory.find(params[:id])
     if current_project_category.is_defined?
@@ -90,7 +92,7 @@ class ProjectCategoriesController < ApplicationController
 
     if @project_category.update_attributes(params[:project_category])
       flash[:notice] = I18n.t (:notice_project_categories_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(:anchor => 'tabs-project-categories'))
+      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-project-categories'))
     else
       render action: 'edit'
     end
@@ -100,6 +102,8 @@ class ProjectCategoriesController < ApplicationController
     authorize! :manage, ProjectCategory
 
     @project_category = ProjectCategory.find(params[:id])
+    organization_id = @project_category.organization_id
+
     if @project_category.is_defined? || @project_category.is_custom?
       #logical deletion: delete don't have to suppress records anymore on defined record
       @project_category.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
@@ -108,6 +112,6 @@ class ProjectCategoriesController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_project_categories_successful_deleted)
-    redirect_to edit_organization_path(:anchor => 'tabs-project-categories')
+    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-project-categories')
   end
 end

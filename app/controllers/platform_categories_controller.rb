@@ -66,12 +66,13 @@ class PlatformCategoriesController < ApplicationController
   def create
     authorize! :manage, PlatformCategory
 
+    @organization = Organization.find(params[:organization_id])
     @platform_category = PlatformCategory.new(params[:platform_category])
     @platform_category.owner_id = current_user.id
 
     if @platform_category.save
       flash[:notice] = I18n.t (:notice_platform_category_successful_created)
-      redirect_to redirect_apply(nil, new_organization_platform_categories_path(@organization), edit_organization_path(:anchor => 'tabs-platform-categories'))
+      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'new'
     end
@@ -80,6 +81,7 @@ class PlatformCategoriesController < ApplicationController
   def update
     authorize! :manage, PlatformCategory
 
+    @organization = Organization.find(params[:organization_id])
     @platform_category = nil
     current_platform_category = PlatformCategory.find(params[:id])
     if current_platform_category.is_defined?
@@ -91,7 +93,7 @@ class PlatformCategoriesController < ApplicationController
 
     if @platform_category.update_attributes(params[:platform_category])
       flash[:notice] = I18n.t (:notice_platform_category_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_platform_categories_path(@organization), edit_organization_path(:anchor => 'tabs-platform-categories'))
+      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'edit'
     end
@@ -101,6 +103,7 @@ class PlatformCategoriesController < ApplicationController
     authorize! :manage, PlatformCategory
 
     @platform_category = PlatformCategory.find(params[:id])
+    organization_id = @platform_category.organization_id
     if @platform_category.is_defined? || @platform_category.is_custom?
       #logical deletion: delete don't have to suppress records anymore
       @platform_category.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
@@ -109,6 +112,6 @@ class PlatformCategoriesController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_platform_category_successful_deleted)
-    redirect_to edit_organization_path(:anchor => 'tabs-platform-categories')
+    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-platform-categories')
   end
 end

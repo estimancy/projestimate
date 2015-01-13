@@ -77,10 +77,11 @@ class ProjectAreasController < ApplicationController
 
     @project_area = ProjectArea.new(params[:project_area])
     @project_area.owner_id = current_user.id
+    @organization = Organization.find(params[:organization_id])
 
     if @project_area.save
       flash[:notice] = I18n.t (:notice_project_area_successful_created)
-      redirect_to redirect_apply(nil,new_organization_project_area_path(), projects_global_params_path(:anchor => 'tabs-1') )
+      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-project-areas') )
     else
        render action: 'new'
     end
@@ -88,6 +89,7 @@ class ProjectAreasController < ApplicationController
 
   def update
     authorize! :manage, ProjectArea
+    @organization = Organization.find(params[:organization_id])
 
     @project_area = nil
     current_project_area = ProjectArea.find(params[:id])
@@ -100,7 +102,7 @@ class ProjectAreasController < ApplicationController
 
     if @project_area.update_attributes(params[:project_area])
       flash[:notice] = I18n.t (:notice_project_area_successful_updated)
-      redirect_to redirect_apply(edit_project_area_path(@project_area), nil, projects_global_params_path(:anchor => 'tabs-1') )
+      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-project-areas') )
     else
       render action: 'edit'
     end
@@ -110,6 +112,8 @@ class ProjectAreasController < ApplicationController
     authorize! :manage, ProjectArea
 
     @project_area = ProjectArea.find(params[:id])
+    organization_id = @project_area.organization_id
+
     if @project_area.is_defined? || @project_area.is_custom?
       #logical deletion: delete don't have to suppress records anymore if record status is defined
       @project_area.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
@@ -118,6 +122,6 @@ class ProjectAreasController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_project_area_successful_deleted)
-    redirect_to projects_global_params_path(:anchor => 'tabs-1')
+    redirect_to edit_organization_id(organization_id, :anchor => 'tabs-project-areas')
   end
 end
