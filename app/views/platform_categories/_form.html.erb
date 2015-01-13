@@ -4,11 +4,12 @@
   </ul>
 
   <div id="tabs-1">
-    <%= simple_form_for(@platform_category) do |f| %>
+    <%= simple_form_for([@organization, @platform_category]) do |f| %>
         <%= f.error_notification %>
 
-        <div>
-          <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :organization_id, :as => :hidden, :input_html => { :value => @organization.id } %>
+
+        <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
           <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
           <table>
@@ -41,6 +42,5 @@
           </div>
     <% end %>
     </div>
-  </div>
 </div>
 

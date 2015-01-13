@@ -35,9 +35,9 @@
 #############################################################################
 
 class AcquisitionCategoriesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
+  #before_filter :get_record_statuses
 
-  before_filter :get_record_statuses
   load_resource
 
   def new
@@ -45,12 +45,15 @@ class AcquisitionCategoriesController < ApplicationController
 
     set_page_title I18n.t (:acquisition_category)
     @acquisition_category = AcquisitionCategory.new
+    @organization = Organization.find(params[:organization_id])
   end
 
   def edit
     #no authorize required since everyone can show this object
     set_page_title I18n.t (:acquisition_category)
     @acquisition_category = AcquisitionCategory.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
+
 
     unless @acquisition_category.child_reference.nil?
       if @acquisition_category.child_reference.is_proposed_or_custom?

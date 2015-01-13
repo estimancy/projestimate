@@ -35,23 +35,25 @@
 #############################################################################
 
 class ProjectCategoriesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
   load_resource
 
-  before_filter :get_record_statuses
+  #before_filter :get_record_statuses
 
   def new
     authorize! :manage, ProjectCategory
 
     set_page_title 'Project Category'
     @project_category = ProjectCategory.new
+    @organization = Organization.find(params[:organization_id])
   end
 
   def edit
     #no authorize required since everyone can show this object
     set_page_title 'Project Category'
     @project_category = ProjectCategory.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
 
     unless @project_category.child_reference.nil?
       if @project_category.child_reference.is_proposed_or_custom?
@@ -68,7 +70,7 @@ class ProjectCategoriesController < ApplicationController
 
     if @project_category.save
       flash[:notice] = I18n.t (:notice_project_categories_successful_created)
-      redirect_to redirect_apply(nil,new_project_category_path(),  projects_global_params_path(:anchor => 'tabs-2') )
+      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(:anchor => 'tabs-project-categories'))
     else
       render action: 'new'
     end
@@ -88,7 +90,7 @@ class ProjectCategoriesController < ApplicationController
 
     if @project_category.update_attributes(params[:project_category])
       flash[:notice] = I18n.t (:notice_project_categories_successful_updated)
-      redirect_to redirect_apply(edit_project_category_path(@project_category), nil, projects_global_params_path(:anchor => 'tabs-2'), )
+      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(:anchor => 'tabs-project-categories'))
     else
       render action: 'edit'
     end
@@ -106,6 +108,6 @@ class ProjectCategoriesController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_project_categories_successful_deleted)
-    redirect_to projects_global_params_path(:anchor => 'tabs-2')
+    redirect_to edit_organization_path(:anchor => 'tabs-project-categories')
   end
 end

@@ -55,12 +55,14 @@ class ProjectAreasController < ApplicationController
 
     set_page_title 'Project Area'
     @project_area = ProjectArea.new
+    @organization = Organization.find(params[:organization_id])
   end
 
   def edit
     #no authorize required since everyone can show this object
     set_page_title 'Project Area'
     @project_area = ProjectArea.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
 
     unless @project_area.child_reference.nil?
       if @project_area.child_reference.is_proposed_or_custom?
@@ -78,7 +80,7 @@ class ProjectAreasController < ApplicationController
 
     if @project_area.save
       flash[:notice] = I18n.t (:notice_project_area_successful_created)
-      redirect_to redirect_apply(nil,new_project_area_path(), projects_global_params_path(:anchor => 'tabs-1') )
+      redirect_to redirect_apply(nil,new_organization_project_area_path(), projects_global_params_path(:anchor => 'tabs-1') )
     else
        render action: 'new'
     end

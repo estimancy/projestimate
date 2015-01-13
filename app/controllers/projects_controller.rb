@@ -81,10 +81,10 @@ class ProjectsController < ApplicationController
       @project = Project.new :state => 'preliminary'
     end
     @user = @project.users.first
-    @project_areas = ProjectArea.defined
-    @platform_categories = PlatformCategory.defined
-    @acquisition_categories = AcquisitionCategory.defined
-    @project_categories = ProjectCategory.defined
+    @project_areas = ProjectArea.all
+    @platform_categories = PlatformCategory.all
+    @acquisition_categories = AcquisitionCategory.all
+    @project_categories = ProjectCategory.all
 
     @pemodules ||= Pemodule.defined
     @project_modules = @project.pemodules
@@ -708,10 +708,10 @@ class ProjectsController < ApplicationController
       @project_area = ProjectArea.find_by_name(params[:project_area_selected])
     end
 
-    @project_areas = ProjectArea.defined
-    @platform_categories = PlatformCategory.defined
-    @acquisition_categories = AcquisitionCategory.defined
-    @project_categories = ProjectCategory.defined
+    @project_areas = ProjectArea.all
+    @platform_categories = PlatformCategory.all
+    @acquisition_categories = AcquisitionCategory.all
+    @project_categories = ProjectCategory.all
   end
 
   #Load specific security depending of user selected (last tabs on project editing page)
