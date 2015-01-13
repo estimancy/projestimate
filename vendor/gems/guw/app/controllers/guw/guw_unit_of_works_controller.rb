@@ -220,6 +220,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
         end
 
+
+
+        if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
+          guw_unit_of_work.flagged = false
+        else
+          guw_unit_of_work.flagged = true
+        end
       end
 
       guw_unit_of_work.save
@@ -302,6 +309,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     @group = Guw::GuwUnitOfWorkGroup.find(params[:guw_unit_of_work_group_id])
 
+    #For grouped unit of work
     @group_effort_ajusted = Guw::GuwUnitOfWork.where(selected: true,
                                              guw_unit_of_work_group_id: @group.id,
                                              pbs_project_element_id: current_component.id,
@@ -314,12 +322,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                              module_project_id: current_module_project.id,
                                              guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
 
-    @group_number_of_unit_of_work = Guw::GuwUnitOfWork.where(selected: true,
+    @group_number_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
                                                guw_unit_of_work_group_id: @group.id,
                                                pbs_project_element_id: current_component.id,
                                                module_project_id: current_module_project.id,
                                                guw_model_id: @guw_unit_of_work.guw_model.id).size
 
+    @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
+                                                           flagged: true,
+                                                           guw_unit_of_work_group_id: @group.id,
+                                                           pbs_project_element_id: current_component.id,
+                                                           module_project_id: current_module_project.id,
+                                                           guw_model_id: @guw_unit_of_work.guw_model.id).size
+
+
+    #For all unit of work
     @ajusted_effort = Guw::GuwUnitOfWork.where(selected: true,
                                              pbs_project_element_id: current_component.id,
                                              module_project_id: current_module_project.id,
@@ -331,9 +348,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                              guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
 
     @number_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                             pbs_project_element_id: current_component.id,
-                                             module_project_id: current_module_project.id,
-                                             guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                       pbs_project_element_id: current_component.id,
+                                                       module_project_id: current_module_project.id,
+                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
+
+    @flagged_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
+                                                      flagged: true,
+                                                       pbs_project_element_id: current_component.id,
+                                                       module_project_id: current_module_project.id,
+                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
 
   end
 
