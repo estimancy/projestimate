@@ -197,7 +197,6 @@ end
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-gem 'groupdate'
 gem 'remotipart', '~> 1.2'
 
 local_gemfile = File.join(File.dirname(__FILE__), 'Gemfile.local')

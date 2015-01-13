@@ -23,8 +23,8 @@
 
       <table class="table table-condensed table-striped" style="margin-top: 45px;">
         <tr>
-          <th>Sélection</th>
-          <th>Modifié</th>
+          <th>S</th>
+          <th>M</th>
           <th>Nom</th>
           <th>Description</th>
           <th>Acquisition</th>
@@ -38,12 +38,12 @@
 
         <% uowg.guw_unit_of_works.each_with_index do |guow, i| %>
           <tr>
-            <td class="span2">
+            <td>
               <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected" %>
               <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
             </td>
 
-            <td class="span2">
+            <td>
               <% if guow.effort == guow.ajusted_effort %>
                 <span class="fa fa-star icon-green"></span>
               <% else %>
