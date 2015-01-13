@@ -85,7 +85,8 @@ class ProjectsController < ApplicationController
     @project_areas = @project.organization.project_areas
     @platform_categories = @project.organization.platform_categories
     @acquisition_categories = @project.organization.platform_categories
-    @project_categories = @project.organization.project_categories
+    @pro
+    ject_categories = @project.organization.project_categories
 
     @pemodules ||= Pemodule.defined
     @project_modules = @project.pemodules
