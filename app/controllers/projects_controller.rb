@@ -142,15 +142,10 @@ class ProjectsController < ApplicationController
 
     if @module_project.pemodule.alias == "guw"
       if current_module_project.guw_model.nil?
-        #@guw_model = @project.organization.guw_models.first
         @guw_model = GuwModel::GuwModel.first
       else
         @guw_model = current_module_project.guw_model
       end
-
-      @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
-                                                    pbs_project_element_id: current_component,
-                                                    guw_model_id: @guw_model)
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 

@@ -40,7 +40,16 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
     @guw_unit_of_work.selected = true
+
+    if params[:position].blank?
+      @guw_unit_of_work.display_order = @guw_unit_of_work.guw_unit_of_work_group.guw_unit_of_works.size.to_i + 1
+    else
+      @guw_unit_of_work.display_order = params[:position].to_i
+    end
+
     @guw_unit_of_work.save
+
+    reorder @guw_unit_of_work.guw_unit_of_work_group
 
     @guw_model.guw_attributes.all.each do |gac|
       Guw::GuwUnitOfWorkAttribute.create(
@@ -60,7 +69,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def destroy
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
+    group = @guw_unit_of_work.guw_unit_of_work_group
     @guw_unit_of_work.delete
+    reorder group
     redirect_to main_app.dashboard_path(@project)
   end
 
@@ -72,7 +83,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                   pbs_project_element_id: current_component.id,
                                                   guw_model_id: @guw_model.id)
 
-    @guw_unit_of_works.each do |guw_unit_of_work|
+    @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
+
+      reorder guw_unit_of_work.guw_unit_of_work_group
 
       @guw_type = guw_unit_of_work.guw_type
 
@@ -164,6 +177,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.display_order = i
+
       guw_unit_of_work.save
 
       @guw_type.guw_complexities.each do |guw_c|
@@ -285,6 +300,14 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def create_notes
+  end
+
+  private
+  def reorder(group)
+    group.guw_unit_of_works.order("display_order asc").each_with_index do |u, i|
+      u.display_order = i
+      u.save
+    end
   end
 
 end

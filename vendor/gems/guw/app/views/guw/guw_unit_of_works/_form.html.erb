@@ -14,6 +14,9 @@
       <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
 
       <div class="form-inputs">
+
+        <%= hidden_field_tag :position, params[:position] %>
+
         <%= f.input :name %>
         <%= f.input :comments, input_html: { rows: "5" } %>
         <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types, label: "Type d'UO" %>
