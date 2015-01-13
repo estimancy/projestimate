@@ -38,7 +38,6 @@ $('.block_label, div.block_link').hover(
 $('.spiner').hide();
 
 $("#pbs_list").val(<%= @current_component.nil? ? '' : @current_component.id %>);
-$("#select_balancing_attribute").val(<%= current_balancing_attribute.nil? ? '' : current_balancing_attribute.id %>);
 
 $(".header_data").html("<h5><%= @current_component %> - <%= current_module_project %></h5>");
 
@@ -51,6 +50,11 @@ $(".header_data").html("<h5><%= @current_component %> - <%= current_module_proje
     $(".effort_breakdown_activities_profiles").html("<%= raw j(render('users/effort_per_activity')) %>");
 <% else %>
     $('#display_results_by_profile').hide();
+<% end %>
+
+<% if  current_module_project.pemodule.alias == "balancing_module" %>
+    $("#balancing_module_attributes").html("<%=raw j(render(partial: 'projects/select_balancing_module_attributes')) %>");
+    //$("#select_balancing_attribute").val(<%#= current_balancing_attribute.nil? ? '' : current_balancing_attribute.id %>);
 <% end %>
 
 //Allow to copy value from one field to another

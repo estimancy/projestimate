@@ -64,7 +64,8 @@ class ViewsWidgetsController < ApplicationController
     @view_id = params[:view_id]
     @module_project = ModuleProject.find(params[:module_project_id])
     @pbs_project_element_id = current_component.id
-    @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+    #@project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+    @project_pbs_project_elements = @project.pbs_project_elements.reject{|i| i.is_root?}
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
@@ -82,7 +83,8 @@ class ViewsWidgetsController < ApplicationController
     @view_id = @views_widget.view_id
     @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
     @pbs_project_element_id = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
-    @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+    #@project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+    @project_pbs_project_elements = @project.pbs_project_elements.reject{|i| i.is_root?}
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
@@ -116,7 +118,8 @@ class ViewsWidgetsController < ApplicationController
         flash[:error] = "Erreur d'ajout de Widget"
         @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
         @pbs_project_element_id = params[:views_widget][:module_project_id].nil? ? current_component.id : params[:views_widget][:module_project_id]
-        @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+        #@project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+        @project_pbs_project_elements = @project.pbs_project_elements.reject{|i| i.is_root?}
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
@@ -162,7 +165,8 @@ class ViewsWidgetsController < ApplicationController
         flash[:error] = "Erreur lors de la mise à jour du Widget dans la vue"
         @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:views_widget][:module_project_id]) : @views_widget.module_project
         @pbs_project_element = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
-        @project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+        #@project_pbs_project_elements = @module_project.project.pbs_project_elements.reject{|i| i.is_root?}
+        @project_pbs_project_elements = @project.pbs_project_elements.reject{|i| i.is_root?}
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)

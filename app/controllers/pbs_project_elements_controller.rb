@@ -44,8 +44,15 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.new
     set_page_title("New #{@pbs_project_element.name}")
 
-    @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
-    @pbs_wbs_activity_ratios = []
+    # get project's wbs-activity and ratios
+    @project_wbs_activity = []
+    uniq_wbs_activity = @project.project_wbs_activity  # Select only Wbs-Activities affected to current project's organization
+    if uniq_wbs_activity.nil?
+      @pbs_wbs_activity_ratios = []
+    else
+      @project_wbs_activity << uniq_wbs_activity
+      @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
+    end
 
     if params[:work_element_type] == "folder"
       @work_element_type = WorkElementType.find_by_alias("folder")
@@ -58,10 +65,6 @@ class PbsProjectElementsController < ApplicationController
     @parent = PbsProjectElement.find(params[:parent_id])
 
     @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
-
-    unless @pbs_project_element.wbs_activity.nil?
-      @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
-    end
   end
 
   def edit
@@ -72,11 +75,13 @@ class PbsProjectElementsController < ApplicationController
     set_page_title("Editing #{@pbs_project_element.name}")
 
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-    @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project
-    @pbs_wbs_activity_ratios = []
-
-    unless @pbs_project_element.wbs_activity.nil?
-      @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
+    @project_wbs_activity = []
+    uniq_wbs_activity = @project.project_wbs_activity
+    if uniq_wbs_activity.nil?
+      @pbs_wbs_activity_ratios = []
+    else
+      @project_wbs_activity << uniq_wbs_activity
+      @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
     end
 
     #Select folders which could be a parent of a pbs_project_element
@@ -105,8 +110,14 @@ class PbsProjectElementsController < ApplicationController
       render :partial => "pbs_project_elements/refresh_tree"
     else
       flash.now[:error] = I18n.t (:error_pbs_project_element_failed_update)
-      @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
-      @pbs_wbs_activity_ratios = []
+      @project_wbs_activity = []
+      uniq_wbs_activity = @project.project_wbs_activity  # Select only Wbs-Activities affected to current project's organization
+      if uniq_wbs_activity.nil?
+        @pbs_wbs_activity_ratios = []
+      else
+        @project_wbs_activity << uniq_wbs_activity
+        @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
+      end
 
       if params[:work_element_type] == "folder"
         @work_element_type = WorkElementType.find_by_alias("folder")
@@ -118,9 +129,6 @@ class PbsProjectElementsController < ApplicationController
 
       @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
 
-      unless @pbs_project_element.wbs_activity.nil?
-        @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
-      end
       render :new
     end
 
@@ -133,7 +141,8 @@ class PbsProjectElementsController < ApplicationController
 
     authorize! :alter_wbsproducts, @project
 
-    start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], '%m/%d/%Y')
+    #start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], '%m/%d/%Y')
+    start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], I18n.t("date.formats.default"))
     @pbs_project_element.start_date = start_date
 
     params[:pbs_project_element].delete(:start_date)
@@ -151,11 +160,16 @@ class PbsProjectElementsController < ApplicationController
     else
       flash[:error] = I18n.t (:error_pbs_project_element_failed_update)
       @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-      @project_wbs_activities = @project.organization.wbs_activities   # Select only Wbs-Activities affected to current project's organization
-      @pbs_wbs_activity_ratios = []
-      unless @pbs_project_element.wbs_activity.nil?
-        @pbs_wbs_activity_ratios = @pbs_project_element.wbs_activity.wbs_activity_ratios
+      # get project's wbs-activity and ratios
+      @project_wbs_activity = []
+      uniq_wbs_activity = @project.project_wbs_activity  # Select only Wbs-Activities affected to current project's organization
+      if uniq_wbs_activity.nil?
+        @pbs_wbs_activity_ratios = []
+      else
+        @project_wbs_activity << uniq_wbs_activity
+        @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
       end
+
       #Select folders which could be a parent of a pbs_project_element
       #a pbs_project_element cannot be its own parent
       @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
