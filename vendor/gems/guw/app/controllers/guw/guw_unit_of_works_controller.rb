@@ -236,25 +236,40 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
 
-          effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                            pbs_project_element_id: current_component.id,
-                                            guw_model_id: @guw_model.id).map(&:ajusted_effort).compact.sum
+          ajusted_effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                                    pbs_project_element_id: current_component.id,
+                                                    guw_model_id: @guw_model.id,
+                                                    selected: true).map(&:ajusted_effort).compact.sum
+
+          theorical_effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                                      pbs_project_element_id: current_component.id,
+                                                      guw_model_id: @guw_model.id,
+                                                      selected: true).map(&:effort).compact.sum
+
+          number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                                module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.size
 
           if am.pe_attribute.alias == "effort"
-            ev.send("string_data_#{level}")[current_component.id] = effort
+            ev.send("string_data_#{level}")[current_component.id] = ajusted_effort
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "theorical_effort"
+            ev.send("string_data_#{level}")[current_component.id] = theorical_effort
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
 
-          guw = Guw::Guw.new(effort, params["complexity_#{level}"], @project)
+          guw = Guw::Guw.new(theorical_effort, ajusted_effort, params["complexity_#{level}"], @project)
 
           if am.pe_attribute.alias == "delay"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(effort, current_component, current_module_project)
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(ajusted_effort, current_component, current_module_project)
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           elsif am.pe_attribute.alias == "cost"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(effort, current_component, current_module_project)
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(ajusted_effort, current_component, current_module_project)
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           elsif am.pe_attribute.alias == "defects"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(effort, current_component, current_module_project)
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(ajusted_effort, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          elsif am.pe_attribute.alias == "number_of_unit_of_work"
+            ev.send("string_data_#{level}")[current_component.id] = number_of_unit_of_work
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
 
@@ -286,16 +301,39 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.save
 
     @group = Guw::GuwUnitOfWorkGroup.find(params[:guw_unit_of_work_group_id])
-    @group_result = Guw::GuwUnitOfWork.where(selected: true,
+
+    @group_effort_ajusted = Guw::GuwUnitOfWork.where(selected: true,
                                              guw_unit_of_work_group_id: @group.id,
                                              pbs_project_element_id: current_component.id,
                                              module_project_id: current_module_project.id,
                                              guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
 
-    @total_result = Guw::GuwUnitOfWork.where(selected: true,
+    @group_effort_theorical = Guw::GuwUnitOfWork.where(selected: true,
+                                             guw_unit_of_work_group_id: @group.id,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
+
+    @group_number_of_unit_of_work = Guw::GuwUnitOfWork.where(selected: true,
+                                               guw_unit_of_work_group_id: @group.id,
+                                               pbs_project_element_id: current_component.id,
+                                               module_project_id: current_module_project.id,
+                                               guw_model_id: @guw_unit_of_work.guw_model.id).size
+
+    @ajusted_effort = Guw::GuwUnitOfWork.where(selected: true,
                                              pbs_project_element_id: current_component.id,
                                              module_project_id: current_module_project.id,
                                              guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
+
+    @theorical_effort = Guw::GuwUnitOfWork.where(selected: true,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
+
+    @number_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).size
 
   end
 

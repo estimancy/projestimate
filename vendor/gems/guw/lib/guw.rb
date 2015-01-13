@@ -40,13 +40,11 @@ module Guw
   class Guw
     attr_accessor :effort, :project, :delay, :defects, :cost
 
-    def initialize(effort, cplx, project)
+    def initialize(theorical_effort, effort, cplx, project)
+      @theorical_effort = theorical_effort
       @effort = effort
+      @cplx = cplx
       @project = project
-    end
-
-    def get_effort(pbs_project_element_id, module_project_id)
-      Guw::GuwUnitOfWork.where(:module_project_id => args[1], pbs_project_element_id: args[2]).map(:effort).compact.sum
     end
 
     def get_defects(effort, pbs_project_element_id, module_project_id)
