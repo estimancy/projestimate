@@ -39,21 +39,21 @@
 class ProjectArea < ActiveRecord::Base
   attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment, :acquisition_category_ids, :platform_category_ids,:project_category_ids,:labor_category_ids
 
-  include MasterDataHelper  #Module master data management (UUID generation, deep clone, ...)
+  #include MasterDataHelper  #Module master data management (UUID generation, deep clone, ...)
   has_and_belongs_to_many :labor_categories
   has_and_belongs_to_many :platform_categories
   has_and_belongs_to_many :acquisition_categories
   has_and_belongs_to_many :project_categories
 
-  belongs_to :record_status
-  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
+  #belongs_to :record_status
+  #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   has_many :projects
 
-  validates :record_status, :presence => true
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true, :uniqueness => {:case_sensitive => false, :scope => :record_status_id}
-  validates :custom_value, :presence => true, :if => :is_custom?
+  #validates :record_status, :presence => true
+  #validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
+  validates :name, :presence => true#, :uniqueness => {:case_sensitive => false, :scope => :record_status_id}
+  #validates :custom_value, :presence => true, :if => :is_custom?
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
