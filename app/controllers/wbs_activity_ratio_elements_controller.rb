@@ -59,7 +59,7 @@ class WbsActivityRatioElementsController < ApplicationController
       w = WbsActivityRatioElement.find(key)
       #if w.wbs_activity_ratio.is_All_Activity_Elements?
       unless value.blank?
-        if value.to_f <=0 or value.to_f>100
+        if value.to_f <= 0 or value.to_f > 100
           flash.now[:warning] = I18n.t(:warning_wbs_activity_ratio_elt_value_range)
         end
       end

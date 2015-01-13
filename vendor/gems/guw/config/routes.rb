@@ -39,6 +39,7 @@ Guw::Engine.routes.draw do
 
   resources :guw_type_complexities
   resources :guw_complexities
+  resources :guw_complexity_work_units
   resources :guw_attributes
   resources :guw_unit_of_works
   resources :guw_unit_of_work_groups
@@ -65,4 +66,7 @@ Guw::Engine.routes.draw do
   end
 
   post "guw_unit_of_works/save_guw_unit_of_works"
+  post "guw_complexity_work_units/save_complexity_work_units"
+
+  get "change_selected_state" => "guw_unit_of_works#change_selected_state", as: "change_selected_state"
 end

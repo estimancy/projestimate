@@ -81,20 +81,24 @@ class ProjectsController < ApplicationController
       @project = Project.new :state => 'preliminary'
     end
     @user = @project.users.first
-    @project_areas = ProjectArea.defined
-    @platform_categories = PlatformCategory.defined
-    @acquisition_categories = AcquisitionCategory.defined
-    @project_categories = ProjectCategory.defined
+
+    @project_areas = @project.organization.project_areas
+    @platform_categories = @project.organization.platform_categories
+    @acquisition_categories = @project.organization.platform_categories
+    @pro
+    ject_categories = @project.organization.project_categories
 
     @pemodules ||= Pemodule.defined
     @project_modules = @project.pemodules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+
     if current_user.super_admin == true
       @organizations = Organization.all
     else
       @organizations = current_user.organizations
     end
+
     @project_modules = @project.pemodules
     @project_security_levels = ProjectSecurityLevel.all
     @module_project = ModuleProject.find_by_project_id(@project.id)
@@ -708,10 +712,10 @@ class ProjectsController < ApplicationController
       @project_area = ProjectArea.find_by_name(params[:project_area_selected])
     end
 
-    @project_areas = ProjectArea.defined
-    @platform_categories = PlatformCategory.defined
-    @acquisition_categories = AcquisitionCategory.defined
-    @project_categories = ProjectCategory.defined
+    @project_areas = ProjectArea.all
+    @platform_categories = PlatformCategory.all
+    @acquisition_categories = AcquisitionCategory.all
+    @project_categories = ProjectCategory.all
   end
 
   #Load specific security depending of user selected (last tabs on project editing page)

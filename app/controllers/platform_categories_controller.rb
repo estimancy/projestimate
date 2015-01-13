@@ -35,28 +35,30 @@
 #############################################################################
 
 class PlatformCategoriesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
   load_resource
 
-  before_filter :get_record_statuses
+  #before_filter :get_record_statuses
 
   def new
     authorize! :manage, PlatformCategory
 
     set_page_title 'Platform Category'
     @platform_category = PlatformCategory.new
+    @organization = Organization.find(params[:organization_id])
   end
 
   def edit
     #no authorize required since everyone can show this object
     set_page_title 'Platform Category'
     @platform_category = PlatformCategory.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
 
     unless @platform_category.child_reference.nil?
       if @platform_category.child_reference.is_proposed_or_custom?
         flash[:warning] = I18n.t (:warning_platform_category_cant_be_edit)
-        redirect_to redirect(projects_global_params_path(:anchor => 'tabs-3'))
+        redirect_to redirect(edit_organization_path(:anchor => 'tabs-platform-categories'))
       end
     end
   end
@@ -64,12 +66,13 @@ class PlatformCategoriesController < ApplicationController
   def create
     authorize! :manage, PlatformCategory
 
+    @organization = Organization.find(params[:organization_id])
     @platform_category = PlatformCategory.new(params[:platform_category])
     @platform_category.owner_id = current_user.id
 
     if @platform_category.save
       flash[:notice] = I18n.t (:notice_platform_category_successful_created)
-      redirect_to redirect_apply(nil, new_platform_category_path(), projects_global_params_path(:anchor => 'tabs-3'))
+      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'new'
     end
@@ -78,6 +81,7 @@ class PlatformCategoriesController < ApplicationController
   def update
     authorize! :manage, PlatformCategory
 
+    @organization = Organization.find(params[:organization_id])
     @platform_category = nil
     current_platform_category = PlatformCategory.find(params[:id])
     if current_platform_category.is_defined?
@@ -89,7 +93,7 @@ class PlatformCategoriesController < ApplicationController
 
     if @platform_category.update_attributes(params[:platform_category])
       flash[:notice] = I18n.t (:notice_platform_category_successful_updated)
-      redirect_to redirect_apply(edit_platform_category_path(@platform_category), nil, projects_global_params_path(:anchor => 'tabs-3'))
+      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'edit'
     end
@@ -99,6 +103,7 @@ class PlatformCategoriesController < ApplicationController
     authorize! :manage, PlatformCategory
 
     @platform_category = PlatformCategory.find(params[:id])
+    organization_id = @platform_category.organization_id
     if @platform_category.is_defined? || @platform_category.is_custom?
       #logical deletion: delete don't have to suppress records anymore
       @platform_category.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
@@ -107,6 +112,6 @@ class PlatformCategoriesController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_platform_category_successful_deleted)
-    redirect_to projects_global_params_path(:anchor => 'tabs-3')
+    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-platform-categories')
   end
 end

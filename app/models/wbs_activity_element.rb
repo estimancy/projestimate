@@ -74,7 +74,6 @@ class WbsActivityElement < ActiveRecord::Base
     propagate
   end
 
-
   def to_s
     self.wbs_activity.name
   end
@@ -86,15 +85,14 @@ class WbsActivityElement < ActiveRecord::Base
     #create wbs_activity
     @wbs_activity = WbsActivity.new(:name => "#{file.original_filename} - #{Time.now.to_s}",
                                     :state => 'draft',
-                                    :record_status => @localstatus)
+                                    :record_status => @localstatus.id)
     @wbs_activity.save
 
     #create root element
     @root_element = WbsActivityElement.new(:name => @wbs_activity.name,
                                            :description => 'The root element corresponds to the wbs activity.',
                                            :dotted_id => '0',
-                                           :wbs_activity => @wbs_activity,
-                                           :record_status => @localstatus,
+                                           :wbs_activity_id => @wbs_activity.id,
                                            :parent => nil,
                                            :is_root => true)
     @root_element.save
@@ -106,21 +104,15 @@ class WbsActivityElement < ActiveRecord::Base
       @inserts = []
       csv.each_with_index do |row, i|
         unless row.empty? or i == 0
-          @inserts.push("(\"#{Time.now.utc.to_s(:db)}\",
-                          \"#{Time.now.utc.to_s(:db)}\",
-                          \"#{ !row[2].nil? ? row[2].gsub("\"", "\"\"") : row[2] }\",
-                          \"#{ !row[0].nil? ? row[0].gsub("\"", "\"\"") : row[0] }\",
-                          \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\", #{@localstatus.id}, #{@wbs_activity.id}, \"#{UUIDTools::UUID.random_create.to_s}\")")
-
+          @inserts.push("(\"#{Time.now.utc.to_s(:db)}\", \"#{Time.now.utc.to_s(:db)}\", \"#{ !row[2].nil? ? row[2].gsub("\"", "\"\"") : row[2] }\", \"#{ !row[0].nil? ? row[0].gsub("\"", "\"\"") : row[0] }\", \"#{ !row[1].nil? ? row[1].gsub("\"", "\"\"") : row[1] }\", #{@wbs_activity.id})")
         end
       end
     end
 
-    ActiveRecord::Base.connection.execute("INSERT INTO wbs_activity_elements(created_at,updated_at,description,dotted_id,name,record_status_id,wbs_activity_id,uuid) VALUES  #{@inserts.join(',')}")
+    ActiveRecord::Base.connection.execute("INSERT INTO wbs_activity_elements(created_at,updated_at,description,dotted_id,name,wbs_activity_id) VALUES #{@inserts.join(',')}")
 
     elements = @wbs_activity.wbs_activity_elements
     build_ancestry(elements, @wbs_activity.id)
-
   end
 
   def self.build_ancestry(elements, activity_id)
@@ -148,17 +140,4 @@ class WbsActivityElement < ActiveRecord::Base
       end
     end
   end
-
-  #def self.rebuild(elements, activity_id)
-  #  elements.each do |elt|
-  #    ancestors = []
-  #    father = WbsActivityElement.find_by_wbs_activity_id(activity_id)
-  #    unless father.nil?
-  #      ancestors << father.ancestry
-  #      ancestors << father.id
-  #    end
-  #    elt.ancestry = ancestors.join('/')
-  #    elt.save(:validate => false)
-  #  end
-  #end
 end

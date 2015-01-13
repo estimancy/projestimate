@@ -39,6 +39,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
+    @guw_unit_of_work.selected = true
     @guw_unit_of_work.save
 
     @guw_model.guw_attributes.all.each do |gac|
@@ -73,11 +74,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     @guw_unit_of_works.each do |guw_unit_of_work|
 
-      #guw_unit_of_work.guw_type_id = params["guw_type"]["#{guw_unit_of_work.id}"]
-      #guw_unit_of_work.save
-
       @guw_type = guw_unit_of_work.guw_type
-
 
       @lows = Array.new
       @mls = Array.new
@@ -86,9 +83,23 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
-        low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        if params["low"]["#{guw_unit_of_work.id}"].nil?
+          low = 0
+        else
+          low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        end
+
+        if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
+          most_likely = 0
+        else
+          most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        end
+
+        if params["high"]["#{guw_unit_of_work.id}"].nil?
+          high = 0
+        else
+          high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+        end
 
         guw_unit_of_work.off_line = false
 
@@ -147,53 +158,54 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-        guw_unit_of_work.result_low = @lows.sum
-        guw_unit_of_work.result_most_likely = @mls.sum
-        guw_unit_of_work.result_high = @highs.sum
+      guw_unit_of_work.result_low = @lows.sum
+      guw_unit_of_work.result_most_likely = @mls.sum
+      guw_unit_of_work.result_high = @highs.sum
 
-        guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
-        guw_unit_of_work.save
+      guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.save
 
-        @guw_type.guw_complexities.each do |guw_c|
+      @guw_type.guw_complexities.each do |guw_c|
 
-          #Save if uo is simple/ml/high
-          value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
+        #Save if uo is simple/ml/high
+        value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
 
-          if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
-            guw_unit_of_work.guw_complexity_id = guw_c.id
-            guw_unit_of_work.save
-          end
-
-          #Save effective effort (or weight) of uo
-          if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
-            uo_weight_low = guw_c.weight
-          end
-
-          if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
-            uo_weight_ml = guw_c.weight
-          end
-
-          if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
-            uo_weight_high = guw_c.weight
-          end
-
-          @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
-          #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
+          guw_unit_of_work.guw_complexity_id = guw_c.id
+          guw_unit_of_work.save
         end
 
+        #Save effective effort (or weight) of uo
+        if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
+          uo_weight_low = guw_c.weight
+        end
 
+        if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
+          uo_weight_ml = guw_c.weight
+        end
 
-        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"].to_i)
+        if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
+          uo_weight_high = guw_c.weight
+        end
 
+        @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
+        #@weight_pert << (uo_weight_low.to_f + 4 * uo_weight_ml.to_f + uo_weight_high.to_f)/6
+      end
+
+      unless params[:work_unit]["#{guw_unit_of_work.id}"].nil?
+        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
         guw_unit_of_work.effort = @weight_pert.sum * guw_work_unit.value.to_f
         guw_unit_of_work.ajusted_effort = @weight_pert.sum * guw_work_unit.value.to_f
 
         if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-          guw_unit_of_work.ajusted_effort = @weight_pert.sum
-        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+          guw_unit_of_work.ajusted_effort = @weight_pert.sum  * guw_work_unit.value.to_f
+        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum * guw_work_unit.value.to_f)
           guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
         end
+
+      end
 
       guw_unit_of_work.save
 
@@ -248,8 +260,31 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
-  def create_notes
+  def change_selected_state
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    if @guw_unit_of_work.selected == false
+      @guw_unit_of_work.selected = true
+    else
+      @guw_unit_of_work.selected = false
+    end
 
+    @guw_unit_of_work.save
+
+    @group = Guw::GuwUnitOfWorkGroup.find(params[:guw_unit_of_work_group_id])
+    @group_result = Guw::GuwUnitOfWork.where(selected: true,
+                                             guw_unit_of_work_group_id: @group.id,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
+
+    @total_result = Guw::GuwUnitOfWork.where(selected: true,
+                                             pbs_project_element_id: current_component.id,
+                                             module_project_id: current_module_project.id,
+                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
+
+  end
+
+  def create_notes
   end
 
 end

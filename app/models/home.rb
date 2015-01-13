@@ -102,17 +102,17 @@ class Home < ActiveRecord::Base
     puts '   - Wbs Activity Ratio Elements' # The WBS Activity Ratio Elements is no longer a master table
     ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatioElement, WbsActivityRatioElement, ['ratio_value', 'simple_reference', 'multiple_references', 'uuid'])
 
-    puts '   - Project areas'
-    self.update_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])
+    #puts '   - Project areas'
+    #self.update_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])
 
-    puts '   - Project categories'
-    self.update_records(ExternalMasterDatabase::ExternalProjectCategory, ProjectCategory, ['name', 'description', 'uuid'])
+    #puts '   - Project categories'
+    #self.update_records(ExternalMasterDatabase::ExternalProjectCategory, ProjectCategory, ['name', 'description', 'uuid'])
 
-    puts '   - Platform categories'
-    self.update_records(ExternalMasterDatabase::ExternalPlatformCategory, PlatformCategory, ['name', 'description', 'uuid'])
+    #puts '   - Platform categories'
+    #self.update_records(ExternalMasterDatabase::ExternalPlatformCategory, PlatformCategory, ['name', 'description', 'uuid'])
 
-    puts '   - Acquisition categories'
-    self.update_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
+    #puts '   - Acquisition categories'
+    #self.update_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
 
     puts '   - Factor'
     self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])

@@ -35,9 +35,9 @@
 #############################################################################
 
 class AcquisitionCategoriesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
+  #before_filter :get_record_statuses
 
-  before_filter :get_record_statuses
   load_resource
 
   def new
@@ -45,12 +45,14 @@ class AcquisitionCategoriesController < ApplicationController
 
     set_page_title I18n.t (:acquisition_category)
     @acquisition_category = AcquisitionCategory.new
+    @organization = Organization.find(params[:organization_id])
   end
 
   def edit
     #no authorize required since everyone can show this object
     set_page_title I18n.t (:acquisition_category)
     @acquisition_category = AcquisitionCategory.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
 
     unless @acquisition_category.child_reference.nil?
       if @acquisition_category.child_reference.is_proposed_or_custom?
@@ -64,9 +66,11 @@ class AcquisitionCategoriesController < ApplicationController
     authorize! :manage, AcquisitionCategory
 
     @acquisition_category = AcquisitionCategory.new(params[:acquisition_category])
+    @organization = Organization.find(params[:organization_id])
+
     if @acquisition_category.save
       flash[:notice] = I18n.t (:notice_acquisition_category_successful_created)
-      redirect_to redirect_apply(nil, new_acquisition_category_path(), "/projects_global_params#tabs-4")
+      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), edit_organization_path(@organization))
     else
       render action: "edit"
     end
@@ -75,6 +79,7 @@ class AcquisitionCategoriesController < ApplicationController
   def update
     authorize! :manage, AcquisitionCategory
 
+    @organization = Organization.find(params[:organization_id])
     @acquisition_category = nil
     current_acquisition_category = AcquisitionCategory.find(params[:id])
     if current_acquisition_category.record_status == @defined_status
@@ -86,7 +91,7 @@ class AcquisitionCategoriesController < ApplicationController
 
     if @acquisition_category.update_attributes(params[:acquisition_category])
       flash[:notice] = I18n.t (:notice_acquisition_category_successful_updated)
-      redirect_to redirect_apply(edit_acquisition_category_path(@acquisition_category),nil,"/projects_global_params#tabs-4")
+      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), edit_organization_path(@organization))
     else
       render action: "edit"
     end
@@ -96,6 +101,7 @@ class AcquisitionCategoriesController < ApplicationController
     authorize! :manage, AcquisitionCategory
 
     @acquisition_category = AcquisitionCategory.find(params[:id])
+    organization_id = @acquisition_category.organization_id
     if @acquisition_category.is_defined? || @acquisition_category.is_custom?
       #logical deletion: delete don't have to suppress records anymore on Defined record
       @acquisition_category.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
@@ -105,6 +111,6 @@ class AcquisitionCategoriesController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_acquisition_category_successful_destroyed)
-    redirect_to projects_global_params_path(:anchor => "tabs-4")
+    redirect_to edit_organization_path(organization_id, :anchor => "tabs-acquisition-categories")
   end
 end

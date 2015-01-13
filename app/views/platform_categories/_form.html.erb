@@ -4,43 +4,27 @@
   </ul>
 
   <div id="tabs-1">
-    <%= simple_form_for(@platform_category) do |f| %>
-        <%= f.error_notification %>
+    <%= simple_form_for([@organization, @platform_category]) do |f| %>
+      <%= f.error_notification %>
 
-        <div>
-          <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-          <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+      <%= f.input :organization_id, :as => :hidden, :input_html => { :value => @organization.id } %>
 
-          <table>
-            <tr>
-              <td>
-                <%= f.association :record_status, :label => I18n.t('record_status'),
-                                  :collection => @platform_category.record_status_collection,
-                                  :input_html => {:class => 'record_status'},
-                                  :selected => (@platform_category.is_defined_or_nil? ? @proposed_status.id : @platform_category.record_status_id),
-                                  :disabled => (true if @platform_category.is_retired?) %>
-              </td>
-              <td>
-                <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @platform_category.is_custom?) %>
-              </td>
-            </tr>
-          </table>
-          <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
-          <div class="actions-tabs">
-            <% if can? :manage, PlatformCategory %>
-                <% if action_name.in?(%w(new create)) %>
-                    <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                <% elsif action_name == 'edit' || action_name=='update' %>
-                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                    <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-                <% end %>
+      <div class="actions-tabs">
+        <% if can? :manage, PlatformCategory %>
+            <% if action_name.in?(%w(new create)) %>
+                <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+                <%= submit_tag I18n.t('save'), :class => 'btn' %>
+            <% elsif action_name == 'edit' || action_name=='update' %>
+                <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                <%= submit_tag I18n.t('apply'), :class => 'btn' %>
             <% end %>
-            <%= link_to I18n.t('back'), projects_global_params_path(:anchor => 'tabs-3'), :class => 'btn' %>
-          </div>
+        <% end %>
+        <%= link_to I18n.t('back'), projects_global_params_path(:anchor => 'tabs-3'), :class => 'btn' %>
+      </div>
     <% end %>
     </div>
-  </div>
 </div>
 

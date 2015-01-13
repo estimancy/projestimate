@@ -196,10 +196,6 @@ Projestimate::Application.routes.draw do
   post 'check_attribute' => 'pe_attributes#check_attribute', :as => 'check_attribute'
   get 'find_use_attribute' => 'pe_attributes#find_use_attribute', :as => 'find_use_attribute'
 
-  resources :project_categories
-
-  resources :platform_categories
-
   resources :work_element_types
 
   resources :currencies
@@ -208,6 +204,10 @@ Projestimate::Application.routes.draw do
     resources :fields
     resources :wbs_activities
     resources :groups
+    resources :project_categories
+    resources :platform_categories
+    resources :acquisition_categories
+    resources :project_areas
   end
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'
@@ -220,10 +220,6 @@ Projestimate::Application.routes.draw do
   #match 'subcontractors/:id/edit' => 'subcontractors#update', :via => :put, :as => :put_subcontractor
 
   resources :labor_categories
-
-  resources :acquisition_categories
-
-  resources :project_areas
 
   resources :event_types
 

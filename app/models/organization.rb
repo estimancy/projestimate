@@ -70,6 +70,11 @@ class Organization < ActiveRecord::Base
   #Guw Model
   has_many :guw_models, class_name: "Guw::GuwModel", dependent: :destroy
 
+  has_many :project_areas, dependent: :destroy
+  has_many :project_categories, dependent: :destroy
+  has_many :platform_categories, dependent: :destroy
+  has_many :acquisition_categories, dependent: :destroy
+
   # Results view
   has_many :views
 
