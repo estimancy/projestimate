@@ -83,6 +83,21 @@ class Project < ActiveRecord::Base
   scoped_search :in => :pbs_project_elements, :on => :name
   scoped_search :in => :wbs_project_elements, :on => [:name, :description]
 
+  #Get the project's WBS-Activity
+  def project_wbs_activity
+    project_wbs_activity = nil
+    # Project pe_wbs_activity
+    pe_wbs_activity = self.pe_wbs_projects.activities_wbs.first
+    # Get the wbs_project_element which contain the wbs_activity_ratio
+    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
+    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+    if wbs_project_elt_with_ratio
+      project_wbs_activity = wbs_project_elt_with_ratio.wbs_activity  # Select only Wbs-Activities affected to current project's organization
+    end
+    project_wbs_activity
+  end
+
   #  Estimation status name
   def status_name
     self.estimation_status.nil? ? nil : self.estimation_status.name

@@ -82,7 +82,7 @@ class GroupsController < ApplicationController
     end
 
     if @group.save
-      redirect_to edit_organization_path(@organization)
+      redirect_to edit_organization_path(@organization, anchor: "tabs-group")
     else
       render action: 'new'
     end
@@ -155,7 +155,7 @@ class GroupsController < ApplicationController
       #redirect_to redirect(groups_path), :notice => "#{I18n.t (:notice_group_successful_updated)}"
       flash[:notice] =  "#{I18n.t (:notice_group_successful_updated)}"
       #redirect_to edit_organization_path(@organization)
-      redirect_to redirect_apply(edit_organization_group_path(@organization, @group), nil, edit_organization_path(@group.organization_id, :anchor => 'tabs-group'))
+      redirect_to redirect_apply(edit_organization_group_path(@organization, @group, anchor: "tabs-group"), nil, edit_organization_path(@group.organization_id, :anchor => 'tabs-group'))
     else
       render action: 'edit'
     end

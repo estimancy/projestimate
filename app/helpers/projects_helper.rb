@@ -483,6 +483,7 @@ module ProjectsHelper
   # Display the Effort Balancing Input without activity
   def display_balancing_input(module_project, last_estimation_result)
     pbs_project_element = current_component
+    #Get the current balancing attribute
     @current_balancing_attribute = current_balancing_attribute
 
     res = String.new
@@ -571,9 +572,9 @@ module ProjectsHelper
         # As the estimation result is calculated today, we need to have
         ["high", "most_likely"].each do |level|
           res << "#{hidden_field_tag "[#{level}][#{balancing_attr_est_val.pe_attribute.alias.to_sym}][#{module_project.id.to_s}]",
-                                   nil,
-                                   :class => "input_high_most_likely",
-                                   "data-est_val_id" => balancing_attr_est_val.id}"
+                                 nil,
+                                 :class => "input_high_most_likely",
+                                 "data-est_val_id" => balancing_attr_est_val.id}"
         end
       else
         res << "-"
@@ -696,8 +697,7 @@ module ProjectsHelper
       end
       res << '</tr>'
 
-      res << '<tr>
-                <th></th>'
+      res << '<tr><th></th>'
       ['low', '', 'most_likely', 'high'].each do |level|
         res << "<th>#{level.humanize}</th>"
       end

@@ -1339,4 +1339,5 @@ fr:
   new_field: "Nouveau champ"
   inputs: "Entrées"
   outputs: "Sorties"
+  no_wbs_activity_in_project: "Il n'y a pas de wbs-activité dans le projet"
 

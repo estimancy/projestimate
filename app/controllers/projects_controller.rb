@@ -908,6 +908,7 @@ class ProjectsController < ApplicationController
       pe_wbs_activity = start_module_project.project.pe_wbs_projects.activities_wbs.first
       project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
       wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+      #If the PBS has ratio this will be used, otherwise the general Ratio (in project's side) will be used
       if current_component.wbs_activity_ratio.nil? && wbs_project_elt_with_ratio.nil?
         flash[:notice] = "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"
         #return redirect_to(:back, :alert =>"Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet" )
@@ -1065,11 +1066,12 @@ class ProjectsController < ApplicationController
                 wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
 
                 # If Another default ratio was defined in PBS, it will override the one defined in module-project
-                if !@pbs_project_element.wbs_activity_ratio.nil?
-                  ratio_reference = @pbs_project_element.wbs_activity_ratio
-                else
+                if @pbs_project_element.wbs_activity_ratio.nil?
                   # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
                   ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+                else
+                  #The BPS Ratio will be used
+                  ratio_reference = @pbs_project_element.wbs_activity_ratio
                 end
                 # Get the referenced ratio wbs_activity_ratio_profiles
                 referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles
@@ -1098,7 +1100,7 @@ class ProjectsController < ApplicationController
                     wbs_activity_elt_id = wbs_project_elt.wbs_activity_element_id
 
                     # Wbs_project_element root element doesn't have a wbs_activity_element
-                    unless wbs_activity_elt_id.nil?
+                    if !wbs_activity_elt_id.nil? ||
                       wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
                       if !wbs_activity_ratio_elt.nil?
                         # get the wbs_activity_ratio_profile
@@ -1660,12 +1662,12 @@ public
   def checkout
     old_prj = Project.find(params[:project_id])
 
-
-    if !can_modify_estimation?(project)
+    #if !can_modify_estimation?(project)
+    if !can_modify_estimation?(old_prj)
       redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
-    if old_prj.checkpoint? || old_prj.released?
+    #if old_prj.checkpoint? || old_prj.released?
       if can?(:commit_project, old_prj) || can?(:manage, old_prj)
         begin
           authorize! :commit_project, old_prj
@@ -1764,9 +1766,9 @@ public
       else
         redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_checkout_unauthorized_action')}
       end # END commit or manage permissions
-    else
-      redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
-    end  # END commit permission
+    #else
+      #redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
+    #end  # END commit permission
 
   end
 

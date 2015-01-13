@@ -219,9 +219,10 @@ class ModuleProjectsController < ApplicationController
     @results = nil
 
     #respond_to do |format|
-    #  format.js { render :partial => "module_projects/refresh_selected_module_data"}
+    #  #format.js { render :partial => "module_projects/refresh_selected_module_data"}
+    #  format.js { render :partial => "pbs_project_elements/refresh" }
     #end
-    render :partial => "pbs_project_elements/refresh"
+
   end
 
   # Show or not the module_project results view in dashboard
