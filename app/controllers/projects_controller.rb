@@ -123,7 +123,7 @@ class ProjectsController < ApplicationController
     @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
 
     #set_breadcrumbs @project.title => edit_project_path(@project)
-    set_breadcrumbs "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}" => edit_project_path(@project)
+    set_breadcrumbs "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => edit_project_path(@project)
 
     # Get the project default RATIO
     # Get the wbs_project_element which contain the wbs_activity_ratio
@@ -142,15 +142,11 @@ class ProjectsController < ApplicationController
 
     if @module_project.pemodule.alias == "guw"
       if current_module_project.guw_model.nil?
-        #@guw_model = @project.organization.guw_models.first
         @guw_model = GuwModel::GuwModel.first
       else
         @guw_model = current_module_project.guw_model
       end
-
-      @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: @module_project,
-                                                    pbs_project_element_id: current_component,
-                                                    guw_model_id: @guw_model)
+      @unit_of_work_groups = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 

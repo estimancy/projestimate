@@ -64,24 +64,6 @@
           <%= I18n.t(:label_input_data) %> - <%= current_component %> - <%= "#{current_module_project}" %>
         </h5>
 
-        <h5 class="total_unit_of_work">
-          <% if current_module_project.pemodule.alias == "guw" %>
-            <% begin %>
-              Total général :
-              <span class="total_result">
-                <%= Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                  module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
-              </span>
-              Unités Fonctionnelles
-            <% rescue %>
-
-            <% end %>
-          <% end %>
-        </h5>
-
-        <div id="buttons">
-          <%# render 'buttons' %>
-        </div>
       </div>
 
       <div class="collapse in" id="collapseIn">
@@ -90,13 +72,13 @@
             <div class="input_data">
               <% if ["cocomo_basic", "real_size", "effort_breakdown", "balancing_module", "expert_judgment", "wbs_activity_completion"].include?(current_module_project.pemodule.alias) %>
                 <%= form_tag({:controller => 'projects', :action => 'run_estimation', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :class => 'simple_form') do -%>
-                    <div id="balancing_module_attributes">
-                      <% if  current_module_project.pemodule.alias == "balancing_module" %>
-                          <%= render :partial => 'projects/select_balancing_module_attributes' %>
-                      <% end %>
-                    </div>
-                    <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
-                    <%= submit_tag('Run estimation', :class => 'btn btn-mini pull-right', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation') if can_modify_estimation?(@project) %>
+                  <div id="balancing_module_attributes">
+                    <% if  current_module_project.pemodule.alias == "balancing_module" %>
+                        <%= render :partial => 'projects/select_balancing_module_attributes' %>
+                    <% end %>
+                  </div>
+                  <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>
+                  <%= submit_tag('Run estimation', :class => 'btn btn-mini pull-right', :title => I18n.t(:tooltip_run_estimation), :id => 'run_estimation') if can_modify_estimation?(@project) %>
                 <% end %>
               <% end %>
               <%= render :partial => 'projects/setting_module' %>
