@@ -510,8 +510,8 @@ module ViewsWidgetsHelper
     title = String.new
     #title ="<div>"
     title << "#{view_widget.name} \n"
-    title << "#{I18n.t(:associate_pbs_element)} : #{view_widget.pbs_project_element} \n"
-    title << "Module : #{view_widget.module_project}"
+    title << "#{I18n.t(:associate_pbs_element)} : #{current_component.to_s} \n"
+    title << "Module : #{view_widget.module_project.to_s}"
     #title << "</div>"
     title
   end

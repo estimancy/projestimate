@@ -7,7 +7,7 @@ class View < ActiveRecord::Base
   has_many :views_widgets, dependent: :destroy
   has_many :widgets, through: :views_widgets
 
-  validates :name, presence: true
+  validates :name, :organization_id, presence: true
 
   def to_s
     name

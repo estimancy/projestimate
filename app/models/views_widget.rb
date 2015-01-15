@@ -9,7 +9,7 @@ class ViewsWidget < ActiveRecord::Base
 
   has_many :project_fields
 
-  validates :name, :pe_attribute_id, :pbs_project_element_id, :module_project_id, :widget_type,  presence: true
+  #validates :name, :pe_attribute_id, :module_project_id, :widget_type,  presence: true
 
 end
 
