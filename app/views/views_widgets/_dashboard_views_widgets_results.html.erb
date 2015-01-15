@@ -28,6 +28,7 @@
                   <% font_weight = "normal_font_weight" %>
                   <!-- Show all widgets on the current view -->
                   <% if module_project.view %>
+                    <% unless module_project.view.views_widgets.nil? %>
                       <% module_project.view.views_widgets.order('position').each do |view_widget| %>
                         <%# view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
                         <!-- Widgets are now showing the value of the widget's module project -->
@@ -123,6 +124,7 @@
               </div>  <!-- end widget content -->
             </div>  <!-- END widget-box by module -->
           </div>   <!-- END div for each X position -->
+        <% end %>    <!-- Iteration for X position -->
       <% end %>    <!-- Iteration for X position -->
     </div>  <!-- END div for Y position -->
 <% end %>   <!-- Iteration for Y position -->
