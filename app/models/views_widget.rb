@@ -10,7 +10,7 @@ class ViewsWidget < ActiveRecord::Base
 
   has_many :project_fields
 
-  validates :name, :estimation_value_id, :module_project_id, :width, :height, presence: true
+  validates :name, :module_project_id, :width, :height, presence: true    #:estimation_value_id,
 
 end
 

@@ -994,4 +994,27 @@ h5.view_title{
     height:5px;
 }
 
+/*For organization projects fields */
+td.project_field_text_overflow {
+    /* you have to add "max-width" property in your element */
+    max-width: 100px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: right;
+}
+
+/*For text input */
+td.text_field_text_overflow {
+    /* you have to add "max-width" property in your element */
+    max-width: 150px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+}
+
+.table th.text_left{
+    text-align: left;
+}
 
