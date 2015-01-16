@@ -1164,6 +1164,7 @@ ActiveRecord::Schema.define(:version => 20150116082744) do
     t.integer  "widget_id"
     t.string   "name"
     t.integer  "module_project_id"
+    t.integer  "estimation_value_id"
     t.integer  "pe_attribute_id"
     t.integer  "pbs_project_element_id"
     t.string   "icon_class"
