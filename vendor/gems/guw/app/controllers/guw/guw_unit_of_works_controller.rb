@@ -96,22 +96,33 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
-        if params["low"]["#{guw_unit_of_work.id}"].nil?
-          low = 0
-        else
-          low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        end
+        #Peut être factorisé  dans une boucle !
+        if @guw_model.three_points_estimation == true
+          #Estimation 3 points
+          if params["low"]["#{guw_unit_of_work.id}"].nil?
+            low = 0
+          else
+            low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
 
-        if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
-          most_likely = 0
-        else
-          most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        end
+          if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
+            most_likely = 0
+          else
+            most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
 
-        if params["high"]["#{guw_unit_of_work.id}"].nil?
-          high = 0
+          if params["high"]["#{guw_unit_of_work.id}"].nil?
+            high = 0
+          else
+            high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
         else
-          high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          #Estimation 1 point
+          if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
+            low = most_likely = high = 0
+          else
+            low = most_likely = high = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
         end
 
         guw_unit_of_work.off_line = false

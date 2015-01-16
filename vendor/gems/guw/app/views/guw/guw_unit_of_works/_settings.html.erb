@@ -216,9 +216,13 @@
                       <table class="table table-condensed table-striped">
                         <tr>
                           <th>Attributs</th>
-                          <th>L</th>
+                          <% if @guw_model.three_points_estimation == true %>
+                            <th>L</th>
+                          <% end %>
                           <th>M</th>
-                          <th>H</th>
+                          <% if @guw_model.three_points_estimation == true %>
+                            <th>H</th>
+                          <% end %>
                         </tr>
 
                         <% guow.guw_unit_of_work_attributes.each_with_index do |uowa, j| %>
@@ -230,15 +234,19 @@
                               <td>
                                 <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description, class: "attribute_tooltip pull-left" %>
                               </td>
-                              <td>
-                                <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
-                              </td>
+                              <% if @guw_model.three_points_estimation == true %>
+                                <td>
+                                  <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini" %>
+                                </td>
+                              <% end %>
                               <td>
                                 <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini" %>
                               </td>
-                              <td>
-                                <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
-                              </td>
+                              <% if @guw_model.three_points_estimation == true %>
+                                <td>
+                                  <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini" %>
+                                </td>
+                              <% end %>
                             <% end %>
                           </tr>
                         <% end %>
