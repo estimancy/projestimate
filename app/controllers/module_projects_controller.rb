@@ -91,12 +91,16 @@ class ModuleProjectsController < ApplicationController
       if params['module_project']['view_id'] != @module_project.view_id
         module_project_name = @module_project.to_s
         selected_view = View.find(params['module_project']['view_id'])
-        new_view = View.create(organization_id: @project.organization_id, name: "View for #{module_project_name}", description: "Dynamic created view for the #{module_project_name} module. Please rename the view's name and description if needed.")
-        #We have to copy all the selected view's widgets in a new view for the current module_project
-        selected_view.views_widgets.each do |view_widget|
-          widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, pe_attribute_id: view_widget.pe_attribute_id, name: view_widget.name,
-                                           show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
-                                           width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position)
+        new_view = selected_view
+        #The view will be copied only if the view is used by another module
+        if !selected_view.module_projects.empty?
+          new_view = View.create(organization_id: @project.organization_id, name: "View for #{module_project_name}", description: "Dynamic created view for the #{module_project_name} module. Please rename the view's name and description if needed.")
+          #We have to copy all the selected view's widgets in a new view for the current module_project
+          selected_view.views_widgets.each do |view_widget|
+            widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, pe_attribute_id: view_widget.pe_attribute_id, name: view_widget.name,
+                                             show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                             width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position)
+          end
         end
         #affect the view to the module_project
         @module_project.update_attributes(:view_id => new_view.id, :color => params['module_project']['color'])
