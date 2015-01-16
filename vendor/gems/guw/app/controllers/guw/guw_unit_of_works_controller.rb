@@ -366,12 +366,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                module_project_id: current_module_project.id,
                                                guw_model_id: @guw_unit_of_work.guw_model.id).size
 
-    @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                                           flagged: true,
-                                                           guw_unit_of_work_group_id: @group.id,
-                                                           pbs_project_element_id: current_component.id,
-                                                           module_project_id: current_module_project.id,
-                                                           guw_model_id: @guw_unit_of_work.guw_model.id).size
+    @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
+                                                            guw_unit_of_work_group_id: @group.id,
+                                                            pbs_project_element_id: current_component.id,
+                                                            module_project_id: current_module_project.id,
+                                                            guw_model_id: @guw_unit_of_work.guw_model.id).size
 
 
     #For all unit of work
@@ -390,8 +389,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                        module_project_id: current_module_project.id,
                                                        guw_model_id: @guw_unit_of_work.guw_model.id).size
 
-    @flagged_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                                      flagged: true,
+    @flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
                                                        pbs_project_element_id: current_component.id,
                                                        module_project_id: current_module_project.id,
                                                        guw_model_id: @guw_unit_of_work.guw_model.id).size
