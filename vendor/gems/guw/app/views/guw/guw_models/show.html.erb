@@ -111,9 +111,10 @@
                 </td>
 
                 <% guw_type.guw_complexities.each do |guw_cplx| %>
-                  <% tcplx = nil %>
+                  <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
+                                                                organization_technology_id: technology.id).first %>
                   <td class="align-center">
-                    <%= text_field_tag "technology_coef[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : cwu.value, class: "input-mini" %>
+                    <%= text_field_tag "coefficient[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>

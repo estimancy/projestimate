@@ -96,6 +96,7 @@
           <th>Description</th>
           <th>Acquisition</th>
           <th>Type d'UO</th>
+          <th>Technolgy</th>
           <th>Tracabilité</th>
           <th>Cotation</th>
           <th>Résultat</th>
@@ -152,6 +153,10 @@
 
             <td class="span2">
               <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "input-small", required: true %>
+            </td>
+
+            <td class="span2">
+              <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]}, selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id), class: "input-small", required: true %>
             </td>
 
             <td class="">

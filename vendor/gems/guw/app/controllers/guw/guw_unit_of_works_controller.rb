@@ -177,6 +177,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
+
       guw_unit_of_work.display_order = i
 
       guw_unit_of_work.save
@@ -197,16 +199,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
         if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: current_component.organization_technology).first
           uo_weight_low = cwu.value
         end
 
         if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: current_component.organization_technology).first
           uo_weight_ml = cwu.value
         end
 
         if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: current_component.organization_technology).first
           uo_weight_high = cwu.value
         end
 

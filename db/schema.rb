@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150116082744) do
+ActiveRecord::Schema.define(:version => 20150116104828) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -359,10 +359,10 @@ ActiveRecord::Schema.define(:version => 20150116082744) do
 
   create_table "guw_guw_complexity_technologies", :force => true do |t|
     t.integer  "guw_complexity_id"
-    t.integer  "guw_technology_id"
+    t.integer  "organization_technology_id"
     t.float    "coefficient"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   create_table "guw_guw_complexity_work_units", :force => true do |t|
@@ -415,10 +415,11 @@ ActiveRecord::Schema.define(:version => 20150116082744) do
     t.string   "name"
     t.text     "comments"
     t.integer  "module_project_id"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.integer  "pbs_project_element_id"
     t.string   "notes"
+    t.integer  "organization_technology_id"
   end
 
   create_table "guw_guw_unit_of_works", :force => true do |t|
@@ -428,8 +429,8 @@ ActiveRecord::Schema.define(:version => 20150116082744) do
     t.float    "result_most_likely"
     t.float    "result_high"
     t.integer  "guw_type_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.integer  "guw_complexity_id"
     t.float    "effort"
     t.float    "ajusted_effort"
@@ -443,6 +444,7 @@ ActiveRecord::Schema.define(:version => 20150116082744) do
     t.boolean  "selected"
     t.boolean  "flagged"
     t.integer  "display_order"
+    t.integer  "organization_technology_id"
   end
 
   create_table "guw_guw_work_units", :force => true do |t|
