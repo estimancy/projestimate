@@ -42,6 +42,10 @@ class EstimationValue < ActiveRecord::Base
   belongs_to :module_project
   belongs_to :pbs_project_element
 
+  has_many :views_widgets
+
+  validates :pe_attribute_id, :module_project_id, presence: true
+
   #Serialize some output data for estimation result
   serialize :string_data_low, Hash
   serialize :string_data_most_likely, Hash

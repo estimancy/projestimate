@@ -28,8 +28,8 @@
                   <% font_weight = "normal_font_weight" %>
                   <!-- Show all widgets on the current view -->
                   <% if module_project.view %>
-                    <% unless module_project.view.views_widgets.nil? %>
-                      <% module_project.view.views_widgets.order('position').each do |view_widget| %>
+                      <% module_project_view_widgets =  module_project.view.views_widgets.order('position').all %>
+                      <% module_project_view_widgets.each do |view_widget| %>
                         <%# view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
                         <!-- Widgets are now showing the value of the widget's module project -->
                         <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
@@ -66,7 +66,13 @@
                         <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 view_widget <%= "#{effort_per_phase_class}" %>" title="<%= view_widget_title(view_widget) %>" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; height: <%=view_widget_height%>px; width: <%=view_widget_width%>px; max-width: 100%; position: relative;">
                           <div class="row-fluid">
                             <div class="span9">
-                              <% unless view_widget.icon_class.empty? %>
+                              <% if view_widget.icon_class.empty? %>
+                                  <div class="fa">
+                                    <% if view_widget.show_name? %>
+                                        <span class="widget_name"><%= view_widget.name %></span>
+                                    <% end %>
+                                  </div>
+                              <% else %>
                                   <div class="fa <%= view_widget.icon_class %> icon_size" style="font-size: <%=view_widget_font_size%>em">
                                     <% if view_widget.show_name? %>
                                       <span class="widget_name"><%= view_widget.name %></span>
@@ -124,7 +130,6 @@
               </div>  <!-- end widget content -->
             </div>  <!-- END widget-box by module -->
           </div>   <!-- END div for each X position -->
-        <% end %>    <!-- Iteration for X position -->
       <% end %>    <!-- Iteration for X position -->
     </div>  <!-- END div for Y position -->
 <% end %>   <!-- Iteration for Y position -->

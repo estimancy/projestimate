@@ -1283,4 +1283,7 @@ de:
   outputs: "Outputs"
   no_wbs_activity_in_project: "There is wbs-activity in project"
   used_view: "Display view used : %{value}"
+  online_support: "Online support "
+  live_chat_support: "Live chat support "
+  see_consultants: "See consultants "
 

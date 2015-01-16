@@ -1180,8 +1180,27 @@ class ProjectsController < ApplicationController
           end
 
           in_result["string_data_#{level}"] = level_estimation_value
-
         end
+
+        #calulate the Probable value for the input data
+        input_probable_estimation_value = Hash.new
+        input_probable_estimation_value = est_val.send('string_data_probable')
+        minimum = in_result["string_data_low"][@pbs_project_element.id].to_f
+        most_likely = in_result["string_data_most_likely"][@pbs_project_element.id].to_f
+        maximum = in_result["string_data_high"][@pbs_project_element.id].to_f
+
+        # The module is not using Ratio and Activities
+        if !start_module_project.pemodule.yes_for_input? && !start_module_project.pemodule.yes_for_input_output_with_ratio?
+          if est_val_attribute_type == 'numeric'
+            input_probable_estimation_value[@pbs_project_element.id] = compute_probable_value(minimum, most_likely, maximum, est_val)[:value]  #probable_value(in_result, est_val)
+          else
+            input_probable_estimation_value[@pbs_project_element.id] = in_result["string_data_most_likely"][@pbs_project_element.id]
+          end
+          #update the iput result with probable value
+          in_result["string_data_probable"] = input_probable_estimation_value
+        end
+
+        #Update the Input data estimation values
         est_val.update_attributes(in_result)
       end
 
