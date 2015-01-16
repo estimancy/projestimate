@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150113104905) do
+ActiveRecord::Schema.define(:version => 20150114171033) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1156,6 +1156,7 @@ ActiveRecord::Schema.define(:version => 20150113104905) do
     t.string   "widget_type"
     t.integer  "position"
     t.boolean  "show_name"
+    t.integer  "estimation_value_id"
   end
 
   create_table "wbs_activities", :force => true do |t|

@@ -1341,4 +1341,7 @@ fr:
   outputs: "Sorties"
   no_wbs_activity_in_project: "Il n'y a pas de wbs-activité dans le projet"
   used_view: "Vue d'affichage utilisée : %{value}"
+  online_support: "Support en ligne "
+  live_chat_support: "Support messagerie instantanée "
+  see_consultants: "Voir les conseillers "
 

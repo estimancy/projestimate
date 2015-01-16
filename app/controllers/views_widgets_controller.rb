@@ -36,29 +36,31 @@ class ViewsWidgetsController < ApplicationController
   # Get the module_project attributes grouped by Input and Ouput
   def get_module_project_attributes_input_output(module_project)
     # Get the possible attribute grouped by type (input, output)
-    attribute_modules = module_project.pemodule.attribute_modules
-    ###input_attribute_modules = attribute_modules.where('in_out IN (?)', ['input', 'both'])
-    output_attribute_modules = attribute_modules.where('in_out IN (?)', ['output', 'both'])
-
-    module_project_attributes = []
-    input_attributes = []
-    output_attributes = []
-
-    #for input attribute
+    #attribute_modules = module_project.pemodule.attribute_modules
+    #input_attribute_modules = attribute_modules.where('in_out IN (?)', ['input', 'both'])
+    #output_attribute_modules = attribute_modules.where('in_out IN (?)', ['output', 'both'])
+    #
+    #module_project_attributes = []
+    #input_attributes = []
+    #output_attributes = []
+    #
+    ##for input attribute
     #input_attribute_modules.each do |attr_module|
     #  pe_attribute = attr_module.pe_attribute
     #  input_attributes << [pe_attribute, pe_attribute.id]
     #end
+    #
+    ##for output attribute
+    #output_attribute_modules.each do |attr_module|
+    #  pe_attribute = attr_module.pe_attribute
+    #  output_attributes << [pe_attribute, pe_attribute.id]
+    #end
+    #
+    #module_project_attributes << ["#{I18n.t(:inputs)}", input_attributes]
+    #module_project_attributes << ["#{I18n.t(:outputs)}", output_attributes]
+    ###module_project_attributes
 
-    #for output attribute
-    output_attribute_modules.each do |attr_module|
-      pe_attribute = attr_module.pe_attribute
-      output_attributes << [pe_attribute, pe_attribute.id]
-    end
-
-    ###module_project_attributes << ["#{I18n.t(:inputs)}", input_attributes]
-    module_project_attributes << ["#{I18n.t(:outputs)}", output_attributes]
-    module_project_attributes
+    estimation_values = module_project.estimation_values.group_by{ |attr| attr.in_out }.sort()
   end
 
 

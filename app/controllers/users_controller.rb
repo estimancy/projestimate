@@ -150,7 +150,7 @@ public
 
       #session[:current_password] = nil;  session[:password] = nil; session[:password_confirmation] = nil
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
-      redirect_to redirect_apply(edit_user_path(@user, :anchor => session[:anchor]), nil, users_path)
+      redirect_to redirect_apply(edit_user_path(@user, :anchor => "tabs-5"), nil, users_path)
     else
       #session[:current_password] = params[:user][:current_password];  session[:password] = params[:user][:password]; session[:password_confirmation] = params[:user][:password_confirmation]
       @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]

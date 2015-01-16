@@ -24,43 +24,20 @@ module ViewsWidgetsHelper
   # Get the view_widget data for each view/widget/module_project
   def get_view_widget_data(module_project_id, view_widget_id)
 
+    # General data
     view_widget = ViewsWidget.find(view_widget_id)
-    view_widget_attribute = view_widget.pe_attribute
-    view_widget_attribute_name = view_widget_attribute.nil? ? "" : view_widget_attribute.name
     pbs_project_elt = current_component
     module_project = ModuleProject.find(module_project_id)
     project = module_project.project
     pemodule = module_project.pemodule
-    estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget.pe_attribute_id, "output").last
     widget_data = {}
     data_probable = ""; min_value = ""; max_value = ""; value_to_show = ""
     initial_width = 60;  initial_height = 60
     value_to_show = nil # according to the widget type
     data_low = nil; data_most_likely=nil; data_high=nil; data_probable=nil
+    widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable }
 
-    unless estimation_value.nil?
-      data_low = estimation_value.string_data_low[pbs_project_elt.id]
-      data_high = estimation_value.string_data_high[pbs_project_elt.id]
-      data_most_likely = estimation_value.string_data_most_likely[pbs_project_elt.id]
-      data_probable = estimation_value.string_data_probable[pbs_project_elt.id]
-
-      # Get the project wbs_project_element root if module with activities
-      #if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-      if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
-        wbs_project_elt_root = project.wbs_project_elements.elements_root.first
-        data_low = data_low.nil? ? nil : data_low[wbs_project_elt_root.id][:value]
-        data_high = data_high.nil? ? nil : data_high[wbs_project_elt_root.id][:value]
-        data_probable = data_probable.nil? ? nil : data_probable[wbs_project_elt_root.id][:value]
-      end
-
-      probable_value_text =  display_value(data_probable, estimation_value)
-      max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, false)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
-      min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, false)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
-
-    end
-
-    widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
-
+    ############################ Get the view_widget size  ############################
     ft_maxFontSize_without_mm = 75
     ft_maxFontSize_with_mm = 60
     ft_minMax_maxFontSize = 20
@@ -69,6 +46,9 @@ module ViewsWidgetsHelper
     # The widget size with : margin-right = 10px
     height = (initial_height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
     width = (initial_width*view_widget.width.to_i) + 10*(view_widget.width.to_i - 1)
+    # update size in the results hash
+    widget_data[:width] = width
+    widget_data[:height] = height
 
     case view_widget.height.to_i
       when 1..2
@@ -86,7 +66,6 @@ module ViewsWidgetsHelper
         else
           ft_minMax_minFontSize = 7.5
         end
-
       when 3
         icon_font_size = 2.5 #3
         ft_maxFontSize_without_mm = 30
@@ -100,32 +79,10 @@ module ViewsWidgetsHelper
           icon_font_size = 4 #5
         end
     end
-
     text_size = ((height+width)/2) * 0.015
     min_max_size = ((height+width)/2) * 0.009
 
-    #if view_widget.height.to_i > 2
-    #  height = (height*view_widget.height.to_i) + 10*(view_widget.height.to_i - 1)
-    #  icon_font_size = ((height+width)/2) * 0.025
-    #else
-    #  icon_font_size = 2
-    #  ft_maxFontSize_without_mm = 30
-    #  ft_maxFontSize_with_mm = 30
-    #  ft_minMax_maxFontSize = 15
-    #
-    #  if view_widget.width.to_i <= 1
-    #    ft_minMax_minFontSize = 4.5
-    #  else
-    #    ft_minMax_minFontSize = 7.5
-    #  end
-    #
-    #end
-
     # get the fitText minFontSize and maxFontSize
-
-    # update size in the results hash
-    widget_data[:width] = width
-    widget_data[:height] = height
     widget_data[:icon_font_size] = icon_font_size
     widget_data[:text_size] = text_size
     widget_data[:min_max_size] = min_max_size
@@ -135,125 +92,172 @@ module ViewsWidgetsHelper
     widget_data[:ft_minMax_minFontSize] = ft_minMax_minFontSize
     widget_data[:ft_minMax_maxFontSize] = ft_minMax_maxFontSize
 
-    #WIDGETS_TYPE = [["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ]
-    #According to the widget type, we will show simple text, charts, timeline, etc
-    chart_level_values = []
-    chart_level_values << ["low", data_low]
-    chart_level_values << ["ml", data_most_likely]
-    chart_level_values << ["high", data_high]
-    chart_level_values << ["probable", data_probable]
+    ############################ Get the view_widget estimation value  ############################
 
-    widget_data[:chart_level_values] = chart_level_values
-    chart_height = height-50
-    chart_width = width -40
-    chart_title = view_widget.name
-    chart_vAxis = "#{view_widget_attribute_name} (#{get_attribute_unit(view_widget_attribute)})"
-    chart_hAxis = "Level"
+    view_widget_est_val = view_widget.estimation_value
 
-    case view_widget.widget_type
-      when "text"
-        value_to_show = probable_value_text
-        is_simple_text = true
+    unless view_widget_est_val.nil?
+      est_val_in_out = view_widget_est_val.in_out
+      view_widget_attribute = view_widget_est_val.pe_attribute #view_widget.pe_attribute
+      view_widget_attribute_name = view_widget_attribute.nil? ? "" : view_widget_attribute.name
+      estimation_value = module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', view_widget_attribute.id, view_widget_est_val.in_out).last
 
-      when "line_chart"
-        #value_to_show = line_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: view_widget.color})
-        value_to_show =  line_chart([
-            {name: "Low", data: {Time.new => data_low} },  #10
-            {name: "Most likely", data: {Time.new => data_most_likely} }, #30
-            {name: "High", data: {Time.new => data_high} } ],  #50
-            {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: view_widget_attribute_name}}})
+      unless estimation_value.nil?
+        data_low = estimation_value.string_data_low[pbs_project_elt.id]
+        data_high = estimation_value.string_data_high[pbs_project_elt.id]
+        data_most_likely = estimation_value.string_data_most_likely[pbs_project_elt.id]
+        data_probable = estimation_value.string_data_probable[pbs_project_elt.id]
 
-      when "bar_chart"
-        value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+        # Get the project wbs_project_element root if module with activities
+        #if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+        if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
+          if est_val_in_out == "output"
+            wbs_project_elt_root = project.wbs_project_elements.elements_root.first
+            wbs_data_low = data_low.nil? ? nil : data_low[wbs_project_elt_root.id]
+            wbs_data_high = data_high.nil? ? nil : data_high[wbs_project_elt_root.id]
+            wbs_data_probable = data_probable.nil? ? nil : data_probable[wbs_project_elt_root.id]
 
-      when "area_chart"
-        value_to_show = area_chart(chart_level_values, height: "#{chart_height}px", library: {title: view_widget.name, vAxis: {title: view_widget.chart_vAxis}})
-
-      when "pie_chart"
-        value_to_show = pie_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title})
-
-      when "stacked_bar_chart"
-        value_to_show = probable_value_text
-
-      when "timeline"
-        timeline_data = []
-
-        delay = PeAttribute.where(alias: "delay").first
-        end_date = PeAttribute.where(alias: "end_date").first
-        staffing = PeAttribute.where(alias: "staffing").first
-        effort = PeAttribute.where(alias: "effort").first
-        is_ok = false
-
-        # Get the component/PBS children
-        products = pbs_project_elt.root.subtree.all
-
-        products.each_with_index do |element, i|
-          dev = nil
-          est_val = module_project.estimation_values.where(pe_attribute_id: delay.id).first
-          unless est_val.nil?
-            str_data_probable = est_val.string_data_probable
-            str_data_probable.nil? ? nil : (dev = str_data_probable[element.id])
+            data_low = wbs_data_low.nil? ? nil : wbs_data_low[:value]
+            data_high = wbs_data_high.nil? ? nil : wbs_data_high[:value]
+            data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
           end
+        end
 
-          if !dev.nil?
+        probable_value_text =  display_value(data_probable, estimation_value)
+        max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, false)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
+        min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, false)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
 
-            d = dev.to_f
+        #Update the widget data
+        #widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
+        widget_data[:data_low] = data_low;
+        widget_data[:data_high] = data_high
+        widget_data[:data_most_likely] = data_most_likely
+        widget_data[:data_probable] = data_probable
+        widget_data[:max_value_text] = max_value_text
+        widget_data[:min_value_text] = min_value_text
+        widget_data[:probable_value_text] = probable_value_text
 
-            if d.nil?
-              dh = 1.hours
+        #WIDGETS_TYPE = [["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ]
+        #According to the widget type, we will show simple text, charts, timeline, etc
+        chart_level_values = []
+        chart_level_values << ["low", data_low]
+        chart_level_values << ["ml", data_most_likely]
+        chart_level_values << ["high", data_high]
+        chart_level_values << ["probable", data_probable]
+
+        widget_data[:chart_level_values] = chart_level_values
+        chart_height = height-50
+        chart_width = width -40
+        chart_title = view_widget.name
+        chart_vAxis = "#{view_widget_attribute_name} (#{get_attribute_unit(view_widget_attribute)})"
+        chart_hAxis = "Level"
+
+        case view_widget.widget_type
+          when "text"
+            value_to_show = probable_value_text
+            is_simple_text = true
+
+          when "line_chart"
+            #value_to_show = line_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: view_widget.color})
+            value_to_show =  line_chart([
+                                            {name: "Low", data: {Time.new => data_low} },  #10
+                                            {name: "Most likely", data: {Time.new => data_most_likely} }, #30
+                                            {name: "High", data: {Time.new => data_high} } ],  #50
+                                        {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: view_widget_attribute_name}}})
+
+          when "bar_chart"
+            value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+
+          when "area_chart"
+            value_to_show = area_chart(chart_level_values, height: "#{chart_height}px", library: {title: view_widget.name, vAxis: {title: view_widget.chart_vAxis}})
+
+          when "pie_chart"
+            value_to_show = pie_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title})
+
+          when "stacked_bar_chart"
+            value_to_show = probable_value_text
+
+          when "timeline"
+            timeline_data = []
+
+            delay = PeAttribute.where(alias: "delay").first
+            end_date = PeAttribute.where(alias: "end_date").first
+            staffing = PeAttribute.where(alias: "staffing").first
+            effort = PeAttribute.where(alias: "effort").first
+            is_ok = false
+
+            # Get the component/PBS children
+            products = pbs_project_elt.root.subtree.all
+
+            products.each_with_index do |element, i|
+              dev = nil
+              est_val = module_project.estimation_values.where(pe_attribute_id: delay.id).first
+              unless est_val.nil?
+                str_data_probable = est_val.string_data_probable
+                str_data_probable.nil? ? nil : (dev = str_data_probable[element.id])
+              end
+
+              if !dev.nil?
+
+                d = dev.to_f
+
+                if d.nil?
+                  dh = 1.hours
+                else
+                  dh = d.hours
+                end
+
+                ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
+
+                begin
+                  timeline_data << [
+                      element.name,
+                      element.start_date,
+                      element.start_date + dh
+                  ]
+                  is_ok = true
+                rescue
+                  is_ok = false
+                end
+              end
+            end
+
+            if is_ok == true
+              value_to_show = timeline(timeline_data, library: {title: view_widget_attribute_name})
             else
-              dh = d.hours
+              value_to_show = "" #I18n.t(:error_invalid_date)
             end
 
-            ed = module_project.estimation_values.where(pe_attribute_id: end_date.id).first.string_data_probable[element.id]
+          when "table_effort_per_phase", "table_cost_per_phase"
+            value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
 
-            begin
-              timeline_data << [
-                element.name,
-                element.start_date,
-                element.start_date + dh
-              ]
-              is_ok = true
-            rescue
-              is_ok = false
-            end
-          end
+          when "histogram_effort_per_phase", "histogram_cost_per_phase"
+            chart_height = height-90
+            chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+            value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
+
+          when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
+            chart_height = height-90
+            chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+            value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {title: chart_title})
+
+          when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
+            value_to_show = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+
+          when "stacked_bar_chart_effort_per_phases_profiles"
+            chart_height = height-90
+            stacked_chart_data = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+            value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+
+          when "stacked_bar_chart_cost_per_phases_profiles"
+
+          else
+            value_to_show = probable_value_text
         end
 
-        if is_ok == true
-          value_to_show = timeline(timeline_data, library: {title: view_widget_attribute_name})
-        else
-          value_to_show = "" #I18n.t(:error_invalid_date)
-        end
-
-      when "table_effort_per_phase", "table_cost_per_phase"
-        value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
-
-      when "histogram_effort_per_phase", "histogram_cost_per_phase"
-        chart_height = height-90
-        chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
-        value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
-
-      when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
-        chart_height = height-90
-        chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
-        value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {title: chart_title})
-
-      when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
-        value_to_show = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
-
-      when "stacked_bar_chart_effort_per_phases_profiles"
-        chart_height = height-90
-        stacked_chart_data = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
-        value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
-
-      when "stacked_bar_chart_cost_per_phases_profiles"
-
-      else
-        value_to_show = probable_value_text
+        widget_data[:value_to_show] = value_to_show
+      end
     end
-
-    widget_data[:value_to_show] = value_to_show
 
     # Return the view_widget HASH
     widget_data
