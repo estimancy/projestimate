@@ -206,8 +206,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
 
-      guw_unit_of_work.display_order = i
-
       guw_unit_of_work.save
 
       @guw_type.guw_complexities.each do |guw_c|

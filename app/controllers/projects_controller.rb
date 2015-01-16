@@ -135,12 +135,14 @@ class ProjectsController < ApplicationController
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
     if @module_project.pemodule.alias == "guw"
+
       if current_module_project.guw_model.nil?
         @guw_model = GuwModel::GuwModel.first
       else
         @guw_model = current_module_project.guw_model
       end
       @unit_of_work_groups = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all
+
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 
