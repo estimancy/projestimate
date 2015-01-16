@@ -591,10 +591,10 @@ fr:
   #sessions
   button_ask_account: "Demander un compte"
   send_request: "Envoyer"
-  login_name_or_email: "identifiant de connexion ou courriel"
+  login_name_or_email: "Email ou login"
   button_forgotten_password: "Mot de passe oublié ?"
   open_url_id: "Identifiant OpenId"
-  ldap_account_or_application_account: "Identifiant ou courriel de l'utilisateur (ou Identifiant LDAP)"
+  ldap_account_or_application_account: "Login ou courriel de l'utilisateur (ou Identifiant LDAP)"
   not_yet_supported: "Pas encore supporté"
   ldap_account_password_or_application_account_password: "mot de passe de l'utilisateur (ou Mot de passe LDAP)"
   text_ask_new_account: "Pour demander un compte, cliquez sur 'Demander un compte' puis suivre les instructions"

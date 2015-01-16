@@ -47,6 +47,11 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  #  #Display help login page
+    def help_login
+      #No authorize required since everyone can ask for help when logged in
+    end
+
   def update
     #super do |resource|
     #  #resource.save
