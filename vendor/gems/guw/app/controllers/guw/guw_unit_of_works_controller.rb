@@ -75,6 +75,22 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
+  def up
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    @guw_unit_of_work.display_order = @guw_unit_of_work.display_order - 2
+    @guw_unit_of_work.save
+    reorder @guw_unit_of_work.guw_unit_of_work_group
+    redirect_to :back
+  end
+
+  def down
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    @guw_unit_of_work.display_order = @guw_unit_of_work.display_order + 1
+    @guw_unit_of_work.save
+    reorder @guw_unit_of_work.guw_unit_of_work_group
+    redirect_to :back
+  end
+
   def save_guw_unit_of_works
 
     hb = false
