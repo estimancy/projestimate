@@ -42,6 +42,10 @@ Guw::Engine.routes.draw do
   resources :guw_complexity_work_units
   resources :guw_attributes
   resources :guw_unit_of_works
+  resources :guw_unit_of_works do
+    get "up"
+    get "down"
+  end
   resources :guw_unit_of_work_groups
 
   resources :guw_work_units
