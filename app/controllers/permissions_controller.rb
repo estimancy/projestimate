@@ -51,27 +51,6 @@ class PermissionsController < ApplicationController
     end
   end
 
-  def globals_permissions
-    authorize! :manage_roles, Permission
-
-    set_page_title 'Globals Permissions'
-
-    @global_permissions = Permission.order('object_associated','alias').defined.select{|i| !i.is_permission_project and !i.is_master_permission}
-    @permission_projects = Permission.order('object_associated','alias').defined.select{|i| i.is_permission_project }
-    @master_permissions = Permission.order('object_associated','alias').defined.select{|i| i.is_master_permission }
-
-    @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
-    @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
-    @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
-
-    @project_security_levels = ProjectSecurityLevel.defined
-    @groups = Group.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
-  end
-
   def new
     authorize! :manage, Permission
 
@@ -156,7 +135,7 @@ class PermissionsController < ApplicationController
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
       end
 
-      redirect_to globals_permissions_path(:anchor => "tabs-projects"), :notice => "#{I18n.t (:notice_permission_successful_saved)}"
+      redirect_to :back
     end
   end
 
@@ -177,7 +156,7 @@ class PermissionsController < ApplicationController
         end
       end
 
-      redirect_to globals_permissions_path(:anchor => "tabs-projects"), :notice => "#{I18n.t (:notice_permission_successful_saved)}"
+      redirect_to :back
     end
   end
 end

@@ -1,40 +1,41 @@
 <%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path do %>
 
   <% @group_unit_of_works = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id) %>
-  <div class="label label-warning pull-right">
-    Total général :
-    <span class="theorical_effort">
 
-        <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
-    </span>
-    UF
-  </div>
+    <div class="label label-info pull-right">
+      Total UO :
+      <span class="theorical_effort">
+
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
+      </span>
+      UF
+    </div>
+
+    <br>
+
+    <div class="label label-info pull-right">
+      Total retenu :
+      <span class="ajusted_effort">
+        <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
+
+      </span>
+      UF
+    </div>
+
+    <br>
+
+    <div class="label label-info pull-right">
+      Sélection :
+      <span class="number_of_unit_of_work">
+
+        <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.size %>
+      </span>
+      UO
+    </div>
 
   <br>
 
-  <div class="label label-warning pull-right">
-    Total retenu :
-    <span class="ajusted_effort">
-      <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
-
-    </span>
-    UF
-  </div>
-
-  <br>
-
-  <div class="label label-warning pull-right">
-    Sélection :
-    <span class="number_of_unit_of_work">
-
-      <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.size %>
-    </span>
-    UO
-  </div>
-
-  <br>
-
-  <div class="label label-warning pull-right">
+  <div class="label label-info pull-right">
     Modifiés :
     <span class="flagged_unit_of_work">
 
@@ -85,7 +86,7 @@
       <button type="submit" class="btn btn-default btn-mini pull-right">Sauvegarder</button>
 
       <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-      <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
+      <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
 
       <table class="table table-condensed table-striped" style="margin-top: 45px;">
         <tr>

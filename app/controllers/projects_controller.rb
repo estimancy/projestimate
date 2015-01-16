@@ -82,12 +82,6 @@ class ProjectsController < ApplicationController
     end
     @user = @project.users.first
 
-    @project_areas = @project.organization.project_areas
-    @platform_categories = @project.organization.platform_categories
-    @acquisition_categories = @project.organization.platform_categories
-    @pro
-    ject_categories = @project.organization.project_categories
-
     @pemodules ||= Pemodule.defined
     @project_modules = @project.pemodules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -224,6 +218,11 @@ class ProjectsController < ApplicationController
   def new
     authorize! :create_project_from_scratch, Project
     @organization = Organization.find(params[:organization_id])
+    @project_areas = @organization.project_areas
+    @platform_categories = @organization.platform_categories
+    @acquisition_categories = @organization.platform_categories
+    @project_categories = @organization.project_categories
+
     set_breadcrumbs "Estimations" => projects_path
     set_page_title 'New estimation'
   end
@@ -238,6 +237,11 @@ class ProjectsController < ApplicationController
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
     @organization = Organization.find(params[:project][:organization_id])
+
+    @project_areas = @organization.project_areas
+    @platform_categories = @organization.platform_categories
+    @acquisition_categories = @organization.platform_categories
+    @project_categories = @organization.project_categories
 
     #Give full control to project creator
     full_control_security_level = ProjectSecurityLevel.find_by_name('FullControl')
@@ -336,6 +340,11 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @organization = @project.organization
 
+    @project_areas = @organization.project_areas
+    @platform_categories = @organization.platform_categories
+    @acquisition_categories = @organization.platform_categories
+    @project_categories = @organization.project_categories
+
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
@@ -409,6 +418,11 @@ class ProjectsController < ApplicationController
     set_page_title 'Edit estimation'
     @project = Project.find(params[:id])
     @organization = @project.organization
+
+    @project_areas = @organization.project_areas
+    @platform_categories = @organization.platform_categories
+    @acquisition_categories = @organization.platform_categories
+    @project_categories = @organization.project_categories
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
