@@ -591,10 +591,10 @@ en:
   #sessions
   button_ask_account: "Request an account"
   send_request: "Submit"
-  login_name_or_email: "Login name or email"
+  login_name_or_email: "Email or login name"
   button_forgotten_password: "Lost password?"
   open_url_id: "Open Url Id"
-  ldap_account_or_application_account: "User's login id or email (or LDAP account id)."
+  ldap_account_or_application_account: "User's login or email (or LDAP account id)."
   not_yet_supported: "Not yet supported"
   ldap_account_password_or_application_account_password: "User's password (or LDAP account password)"
   text_ask_new_account: "To request an account, click 'Request an account' then follow instructions."

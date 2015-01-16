@@ -88,6 +88,10 @@ Projestimate::Application.routes.draw do
 
   devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}
 
+  devise_scope :user do
+    get "help_login" => "registrations", :as => 'help_login'
+  end
+
   get 'awaiting_confirmation' => 'registrations#awaiting_confirmation', :as => 'awaiting_confirmation'
 
   resources :users
