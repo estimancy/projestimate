@@ -822,8 +822,7 @@
            <%= link_to i.name, guw.guw_model_path(i), :title => I18n.t('edit') %>
          </td>
          <td class="align-center">
-           <%= link_to 'Show model', guw.guw_model_path(i), :class => 'btn btn-mini', :title => I18n.t('edit') %>
-           <%= link_to 'Edit model', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'btn btn-mini', :title => I18n.t('edit') %>
+           <%= link_to 'Edit model', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'btn btn-mini' %>
            <%= link_to 'Delete', guw.guw_model_path(i), method: "DELETE",  :class => 'btn btn-mini', :title => I18n.t('delete') %>
          </td>
        </tr>
