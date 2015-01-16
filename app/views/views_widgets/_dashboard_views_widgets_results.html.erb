@@ -66,7 +66,13 @@
                         <div id="<%= "dashboard_widget_#{view_widget.id}" %>" class="span3 view_widget <%= "#{effort_per_phase_class}" %>" title="<%= view_widget_title(view_widget) %>" data-view_widget_id="<%= view_widget.id %>" data-container_id="<%="view_widgets_container_#{module_project.id}"%>" style="margin-left: 0px; margin-right:10px; margin-bottom: 10px;  background-color: <%= view_widget.color %>; height: <%=view_widget_height%>px; width: <%=view_widget_width%>px; max-width: 100%; position: relative;">
                           <div class="row-fluid">
                             <div class="span9">
-                              <% unless view_widget.icon_class.empty? %>
+                              <% if view_widget.icon_class.empty? %>
+                                  <div class="fa">
+                                    <% if view_widget.show_name? %>
+                                        <span class="widget_name"><%= view_widget.name %></span>
+                                    <% end %>
+                                  </div>
+                              <% else %>
                                   <div class="fa <%= view_widget.icon_class %> icon_size" style="font-size: <%=view_widget_font_size%>em">
                                     <% if view_widget.show_name? %>
                                       <span class="widget_name"><%= view_widget.name %></span>
