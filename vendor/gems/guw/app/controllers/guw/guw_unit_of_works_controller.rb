@@ -154,7 +154,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           @guw_attribute_complexities.each do |guw_ac|
             unless low.nil?
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-                if (low >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (low >= @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+                if (low >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (low < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                   unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                     if (low >= guw_ac.bottom_range) and (low < guw_ac.top_range)
                       @lows << guw_ac.guw_type_complexity.value
@@ -167,7 +167,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
 
             unless most_likely.nil?
-              if (most_likely >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high >= @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+              if (most_likely >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                 unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                   if (most_likely >= guw_ac.bottom_range) and (most_likely < guw_ac.top_range)
                     @mls << guw_ac.guw_type_complexity.value
@@ -179,7 +179,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
 
             unless high.nil?
-              if (high >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high >= @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+              if (high >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                 unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                   if (high >= guw_ac.bottom_range) and (high < guw_ac.top_range)
                     @highs << guw_ac.guw_type_complexity.value
