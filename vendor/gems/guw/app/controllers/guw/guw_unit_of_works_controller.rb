@@ -96,22 +96,33 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
-        if params["low"]["#{guw_unit_of_work.id}"].nil?
-          low = 0
-        else
-          low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        end
+        #Peut être factorisé  dans une boucle !
+        if @guw_model.three_points_estimation == true
+          #Estimation 3 points
+          if params["low"]["#{guw_unit_of_work.id}"].nil?
+            low = 0
+          else
+            low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
 
-        if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
-          most_likely = 0
-        else
-          most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
-        end
+          if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
+            most_likely = 0
+          else
+            most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
 
-        if params["high"]["#{guw_unit_of_work.id}"].nil?
-          high = 0
+          if params["high"]["#{guw_unit_of_work.id}"].nil?
+            high = 0
+          else
+            high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
         else
-          high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          #Estimation 1 point
+          if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
+            low = most_likely = high = 0
+          else
+            low = most_likely = high = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
+          end
         end
 
         guw_unit_of_work.off_line = false
@@ -177,6 +188,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
+
       guw_unit_of_work.display_order = i
 
       guw_unit_of_work.save
@@ -197,16 +210,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
         if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: current_component.organization_technology).first
           uo_weight_low = cwu.value
         end
 
         if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: current_component.organization_technology).first
           uo_weight_ml = cwu.value
         end
 
         if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: current_component.organization_technology).first
           uo_weight_high = cwu.value
         end
 

@@ -55,6 +55,23 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
       end
     end
 
+    params[:coefficient].each do |i|
+      i.last.each do |j|
+        ot = OrganizationTechnology.find(j.first.to_i)
+        cplx = Guw::GuwComplexity.find(i.first.to_i)
+
+        cwu = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
+                                           organization_technology_id: ot.id).first
+
+        if cwu.nil?
+          Guw::GuwComplexityTechnology.create(guw_complexity_id: cplx.id, organization_technology_id: ot.id, coefficient: params[:coefficient]["#{cplx.id}"]["#{ot.id}"])
+        else
+          cwu.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
+          cwu.save
+        end
+      end
+    end
+
     redirect_to :back
   end
 end
