@@ -39,13 +39,22 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
 
   def save_complexity_work_units
     params[:value].each do |i|
-      i.each do |j|
-        cplx = Guw::GuwComplexity.find(j).id
-        wu = Guw::GuwWorkUnit.find(i).id
-        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx, guw_work_unit_id: wu, value: 18)
+      i.last.each do |j|
+        wu = Guw::GuwWorkUnit.find(j.first.to_i)
+        cplx = Guw::GuwComplexity.find(i.first.to_i)
+
+        cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id,
+                                               guw_work_unit_id: wu.id).first
+
+        if cwu.nil?
+          Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id, value: params[:value]["#{cplx.id}"]["#{wu.id}"])
+        else
+          cwu.value = params[:value]["#{cplx.id}"]["#{wu.id}"]
+          cwu.save
+        end
       end
     end
 
-    redirect_to guw.guw_model_path(complexity)
+    redirect_to :back
   end
 end

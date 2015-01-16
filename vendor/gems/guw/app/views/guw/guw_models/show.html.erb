@@ -87,7 +87,8 @@
 
                 <% guw_type.guw_complexities.each do |guw_cplx| %>
                   <td class="align-center">
-                    <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id, guw_work_unit_id: work_unit.id).first %>
+                    <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
+                                                              guw_work_unit_id: work_unit.id).first %>
                     <%= text_field_tag "value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
                   </td>
                 <% end %>
@@ -98,7 +99,7 @@
             <tr>
               <td colspan="4">
                 <b>
-                  Tecnologies
+                  Technologies
                 </b>
               </td>
             </tr>

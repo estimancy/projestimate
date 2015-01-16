@@ -208,6 +208,7 @@ Projestimate::Application.routes.draw do
     resources :platform_categories
     resources :acquisition_categories
     resources :project_areas
+    resources :project_security_levels
   end
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'

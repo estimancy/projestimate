@@ -5,7 +5,6 @@ module Guw
 
     validates :bottom_range, numericality: { only_integer: true }
     validates :top_range, numericality: { only_integer: true }
-    validates :weight, presence: true
 
   end
 end

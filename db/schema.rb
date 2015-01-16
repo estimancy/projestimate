@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150113104905) do
+ActiveRecord::Schema.define(:version => 20150116082744) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -897,6 +897,7 @@ ActiveRecord::Schema.define(:version => 20150113104905) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.text     "description"
+    t.integer  "organization_id"
   end
 
   add_index "project_security_levels", ["record_status_id"], :name => "index_project_security_levels_on_record_status_id"

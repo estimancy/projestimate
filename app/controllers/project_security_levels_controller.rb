@@ -35,10 +35,10 @@
 #############################################################################
 
 class ProjectSecurityLevelsController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
   load_resource
 
-  before_filter :get_record_statuses
+  #before_filter :get_record_statuses
 
   def index
     authorize! :manage, ProjectSecurityLevel
@@ -56,17 +56,8 @@ class ProjectSecurityLevelsController < ApplicationController
 
   def edit
     authorize! :manage, ProjectSecurityLevel
-
     set_page_title 'Project security levels'
-
     @project_security_level = ProjectSecurityLevel.find(params[:id])
-
-    unless @project_security_level.child_reference.nil?
-      if @project_security_level.child_reference.is_proposed_or_custom?
-        flash[:warning] = I18n.t (:warning_project_securities_level_cant_be_edit)
-        redirect_to project_security_levels_path
-      end
-    end
   end
 
   def create
@@ -75,7 +66,7 @@ class ProjectSecurityLevelsController < ApplicationController
     @project_security_level = ProjectSecurityLevel.new(params[:project_security_level])
 
     if @project_security_level.save
-      redirect_to redirect(project_security_levels_url), notice: "#{I18n.t (:notice_project_securities_level_successful_created)}"
+      redirect_to edit_organization_path(@project_security_level.organization_id), notice: "#{I18n.t (:notice_project_securities_level_successful_created)}"
     else
       render action: 'new'
     end
@@ -84,17 +75,10 @@ class ProjectSecurityLevelsController < ApplicationController
   def update
     authorize! :manage, ProjectSecurityLevel
 
-    @project_security_level = nil
-    current_project_security_level = ProjectSecurityLevel.find(params[:id])
-    if current_project_security_level.is_defined?
-      @project_security_level = current_project_security_level.amoeba_dup
-      @project_security_level.owner_id = current_user.id
-    else
-      @project_security_level = current_project_security_level
-    end
+    @project_security_level = ProjectSecurityLevel.find(params[:id])
 
     if @project_security_level.update_attributes(params[:project_security_level])
-      redirect_to redirect(project_security_levels_url), notice: "#{I18n.t (:notice_project_securities_level_successful_updated)}"
+      redirect_to edit_organization_path(@project_security_level.organization_id), notice: "#{I18n.t (:notice_project_securities_level_successful_updated)}"
     else
       render action: 'edit'
     end
@@ -104,15 +88,9 @@ class ProjectSecurityLevelsController < ApplicationController
     authorize! :manage, ProjectSecurityLevel
 
     @project_security_level = ProjectSecurityLevel.find(params[:id])
-    if @project_security_level.is_defined? || @project_security_level.is_custom?
-      #logical deletion: delete don't have to suppress records anymore
-      @project_security_level.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @project_security_level.destroy
-    end
+    organization_id = @project_security_level.organization_id
+    @project_security_level.destroy
 
-    respond_to do |format|
-      format.html { redirect_to project_security_levels_url, notice: "#{I18n.t (:notice_project_securities_level_successful_deleted)}" }
-    end
+    redirect_to edit_organization_path(organization_id)
   end
 end

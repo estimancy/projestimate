@@ -141,11 +141,14 @@ class PermissionsController < ApplicationController
 
   def set_rights_project_security
     #authorize! :manage_roles, Permission
+
+    @organization = Organization.find(params[:organization_id])
+
     #For the cancel button
     if params[:commit] == I18n.t('cancel')
-      redirect_to globals_permissions_path(:anchor => "tabs-projects"), :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
+      redirect_to edit_organization_path(@organization, :anchor => "tabs-projects"), :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
     else
-      @project_security_levels = ProjectSecurityLevel.defined
+      @project_security_levels = @organization.project_security_levels
       @permissions = Permission.defined
 
       @project_security_levels.each do |psl|
