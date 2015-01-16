@@ -403,7 +403,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   private
   def reorder(group)
-    group.guw_unit_of_works.order("display_order asc").each_with_index do |u, i|
+    group.guw_unit_of_works.order("display_order asc, updated_at asc").each_with_index do |u, i|
       u.display_order = i
       u.save
     end
