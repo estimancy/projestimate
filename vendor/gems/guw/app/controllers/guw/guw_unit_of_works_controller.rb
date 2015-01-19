@@ -93,7 +93,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def save_guw_unit_of_works
 
-    hb = false
     @guw_model = current_module_project.guw_model
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: current_component.id,
@@ -101,6 +100,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
 
+      #reorder to keep good order
       reorder guw_unit_of_work.guw_unit_of_work_group
 
       @guw_type = guw_unit_of_work.guw_type
@@ -109,6 +109,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @mls = Array.new
       @highs = Array.new
       @weight_pert = Array.new
+
+      guw_unit_of_work.off_line = false
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 
@@ -141,16 +143,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           end
         end
 
-        guw_unit_of_work.off_line = false
-
         @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
                                                                         guw_attribute_id: guowa.guw_attribute_id).all
 
         sum_range = guowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: @guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
 
-        if sum_range.nil? || sum_range.blank? || sum_range == 0
-          # ??
-        else
+        unless sum_range.nil? || sum_range.blank? || sum_range == 0
           @guw_attribute_complexities.each do |guw_ac|
             unless low.nil?
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
@@ -271,6 +269,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     end
 
+    #we save the effort now in estimation values
     @module_project = current_module_project
     @module_project.guw_model_id = @guw_model.id
     @module_project.save
@@ -366,12 +365,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                module_project_id: current_module_project.id,
                                                guw_model_id: @guw_unit_of_work.guw_model.id).size
 
-    @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                                           flagged: true,
-                                                           guw_unit_of_work_group_id: @group.id,
-                                                           pbs_project_element_id: current_component.id,
-                                                           module_project_id: current_module_project.id,
-                                                           guw_model_id: @guw_unit_of_work.guw_model.id).size
+    @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
+                                                            guw_unit_of_work_group_id: @group.id,
+                                                            pbs_project_element_id: current_component.id,
+                                                            module_project_id: current_module_project.id,
+                                                            guw_model_id: @guw_unit_of_work.guw_model.id).size
 
 
     #For all unit of work
@@ -390,8 +388,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                        module_project_id: current_module_project.id,
                                                        guw_model_id: @guw_unit_of_work.guw_model.id).size
 
-    @flagged_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                                      flagged: true,
+    @flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
                                                        pbs_project_element_id: current_component.id,
                                                        module_project_id: current_module_project.id,
                                                        guw_model_id: @guw_unit_of_work.guw_model.id).size
@@ -403,7 +400,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   private
   def reorder(group)
-    group.guw_unit_of_works.order("display_order asc").each_with_index do |u, i|
+    group.guw_unit_of_works.order("display_order asc, updated_at asc").each_with_index do |u, i|
       u.display_order = i
       u.save
     end
