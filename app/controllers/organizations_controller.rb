@@ -89,6 +89,8 @@ class OrganizationsController < ApplicationController
 
     @organization_profiles = @organization.organization_profiles
 
+    @work_element_types = @organization.work_element_types
+
     #Get the Master defined groups and the organization's group
     @organization_group = @organization.groups
     @guw_models = @organization.guw_models

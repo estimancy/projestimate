@@ -17,6 +17,7 @@
       <li><a href="#tabs-project-categories"><%= I18n.t(:project_categories) %></a></li>
       <li><a href="#tabs-platform-categories"><%= I18n.t(:platform_categories) %></a></li>
       <li><a href="#tabs-acquisition-categories"><%= I18n.t(:acquisition_categories) %></a></li>
+      <li><a href="#tabs-wet"><%= I18n.t(:label_WorkElementType) %></a></li>
       <li><a href="#tabs-attribute"><%= I18n.t(:pe_attributes) %> </a></li>
       <li><a href="#tabs-technology"><%= I18n.t(:organization_technology) %> </a></li>
       <li><a href="#tabs-uow"><%= I18n.t(:organization_unit_of_work) %> </a></li>
@@ -510,6 +511,37 @@
       <%= render :partial => 'layouts/footer_table' %>
       </tbody>
     </table>
+  </div>
+
+  <div id="tabs-wet">
+    <table border="0" width="100%">
+      <tr>
+        <td style="text-align:right;">
+          <%= link_to I18n.t(:new_work_element_type), new_organization_work_element_type_path(@organization), :class => 'btn' %>
+        </td>
+      </tr>
+    </table>
+
+    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th>Alias</th>
+        <th><%= I18n.t(:description) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @work_element_types.each do |work_element_type| %>
+        <tr>
+          <td><%= work_element_type.name %></td>
+          <td><%= work_element_type.alias %></td>
+          <td><%= work_element_type.description %></td>
+        </tr>
+      <% end %>
+      </tbody>
+      <%= render :partial => 'layouts/footer_table' %>
+    </table>
+
   </div>
 
   <div id="tabs-acquisition-categories">

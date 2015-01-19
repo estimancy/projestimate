@@ -35,17 +35,11 @@
 #############################################################################
 
 class WorkElementTypesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
-  before_filter :get_record_statuses
+  #before_filter :get_record_statuses
 
   load_resource
-
-  def index
-    authorize! :create_and_edit_work_element_type, WorkElementType
-    set_page_title 'Work Element Type'
-    @work_element_types = WorkElementType.all
-  end
 
   def new
     authorize! :create_and_edit_work_element_type, WorkElementType
@@ -62,7 +56,7 @@ class WorkElementTypesController < ApplicationController
     unless @work_element_type.child_reference.nil?
       if @work_element_type.child_reference.is_proposed_or_custom?
         flash[:warning] = I18n.t (:warning_work_element_type_cant_be_edit)
-        redirect_to work_element_types_path
+        redirect_to edit_organization_path(@work_element_type.organization)
       end
     end
   end
@@ -72,7 +66,7 @@ class WorkElementTypesController < ApplicationController
     @work_element_type = WorkElementType.new(params[:work_element_type])
 
     if @work_element_type.save
-      redirect_to redirect_apply(nil,new_work_element_type_path(),  work_element_types_path)
+      redirect_to redirect_apply(nil, new_organization_path(@work_element_type.organization), edit_organization_path(@work_element_type.organization))
     else
       render action: 'new'
     end
@@ -91,7 +85,7 @@ class WorkElementTypesController < ApplicationController
 
     if @work_element_type.update_attributes(params[:work_element_type])
       flash[:notice] =  I18n.t (:notice_work_element_type_successful_updated)
-      redirect_to redirect_apply(edit_work_element_type_path(@work_element_type), nil, work_element_types_path )
+      redirect_to redirect_apply(nil, new_organization_path(@work_element_type.organization), edit_organization_path(@work_element_type.organization))
     else
       render action: 'edit'
     end
@@ -100,6 +94,7 @@ class WorkElementTypesController < ApplicationController
   def destroy
     authorize! :manage, WorkElementType
     @work_element_type = WorkElementType.find(params[:id])
+    organization_id = @work_element_type.organization
     if @work_element_type.is_defined? || @work_element_type.is_custom?
       #logical deletion: delete don't have to suppress records anymore
       @work_element_type.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
@@ -107,6 +102,6 @@ class WorkElementTypesController < ApplicationController
       @work_element_type.destroy
     end
 
-    redirect_to work_element_types_url
+    redirect_to edit_organization_path(organization_id)
   end
 end

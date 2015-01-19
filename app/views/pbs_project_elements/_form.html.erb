@@ -37,7 +37,7 @@
     <%# unless @pbs_project_element.is_root? %>
       <table>
         <tr>
-          <td><%= f.input :work_element_type_id, :label => I18n.t('work_element_type'), :as => :select, :collection => WorkElementType.all, :include_blank => true %></td>
+          <td><%= f.input :work_element_type_id, :label => I18n.t('work_element_type'), :as => :select, :collection => @project.organization.work_element_types, :include_blank => true %></td>
           <td><%= f.input :organization_technology_id, :label => I18n.t('organization_technology'), :as => :select, :collection => @project.organization.organization_technologies, :include_blank => true %></td>
         </tr>
       </table>
