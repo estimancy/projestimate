@@ -992,6 +992,7 @@ $(function table_sorter_filter() {
                 // ****************************
                 .tablesorterPager(pagerOptions);
         }
+
     });
 
 });

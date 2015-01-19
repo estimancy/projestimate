@@ -9,4 +9,7 @@ class OrganizationProfile < ActiveRecord::Base
   #validates :organization_id, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id
   validates :cost_per_hour, :numericality => { :allow_blank => true }
+
+  #Search fields
+  scoped_search :on => [:name, :description]
 end

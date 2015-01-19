@@ -57,6 +57,9 @@ class OrganizationTechnology < ActiveRecord::Base
 
   default_scope { order('alias DESC') }
 
+  #Search fields
+  scoped_search :on => [:name, :alias, :description]
+
   def to_s
     name || ''
   end

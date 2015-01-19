@@ -1624,3 +1624,17 @@ es:
   live_chat_support: "Live chat support "
   see_consultants: "See consultants "
 
+  #label for Search results display
+  label_OrganizationProfile: "Profile"
+  label_EstimationStatus: "Estimation statuses"
+  label_UnitOfWork: "Units of work"
+  label_Field: "Custom Fields"
+  label_OrganizationUowComplexity: "Factor complexities"
+  label_ProjectField: "Project field"
+  label_OrganizationTechnology: "Technology"
+  label_Factor: "Factor"
+  label_SizeUnit: "Size unit"
+  label_SizeUnitType: "Size unit type"
+  label_Subcontractor: "Subcontractor"
+  "label_Guw::GuwModel": "Generic unit of work model"
+

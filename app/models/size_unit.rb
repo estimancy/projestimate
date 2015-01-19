@@ -13,4 +13,7 @@ class SizeUnit < ActiveRecord::Base
 
   belongs_to :size_unit_type
 
+  #Search fields
+  scoped_search :on => [:name, :alias, :description]
+
 end

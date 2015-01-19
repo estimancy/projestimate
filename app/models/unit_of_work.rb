@@ -54,6 +54,10 @@ class UnitOfWork < ActiveRecord::Base
 
   default_scope { order('display_order ASC') }
 
+  #Search fields
+  scoped_search :on => [:name, :alias, :description]
+  scoped_search :in => :organization, :on => :name
+
   def to_s
     name || ''
   end
