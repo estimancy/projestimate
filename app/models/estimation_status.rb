@@ -44,6 +44,9 @@ class EstimationStatus < ActiveRecord::Base
   validates :status_alias, presence: true, uniqueness: { scope: :organization_id, case_sensitive: false }
   validate  :check_status_alias
 
+  #Search fields
+  scoped_search :on => [:name, :description, :status_alias]
+
   # Add the amoeba gem for the copy
   amoeba do
     #enable

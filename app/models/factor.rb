@@ -38,6 +38,9 @@ class Factor < ActiveRecord::Base
   validates :factor_type, :presence => true
   validates :custom_value, :presence => true, :if => :is_custom?
 
+  #Search fields
+  scoped_search :on => [:name, :alias, :description]
+
   amoeba do
     enable
     exclude_field [:users]

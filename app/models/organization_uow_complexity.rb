@@ -23,7 +23,7 @@
 class OrganizationUowComplexity < ActiveRecord::Base
   include MasterDataHelper
 
-  attr_accessible :name, :description, :display_order, :state, :factor_id, :unit_of_work_id, :value, :record_status_id, :organization_id, :state, :organization_technology_id
+  attr_accessible :name, :description, :display_order, :state, :factor_id, :unit_of_work_id, :value, :record_status_id, :organization_id, :organization_technology_id
 
   include AASM
   aasm :column => :state do # defaults to aasm_state
@@ -52,6 +52,11 @@ class OrganizationUowComplexity < ActiveRecord::Base
 
   #validates_presence_of :unit_of_work_id
   #validates_presence_of :organization_technology_id
+
+  #Search fields
+  scoped_search :on => [:name, :description]
+  scoped_search :in => :organization, :on => :name
+
 
   amoeba do
     enable

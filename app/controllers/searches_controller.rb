@@ -44,8 +44,13 @@ class SearchesController < ApplicationController
     if params[:search].class == Array
       classes = params[:search][:classes].map { |i| String::keep_clean_space(i).camelcase.constantize }
     else
-      classes = [Project, ProjectArea, PlatformCategory, ProjectCategory, AcquisitionCategory, WbsActivity, Pemodule, PeAttribute, WorkElementType, Organization, User, Group]
+      classes = [Project, ProjectArea, PlatformCategory, ProjectCategory, AcquisitionCategory, WbsActivity, Pemodule, PeAttribute, WorkElementType,
+                 Organization, User, Group, OrganizationProfile, OrganizationUowComplexity, Field, ProjectField, EstimationStatus, OrganizationTechnology,
+                 UnitOfWork, Factor, SizeUnit, SizeUnitType, Subcontractor, Guw::GuwModel]
     end
+
+    # Get the current_user Organization
+    #user_organization = current_user.organization
 
     @results = Array.new
     @result_count = Hash.new

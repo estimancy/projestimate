@@ -1345,3 +1345,17 @@ fr:
   live_chat_support: "Support messagerie instantanée "
   see_consultants: "Voir les conseillers "
 
+  #label for Search results display
+  label_OrganizationProfile: "Profil"
+  label_EstimationStatus: "Statuts des estimations"
+  label_UnitOfWork: "Unités d'oeuvres"
+  label_Field: "Champs personnalisés"
+  label_OrganizationUowComplexity: "Complexité des unités d'oeuvre"
+  label_ProjectField: "Champs personnalisés du projet"
+  label_OrganizationTechnology: "Technologie"
+  label_Factor: "Facteur d'ajustement"
+  label_SizeUnit: "Unité de taille"
+  label_SizeUnitType: "Type d'unité de taille"
+  label_Subcontractor: "Sous-traitant"
+  "label_Guw::GuwModel": "Modèle d'unité d'oeuvres génériques"
+

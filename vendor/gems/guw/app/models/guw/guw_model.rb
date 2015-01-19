@@ -10,6 +10,9 @@ module Guw
 
     validates_presence_of :name, :organization_id
 
+    #Search fields
+    scoped_search :on => [:name]
+
     def to_s
       name
     end
