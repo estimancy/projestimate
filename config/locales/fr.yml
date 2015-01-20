@@ -1359,3 +1359,13 @@ fr:
   label_Subcontractor: "Sous-traitant"
   "label_Guw::GuwModel": "Modèle d'unité d'oeuvres génériques"
 
+  cotation: "Cotation"
+  technology: "Technology"
+  tracability: "Tracability"
+  results: "Résultats"
+  retained_result: "Retenu"
+  actions: "Actions"
+  work_unit_type: "Type d'unité d'oeuvres"
+  no_uo_type: "Vous n'avez pas encore de type d'UO"
+  weight: "Poids"
+

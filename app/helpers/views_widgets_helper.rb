@@ -160,9 +160,9 @@ module ViewsWidgetsHelper
           when "line_chart"
             #value_to_show = line_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: view_widget.color})
             value_to_show =  line_chart([
-                                            {name: "Low", data: {Time.new => data_low} },  #10
-                                            {name: "Most likely", data: {Time.new => data_most_likely} }, #30
-                                            {name: "High", data: {Time.new => data_high} } ],  #50
+                                            {name: I18n.t(:low), data: {Time.new => data_low} },  #10
+                                            {name: I18n.t(:most_likely), data: {Time.new => data_most_likely} }, #30
+                                            {name: I18n.t(:high), data: {Time.new => data_high} } ],  #50
                                         {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: view_widget_attribute_name}}})
 
           when "bar_chart"

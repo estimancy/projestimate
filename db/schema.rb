@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150119154024) do
+ActiveRecord::Schema.define(:version => 20150120151507) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(:version => 20150119154024) do
     t.integer  "organization_uow_complexity_id"
     t.integer  "organization_technology_id"
     t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "updated_at",                     :null => falsee
     t.integer  "organization_id"
     t.integer  "factor_id"
   end
@@ -248,6 +248,11 @@ ActiveRecord::Schema.define(:version => 20150119154024) do
   end
 
   add_index "estimation_values", ["links"], :name => "index_attribute_projects_on_links"
+
+  create_table "expert_judgment_models", :force => true do |t|
+    t.string  "name"
+    t.integer "organization_id"
+  end
 
   create_table "factor_translations", :force => true do |t|
     t.integer  "factor_id"
