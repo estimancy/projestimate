@@ -816,7 +816,7 @@
          <td><%= project_security_level.description %></td>
          <td class="center">
            <%= link_to '', edit_organization_project_security_level_path(@organization, project_security_level), :class => 'icon-pencil', :title => I18n.t('edit') %>
-           <%= link_to '', project_security_level, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+           <%= link_to '', organization_project_security_level_path(@organization, project_security_level), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
          </td>
        </tr>
      <% end %>

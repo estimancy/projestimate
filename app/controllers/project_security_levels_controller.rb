@@ -35,17 +35,7 @@
 #############################################################################
 
 class ProjectSecurityLevelsController < ApplicationController
-  #include DataValidationHelper #Module for master data changes validation
   load_resource
-
-  #before_filter :get_record_statuses
-
-  def index
-    authorize! :manage, ProjectSecurityLevel
-
-    set_page_title 'Project security levels'
-    @project_security_levels = ProjectSecurityLevel.all
-  end
 
   def new
     authorize! :manage, ProjectSecurityLevel

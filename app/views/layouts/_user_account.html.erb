@@ -119,21 +119,9 @@
           <%= I18n.t(:projestimate_module) %></a></li>
       <% end %>
 
-      <% if can? :manage, WorkElementType or can? :create_and_edit_work_element_type, WorkElementType %>
-        <li class="dropdown"><a href="<%= main_app.work_element_types_path %>">
-          <!--<i class="icon-sitemap icon-large pull-left"></i>-->
-          <%= I18n.t(:work_element) %></a></li>
-      <% end %>
-
       <li class="dropdown"><a href="<%= main_app.technologies_path %>">
         <%= I18n.t(:organization_technology) %></a>
       </li>
-
-      <% if can? :manage, ProjectSecurityLevel %>
-        <li class="dropdown"><a href="<%= main_app.project_security_levels_path %>">
-          <!--<i class="icon-check icon-large pull-left"></i>-->
-          <%= I18n.t(:security_level) %></a></li>
-      <% end %>
 
       <% if can? :manage, Permission %>
         <li class="dropdown"><a href="<%= main_app.permissions_path %>">

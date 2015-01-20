@@ -173,8 +173,6 @@ Projestimate::Application.routes.draw do
   get 'searches/results' => 'searches#results', :as => 'searches/results'
   match 'searches/results' => 'searches#results', :as => 'search_results'
 
-  resources :project_security_levels
-
   resources :estimation_values
   match 'estimation_values/:type/convert' => 'estimation_values#convert', :as => 'convert'
 
@@ -199,8 +197,6 @@ Projestimate::Application.routes.draw do
   resources :pe_attributes
   post 'check_attribute' => 'pe_attributes#check_attribute', :as => 'check_attribute'
   get 'find_use_attribute' => 'pe_attributes#find_use_attribute', :as => 'find_use_attribute'
-
-  resources :work_element_types
 
   resources :currencies
 
@@ -236,7 +232,6 @@ Projestimate::Application.routes.draw do
   post 'set_rights_project_security' => 'permissions#set_rights_project_security', :as => 'set_rights_project_security'
   get 'globals_permissions' => 'permissions#globals_permissions', :as => 'globals_permissions'
 
-  resources :groups
   post 'update_selected_users' => 'groups#update_selected_users'
   post 'update_selected_projects' => 'groups#update_selected_projects'
 
