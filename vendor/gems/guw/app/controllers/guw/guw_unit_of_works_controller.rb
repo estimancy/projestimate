@@ -359,11 +359,16 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                              module_project_id: current_module_project.id,
                                              guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
 
-    @group_number_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                               guw_unit_of_work_group_id: @group.id,
-                                               pbs_project_element_id: current_component.id,
-                                               module_project_id: current_module_project.id,
-                                               guw_model_id: @guw_unit_of_work.guw_model.id).size
+    @group_number_of_unit_of_works = Guw::GuwUnitOfWork.where(guw_unit_of_work_group_id: @group.id,
+                                                              pbs_project_element_id: current_component.id,
+                                                              module_project_id: current_module_project.id,
+                                                              guw_model_id: @guw_unit_of_work.guw_model.id).size
+
+    @group_selected_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
+                                                                guw_unit_of_work_group_id: @group.id,
+                                                                pbs_project_element_id: current_component.id,
+                                                                module_project_id: current_module_project.id,
+                                                                guw_model_id: @guw_unit_of_work.guw_model.id).size
 
     @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
                                                             guw_unit_of_work_group_id: @group.id,
@@ -374,24 +379,28 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     #For all unit of work
     @ajusted_effort = Guw::GuwUnitOfWork.where(selected: true,
-                                             pbs_project_element_id: current_component.id,
-                                             module_project_id: current_module_project.id,
-                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
+                                               pbs_project_element_id: current_component.id,
+                                               module_project_id: current_module_project.id,
+                                               guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.ajusted_effort.to_f }.sum
 
     @theorical_effort = Guw::GuwUnitOfWork.where(selected: true,
-                                             pbs_project_element_id: current_component.id,
-                                             module_project_id: current_module_project.id,
-                                             guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
+                                                 pbs_project_element_id: current_component.id,
+                                                 module_project_id: current_module_project.id,
+                                                 guw_model_id: @guw_unit_of_work.guw_model.id).map{|i| i.effort.to_f }.sum
 
-    @number_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
-                                                       pbs_project_element_id: current_component.id,
-                                                       module_project_id: current_module_project.id,
-                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
+    @number_of_unit_of_works = Guw::GuwUnitOfWork.where(pbs_project_element_id: current_component.id,
+                                                        module_project_id: current_module_project.id,
+                                                        guw_model_id: @guw_unit_of_work.guw_model.id).size
+
+    @selected_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
+                                                          pbs_project_element_id: current_component.id,
+                                                          module_project_id: current_module_project.id,
+                                                          guw_model_id: @guw_unit_of_work.guw_model.id).size
 
     @flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
-                                                       pbs_project_element_id: current_component.id,
-                                                       module_project_id: current_module_project.id,
-                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                      pbs_project_element_id: current_component.id,
+                                                      module_project_id: current_module_project.id,
+                                                      guw_model_id: @guw_unit_of_work.guw_model.id).size
 
   end
 

@@ -158,6 +158,7 @@ class ViewsWidgetsController < ApplicationController
         pf.save
       end
     end
+
     respond_to do |format|
 
       if @views_widget.update_attributes(params[:views_widget])
