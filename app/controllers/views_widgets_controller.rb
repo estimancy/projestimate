@@ -101,7 +101,8 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def create
-    @views_widget = ViewsWidget.new(params[:views_widget])
+    @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1))
+    # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
     #@module_project = ModuleProject.find(params[:views_widget][:module_project_id])
 
@@ -193,7 +194,25 @@ class ViewsWidgetsController < ApplicationController
     redirect_to dashboard_path(@project)
   end
 
+
   def update_view_widget_positions
+    views_widgets = params[:views_widgets]
+    unless views_widgets.empty?
+      views_widgets.each_with_index do |element, index|
+        view_widget_hash = element.last
+        view_widget_id = view_widget_hash[:view_widget_id].to_i
+        if view_widget_id != 0
+          view_widget = ViewsWidget.find(view_widget_id)
+          if view_widget
+            # Update the View Widget positions (left = position_x, top = position_y)
+            view_widget.update_attributes(position_x: view_widget_hash[:col], position_y: view_widget_hash[:row], position: index+1)
+          end
+        end
+      end
+    end
+  end
+
+  def update_view_widget_positions_SAVE
     view_id = params[:view_id]
     pos_x = "#{params[:position_x]}px"
     pos_y = "#{params[:position_y]}px"
@@ -209,7 +228,7 @@ class ViewsWidgetsController < ApplicationController
       #  view_widget.update_attributes(position_x: pos_x, position_y: pos_y)
       #end
 
-      widgets_orders.each_with_index do |dashboard_widget_id, index|
+      widgets_orders.each do |dashboard_widget_id, index|
         if dashboard_widget_id != ""
           view_widget_id = dashboard_widget_id.split("dashboard_widget_").last.to_i
           view_widget = ViewsWidget.find(view_widget_id)

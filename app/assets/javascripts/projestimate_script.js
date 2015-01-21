@@ -27,95 +27,145 @@ $(document).ready(function() {
     // Update the jscolor library Dir to resolve bug on colors detection
     jscolor.dir = '/assets/';
 
-    $(function() {
+    // ============================ TEST ================================================
+
+    $(function(){ //DOM Ready
 
         $('[id^="view_widgets_container_"]').each(function(){
-            //var container = $(this).data("view_id");
             var container_id = $(this).attr('id');
             var $widgets_container  = $('#'+container_id);
 
-            //$(this).sortable(); //$(this).disableSelection();
-            $widgets_container.sortable({
-                items:'.view_widget',
-                containment: 'parent',
-                revert: false,
-                dropOnEmpty: true,
-                forcePlaceholderSize: true,
-                scroll: true,
-
-                start: function(event, ui) {
-                    var start_pos = ui.item.index();
-                    ui.item.data('start_pos', start_pos);
-                    ui.item.startPos = ui.item.index();
-                    console.log(event);
-                    console.log(ui);
+            //$(".gridster ul").gridster({
+            $("#"+container_id+" > ul").gridster({
+                namespace: '#'+container_id,
+                widget_margins: [5, 5],
+                widget_base_dimensions: [60, 60],
+                widget_selector: "li",
+                serialize_params: function($w, wgd) {
+                    return {
+                        /* add element (ID, view_widget_id and container_id) to data*/
+                        id: $w.attr('id'),
+                        view_widget_id: $w.data('view_widget_id'),
+                        container_id: $w.data('container_id'),
+                        /* defaults */
+                        col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y
+                    }
                 },
 
-                update: function (event, ui) {
-                    var list =  $(this).sortable("toArray");
-                    $.ajax({
-                        method: 'GET',
-                        url: "/update_view_widget_positions",
-                        data: {
-                            view_id: this.id,
-                            view_widget_id: ui.item.data('view_widget_id'),
-                            position_x: ui.position.left,
-                            position_y: ui.position.top,
-                            widgets_orders: list
-                        }
-                    });
-                },
-
-                stop: function(event, ui) {
-                    var start_pos = ui.item.data('start_pos');
-                    var end_pos = ui.item.index();
-                    var idsInOrder = $($widgets_container).sortable("toArray");
-                    //alert(start_pos + ' - ' + end_pos);
-                    console.log(idsInOrder);
-                    console.log("Test " + ui.item.prevAll().length);
-                    //ui.helper.css({'top' : ui.position.top + $(window).scrollTop() + 'px'});
-                    console.log("New position: " + ui.placeholder.index());
-                    //alert(idsInOrder);
-                    //alert(ui.position.left);
+                draggable: {
+                    // Update all widgets positions
+                    stop: function(event, ui){
+                        //var gridster = $(".gridster ul").gridster().data('gridster');
+                        var gridster = $('#'+container_id+".gridster ul").gridster().data('gridster');
+                        var gridster_elements = gridster.serialize();
+                        $.ajax({
+                            method: 'GET',
+                            url: "/update_view_widget_positions",
+                            data: {
+                                view_id: this.id,
+                                views_widgets: gridster_elements
+                            }
+                        });
+                    }
                 }
+            });
+        })
+    });
 
-//                update: function( event, ui ) {
-//                    save_new_order($widgets_container);
+
+    // ============================ END TEST ============================================
+
+
+    // Handle widget draggable and sortable
+//    $(function() {
+//
+//        $('[id^="view_widgets_container_"]').each(function(){
+//            //var container = $(this).data("view_id");
+//            var container_id = $(this).attr('id');
+//            var $widgets_container  = $('#'+container_id);
+//
+//            //$(this).sortable(); //$(this).disableSelection();
+//            $widgets_container.sortable({
+//                items:'.view_widget',
+//                containment: 'parent',
+//                revert: false,
+//                dropOnEmpty: true,
+//                forcePlaceholderSize: true,
+//                scroll: true,
+//
+//                start: function(event, ui) {
+//                    var start_pos = ui.item.index();
+//                    ui.item.data('start_pos', start_pos);
+//                    ui.item.startPos = ui.item.index();
+//                    console.log(event);
+//                    console.log(ui);
+//                },
+//
+//                update: function (event, ui) {
+//                    var list =  $(this).sortable("toArray");
+//                    $.ajax({
+//                        method: 'GET',
+//                        url: "/update_view_widget_positions",
+//                        data: {
+//                            view_id: this.id,
+//                            view_widget_id: ui.item.data('view_widget_id'),
+//                            position_x: ui.position.left,
+//                            position_y: ui.position.top,
+//                            widgets_orders: list
+//                        }
+//                    });
+//                },
+//
+//                stop: function(event, ui) {
+//                    var start_pos = ui.item.data('start_pos');
+//                    var end_pos = ui.item.index();
+//                    var idsInOrder = $($widgets_container).sortable("toArray");
+//                    //alert(start_pos + ' - ' + end_pos);
+//                    console.log(idsInOrder);
+//                    console.log("Test " + ui.item.prevAll().length);
+//                    //ui.helper.css({'top' : ui.position.top + $(window).scrollTop() + 'px'});
+//                    console.log("New position: " + ui.placeholder.index());
+//                    //alert(idsInOrder);
+//                    //alert(ui.position.left);
 //                }
-            });
-
-        }).disableSelection();
-
-//        $(".view_widget").resizable({
-//            containment: 'parent'
-//        });
-
-        function save_new_order(sortable_id) {
-            var a = [];
-            $(sortable_id).children().each(function (i) {
-                a.push($(this).attr('id') + ':' + i);
-            });
-            var s = a.join(',');
-            alert(s);
-        }
-
-        //Function that update the widget's position in view
-        function saveWidgetPositions( $widget_ui ){
-            var pos_x = $widget_ui.position.left;
-            var pos_y = $widget_ui.position.top;
-            alert("pos_x = "+ pos_x+ "px \n" +"pos_y ="+ pos_y+"px");
-            $.ajax({
-                url:"/update_view_widget_positions",
-                method: 'GET',
-                data: {
-                    view_widget_id: $widget_ui.draggable.data('view_widget_id'),
-                    position_x: pos_x,
-                    position_y: pos_y
-                }
-            });
-        }
-
-   });
+//
+////                update: function( event, ui ) {
+////                    save_new_order($widgets_container);
+////                }
+//            });
+//
+//        }).disableSelection();
+//
+////        $(".view_widget").resizable({
+////            containment: 'parent'
+////        });
+//
+//        function save_new_order(sortable_id) {
+//            var a = [];
+//            $(sortable_id).children().each(function (i) {
+//                a.push($(this).attr('id') + ':' + i);
+//            });
+//            var s = a.join(',');
+//            alert(s);
+//        }
+//
+//        //Function that update the widget's position in view
+//        function saveWidgetPositions( $widget_ui ){
+//            var pos_x = $widget_ui.position.left;
+//            var pos_y = $widget_ui.position.top;
+//            alert("pos_x = "+ pos_x+ "px \n" +"pos_y ="+ pos_y+"px");
+//            $.ajax({
+//                url:"/update_view_widget_positions",
+//                method: 'GET',
+//                data: {
+//                    view_widget_id: $widget_ui.draggable.data('view_widget_id'),
+//                    position_x: pos_x,
+//                    position_y: pos_y
+//                }
+//            });
+//        }
+//
+//   });
 
 
     $("form.send_feedback input[type=submit]").click(function() {

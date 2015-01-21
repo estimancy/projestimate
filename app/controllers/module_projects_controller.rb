@@ -97,7 +97,9 @@ class ModuleProjectsController < ApplicationController
           new_view = View.create(organization_id: @project.organization_id, name: "View for #{module_project_name}", description: "Dynamic created view for the #{module_project_name} module. Please rename the view's name and description if needed.")
           #We have to copy all the selected view's widgets in a new view for the current module_project
           selected_view.views_widgets.each do |view_widget|
-            widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, pe_attribute_id: view_widget.pe_attribute_id, name: view_widget.name,
+            estimation_value = @module_project.estimation_values.where('pe_attribute_id = ?', view_widget.estimation_value.pe_attribute_id).first
+            estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+            widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
                                              show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                              width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position)
           end
@@ -264,6 +266,10 @@ class ModuleProjectsController < ApplicationController
       end
     end
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
+
+    respond_to do |format|
+      format.js { render :js => "window.location.replace('#{dashboard_path(@project)}');"}
+    end
   end
 
 end
