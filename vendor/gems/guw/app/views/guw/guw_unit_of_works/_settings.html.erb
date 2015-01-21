@@ -18,19 +18,19 @@
           <span class="label label-info theorical_effort">
               <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
           </span>
-            / Nombre d'U.O. :
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. :
           <span class="label label-info number_of_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works }.flatten.size %>
           </span>
-            / Nombre d'U.O. modifiés
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. modifiés
           <span class="label label-info modified_of_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size %>
           </span>
-          / Nombre d'U.O. sélectionnés :
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. sélectionnés :
           <span class="label label-info selected_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size %>
           </span>
-            / Nombre d'U.O. H.C. :
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.C. :
           <span class="label label-info off_line_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size %>
           </span>
@@ -62,22 +62,22 @@
             <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum %>
           </span>
 
-          / Total U.F. calculés :
+          - Total U.F. calculés :
           <span class="<%= uowg.id %>_theorical">
             <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>
           </span>
 
-          / Nombre d'U.O. :
+          - Nombre d'U.O. :
           <span class="<%= uowg.id %>_number">
             <%= uowg.guw_unit_of_works.size %>
           </span>
 
-          / Nombre d'U.O. modifiés :
+          - Nombre d'U.O. modifiés :
           <span class="<%= uowg.id %>_flagged">
             <%= uowg.guw_unit_of_works.where(flagged: true).size %>
           </span>
 
-          / Nombre d'U.O. sélectionnés :
+          - Nombre d'U.O. sélectionnés :
           <span class="<%= uowg.id %>_selected">
             <%= uowg.guw_unit_of_works.where(selected: true).size %>
           </span>
