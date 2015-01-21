@@ -221,6 +221,7 @@ $(document).ready(function() {
         });
     });
 
+    // Update the view_widget attribute according to the selected module
    $("#views_widget_module_project_id").change(function() {
        if ($(this).val() !== ""){
             return $.ajax({
