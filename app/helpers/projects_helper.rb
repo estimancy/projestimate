@@ -83,7 +83,8 @@ module ProjectsHelper
     end
   end
 
-  def convert(value, organization)
+  def convert(v, organization)
+    value = v.to_f
     if value < organization.limit1.to_i
       value
     elsif (value >= organization.limit1.to_i) && (value < organization.limit2.to_i)
@@ -97,7 +98,8 @@ module ProjectsHelper
     end
   end
 
-  def convert_label(value, organization)
+  def convert_label(v, organization)
+    value = v.to_f
     if value < organization.limit1.to_i
       "h/h"
     elsif (value >= organization.limit1.to_i) && (value < organization.limit2.to_i)
