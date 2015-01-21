@@ -37,12 +37,6 @@
 class ProjectSecuritiesController < ApplicationController
   load_resource
 
-  def index
-    set_page_title 'Projects Securities'
-    @project_security_levels = ProjectSecurityLevel.defined
-    @permissions = @permissions = Permission.defined.select{|i| i.is_permission_project }
-  end
-
   def new
     set_page_title 'Project securities'
     @project_security = ProjectSecurity.new

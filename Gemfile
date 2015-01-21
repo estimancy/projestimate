@@ -118,6 +118,7 @@ gem 'real_size', path: "vendor/gems/real_size"
 gem 'uow', :path => 'vendor/gems/uow'
 gem 'guw', :path => 'vendor/gems/guw'
 gem 'balancing_module', path: "vendor/gems/balancing_module"
+#gem 'expert_judgment', path: "vendor/gems/expert_judgment"
 
 # This gem provides the JavaScript InfoVis Toolkit for your rails application.
 gem "jit-rails", "~> 0.0.2"

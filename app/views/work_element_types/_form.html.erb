@@ -6,35 +6,17 @@
     <%= simple_form_for(@work_element_type) do |f| %>
         <%= f.error_notification %>
 
-        <div>
-          <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :organization_id, as: :hidden, :input_html => {:value => params[:organization_id] }  %>
 
-          <table>
-            <tr>
-              <td>
-                <%= f.input :alias, :label => I18n.t('alias') %>
-              </td>
-            </tr>
-          </table>
-          <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-
-          <table>
-            <tr>
-              <td>
-                <%= f.association :record_status, :label => I18n.t('record_status'),
-                                  :collection => @work_element_type.record_status_collection,
-                                  :input_html => {:class => 'record_status'},
-                                  :selected => (@work_element_type.is_defined_or_nil? ? @proposed_status.id : @work_element_type.record_status_id),
-                                  :disabled => (true if @work_element_type.is_retired?) %>
-              </td>
-              <td>
-                <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @work_element_type.is_custom?) %>
-              </td>
-            </tr>
-          </table>
-          <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
-
-        </div>
+        <table>
+          <tr>
+            <td>
+              <%= f.input :alias, :label => I18n.t('alias') %>
+            </td>
+          </tr>
+        </table>
+        <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
         <div class="actions-tabs">
           <% if action_name.in?(%w(new create)) %>

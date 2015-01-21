@@ -70,7 +70,7 @@ module ProjectsHelper
       when "effort_person_hour"
         I18n.t(:unit_effort_person_hour)
       when "effort"
-        I18n.t(:unit_effort)
+        I18n.t(:unit_effort_person_hour)
       when "effort_person_week"
         I18n.t(:unit_effort_person_week)
       when "staffing"
@@ -170,9 +170,9 @@ module ProjectsHelper
     pbs_level_data_for_consistency = Hash.new
 
     module_project.estimation_values.order('display_order ASC').each do |est_val|
-          if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
-            probable_est_value_for_consistency = est_val.send("string_data_probable")
-            res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
+      if (est_val.in_out == 'output' or est_val.in_out=='both') and est_val.module_project.id == module_project.id
+        probable_est_value_for_consistency = est_val.send("string_data_probable")
+        res << "<th colspan='4'><span class='attribute_tooltip' title='#{est_val.pe_attribute.description} #{display_rule(est_val)}'> #{est_val.pe_attribute.name} (#{get_attribute_unit(est_val.pe_attribute)})</span></th>"
 
         # For is_consistent purpose
         ['low', 'most_likely', 'high', 'probable'].each do |level|
@@ -928,11 +928,7 @@ module ProjectsHelper
               "#{convert(value, @project.organization).round}"
             end
           else
-            if get_with_unit
-              "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))} #{get_attribute_unit(est_val_pe_attribute)}"
-            else
-              "#{number_with_delimiter(value.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision))}"
-            end
+            "#{convert(value, @project.organization).round(1)} #{get_attribute_unit(est_val_pe_attribute)}"
           end
         rescue
           value
