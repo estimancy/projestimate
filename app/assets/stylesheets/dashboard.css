@@ -1018,3 +1018,9 @@ td.text_field_text_overflow {
     text-align: left;
 }
 
+/*Set widget background */
+.gridster .preview-holder {
+    border: none!important;
+    background: #d3d3d3!important;
+}
+
