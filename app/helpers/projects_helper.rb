@@ -67,12 +67,8 @@ module ProjectsHelper
   # Display the units of attributes
   def get_attribute_unit(pe_attribute)
     case pe_attribute.alias
-      when "effort_person_hour"
-        I18n.t(:unit_effort_person_hour)
       when "effort"
         I18n.t(:unit_effort_person_hour)
-      when "effort_person_week"
-        I18n.t(:unit_effort_person_week)
       when "staffing"
         I18n.t(:unit_staffing)
       when "end_date"
@@ -87,31 +83,33 @@ module ProjectsHelper
     end
   end
 
-  def convert(value, organization)
+  def convert(v, organization)
+    value = v.to_f
     if value < organization.limit1.to_i
       value
-    elsif (value > organization.limit1.to_i) && (value < organization.limit2.to_i)
+    elsif (value >= organization.limit1.to_i) && (value < organization.limit2.to_i)
       value / organization.number_hours_per_day
-    elsif (value > organization.limit2.to_i) && (value < organization.limit3.to_i)
+    elsif (value >= organization.limit2.to_i) && (value < organization.limit3.to_i)
       value / organization.number_hours_per_day / 4
-    elsif value > organization.limit3.to_i
+    elsif value >= organization.limit3.to_i
       value / organization.number_hours_per_month
     else
       value
     end
   end
 
-  def convert_delay_label(value, organization)
+  def convert_label(v, organization)
+    value = v.to_f
     if value < organization.limit1.to_i
-      I18n.t(:hours)
-    elsif (value > organization.limit1.to_i) && (value < organization.limit2.to_i)
-      I18n.t(:unit_days)
-    elsif (value > organization.limit2.to_i) && (value < organization.limit3.to_i)
-      I18n.t(:weeks)
-    elsif value > organization.limit3.to_i
-      I18n.t(:months)
+      "h/h"
+    elsif (value >= organization.limit1.to_i) && (value < organization.limit2.to_i)
+      "j/h"
+    elsif (value >= organization.limit2.to_i) && (value < organization.limit3.to_i)
+      "w/h"
+    elsif value >= organization.limit3.to_i
+      "m/h"
     else
-      I18n.t(:hours)
+      "h/h"
     end
   end
 
@@ -916,35 +914,37 @@ module ProjectsHelper
   #Display pemodule output depending attribute type.
   def display_value(value, est_val, get_with_unit=true)
     est_val_pe_attribute = est_val.pe_attribute
+    precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
     case est_val_pe_attribute.attr_type
       when 'date'
         display_date(value)
       when 'float'
-        begin
+        #begin
           if est_val_pe_attribute.alias == "delay"
             if get_with_unit
-              "#{convert(value, @project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_delay_label(value, @project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+              "#{convert(value, @project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_label(value, @project.organization) : get_attribute_unit(est_val_pe_attribute)}"
             else
-              "#{convert(value, @project.organization).round}"
+              "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
             end
           else
-            "#{convert(value, @project.organization).round(1)} #{get_attribute_unit(est_val_pe_attribute)}"
+            "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
           end
-        rescue
-          value
-        end
+        #rescue
+        #  value
+        #end
       when 'integer'
-        begin
-          value.to_i
-        rescue
-          value
-        end
+        #begin
+          "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
+        #rescue
+        #  value
+        #end
       else
-        begin
-          value.round(user_number_precision)
-        rescue
-          value
-        end
+        value
+        #begin
+        #  "#{convert(value, @project.organization).round(1)} #{convert_label(est_val_pe_attribute, @project.organization)}"
+        #rescue
+        #  value
+        #end
     end
   end
 
@@ -963,22 +963,14 @@ module ProjectsHelper
   def display_text_field_tag(level, est_val, module_project, level_estimation_values, pbs_project_element, attribute_type="", read_only_value=false)
 
     est_val_pe_attribute = est_val.pe_attribute
+    organization = module_project.project.organization
+    precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
     res = []
-    #if pbs_project_element.folder? && !pbs_project_element.descendants.empty?
-    #  ###pbs_project_element.descendants.map{|i| res << level_estimation_values[i.id].to_i }
-    #  text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-    #                 level_estimation_values[pbs_project_element.id].to_i,
-    #                 :class => "input-small #{level} #{est_val.id}",
-    #                 :readonly => true,
-    #                 "data-module_project_id" => module_project.id,
-    #                 "data-est_val_id" => est_val.id
-    #else
-    #if pbs_project_element.is_root?
+
     read_only_value = false
-    #end
     if module_project.previous.empty? || !est_val["string_data_#{level}"][pbs_project_element.id].nil?
       text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                     level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id],
+                     convert(level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id], organization),
                      :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                      "data-est_val_id" => est_val.id,
                      "data-module_project_id" => module_project.id,
@@ -987,7 +979,7 @@ module ProjectsHelper
       comm_attr = ModuleProject::common_attributes(module_project.previous.first, module_project)
       if comm_attr.empty?
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                       (level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id]).to_f.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision),
+                       convert((level_estimation_values[pbs_project_element.id].nil? ? level_estimation_values["default_#{level}".to_sym] : level_estimation_values[pbs_project_element.id]), organization).to_f.round(precision),
                        :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                        "data-est_val_id" => est_val.id,
                        "data-module_project_id" => module_project.id,
@@ -996,14 +988,13 @@ module ProjectsHelper
         estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id, :module_project_id => module_project.previous.first.id).first
         new_level_estimation_values = estimation_value.send("string_data_#{level}")
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
-                       (new_level_estimation_values[pbs_project_element.id]).to_f.round(est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision),
+                       convert(new_level_estimation_values[pbs_project_element.id], organization).to_f.round(precision),
                        :class => "input-small #{level} #{est_val.id} #{attribute_type}",
                        "data-est_val_id" => est_val.id,
                        "data-module_project_id" => module_project.id,
                        :readonly => read_only_value
       end
     end
-    #end
   end
 
   #Display rule and options of an attribute in a bootstrap tooltip
