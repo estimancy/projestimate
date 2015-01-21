@@ -430,7 +430,7 @@ fr:
 
   #groups
   global: "Global"
-  text_group_associated_users: "Utilisateurs associés (utilisateurs membres) du groupe \"%{value}\""
+  text_group_associated_users: "Utilisateurs membre du groupe \"%{value}\""
   edit_group: "Editer le groupe \"%{value}\" ... "
   new_group: "Créer un nouveau groupe ... "
 
