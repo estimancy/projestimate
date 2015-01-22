@@ -1369,3 +1369,6 @@ fr:
   no_uo_type: "Vous n'avez pas encore de type d'UO"
   weight: "Poids"
 
+  help_text: "Texte d'aide"
+
+

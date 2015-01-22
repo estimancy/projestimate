@@ -1,3 +1,7 @@
 $("#myModal").modal('toggle');
-//$("#help").html("<%#raw @descriptions %>")
-$("#content").html("<%=raw j(@factor.helps) %>")
+//$("#content").html("<%#=raw j(@factor.helps) %>")
+<% if current_user.language.locale.downcase == "fr" %>
+    $("#content").html("<%=raw j(@factor.send("fr_helps")) %>")
+<% else %>
+    $("#content").html("<%=raw j(@factor.send("en_helps")) %>")
+<% end %>

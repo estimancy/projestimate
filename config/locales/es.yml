@@ -1638,3 +1638,15 @@ es:
   label_Subcontractor: "Subcontractor"
   "label_Guw::GuwModel": "Generic unit of work model"
 
+  work_unit_type: "Unit of work type"
+  cotation: "Cotation"
+  technology: "Technology"
+  tracability: "Tracability"
+  results: "Results"
+  retained_result: "Retained"
+  actions: "Actions"
+  no_uo_type: "You havent unit of works types"
+  weight: "Weight"
+
+  help_text: "Help text"
+
