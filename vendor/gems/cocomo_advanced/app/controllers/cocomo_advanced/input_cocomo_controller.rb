@@ -22,7 +22,6 @@
 class CocomoAdvanced::InputCocomoController < ApplicationController
 
   def index
-
     @aprod = Array.new
     aliass = %w(rely data cplx ruse docu)
     aliass.each do |a|

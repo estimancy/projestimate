@@ -13,7 +13,12 @@
         <%= f.input :factor_type, :label => I18n.t(:type), :input_html => {:class => 'input-xxlarge'}, collection: ["intermediate", "advanced", "early_design", "expert_early_design", "expert_post_architecture"] %>
         <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
         <%= tinymce %>
-        <%= f.input :helps, :label => "Help text", :input_html => {class: 'tinymce', rows: 15, cols: 20 } %>
+        <% if current_user.language.locale.downcase == "fr" %>
+            <%= f.input :fr_helps, :label => I18n.t(:help_text), :input_html => {class: 'tinymce', rows: 15, cols: 20 } %>
+        <% else %>
+            <%= f.input :en_helps, :label => I18n.t(:help_text), :input_html => {class: 'tinymce', rows: 15, cols: 20 } %>
+        <% end %>
+
         <%= f.input :state, :label => I18n.t('state'), :input_html => {:class => 'input-xxlarge'} %>
         <table>
           <tr>

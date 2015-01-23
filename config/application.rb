@@ -182,8 +182,10 @@ module Projestimate
                                ["Cost per phase", [ ["Table", "table_cost_per_phase"], ["Histogram", "histogram_cost_per_phase"], ["Pie chart", "pie_chart_cost_per_phase"] ] ],
                                ["Effort per phases and profiles", [ ["Table", "effort_per_phases_profiles_table"],["Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"] ] ],
                                ["Cost per phases and profiles", [ ["Table", "cost_per_phases_profiles_table"], ["Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"] ] ]
-                               #["Effort per phase & Profiles", [ ["Effort per phases & profiles : table", "effort_per_phases_profiles_table"], ["Cost per phases & profiles : table", "cost_per_phases_profiles_table"] ] ],
-                               #["Effort per phase & Profiles Stacked", [ ["Effort per phases & profiles : Stacked bar chart", "stacked_bar_chart_effort_per_phases_profiles"], ["Cost per phases & profiles : Stacked bar chart", "stacked_bar_chart_cost_per_phases_profiles"] ] ]
     ]
+
+    # Non concern value : "text", table_effort_per_phase", "effort_per_phases_profiles_table", "cost_per_phases_profiles_table",
+    DELETE_MIN_MAX_ON_WIDGET_TYPE = [ "line_chart", "bar_chart", "area_chart", "pie_chart", "timeline", "stacked_bar_chart", "histogram_effort_per_phase", "pie_chart_effort_per_phase", "histogram_cost_per_phase",
+                                      "pie_chart_cost_per_phase", "stacked_bar_chart_effort_per_phases_profiles",  "stacked_bar_chart_cost_per_phases_profiles" ]
   end
 end

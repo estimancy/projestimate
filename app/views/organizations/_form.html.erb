@@ -733,7 +733,7 @@
         <td><%= ot.name %></td>
         <td><%= ot.alias %></td>
         <td><%= ot.description %></td>
-        <td><%= ot.state %></td>
+        <td class="center"><%= ot.state %></td>
         <td class="align-center">
           <% unless ot.in?(@default_subcontractors) %>
             <%= link_to '', edit_subcontractor_path(ot.id, :organization_id => @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
