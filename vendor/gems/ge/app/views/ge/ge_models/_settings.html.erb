@@ -8,6 +8,7 @@
       <% attr = PeAttribute.find_by_alias("retained_size") %>
       <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.previous.first.id).first %>
       <% component_id = current_component.id %>
+      <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
 
       <table class="table table-condensed table-striped">
         <tr>
@@ -56,15 +57,15 @@
         <tr>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "effort_low", convert(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization), class: "input-medium" %>
+              <%= text_field_tag "effort_low", convert(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization).round(precision), class: "input-medium" %>
             </td>
           <% end %>
           <td>
-            <%= text_field_tag "effort_most_likely", convert(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization), class: "input-medium" %>
+            <%= text_field_tag "effort_most_likely", convert(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization).round(precision), class: "input-medium" %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "effort_high", convert(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization), class: "input-medium" %>
+              <%= text_field_tag "effort_high", convert(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization).round(precision), class: "input-medium" %>
             </td>
           <% end %>
         </tr>
