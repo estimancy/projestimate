@@ -1,0 +1,80 @@
+<div class="alert alert-dismissable">
+  Formule de calcul de l'effort = ax^b ou <b>a</b> = <%= @ge_model.coeff_a %> et <b>b</b> = <%= @ge_model.coeff_b %>
+</div>
+<%= form_tag ge.ge_model_save_efforts_path(@ge_model) do %>
+  <div class="row-fluid">
+    <div class="span6">
+      <h4>Taille en entrée (en <%= current_module_project.previous.first.guw_model.output_unit %>)</h4>
+      <% attr = PeAttribute.find_by_alias("retained_size") %>
+      <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.previous.first.id).first %>
+      <% component_id = current_component.id %>
+      <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
+
+      <table class="table table-condensed table-striped">
+        <tr>
+          <% if @ge_model.three_points_estimation == true %>
+            <th>L</th>
+          <% end %>
+          <th>M</th>
+          <% if @ge_model.three_points_estimation == true %>
+            <th>H</th>
+          <% end %>
+        </tr>
+        <tr>
+          <% if @ge_model.three_points_estimation == true %>
+            <td>
+              <%= text_field_tag "retained_size_low", ev.nil? ? '': ev.send("string_data_low")[component_id], class: "input-medium" %>
+            </td>
+          <% end %>
+          <td>
+            <%= text_field_tag "retained_size_most_likely", ev.nil? ? '': ev.send("string_data_most_likely")[component_id], class: "input-medium" %>
+          </td>
+          <% if @ge_model.three_points_estimation == true %>
+            <td>
+              <%= text_field_tag "retained_size_high", ev.nil? ? '': ev.send("string_data_high")[component_id], class: "input-medium" %>
+            </td>
+          <% end %>
+        </tr>
+      </table>
+    </div>
+
+
+    <div class="span6">
+      <% attr = PeAttribute.find_by_alias("effort") %>
+      <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id).first %>
+      <% component_id = current_component.id %>
+      <h4>Effort en sortie (en <%= convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization) %>)</h4>
+      <table class="table table-condensed table-striped">
+        <tr>
+          <% if @ge_model.three_points_estimation == true %>
+            <th>L</th>
+          <% end %>
+          <th>M</th>
+          <% if @ge_model.three_points_estimation == true %>
+            <th>H</th>
+          <% end %>
+        </tr>
+        <tr>
+          <% if @ge_model.three_points_estimation == true %>
+            <td>
+              <%= text_field_tag "effort_low", convert(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization).round(precision), class: "input-medium" %>
+            </td>
+          <% end %>
+          <td>
+            <%= text_field_tag "effort_most_likely", convert(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization).round(precision), class: "input-medium" %>
+          </td>
+          <% if @ge_model.three_points_estimation == true %>
+            <td>
+              <%= text_field_tag "effort_high", convert(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization).round(precision), class: "input-medium" %>
+            </td>
+          <% end %>
+        </tr>
+      </table>
+    </div>
+
+    <button type="submit" class="btn btn-default btn-mini pull-right">Sauvegarder</button>
+
+    <br>
+    <hr>
+  </div>
+<% end %>

@@ -53,9 +53,40 @@
               <%= f.input :cost_per_hour, :label => I18n.t('cost_per_hour'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
               <%= f.input :inflation_rate, :label => I18n.t('inflation_rate'), :required => true, :input_html => {:class => 'input-xxlarge'} %>
 
-              <%= f.input :limit1, :required => true, :input_html => {:class => 'input-xxlarge'} %>
-              <%= f.input :limit2, :required => true, :input_html => {:class => 'input-xxlarge'} %>
-              <%= f.input :limit3, :required => true, :input_html => {:class => 'input-xxlarge'} %>
+              <hr>
+              <br>
+
+              <table class="table">
+                <tr>
+                  <th>Valeu max. du seuil</th>
+                  <th>Coefficient de conversion standard (heure)</th>
+                  <th>Unité d'effort</th>
+                </tr>
+
+                <tr>
+                  <td class="center"><%= text_field_tag "organization[limit1]", @organization.limit1 %></td>
+                  <td class="center"><%= text_field_tag "organization[limit1_coef]", @organization.limit1_coef %></td>
+                  <td class="center"><%= text_field_tag "organization[limit1_unit]", @organization.limit1_unit %></td>
+                </tr>
+
+                <tr>
+                  <td class="center"><%= text_field_tag "organization[limit2]", @organization.limit2 %></td>
+                  <td class="center"><%= text_field_tag "organization[limit2_coef]", @organization.limit2_coef %></td>
+                  <td class="center"><%= text_field_tag "organization[limit2_unit]", @organization.limit2_unit %></td>
+                </tr>
+                <tr>
+                  <td class="center"><%= text_field_tag "organization[limit3]", @organization.limit3 %></td>
+                  <td class="center"><%= text_field_tag "organization[limit3_coef]", @organization.limit3_coef %></td>
+                  <td class="center"><%= text_field_tag "organization[limit3_unit]", @organization.limit3_unit %></td>
+                </tr>
+                <tr>
+                  <td class="center"><%= text_field_tag "organization[limit4]", @organization.limit4 %></td>
+                  <td class="center"><%= text_field_tag "organization[limit4_coef]", @organization.limit4_coef %></td>
+                  <td class="center"><%= text_field_tag "organization[limit4_unit]", @organization.limit3_unit %></td>
+                </tr>
+
+              </table>
+
             </div>
           </div>
         </div>
@@ -839,7 +870,7 @@
 
    <b>Modèle d'UO</b>
 
-   <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn pull-right' %>
+   <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
    <br>
 
    <table class="table table-bordered">
@@ -851,11 +882,62 @@
      <% @guw_models.each do |i| %>
        <tr>
          <td class="span5">
-           <%= link_to i.name, guw.guw_model_path(i), :title => I18n.t('edit') %>
+           <%= link_to i.name, guw.guw_model_path(i) %>
          </td>
          <td class="align-center">
-           <%= link_to 'Edit model', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'btn btn-mini' %>
-           <%= link_to 'Delete', guw.guw_model_path(i), method: "DELETE",  :class => 'btn btn-mini', :title => I18n.t('delete') %>
+           <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+         </td>
+       </tr>
+     <% end %>
+   </table>
+
+   <br>
+   <hr>
+
+   <b>Expert Judgment</b>
+
+   <table class="table table-bordered">
+     <tr>
+       <th><%= I18n.t(:name) %></th>
+       <th class="action"><%= I18n.t(:actions) %></th>
+     </tr>
+
+     <% ExpertJudgement::Instance.all.each do |i| %>
+       <tr>
+         <td class="span5">
+           <%= link_to i.name, guw.guw_model_path(i) %>
+         </td>
+         <td class="align-center">
+           <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+         </td>
+       </tr>
+     <% end %>
+   </table>
+
+   <br>
+   <hr>
+
+   <b>Module d'Effort Générique</b>
+
+   <%= link_to "Nouvelle instance d'effort", ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+
+   <table class="table table-bordered">
+
+     <tr>
+       <th><%= I18n.t(:name) %></th>
+       <th class="action"><%= I18n.t(:actions) %></th>
+     </tr>
+
+     <% Ge::GeModel.all.each do |i| %>
+       <tr>
+         <td class="span5">
+           <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
+         </td>
+         <td class="align-center">
+           <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', ge.ge_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
          </td>
        </tr>
      <% end %>
