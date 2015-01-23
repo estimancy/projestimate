@@ -1,3 +1,6 @@
+<div class="alert alert-dismissable">
+  Formule de calcul de l'effort = ax^b ou <b>a</b> = <%= @ge_model.coeff_a %> et <b>b</b> = <%= @ge_model.coeff_b %>
+</div>
 <%= form_tag ge.ge_model_save_efforts_path(@ge_model) do %>
   <div class="row-fluid">
     <div class="span6">
