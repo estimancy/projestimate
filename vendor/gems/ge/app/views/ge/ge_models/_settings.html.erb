@@ -19,15 +19,15 @@
         <tr>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "low_result", ev.nil? ? '': ev.send("string_data_low")[component_id], class: "input-medium" %>
+              <%= text_field_tag "retained_size_low", ev.nil? ? '': ev.send("string_data_low")[component_id], class: "input-medium" %>
             </td>
           <% end %>
           <td>
-            <%= text_field_tag "most_likely_result", ev.nil? ? '': ev.send("string_data_most_likely")[component_id], class: "input-medium" %>
+            <%= text_field_tag "retained_size_most_likely", ev.nil? ? '': ev.send("string_data_most_likely")[component_id], class: "input-medium" %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "high_result", ev.nil? ? '': ev.send("string_data_high")[component_id], class: "input-medium" %>
+              <%= text_field_tag "retained_size_high", ev.nil? ? '': ev.send("string_data_high")[component_id], class: "input-medium" %>
             </td>
           <% end %>
         </tr>
@@ -53,15 +53,15 @@
         <tr>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "low_result", ev.nil? ? '': ev.send("string_data_low")[component_id], class: "input-medium" %>
+              <%= text_field_tag "effort_low", ev.nil? ? '': ev.send("string_data_low")[component_id], class: "input-medium" %>
             </td>
           <% end %>
           <td>
-            <%= text_field_tag "most_likely_result", ev.nil? ? '': ev.send("string_data_most_likely")[component_id], class: "input-medium" %>
+            <%= text_field_tag "effort_most_likely", ev.nil? ? '': ev.send("string_data_most_likely")[component_id], class: "input-medium" %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "high_result", ev.nil? ? '': ev.send("string_data_high")[component_id], class: "input-medium" %>
+              <%= text_field_tag "effort_high", ev.nil? ? '': ev.send("string_data_high")[component_id], class: "input-medium" %>
             </td>
           <% end %>
         </tr>

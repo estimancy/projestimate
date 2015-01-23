@@ -74,18 +74,23 @@ class Ge::GeModelsController < ApplicationController
   def save_efforts
     @ge_model = Ge::GeModel.find(params[:ge_model_id])
     tmp_prbl = Array.new
-    ["low", "most_likely", "high"].each do |level|
-      effort = (@ge_model.coeff_a * params[:"#{level}"].to_f ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient
-      attr = PeAttribute.find_by_alias("effort")
-      ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => attr.id).first
-      ev.send("string_data_#{level}")[current_component.id] = effort
-      ev.save
-      tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-      if ev.in_out == "output"
-        ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+    current_module_project.pemodule.attribute_modules.each do |am|
+      ["low", "most_likely", "high"].each do |level|
+        if am.pe_attribute.alias == "effort"
+          effort = (@ge_model.coeff_a * params[:"retained_size_#{level}"].to_f ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient
+          ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+          ev.send("string_data_#{level}")[current_component.id] = effort
+          ev.save
+          tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+          ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        elsif am.pe_attribute.alias == "retained_size"
+          ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+          ev.send("string_data_#{level}")[current_component.id] = params[:"retained_size_#{level}"]
+          ev.save
+        end
       end
     end
-
     redirect_to main_app.dashboard_path(@project)
   end
+
 end
