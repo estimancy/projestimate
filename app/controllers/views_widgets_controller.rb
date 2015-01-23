@@ -67,6 +67,7 @@ class ViewsWidgetsController < ApplicationController
   def new
     @views_widget = ViewsWidget.new(params[:views_widget])
     @view_id = params[:view_id]
+    @position_x = 1; @position_y = 1
     @module_project = ModuleProject.find(params[:module_project_id])
     @pbs_project_element_id = current_component.id
     @project_pbs_project_elements = @module_project.project.pbs_project_elements#.reject{|i| i.is_root?}
@@ -85,6 +86,9 @@ class ViewsWidgetsController < ApplicationController
   def edit
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
+    @position_x = (@views_widget.position_x.nil? || @views_widget.position_x.downcase.eql?("nan")) ? 1 : @views_widget.position_x
+    @position_y = (@views_widget.position_y.nil? || @views_widget.position_y.downcase.eql?("nan")) ? 1 : @views_widget.position_y
+
     @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
     @pbs_project_element_id = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
     @project_pbs_project_elements = @module_project.project.pbs_project_elements#.reject{|i| i.is_root?}
@@ -120,6 +124,7 @@ class ViewsWidgetsController < ApplicationController
         format.js { render :js => "window.location.replace('#{dashboard_path(@project)}');"}
       else
         flash[:error] = "Erreur d'ajout de Widget"
+        @position_x = 1; @position_y = 1
         @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
         @pbs_project_element_id = params[:views_widget][:module_project_id].nil? ? current_component.id : params[:views_widget][:module_project_id]
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
@@ -167,6 +172,9 @@ class ViewsWidgetsController < ApplicationController
         format.js { render :js => "window.location.replace('#{dashboard_path(@project)}');"}
       else
         flash[:error] = "Erreur lors de la mise à jour du Widget dans la vue"
+        @position_x = (@views_widget.position_x.nil? || @views_widget.position_x.downcase.eql?("nan")) ? 1 : @views_widget.position_x
+        @position_y = (@views_widget.position_y.nil? || @views_widget.position_y.downcase.eql?("nan")) ? 1 : @views_widget.position_y
+
         @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:views_widget][:module_project_id]) : @views_widget.module_project
         @pbs_project_element = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
@@ -212,31 +220,12 @@ class ViewsWidgetsController < ApplicationController
     end
   end
 
-  def update_view_widget_positions_SAVE
-    view_id = params[:view_id]
-    pos_x = "#{params[:position_x]}px"
-    pos_y = "#{params[:position_y]}px"
-
-    widgets_orders = params[:widgets_orders]
-    if view_id != "" && view_id != "undefined"
-      #if params["view_widget_id"] != "" && params["view_widget_id"] != "undefined"
-      #  view_widget = ViewsWidget.find(params[:view_widget_id].to_i)
-      #  pos_x = "#{params[:position_x]}px"
-      #  pos_y = "#{params[:position_y]}px"
-      #
-      #  # Update the View Widget positions (left = position_x, top = position_y)
-      #  view_widget.update_attributes(position_x: pos_x, position_y: pos_y)
-      #end
-
-      widgets_orders.each do |dashboard_widget_id, index|
-        if dashboard_widget_id != ""
-          view_widget_id = dashboard_widget_id.split("dashboard_widget_").last.to_i
-          view_widget = ViewsWidget.find(view_widget_id)
-          if view_widget
-            # Update the View Widget positions (left = position_x, top = position_y)
-            view_widget.update_attribute('position', index+1)
-          end
-        end
+  def update_view_widget_sizes
+    view_widget_id = params[:view_widget_id]
+    if view_widget_id != "" && view_widget_id!= "indefined"
+      view_widget = ViewsWidget.find(view_widget_id)
+      if view_widget
+        view_widget.update_attributes(width: params[:sizex], height: params[:sizey])
       end
     end
   end

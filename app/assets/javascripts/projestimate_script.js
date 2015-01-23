@@ -67,6 +67,40 @@ $(document).ready(function() {
                             }
                         });
                     }
+                },
+
+                resize: {
+                    enabled: true,
+                    axes: ['both'],
+                    stop: function(event, ui, $widget) {
+                        // Get final width and height of widget
+                        var newHeight = this.resize_coords.data.height;
+                        var newWidth = this.resize_coords.data.width;
+                        var text_size = ((newHeight+newWidth)/2) * 0.015;
+                        //alert(newHeight + ":" + newWidth);
+
+                        //Update the font-size according to the widget sizes
+                        var widget_id = $widget.data('id');
+                        $('li#'+widget_id+'.widget_text').css("fontSize", text_size+"em");
+
+                        //Update the widget size (width, height) in database
+                        $.ajax({
+                            method: 'GET',
+                            url: "/update_view_widget_sizes",
+                            data: {
+                                view_widget_id: $widget.data('view_widget_id'),
+                                sizex: $widget.data('sizex'),
+                                sizey: $widget.data('sizey')
+                            }
+                        });
+
+                        // Update font-size : $('.changeMe').css("font-size", $(this).val() + "px");
+                        $('#widget_text_'+widget_id+'.widget_text.without_min_max').fitText(0.6);
+                        $('#widget_text_'+widget_id+'.widget_text.with_min_max').fitText(0.7);
+                        $("li.no_estimation_value").fitText(2);
+                        $('#widget_name_'+widget_id+'.widget_name').fitText(0.8);
+                        $('#min_max_'+widget_id+'.min_max').fitText(1);
+                    }
                 }
             });
         })

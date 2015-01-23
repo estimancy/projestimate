@@ -164,7 +164,6 @@ module ViewsWidgetsHelper
                                             {name: I18n.t(:most_likely), data: {Time.new => data_most_likely} }, #30
                                             {name: I18n.t(:high), data: {Time.new => data_high} } ],  #50
                                         {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: chart_vAxis}}})
-
           when "bar_chart"
             value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
 
