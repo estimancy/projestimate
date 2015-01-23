@@ -105,7 +105,7 @@ module ProjectsHelper
     elsif (value >= organization.limit1.to_i) && (value < organization.limit2.to_i)
       "j/h"
     elsif (value >= organization.limit2.to_i) && (value < organization.limit3.to_i)
-      "w/h"
+      "s/h"
     elsif value >= organization.limit3.to_i
       "m/h"
     else
@@ -922,7 +922,7 @@ module ProjectsHelper
         #begin
           if est_val_pe_attribute.alias == "delay"
             if get_with_unit
-              "#{convert(value, @project.organization).round} #{est_val_pe_attribute.alias == "delay" ? convert_label(value, @project.organization) : get_attribute_unit(est_val_pe_attribute)}"
+              "#{convert(value, @project.organization).round.round(precision)} #{est_val_pe_attribute.alias == "delay" ? convert_label(value, @project.organization) : get_attribute_unit(est_val_pe_attribute)}"
             else
               "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
             end

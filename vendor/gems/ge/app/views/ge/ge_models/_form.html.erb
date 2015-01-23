@@ -1,0 +1,35 @@
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Model d'Unité d'Oeuvres
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <%= simple_form_for(@ge_model) do |f| %>
+
+      <div class="alert alert-info">
+        La méthode générique d'éffort correspond à une méthode de calcul de l'éffort
+        selon la formule a*x^b ou <b>a</b> correspond au facteur d'ajustement et <b>b</b> au facteur d'échelle.
+        <br>
+        L'effort E est généré ensuite en heure selon la formule E*c ou <b>c</b> correspond au coefficient standard de conversion.
+      </div>
+      <%= f.error_notification %>
+
+      <%= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :coeff_a, label: "Facteur d'ajustement" %>
+        <%= f.input :coeff_b, label: "Facteur d'échelle" %>
+        <%= f.input :standard_unit_coefficient, label: 'Coefficient standard de conversion' %>
+        <%= f.input :output_unit, label: 'Unité de sortie' %>
+        <%= f.input :three_points_estimation, inline_label: 'Estimation 3 points' %>
+      </div>
+
+      <%= f.button :submit, I18n.t('save') %>
+    <% end %>
+  </div>
+</div>

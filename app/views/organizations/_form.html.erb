@@ -839,7 +839,7 @@
 
    <b>Modèle d'UO</b>
 
-   <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn pull-right' %>
+   <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
    <br>
 
    <table class="table table-bordered">
@@ -851,11 +851,62 @@
      <% @guw_models.each do |i| %>
        <tr>
          <td class="span5">
-           <%= link_to i.name, guw.guw_model_path(i), :title => I18n.t('edit') %>
+           <%= link_to i.name, guw.guw_model_path(i) %>
          </td>
          <td class="align-center">
-           <%= link_to 'Edit model', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'btn btn-mini' %>
-           <%= link_to 'Delete', guw.guw_model_path(i), method: "DELETE",  :class => 'btn btn-mini', :title => I18n.t('delete') %>
+           <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+         </td>
+       </tr>
+     <% end %>
+   </table>
+
+   <br>
+   <hr>
+
+   <b>Expert Judgment</b>
+
+   <table class="table table-bordered">
+     <tr>
+       <th><%= I18n.t(:name) %></th>
+       <th class="action"><%= I18n.t(:actions) %></th>
+     </tr>
+
+     <% ExpertJudgement::Instance.all.each do |i| %>
+       <tr>
+         <td class="span5">
+           <%= link_to i.name, guw.guw_model_path(i) %>
+         </td>
+         <td class="align-center">
+           <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+         </td>
+       </tr>
+     <% end %>
+   </table>
+
+   <br>
+   <hr>
+
+   <b>Module d'Effort Générique</b>
+
+   <%= link_to "Nouvelle instance d'effort", ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+
+   <table class="table table-bordered">
+
+     <tr>
+       <th><%= I18n.t(:name) %></th>
+       <th class="action"><%= I18n.t(:actions) %></th>
+     </tr>
+
+     <% Ge::GeModel.all.each do |i| %>
+       <tr>
+         <td class="span5">
+           <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
+         </td>
+         <td class="align-center">
+           <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', ge.ge_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
          </td>
        </tr>
      <% end %>

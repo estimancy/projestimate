@@ -56,8 +56,9 @@ module Projestimate
     config.autoload_paths += Dir["#{config.root}/vendor/gems/cocomo_expert/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/uow/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/guw/lib"]
+    config.autoload_paths += Dir["#{config.root}/vendor/gems/ge/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/real_size/lib"]
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/expert_judgment/lib"]
+    config.autoload_paths += Dir["#{config.root}/vendor/gems/expert_judgement/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/effort_breakdown/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/wbs_activity_completion/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/sample_model/lib"]
@@ -70,8 +71,9 @@ module Projestimate
     config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_expert/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/uow/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/guw/lib)
+    config.autoload_paths += %W(#{config.root}/vendor/gems/ge/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/real_size/lib)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/expert_judgment/lib)
+    config.autoload_paths += %W(#{config.root}/vendor/gems/expert_judgement/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/effort_breakdown/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/wbs_activity_completion/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/sample_model/lib)

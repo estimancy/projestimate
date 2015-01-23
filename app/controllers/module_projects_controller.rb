@@ -198,7 +198,6 @@ class ModuleProjectsController < ApplicationController
   def activate_module_project
     session[:module_project_id] = params[:module_project_id]
     @module_project = ModuleProject.find(params[:module_project_id])
-    @project = @module_project.project
 
     authorize! :alter_estimation_plan, @project
 
@@ -214,7 +213,7 @@ class ModuleProjectsController < ApplicationController
 
     @results = nil
 
-    redirect_to dashboard_path(@project)
+    redirect_to main_app.dashboard_path(@project)
   end
 
 

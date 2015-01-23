@@ -42,6 +42,7 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :project, :touch => true
   belongs_to :view    # the current selected view
   belongs_to :guw_model, class_name: "Guw::GuwModel"
+  belongs_to :ge_model, class_name: "Ge::GeModel"
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
   has_many :guw_unit_of_works, class_name: "Guw::GuwUnitOfWork"

@@ -280,12 +280,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
 
-          ajusted_effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+          retained_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
                                                     pbs_project_element_id: current_component.id,
                                                     guw_model_id: @guw_model.id,
                                                     selected: true).map(&:ajusted_effort).compact.sum
 
-          theorical_effort = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+          theorical_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
                                                       pbs_project_element_id: current_component.id,
                                                       guw_model_id: @guw_model.id,
                                                       selected: true).map(&:effort).compact.sum
@@ -302,24 +302,24 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                                module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size
 
 
-          if am.pe_attribute.alias == "effort"
-            ev.send("string_data_#{level}")[current_component.id] = ajusted_effort
+          if am.pe_attribute.alias == "retained_size"
+            ev.send("string_data_#{level}")[current_component.id] = retained_size
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-          elsif am.pe_attribute.alias == "theorical_effort"
-            ev.send("string_data_#{level}")[current_component.id] = theorical_effort
+          elsif am.pe_attribute.alias == "theorical_size"
+            ev.send("string_data_#{level}")[current_component.id] = theorical_size
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
 
-          guw = Guw::Guw.new(theorical_effort, ajusted_effort, params["complexity_#{level}"], @project)
+          guw = Guw::Guw.new(theorical_size, retained_size, params["complexity_#{level}"], @project)
 
           if am.pe_attribute.alias == "delay"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(ajusted_effort, current_component, current_module_project)
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(retained_size, current_component, current_module_project)
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           elsif am.pe_attribute.alias == "cost"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(ajusted_effort, current_component, current_module_project)
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(retained_size, current_component, current_module_project)
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           elsif am.pe_attribute.alias == "defects"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(ajusted_effort, current_component, current_module_project)
+            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(retained_size, current_component, current_module_project)
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           elsif am.pe_attribute.alias == "number_of_unit_of_work"
             ev.send("string_data_#{level}")[current_component.id] = number_of_unit_of_work

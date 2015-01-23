@@ -5,7 +5,7 @@
     <div class="pull-right">
       <b>
         <div class="label label-info pull-right">
-          Total U.F. retenu :
+          Total <%= @guw_model.output_unit %> retenu :
           <span class="ajusted_effort">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
           </span>
@@ -14,7 +14,7 @@
         <br>
 
         <div class="pull-left">
-          Total U.F. calculés :
+          Total <%= @guw_model.output_unit %> calculés :
           <span class="label label-info theorical_effort">
               <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
           </span>
@@ -57,12 +57,12 @@
 
         <span class="pull-right">
 
-          Total U.F. retenu :
+          Total <%= @guw_model.output_unit %> retenu :
           <span class="<%= uowg.id %>_ajusted">
             <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum %>
           </span>
 
-          - Total U.F. calculés :
+          - Total <%= @guw_model.output_unit %> calculés :
           <span class="<%= uowg.id %>_theorical">
             <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>
           </span>
@@ -291,7 +291,6 @@
 
     </div>
   <% end %>
-
 
 <% end %>
 

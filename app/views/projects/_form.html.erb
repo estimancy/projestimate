@@ -141,7 +141,8 @@
             <div class="span12">
               <%= I18n.t(:label_add_a_module_to_project) %>
               <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation" => @modules_selected,
-                                                                          "Module d'UO" => @guw_modules}), :prompt => '' %>
+                                                                          "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
+                                                                          "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
             </div>
           </div>
 

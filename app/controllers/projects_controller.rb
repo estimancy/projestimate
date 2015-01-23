@@ -134,10 +134,16 @@ class ProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    if @module_project.pemodule.alias == "guw"
+    if @module_project.pemodule.alias == "ge"
+      if current_module_project.ge_model.nil?
+        @ge_model = Ge::GeModel.first
+      else
+        @ge_model = current_module_project.ge_model
+      end
+    elsif @module_project.pemodule.alias == "guw"
 
       if current_module_project.guw_model.nil?
-        @guw_model = GuwModel::GuwModel.first
+        @guw_model = Guw::GuwModel.first
       else
         @guw_model = current_module_project.guw_model
       end
@@ -370,7 +376,9 @@ class ProjectsController < ApplicationController
     @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ? AND alias <> ?', @defined_status.id, 'initialization', 'guw').all.map { |i| [i.title, i.id] }
 
     @guw_module = Pemodule.where(alias: "guw").first
-    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] } #bluurgh
+    @ge_module = Pemodule.where(alias: "ge").first
+    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -820,8 +828,11 @@ class ProjectsController < ApplicationController
       default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
       my_module_project.view_id = default_view_for_widgets.id
 
+      #si le module est un module generic on l'associe le module project
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
+      elsif @pemodule.alias == "ge"
+        my_module_project.ge_model_id = params[:module_selected].split(',').first
       end
 
       my_module_project.save

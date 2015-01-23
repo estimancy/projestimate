@@ -117,7 +117,9 @@ Projestimate::Application.routes.draw do
 
   resources :audits
 
+  mount ExpertJudgement::Engine, :at => '/expert_judgement'
   mount Guw::Engine, :at => '/guw'
+  mount Ge::Engine, :at => '/ge'
   mount Uow::Engine, :at => '/uow'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'
   mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
