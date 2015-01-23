@@ -250,12 +250,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
       end
 
-      guw_unit_of_work.effort = @weight_pert.sum# * guw_work_unit.value.to_f
-      guw_unit_of_work.ajusted_effort = @weight_pert.sum# * guw_work_unit.value.to_f
+      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum)
+      guw_unit_of_work.ajusted_effort = @weight_pert.sum
 
       if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-        guw_unit_of_work.ajusted_effort = @weight_pert.sum#  * guw_work_unit.value.to_f
-      elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != (@weight_pert.sum)# * guw_work_unit.value.to_f)
+        guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum)
+      elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
         guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
       end
 

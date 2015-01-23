@@ -27,7 +27,7 @@
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size %>
           </span>
           &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. sélectionnés :
-          <span class="label label-info selected_unit_of_work">
+          <span class="label label-info selected_of_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size %>
           </span>
           &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.C. :
@@ -82,7 +82,7 @@
             <%= uowg.guw_unit_of_works.where(selected: true).size %>
           </span>
 
-          / Nombre d'U.O. H.C. :
+          - Nombre d'U.O. H.C. :
           <span class="<%= uowg.id %>_off_line">
             <%= uowg.guw_unit_of_works.where(off_line: true).size %>
           </span>
@@ -148,7 +148,10 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title" id="comments_label<%= guow.id %>">Attributs de <%= guow %> </h4>
+                      <h4 class="modal-title" id="comments_label<%= guow.id %>">
+                        <b>
+                          <%= guow.guw_type %>
+                        </b> - Attributs de <%= guow %> </h4>
                     </div>
                     <div class="modal-body">
                       <%= text_area_tag "comments[#{guow.id}]", guow.comments, class: "attribute_note_area" %>
@@ -176,13 +179,17 @@
 
             <td>
               <span class="pull-left">
-                <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '--' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
+                <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '------' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
               </span>
               <div class="modal fade" id="tracking<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= guow.id %>" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title" id="tracking_label<%= guow.id %>">Attributs de <%= guow %> </h4>
+                      <h4 class="modal-title" id="tracking_label<%= guow.id %>">
+                        <b>
+                          <%= guow.guw_type %>
+                        </b> - Attributs de <%= guow %> </h4>
+                      </h4>
                     </div>
                     <div class="modal-body">
                       <%= text_area_tag "tracking[#{guow.id}]", guow.tracking, class: "attribute_note_area" %>
@@ -227,7 +234,10 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title" id="myModalLabel<%= guow.id %>">Attributs de <%= guow %> </h4>
+                      <h4 class="modal-title" id="myModalLabel<%= guow.id %>">
+                        <b>
+                          <%= guow.guw_type %>
+                        </b> - Attributs de <%= guow %> </h4>
                     </div>
                     <div class="modal-body">
                       <table class="table table-condensed table-striped">

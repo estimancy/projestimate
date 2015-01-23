@@ -14,7 +14,7 @@
         La méthode générique d'éffort correspond à une méthode de calcul de l'éffort
         selon la formule a*x^b ou <b>a</b> correspond au facteur d'ajustement et <b>b</b> au facteur d'échelle.
         <br>
-        L'effort E est généré ensuite en heure selon la formule E*c ou <b>c</b> correspond au coefficient standard de conversion.
+        L'effort E est généré dans l'unité propre au modèle (h.j, h.m etc...). L'utilisateur doit définir le coefficient de conversion en unité standard du produit (des heures).
       </div>
       <%= f.error_notification %>
 
@@ -24,7 +24,7 @@
         <%= f.input :name %>
         <%= f.input :coeff_a, label: "Facteur d'ajustement" %>
         <%= f.input :coeff_b, label: "Facteur d'échelle" %>
-        <%= f.input :standard_unit_coefficient, label: 'Coefficient standard de conversion' %>
+        <%= f.input :standard_unit_coefficient, label: 'Coefficient de conversion en unité standard (heures)' %>
         <%= f.input :output_unit, label: 'Unité de sortie' %>
         <%= f.input :three_points_estimation, inline_label: 'Estimation 3 points' %>
       </div>
