@@ -86,7 +86,7 @@ module ProjectsHelper
   def convert(v, organization)
     value = v.to_f
     if value < organization.limit1.to_i
-      value
+      value / organization.limit1_coef.to_f
     elsif value < organization.limit2.to_i
       value / organization.limit2_coef.to_f
     elsif value < organization.limit3.to_i
