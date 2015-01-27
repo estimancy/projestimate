@@ -296,7 +296,7 @@ module ViewsWidgetsHelper
         ratio_profiles_with_nil_ratio << ratio_elt.wbs_activity_ratio_profiles
       end
       # Reject all RatioProfile with nil ratio_value
-      wbs_activity_ratio_profiles = ratio_profiles_with_nil_ratio.flatten.reject!{|i| i.ratio_value.nil? }
+      wbs_activity_ratio_profiles = ratio_profiles_with_nil_ratio.flatten.reject{|i| i.ratio_value.nil? }
     end
     wbs_activity_ratio_profiles.each do |ratio_profile|
       project_organization_profiles << ratio_profile.organization_profile
