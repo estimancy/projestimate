@@ -98,8 +98,9 @@ class ModuleProjectsController < ApplicationController
             new_view = View.create(organization_id: @project.organization_id, name: "View for #{module_project_name}", description: "Dynamic created view for the #{module_project_name} module. Please rename the view's name and description if needed.")
             #We have to copy all the selected view's widgets in a new view for the current module_project
             selected_view.views_widgets.each do |view_widget|
-              in_out = view_widget.esti
-              estimation_value = @module_project.estimation_values.where('pe_attribute_id = ?', view_widget.estimation_value.pe_attribute_id).first
+              widget_est_val = view_widget.estimation_value
+              in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+              estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).first
               estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
               widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
                                                show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,

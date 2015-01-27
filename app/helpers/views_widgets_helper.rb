@@ -296,7 +296,7 @@ module ViewsWidgetsHelper
         ratio_profiles_with_nil_ratio << ratio_elt.wbs_activity_ratio_profiles
       end
       # Reject all RatioProfile with nil ratio_value
-      wbs_activity_ratio_profiles = ratio_profiles_with_nil_ratio.flatten.reject!{|i| i.ratio_value.nil? }
+      wbs_activity_ratio_profiles = ratio_profiles_with_nil_ratio.flatten.reject{|i| i.ratio_value.nil? }
     end
     wbs_activity_ratio_profiles.each do |ratio_profile|
       project_organization_profiles << ratio_profile.organization_profile
@@ -306,10 +306,10 @@ module ViewsWidgetsHelper
     case view_widget.widget_type
 
       when "effort_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
+        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
 
       when "cost_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: view_widget.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
+        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
         #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
@@ -340,7 +340,7 @@ module ViewsWidgetsHelper
                   if wbs_profiles_value.nil?
                     profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = 0
                   else
-                    value = number_with_delimiter(wbs_profiles_value.round(view_widget.pe_attribute.precision.nil? ? user_number_precision : view_widget.pe_attribute.precision))
+                    value = number_with_delimiter(wbs_profiles_value.round(estimation_value.pe_attribute.precision.nil? ? user_number_precision : estimation_value.pe_attribute.precision))
                     profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = value
                   end
                 end
@@ -406,6 +406,7 @@ module ViewsWidgetsHelper
   def display_effort_or_cost_per_phase(pbs_project_element, module_project_id, estimation_value, view_widget_id)
     res = String.new
     view_widget = ViewsWidget.find(view_widget_id)
+
     module_project = ModuleProject.find(module_project_id)
     pemodule = module_project.pemodule
 

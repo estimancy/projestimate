@@ -13,7 +13,7 @@
 
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
 
-      <%= f.input :category, :label => I18n.t('category'), :collection => ['Admin', 'Library','Library - Organization', 'Library - Project Settings','Library - WBS-Activities', 'Master data','Projects','Project'], :input_html => {:class => 'input-xxlarge'} %>
+      <%= f.input :category, :label => I18n.t('category'), :collection => ['Admin', 'Library','Library - Organization', 'Organization Estimation Template', 'Library - Project Settings','Library - WBS-Activities', 'Master data', 'Projects', 'Project'], :input_html => {:class => 'input-xxlarge'} %>
 
       <%= f.input :is_master_permission, :label => I18n.t('is_permission_master'), :input_html => {:class => 'input-xxlarge'}, :as => :boolean %>
 
@@ -21,21 +21,21 @@
 
       <%= f.input :object_associated, :label => I18n.t('label_associated_object'), :input_html => {:class => 'input-xxlarge'}, :as => :select, :collection => ActiveRecord::Base.connection.tables.map{|t| t.classify }.compact.reject{|j| j == 'SchemaMigration' } %>
 
-        <table>
+      <table>
           <tr>
             <td>
-      <%= f.association :record_status, :label => I18n.t('record_status'),
-                        :collection => @permission.record_status_collection,
-                        :input_html => {:class => 'record_status'},
-                        :selected => (@permission.is_defined_or_nil? ? @proposed_status.id : @permission.record_status_id),
-                        :disabled => (true if @permission.is_retired?) %><br />
+                <%= f.association :record_status, :label => I18n.t('record_status'),
+                    :collection => @permission.record_status_collection,
+                    :input_html => {:class => 'record_status'},
+                    :selected => (@permission.is_defined_or_nil? ? @proposed_status.id : @permission.record_status_id),
+                    :disabled => (true if @permission.is_retired?) %><br />
             </td>
             <td>
-      <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @permission.is_custom?) %><br />
+                <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @permission.is_custom?) %><br />
             </td>
           </tr>
-        </table>
-              <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+      </table>
+      <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
       <div class="actions">
         <% if action_name == 'new' || action_name=='create' %>
             <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>

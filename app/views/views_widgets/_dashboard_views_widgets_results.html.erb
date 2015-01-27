@@ -99,6 +99,7 @@
                                           <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
                                             <%= value_to_show %>
                                           </div>
+
                                           <div>
                                             <span id="<%= "min_max_#{view_widget.id}" %>" class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:max_value_text] %></span><br>
                                             <span id="<%= "min_max_#{view_widget.id}" %>" class="min_max" style="font-size: <%=view_widget_min_max_size%>em; float: right"><%= view_widget_data[:min_value_text] %></span>
@@ -120,6 +121,7 @@
                             </li>
                               <!--script-->
                               <script type="text/javascript">
+
                                   $("#fittext1").fitText();
                                   $("li.without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%= max_without_min_max %>' });
                                   $("li.with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%= max_with_min_max %>' });
