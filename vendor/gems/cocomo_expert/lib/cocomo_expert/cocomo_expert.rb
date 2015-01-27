@@ -64,9 +64,9 @@ module CocomoExpert
       b = 0.91 + 0.01 * sf.sum.to_f
 
       #on ne gere pas BRAK
-      pm = 2.94 * em.inject(:*).to_f * 1 * (@coef_sloc)**b
+      effort = 2.94 * em.inject(:*).to_f * 1 * (@coef_sloc)**b * 152
 
-      return pm
+      return effort
     end
 
     #Return delay (in month)

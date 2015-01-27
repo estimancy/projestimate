@@ -37,4 +37,8 @@
 ExpertJudgement::Engine.routes.draw do
   root :to => 'instances#index'
   resources :instances
+
+  resources :instances do
+    post "save_efforts"
+  end
 end

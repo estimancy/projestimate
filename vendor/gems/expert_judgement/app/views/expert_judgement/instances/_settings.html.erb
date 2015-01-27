@@ -1,0 +1,104 @@
+<%= form_tag expert_judgement.instance_save_efforts_path(@expert_judgement_instance) do %>
+  <table class="table">
+    <tr>
+      <th>Type de valeurs</th>
+      <th>Commentaires</th>
+      <th>Entrées</th>
+      <th colspan="3">Sorties</th>
+      <th>Commentaires</th>
+      <th>Traçabilité</th>
+    </tr>
+    <% @expert_judgement_attributes.each do |eja| %>
+
+      <% ie = ExpertJudgement::InstanceEstimate.where(pe_attribute_id: eja.id,
+                                                         expert_judgement_instance_id: @expert_judgement_instance.id,
+                                                         module_project_id: current_module_project.id,
+                                                         pbs_project_element_id: current_component.id).first %>
+      <tr>
+        <td><%= eja.name %></td>
+
+
+        <td><%= link_to ie.description.blank? ? '------' : ie.description, "#", title: ie.description, :"data-toggle" => "modal", :"data-target" => "#description#{ie.id}", :"data-backdrop" => "static"  %></td>
+        <div class="modal fade" id="description<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="description_label<%= ie.id %>" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="description_label<%= ie.id %>">
+                  <b>
+                    <%= eja.name %>
+                  </b>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <%= text_area_tag "description[#{eja.id}]", ie.description, class: "attribute_note_area" %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
+                <button type="submit" class="btn btn-default">Sauvegarder</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <td>
+          <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input, class: "input-small" %>
+          <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input, class: "input-small" %>
+          <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input, class: "input-small" %>
+        </td>
+        <td colspan="3">
+          <%= text_field_tag "values[#{eja.id}][low][output]", ie.low_output, class: "input-small" %>
+          <%= text_field_tag "values[#{eja.id}][most_likely][output]", ie.most_likely_output, class: "input-small" %>
+          <%= text_field_tag "values[#{eja.id}][high][output]", ie.high_output, class: "input-small" %>
+        </td>
+
+        <td><%= link_to ie.comments.blank? ? '------' : ie.comments, "#", title: ie.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{ie.id}", :"data-backdrop" => "static"  %></td>
+        <div class="modal fade" id="comments<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="comments_label<%= ie.id %>" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="comments_label<%= ie.id %>">
+                  <b>
+                    <%= eja.name %>
+                  </b>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <%= text_area_tag "comments[#{eja.id}]", ie.comments, class: "attribute_note_area" %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
+                <button type="submit" class="btn btn-default">Sauvegarder</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <td><%= link_to ie.tracking.blank? ? '------' : ie.tracking, "#", title: ie.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{ie.id}", :"data-backdrop" => "static"  %></td>
+        <div class="modal fade" id="tracking<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= ie.id %>" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="tracking_label<%= ie.id %>">
+                  <b>
+                    <%= eja.name %>
+                  </b>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <%= text_area_tag "tracking[#{eja.id}]", ie.tracking, class: "attribute_note_area" %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
+                <button type="submit" class="btn btn-default">Sauvegarder</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </tr>
+    <% end %>
+  </table>
+
+  <%= submit_tag "eded" %>
+<% end %>

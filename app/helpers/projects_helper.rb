@@ -939,9 +939,9 @@ module ProjectsHelper
         #  value
         #end
       else
-        value
+        #value
         #begin
-        #  "#{convert(value, @project.organization).round(1)} #{convert_label(est_val_pe_attribute, @project.organization)}"
+          "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
         #rescue
         #  value
         #end
@@ -985,7 +985,9 @@ module ProjectsHelper
                        "data-module_project_id" => module_project.id,
                        :readonly => read_only_value
       else
-        estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id, :module_project_id => module_project.previous.first.id).first
+        estimation_value = EstimationValue.where(:pe_attribute_id => comm_attr.first.id,
+                                                 :module_project_id => module_project.previous.first.id,
+                                                 :in_out => "output").first
         new_level_estimation_values = estimation_value.send("string_data_#{level}")
         text_field_tag "[#{level}][#{est_val_pe_attribute.alias.to_sym}][#{module_project.id}]",
                        convert(new_level_estimation_values[pbs_project_element.id], organization).to_f.round(precision),

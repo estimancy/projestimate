@@ -70,11 +70,11 @@
         <div class="widget-content tab-content">
           <div class="input">
             <div class="input_data">
-              <% if ["cocomo_basic", "real_size", "effort_breakdown", "balancing_module", "expert_judgement", "wbs_activity_completion"].include?(current_module_project.pemodule.alias) %>
+              <% if ["cocomo_basic", "real_size", "effort_breakdown", "balancing_module", "wbs_activity_completion"].include?(current_module_project.pemodule.alias) %>
                 <%= form_tag({:controller => 'projects', :action => 'run_estimation', :pbs_project_element_id => current_component.id, :start_module_project => current_module_project}, :class => 'simple_form') do -%>
                   <div id="balancing_module_attributes">
                     <% if  current_module_project.pemodule.alias == "balancing_module" %>
-                        <%= render :partial => 'projects/select_balancing_module_attributes' %>
+                      <%= render :partial => 'projects/select_balancing_module_attributes' %>
                     <% end %>
                   </div>
                   <%= raw display_input.blank? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info')}" : display_input %>

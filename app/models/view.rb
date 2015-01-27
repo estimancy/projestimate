@@ -9,6 +9,11 @@ class View < ActiveRecord::Base
 
   validates :name, :organization_id, presence: true
 
+  amoeba do
+    enable
+    include_field [:widgets]
+  end
+
   def to_s
     name
   end

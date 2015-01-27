@@ -16,18 +16,19 @@
   <div id="tabs-1">
     <table class="table table-bordered">
       <tr>
-        <th>Name</th>
+        <th>Nom</th>
         <th>Description</th>
-        <th></th>
-        <th></th>
+        <th>Actions</th>
       </tr>
 
       <% @guw_attributes.each do |guw_attribute| %>
         <tr>
           <td><%= guw_attribute.name %></td>
           <td><%= guw_attribute.description %></td>
-          <td><%= link_to 'Edit', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute) %></td>
-          <td><%= link_to 'Destroy', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td>
+            <%= link_to '', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute), class: "fa fa-edit" %>
+            <%= link_to '', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
+          </td>
         </tr>
       <% end %>
     </table>
@@ -36,5 +37,5 @@
 
 <br>
 
-<%= link_to 'New attribute', guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>
+<%= link_to 'Nouvel attribut', guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>
 <%= link_to "Retour", guw.guw_model_path(params[:guw_model_id]), class: "btn" %>
