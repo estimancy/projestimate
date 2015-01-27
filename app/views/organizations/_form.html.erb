@@ -908,7 +908,7 @@
      <% ExpertJudgement::Instance.all.each do |i| %>
        <tr>
          <td class="span5">
-           <%= link_to i.name, expert_judgement.edit_instance_path(i) %>
+           <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
          </td>
          <td class="align-center">
            <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>

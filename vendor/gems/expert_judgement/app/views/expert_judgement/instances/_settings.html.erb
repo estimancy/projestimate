@@ -4,9 +4,18 @@
       <th>Type de valeurs</th>
       <th>Commentaires</th>
       <th>Entrées</th>
-      <th colspan="3">Sorties</th>
+      <th>Sorties</th>
       <th>Commentaires</th>
       <th>Traçabilité</th>
+
+    </tr>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>L / M / H</th>
+      <th>L / M / H</th>
+      <th></th>
+      <th></th>
     </tr>
     <% @expert_judgement_attributes.each do |eja| %>
 
@@ -16,7 +25,6 @@
                                                          pbs_project_element_id: current_component.id).first %>
       <tr>
         <td><%= eja.name %></td>
-
 
         <td><%= link_to ie.description.blank? ? '------' : ie.description, "#", title: ie.description, :"data-toggle" => "modal", :"data-target" => "#description#{ie.id}", :"data-backdrop" => "static"  %></td>
         <div class="modal fade" id="description<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="description_label<%= ie.id %>" aria-hidden="true">
@@ -41,14 +49,22 @@
         </div>
 
         <td>
-          <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input, class: "input-small" %>
+          <% if @expert_judgement_instance.three_points_estimation? %>
+            <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input, class: "input-small" %>
+          <% end %>
           <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input, class: "input-small" %>
-          <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input, class: "input-small" %>
+          <% if @expert_judgement_instance.three_points_estimation? %>
+            <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input, class: "input-small" %>
+          <% end %>
         </td>
-        <td colspan="3">
-          <%= text_field_tag "values[#{eja.id}][low][output]", ie.low_output, class: "input-small" %>
+        <td>
+          <% if @expert_judgement_instance.three_points_estimation? %>
+            <%= text_field_tag "values[#{eja.id}][low][output]", ie.low_output, class: "input-small" %>
+          <% end %>
           <%= text_field_tag "values[#{eja.id}][most_likely][output]", ie.most_likely_output, class: "input-small" %>
-          <%= text_field_tag "values[#{eja.id}][high][output]", ie.high_output, class: "input-small" %>
+          <% if @expert_judgement_instance.three_points_estimation? %>
+            <%= text_field_tag "values[#{eja.id}][high][output]", ie.high_output, class: "input-small" %>
+          <% end %>
         </td>
 
         <td><%= link_to ie.comments.blank? ? '------' : ie.comments, "#", title: ie.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{ie.id}", :"data-backdrop" => "static"  %></td>

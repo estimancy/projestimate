@@ -392,6 +392,7 @@ class ProjectsController < ApplicationController
     @guw_module = Pemodule.where(alias: "guw").first
     @ge_module = Pemodule.where(alias: "ge").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
+
     @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
     @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
     @modules_ej = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }

@@ -97,13 +97,22 @@ class ExpertJudgement::InstancesController < ApplicationController
         ejie.comments = params[:comments][attr_id]
         ejie.description = params[:description][attr_id]
 
-        ejie.low_input = params[:values][attr_id]["low"]["input"].to_f
-        ejie.most_likely_input = params[:values][attr_id]["most_likely"]["input"].to_f
-        ejie.high_input = params[:values][attr_id]["high"]["input"].to_f
+        if @expert_judgement_instance.three_points_estimation?
+          ejie.low_input = params[:values][attr_id]["low"]["input"].to_f
+          ejie.most_likely_input = params[:values][attr_id]["most_likely"]["input"].to_f
+          ejie.high_input = params[:values][attr_id]["high"]["input"].to_f
 
-        ejie.low_output = params[:values][attr_id]["low"]["output"].to_f
-        ejie.most_likely_output = params[:values][attr_id]["most_likely"]["output"].to_f
-        ejie.high_output = params[:values][attr_id]["high"]["output"].to_f
+          ejie.low_output = params[:values][attr_id]["low"]["output"].to_f
+          ejie.most_likely_output = params[:values][attr_id]["most_likely"]["output"].to_f
+          ejie.high_output = params[:values][attr_id]["high"]["output"].to_f
+        else
+          in_value = params[:values][attr_id]["most_likely"]["input"].to_f
+          out_value = params[:values][attr_id]["most_likely"]["output"].to_f
+
+          ejie.low_input = ejie.most_likely_input = ejie.high_input = in_value
+          ejie.low_output = ejie.most_likely_output = ejie.high_output = out_value
+        end
+
         ejie.save
       end
 
@@ -112,7 +121,13 @@ class ExpertJudgement::InstancesController < ApplicationController
           ev = EstimationValue.where(module_project_id: current_module_project.id,
                                      pe_attribute_id: attr_id.to_i,
                                      in_out: io).first
-          ev.send("string_data_#{level}")[current_component.id] = params[:values][attr_id][level][io].to_f
+
+          if @expert_judgement_instance.three_points_estimation?
+            ev.send("string_data_#{level}")[current_component.id] = params[:values][attr_id][level][io].to_f
+          else
+            ev.send("string_data_#{level}")[current_component.id] = params[:values][attr_id]["most_likely"][io].to_f
+          end
+
           ev.save
         end
       end
