@@ -19,10 +19,15 @@
     </tr>
     <% @expert_judgement_attributes.each do |eja| %>
 
-      <% ie = ExpertJudgement::InstanceEstimate.where(pe_attribute_id: eja.id,
-                                                         expert_judgement_instance_id: @expert_judgement_instance.id,
-                                                         module_project_id: current_module_project.id,
-                                                         pbs_project_element_id: current_component.id).first %>
+      <% ie = ExpertJudgement::InstanceEstimate.where( pe_attribute_id: eja.id,
+                                                       expert_judgement_instance_id: @expert_judgement_instance.id,
+                                                       module_project_id: current_module_project.id,
+                                                       pbs_project_element_id: current_component.id).first %>
+
+      <% ev = EstimationValue.where(:pe_attribute_id => eja.id,
+                                    :module_project_id => current_module_project.previous.first.id,
+                                    :in_out => "output").first %>
+
       <tr>
         <td><%= eja.name %></td>
 
@@ -50,11 +55,11 @@
 
         <td>
           <% if @expert_judgement_instance.three_points_estimation? %>
-            <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input, class: "input-small" %>
+            <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input.blank? ? ev.nil? ? '' : ev.string_data_low[current_component.id] : ie.low_input, class: "input-small" %>
           <% end %>
-          <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input, class: "input-small" %>
+          <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input.blank? ? ev.nil? ? '' : ev.string_data_most_likely[current_component.id] : ie.most_likely_input, class: "input-small" %>
           <% if @expert_judgement_instance.three_points_estimation? %>
-            <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input, class: "input-small" %>
+            <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input.blank? ? ev.nil? ? '' : ev.string_data_high[current_component.id] : ie.high_input, class: "input-small" %>
           <% end %>
         </td>
         <td>

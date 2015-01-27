@@ -10,7 +10,8 @@
         <h4>Taille en entrée (n/c) </h4>
       <% end %>
       <% attr = PeAttribute.find_by_alias("retained_size") %>
-      <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.previous.first.id).first %>
+      <% ev = EstimationValue.where(:pe_attribute_id => attr.id,
+                                    :module_project_id => current_module_project.previous.first.id ).first %>
       <% component_id = current_component.id %>
       <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
 
