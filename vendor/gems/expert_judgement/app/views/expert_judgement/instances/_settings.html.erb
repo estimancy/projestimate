@@ -1,19 +1,19 @@
 <%= form_tag expert_judgement.instance_save_efforts_path(@expert_judgement_instance) do %>
   <table class="table">
     <tr>
-      <th>Type de valeurs</th>
-      <th>Commentaires</th>
-      <th>Entrées</th>
-      <th>Sorties</th>
-      <th>Commentaires</th>
-      <th>Traçabilité</th>
+      <th class="text_left">Type de valeurs</th>
+      <th class="text_left">Description</th>
+      <th class="text_left">Entrées</th>
+      <th class="text_left">Sorties</th>
+      <th class="text_left">Commentaires</th>
+      <th class="text_left">Traçabilité</th>
 
     </tr>
     <tr>
       <th></th>
       <th></th>
-      <th>L / M / H</th>
-      <th>L / M / H</th>
+      <th class="text_left">L / M / H</th>
+      <th class="text_left">L / M / H</th>
       <th></th>
       <th></th>
     </tr>
@@ -29,9 +29,17 @@
                                     :in_out => "output").first %>
 
       <tr>
-        <td><%= eja.name %></td>
+        <td>
+          <span class="pull-left">
+            <%= eja.name %>
+          </span>
+        </td>
 
-        <td><%= link_to ie.description.blank? ? '------' : ie.description, "#", title: ie.description, :"data-toggle" => "modal", :"data-target" => "#description#{ie.id}", :"data-backdrop" => "static"  %></td>
+        <td>
+          <span class="pull-left">
+            <%= link_to ie.description.blank? ? '------' : ie.description, "#", title: ie.description, :"data-toggle" => "modal", :"data-target" => "#description#{ie.id}", :"data-backdrop" => "static"  %>
+          </span>
+        </td>
         <div class="modal fade" id="description<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="description_label<%= ie.id %>" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -54,25 +62,33 @@
         </div>
 
         <td>
-          <% if @expert_judgement_instance.three_points_estimation? %>
-            <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input.blank? ? ev.nil? ? '' : ev.string_data_low[current_component.id] : ie.low_input, class: "input-small" %>
-          <% end %>
-          <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input.blank? ? ev.nil? ? '' : ev.string_data_most_likely[current_component.id] : ie.most_likely_input, class: "input-small" %>
-          <% if @expert_judgement_instance.three_points_estimation? %>
-            <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input.blank? ? ev.nil? ? '' : ev.string_data_high[current_component.id] : ie.high_input, class: "input-small" %>
-          <% end %>
+          <span class="pull-left">
+            <% if @expert_judgement_instance.three_points_estimation? %>
+              <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input.blank? ? ev.nil? ? '' : ev.string_data_low[current_component.id] : ie.low_input, class: "input-small" %>
+            <% end %>
+            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input.blank? ? ev.nil? ? '' : ev.string_data_most_likely[current_component.id] : ie.most_likely_input, class: "input-small" %>
+            <% if @expert_judgement_instance.three_points_estimation? %>
+              <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input.blank? ? ev.nil? ? '' : ev.string_data_high[current_component.id] : ie.high_input, class: "input-small" %>
+            <% end %>
+          </span>
         </td>
         <td>
-          <% if @expert_judgement_instance.three_points_estimation? %>
-            <%= text_field_tag "values[#{eja.id}][low][output]", ie.low_output, class: "input-small" %>
-          <% end %>
-          <%= text_field_tag "values[#{eja.id}][most_likely][output]", ie.most_likely_output, class: "input-small" %>
-          <% if @expert_judgement_instance.three_points_estimation? %>
-            <%= text_field_tag "values[#{eja.id}][high][output]", ie.high_output, class: "input-small" %>
-          <% end %>
+          <span class="pull-left">
+            <% if @expert_judgement_instance.three_points_estimation? %>
+              <%= text_field_tag "values[#{eja.id}][low][output]", ie.low_output, class: "input-small" %>
+            <% end %>
+            <%= text_field_tag "values[#{eja.id}][most_likely][output]", ie.most_likely_output, class: "input-small" %>
+            <% if @expert_judgement_instance.three_points_estimation? %>
+              <%= text_field_tag "values[#{eja.id}][high][output]", ie.high_output, class: "input-small" %>
+            <% end %>
+          </span>
         </td>
 
-        <td><%= link_to ie.comments.blank? ? '------' : ie.comments, "#", title: ie.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{ie.id}", :"data-backdrop" => "static"  %></td>
+        <td>
+          <span class="pull-left">
+            <%= link_to ie.comments.blank? ? '------' : ie.comments, "#", title: ie.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{ie.id}", :"data-backdrop" => "static"  %>
+          </span>
+        </td>
         <div class="modal fade" id="comments<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="comments_label<%= ie.id %>" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -95,7 +111,11 @@
         </div>
 
 
-        <td><%= link_to ie.tracking.blank? ? '------' : ie.tracking, "#", title: ie.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{ie.id}", :"data-backdrop" => "static"  %></td>
+        <td>
+          <span class="pull-left">
+            <%= link_to ie.tracking.blank? ? '------' : ie.tracking, "#", title: ie.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{ie.id}", :"data-backdrop" => "static"  %>
+          </span>
+        </td>
         <div class="modal fade" id="tracking<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= ie.id %>" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
