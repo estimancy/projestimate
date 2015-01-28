@@ -1,14 +1,19 @@
 <div class="tabs">
   <ul>
-    <li><a href="#tabs-1"><%= I18n.t(:security_level) %> </a></li>
+    <li>
+      <a href="#tabs-1">
+        <%= I18n.t(:security_level) %>
+      </a>
+    </li>
   </ul>
 
   <div id="tabs-1">
-    <%= simple_form_for(@project_security_level) do |f| %>
+    <%= simple_form_for([@organization, @project_security_level]) do |f| %>
       <%= f.error_notification %>
 
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:autofocus => (controller.action_name == 'new'), :class => 'input-xxlarge' } %>
       <%= f.input :description, :label => I18n.t('description'), :input_html => { :class => 'input-xxlarge', :rows => 5 } %>
+
       <%= f.input :organization_id, as: :hidden, :input_html => { value: params[:organization_id] } %>
 
       <div class="actions-tabs">
@@ -18,7 +23,7 @@
           <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
         <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= link_to I18n.t('back'), project_security_levels_path, :class => 'btn' %>
+        <%= link_to I18n.t('back'), edit_organization_path(params[:organization_id]), :class => 'btn' %>
       </div>
 
     <% end %>
