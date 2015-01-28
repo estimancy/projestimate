@@ -42,14 +42,14 @@ class WorkElementTypesController < ApplicationController
   load_resource
 
   def new
-    authorize! :create_and_edit_work_element_type, WorkElementType
+    authorize! :manage, WorkElementType
     set_page_title 'Work Element Type'
     @work_element_type = WorkElementType.new
   end
 
   # GET /work_element_types/1/edit
   def edit
-    authorize! :create_and_edit_work_element_type, WorkElementType
+    authorize! :manage, WorkElementType
     set_page_title 'Work Element Type'
     @work_element_type = WorkElementType.find(params[:id])
 
@@ -62,7 +62,7 @@ class WorkElementTypesController < ApplicationController
   end
 
   def create
-    authorize! :create_and_edit_work_element_type, WorkElementType
+    authorize! :manage, WorkElementType
     @work_element_type = WorkElementType.new(params[:work_element_type])
 
     if @work_element_type.save
@@ -73,7 +73,7 @@ class WorkElementTypesController < ApplicationController
   end
 
   def update
-    authorize! :create_and_edit_work_element_type, WorkElementType
+    authorize! :manage, WorkElementType
     @work_element_type = nil
     current_work_element_type = WorkElementType.find(params[:id])
     if current_work_element_type.is_defined?

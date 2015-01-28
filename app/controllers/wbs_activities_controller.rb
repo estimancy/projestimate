@@ -43,7 +43,7 @@ class WbsActivitiesController < ApplicationController
 
   #Import a new WBS-Activities from a CVS file
   def import
-    authorize! :create_wbs_activities, WbsActivity
+    authorize! :manage, WbsActivity
 
     begin
       WbsActivityElement.import(params[:file], params[:separator])
@@ -127,7 +127,7 @@ class WbsActivitiesController < ApplicationController
   end
 
   def new
-    authorize! :create_wbs_activities, WbsActivity
+    authorize! :manage, WbsActivity
 
     set_page_title 'WBS activities'
     @wbs_activity = WbsActivity.new
@@ -135,7 +135,7 @@ class WbsActivitiesController < ApplicationController
   end
 
   def create
-    authorize! :create_wbs_activities, WbsActivity
+    authorize! :manage, WbsActivity
 
     @wbs_activity = WbsActivity.new(params[:wbs_activity])
     @organization_id = params['wbs_activity']['organization_id']
@@ -163,7 +163,7 @@ class WbsActivitiesController < ApplicationController
 
   #Method to duplicate WBS-Activity and associated WBS-Activity-Elements
   def duplicate_wbs_activity
-    authorize! :create_wbs_activities, WbsActivity
+    authorize! :manage, WbsActivity
 
     #Update ancestry depth caching
     WbsActivityElement.rebuild_depth_cache!

@@ -327,7 +327,7 @@
     <div id="wbs-activities">
       <b><%= I18n.t :wbs_activities %></b>
 
-      <% if can? :create_wbs_activities, WbsActivity %>
+      <% if can? :manage, WbsActivity %>
         <a href="#myWBSModal" role="button" class="btn pull-right" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal"><%= I18n.t(:import_wbs_activity) %></a>
         <%= link_to I18n.t(:new_wbs_activity), new_organization_wbs_activity_path(@organization), :class => 'btn pull-right', :title => "#{I18n.t(:guide_create_wbs_activity)}" %>
       <% end %>
@@ -348,11 +348,9 @@
             <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
             <td class="center">
               <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
-              <% if can? :create_wbs_activities, WbsActivity %>
-                <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
-              <% end %>
               <% if can? :manage, WbsActivity %>
-                  <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t(:delete) %>
+                <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
+                <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t(:delete) %>
               <% end %>
             </td>
           </tr>
