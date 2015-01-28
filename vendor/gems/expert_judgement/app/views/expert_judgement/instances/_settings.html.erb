@@ -69,7 +69,7 @@
               <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
             <% end %>
 
-            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.most_likely_input.blank? ? ev.nil? ? '' : ev.string_data_most_likely[current_component.id] : ie.most_likely_input, class: "input-small" %>
+            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.convert_effort(eja, ev), class: "input-small" %>
             <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
 
             <% if @expert_judgement_instance.three_points_estimation? %>

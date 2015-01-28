@@ -179,16 +179,4 @@ class ModuleProject < ActiveRecord::Base
       ""
     end
   end
-
-  #def crawl(starting_node)
-  #  list = []
-  #  items=[starting_node]
-  #  until items.empty?
-  #    item = items.shift
-  #    list << item.id unless list.include?(item.id)
-  #    kids = item.next.sort{ |mp1, mp2| (mp1.position_y <=> mp2.position_y) && (mp1.position_x <=> mp2.position_x)} #Get next module_project
-  #    kids.each{ |kid| items << kid }
-  #  end
-  #  list - [starting_node.id]
-  #end
 end

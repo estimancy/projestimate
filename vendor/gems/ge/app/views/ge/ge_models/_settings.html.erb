@@ -43,7 +43,6 @@
       </table>
     </div>
 
-
     <div class="span6">
       <% attr = PeAttribute.find_by_alias("effort") %>
       <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id).first %>
