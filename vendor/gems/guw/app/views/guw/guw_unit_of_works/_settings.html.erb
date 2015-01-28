@@ -45,7 +45,7 @@
 
   <% if @unit_of_work_groups.empty? %>
     <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-    <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
+    <%= link_to I18n.t(:new_unit_of_work), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
   <% end %>
 
   <div id="table_guw_model">
@@ -94,7 +94,7 @@
       <%= link_to "RAZ", "#", class: "btn btn-mini reset_retained button_margin_right pull-right" %>
 
       <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-      <%= link_to "Créer une Unité d'Oeuvres", guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
+      <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
 
       <table class="table table-condensed table-striped" style="margin-top: 45px;">
         <tr>
@@ -104,7 +104,7 @@
           <th><%= I18n.t :name %></th>
           <th><%= I18n.t :description %></th>
           <th><%= I18n.t :work_unit_type %></th>
-          <th><%= I18n.t :cotation %></th>
+          <th>Opération</th>
           <th><%= I18n.t :technology %></th>
           <th><%= I18n.t :tracability %></th>
           <th><%= I18n.t :cotation %></th>

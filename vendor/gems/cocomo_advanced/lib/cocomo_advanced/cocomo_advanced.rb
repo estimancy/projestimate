@@ -83,7 +83,7 @@ module CocomoAdvanced
         sf << ic
       end
 
-      return (@coef_a * @coef_sloc ** @coef_b) * sf.inject(:*)
+      return (@coef_a * @coef_sloc ** @coef_b) * sf.inject(:*) * 152
     end
 
     #Return delay (in hour)

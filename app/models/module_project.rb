@@ -41,9 +41,10 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :pemodule
   belongs_to :project, :touch => true
   belongs_to :view    # the current selected view
+
   belongs_to :guw_model, class_name: "Guw::GuwModel"
   belongs_to :ge_model, class_name: "Ge::GeModel"
-
+  belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
   has_many :guw_unit_of_works, class_name: "Guw::GuwUnitOfWork"
 
@@ -67,7 +68,7 @@ class ModuleProject < ActiveRecord::Base
 
   amoeba do
     enable
-    include_field [:estimation_values, :pbs_project_elements]
+    include_field [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works, :views_widgets]
 
     customize(lambda { |original_module_project, new_module_project|
       new_module_project.copy_id = original_module_project.id

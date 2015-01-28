@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150123144621) do
+ActiveRecord::Schema.define(:version => 20150127104241) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -240,9 +240,32 @@ ActiveRecord::Schema.define(:version => 20150123144621) do
 
   add_index "estimation_values", ["links"], :name => "index_attribute_projects_on_links"
 
+  create_table "expert_judgement_instance_estimates", :force => true do |t|
+    t.integer "pbs_project_element_id"
+    t.integer "module_project_id"
+    t.integer "pe_attribute_id"
+    t.integer "expert_judgement_instance_id"
+    t.float   "low_input"
+    t.float   "most_likely_input"
+    t.float   "high_input"
+    t.float   "low_output"
+    t.float   "most_likely_output"
+    t.float   "high_output"
+    t.text    "description"
+    t.text    "comments"
+    t.text    "tracking"
+  end
+
   create_table "expert_judgement_instances", :force => true do |t|
     t.string  "name"
     t.integer "organization_id"
+    t.text    "description"
+    t.string  "cost_output_unit"
+    t.string  "effort_output_unit"
+    t.string  "size_output_unit"
+    t.float   "effort_unit_coefficient"
+    t.float   "cost_unit_coefficient"
+    t.boolean "three_points_estimation"
   end
 
   create_table "factor_translations", :force => true do |t|
@@ -530,10 +553,11 @@ ActiveRecord::Schema.define(:version => 20150123144621) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "view_id"
-    t.boolean  "show_results_view", :default => true
+    t.boolean  "show_results_view",            :default => true
     t.string   "color"
     t.integer  "guw_model_id"
     t.integer  "ge_model_id"
+    t.integer  "expert_judgement_instance_id"
   end
 
   create_table "module_projects_pbs_project_elements", :id => false, :force => true do |t|

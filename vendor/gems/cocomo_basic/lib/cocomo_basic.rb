@@ -68,7 +68,7 @@ module CocomoBasic
     #Getters
     #Return effort (in man-month)
     def get_effort(*args)
-      @effort = (@coef_a*(@coef_sloc**@coef_b)).to_f
+      @effort = (@coef_a*(@coef_sloc**@coef_b) * 152).to_f
     end
 
     #Return delay (in month)

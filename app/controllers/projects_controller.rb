@@ -134,7 +134,21 @@ class ProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    if @module_project.pemodule.alias == "ge"
+    if @module_project.pemodule.alias == "expert_judgement"
+      if current_module_project.expert_judgement_instance.nil?
+        @expert_judgement_instance = ExpertJudgement::Instance.first
+      else
+        @expert_judgement_instance = current_module_project.expert_judgement_instance
+      end
+      @expert_judgement_attributes = PeAttribute.where(alias: ["cost", "retained_size", "effort"])
+      ["effort", "cost", "retained_size"].each do |a|
+        ie = ExpertJudgement::InstanceEstimate.where(  pe_attribute_id: PeAttribute.find_by_alias(a).id,
+                                                       expert_judgement_instance_id: @expert_judgement_instance.id.to_i,
+                                                       module_project_id: current_module_project.id,
+                                                       pbs_project_element_id: current_component.id).first_or_create!
+      end
+
+    elsif @module_project.pemodule.alias == "ge"
       if current_module_project.ge_model.nil?
         @ge_model = Ge::GeModel.first
       else
@@ -377,8 +391,11 @@ class ProjectsController < ApplicationController
 
     @guw_module = Pemodule.where(alias: "guw").first
     @ge_module = Pemodule.where(alias: "ge").first
+    @ej_module = Pemodule.where(alias: "expert_judgement").first
+
     @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
     @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @modules_ej = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
@@ -833,6 +850,9 @@ class ProjectsController < ApplicationController
         my_module_project.guw_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
+      elsif @pemodule.alias == "expert_judgement"
+        eji_id = params[:module_selected].split(',').first
+        my_module_project.expert_judgement_instance_id = eji_id.to_i
       end
 
       my_module_project.save

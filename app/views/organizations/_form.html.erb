@@ -58,7 +58,7 @@
 
               <table class="table">
                 <tr>
-                  <th>Valeu max. du seuil</th>
+                  <th>Valeur max. du seuil</th>
                   <th>Coefficient de conversion standard (heure)</th>
                   <th>Unité d'effort</th>
                 </tr>
@@ -894,6 +894,8 @@
    <hr>
 
    <b>Expert Judgment</b>
+   <%= link_to "Nouveau modèle de Jugement d'Expert", expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+   <br>
 
    <table class="table table-bordered">
      <tr>
@@ -904,11 +906,11 @@
      <% ExpertJudgement::Instance.all.each do |i| %>
        <tr>
          <td class="span5">
-           <%= link_to i.name, guw.guw_model_path(i) %>
+           <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
          </td>
          <td class="align-center">
-           <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
-           <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+           <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+           <%= link_to '', expert_judgement.instance_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
          </td>
        </tr>
      <% end %>

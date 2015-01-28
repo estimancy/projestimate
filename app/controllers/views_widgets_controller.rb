@@ -81,9 +81,8 @@ class ViewsWidgetsController < ApplicationController
 
   def create
     @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1))
-    # Add the position_x and position_y to params
+      # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
-    #@module_project = ModuleProject.find(params[:views_widget][:module_project_id])
 
     respond_to do |format|
       if @views_widget.save
@@ -116,8 +115,6 @@ class ViewsWidgetsController < ApplicationController
         format.js { render action: :new }
       end
     end
-
-    #redirect_to dashboard_path(@project)
   end
 
   def update
@@ -143,7 +140,6 @@ class ViewsWidgetsController < ApplicationController
     respond_to do |format|
 
       if @views_widget.update_attributes(params[:views_widget])
-        #flash[:notice] = "Widget mis à jour avec succès"
         format.js { render :js => "window.location.replace('#{dashboard_path(@project)}');"}
       else
         flash[:error] = "Erreur lors de la mise à jour du Widget dans la vue"
