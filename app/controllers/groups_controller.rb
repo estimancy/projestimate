@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
   helper_method :enable_update_in_local?
 
   def new
-    authorize! :create_and_edit_groups, Group
+    authorize! :manage, Group
 
     set_page_title 'New group'
     @group = Group.new
@@ -53,6 +53,8 @@ class GroupsController < ApplicationController
   end
 
   def edit
+    authorize! :manage, Group
+
     set_page_title 'Edit group'
 
     @group = Group.find(params[:id])
@@ -66,7 +68,7 @@ class GroupsController < ApplicationController
   end
 
   def create
-    authorize! :create_and_edit_groups, Group
+    authorize! :manage, Group
 
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
@@ -144,7 +146,7 @@ class GroupsController < ApplicationController
 
 
   def update
-    authorize! :create_and_edit_groups, Group
+    authorize! :manage, Group
 
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
@@ -162,7 +164,7 @@ class GroupsController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, User
+    authorize! :manage, Group
 
     @group = Group.find(params[:id])
     @organization = @group.organization

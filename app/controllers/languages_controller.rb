@@ -41,20 +41,20 @@ class LanguagesController < ApplicationController
   load_resource
 
   def index
-    authorize! :create_and_edit_languages, Language
+    authorize! :manage, Language
 
     set_page_title 'Languages'
     @languages = Language.all
   end
 
   def new
-    authorize! :create_and_edit_languages, Language
+    authorize! :manage, Language
     set_page_title 'Add a language'
     @language = Language.new
   end
 
   def edit
-    authorize! :create_and_edit_languages, Language
+    authorize! :manage, Language
     set_page_title 'Edit language'
     @language = Language.find(params[:id])
 
@@ -67,7 +67,7 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    authorize! :create_and_edit_languages, Language
+    authorize! :manage, Language
     @language = Language.new(params[:language])
     @language.record_status = @proposed_status
     if @language.save
@@ -79,7 +79,7 @@ class LanguagesController < ApplicationController
   end
 
   def update
-    authorize! :create_and_edit_languages, Language
+    authorize! :manage, Language
     @language = nil
     current_language = Language.find(params[:id])
     if current_language.is_defined?

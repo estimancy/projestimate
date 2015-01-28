@@ -73,7 +73,7 @@
       <i class="icon-cog icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
-      <% if can? :manage, AdminSetting or can? :edit_admin_settings, AdminSetting %>
+      <% if can? :manage, AdminSetting or can? :show_admin_settings, AdminSetting %>
         <li class="dropdown">
           <a href="<%= main_app.admin_settings_path %>">
             <!--<i class="icon-cog icon-large pull-left"></i>-->
@@ -129,7 +129,7 @@
           <%= I18n.t(:all_permissions) %></a></li>
       <% end %>
 
-      <% if can? :manage, Language or can? :create_and_edit_languages, Language %>
+      <% if can? :manage, Language or can? :show_languages, Language %>
         <li class="dropdown"><a href="<%= main_app.languages_path %>">
           <!--<i class="icon-comments icon-large pull-left"></i>-->
           <%= I18n.t(:languages) %></a></li>

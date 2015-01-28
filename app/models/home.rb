@@ -145,8 +145,8 @@ class Home < ActiveRecord::Base
       end
     end
 
-    puts '   - WorkElementType'
-    self.update_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'uuid'])
+    #puts '   - WorkElementType'
+    #self.update_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'uuid'])
 
     puts '   - Currencies'
     self.update_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])
@@ -160,11 +160,11 @@ class Home < ActiveRecord::Base
     puts '   - Auth Method'
     self.update_records(ExternalMasterDatabase::ExternalAuthMethod, AuthMethod, ['name', 'server_name', 'port', 'base_dn', 'uuid'])
 
-    puts '   - Default groups'   # The Group table is no longer a master table
+    #puts '   - Default groups'   # The Group table is no longer a master table
     ###self.update_records(ExternalMasterDatabase::ExternalGroup, Group, ['name', 'description', 'for_global_permission', 'for_project_security', 'uuid'])
 
-    puts '   - Security level'
-    self.update_records(ExternalMasterDatabase::ExternalProjectSecurityLevel, ProjectSecurityLevel, ['name', 'description', 'uuid'])
+    #puts '   - Security level'
+    #self.update_records(ExternalMasterDatabase::ExternalProjectSecurityLevel, ProjectSecurityLevel, ['name', 'description', 'uuid'])
 
     puts '   - Global permissions'
     self.update_records(ExternalMasterDatabase::ExternalPermission, Permission, ['name', 'description', 'object_associated', 'is_permission_project', 'uuid','alias','is_master_permission','category'])
