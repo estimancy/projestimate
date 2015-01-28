@@ -8,9 +8,9 @@ module ExpertJudgement
     def convert_effort(eja, ev)
       gross = (self.most_likely_input.blank? ? ev.nil? ? '' : ev.string_data_most_likely[current_component.id] : self.most_likely_input).to_f
       if eja.alias == "effort"
-        gross * self.instance.effort_unit_coefficient
+        gross * self.instance.effort_unit_coefficient.to_f
       elsif eja.alias == "cost"
-        gross * self.instance.cost_unit_coefficient
+        gross * self.instance.cost_unit_coefficient.to_f
       else
         gross
       end
