@@ -5,9 +5,9 @@
   <div class="row-fluid">
     <div class="span6">
       <% if current_module_project.previous.empty? %>
-        <h4>Taille en entrée (en <%= current_module_project.previous.first.guw_model.output_unit %>)</h4>
-      <% else %>
         <h4>Taille en entrée (n/c) </h4>
+      <% else %>
+        <h4>Taille en entrée (en <%= current_module_project.expert_judgement_instance %>)</h4>
       <% end %>
       <% attr = PeAttribute.find_by_alias("retained_size") %>
       <% ev = EstimationValue.where(:pe_attribute_id => attr.id,

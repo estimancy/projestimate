@@ -911,40 +911,25 @@ module ProjectsHelper
   end
 
 
-  #Display pemodule output depending attribute type.
-  def display_value(value, est_val, get_with_unit=true)
+  def display_value(value, est_val, mp_id)
+    module_project = ModuleProject.find(mp_id)
     est_val_pe_attribute = est_val.pe_attribute
     precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
-    case est_val_pe_attribute.attr_type
-      when 'date'
-        display_date(value)
-      when 'float'
-        #begin
-          if est_val_pe_attribute.alias == "delay"
-            if get_with_unit
-              "#{convert(value, @project.organization).round.round(precision)} #{est_val_pe_attribute.alias == "delay" ? convert_label(value, @project.organization) : get_attribute_unit(est_val_pe_attribute)}"
-            else
-              "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
-            end
-          else
-            "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
-          end
-        #rescue
-        #  value
-        #end
-      when 'integer'
-        #begin
+    if est_val.pe_attribute.alias == "retained_size"
+      "#{value.to_f} #{module_project.size}"
+    elsif est_val.pe_attribute.alias == "effort"
+      "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
+    else
+      case est_val.attr_type
+        when 'date'
+          display_date(value)
+        when 'float'
           "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
-        #rescue
-        #  value
-        #end
-      else
-        #value
-        #begin
+        when 'integer'
           "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
-        #rescue
-        #  value
-        #end
+        else
+          value
+      end
     end
   end
 
@@ -953,7 +938,7 @@ module ProjectsHelper
     begin
       I18n.l(date.to_date)
     rescue
-      nil
+      date
     end
   end
 
