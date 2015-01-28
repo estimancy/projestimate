@@ -165,7 +165,12 @@ class ModuleProject < ActiveRecord::Base
   def size
     module_alias = self.pemodule.alias
     if module_alias == "ge"
-      self.ge_model.retained_size_unit
+      previous_module_project = self.previous.first
+      if previous_module_project.pemodule.alias == "expert_judgement"
+        previous_module_project.expert_judgement_instance.retained_size_unit
+      else
+        previous_module_project.guw_model.retained_size_unit
+      end
     elsif module_alias == "guw"
       self.guw_model.retained_size_unit
     elsif module_alias == "expert_judgement"
