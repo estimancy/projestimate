@@ -1184,7 +1184,7 @@ fr:
   conversion_rate: "Taux de conversion"
   select_technology: "Sélectionner une technologie"
   select_uow: "Sélectionner une unité de travail"
-  number_precision: "Précision des nombres"
+  number_precision: "Nombre de décimal"
   profile: "un profil"
   profiles: "Profils"
   new_profile: "Nouveau profil"

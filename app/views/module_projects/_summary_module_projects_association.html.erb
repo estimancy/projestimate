@@ -14,15 +14,7 @@
           <th>Module projects</th>
           <% @module_projects.each do |mp| %>
             <th>
-              <% if mp.pemodule.alias == "guw" %>
-                <%= mp.guw_model.nil? ? 'Undefined model': mp.guw_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[mp.position_x.to_i-1]};#{mp.position_y.to_i})" %>
-              <% elsif mp.pemodule.alias == "ge" %>
-                <%= mp.ge_model.nil? ? 'Undefined model': mp.ge_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[mp.position_x.to_i-1]};#{mp.position_y.to_i})" %>
-              <% elsif mp.pemodule.alias == "expert_judgement" %>
-                <%= mp.expert_judgement_instance.nil? ? 'Undefined model': mp.expert_judgement_instance.to_s + " (#{Projestimate::Application::ALPHABETICAL[mp.position_x.to_i-1]};#{mp.position_y.to_i})" %>
-              <% else %>
-                <%= mp.pemodule.title %> (<%= @alphabetical[mp.position_x.to_i-1] %>;<%= mp.position_y.to_i %>)</strong>
-              <% end %>
+              <%= mp %>
             </th>
           <% end %>
         </tr>
@@ -32,15 +24,9 @@
             <td>
               <%= hidden_field_tag "module_projects[#{i.id}][]" %>
               <strong>
-                <% if i.pemodule.alias == "guw" %>
-                  <%= i.guw_model.nil? ? 'Undefined model': i.guw_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[i.position_x.to_i-1]};#{i.position_y.to_i})" %>
-                <% elsif i.pemodule.alias == "ge" %>
-                  <%= i.ge_model.nil? ? 'Undefined model': i.ge_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[i.position_x.to_i-1]};#{i.position_y.to_i})" %>
-                <% elsif i.pemodule.alias == "expert_judgement" %>
-                  <%= i.expert_judgement_instance.nil? ? 'Undefined model': i.expert_judgement_instance.to_s + " (#{Projestimate::Application::ALPHABETICAL[i.position_x.to_i-1]};#{i.position_y.to_i})" %>
-                <% else %>
-                  <%= i.pemodule.title %> (<%= @alphabetical[i.position_x.to_i-1] %>;<%= i.position_y.to_i %>)</strong>
-                <% end %>
+                <%= i %>
+              </strong>
+
             </td>
 
             <% @module_projects.each_with_index do |j, k| %>

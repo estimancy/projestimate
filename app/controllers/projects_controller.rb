@@ -80,7 +80,6 @@ class ProjectsController < ApplicationController
     else
       @project = Project.new :state => 'preliminary'
     end
-    @user = @project.users.first
 
     @pemodules ||= Pemodule.defined
     @project_modules = @project.pemodules
@@ -1407,71 +1406,66 @@ public
 
   #Method to duplicate project and associated pe_wbs_project
   def duplicate
-    #begin
-      authorize! :create_project_from_template, Project
+    authorize! :create_project_from_template, Project
 
-      old_prj = Project.find(params[:project_id])
+    old_prj = Project.find(params[:project_id])
 
-      new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
-      new_prj.ancestry = nil
+    new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
+    new_prj.ancestry = nil
 
-      if new_prj.save
-        old_prj.save #Original project copy number will be incremented to 1
+    if new_prj.save
+      old_prj.save #Original project copy number will be incremented to 1
 
-        #Managing the component tree : PBS
-        pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
-        pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
+      #Managing the component tree : PBS
+      pe_wbs_product = new_prj.root_component
+      pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
-        # For PBS
-        new_prj_components = pe_wbs_product.pbs_project_elements
-        new_prj_components.each do |new_c|
-          unless new_c.is_root?
-            new_ancestor_ids_list = []
-            new_c.ancestor_ids.each do |ancestor_id|
-              ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
-              new_ancestor_ids_list.push(ancestor_id)
-            end
-            new_c.ancestry = new_ancestor_ids_list.join('/')
-
-            # For PBS-Project-Element Links with modules
-            old_pbs = PbsProjectElement.find(new_c.copy_id)
-            new_c.module_projects = old_pbs.module_projects
-
-            new_c.save
+      # For PBS
+      new_prj_components = pe_wbs_product.subtree
+      new_prj_components.each do |new_c|
+        unless new_c.is_root?
+          new_ancestor_ids_list = []
+          new_c.ancestor_ids.each do |ancestor_id|
+            ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
+            new_ancestor_ids_list.push(ancestor_id)
           end
-        end
+          new_c.ancestry = new_ancestor_ids_list.join('/')
 
-        # For WBS
-        new_prj_wbs = pe_wbs_activity.wbs_project_elements
-        new_prj_wbs.each do |new_wbs|
-          unless new_wbs.is_root?
-            new_ancestor_ids_list = []
-            new_wbs.ancestor_ids.each do |ancestor_id|
-              ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-              new_ancestor_ids_list.push(ancestor_id)
-            end
-            new_wbs.ancestry = new_ancestor_ids_list.join('/')
-            new_wbs.save
-          end
-        end
+          # For PBS-Project-Element Links with modules
+          old_pbs = PbsProjectElement.find(new_c.copy_id)
+          new_c.module_projects = old_pbs.module_projects
 
-        # For ModuleProject associations
-        old_prj.module_projects.group(:id).each do |old_mp|
-          new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
-          old_mp.associated_module_projects.each do |associated_mp|
-            new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
-            new_mp.associated_module_projects << new_associated_mp
-          end
+          new_c.save
         end
       end
 
-      flash[:success] = I18n.t(:notice_project_successful_duplicated)
-      flash[:success] = I18n.t(:notice_project_successful_duplicated)
-      redirect_to edit_project_path(new_prj) and return
-    #rescue
-    #  flash['Error'] = I18n.t(:error_project_duplication_failed)
-    #  redirect_to '/projects'
-    #end
+      # For WBS
+      new_prj_wbs = pe_wbs_activity.wbs_project_elements
+      new_prj_wbs.each do |new_wbs|
+        unless new_wbs.is_root?
+          new_ancestor_ids_list = []
+          new_wbs.ancestor_ids.each do |ancestor_id|
+            ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
+            new_ancestor_ids_list.push(ancestor_id)
+          end
+          new_wbs.ancestry = new_ancestor_ids_list.join('/')
+          new_wbs.save
+        end
+      end
+
+      # For ModuleProject associations
+      old_prj.module_projects.group(:id).each do |old_mp|
+        new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
+        old_mp.associated_module_projects.each do |associated_mp|
+          new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
+          new_mp.associated_module_projects << new_associated_mp
+        end
+      end
+    end
+
+    flash[:success] = I18n.t(:notice_project_successful_duplicated)
+    flash[:success] = I18n.t(:notice_project_successful_duplicated)
+    redirect_to edit_project_path(new_prj) and return
   end
 
 
@@ -1492,26 +1486,6 @@ public
       redirect_to '/projects'
     end
   end
-
-
-  #def activate
-  #  project = Project.find(params[:project_id])
-  #  authorize! :show_project, project
-  #
-  #  if !can_show_estimation?(project)
-  #    redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
-  #  end
-  #
-  #  session[:current_project_id] = params[:project_id]
-  #  session[:pbs_project_element_id] = project.root_component
-  #
-  #  if params[:from_tree_history_view]
-  #   redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
-  #  else
-  #    redirect_to '/dashboard', :notice => I18n.t('project_is_activated', :project_title => "#{project.title}")
-  #  end
-  #end
-
 
   def find_use_project
     @project = Project.find(params[:project_id])

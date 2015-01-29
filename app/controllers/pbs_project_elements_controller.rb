@@ -54,17 +54,9 @@ class PbsProjectElementsController < ApplicationController
       @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
     end
 
-    if params[:work_element_type] == "folder"
-      @work_element_type = WorkElementType.find_by_alias("folder")
-    elsif params[:work_element_type] == "link"
-      @work_element_type = WorkElementType.find_by_alias("link")
-    else
-      @work_element_type = WorkElementType.find_by_alias("undefined")
-    end
-
     @parent = PbsProjectElement.find(params[:parent_id])
 
-    @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
+    @components = @project.pbs_project_elements
   end
 
   def edit
@@ -84,9 +76,9 @@ class PbsProjectElementsController < ApplicationController
       @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
     end
 
-    #Select folders which could be a parent of a pbs_project_element
-    #a pbs_project_element cannot be its own parent
-    @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
+    @parent = @pbs_project_element.parent
+
+    @components = @project.pbs_project_elements
   end
 
 
@@ -127,7 +119,7 @@ class PbsProjectElementsController < ApplicationController
         @work_element_type = WorkElementType.find_by_alias("undefined")
       end
 
-      @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
+      @components = @project.pbs_project_elements
 
       render :new
     end
@@ -170,9 +162,7 @@ class PbsProjectElementsController < ApplicationController
         @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
       end
 
-      #Select folders which could be a parent of a pbs_project_element
-      #a pbs_project_element cannot be its own parent
-      @folder_components = @project.pe_wbs_projects.products_wbs.first.pbs_project_elements.select{ |i| i.work_element_type.alias == "folder" }
+      @components = @project.pbs_project_elements
       render :edit
     end
   end
@@ -196,8 +186,7 @@ class PbsProjectElementsController < ApplicationController
       element.position = element.position - 1
       element.save
     end
-
-    render :partial => "pbs_project_elements/refresh_tree"
+    redirect_to dashboard_path(@project)
   end
 
 
@@ -241,7 +230,7 @@ class PbsProjectElementsController < ApplicationController
       component_b.update_attribute("position", component_b.position + 1)
     end
     @user = current_user
-    render :partial => "pbs_project_elements/refresh_tree"
+    redirect_to dashboard_path(@project)
   end
 
   #Pushed down the pbs_project_element
@@ -260,7 +249,7 @@ class PbsProjectElementsController < ApplicationController
       component_b.update_attribute("position", component_b.position - 1)
     end
     @user = current_user
-    render :partial => "pbs_project_elements/refresh_tree"
+    redirect_to dashboard_path(@project)
   end
 
   def refresh_pbs_activity_ratios

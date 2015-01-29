@@ -166,7 +166,7 @@ def load_data!
       p.save(validate: false)
     end
 
-  # Version
+    # Version
     puts '   - Version table'
     Version.create :comment => 'No update data has been save'
 

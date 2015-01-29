@@ -45,11 +45,10 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :guw_model, class_name: "Guw::GuwModel"
   belongs_to :ge_model, class_name: "Ge::GeModel"
   belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
+
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
   has_many :guw_unit_of_works, class_name: "Guw::GuwUnitOfWork"
-
   has_many :estimation_values, :dependent => :destroy
-  has_many :inputs
   has_many :input_cocomos
   has_many :factors, :through => :input_cocomos
   has_many :organization_uow_complexities, :through => :factors
@@ -62,7 +61,6 @@ class ModuleProject < ActiveRecord::Base
 
   has_many :second_module_projects, :class_name => 'AssociatedModuleProject', :foreign_key => 'associated_module_project_id'
   has_many :inverse_associated_module_projects, :through => :second_module_projects, :source => :module_project
-
 
   default_scope :order => 'position_x ASC, position_y ASC'
 
@@ -151,12 +149,13 @@ class ModuleProject < ActiveRecord::Base
   def to_s
     #self.pemodule.title.humanize
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
-      # nothing to show for position as the "Initialization is always on the first position"
       self.project.title #self.pemodule.title.humanize
     elsif self.pemodule.alias == "ge"
-      self.ge_model.nil? ? 'Undefined model': self.ge_model.to_s
+      self.ge_model.nil? ? 'Undefined model': self.ge_model.to_s(self)
     elsif self.pemodule.alias == "guw"
-      self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s
+      self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s(self)
+    elsif self.pemodule.alias == "expert_judgement"
+      self.expert_judgement_instance.nil? ? 'Undefined model': self.expert_judgement_instance.to_s(self)
     else
       "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
     end

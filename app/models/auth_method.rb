@@ -34,8 +34,6 @@
 #
 #############################################################################
 
-#Special table
-
 class AuthMethod < ActiveRecord::Base
 
   attr_accessible :name, :server_name, :port, :base_dn, :user_name_attribute,

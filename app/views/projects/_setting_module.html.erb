@@ -1,4 +1,4 @@
-<div class="" id="estimation_graph_box">
+<div id="estimation_graph_box">
   <% if current_module_project.pemodule.alias == "guw" %>
     <%= render partial: "guw/guw_unit_of_works/settings" %>
   <% elsif current_module_project.pemodule.alias == "ge" %>
@@ -11,7 +11,5 @@
     <%= render partial: "cocomo_advanced/input_cocomo/settings" %>
   <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
     <%= render partial: "cocomo_expert/input_cocomo/settings" %>
-  <% else %>
-
   <% end %>
 </div>

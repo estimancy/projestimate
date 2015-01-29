@@ -864,9 +864,6 @@ module ProjectsHelper
       end
       res << '</table>'
 
-      #if module_project.pemodule.alias == "guw"
-      #  res << link_to("Start counting", load_setting_module_path(current_module_project.id.to_s, anchor: 'setting_module'), :class => 'btn btn-mini', :id => 'run_estimation', :method => "POST", remote: true, class: "btn btn-mini")
-      #end
     end
     res
   end
@@ -915,12 +912,12 @@ module ProjectsHelper
     module_project = ModuleProject.find(mp_id)
     est_val_pe_attribute = est_val.pe_attribute
     precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
-    if est_val.pe_attribute.alias == "retained_size"
+    if est_val_pe_attribute.alias == "retained_size"
       "#{value.to_f} #{module_project.size}"
-    elsif est_val.pe_attribute.alias == "effort"
+    elsif est_val_pe_attribute.alias == "effort"
       "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
     else
-      case est_val.attr_type
+      case est_val_pe_attribute
         when 'date'
           display_date(value)
         when 'float'
