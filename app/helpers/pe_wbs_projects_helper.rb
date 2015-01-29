@@ -67,7 +67,7 @@ module PeWbsProjectsHelper
         <div class='block_label #{ pbs_project_element == current_component ? 'selected_pbs' : '' }'>
           <div>
               <a href=#{ selected_pbs_project_element_path(:pbs_id => pbs_project_element.id, :is_project_show_view => is_project_show_view, project_id: @project.id) }>
-                <i class='icon-leaf'></i>
+                <i class='icon-file'></i>
                 #{ content_tag('i', '', :class => "#{ pbs_project_element.is_completed ? 'icon-star' : 'icon-star-empty' } ") }
                 #{ content_tag('i', '', :class => "#{ pbs_project_element.is_validated ? 'icon-circle' : 'icon-circle-blank' } ") }
                 #{pbs_project_element.name}
