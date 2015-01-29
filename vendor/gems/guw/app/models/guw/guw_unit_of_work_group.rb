@@ -1,7 +1,7 @@
 module Guw
   class GuwUnitOfWorkGroup < ActiveRecord::Base
 
-    has_many :guw_unit_of_works
+    has_many :guw_unit_of_works, dependent: :destroy
 
     validates_presence_of :name, :organization_technology_id
 

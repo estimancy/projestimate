@@ -123,9 +123,10 @@ module ViewsWidgetsHelper
           end
         end
 
-        probable_value_text =  display_value(data_probable, estimation_value)
-        max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, false)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
-        min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, false)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
+        probable_value_text = display_value(data_probable, estimation_value, module_project_id)
+
+        max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
+        min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, module_project_id)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
 
         #Update the widget data
         #widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
@@ -481,7 +482,7 @@ module ViewsWidgetsHelper
         if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
           res << ' - '
         else
-          res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value)}"
+          res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value, module_project_id)}"
         end
         res << "</td>"
       end

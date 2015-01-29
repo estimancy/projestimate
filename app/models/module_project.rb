@@ -153,6 +153,8 @@ class ModuleProject < ActiveRecord::Base
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
       # nothing to show for position as the "Initialization is always on the first position"
       self.project.title #self.pemodule.title.humanize
+    elsif self.pemodule.alias == "ge"
+      self.ge_model.nil? ? 'Undefined model': self.ge_model.to_s
     elsif self.pemodule.alias == "guw"
       self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s
     else
@@ -160,15 +162,21 @@ class ModuleProject < ActiveRecord::Base
     end
   end
 
-  #def crawl(starting_node)
-  #  list = []
-  #  items=[starting_node]
-  #  until items.empty?
-  #    item = items.shift
-  #    list << item.id unless list.include?(item.id)
-  #    kids = item.next.sort{ |mp1, mp2| (mp1.position_y <=> mp2.position_y) && (mp1.position_x <=> mp2.position_x)} #Get next module_project
-  #    kids.each{ |kid| items << kid }
-  #  end
-  #  list - [starting_node.id]
-  #end
+  def size
+    module_alias = self.pemodule.alias
+    if module_alias == "ge"
+      previous_module_project = self.previous.first
+      if previous_module_project.pemodule.alias == "expert_judgement"
+        previous_module_project.expert_judgement_instance.retained_size_unit
+      else
+        previous_module_project.guw_model.retained_size_unit
+      end
+    elsif module_alias == "guw"
+      self.guw_model.retained_size_unit
+    elsif module_alias == "expert_judgement"
+      self.expert_judgement_instance.retained_size_unit
+    else
+      ""
+    end
+  end
 end

@@ -5,7 +5,7 @@
     <div class="pull-right">
       <b>
         <div class="label label-info pull-right">
-          Total <%= @guw_model.output_unit %> retenu :
+          Total <%= @guw_model.retained_size_unit %> retenu :
           <span class="ajusted_effort">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
           </span>
@@ -14,7 +14,7 @@
         <br>
 
         <div class="pull-left">
-          Total <%= @guw_model.output_unit %> calculés :
+          Total <%= @guw_model.retained_size_unit %> calculés :
           <span class="label label-info theorical_effort">
               <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
           </span>
@@ -57,12 +57,12 @@
 
         <span class="pull-right">
 
-          Total <%= @guw_model.output_unit %> retenu :
+          Total <%= @guw_model.retained_size_unit %> retenu :
           <span class="<%= uowg.id %>_ajusted">
             <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum %>
           </span>
 
-          - Total <%= @guw_model.output_unit %> calculés :
+          - Total <%= @guw_model.retained_size_unit %> calculés :
           <span class="<%= uowg.id %>_theorical">
             <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>
           </span>
@@ -98,19 +98,19 @@
 
       <table class="table table-condensed table-striped" style="margin-top: 45px;">
         <tr>
-          <th></th>
-          <th>S</th>
-          <th>M</th>
-          <th><%= I18n.t :name %></th>
-          <th><%= I18n.t :description %></th>
-          <th><%= I18n.t :work_unit_type %></th>
-          <th>Opération</th>
-          <th><%= I18n.t :technology %></th>
-          <th><%= I18n.t :tracability %></th>
-          <th><%= I18n.t :cotation %></th>
-          <th><%= I18n.t :results %></th>
-          <th><%= I18n.t :retained_result %></th>
-          <th><%= I18n.t :actions %></th>
+          <th class="text_left"></th>
+          <th class="text_left">S</th>
+          <th class="text_left">M</th>
+          <th class="text_left"><%= I18n.t :name %></th>
+          <th class="text_left"><%= I18n.t :description %></th>
+          <th class="text_left"><%= I18n.t :work_unit_type %></th>
+          <th class="text_left">Opération</th>
+          <th class="text_left"><%= I18n.t :technology %></th>
+          <th class="text_left"><%= I18n.t :tracability %></th>
+          <th class="text_left"><%= I18n.t :cotation %></th>
+          <th class="text_left"><%= I18n.t :results %></th>
+          <th class="text_left"><%= I18n.t :retained_result %></th>
+          <th class="text_left"><%= I18n.t :actions %></th>
         </tr>
 
         <% uowg.guw_unit_of_works.order("display_order asc").each_with_index do |guow, i| %>
@@ -204,29 +204,37 @@
             </td>
 
             <td>
-              <% if guow.guw_complexity.nil? %>
-                <%= link_to "------", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
-              <% elsif guow.off_line == true %>
-                <%= link_to "HS", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
-              <% else %>
-                <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
-              <% end %>
+              <span class="pull-left">
+                <% if guow.guw_complexity.nil? %>
+                  <%= link_to "------", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+                <% elsif guow.off_line == true %>
+                  <%= link_to "HS", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                <% else %>
+                  <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+                <% end %>
+              </span>
             </td>
 
             <td>
-              <%= guow.effort %>
+              <span class="pull-left">
+                <%= guow.effort %>
+              </span>
             </td>
 
             <td>
-              <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini retained" %>
+              <span class="pull-left">
+                <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini retained" %>
+              </span>
             </td>
 
             <td>
-              <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
-              <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
-              <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
-              <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-edit" %>
-              <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
+              <span class="pull-left">
+                <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
+                <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
+                <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
+                <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-edit" %>
+                <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
+              </span>
             </td>
 
             <td>

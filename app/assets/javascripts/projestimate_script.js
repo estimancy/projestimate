@@ -805,8 +805,6 @@ $(document).ready(function() {
         return false;
     });
 
-    $('html, body').animate({ scrollTop: 0 });
-
     $.ui.plugin.add("resizable", "alsoResizeReverse", {
 
         start: function(event, ui) {
