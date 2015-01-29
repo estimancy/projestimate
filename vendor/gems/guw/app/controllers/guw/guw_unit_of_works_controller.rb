@@ -293,7 +293,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
                                                                  module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works}.flatten.size
 
-          selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
+          selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                                   module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
 
           offline_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
                                                                module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size
@@ -330,7 +331,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           elsif am.pe_attribute.alias == "flagged_unit_of_work"
             ev.send("string_data_#{level}")[current_component.id] = flagged_unit_of_work
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-          elsif am.pe_attribute.alias == "flagged_unit_of_work"
+          elsif am.pe_attribute.alias == "selected_of_unit_of_work"
             ev.send("string_data_#{level}")[current_component.id] = selected_of_unit_of_work
             tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
           end
