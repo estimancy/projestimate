@@ -2,25 +2,29 @@ class SizeUnitTypesController < ApplicationController
   load_and_authorize_resource :except => [:index]
 
   def index
+    authorize! :show_size_unit_types, SizeUnitType
     @size_unit_types = SizeUnitType.all
-
   end
 
   def show
+    authorize! :show_size_unit_types, SizeUnitType
     @size_unit_type = SizeUnitType.find(params[:id])
   end
 
   def new
+    authorize! :manage, SizeUnitType
     @size_unit_type = SizeUnitType.new
     @organization = Organization.find(params[:organization_id])
   end
 
   def edit
+    authorize! :manage, SizeUnitType
     @size_unit_type = SizeUnitType.find(params[:id])
     @organization = @size_unit_type.organization #|| Organization.find(params[:organization_id])
   end
 
   def create
+    authorize! :manage, SizeUnitType
     @size_unit_type = SizeUnitType.new(params[:size_unit_type])
     #@size_unit_type.organization_id = params[:size_unit_type][:organization_id]
     @organization = Organization.find_by_id(params['size_unit_type']['organization_id'])
@@ -44,6 +48,8 @@ class SizeUnitTypesController < ApplicationController
   end
 
   def update
+    authorize! :manage, SizeUnitType
+
     @size_unit_type = SizeUnitType.find(params[:id])
     #@size_unit_type.organization_id = params[:size_unit_type][:organization_id]
     @organization = @size_unit_type.organization
@@ -56,6 +62,8 @@ class SizeUnitTypesController < ApplicationController
   end
 
   def destroy
+    authorize! :manage, SizeUnitType
+
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.destroy
     redirect_to edit_organization_path(@size_unit_type.organization_id, anchor: "tabs-sut"), notice: 'Size unit type was successfully deleted.'

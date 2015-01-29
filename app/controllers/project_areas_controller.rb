@@ -59,7 +59,7 @@ class ProjectAreasController < ApplicationController
   end
 
   def edit
-    #no authorize required since everyone can show this object
+    authorize! :manage, ProjectArea
     set_page_title 'Project Area'
     @project_area = ProjectArea.find(params[:id])
     @organization = Organization.find(params[:organization_id])

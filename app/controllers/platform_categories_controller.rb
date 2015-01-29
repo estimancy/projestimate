@@ -50,7 +50,8 @@ class PlatformCategoriesController < ApplicationController
   end
 
   def edit
-    #no authorize required since everyone can show this object
+    authorize! :manage, PlatformCategory
+
     set_page_title 'Platform Category'
     @platform_category = PlatformCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])

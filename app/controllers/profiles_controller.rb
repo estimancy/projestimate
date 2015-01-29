@@ -8,20 +8,21 @@ class ProfilesController < ApplicationController
   # GET /profiles
   # GET /profiles.json
   def index
-    authorize! :create_and_edit_profiles, Profile
+    authorize! :show_profiles, Profile
     @profiles = Profile.all
   end
 
   # GET /profiles/new
   # GET /profiles/new.json
   def new
+    authorize! :manage, Profile
     @profile = Profile.new
     @profile_categories = ProfileCategory.defined.all
   end
 
   # GET /profiles/1/edit
   def edit
-    authorize! :create_and_edit_profiles, Profile
+    authorize! :manage, Profile
     set_page_title 'Edit profile'
     @profile = Profile.find(params[:id])
     @profile_categories = ProfileCategory.defined.all
@@ -38,7 +39,7 @@ class ProfilesController < ApplicationController
   # POST /profiles
   # POST /profiles.json
   def create
-    authorize! :create_and_edit_profiles, Profile
+    authorize! :manage, Profile
     set_page_title 'Create profile'
 
     @profile = Profile.new(params[:profile])
@@ -57,7 +58,7 @@ class ProfilesController < ApplicationController
   # PUT /profiles/1
   # PUT /profiles/1.json
   def update
-    authorize! :create_and_edit_profiles, Profile
+    authorize! :manage, Profile
     set_page_title 'Update profile'
     @profile_categories = ProfileCategory.defined.all
 

@@ -50,7 +50,8 @@ class ProjectCategoriesController < ApplicationController
   end
 
   def edit
-    #no authorize required since everyone can show this object
+    authorize! :manage, ProjectCategory
+
     set_page_title 'Project Category'
     @project_category = ProjectCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])

@@ -38,13 +38,13 @@ class SubcontractorsController < ApplicationController
   load_resource
 
   def new
-    authorize! :edit_organizations, Organization
+    authorize! :show_subcontractors, Subcontractor
     @subcontractor = Subcontractor.new
     @organization = Organization.find_by_id(params[:organization_id])
   end
 
   def edit
-    #No authorize required since everyone can edit
+    authorize! :manage, Subcontractor
     @subcontractor = Subcontractor.find(params[:id])
     @organization = @subcontractor.organization
 
@@ -57,7 +57,7 @@ class SubcontractorsController < ApplicationController
   end
 
   def create
-    authorize! :edit_organizations, Organization
+    authorize! :manage, Subcontractor
     set_page_title 'Subcontractors'
     @subcontractor = Subcontractor.new(params[:subcontractor])
     @organization = Organization.find_by_id(params['subcontractor']['organization_id'])
@@ -71,7 +71,7 @@ class SubcontractorsController < ApplicationController
   end
 
   def update
-    authorize! :edit_organizations, Organization
+    authorize! :manage, Subcontractor
     @subcontractor = Subcontractor.find(params[:id])
     @organization = @subcontractor.organization
 
@@ -84,7 +84,8 @@ class SubcontractorsController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, Organization
+    authorize! :manage, Subcontractor
+
     @subcontractor = Subcontractor.find(params[:id])
     organization_id = @subcontractor.organization_id
     @subcontractor.destroy
