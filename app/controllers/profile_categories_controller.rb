@@ -7,14 +7,14 @@ class ProfileCategoriesController < ApplicationController
   helper_method :enable_update_in_local?
 
   def index
-    authorize! :create_and_edit_profile_categories, ProfileCategory
+    authorize! :show_profile_categories, ProfileCategory
 
     set_page_title 'Profile Categories'
     @profile_categories = ProfileCategory.all
   end
 
   def new
-    authorize! :create_and_edit_profile_categories, ProfileCategory
+    authorize! :manage, ProfileCategory
 
     set_page_title 'Profile Categories'
     @profile_category = ProfileCategory.new
@@ -28,7 +28,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def edit
-    authorize! :create_and_edit_profile_categories, ProfileCategory
+    authorize! :manage, ProfileCategory
 
     set_page_title 'Edit profile Categories'
     @profile_category = ProfileCategory.find(params[:id])
@@ -56,7 +56,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def create
-    authorize! :create_and_edit_profile_categories, ProfileCategory
+    authorize! :manage, ProfileCategory
 
     @profile_category = ProfileCategory.new(params[:profile_category])
     @profile_category.owner_id = current_user.id
@@ -82,7 +82,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def update
-    authorize! :create_and_edit_profile_categories, ProfileCategory
+    authorize! :manage, ProfileCategory
 
     @profile_category = nil
     current_profile_category = ProfileCategory.find(params[:id])
@@ -141,7 +141,7 @@ class ProfileCategoriesController < ApplicationController
 
   # Create new profile category on the Organization profile path
   def new_profile_category_with_organization
-    authorize! :create_and_edit_organizations, Organization
+    authorize! :manage, ProfileCategory
     set_page_title 'Create organization profile category'
 
     @profile_category = ProfileCategory.new(params[:profile_category])
