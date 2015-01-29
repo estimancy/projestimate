@@ -9,9 +9,13 @@
       <% else %>
         <h4>Taille en entrée (en <%= current_module_project.expert_judgement_instance %>)</h4>
       <% end %>
+
       <% attr = PeAttribute.find_by_alias("retained_size") %>
-      <% ev = EstimationValue.where(:pe_attribute_id => attr.id,
-                                    :module_project_id => current_module_project.previous.first.id ).first %>
+      <% previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
+                                             :module_project_id => current_module_project.previous.first.id).first %>
+
+      <% current_ev = EstimationValue.where(:pe_attribute_id => attr.id,
+                                             :module_project_id => current_module_project.id).first %>
       <% component_id = current_component.id %>
       <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
 
@@ -28,15 +32,15 @@
         <tr>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "retained_size_low", ev.nil? ? '': ev.send("string_data_low")[component_id], class: "input-medium" %>
+              <%= text_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id), class: "input-medium" %>
             </td>
           <% end %>
           <td>
-            <%= text_field_tag "retained_size_most_likely", ev.nil? ? '': ev.send("string_data_most_likely")[component_id], class: "input-medium" %>
+            <%= text_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id), class: "input-medium" %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "retained_size_high", ev.nil? ? '': ev.send("string_data_high")[component_id], class: "input-medium" %>
+              <%= text_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id), class: "input-medium" %>
             </td>
           <% end %>
         </tr>

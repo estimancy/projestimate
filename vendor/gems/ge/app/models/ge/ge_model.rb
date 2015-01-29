@@ -12,5 +12,13 @@ module Ge
         "#{self.name} (#{Projestimate::Application::ALPHABETICAL[mp.position_x.to_i-1]};#{mp.position_y.to_i})"
       end
     end
+
+    def self.display_size(p, c, level, component_id)
+      if c.send("string_data_#{level}")[component_id].blank?
+        p.send("string_data_#{level}")[component_id]
+      else
+        c.send("string_data_#{level}")[component_id]
+      end
+    end
   end
 end

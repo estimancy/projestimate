@@ -65,15 +65,15 @@
           <span class="pull-left">
 
             <% if @expert_judgement_instance.three_points_estimation? %>
-              <%= text_field_tag "values[#{eja.id}][low][input]", ie.low_input.blank? ? ev.nil? ? '' : ev.string_data_low[current_component.id] : ie.low_input, class: "input-small" %>
+              <%= text_field_tag "values[#{eja.id}][low][input]", ie.convert_effort("low", eja, ev), class: "input-small" %>
               <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
             <% end %>
 
-            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.convert_effort(eja, ev), class: "input-small" %>
+            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.convert_effort("most_likely", eja, ev), class: "input-small" %>
             <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
 
             <% if @expert_judgement_instance.three_points_estimation? %>
-              <%= text_field_tag "values[#{eja.id}][high][input]", ie.high_input.blank? ? ev.nil? ? '' : ev.string_data_high[current_component.id] : ie.high_input, class: "input-small" %>
+              <%= text_field_tag "values[#{eja.id}][high][input]", ie.convert_effort("high", eja, ev), class: "input-small" %>
               <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
             <% end %>
 
@@ -155,5 +155,5 @@
     <% end %>
   </table>
 
-  <%= submit_tag "eded" %>
+  <%= submit_tag "Sauvegarder", class: "pull-right btn btn-mini" %>
 <% end %>

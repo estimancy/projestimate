@@ -5,8 +5,8 @@ module ExpertJudgement
     belongs_to :pe_attribute
     belongs_to :instance, foreign_key: "expert_judgement_instance_id"
 
-    def convert_effort(eja, ev)
-      gross = (self.most_likely_input.blank? ? ev.nil? ? '' : ev.string_data_most_likely[current_component.id] : self.most_likely_input).to_f
+    def convert_effort(level, eja, ev)
+      gross = (self.send("#{level}_input").blank? ? ev.nil? ? '' : ev.send("#{level}_input")[current_component.id] : self.send("#{level}_input")).to_f
       if eja.alias == "effort"
         gross * self.instance.effort_unit_coefficient.to_f
       elsif eja.alias == "cost"
