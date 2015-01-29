@@ -2,6 +2,8 @@ class FieldsController < ApplicationController
   # GET /fields/new
   # GET /fields/new.json
   def new
+    authorize! :manage, Field
+
     @field = Field.new
 
     respond_to do |format|
@@ -12,12 +14,15 @@ class FieldsController < ApplicationController
 
   # GET /fields/1/edit
   def edit
+    authorize! :manage, Field
     @field = Field.find(params[:id])
   end
 
   # POST /fields
   # POST /fields.json
   def create
+    authorize! :manage, Field
+
     @field = Field.new(params[:field])
 
     respond_to do |format|
@@ -34,6 +39,8 @@ class FieldsController < ApplicationController
   # PUT /fields/1
   # PUT /fields/1.json
   def update
+    authorize! :manage, Field
+
     @field = Field.find(params[:id])
 
     respond_to do |format|
@@ -50,6 +57,8 @@ class FieldsController < ApplicationController
   # DELETE /fields/1
   # DELETE /fields/1.json
   def destroy
+    authorize! :manage, Field
+
     @field = Field.find(params[:id])
     organization_id = @field.organization_id
     @field.destroy

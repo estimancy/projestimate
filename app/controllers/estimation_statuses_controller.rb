@@ -23,7 +23,7 @@ class EstimationStatusesController < ApplicationController
 
   # Set the estimation status workflow
   def set_estimation_status_workflow
-    authorize! :edit_organizations, Organization
+    authorize! :manage, EstimationStatus
 
     @organization = Organization.find(params[:organization_id])
 
@@ -44,7 +44,8 @@ class EstimationStatusesController < ApplicationController
 
   # Set the estimations permission for groups according to the estimate status
   def set_estimation_status_group_roles
-    authorize! :edit_organizations, Organization
+    authorize! :manage, EstimationStatus
+
     @organization = Organization.find(params[:organization_id])
 
     @organization.estimation_statuses.all.each do |status|
@@ -67,16 +68,21 @@ class EstimationStatusesController < ApplicationController
   end
 
   def new
+    authorize! :manage, EstimationStatus
     @estimation_status = EstimationStatus.new
     @organization = Organization.find_by_id(params[:organization_id])
   end
 
   def edit
+    authorize! :manage, EstimationStatus
+
     @estimation_status = EstimationStatus.find(params[:id])
     @organization = @estimation_status.organization
   end
 
   def create
+    authorize! :manage, EstimationStatus
+
     @estimation_status = EstimationStatus.new(params[:estimation_status])
     @organization = Organization.find_by_id(params['estimation_status']['organization_id'])
 
@@ -92,6 +98,8 @@ class EstimationStatusesController < ApplicationController
   end
 
   def update
+    authorize! :manage, EstimationStatus
+
     @estimation_status = EstimationStatus.find(params[:id])
     @organization = @estimation_status.organization
 
@@ -104,6 +112,8 @@ class EstimationStatusesController < ApplicationController
   end
 
   def destroy
+    authorize! :manage, EstimationStatus
+
     @estimation_status = EstimationStatus.find(params[:id])
     organization_id = @estimation_status.organization_id
 

@@ -4,7 +4,9 @@
 <table border="0" width="100%">
   <tr>
     <td style="text-align:right;">
-      <%= link_to I18n.t('new_group'), new_group_path(:organization_id => params[:id]), :class => 'btn' %>
+      <% if can? :manage, Group  %>
+        <%= link_to I18n.t('new_group'), new_group_path(:organization_id => params[:id]), :class => 'btn' %>
+      <% end %>
     </td>
   </tr>
 </table>
@@ -24,8 +26,10 @@
         <td><%= link_to group.name, edit_organization_group_path(@organization, group), :title => I18n.t('edit')  %></td>
         <td><%= group.description %></td>
         <td class="center">
-          <%= link_to '', edit_organization_group_path(@organization, group), :class => 'icon-pencil', :title => I18n.t('edit') %>
-          <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+          <% if can? :manage, group %>
+            <%= link_to '', edit_organization_group_path(@organization, group), :class => 'icon-pencil', :title => I18n.t('edit') %>
+            <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+          <% end %>
         </td>
       </tr>
   <% end %>

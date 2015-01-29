@@ -1,14 +1,17 @@
 
 <%= hidden_field_tag "organization_id", params[:id] %>
 
-<table border="0" width="100%">
-  <tr>
-    <td style="text-align:right;">
-      <%= link_to I18n.t('new_profile'), new_organization_profile_path(:organization_id => params[:id]), :class => 'btn' %>
-      <%= link_to I18n.t(:new_profile_category), new_profile_category_path(organization_id: @organization.id), class: 'btn pull-right button_margin_left', remote: true %>
-    </td>
-  </tr>
-</table>
+<% if can? :manage, OrganizationProfile %>
+    <table border="0" width="100%">
+      <tr>
+        <td style="text-align:right;">
+          <%= link_to I18n.t('new_profile'), new_organization_profile_path(:organization_id => params[:id]), :class => 'btn' %>
+          <%= link_to I18n.t(:new_profile_category), new_profile_category_path(organization_id: @organization.id), class: 'btn pull-right button_margin_left', remote: true %>
+        </td>
+      </tr>
+    </table>
+<% end %>
+
 <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
   <thead>
   <tr>
@@ -29,8 +32,11 @@
         <td><%= profile.description %></td>
         <td><%= profile.cost_per_hour %></td>
 
-        <td class="align-center"><%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil', :title => I18n.t('edit') %>
-          <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+        <td class="align-center">
+          <% if can? :manage, OrganizationProfile %>
+            <%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil', :title => I18n.t('edit') %>
+            <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+          <% end %>
         </td>
       </tr>
   <% end %>

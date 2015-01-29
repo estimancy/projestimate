@@ -49,7 +49,8 @@ class AcquisitionCategoriesController < ApplicationController
   end
 
   def edit
-    #no authorize required since everyone can show this object
+    authorize! :manage, AcquisitionCategory
+
     set_page_title I18n.t (:acquisition_category)
     @acquisition_category = AcquisitionCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])
