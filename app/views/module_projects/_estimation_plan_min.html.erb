@@ -18,16 +18,7 @@
 
               <% unless pmod.nil? %>
                 <div class="<%= select_pemodule %> module_project_min <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" style="background-color: <%= "##{pmod.color}" %>">
-                  <% if pmod.pemodule.alias == "guw" %>
-                    <%= link_to pmod.guw_model.nil? ? 'Undefined model': pmod.guw_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[pmod.position_x.to_i-1]};#{pmod.position_y.to_i})", activate_module_project_path(pmod) %>
-                  <% elsif pmod.pemodule.alias == "ge" %>
-                    <%= link_to pmod.ge_model.nil? ? 'Undefined model': pmod.ge_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[pmod.position_x.to_i-1]};#{pmod.position_y.to_i})" , activate_module_project_path(pmod), class: "a_white" %>
-                  <% elsif pmod.pemodule.alias == "expert_judgement" %>
-                    <%= link_to pmod.expert_judgement_instance.nil? ? 'Undefined model': pmod.expert_judgement_instance.to_s + " (#{Projestimate::Application::ALPHABETICAL[pmod.position_x.to_i-1]};#{pmod.position_y.to_i})" , activate_module_project_path(pmod), class: "a_white" %>
-                  <% else %>
-                    <%= link_to pmod, activate_module_project_path(pmod) %>
-                    <%= link_to ' ', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip" %>
-                  <% end %>
+                  <%= link_to pmod, activate_module_project_path(pmod) %>
 
                   <% if pmod.show_results_view %>
                       <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-open a_white blue", :title => I18n.t(:title_hide_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>

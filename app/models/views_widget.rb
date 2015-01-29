@@ -10,7 +10,12 @@ class ViewsWidget < ActiveRecord::Base
 
   has_many :project_fields
 
-  validates :name, :module_project_id, :width, :height, presence: true    #:estimation_value_id,
+  validates :name, :module_project_id, :width, :height, presence: true
+
+  amoeba do
+    enable
+    include_field [:project_fields]
+  end
 
 end
 

@@ -43,7 +43,7 @@ class Organization < ActiveRecord::Base
 
   #has_and_belongs_to_many :users
   #Groups created on local, will be attached to an organization
-  has_many :groups
+  has_many :groups, :dependent => :destroy
   has_many :users, through: :groups, uniq: true
 
   has_many :fields, :dependent => :destroy
@@ -56,10 +56,10 @@ class Organization < ActiveRecord::Base
   has_many :unit_of_works, :dependent => :destroy
   has_many :subcontractors, :dependent => :delete_all
   has_many :subcontractors, :dependent => :destroy
-  has_many :projects
+  has_many :projects, :dependent => :destroy
   has_many :organization_profiles, :dependent => :destroy
   has_many :profile_categories
-  has_many :size_unit_types
+  has_many :size_unit_types, :dependent => :destroy
   has_many :technology_size_types, :through => :size_unit_types
 
   #Estimations statuses
@@ -106,7 +106,8 @@ class Organization < ActiveRecord::Base
   amoeba do
     enable
     include_field [:attribute_organizations, :organization_technologies, :organization_profiles,
-                   :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types, :organization_uow_complexities, :estimation_statuses]
+                   :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types,
+                   :organization_uow_complexities, :estimation_statuses, :fields]
 
     customize(lambda { |original_organization, new_organization|
       new_copy_number = original_organization.copy_number.to_i+1

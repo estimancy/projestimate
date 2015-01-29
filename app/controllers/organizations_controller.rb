@@ -59,7 +59,7 @@ class OrganizationsController < ApplicationController
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
     @complexities = @organization.organization_uow_complexities
-    @projects = @organization.projects.reject { |i| !i.is_childless? }
+    @projects = @organization.projects
 
     @wbs_activities = @organization.wbs_activities
 

@@ -52,9 +52,8 @@ class Project < ActiveRecord::Base
   belongs_to :platform_category
   belongs_to :project_category
   belongs_to :creator, :class_name => 'User', :foreign_key => 'creator_id'
-  belongs_to :estimation_status   #Estimation status
+  belongs_to :estimation_status
 
-  has_many :events
   has_many :module_projects, :dependent => :destroy
   has_many :pemodules, :through => :module_projects
   has_many :project_securities, :dependent => :destroy
@@ -63,15 +62,10 @@ class Project < ActiveRecord::Base
   has_many :pbs_project_elements, :through => :pe_wbs_projects
   has_many :wbs_project_elements, :through => :pe_wbs_projects
 
-  has_and_belongs_to_many :groups
-  has_and_belongs_to_many :users
-
   default_scope order('title ASC, version ASC')
 
   serialize :included_wbs_activities, Array
 
-  #serialize :ten_latest_projects
-  #validates_presence_of :state
   validates :title, :presence => true, :uniqueness => { :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :alias, :presence => true, :uniqueness => { :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => :title, :scope => :alias, case_sensitive: false, :message => I18n.t(:error_validation_project) }
@@ -82,6 +76,24 @@ class Project < ActiveRecord::Base
   scoped_search :in => :organization, :on => :name
   scoped_search :in => :pbs_project_elements, :on => :name
   scoped_search :in => :wbs_project_elements, :on => [:name, :description]
+
+  amoeba do
+    enable
+    include_field [:pe_wbs_projects, :module_projects, :project_securities]
+
+    customize(lambda { |original_project, new_project|
+      new_copy_number = original_project.copy_number.to_i+1
+      new_project.title = "#{original_project.title}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.title}"
+      new_project.alias = "#{original_project.alias}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.alias}"
+      new_project.version = '1.0'
+      new_project.description = " #{original_project.description} \n \n This project is a duplication of project \"#{original_project.title} (#{original_project.alias}) - #{original_project.version}\" "
+      new_project.copy_number = 0
+      new_project.is_model = false
+      original_project.copy_number = new_copy_number
+    })
+
+    propagate
+  end
 
   #Get the project's WBS-Activity
   def project_wbs_activity
@@ -149,24 +161,6 @@ class Project < ActiveRecord::Base
         end
       end
     end
-  end
-
-  amoeba do
-    enable
-    include_field [:pe_wbs_projects, :module_projects, :groups, :users, :project_securities]
-
-    customize(lambda { |original_project, new_project|
-      new_copy_number = original_project.copy_number.to_i+1
-      new_project.title = "#{original_project.title}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.title}"
-      new_project.alias = "#{original_project.alias}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.alias}"
-      new_project.version = '1.0'
-      new_project.description = " #{original_project.description} \n \n This project is a duplication of project \"#{original_project.title} (#{original_project.alias}) - #{original_project.version}\" "
-      new_project.copy_number = 0
-      new_project.is_model = false
-      original_project.copy_number = new_copy_number
-    })
-
-    propagate
   end
 
   def self.encoding

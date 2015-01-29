@@ -302,7 +302,6 @@ class ApplicationController < ActionController::Base
   def current_module_project
     @defined_record_status = RecordStatus.find_by_name('Defined')
     pemodule = Pemodule.find_by_alias_and_record_status_id('initialization', @defined_record_status)
-    #begin
       default_current_module_project = ModuleProject.where('pemodule_id = ? AND project_id = ?', pemodule.id, @project.id).first
       if @project.module_projects.map(&:id).include?(session[:module_project_id].to_i)
         session[:module_project_id].nil? ? default_current_module_project : ModuleProject.find(session[:module_project_id])
@@ -314,9 +313,6 @@ class ApplicationController < ActionController::Base
           @project.module_projects.first
         end
       end
-    #rescue
-    #  nil
-    #end
   end
 
   # Get the current selected attribute for the Balancing Module
