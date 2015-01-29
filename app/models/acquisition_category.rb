@@ -41,7 +41,6 @@ class AcquisitionCategory < ActiveRecord::Base
   has_and_belongs_to_many :project_areas
 
   validates_presence_of :description
-  validates :uuid, :presence => true
   validates :name, :presence => true
 
   amoeba do

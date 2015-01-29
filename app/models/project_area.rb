@@ -50,10 +50,7 @@ class ProjectArea < ActiveRecord::Base
 
   has_many :projects
 
-  #validates :record_status, :presence => true
-  #validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :presence => true#, :uniqueness => {:case_sensitive => false, :scope => :record_status_id}
-  #validates :custom_value, :presence => true, :if => :is_custom?
+  validates :name, :presence => true
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
