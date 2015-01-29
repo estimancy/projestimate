@@ -24,26 +24,29 @@ class UnitOfWorksController < ApplicationController
   load_and_authorize_resource :except => [:index]
 
   def index
-    #No authorize required since everyone can edit
+    authorize! :show_unit_of_works, UnitOfWork
 
     @organization = Organization.find(params[:id])
     @organization_uow_complexities = @organization.unit_of_works
   end
 
   def edit
-    #No authorize required since everyone can edit
+    authorize! :manage, UnitOfWork
+
     @unit_of_work = UnitOfWork.find(params[:id])
     @organization = @unit_of_work.organization
   end
 
   def new
-    authorize! :edit_organizations, Organization
+    authorize! :manage, UnitOfWork
+
     @unit_of_work = UnitOfWork.new
     @organization = Organization.find_by_id(params[:organization_id])
   end
 
   def create
-    authorize! :edit_organizations, Organization
+    authorize! :manage, UnitOfWork
+
     @unit_of_work = UnitOfWork.new(params[:unit_of_work])
     @organization = Organization.find_by_id(params[:unit_of_work][:organization_id])
 
@@ -58,7 +61,8 @@ class UnitOfWorksController < ApplicationController
   end
 
   def update
-    authorize! :edit_organizations, Organization
+    authorize! :manage, UnitOfWork
+
     @unit_of_work = UnitOfWork.find(params[:id])
     @organization = Organization.find_by_id(params[:unit_of_work][:organization_id])
     if @unit_of_work.update_attributes(params[:unit_of_work])
@@ -72,7 +76,8 @@ class UnitOfWorksController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, Organization
+    authorize! :manage, UnitOfWork
+
     @unit_of_work = UnitOfWork.find(params[:id])
     organization_id = @unit_of_work.organization_id
     @unit_of_work.delete

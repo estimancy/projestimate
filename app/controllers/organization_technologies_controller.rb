@@ -38,14 +38,14 @@ class OrganizationTechnologiesController < ApplicationController
   load_resource
 
   def index
-    #No authorize required since everyone can edit
+    authorize! :show_organization_technologies, OrganizationTechnology
 
     @organization = Organization.find(params[:id])
     @organization_technologies = @organization.organization_technologies
   end
 
   def edit
-    #No authorize required since everyone can edit
+    authorize! :manage, OrganizationTechnology
 
     @organization_technology = OrganizationTechnology.find(params[:id])
     @organization = @organization_technology.organization
@@ -53,14 +53,14 @@ class OrganizationTechnologiesController < ApplicationController
   end
 
   def new
-    authorize! :edit_organizations, Organization
+    authorize! :manage, OrganizationTechnology
 
     @organization_technology = OrganizationTechnology.new
     @organization = Organization.find_by_id(params[:organization_id])
   end
 
   def create
-    authorize! :edit_organizations, Organization
+    authorize! :manage, OrganizationTechnology
 
     @organization_technology = OrganizationTechnology.new(params[:organization_technology])
     @organization = Organization.find_by_id(params['organization_technology']['organization_id'])
@@ -74,7 +74,7 @@ class OrganizationTechnologiesController < ApplicationController
   end
 
   def update
-    authorize! :edit_organizations, Organization
+    authorize! :manage, OrganizationTechnology
 
     @organization_technology = OrganizationTechnology.find(params[:id])
     @organization = @organization_technology.organization
@@ -88,7 +88,8 @@ class OrganizationTechnologiesController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, Organization
+    authorize! :manage, OrganizationTechnology
+
     @organization_technology = OrganizationTechnology.find(params[:id])
     organization_id = @organization_technology.organization_id
     @organization_technology.delete

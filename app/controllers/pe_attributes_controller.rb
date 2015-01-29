@@ -41,21 +41,21 @@ class PeAttributesController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :create_and_edit_attributes, PeAttribute
+    authorize! :manage, PeAttribute
 
     set_page_title 'Attributes'
     @attributes = PeAttribute.all
   end
 
   def new
-    authorize! :create_and_edit_attributes, PeAttribute
+    authorize! :manage, PeAttribute
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.new
   end
 
   def edit
-    authorize! :create_and_edit_attributes, PeAttribute
+    authorize! :manage, PeAttribute
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.find(params[:id])
@@ -71,7 +71,7 @@ class PeAttributesController < ApplicationController
   end
 
   def create
-    authorize! :create_and_edit_attributes, PeAttribute
+    authorize! :manage, PeAttribute
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.new(params[:pe_attribute])
@@ -87,7 +87,7 @@ class PeAttributesController < ApplicationController
   end
 
   def update
-    authorize! :create_and_edit_attributes, PeAttribute
+    authorize! :manage, PeAttribute
 
     set_page_title 'Attributes'
 
@@ -140,6 +140,8 @@ class PeAttributesController < ApplicationController
 
   #Find where attribute is using
   def find_use_attribute
+    authorize! :manage, PeAttribute
+
     @pe_attribute = PeAttribute.find(params[:pe_attribute_id])
     @attribute_modules = AttributeModule.find_all_by_pe_attribute_id(@pe_attribute.id)
     @attribute_organizations = AttributeOrganization.find_all_by_pe_attribute_id(@pe_attribute.id)

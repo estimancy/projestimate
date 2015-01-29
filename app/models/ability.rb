@@ -53,6 +53,12 @@ class Ability
                      WorkElementType, Currency, AdminSetting, AuthMethod, Group, ProjectSecurityLevel,
                      Permission], :record_status => {:name => 'Retired'}
 
+    # Add Action Aliases, for example:  alias_action :edit, :to => :update
+    # Notice the edit action is aliased to update. This means if the user is able to update a record he also has permission to edit it.
+    alias_action [:show_groups, Group], :to => [:manage, Group]
+    alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
+    alias_action :show_global_permissions, :to => :manage_roles
+
     #Load user groups permissions
     if user && !user.groups.empty?
       permissions_array = []

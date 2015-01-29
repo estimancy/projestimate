@@ -42,7 +42,7 @@ class PemodulesController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :create_and_edit_modules, Pemodule
+    authorize! :show_modules, Pemodule
 
     set_page_title 'Modules'
     @pemodules = Pemodule.all
@@ -50,7 +50,7 @@ class PemodulesController < ApplicationController
   end
 
   def new
-    authorize! :create_and_edit_modules, Pemodule
+    authorize! :manage, Pemodule
 
     set_page_title 'New Modules'
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
@@ -60,7 +60,7 @@ class PemodulesController < ApplicationController
   end
 
   def edit
-    authorize! :create_and_edit_modules, Pemodule
+    authorize! :manage, Pemodule
 
     set_page_title 'Edit Modules'
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
@@ -77,7 +77,7 @@ class PemodulesController < ApplicationController
   end
 
   def update
-    authorize! :create_and_edit_modules, Pemodule
+    authorize! :manage, Pemodule
 
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @attributes = PeAttribute.defined.all
@@ -107,7 +107,7 @@ class PemodulesController < ApplicationController
   end
 
   def create
-    authorize! :create_and_edit_modules, Pemodule
+    authorize! :manage, Pemodule
 
     @pemodule = Pemodule.new(params[:pemodule])
     @pemodule.alias =  params[:pemodule][:alias].downcase
@@ -196,8 +196,10 @@ class PemodulesController < ApplicationController
     redirect_to pemodules_url, :notice => "#{I18n.t (:notice_pemodule_successful_deleted)}"
   end
 
+  # redefine the links between estimation plan's modules
   def update_link_between_modules(project, module_project, last_position_x=nil)
-    #TODO opi define authorize!
+    authorize! :manage_project_estimation_plan, project
+
     return if @initialization_module.nil?
     initialization_mod_proj = project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
@@ -227,9 +229,10 @@ class PemodulesController < ApplicationController
   end
 
   def pemodules_up
-    #TODO opi define authorize!
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
+
+    authorize! :manage_project_estimation_plan, @project
 
     if @project_module.position_y > 1
       current_pmodule = @project.module_projects.where('position_x =? AND position_y =?', @project_module.position_x, @project_module.position_y.to_i-1).first
@@ -251,9 +254,10 @@ class PemodulesController < ApplicationController
 
 
   def pemodules_down
-    #TODO opi define authorize!
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
+
+    authorize! :manage_project_estimation_plan, @project
 
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
 
@@ -274,9 +278,10 @@ class PemodulesController < ApplicationController
 
 
   def pemodules_left
-    #TODO opi define authorize!
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
+
+    authorize! :manage_project_estimation_plan, @project
     last_position_x = nil
 
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -297,10 +302,11 @@ class PemodulesController < ApplicationController
 
 
   def pemodules_right
-    #TODO opi define authorize!
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
     last_position_x = nil
+
+    authorize! :manage_project_estimation_plan, @project
 
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     current_pmodule = @project.module_projects.where('position_x =? AND position_y =?', @project_module.position_x.to_i+1, @project_module.position_y.to_i).first
@@ -316,6 +322,8 @@ class PemodulesController < ApplicationController
   end
 
   def find_use_pemodule
+    #TODO Authorize #saly
+
     @pemodule = Pemodule.find(params[:pemodule_id])
     @related_projects = ModuleProject.find_all_by_pemodule_id(@pemodule.id)
   end
