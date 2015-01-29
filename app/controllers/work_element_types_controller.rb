@@ -45,6 +45,7 @@ class WorkElementTypesController < ApplicationController
     authorize! :manage, WorkElementType
     set_page_title 'Work Element Type'
     @work_element_type = WorkElementType.new
+    @organization = Organization.find(params[:organization_id])
   end
 
   # GET /work_element_types/1/edit
@@ -52,6 +53,7 @@ class WorkElementTypesController < ApplicationController
     authorize! :manage, WorkElementType
     set_page_title 'Work Element Type'
     @work_element_type = WorkElementType.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
 
     unless @work_element_type.child_reference.nil?
       if @work_element_type.child_reference.is_proposed_or_custom?

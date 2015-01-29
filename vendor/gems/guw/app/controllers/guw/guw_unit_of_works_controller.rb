@@ -94,8 +94,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   def save_guw_unit_of_works
 
     @guw_model = current_module_project.guw_model
+    @component = current_component
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
-                                                  pbs_project_element_id: current_component.id,
+                                                  pbs_project_element_id: @component.id,
                                                   guw_model_id: @guw_model.id)
 
     @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
@@ -305,48 +306,57 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
           if am.pe_attribute.alias == "retained_size"
             ev.send("string_data_#{level}")[current_component.id] = retained_size
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "theorical_size"
             ev.send("string_data_#{level}")[current_component.id] = theorical_size
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           end
 
           guw = Guw::Guw.new(theorical_size, retained_size, params["complexity_#{level}"], @project)
 
           if am.pe_attribute.alias == "delay"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_delay(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = guw.get_delay(retained_size, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "cost"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_cost(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = guw.get_cost(retained_size, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "defects"
-            ev.send("string_data_#{level}")[current_component.id] = guw.get_defects(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = guw.get_defects(retained_size, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "number_of_unit_of_work"
-            ev.send("string_data_#{level}")[current_component.id] = number_of_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = number_of_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "offline_unit_of_work"
-            ev.send("string_data_#{level}")[current_component.id] = offline_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = offline_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "flagged_unit_of_work"
-            ev.send("string_data_#{level}")[current_component.id] = flagged_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = flagged_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "selected_of_unit_of_work"
-            ev.send("string_data_#{level}")[current_component.id] = selected_of_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+            ev.send("string_data_#{level}")[@component.id] = selected_of_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           end
-
           ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
         end
 
         if ev.in_out == "output"
-          begin
-            ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-          rescue
-            #on ne gere pas les dates
-          end
+          ev.update_attribute(:"string_data_probable", { @component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
+      end
+    end
 
+    @module_project.next.each do |n|
+      ModuleProject::common_attributes(@module_project, n).each do |ca|
+        ["low", "most_likely", "high"].each do |level|
+          ev = EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first
+          ev.send("string_data_#{level}")[@component.id] = 999
+
+          evp = EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first
+          evp.send("string_data_probable")[@component.id] = 99
+
+          ev.save
+          evp.save
+        end
       end
     end
 

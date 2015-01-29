@@ -3,7 +3,7 @@
     <li><a href="#tabs-1"><%= I18n.t(:work_element_type) %> </a></li>
   </ul>
   <div id="tabs-1">
-    <%= simple_form_for(@work_element_type) do |f| %>
+    <%= simple_form_for([@organization, @work_element_type]) do |f| %>
         <%= f.error_notification %>
 
         <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
@@ -26,7 +26,7 @@
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <%= link_to I18n.t('back'), work_element_types_path, :class => 'btn' %>
+          <%= link_to I18n.t('back'), edit_organization_path(@organization), :class => 'btn' %>
 
         </div>
     <% end %>
