@@ -975,58 +975,58 @@ class ProjectsController < ApplicationController
     # Need to execute other module_projects if all required input attributes are present
     # Get all required attributes for each module (where)
     # Get all module_projects from the current_module_project : crawl_module_project(start_module_project)
-    until rest_of_module_projects.empty?
-      module_project = rest_of_module_projects.shift
-
-      @module_project_results = Hash.new
-      required_input_attributes = Array.new
-      input_attribute_modules = module_project.estimation_values.where('in_out IN (?) AND is_mandatory = ?', %w(input both), true)
-      input_attribute_modules.each do |attr_module|
-        required_input_attributes << attr_module.pe_attribute.alias
-      end
-
-      # Verification will be done only if there are some required attribute for the module
-      #unless required_input_attributes.empty?
-      # Re-initialize the current module_project
-      # @my_results is like that {:low => {:complexity_467 => 'organic', :sloc_467 => 10}, :most_likely => {:complexity_467 => 'organic', :sloc_467 => 10}, :hight => {:complexity_467 => 'organic', :sloc_467 => 10}}
-      get_all_required_attributes = []
-
-      ['low', 'most_likely', 'high'].each do |level|
-        level_result = @my_results[level.to_sym]
-
-        level_result.each do |key, value|
-          attribute_alias = key.to_s.split("_#{start_module_project.id}").first
-
-          # For modules with activities
-          if start_module_project.pemodule.yes_for_output_with_ratio? || start_module_project.pemodule.yes_for_output_without_ratio? || start_module_project.pemodule.yes_for_input_output_with_ratio? || start_module_project.pemodule.yes_for_input_output_without_ratio?
-            value = value.inject({}) { |wbs_value, (k, v)| wbs_value[k.to_s] = v; wbs_value }
-          end
-
-          set_attributes[level][attribute_alias] = value
-        end
-
-        # Update the set_attributes_name_list with the last one,
-        # Attribute is only added to the set_attributes_name_list if it's present
-        set_attributes[level].keys.each { |key| set_attributes_name_list[level] << key }
-
-        # Need to verify that all required attributes for this module are present
-        # If all required attributes are present
-        get_all_required_attributes << ((required_input_attributes & set_attributes_name_list[level]) == required_input_attributes)
-      end
-
-      at_least_one_all_required_attr = nil
-      get_all_required_attributes.each do |elt|
-        at_least_one_all_required_attr = elt
-        break if at_least_one_all_required_attr == true
-      end
-
-      #Run the estimation until there is one module_project that doesn't has all required attributes
-      catch (:done) do
-        throw :done if !at_least_one_all_required_attr
-        # Run estimation plan for the current module_project
-        run_estimation(module_project, pbs_project_element_id, rest_of_module_projects, set_attributes)
-      end
-    end
+    #until rest_of_module_projects.empty?
+    #  module_project = rest_of_module_projects.shift
+    #
+    #  @module_project_results = Hash.new
+    #  required_input_attributes = Array.new
+    #  input_attribute_modules = module_project.estimation_values.where('in_out IN (?) AND is_mandatory = ?', %w(input both), true)
+    #  input_attribute_modules.each do |attr_module|
+    #    required_input_attributes << attr_module.pe_attribute.alias
+    #  end
+    #
+    #  # Verification will be done only if there are some required attribute for the module
+    #  #unless required_input_attributes.empty?
+    #  # Re-initialize the current module_project
+    #  # @my_results is like that {:low => {:complexity_467 => 'organic', :sloc_467 => 10}, :most_likely => {:complexity_467 => 'organic', :sloc_467 => 10}, :hight => {:complexity_467 => 'organic', :sloc_467 => 10}}
+    #  get_all_required_attributes = []
+    #
+    #  ['low', 'most_likely', 'high'].each do |level|
+    #    level_result = @my_results[level.to_sym]
+    #
+    #    level_result.each do |key, value|
+    #      attribute_alias = key.to_s.split("_#{start_module_project.id}").first
+    #
+    #      # For modules with activities
+    #      if start_module_project.pemodule.yes_for_output_with_ratio? || start_module_project.pemodule.yes_for_output_without_ratio? || start_module_project.pemodule.yes_for_input_output_with_ratio? || start_module_project.pemodule.yes_for_input_output_without_ratio?
+    #        value = value.inject({}) { |wbs_value, (k, v)| wbs_value[k.to_s] = v; wbs_value }
+    #      end
+    #
+    #      set_attributes[level][attribute_alias] = value
+    #    end
+    #
+    #    # Update the set_attributes_name_list with the last one,
+    #    # Attribute is only added to the set_attributes_name_list if it's present
+    #    set_attributes[level].keys.each { |key| set_attributes_name_list[level] << key }
+    #
+    #    # Need to verify that all required attributes for this module are present
+    #    # If all required attributes are present
+    #    get_all_required_attributes << ((required_input_attributes & set_attributes_name_list[level]) == required_input_attributes)
+    #  end
+    #
+    #  at_least_one_all_required_attr = nil
+    #  get_all_required_attributes.each do |elt|
+    #    at_least_one_all_required_attr = elt
+    #    break if at_least_one_all_required_attr == true
+    #  end
+    #
+    #  #Run the estimation until there is one module_project that doesn't has all required attributes
+    #  catch (:done) do
+    #    throw :done if !at_least_one_all_required_attr
+    #    # Run estimation plan for the current module_project
+    #    run_estimation(module_project, pbs_project_element_id, rest_of_module_projects, set_attributes)
+    #  end
+    #end
 
     # Get the estimation results by profile for the EffortBreakdown module and save data
     if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -1051,10 +1051,6 @@ class ProjectsController < ApplicationController
     end
 
     redirect_to dashboard_path(@project)
-    #flash.now[:notice] = "Finish to execute estimation"
-    #respond_to do |format|
-    #  format.js { render :partial => 'pbs_project_elements/refresh'}
-    #end
   end
 
 
@@ -1100,84 +1096,10 @@ class ProjectsController < ApplicationController
 
             ######### if module_project use Ratio for output (like the Effort breakdown estimation module) ###############
             # Get the effort per Activity by profile
-            if start_module_project.pemodule.yes_for_output_with_ratio? || start_module_project.pemodule.yes_for_input_output_with_ratio?
-
-              if (start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN) && (est_val.pe_attribute.alias == Projestimate::Application::EFFORT)
-                ####### Get the project referenced ratio #####
-                # Project pe_wbs_activity
-                pe_wbs_activity = @project.pe_wbs_projects.activities_wbs.first
-                # Get the wbs_project_element which contain the wbs_activity_ratio
-                project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-                #wbs_project_elt_with_ratio = WbsProjectElement.where("pe_wbs_project_id = ? and wbs_activity_id = ? and is_added_wbs_root = ?", pe_wbs_activity.id, @pbs_project_element.wbs_activity_id, true).first
-                # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
-                wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-
-                # If Another default ratio was defined in PBS, it will override the one defined in module-project
-                if @pbs_project_element.wbs_activity_ratio.nil?
-                  # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
-                  ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
-                else
-                  #The BPS Ratio will be used
-                  ratio_reference = @pbs_project_element.wbs_activity_ratio
-                end
-                # Get the referenced ratio wbs_activity_ratio_profiles
-                referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles
-                profiles_probable_value = {}
-                parent_profile_est_value = {}
-
-                # get the wbs_project_elements that have at least one child
-                wbs_project_elt_with_children = pe_wbs_activity.wbs_project_elements.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
-
-                @project.organization.organization_profiles.each do |profile|
-                  profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
-                  # Parent values are reset to zero
-                  wbs_project_elt_with_children.each{ |elt| parent_profile_est_value["#{elt}"] = 0 }
-
-                  probable_estimation_value[@pbs_project_element.id].each do |wbs_project_elt_id, hash_value|
-                    # Get the probable value profiles values
-
-                    if hash_value["profiles"].nil?
-                      # create a new hash for profiles estimations results
-                      probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"] = Hash.new
-                    end
-
-                    current_probable_profiles = probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"]
-
-                    wbs_project_elt = WbsProjectElement.find(wbs_project_elt_id)
-                    wbs_activity_elt_id = wbs_project_elt.wbs_activity_element_id
-
-                    # Wbs_project_element root element doesn't have a wbs_activity_element
-                    if !wbs_activity_elt_id.nil? ||
-                      wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
-                      if !wbs_activity_ratio_elt.nil?
-                        # get the wbs_activity_ratio_profile
-                        corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
-                        # Get current profile ratio value for the referenced ratio
-                        corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
-                        estimation_value_profile = nil
-                        unless corresponding_ratio_profile_value.nil?
-                          estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
-
-                          #the update the parent's value
-                          ###parent_profile_est_value["#{wbs_project_elt.parent_id}"] += estimation_value_profile
-                          parent_profile_est_value["#{wbs_project_elt.parent_id}"] = parent_profile_est_value["#{wbs_project_elt.parent_id}"].to_f + estimation_value_profile
-                        end
-
-                        #if current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil?
-                          current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => estimation_value_profile} }
-                        #else
-                          #current_probable_profiles["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"] = { :value => estimation_value_profile }
-                        #end
-                      end
-                    end
-                  end
-                  #Need to calculate the parents effort by profile : addition of its children values
-                  wbs_project_elt_with_children.each do |wbs_project_elt_id|
-                    probable_estimation_value[@pbs_project_element.id][wbs_project_elt_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_project_elt_id}"]} }
-                  end
-                end
-              end
-            end
+            #if start_module_project.pemodule.yes_for_output_with_ratio? || start_module_project.pemodule.yes_for_input_output_with_ratio?
+              #copy paste
+            #end
+          #  We remove the code
 
           else
             probable_estimation_value[@pbs_project_element.id] = @my_results[:most_likely]["#{est_val_attribute_alias}_#{est_val.module_project_id.to_s}".to_sym]
@@ -1367,20 +1289,12 @@ public
 
       # Normally, the input data is commonly from the Expert Judgment Module on PBS (when running estimation on its product)
       cm = current_module.send(:new, input_data)
-      #begin
-        @result_hash["#{balancing_attr_est_values.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{balancing_attr_est_values.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id, level)
-      #rescue => e
-      #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
-      #  puts e.message
-      #end
+      @result_hash["#{balancing_attr_est_values.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{balancing_attr_est_values.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id, level)
 
     # For others modules
     else
       #current_mp_to_execute.estimation_values.sort! { |a, b| a.in_out <=> b.in_out }.each do |est_val|
       current_mp_to_execute.estimation_values.each do |est_val|
-        #if est_val.in_out == 'input' or est_val.in_out=='both'
-        #  inputs[est_val.pe_attribute.alias.to_sym] = input_data[est_val.pe_attribute.alias] #[current_mp_to_execute.id.to_s]
-        #end
 
         current_module = "#{current_mp_to_execute.pemodule.alias.camelcase.constantize}::#{current_mp_to_execute.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
 
@@ -1390,12 +1304,7 @@ public
         cm = current_module.send(:new, input_data)
 
         if est_val.in_out == 'output' or est_val.in_out=='both'
-          #begin
-              @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id, level)
-          #rescue => e
-          #  @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = nil
-          #  puts e.message
-          #end
+          @result_hash["#{est_val.pe_attribute.alias}_#{current_mp_to_execute.id}".to_sym] = cm.send("get_#{est_val.pe_attribute.alias}", project.id, current_mp_to_execute.id, pbs_project_element_id, level)
         end
       end
     end
