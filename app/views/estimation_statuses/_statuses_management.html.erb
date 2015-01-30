@@ -21,8 +21,10 @@
             <td style='width: 10%; background-color: <%= "##{estimation_status.status_color}" %>'><%#= "##{estimation_status.status_color}" %></td>
             <td><%= estimation_status.description %></td>
             <td class="center">
-              <%= link_to '', edit_estimation_status_path(estimation_status), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
-              <%= link_to '', estimation_status, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
+              <% if can? :manage, EstimationStatus %>
+                <%= link_to '', edit_estimation_status_path(estimation_status), :class => 'icon-pencil icon-large icon-border', :title => I18n.t('edit') %>
+                <%= link_to '', estimation_status, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large icon-border', :style => 'color:red', :title => I18n.t('delete') %>
+              <% end %>
             </td>
           </tr>
       <% end %>
@@ -62,7 +64,7 @@
             </tr>
             <% end %>
           </table>
-          <% if can? :edit_organizations, Organization %>
+          <% if can? :manage, EstimationStatus %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
               <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
           <% end %>
@@ -134,7 +136,7 @@
             <% end %>
 
           </table>
-          <% if can? :edit_organizations, Organization %>
+          <% if can? :manage, EstimationStatus %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
               <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
           <% end %>

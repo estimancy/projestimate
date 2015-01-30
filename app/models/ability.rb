@@ -58,6 +58,7 @@ class Ability
     alias_action [:show_groups, Group], :to => [:manage, Group]
     alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
     alias_action :show_global_permissions, :to => :manage_roles
+    alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :alter_estimation_plan, :to => :manage_estimation_plan
 
     #Load user groups permissions
     if user && !user.groups.empty?

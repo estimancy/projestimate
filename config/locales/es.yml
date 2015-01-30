@@ -1666,4 +1666,8 @@ es:
   notice_cannot_view_organization_technologies: "You don't have the rights to view the technologies"
   notice_cannot_view_unit_of_works: "You don't have the rights to view the unit of works"
   notice_cannot_view_size_unit_types: "You don't have the rights to view the size unit types"
+  notice_cannot_view_subcontractors: "You don't have the rights to view the subcontractors"
+  notice_cannot_view_factors_complexities: "You don't have the rights to view the factors complexities"
+  notice_cannot_view_estimation_statuses: "You don't have the rights to view the estimation's statuses"
+  notice_cannot_delete_widgets: "You don't have the rights to delete the widgets"
 
