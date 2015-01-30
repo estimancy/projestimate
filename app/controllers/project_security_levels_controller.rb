@@ -58,7 +58,8 @@ class ProjectSecurityLevelsController < ApplicationController
     @project_security_level = ProjectSecurityLevel.new(params[:project_security_level])
 
     if @project_security_level.save
-      redirect_to edit_organization_path(@project_security_level.organization_id), notice: "#{I18n.t (:notice_project_securities_level_successful_created)}"
+      #redirect_to edit_organization_path(@project_security_level.organization_id), notice: "#{I18n.t (:notice_project_securities_level_successful_created)}"
+      redirect_to redirect_apply(nil, new_organization_project_security_level_path(), edit_organization_path(@project_security_level.organization_id, anchor: "tabs-project-security-levels")), notice: "#{I18n.t (:notice_project_securities_level_successful_created)}"
     else
       render action: 'new'
     end

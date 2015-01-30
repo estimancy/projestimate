@@ -83,7 +83,6 @@ class Ability
 
       #Specfic project security loading
       prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
-
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
