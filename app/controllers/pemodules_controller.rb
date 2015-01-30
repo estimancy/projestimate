@@ -198,7 +198,7 @@ class PemodulesController < ApplicationController
 
   # redefine the links between estimation plan's modules
   def update_link_between_modules(project, module_project, last_position_x=nil)
-    authorize! :manage_project_estimation_plan, project
+    authorize! :manage_estimation_plan, project
 
     return if @initialization_module.nil?
     initialization_mod_proj = project.module_projects.find_by_pemodule_id(@initialization_module.id)
@@ -232,7 +232,7 @@ class PemodulesController < ApplicationController
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
 
-    authorize! :manage_project_estimation_plan, @project
+    authorize! :manage_estimation_plan, @project
 
     if @project_module.position_y > 1
       current_pmodule = @project.module_projects.where('position_x =? AND position_y =?', @project_module.position_x, @project_module.position_y.to_i-1).first
@@ -257,7 +257,7 @@ class PemodulesController < ApplicationController
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
 
-    authorize! :manage_project_estimation_plan, @project
+    authorize! :manage_estimation_plan, @project
 
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
 
@@ -281,7 +281,7 @@ class PemodulesController < ApplicationController
     @project_module = ModuleProject.find(params[:module_id])
     @project = @project_module.project
 
-    authorize! :manage_project_estimation_plan, @project
+    authorize! :manage_estimation_plan, @project
     last_position_x = nil
 
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
@@ -306,7 +306,7 @@ class PemodulesController < ApplicationController
     @project = @project_module.project
     last_position_x = nil
 
-    authorize! :manage_project_estimation_plan, @project
+    authorize! :manage_estimation_plan, @project
 
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     current_pmodule = @project.module_projects.where('position_x =? AND position_y =?', @project_module.position_x.to_i+1, @project_module.position_y.to_i).first

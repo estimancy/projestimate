@@ -61,7 +61,9 @@
       </div>
 
       <div class="actions">
-        <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <% if can?(:manage_estimation_plan, Project) || ( can? :alter_widget, ViewsWidget { |widget| widget.project_fields.empty? } ) %>
+            <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <% end %>
         <%= link_to I18n.t('back'), :back, :class => 'btn' %>
       </div>
     <% end %>

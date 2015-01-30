@@ -40,6 +40,8 @@ class ViewsWidgetsController < ApplicationController
 
 
   def new
+    authorize! :alter_widget, ViewsWidget
+
     @views_widget = ViewsWidget.new(params[:views_widget])
     @view_id = params[:view_id]
     @position_x = 1; @position_y = 1
@@ -59,6 +61,8 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def edit
+    authorize! :alter_widget, ViewsWidget
+
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
     @position_x = (@views_widget.position_x.nil? || @views_widget.position_x.downcase.eql?("nan")) ? 1 : @views_widget.position_x
@@ -80,6 +84,8 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def create
+    authorize! :alter_widget, ViewsWidget
+
     @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1))
       # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
@@ -118,6 +124,8 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def update
+    authorize! :alter_widget, ViewsWidget
+
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
 
@@ -167,8 +175,15 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def destroy
-    @views_widget = ViewsWidget.find(params[:id])
-    @views_widget.destroy
+    #authorize! :alter_widget, ViewsWidget
+
+    if can?(:manage_estimation_plan, Project) || ( can? :alter_widget, ViewsWidget { |widget| widget.project_fields.empty? } )
+      @views_widget = ViewsWidget.find(params[:id])
+      @views_widget.destroy
+    else
+      flash[:warning] = I18n.t(:notice_cannot_delete_widgets)
+    end
+
     #render :partial => "views_widgets/refresh_views_widgets_results"
     redirect_to dashboard_path(@project)
   end

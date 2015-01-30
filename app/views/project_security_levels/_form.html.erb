@@ -23,7 +23,7 @@
           <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
         <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= link_to I18n.t('back'), edit_organization_path(params[:organization_id]), :class => 'btn' %>
+        <%= link_to I18n.t('back'), edit_organization_path(params[:organization_id], anchor: "tabs-project-security-levels"), :class => 'btn' %>
       </div>
 
     <% end %>

@@ -1387,3 +1387,7 @@ fr:
   notice_cannot_view_organization_technologies: "Vous n'avez pas les autorisations nécessaires pour voir les technologies"
   notice_cannot_view_unit_of_works: "Vous n'avez pas les autorisations nécessaires pour voir les unités d'oeuvres"
   notice_cannot_view_size_unit_types: "Vous n'avez pas les autorisations nécessaires pour voir les types d'unité de taille"
+  notice_cannot_view_subcontractors: "Vous n'avez pas les autorisations nécessaires pour voir les sous-traitants"
+  notice_cannot_view_factors_complexities: "Vous n'avez pas les autorisations nécessaires pour voir les facteurs d'ajustement"
+  notice_cannot_view_estimation_statuses: "Vous n'avez pas les autorisations nécessaires pour voir les statuts des estimations"
+  notice_cannot_delete_widgets: "Vous n'avez pas les autorisations nécessaires pour supprimer les vignettes"
