@@ -38,31 +38,6 @@ class ModuleProjectsController < ApplicationController
 
   load_resource
 
-  def pbs_element_matrix
-    set_page_title 'Associate PBS-element'
-    @project = Project.find(params[:project_id])
-    authorize! :alter_estimation_plan, @project
-
-    @module_projects = @project.module_projects
-    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-    @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
-  end
-
-  def associate
-    @project = Project.find(params[:project_id])
-    authorize! :alter_estimation_plan, @project
-
-    @module_projects = @project.module_projects
-    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
-    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-
-    @module_projects.each do |mp|
-      mp.update_attribute('pbs_project_element_ids', params[:pbs_project_elements][mp.id.to_s])
-    end
-    redirect_to pbs_element_matrix_path(@project, :anchor => 'tabs-2')
-  end
-
   def edit
     @module_project = ModuleProject.find(params[:id])
     @project = @module_project.project

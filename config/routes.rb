@@ -127,6 +127,8 @@ Projestimate::Application.routes.draw do
   mount BalancingModule::Engine, at: '/balancing_module'
   mount RealSize::Engine, at: '/inputs'
 
+  post "save_effort_breakdown" => "wbs_activities#save_effort_breakdown"
+
   resources :organization_technologies
   post '/set_technology_uow_synthesis' => 'organizations#set_technology_uow_synthesis', :as => 'set_technology_uow_synthesis'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
@@ -183,7 +185,6 @@ Projestimate::Application.routes.draw do
   post 'check_attribute_modules' => 'attribute_modules#check_attribute_modules', :as => 'check_attribute_modules'
 
   resources :module_projects
-  match 'module_projects/:project_id/pbs_element_matrix' => 'module_projects#pbs_element_matrix', :as => 'pbs_element_matrix'
   match 'module_projects/:project_id/module_projects_matrix' => 'module_projects#module_projects_matrix', :as => 'module_projects_matrix'
   match 'module_projects/associate_modules_projects' => 'module_projects#associate_modules_projects', :as => 'associate_modules_projects'
   match 'module_projects/associate_module_project_to_ratios' => 'module_projects#associate_module_project_to_ratios', :as => 'associate_module_project_to_ratios'

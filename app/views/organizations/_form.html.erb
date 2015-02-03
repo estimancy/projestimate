@@ -91,7 +91,7 @@
                 <tr>
                   <td class="center"><%= text_field_tag "organization[limit4]", @organization.limit4 %></td>
                   <td class="center"><%= text_field_tag "organization[limit4_coef]", @organization.limit4_coef %></td>
-                  <td class="center"><%= text_field_tag "organization[limit4_unit]", @organization.limit3_unit %></td>
+                  <td class="center"><%= text_field_tag "organization[limit4_unit]", @organization.limit4_unit %></td>
                 </tr>
 
               </table>
@@ -378,7 +378,7 @@
 
         <% @wbs_activities.each do |wbs_activity| %>
           <tr>
-            <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1')) %></td>
+            <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-2')) %></td>
             <td><%= wbs_activity.description %></td>
             <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
             <td class="center">

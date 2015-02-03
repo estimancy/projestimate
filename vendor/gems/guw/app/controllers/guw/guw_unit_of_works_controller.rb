@@ -348,14 +348,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @module_project.next.each do |n|
       ModuleProject::common_attributes(@module_project, n).each do |ca|
         ["low", "most_likely", "high"].each do |level|
-          ev = EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first
-          ev.send("string_data_#{level}")[@component.id] = 999
-
-          evp = EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first
-          evp.send("string_data_probable")[@component.id] = 99
-
-          ev.save
-          evp.save
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { @component.id => nil } )
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { @component.id => nil } )
         end
       end
     end

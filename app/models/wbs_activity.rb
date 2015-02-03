@@ -35,7 +35,8 @@
 #############################################################################
 
 class WbsActivity < ActiveRecord::Base
-  attr_accessible :name, :description, :state, :record_status_id, :custom_value, :change_comment, :organization_id, :parent_id
+  attr_accessible :name, :description, :state, :record_status_id, :custom_value, :change_comment, :organization_id, :parent_id,
+                  :cost_unit, :cost_unit_coefficient, :effort_unit, :effort_unit_coefficient, :three_points_estimation
 
   include AASM
 
@@ -48,14 +49,10 @@ class WbsActivity < ActiveRecord::Base
   belongs_to :organization
 
   has_many :wbs_activity_elements, :dependent => :destroy
-  #has_many :wbs_project_elements, :through => :wbs_activity_elements
   has_many :wbs_activity_ratios, :dependent => :destroy
 
   has_many :pe_wbs_projects
   has_many :pbs_project_elements
-
-  #belongs_to :record_status
-  #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
   validates :organization_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :scope => :organization_id }
@@ -79,5 +76,14 @@ class WbsActivity < ActiveRecord::Base
   scoped_search :in => :organization, :on => :name
   scoped_search :in => :wbs_activity_elements, :on => [:name, :description]
   scoped_search :in => :wbs_activity_ratios, :on => [:name, :description]
+
+
+  def to_s(mp=nil)
+    if mp.nil?
+      self.name
+    else
+      "#{self.name} (#{Projestimate::Application::ALPHABETICAL[mp.position_x.to_i-1]};#{mp.position_y.to_i})"
+    end
+  end
 
 end

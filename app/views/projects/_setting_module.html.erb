@@ -11,5 +11,7 @@
     <%= render partial: "cocomo_advanced/input_cocomo/settings" %>
   <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
     <%= render partial: "cocomo_expert/input_cocomo/settings" %>
+  <% elsif current_module_project.pemodule.alias == "effort_breakdown" %>
+    <%= render partial: "wbs_activities/settings" %>
   <% end %>
 </div>

@@ -42,18 +42,7 @@
                 <% end %>
 
                 <div class="<%= pbs_class %> module_project <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
-
-                  <% if pmod.pemodule.alias == "guw" %>
-                    <%= link_to pmod.guw_model.nil? ? 'Undefined model': pmod.guw_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[pmod.position_x.to_i-1]};#{pmod.position_y.to_i})", activate_module_project_path(pmod), :remote => true, class: "a_white" %>
-                  <% elsif pmod.pemodule.alias == "ge" %>
-                    <%= link_to pmod.ge_model.nil? ? 'Undefined model': pmod.ge_model.to_s + " (#{Projestimate::Application::ALPHABETICAL[pmod.position_x.to_i-1]};#{pmod.position_y.to_i})" , activate_module_project_path(pmod), :remote => true, class: "a_white" %>
-                  <% elsif pmod.pemodule.alias == "expert_judgement" %>
-                    <%= link_to pmod.expert_judgement_instance.nil? ? 'Undefined model': pmod.expert_judgement_instance.to_s + " (#{Projestimate::Application::ALPHABETICAL[pmod.position_x.to_i-1]};#{pmod.position_y.to_i})" , activate_module_project_path(pmod), class: "a_white" %>
-                  <% else %>
-                    <%= link_to pmod, activate_module_project_path(pmod), :remote => true, class: "a_white" %>
-                    <%= link_to ' ', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip", class: "a_white" %>
-                  <% end %>
-
+                    <%= pmod %>
                     <br>
                     <% unless @project.locked? || (@project.in_frozen_status? && action_name=="show") %>
                       <%= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left a_white' %>

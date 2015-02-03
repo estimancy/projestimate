@@ -1,0 +1,39 @@
+<h4>
+  <b>
+    Liste des groupes
+  </b>
+</h4>
+
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Groupes
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <table class="table table-bordered">
+      <tr>
+        <th>Nom</th>
+        <th>Actions</th>
+      </tr>
+
+      <% @guw_unit_of_work_groups.each do |uowg| %>
+        <tr>
+          <td><%= uowg.name %></td>
+          <td>
+            <%= link_to '', guw.edit_guw_model_guw_unit_of_work_group_path(params[:guw_model_id], uowg), class: "fa fa-edit" %>
+            <%= link_to '', uowg, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<br>
+
+<%= link_to 'Nouveau groupe', guw.new_guw_model_guw_unit_of_work_group_path(params[:guw_model_id]), class: "btn" %>
+<%= link_to "Retour", main_app.root_url, class: "btn" %>

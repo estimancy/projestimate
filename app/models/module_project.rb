@@ -45,6 +45,7 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :guw_model, class_name: "Guw::GuwModel"
   belongs_to :ge_model, class_name: "Ge::GeModel"
   belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
+  belongs_to :wbs_activity
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
   has_many :guw_unit_of_works, class_name: "Guw::GuwUnitOfWork"
@@ -151,13 +152,15 @@ class ModuleProject < ActiveRecord::Base
     #self.pemodule.title.humanize
 
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
-      self.project.title #self.pemodule.title.humanize
+      self.project.title
     elsif self.pemodule.alias == "ge"
       self.ge_model.nil? ? 'Undefined model': self.ge_model.to_s(self)
     elsif self.pemodule.alias == "guw"
       self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s(self)
+    elsif self.pemodule.alias == "effort_breakdown"
+      self.wbs_activity.nil? ? 'Undefined model': self.wbs_activity.to_s(self)
     elsif self.pemodule.alias == "expert_judgement"
-      self.expert_judgement_instance.nil? ? 'Undefined model': self.expert_judgement_instance.to_s(self)
+      self.expert_judgement_instance.nil? ? 'Undefined model' : self.expert_judgement_instance.to_s(self)
     else
       "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
     end

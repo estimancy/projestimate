@@ -19,6 +19,10 @@
 
 class Guw::GuwUnitOfWorkGroupsController < ApplicationController
 
+  def index
+    @guw_unit_of_work_groups = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all
+  end
+
   def new
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.new
   end
