@@ -90,8 +90,10 @@ class Ability
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
-          prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
-            can i.alias.to_sym, prj_scrt.project
+          unless prj_scrt.project_security_level.nil?
+            prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
+              can i.alias.to_sym, prj_scrt.project
+            end
           end
         end
       end
