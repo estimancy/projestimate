@@ -552,7 +552,7 @@ fr:
   edit_project: "Editer le projet \"%{value}\""
   new_project: "Créer une estimation"
   new_project_from: "Créer une estimation à partir d'un modèle"
-  wbs_product: "PBS-Produits"
+  wbs_product: "PBS-Projets"
   wbs_activity: "WBS-Activités"
   available_wbs_activity: "WBS-Activité disponibles dans la bibliothèque, avec leurs tables de ratio associées\n(La table de ratio selectionnée sera utilisée comme table de ratio par défaut)"
   button_add: "Ajouter"
