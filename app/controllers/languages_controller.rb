@@ -41,7 +41,7 @@ class LanguagesController < ApplicationController
   load_resource
 
   def index
-    authorize! :manage, Language
+    authorize! :manage_master_data, :all
 
     set_page_title 'Languages'
     @languages = Language.all
@@ -54,7 +54,7 @@ class LanguagesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, Language
+    authorize! :manage_master_data, :all
     set_page_title 'Edit language'
     @language = Language.find(params[:id])
 
@@ -67,7 +67,8 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    authorize! :manage, Language
+    authorize! :manage_master_data, :all
+
     @language = Language.new(params[:language])
     @language.record_status = @proposed_status
     if @language.save
@@ -79,7 +80,8 @@ class LanguagesController < ApplicationController
   end
 
   def update
-    authorize! :manage, Language
+    authorize! :manage_master_data, :all
+
     @language = nil
     current_language = Language.find(params[:id])
     if current_language.is_defined?
@@ -101,7 +103,8 @@ class LanguagesController < ApplicationController
   # Destroy method on Master table is not going to delete  definitively the record
   #It is only going to change ths record status : logical deletion
   def destroy
-    authorize! :manage, Language
+    authorize! :manage_master_data, :all
+
     @language = Language.find(params[:id])
     #if @language.is_defined? || @language.is_custom?
     if @language.is_custom?

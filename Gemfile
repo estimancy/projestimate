@@ -86,7 +86,7 @@ gem 'paperclip', '~> 3.0'
 gem 'uuidtools'
 
 #For deep copy of ActiveRecord object
-gem 'amoeba'
+gem 'amoeba', '~> 3.0.0'
 
 # Required for rspec and rails command
 gem 'rb-readline'

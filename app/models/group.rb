@@ -80,7 +80,7 @@ class Group < ActiveRecord::Base
 
   amoeba do
     enable
-    include_field [:permissions]
+    include_association [:permissions]
   end
 
 end

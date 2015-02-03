@@ -64,7 +64,7 @@ class PeAttribute < ActiveRecord::Base
   ##Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
     enable
-    exclude_field [:attribute_modules, :attribute_organizations]
+    exclude_association [:attribute_modules, :attribute_organizations]
 
     customize(lambda { |original_record, new_record|
       new_record.reference_uuid = original_record.uuid

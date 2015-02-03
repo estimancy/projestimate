@@ -42,17 +42,21 @@ class CurrenciesController < ApplicationController
   before_filter :get_record_statuses
 
   def index
+    authorize! :manage_master_data, :all
     @currencies = Currency.all
   end
 
   # GET /currencies/new
   # GET /currencies/new.json
   def new
+    authorize! :manage_master_data, :all
     @currency = Currency.new
   end
 
   # GET /currencies/1/edit
   def edit
+    authorize! :manage_master_data, :all
+
     @currency = Currency.find(params[:id])
 
     unless @currency.child_reference.nil?
@@ -66,6 +70,8 @@ class CurrenciesController < ApplicationController
   # POST /currencies
   # POST /currencies.json
   def create
+    authorize! :manage_master_data, :all
+
     @currency = Currency.new(params[:currency])
     @currency.save
     redirect_to redirect(currencies_url)
@@ -74,6 +80,8 @@ class CurrenciesController < ApplicationController
   # PUT /currencies/1
   # PUT /currencies/1.json
   def update
+    authorize! :manage_master_data, :all
+
     @currency = nil
     current_currency = Currency.find(params[:id])
     if current_currency.is_defined?
@@ -93,6 +101,8 @@ class CurrenciesController < ApplicationController
   # DELETE /currencies/1
   # DELETE /currencies/1.json
   def destroy
+    authorize! :manage_master_data, :all
+
     @currency = Currency.find(params[:id])
     if @currency.is_defined? || @currency.is_custom?
       #logical deletion: delete don't have to suppress records anymore on defined record

@@ -219,6 +219,8 @@ Projestimate::Application.routes.draw do
   post '/set_technology_size_unit_abacus' => 'organizations#set_technology_size_unit_abacus', :as => 'set_technology_size_unit_abacus'
   post '/organizations/:organization_id/export' => 'organizations#export', :as => 'export_organization'
   match 'organizations/:organization_id/duplicate_organization' => 'organizations#duplicate_organization', :as => :duplicate_organization
+  get 'new_organization_from_image' => 'organizations#new_organization_from_image', as: 'new_organization_from_image'
+  post 'create_organization_from_image' => 'organizations#create_organization_from_image', as: 'create_organization_from_image'
 
   resources :subcontractors
   #match '/subcontractors', :to => 'subcontractors#new', :via => :get, :as => :get_subcontractor

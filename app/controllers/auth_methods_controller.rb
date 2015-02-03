@@ -41,14 +41,14 @@ class AuthMethodsController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :manage, AuthMethod
+    authorize! :manage_master_data, :all
 
     set_page_title 'Authentications Method'
     @auth_methods = AuthMethod.all
   end
 
   def edit
-    authorize! :manage, AuthMethod
+    authorize! :manage_master_data, :all
 
     @auth_method = AuthMethod.find(params[:id])
     set_page_title "Edit #{@auth_method.name}"
@@ -71,14 +71,14 @@ class AuthMethodsController < ApplicationController
   end
 
   def new
-    authorize! :manage, AuthMethod
+    authorize! :manage_master_data, :all
 
     set_page_title 'New authentication method'
     @auth_method = AuthMethod.new
   end
 
   def update
-    authorize! :manage, AuthMethod
+    authorize! :manage_master_data, :all
 
     set_page_title 'Authentications Method'
     @auth_method = nil
@@ -106,7 +106,7 @@ class AuthMethodsController < ApplicationController
   end
 
   def create
-    authorize! :manage, AuthMethod
+    authorize! :manage_master_data, :all
 
     set_page_title 'Authentications Method'
     @auth_method = AuthMethod.new(params[:auth_method])
@@ -126,7 +126,7 @@ class AuthMethodsController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, AuthMethod
+    authorize! :manage_master_data, :all
 
     @auth_method = AuthMethod.find(params[:id])
     if is_master_instance?

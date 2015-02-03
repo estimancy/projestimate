@@ -44,7 +44,7 @@ class EstimationValue < ActiveRecord::Base
 
   has_many :views_widgets
 
-  validates :pe_attribute_id, :module_project_id, presence: true
+  #validates :pe_attribute_id, :module_project_id, presence: true
 
   #Serialize some output data for estimation result
   serialize :string_data_low, Hash

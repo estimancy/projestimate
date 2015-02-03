@@ -238,6 +238,7 @@ class ProjectsController < ApplicationController
 
   def new
     authorize! :create_project_from_scratch, Project
+
     @organization = Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
@@ -1461,11 +1462,16 @@ public
           new_mp.associated_module_projects << new_associated_mp
         end
       end
+
+      flash[:success] = I18n.t(:notice_project_successful_duplicated)
+      redirect_to edit_project_path(new_prj) and return
+
+    else
+      flash[:error] = I18n.t(:error_project_failed_duplicate)
+      redirect_to projects_path
     end
 
-    flash[:success] = I18n.t(:notice_project_successful_duplicated)
-    flash[:success] = I18n.t(:notice_project_successful_duplicated)
-    redirect_to edit_project_path(new_prj) and return
+
   end
 
 

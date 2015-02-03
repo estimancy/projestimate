@@ -36,7 +36,7 @@
 
 #Organization of the User
 class Organization < ActiveRecord::Base
-  attr_accessible :name, :description, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate,
+  attr_accessible :name, :description, :is_image_organization, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate,
                   :limit1, :limit2, :limit3, :limit4,
                   :limit1_coef, :limit2_coef, :limit3_coef, :limit4_coef,
                   :limit1_unit, :limit2_unit, :limit3_unit, :limit4_unit
@@ -105,9 +105,9 @@ class Organization < ActiveRecord::Base
   # Add the amoeba gem for the copy
   amoeba do
     enable
-    include_field [:attribute_organizations, :organization_technologies, :organization_profiles,
-                   :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types,
-                   :organization_uow_complexities, :estimation_statuses, :fields]
+    include_association [:attribute_organizations, :organization_technologies, :organization_profiles,
+                         :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types,
+                         :organization_uow_complexities, :estimation_statuses, :fields]
 
     customize(lambda { |original_organization, new_organization|
       new_copy_number = original_organization.copy_number.to_i+1

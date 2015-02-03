@@ -39,7 +39,7 @@ module DataValidationHelper
 
   #Validate changes on record
   def validate_change
-    authorize! :validate, :all
+    authorize! :manage_master_data, :all
 
     #get the record controller name
     controller = params[:controller]    #controller.controller_name
@@ -117,7 +117,7 @@ module DataValidationHelper
 
   #Restoring change on record
   def restore_change
-    authorize! :restore, :all
+    authorize! :manage_master_data, :all
 
     #get the record controller name
     controller = params[:controller]    #controller.controller_name

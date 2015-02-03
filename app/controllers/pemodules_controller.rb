@@ -42,7 +42,7 @@ class PemodulesController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :show_modules, Pemodule
+    authorize! :manage_master_data, :all
 
     set_page_title 'Modules'
     @pemodules = Pemodule.all
@@ -50,7 +50,7 @@ class PemodulesController < ApplicationController
   end
 
   def new
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     set_page_title 'New Modules'
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
@@ -60,7 +60,7 @@ class PemodulesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     set_page_title 'Edit Modules'
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
@@ -77,7 +77,7 @@ class PemodulesController < ApplicationController
   end
 
   def update
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @attributes = PeAttribute.defined.all
@@ -107,7 +107,7 @@ class PemodulesController < ApplicationController
   end
 
   def create
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     @pemodule = Pemodule.new(params[:pemodule])
     @pemodule.alias =  params[:pemodule][:alias].downcase
@@ -127,7 +127,7 @@ class PemodulesController < ApplicationController
 
   #Update attribute of the pemodule selected (2nd tabs)
   def update_selected_attributes
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     @pemodule = Pemodule.find(params[:module_id])
 
@@ -162,7 +162,7 @@ class PemodulesController < ApplicationController
 
   #Update attribute settings (3th tabs)
   def set_attributes_module
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     @pemodule = Pemodule.find(params[:module_id])
 
@@ -184,7 +184,7 @@ class PemodulesController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, Pemodule
+    authorize! :manage_master_data, :all
 
     @pemodule = Pemodule.find(params[:id])
     if @pemodule.is_defined? || @pemodule.is_custom?
@@ -282,8 +282,8 @@ class PemodulesController < ApplicationController
     @project = @project_module.project
 
     authorize! :manage_estimation_plan, @project
-    last_position_x = nil
 
+    last_position_x = nil
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     if @project_module.position_x.to_i > 1
       current_pmodule = @project.module_projects.where('position_x =? AND position_y =?', @project_module.position_x.to_i-1, @project_module.position_y).first
@@ -323,6 +323,7 @@ class PemodulesController < ApplicationController
 
   def find_use_pemodule
     #TODO Authorize #saly
+    authorize! :manage_master_data, :all
 
     @pemodule = Pemodule.find(params[:pemodule_id])
     @related_projects = ModuleProject.find_all_by_pemodule_id(@pemodule.id)

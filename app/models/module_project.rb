@@ -66,7 +66,8 @@ class ModuleProject < ActiveRecord::Base
 
   amoeba do
     enable
-    include_field [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works, :views_widgets]
+    ###include_field [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works, :views_widgets]
+    include_association [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works, :views_widgets]
 
     customize(lambda { |original_module_project, new_module_project|
       new_module_project.copy_id = original_module_project.id
@@ -148,6 +149,7 @@ class ModuleProject < ActiveRecord::Base
 
   def to_s
     #self.pemodule.title.humanize
+
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
       self.project.title #self.pemodule.title.humanize
     elsif self.pemodule.alias == "ge"
@@ -159,6 +161,7 @@ class ModuleProject < ActiveRecord::Base
     else
       "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
     end
+
   end
 
   def size

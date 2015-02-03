@@ -60,6 +60,10 @@ class Ability
     alias_action :show_global_permissions, :to => :manage_roles
     alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :alter_estimation_plan, :to => :manage_estimation_plan
 
+    #When user can create a project template, he also can create a project from scratch
+    alias_action :create_project_from_scratch, :to => :create_project_template
+
+
     #Load user groups permissions
     if user && !user.groups.empty?
       permissions_array = []

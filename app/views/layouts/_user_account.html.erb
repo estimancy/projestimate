@@ -57,7 +57,7 @@
           </li>
         <% end %>
       <% end %>
-      <% if can? :show_factors, Factor %>
+      <% if can? :manage_master_data, :all %>
           <li class="dropdown"><a href="<%= main_app.factors_path %>">
             <!--<i class="icon-globe icon-large pull-left"></i>-->
             <%= I18n.t(:factors) %></a>
@@ -73,26 +73,19 @@
       <i class="icon-cog icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
-      <% if can? :show_admin_settings, AdminSetting  %>
+      <% if can? :manage_master_data, :all %>
         <li class="dropdown">
-          <a href="<%= main_app.admin_settings_path %>">
-            <!--<i class="icon-cog icon-large pull-left"></i>-->
-            <%= I18n.t(:administration) %>
-          </a></li>
+          <a href="<%= main_app.admin_settings_path %>"> <%= I18n.t(:administration) %> </a>
+        </li>
+        <li class="dropdown">
+          <a href="<%= main_app.auth_methods_path %>"><%= I18n.t(:auth_methods) %></a>
+        </li>
       <% end %>
 
       <% if can? :manage, User %>
         <li class="dropdown">
-          <a href="<%= main_app.users_path %>">
-            <!--<i class="icon-user icon-large pull-left"></i>-->
-            <%= I18n.t(:users) %>
-          </a></li>
-      <% end %>
-
-      <% if can? :manage, AuthMethod %>
-        <li class="dropdown"><a href="<%= main_app.auth_methods_path %>">
-          <!--<i class="icon-signin icon-large pull-left"></i>-->
-          <%= I18n.t(:auth_methods) %></a></li>
+          <a href="<%= main_app.users_path %>"> <%= I18n.t(:users) %> </a>
+        </li>
       <% end %>
     </ul>
   </li>
@@ -104,61 +97,48 @@
       <i class="icon-key icon-large pull-left"></i></b>
     </a>
     <ul class="dropdown-menu">
-      <% if can? :show_attributes, PeAttribute %>
+      <% if can? :manage_master_data, :all %>
         <li class="dropdown"><a href="<%= main_app.pe_attributes_path %>">
-          <!--<i class="icon-list-ol icon-large pull-left"></i>-->
-          <%= I18n.t(:pe_attributes) %></a></li>
-        <li class="dropdown"><a href="<%= main_app.attribute_categories_path %>">
-          <!--<i class="icon-list-alt icon-large pull-left"></i>-->
-          <%= I18n.t(:attribute_categories) %></a></li>
-      <% end %>
+          <%= I18n.t(:pe_attributes) %></a>
+        </li>
 
-      <% if can? :show_modules, Pemodule %>
+        <li class="dropdown"><a href="<%= main_app.attribute_categories_path %>">
+          <%= I18n.t(:attribute_categories) %></a>
+        </li>
+
         <li class="dropdown"><a href="<%= main_app.pemodules_path %>">
-          <!--<i class="icon-th icon-large pull-left"></i>-->
-          <%= I18n.t(:projestimate_module) %></a></li>
+            <%= I18n.t(:projestimate_module) %></a>
+        </li>
+
+        <li class="dropdown"><a href="<%= main_app.permissions_path %>">
+            <%= I18n.t(:all_permissions) %></a>
+        </li>
+
+        <li class="dropdown"><a href="<%= main_app.languages_path %>">
+            <%= I18n.t(:languages) %></a>
+        </li>
+
+        <li class="dropdown"><a href="/translations">
+            <%= I18n.t(:translations) %></a>
+        </li>
+
+        <li class="dropdown"><a href="<%= main_app.record_statuses_path %>">
+            <%= I18n.t(:record_status) %></a>
+        </li>
+
+        <li class="dropdown"><a href="<%= main_app.currencies_path %>">
+            <%= I18n.t(:currencies) %></a>
+        </li>
+
+        <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
+
+        <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
       <% end %>
 
       <li class="dropdown"><a href="<%= main_app.technologies_path %>">
         <%= I18n.t(:organization_technology) %></a>
       </li>
 
-      <% if can? :manage, Permission %>
-        <li class="dropdown"><a href="<%= main_app.permissions_path %>">
-          <!--<i class="icon-check icon-large pull-left"></i>-->
-          <%= I18n.t(:all_permissions) %></a></li>
-      <% end %>
-
-      <% if can? :show_languages, Language %>
-        <li class="dropdown"><a href="<%= main_app.languages_path %>">
-          <!--<i class="icon-comments icon-large pull-left"></i>-->
-          <%= I18n.t(:languages) %></a></li>
-      <% end %>
-
-      <!-- TODO add manage permission for translation (and replace Language per Translation -->
-      <% if can? :manage_translations, Language %>
-        <li class="dropdown"><a href="/translations">
-          <!--<i class="icon-comments-alt icon-large pull-left"></i>-->
-          <%= I18n.t(:translations) %></a></li>
-      <% end %>
-      <% if can? :manage, RecordStatus %>
-        <li class="dropdown"><a href="<%= main_app.record_statuses_path %>">
-          <!--<i class="icon-legal icon-large pull-left"></i>-->
-          <%= I18n.t(:record_status) %></a></li>
-      <% end %>
-
-      <% if can? :manage, Currency %>
-          <li class="dropdown"><a href="<%= main_app.currencies_path %>">
-           <%= I18n.t(:currencies) %></a></li>
-      <% end %>
-
-      <% if can? :show_profile_categories, ProfileCategory %>
-          <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
-      <% end %>
-
-      <% if can? :show_profiles, Profile %>
-          <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
-      <% end %>
     </ul>
   </li>
 </ul>

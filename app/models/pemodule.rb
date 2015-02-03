@@ -78,8 +78,14 @@ class Pemodule < ActiveRecord::Base
     #include_field [:attribute_modules, :pe_attributes]      #TODO Review relations
     #exclude_field [:projects, :module_projects]             #TODO Review relations
 
-    include_field [:attribute_modules] #TODO Review relations
-    exclude_field [:projects, :module_projects] #TODO Review relations
+    ####include_field [:attribute_modules] #TODO Review relations
+    ####exclude_field [:projects, :module_projects] #TODO Review relations
+
+
+    ###include_association [:attribute_modules] #TODO Review relations
+    ###include_association [:attribute_modules, :module_projects] #TODO Review relations
+    ##include_association [:attribute_modules, :projects] #TODO Review relations
+    include_association [:attribute_modules] #TODO Review relations
 
     customize(lambda { |original_record, new_record|
       new_record.reference_uuid = original_record.uuid

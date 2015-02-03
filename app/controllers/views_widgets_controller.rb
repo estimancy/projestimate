@@ -86,7 +86,7 @@ class ViewsWidgetsController < ApplicationController
   def create
     authorize! :alter_widget, ViewsWidget
 
-    @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1))
+    @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1, :width => 3, :height => 3))
       # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
 

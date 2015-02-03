@@ -79,7 +79,8 @@ class Project < ActiveRecord::Base
 
   amoeba do
     enable
-    include_field [:pe_wbs_projects, :module_projects, :project_securities]
+    ####include_field [:pe_wbs_projects, :module_projects, :project_securities]
+    include_association [:pe_wbs_projects, :module_projects, :project_securities]
 
     customize(lambda { |original_project, new_project|
       new_copy_number = original_project.copy_number.to_i+1

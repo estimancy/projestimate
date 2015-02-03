@@ -11,7 +11,7 @@ class View < ActiveRecord::Base
 
   amoeba do
     enable
-    include_field [:widgets]
+    include_association [:widgets]
   end
 
   def to_s

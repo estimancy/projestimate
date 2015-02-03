@@ -58,7 +58,7 @@ class WbsActivityElement < ActiveRecord::Base
   amoeba do
     enable
 
-    exclude_field [:wbs_activity_ratio_elements]      #TODO verify for wbs_project_elements exclusion
+    exclude_association [:wbs_activity_ratio_elements]      #TODO verify for wbs_project_elements exclusion
 
     customize(lambda { |original_wbs_activity_elt, new_wbs_activity_elt|
 

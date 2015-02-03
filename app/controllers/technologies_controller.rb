@@ -8,7 +8,7 @@ class TechnologiesController < ApplicationController
   # GET /technologies
   # GET /technologies.json
   def index
-    authorize! :show_technologies, Technology
+    authorize! :manage_master_data, :all
     @technologies = Technology.all
 
     respond_to do |format|
@@ -20,7 +20,7 @@ class TechnologiesController < ApplicationController
   # GET /technologies/1
   # GET /technologies/1.json
   def show
-    authorize! :show_technologies, Technology
+    authorize! :manage_master_data, :all
 
     @technology = Technology.find(params[:id])
 
@@ -33,7 +33,7 @@ class TechnologiesController < ApplicationController
   # GET /technologies/new
   # GET /technologies/new.json
   def new
-    authorize! :manage, Technology
+    authorize! :manage_master_data, :all
     @technology = Technology.new
 
     respond_to do |format|
@@ -44,14 +44,14 @@ class TechnologiesController < ApplicationController
 
   # GET /technologies/1/edit
   def edit
-    authorize! :manage, Technology
+    authorize! :manage_master_data, :all
     @technology = Technology.find(params[:id])
   end
 
   # POST /technologies
   # POST /technologies.json
   def create
-    authorize! :manage, Technology
+    authorize! :manage_master_data, :all
     @technology = Technology.new(params[:technology])
 
     respond_to do |format|
@@ -68,7 +68,7 @@ class TechnologiesController < ApplicationController
   # PUT /technologies/1
   # PUT /technologies/1.json
   def update
-    authorize! :manage, Technology
+    authorize! :manage_master_data, :all
     @technology = Technology.find(params[:id])
 
     respond_to do |format|
@@ -85,7 +85,7 @@ class TechnologiesController < ApplicationController
   # DELETE /technologies/1
   # DELETE /technologies/1.json
   def destroy
-    authorize! :manage, Technology
+    authorize! :manage_master_data, :all
     @technology = Technology.find(params[:id])
     @technology.destroy
 

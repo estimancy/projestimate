@@ -41,7 +41,7 @@ class RecordStatusesController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_statuses = RecordStatus.all
 
@@ -52,7 +52,7 @@ class RecordStatusesController < ApplicationController
   end
 
   def show
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_status = RecordStatus.find(params[:id])
 
@@ -63,7 +63,7 @@ class RecordStatusesController < ApplicationController
   end
 
   def new
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_status = RecordStatus.new
 
@@ -74,7 +74,7 @@ class RecordStatusesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_status = RecordStatus.find(params[:id])
 
@@ -87,7 +87,7 @@ class RecordStatusesController < ApplicationController
   end
 
   def create
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_status = RecordStatus.new(params[:record_status])
 
@@ -99,7 +99,7 @@ class RecordStatusesController < ApplicationController
   end
 
   def update
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_status = nil
     current_record_status = RecordStatus.find(params[:id])
@@ -120,7 +120,7 @@ class RecordStatusesController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, RecordStatus
+    authorize! :manage_master_data, :all
 
     @record_status = RecordStatus.find(params[:id])
     if @record_status.is_defined? || @record_status.is_custom?

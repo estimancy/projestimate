@@ -27,7 +27,7 @@ class FactorsController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :show_factors, Factor
+    authorize! :manage_master_data, :all
 
     @factors = Factor.order("factor_type")
   end
@@ -46,14 +46,14 @@ class FactorsController < ApplicationController
 
   # GET /factors/1/edit
   def edit
-    authorize! :manage, Factor
+    authorize! :manage_master_data, :all
     @factor = Factor.find(params[:id])
   end
 
   # POST /factors
   # POST /factors.json
   def create
-    authorize! :manage, Factor
+    authorize! :manage_master_data, :all
 
     @factor = Factor.new(params[:factor])
 
@@ -71,7 +71,8 @@ class FactorsController < ApplicationController
   # PUT /factors/1
   # PUT /factors/1.json
   def update
-    authorize! :manage, Factor
+    authorize! :manage_master_data, :all
+
     @factor = Factor.find(params[:id])
 
     respond_to do |format|
@@ -88,7 +89,7 @@ class FactorsController < ApplicationController
   # DELETE /factors/1
   # DELETE /factors/1.json
   def destroy
-    authorize! :manage, Factor
+    authorize! :manage_master_data, :all
 
     @factor = Factor.find(params[:id])
     @factor.destroy

@@ -39,7 +39,7 @@ class TranslationsController < ApplicationController
   #Listing translations pages
   def index
     set_page_title "Translations"
-    authorize! :manage_translations, Language
+    authorize! :manage_master_data, :all
 
     I18n.backend.send(:init_translations)
     if params[:locale].nil?
@@ -52,7 +52,7 @@ class TranslationsController < ApplicationController
 
   #Create a new entry
   def create
-    authorize! :manage_translations, Language
+    authorize! :manage_master_data, :all
 
     params[:translations].each do |elem|
       I18n.backend.store_translations(:fr, { elem[0] => elem[1].first })
@@ -64,7 +64,7 @@ class TranslationsController < ApplicationController
 
   #Load translations from config/locale/*.yml files
   def load_translations
-    authorize! :manage_translations, Language
+    authorize! :manage_master_data, :all
 
     @translations = I18n.backend.send(:translations)[params[:locale]]
   end

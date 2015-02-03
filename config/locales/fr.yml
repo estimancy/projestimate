@@ -852,7 +852,7 @@ fr:
   error_project_failed_create: "Erreur: La création du projet a échoué,"
   project_successful_updated: "Project a été mis à jour avec succès.."
   notice_project_successful_duplicated: "Project a été dupliqué avec succès"
-  error_project_failed_duplicate: "La duplication a échouée: EUne erreur est survenue lors de la duplication du projet"
+  error_project_failed_duplicate: "La duplication a échouée: Une erreur est survenue lors de la duplication du projet"
   confirm_new_branch_project_checkout: "Vous êtes sur le point de créer une nouvelle branche. malgré les difficultés liées à la fusion, voulez-vous continuer cette opération?"
   notice_project_successful_checkout: "La nouvelle version du projet a été créée avec succès"
   notice_wbs_activity_successful_added: "Wbs-Activity a été ajouté avec succès au projet."
@@ -1391,3 +1391,6 @@ fr:
   notice_cannot_view_factors_complexities: "Vous n'avez pas les autorisations nécessaires pour voir les facteurs d'ajustement"
   notice_cannot_view_estimation_statuses: "Vous n'avez pas les autorisations nécessaires pour voir les statuts des estimations"
   notice_cannot_delete_widgets: "Vous n'avez pas les autorisations nécessaires pour supprimer les vignettes"
+
+  is_image_organization: "Est une organisation image ?"
+  new_organization_from_image: "Créer une organisation à partir d'une image"

@@ -53,7 +53,7 @@ class ProjectCategory < ActiveRecord::Base
 
   amoeba do
     enable
-    exclude_field [:projects]
+    exclude_association [:projects]
   end
 
   #Search fields

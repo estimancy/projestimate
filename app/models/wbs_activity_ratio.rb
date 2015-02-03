@@ -52,7 +52,7 @@ class WbsActivityRatio < ActiveRecord::Base
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
     enable
-    include_field [:wbs_activity_ratio_elements]
+    include_association [:wbs_activity_ratio_elements]
 
     customize(lambda { |original_wbs_activity_ratio, new_wbs_activity_ratio|
       if defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")

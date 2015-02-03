@@ -54,7 +54,7 @@ class Language < ActiveRecord::Base
 
   amoeba do
     enable
-    exclude_field [:users]
+    exclude_association [:users]
 
     customize(lambda { |original_record, new_record|
       new_record.reference_uuid = original_record.uuid

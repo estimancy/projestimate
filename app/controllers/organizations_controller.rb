@@ -41,14 +41,26 @@ class OrganizationsController < ApplicationController
   require 'roo'
   include Roo
 
+  # New organization from image
+  def new_organization_from_image
+
+  end
+
+  #Create New organization from selected image organization
+  def create_organization_from_image
+
+  end
+
 
   def new
+    authorize! :create_organizations, Organization
+
     set_page_title 'Organizations'
     @organization = Organization.new
   end
 
   def edit
-    #No authorize required since everyone can edit
+    authorize! :edit_organizations, Organization
 
     set_page_title 'Organizations'
     @organization = Organization.find(params[:id])
@@ -102,6 +114,8 @@ class OrganizationsController < ApplicationController
   end
 
   def create
+    authorize! :create_organizations, Organization
+
     @organization = Organization.new(params[:organization])
 
     # Add current_user to the organization
@@ -464,7 +478,7 @@ class OrganizationsController < ApplicationController
   end
 
   def export_abacus
-    #No authorize required since everyone can edit
+    authorize! :edit_organizations, Organization
 
     @organization = Organization.find(params[:id])
     p=Axlsx::Package.new
@@ -577,7 +591,8 @@ class OrganizationsController < ApplicationController
 
   # Duplicate the organization
   def duplicate_organization
-    authorize! :create_organizations, Organization
+    authorize! :manage_master_data, :all
+
     original_organization = Organization.find(params[:organization_id])
     new_organization = original_organization.amoeba_dup
     if new_organization.save
@@ -590,9 +605,12 @@ class OrganizationsController < ApplicationController
   end
 
   def show
+    authorize! :show_organizations, Orgnaization
   end
 
   def export
+    authorize! :edit_organizations, Organization
+
     @organization = Organization.find(params[:organization_id])
 
     p = Axlsx::Package.new

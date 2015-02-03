@@ -63,7 +63,7 @@ class WbsActivity < ActiveRecord::Base
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
     enable
-    include_field [:wbs_activity_ratios]
+    include_association [:wbs_activity_ratios]
 
     customize(lambda { |original_wbs_activity, new_wbs_activity|
       new_wbs_activity.name = "Copy_#{ original_wbs_activity.copy_number.to_i+1} of #{original_wbs_activity.name}"

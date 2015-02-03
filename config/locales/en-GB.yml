@@ -1358,3 +1358,6 @@ en-gb:
   notice_cannot_view_estimation_statuses: "You don't have the rights to view the estimation's statuses"
   notice_cannot_delete_widgets: "You don't have the rights to delete the widgets"
 
+  is_image_organization: "Is an image organization ?"
+  new_organization_from_image: "Create organization from image"
+

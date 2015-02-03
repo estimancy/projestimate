@@ -33,7 +33,16 @@
   <div id="tabs-organization">
     <%= simple_form_for(@organization) do |f| %>
 
-      <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <div class="row-fluid input-xxlarge">
+        <div class="span7"><%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></div>
+        <div class="span5">
+          <label class="checkbox"></label>
+          <%= f.input :is_image_organization, as: :boolean, :label => I18n.t('is_image_organization') %>
+        </div>
+      </div>
+      <%#= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+      <%#= f.input :is_image_organization, as: :boolean, :label => I18n.t('is_image_organization') %>
+
       <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
       <br />
 

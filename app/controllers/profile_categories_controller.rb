@@ -14,7 +14,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def new
-    authorize! :manage, ProfileCategory
+    authorize! :manage_master_data, :all
 
     set_page_title 'Profile Categories'
     @profile_category = ProfileCategory.new
@@ -28,7 +28,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, ProfileCategory
+    authorize! :manage_master_data, :all
 
     set_page_title 'Edit profile Categories'
     @profile_category = ProfileCategory.find(params[:id])
@@ -56,7 +56,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def create
-    authorize! :manage, ProfileCategory
+    authorize! :manage_master_data, :all
 
     @profile_category = ProfileCategory.new(params[:profile_category])
     @profile_category.owner_id = current_user.id
@@ -82,7 +82,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def update
-    authorize! :manage, ProfileCategory
+    authorize! :manage_master_data, :all
 
     @profile_category = nil
     current_profile_category = ProfileCategory.find(params[:id])
@@ -115,7 +115,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, ProfileCategory
+    authorize! :manage_master_data, :all
 
     @profile_category = ProfileCategory.find(params[:id])
 
@@ -141,7 +141,8 @@ class ProfileCategoriesController < ApplicationController
 
   # Create new profile category on the Organization profile path
   def new_profile_category_with_organization
-    authorize! :manage, ProfileCategory
+    authorize! :manage_master_data, :all
+
     set_page_title 'Create organization profile category'
 
     @profile_category = ProfileCategory.new(params[:profile_category])

@@ -60,7 +60,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
 
   amoeba do
     enable
-    exclude_field [:users, :organization_uow_complexities]
+    exclude_association [:users, :organization_uow_complexities]
 
     customize(lambda { |original_record, new_record|
       new_record.reference_uuid = original_record.uuid

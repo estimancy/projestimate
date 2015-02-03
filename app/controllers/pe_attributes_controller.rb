@@ -41,21 +41,21 @@ class PeAttributesController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     set_page_title 'Attributes'
     @attributes = PeAttribute.all
   end
 
   def new
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.new
   end
 
   def edit
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.find(params[:id])
@@ -71,7 +71,7 @@ class PeAttributesController < ApplicationController
   end
 
   def create
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     set_page_title 'Attributes'
     @attribute = PeAttribute.new(params[:pe_attribute])
@@ -87,7 +87,7 @@ class PeAttributesController < ApplicationController
   end
 
   def update
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     set_page_title 'Attributes'
 
@@ -114,7 +114,7 @@ class PeAttributesController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     @attribute = PeAttribute.find(params[:id])
     if @attribute.is_defined? || @attribute.is_custom?
@@ -140,7 +140,7 @@ class PeAttributesController < ApplicationController
 
   #Find where attribute is using
   def find_use_attribute
-    authorize! :manage, PeAttribute
+    authorize! :manage_master_data, :all
 
     @pe_attribute = PeAttribute.find(params[:pe_attribute_id])
     @attribute_modules = AttributeModule.find_all_by_pe_attribute_id(@pe_attribute.id)

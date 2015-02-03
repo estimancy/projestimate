@@ -10,11 +10,11 @@ class ViewsWidget < ActiveRecord::Base
 
   has_many :project_fields
 
-  validates :name, :module_project_id, :width, :height, presence: true
+  validates :name, :module_project_id, presence: true
 
   amoeba do
     enable
-    include_field [:project_fields]
+    include_association [:project_fields]
   end
 
 end
