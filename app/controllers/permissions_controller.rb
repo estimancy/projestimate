@@ -41,7 +41,7 @@ class PermissionsController < ApplicationController
   before_filter :get_record_statuses
 
   def index
-    authorize! :manage, Permission
+    authorize! :manage_master_data, :all
 
     set_page_title 'Permissions'
     @permissions = Permission.all
@@ -52,14 +52,14 @@ class PermissionsController < ApplicationController
   end
 
   def new
-    authorize! :manage, Permission
+    authorize! :manage_master_data, :all
 
     set_page_title 'Permissions'
     @permission = Permission.new
   end
 
   def edit
-    authorize! :manage, Permission
+    authorize! :manage_master_data, :all
 
     set_page_title 'Permissions'
     @permission = Permission.find(params[:id])
@@ -73,7 +73,7 @@ class PermissionsController < ApplicationController
   end
 
   def create
-    authorize! :manage, Permission
+    authorize! :manage_master_data, :all
 
     @permission = Permission.new(params[:permission])
 
@@ -89,7 +89,7 @@ class PermissionsController < ApplicationController
   end
 
   def update
-    authorize! :manage, Permission
+    authorize! :manage_master_data, :all
 
     @permission = nil
     current_permission = Permission.find(params[:id])
@@ -110,7 +110,7 @@ class PermissionsController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, Permission
+    authorize! :manage_master_data, :all
 
     @permission = Permission.find(params[:id])
     if @permission.is_defined? || @permission.is_custom?
