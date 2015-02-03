@@ -238,6 +238,7 @@ class ProjectsController < ApplicationController
 
   def new
     authorize! :create_project_from_scratch, Project
+
     @organization = Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
@@ -386,16 +387,6 @@ class ProjectsController < ApplicationController
 
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
-    @modules_selected = Pemodule.where('record_status_id = ? AND alias <> ? AND alias <> ?', @defined_status.id, 'initialization', 'guw').all.map { |i| [i.title, i.id] }
-
-    @guw_module = Pemodule.where(alias: "guw").first
-    @ge_module = Pemodule.where(alias: "ge").first
-    @ej_module = Pemodule.where(alias: "expert_judgement").first
-
-    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
-    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
-    @modules_ej = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
-
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @wbs_activity_ratios = []
@@ -404,8 +395,7 @@ class ProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    #defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
-    defined_wbs_activities = @project.organization.wbs_activities#.where('record_status_id = ?', @defined_status.id).all
+    defined_wbs_activities = @project.organization.wbs_activities
     @wbs_activities = defined_wbs_activities #.reject { |i| @project.included_wbs_activities.include?(i.id) }
     @wbs_activity_elements = []
     @wbs_activities.each do |wbs_activity|
@@ -414,6 +404,18 @@ class ProjectsController < ApplicationController
         @wbs_activity_elements << elements_root #wbs_activity.wbs_activity_elements.last.root
       end
     end
+
+    @guw_module = Pemodule.where(alias: "guw").first
+    @ge_module = Pemodule.where(alias: "ge").first
+    @ej_module = Pemodule.where(alias: "expert_judgement").first
+    @ebd_module = Pemodule.where(alias: "effort_breakdown").first
+
+    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
+    @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
+
+    @modules_selected = Pemodule.defined.all - [@guw_module, @ge_module, @ej_module]
 
     # Get the project's current wbs-activity et its Ratio
     @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
@@ -667,7 +669,6 @@ class ProjectsController < ApplicationController
     case params[:commit]
       when I18n.t('delete')
         if params[:yes_confirmation] == 'selected'
-          #if ((can? :delete_project, @project) || (can? :manage, @project)) && (@project.is_childless? && !@project.rejected? && !@project.released? && !@project.checkpoint?)
           if ((can? :delete_project, @project) || (can? :manage, @project)) && @project.is_childless?
             @project.destroy
             ###current_user.delete_recent_project(@project.id)
@@ -849,6 +850,8 @@ class ProjectsController < ApplicationController
         my_module_project.guw_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
+      elsif @pemodule.alias == "effort_breakdown"
+        my_module_project.wbs_activity_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "expert_judgement"
         eji_id = params[:module_selected].split(',').first
         my_module_project.expert_judgement_instance_id = eji_id.to_i
@@ -951,17 +954,17 @@ class ProjectsController < ApplicationController
     end
 
     # if the EffortBreakdown module is called, we need to have at least one Wbs-activity/Ratio defined in the PBS or in project level
-    if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-      pe_wbs_activity = start_module_project.project.pe_wbs_projects.activities_wbs.first
-      project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-      #If the PBS has ratio this will be used, otherwise the general Ratio (in project's side) will be used
-      if current_component.wbs_activity_ratio.nil? && wbs_project_elt_with_ratio.nil?
-        flash[:notice] = "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"
-        #return redirect_to(:back, :alert =>"Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet" )
-        redirect_to(root_path(flash: { error: "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"})) and return
-      end
-    end
+    #if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+    #  pe_wbs_activity = start_module_project.project.pe_wbs_projects.activities_wbs.first
+    #  project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    #  wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+    #  #If the PBS has ratio this will be used, otherwise the general Ratio (in project's side) will be used
+    #  if current_component.wbs_activity_ratio.nil? && wbs_project_elt_with_ratio.nil?
+    #    flash[:notice] = "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"
+    #    #return redirect_to(:back, :alert =>"Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet" )
+    #    redirect_to(root_path(flash: { error: "Wbs-Activity est non existant, veuillez choisir un Wbs-activity au projet"})) and return
+    #  end
+    #end
 
     # Execution of the first/current module-project
     ['low', 'most_likely', 'high'].each do |level|
@@ -1029,26 +1032,26 @@ class ProjectsController < ApplicationController
     #end
 
     # Get the estimation results by profile for the EffortBreakdown module and save data
-    if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-      ###results_with_activities_by_profile
-      @current_component = pbs_project_element
-      @project_organization = @project.organization
-      @project_organization_profiles = @project_organization.organization_profiles
-      @module_project = start_module_project
-
-      # If Another default ratio was defined in PBS, it will override the one defined in module-project
-      if !@current_component.wbs_activity_ratio.nil?
-        @ratio_reference = @current_component.wbs_activity_ratio
-      else
-        # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
-        @ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
-      end
-
-      @attribute = PeAttribute.find_by_alias_and_record_status_id("effort", @defined_record_status)
-      @estimation_values = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', @attribute.id, "output").first
-      @estimation_probable_results = @estimation_values.send('string_data_probable')
-      @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
-    end
+    #if start_module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+    #  ###results_with_activities_by_profile
+    #  @current_component = pbs_project_element
+    #  @project_organization = @project.organization
+    #  @project_organization_profiles = @project_organization.organization_profiles
+    #  @module_project = start_module_project
+    #
+    #  # If Another default ratio was defined in PBS, it will override the one defined in module-project
+    #  if !@current_component.wbs_activity_ratio.nil?
+    #    @ratio_reference = @current_component.wbs_activity_ratio
+    #  else
+    #    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio,
+    #    @ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+    #  end
+    #
+    #  @attribute = PeAttribute.find_by_alias_and_record_status_id("effort", @defined_record_status)
+    #  @estimation_values = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out = ?', @attribute.id, "output").first
+    #  @estimation_probable_results = @estimation_values.send('string_data_probable')
+    #  @estimation_pbs_probable_results = @estimation_probable_results[@current_component.id]
+    #end
 
     redirect_to dashboard_path(@project)
   end
@@ -1195,7 +1198,7 @@ private
   ## values_to_set : Hash
   def compute_tree_node_estimation_value(tree_root, values_to_set)
     #No authorize required since this method is private and won't be call from any route
-    WbsProjectElement.rebuild_depth_cache!
+    WbsActivityElement.rebuild_depth_cache!
     new_effort_person_hour = Hash.new
 
     tree_root.children.each do |node|
@@ -1224,7 +1227,7 @@ private
     if !estimation_result.nil? && !estimation_result.eql?('-')
       estimation_result.each do |wbs_project_elt_id, est_value|
         if module_project.pemodule.alias == 'wbs_activity_completion'
-          wbs_project_elt = WbsProjectElement.find(wbs_project_elt_id)
+          wbs_project_elt = WbsActivityElement.find(wbs_project_elt_id)
           if wbs_project_elt.has_new_complement_child?
             consistency = set_wbs_completion_node_consistency(estimation_result, wbs_project_elt)
           end

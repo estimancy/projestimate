@@ -1,0 +1,47 @@
+<% effort = PeAttribute.find_by_alias("effort") %>
+<% cev = EstimationValue.where(:pe_attribute_id => effort.id,
+                               :module_project_id => current_module_project.id,
+                               :in_out => "input").first %>
+<% pev = EstimationValue.where(:pe_attribute_id => effort.id,
+                               :module_project_id => current_module_project.previous.first.id,
+                               :in_out => "output").first %>
+<% component_id = current_component.id %>
+<% organization = @project.organization %>
+
+<%= form_tag save_effort_breakdown_path do %>
+  <table class="table table-bordered">
+    <tr>
+      <th></th>
+      <th>Activity Ratio</th>
+      <th>L</th>
+      <th>M</th>
+      <th>H</th>
+    </tr>
+    <tr>
+      <td>Effort</td>
+
+      <td>
+        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}) %>
+      </td>
+
+      <% if cev.send("string_data_low")[component_id].blank? %>
+        <td><%= text_field_tag "values[low]", convert(pev.send("string_data_low")[component_id], organization ) %></td>
+      <% else %>
+        <td><%= text_field_tag "values[low]", convert(cev.send("string_data_low")[component_id], organization ) %></td>
+      <% end %>
+
+      <% if cev.send("string_data_most_likely")[component_id].blank? %>
+        <td><%= text_field_tag "values[most_likely]", convert(pev.send("string_data_most_likely")[component_id], organization ) %></td>
+      <% else %>
+        <td><%= text_field_tag "values[most_likely]", convert(cev.send("string_data_most_likely")[component_id], organization ) %></td>
+      <% end %>
+
+      <% if cev.send("string_data_high")[component_id].blank? %>
+        <td><%= text_field_tag "values[high]", convert(pev.send("string_data_high")[component_id], organization ) %></td>
+      <% else %>
+        <td><%= text_field_tag "values[high]", convert(cev.send("string_data_high")[component_id], organization ) %></td>
+      <% end %>
+    </tr>
+  </table>
+  <%= submit_tag "Run Estimation", class: "pull-right btn btn-mini" %>
+<% end %>

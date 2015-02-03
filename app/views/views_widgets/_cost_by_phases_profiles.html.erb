@@ -24,7 +24,7 @@
 
     <% unless estimation_pbs_probable_results.nil? %>
         <%# project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt| %>
-        <% project_wbs_project_elements.each do |wbs_project_elt| %>
+        <% project_wbs_activity_elements.each do |wbs_project_elt| %>
             <% wbs_probable_value =  estimation_pbs_probable_results[wbs_project_elt.id] %>
             <% unless wbs_probable_value.nil? %>
                 <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>

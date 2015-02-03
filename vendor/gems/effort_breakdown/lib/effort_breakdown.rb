@@ -59,7 +59,7 @@ module EffortBreakdown
     # Calculate each Wbs activity effort according to Ratio and Reference_Value and PBS effort
     def get_effort
       # First build cache_depth
-      WbsProjectElement.rebuild_depth_cache!
+      WbsActivityElement.rebuild_depth_cache!
 
       efforts_man_month = nil
       efforts_man_month = get_effort_with_activities_elements
@@ -71,9 +71,9 @@ module EffortBreakdown
     def get_cost(*arg)
       cost = Hash.new
       # Project pe_wbs_activity
-      pe_wbs_activity = @module_project.project.pe_wbs_projects.activities_wbs.first
-      # Get the wbs_project_element which contain the wbs_activity_ratio
-      project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+      wbs_activity = @module_project.wbs_activity
+      # Get the wbs_activity_element which contain the wbs_activity_ratio
+      wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
       # Get the efforts hash for all Wbs_project_element effort
       efforts_man_month = get_effort
 
@@ -92,22 +92,14 @@ module EffortBreakdown
       project = @module_project.project
 
       # Project pe_wbs_activity
-      pe_wbs_activity = @module_project.project.pe_wbs_projects.activities_wbs.first
+      wbs_activity = @module_project.wbs_activity
 
-      # Get the wbs_project_element which contain the wbs_activity_ratio
-      project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-      #wbs_project_elt_with_ratio = WbsProjectElement.where("pe_wbs_project_id = ? and wbs_activity_id = ? and is_added_wbs_root = ?", pe_wbs_activity.id, @pbs_project_element.wbs_activity_id, true).first
-      # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
-      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
+      # Get the wbs_activity_element which contain the wbs_activity_ratio
+      wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
 
-      ratio_reference = nil
       # Use project default Ratio, unless PSB got its own Ratio,
       # If default ratio was defined in PBS, it will override the one defined in module-project
-      if @pbs_project_element.wbs_activity_ratio.nil?
-        ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
-      else
-        ratio_reference = @pbs_project_element.wbs_activity_ratio
-      end
+      ratio_reference = wbs_activity.wbs_activity_ratios.first
 
       #Get the referenced wbs_activity_elt of the ratio_reference
       referenced_ratio_elements = WbsActivityRatioElement.where('wbs_activity_ratio_id =? and multiple_references = ?', ratio_reference.id, true)
@@ -122,30 +114,30 @@ module EffortBreakdown
       end
 
       output_effort = Hash.new
-      project_wbs_project_elt_root.children.each do |node|
+      wbs_activity_root.children.each do |node|
         # Sort node subtree by ancestry_depth
         sorted_node_elements = node.subtree.order('ancestry_depth desc')
-        sorted_node_elements.each do |wbs_project_element|
+        sorted_node_elements.each do |element|
           # A Wbs_project_element is only computed is this module if it has a corresponding Ratio table
-          unless wbs_project_element.wbs_activity_element.nil?
+          unless element.nil?
             # Element effort is really computed only on leaf element
-            if wbs_project_element.is_childless? || wbs_project_element.has_new_complement_child?
+            if element.is_childless? || element.has_new_complement_child?
               # Get the ratio Value of current element
-              corresponding_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_project_element.wbs_activity_element_id).first
+              corresponding_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, element.id).first
               unless corresponding_ratio_elt.nil?
                 corresponding_ratio_value = corresponding_ratio_elt.ratio_value
                 current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)
-                output_effort[wbs_project_element.id] = current_output_effort
+                output_effort[element.id] = current_output_effort
               end
             else
-              output_effort[wbs_project_element.id] = compact_array_and_compute_node_value(wbs_project_element, output_effort)
+              output_effort[element.id] = compact_array_and_compute_node_value(element, output_effort)
             end
           end
         end
       end
 
       # After treating all leaf and node elements, the root element is going to compute by aggregation
-      output_effort[project_wbs_project_elt_root.id] = compact_array_and_compute_node_value(project_wbs_project_elt_root, output_effort)
+      output_effort[wbs_activity_root.id] = compact_array_and_compute_node_value(wbs_activity_root, output_effort)
 
       # Global output efforts
       output_effort
@@ -157,7 +149,7 @@ module EffortBreakdown
     def compact_array_and_compute_node_value(node, effort_array)
       tab = []
       node.children.map do |child|
-        unless child.wbs_activity_element.nil? || child.wbs_activity.nil?
+        unless child.nil? || child.wbs_activity.nil?
           value = effort_array[child.id]
           if value.is_a?(Integer) || value.is_a?(Float)
             tab << value

@@ -34,44 +34,7 @@
 #
 #############################################################################
 
-Guw::Engine.routes.draw do
-  root :to => 'guw#index'
-
-  resources :guw_type_complexities
-  resources :guw_complexities
-  resources :guw_complexity_work_units
-  resources :guw_attributes
-  resources :guw_unit_of_works
-  resources :guw_unit_of_works do
-    get "up"
-    get "down"
+module ExpertJudgement
+  module ApplicationHelper
   end
-  resources :guw_unit_of_work_groups
-
-  resources :guw_work_units
-  resources :guw_work_units do
-    post "create_notes"
-  end
-
-  resources :guw_types
-  resources :guw_attribute_complexities
-
-  resources :guw_models do
-    resources :guw_attributes
-    resources :guw_unit_of_works
-    resources :guw_work_units
-    resources :guw_unit_of_work_groups
-    resources :guw_types do
-      resources :guw_attribute_complexities
-      resources :guw_complexities
-      resources :guw_type_complexities
-
-      post "guw_attribute_complexities/save_attributs_complexities"
-    end
-  end
-
-  post "guw_unit_of_works/save_guw_unit_of_works"
-  post "guw_complexity_work_units/save_complexity_work_units"
-
-  get "change_selected_state" => "guw_unit_of_works#change_selected_state", as: "change_selected_state"
 end

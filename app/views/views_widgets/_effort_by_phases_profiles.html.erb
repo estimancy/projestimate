@@ -24,11 +24,11 @@
         <% unless estimation_pbs_probable_results.nil? %>
             <% referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles %>
 
-            <% project_wbs_project_elements.each do |wbs_project_elt| %>
-                <% wbs_activity_elt_id = wbs_project_elt.wbs_activity_element_id %>
+            <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
+                <% wbs_activity_elt_id = wbs_activity_elt.id %>
                 <% profile_ratio_percentage = "" %>
 
-                <% wbs_probable_value =  estimation_pbs_probable_results[wbs_project_elt.id] %>
+                <% wbs_probable_value =  estimation_pbs_probable_results[wbs_activity_elt.id] %>
                 <% unless wbs_probable_value.nil? %>
                     <!-- Get the profile ratio percentage -->
                     <% unless wbs_activity_elt_id.nil?
@@ -37,15 +37,15 @@
                     <%# # Value is in bold for the WBS root element
                        bold_class = ""
                        unless wbs_elt_with_ratio.nil?
-                         if wbs_project_elt.id == wbs_elt_with_ratio.id
+                         if wbs_activity_elt.id == wbs_elt_with_ratio.id
                             bold_class = "strong"
                          end
                        end
                     %>
                     <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
                     <tr>
-                      <td><span style="float: left; margin-left:<%=wbs_project_elt.depth%>em"> <%= wbs_project_elt.name %> </span></td>
-                      <td><%= (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{number_with_delimiter(wbs_probable_value[:value].round(pe_attribute.precision.nil? ? user_number_precision : pe_attribute.precision))} #{get_attribute_unit(pe_attribute)}" %></td>
+                      <td><span style="float: left; margin-left:<%=wbs_activity_elt.depth%>em"> <%= wbs_activity_elt.name %> </span></td>
+                      <td><%= (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{number_with_delimiter(wbs_probable_value[:value].round(pe_attribute.precision.nil? ? user_number_precision : pe_attribute.precision))} #{get_attribute_unit(pe_attribute)}" %></td>
 
                       <% if project_organization_profiles.length > 0 %>
                           <% project_organization_profiles.each do |profile| %>
@@ -63,7 +63,7 @@
                                     <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
                                   <% end %>
                               <% end %>
-                              <td class='attribute_tooltip2' title='<%= profile_ratio_percentage %>' style="text-align: center"><%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{number_with_delimiter(wbs_profiles_value.round(pe_attribute.precision.nil? ? user_number_precision : pe_attribute.precision))} #{get_attribute_unit(pe_attribute)}" %></td>
+                              <td class='attribute_tooltip2' title='<%= profile_ratio_percentage %>' style="text-align: center"><%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{number_with_delimiter(wbs_profiles_value.round(pe_attribute.precision.nil? ? user_number_precision : pe_attribute.precision))} #{get_attribute_unit(pe_attribute)}" %></td>
                           <% end %>
                       <% else %>
                           <td></td>

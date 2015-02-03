@@ -141,7 +141,8 @@
             <div class="span12">
               <%= I18n.t(:label_add_a_module_to_project) %>
               <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
-                                                                          "Modules de Jugement d'Expert" => @modules_ej,
+                                                                          "Modules de Jugement d'Expert" => @ej_modules,
+                                                                          "Modules Activités / Profils" => @wbs_instances,
                                                                           "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
                                                                           "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
             </div>
@@ -151,7 +152,6 @@
             <div class="span12">
               <%= hidden_field_tag 'project_id', @project.id %>
               <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
-              <%= link_to I18n.t(:button_configure_module_pbs_element), pbs_element_matrix_path(@project.id), :class => 'btn' %>
             </div>
           </div>
         <% end %>

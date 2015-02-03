@@ -110,20 +110,19 @@ module ViewsWidgetsHelper
 
         # Get the project wbs_project_element root if module with activities
         #if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-        if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
-          if est_val_in_out == "output"
-            wbs_project_elt_root = project.wbs_project_elements.elements_root.first
-            wbs_data_low = data_low.nil? ? nil : data_low[wbs_project_elt_root.id]
-            wbs_data_high = data_high.nil? ? nil : data_high[wbs_project_elt_root.id]
-            wbs_data_probable = data_probable.nil? ? nil : data_probable[wbs_project_elt_root.id]
-
-            data_low = wbs_data_low.nil? ? nil : wbs_data_low[:value]
-            data_high = wbs_data_high.nil? ? nil : wbs_data_high[:value]
-            data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
-          end
-        end
+        #if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
+        #  wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
+        #  wbs_data_low = data_low.nil? ? nil : data_low[wbs_activity_elt_root.id]
+        #  wbs_data_high = data_high.nil? ? nil : data_high[wbs_activity_elt_root.id]
+        #  wbs_data_probable = data_probable.nil? ? nil : data_probable[wbs_activity_elt_root.id]
+        #
+        #  data_low = wbs_data_low.nil? ? nil : wbs_data_low[:value]
+        #  data_high = wbs_data_high.nil? ? nil : wbs_data_high[:value]
+        #  data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
+        #end
 
         probable_value_text = display_value(data_probable, estimation_value, module_project_id)
+
 
         max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
         min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, module_project_id)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
@@ -275,25 +274,23 @@ module ViewsWidgetsHelper
 
     return result if probable_est_value.nil? || pbs_probable_est_value.nil?
 
-    # get the ratio_reference
-    ratio_reference = nil
-    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
-    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-    if project_wbs_project_elt_root
-      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-      ratio_reference = wbs_project_elt_with_ratio.wbs_activity_ratio
+    wbs_activity = module_project.wbs_activity
+    wbs_activity_element_root = wbs_activity.wbs_activity_elements.first.root
+    if wbs_activity_element_root
+      wbs_activity_ratio = wbs_activity.wbs_activity_ratios.first
     end
+    ratio_reference = wbs_activity_ratio
+
 
     project_organization = module_project.project.organization
-    project_wbs_project_elements = module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements
-    #project_organization_profiles = module_project.project.organization.organization_profiles
+    wbs_activity_elements = wbs_activity.wbs_activity_elements
 
     # We don't want to show element with nil ratio value
     project_organization_profiles = []
     ratio_profiles_with_nil_ratio = []
     wbs_activity_ratio_profiles = []
-    unless ratio_reference.nil?
-      ratio_reference.wbs_activity_ratio_elements.each do |ratio_elt|
+    unless wbs_activity_ratio.nil?
+      wbs_activity_ratio.wbs_activity_ratio_elements.each do |ratio_elt|
         ratio_profiles_with_nil_ratio << ratio_elt.wbs_activity_ratio_profiles
       end
       # Reject all RatioProfile with nil ratio_value
@@ -307,10 +304,10 @@ module ViewsWidgetsHelper
     case view_widget.widget_type
 
       when "effort_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
+        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_activity_ratio} )
 
       when "cost_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_project_elements: project_wbs_project_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_project_elt_with_ratio} )
+        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_activity_ratio} )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
         #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
@@ -326,7 +323,7 @@ module ViewsWidgetsHelper
           end
 
           #Update chart data
-          project_wbs_project_elements.each do |wbs_project_elt|
+          wbs_activity_elements.each do |wbs_project_elt|
             wbs_probable_value = pbs_probable_est_value[wbs_project_elt.id]
             unless wbs_probable_value.nil?
               wbs_estimation_profiles_values = wbs_probable_value["profiles"]
@@ -342,7 +339,7 @@ module ViewsWidgetsHelper
                     profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = 0
                   else
                     value = number_with_delimiter(wbs_profiles_value.round(estimation_value.pe_attribute.precision.nil? ? user_number_precision : estimation_value.pe_attribute.precision))
-                    profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = value
+                    profiles_wbs_data["profile_id_#{profile.wbs_project_elt_with_ratio.id}"]["#{wbs_project_elt.name}"] = value
                   end
                 end
               end
@@ -375,27 +372,27 @@ module ViewsWidgetsHelper
 
     return chart_data if (!module_project.pemodule.alias.eql?(Projestimate::Application::EFFORT_BREAKDOWN) || estimation_value.nil?)
 
-    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
-    project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
+    wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
+    wbs_activity_root = pe_wbs_activity.wbs_activity_elements.first.root
     view_widget.show_min_max ? (levels = ['low', 'most_likely', 'high', 'probable']) : (levels = ['probable'])
 
     if view_widget.show_min_max
       #  # get all project's wbs-project_elements
-      project_wbs_project_elts = module_project.project.wbs_project_elements
-      project_wbs_project_elts.each do |wbs_project_elt|
-        effort_breakdown_stacked_bar_dataset["#{wbs_project_elt.name.parameterize.underscore}"] = Array.new
+      wbs_activity_elements = wbs_activity.wbs_activity_elements
+      wbs_activity_elements.each do |wbs_activity_elt|
+        effort_breakdown_stacked_bar_dataset["#{wbs_activity_elt.name.parameterize.underscore}"] = Array.new
       end
     else
       probable_est_value = estimation_value.send("string_data_probable")
       pbs_probable_for_consistency = probable_est_value.nil? ? nil : probable_est_value[pbs_project_element.id]
-      pe_wbs_activity.wbs_project_elements.each do |wbs_project_elt|
-        if wbs_project_elt != project_wbs_project_elt_root && !wbs_project_elt.is_added_wbs_root
+      wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
+        if wbs_activity_elt != wbs_activity_root && !wbs_activity_elt.is_added_wbs_root
           level_estimation_values = probable_est_value
-          if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
+          if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
             chart_data << ["#{wbs_project_elt.name}", 0]
           else
-            wbs_value = level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value]
-            chart_data << ["#{wbs_project_elt.name}", wbs_value]
+            wbs_value = level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value]
+            chart_data << ["#{wbs_activity_elt.name}", wbs_value]
           end
         end
       end
@@ -415,10 +412,8 @@ module ViewsWidgetsHelper
     with_activities = pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
     return res unless with_activities #module_project.pemodule.alias != Projestimate::Application::EFFORT_BREAKDOWN
 
-    pe_wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
-    project_wbs_project_elements = pe_wbs_activity.wbs_project_elements
-    #project_wbs_project_elt_root = pe_wbs_activity.wbs_project_elements.elements_root.first
-    added_wbs_root = project_wbs_project_elements.where(is_added_wbs_root: true).first
+    wbs_activity = module_project.wbs_activity
+    wbs_activity_elements = wbs_activity.wbs_activity_elements
 
     if view_widget.show_min_max
       levels = ['low', 'most_likely', 'high', 'probable']
@@ -455,58 +450,40 @@ module ViewsWidgetsHelper
       end
       res << '</tr>'
     end
-    module_project.project.pe_wbs_projects.activities_wbs.first.wbs_project_elements.each do |wbs_project_elt|
+    module_project.wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
       pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
-      wbs_project_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_project_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_project_elt.id][:is_consistent]
+      wbs_activity_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_activity_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_activity_elt.id][:is_consistent]
       show_consistency_class = nil
-      unless wbs_project_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
-        show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_project_elt.name)}'></span>"
+      unless wbs_activity_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
+        show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_activity_elt.name)}'></span>"
       end
       #For wbs-activity-completion node consistency
       completion_consistency = ""
       title = ""
-      res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_project_elt.depth}em;'> #{show_consistency_class}  #{wbs_project_elt.name} </span> </td>"
+      res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{show_consistency_class}  #{wbs_activity_elt.name} </span> </td>"
 
       # Value is in bold for the WBS root element
       bold_class = ""
-      unless added_wbs_root.nil?
-        if wbs_project_elt.id == added_wbs_root.id
-          bold_class = "strong"
-        end
-      end
+      #unless added_wbs_root.nil?
+      #  if wbs_activity_elt.id == added_wbs_root.id
+      #    bold_class = "strong"
+      #  end
+      #end
 
       levels.each do |level|
         res << "<td class=#{bold_class} >"
         level_estimation_values = Hash.new
         level_estimation_values = estimation_value.send("string_data_#{level}")
-        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
+        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
           res << ' - '
         else
-          res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], estimation_value, module_project_id)}"
+          res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], estimation_value, module_project_id)}"
         end
         res << "</td>"
       end
       res << '</tr>'
     end
 
-    #Show the global result of the PBS
-    #res << '<tr><td><strong> </strong></td>'
-    #levels.each do |level|
-    #  res << '<td></td>'
-    #end
-    #res << '</tr>'
-
-    # Show the probable values
-    #res << "<tr><td colspan='#{colspan}'><strong> #{current_component.name} (Probable Value) </strong> </td>"
-    #res << "<td>"
-    #level_probable_value = estimation_value.send('string_data_probable')
-    #if level_probable_value.nil? || level_probable_value[pbs_project_element.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value].nil?
-    #  res << '-'
-    #else
-    #  res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], estimation_value)}</strong></div>"
-    #end
-    #res << '</td>'
-    #res << '</tr>'
     res << '</table>'
     res
   end

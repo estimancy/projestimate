@@ -438,7 +438,7 @@ class ApplicationController < ActionController::Base
   end
 
   def projestimate_version
-    @projestimate_version="1.3+#{COMMIT_VERSION}"
+    @projestimate_version="1.7+#{COMMIT_VERSION}"
   end
 
   def ruby_version
