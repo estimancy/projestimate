@@ -160,17 +160,6 @@ $(document).ready(function() {
         });
     });
 
-    // Update the view_widget attribute according to the selected module
-   $("#views_widget_module_project_id").change(function() {
-       if ($(this).val() !== ""){
-            return $.ajax({
-                url: "/update_widget_module_project_data",
-                method: "GET",
-                data: "module_project_id=" + $(this).val()
-            });
-       }
-    });
-
     $(".accordion").on("show", function (e) {
        $(e.target).parent().find(".icon-caret-right").removeClass("icon-caret-right").addClass("icon-caret-down");
     });

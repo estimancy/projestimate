@@ -51,6 +51,8 @@ class ViewsWidgetsController < ApplicationController
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
+    #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+    #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
     #the view_widget type
     if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -74,6 +76,8 @@ class ViewsWidgetsController < ApplicationController
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
+    #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+    #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
     #the view_widget type
     if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -92,11 +96,8 @@ class ViewsWidgetsController < ApplicationController
 
     respond_to do |format|
       if @views_widget.save
-
         unless params["field"].blank?
-          ProjectField.create( project_id: @project.id,
-                               field_id: params["field"],
-                               views_widget_id: @views_widget.id,
+          ProjectField.create( project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
                                value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
         end
 
@@ -105,12 +106,14 @@ class ViewsWidgetsController < ApplicationController
       else
         flash[:error] = "Erreur d'ajout de Widget"
         @position_x = 1; @position_y = 1
-        @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
-        @pbs_project_element_id = params[:views_widget][:module_project_id].nil? ? current_component.id : params[:views_widget][:module_project_id]
+        @module_project = ModuleProject.find(params[:views_widget][:module_project_id])
+        @pbs_project_element_id = params[:views_widget][:pbs_project_element_id].nil? ? current_component.id : params[:views_widget][:pbs_project_element_id]
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
+        #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+        #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
         #the view_widget type
         if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -118,6 +121,7 @@ class ViewsWidgetsController < ApplicationController
         else
           @views_widget_types = Projestimate::Application::GLOBAL_WIDGETS_TYPE
         end
+
         format.js { render action: :new }
       end
     end
@@ -135,9 +139,7 @@ class ViewsWidgetsController < ApplicationController
     else
       pf = ProjectField.where(field_id: params["field"]).first
       if pf.nil?
-        ProjectField.create(project_id: @project.id,
-                            field_id: params["field"],
-                            views_widget_id: @views_widget.id,
+        ProjectField.create(project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
                             value: get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show])
       else
         pf.value = get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show]
@@ -154,12 +156,16 @@ class ViewsWidgetsController < ApplicationController
         @position_x = (@views_widget.position_x.nil? || @views_widget.position_x.downcase.eql?("nan")) ? 1 : @views_widget.position_x
         @position_y = (@views_widget.position_y.nil? || @views_widget.position_y.downcase.eql?("nan")) ? 1 : @views_widget.position_y
 
-        @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:views_widget][:module_project_id]) : @views_widget.module_project
-        @pbs_project_element = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
+        #@module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:views_widget][:module_project_id]) : @views_widget.module_project
+        #@pbs_project_element_id = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
+        @module_project = ModuleProject.find(params[:views_widget][:module_project_id])
+        @pbs_project_element_id = current_component.id
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
+        #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+        #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
         #the view_widget type
         if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -224,7 +230,9 @@ class ViewsWidgetsController < ApplicationController
       @module_project = ModuleProject.find(module_project_id)
       #@module_project_attributes = @module_project.pemodule.pe_attributes
       # Get the possible attribute grouped by type (input, output)
-      @module_project_attributes = get_module_project_attributes_input_output(@module_project)
+      #@module_project_attributes = get_module_project_attributes_input_output(@module_project)
+      @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+      @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
       #the widget type
       if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN

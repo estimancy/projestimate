@@ -72,6 +72,7 @@ class ModuleProject < ActiveRecord::Base
 
     customize(lambda { |original_module_project, new_module_project|
       new_module_project.copy_id = original_module_project.id
+      # the view will be copied
     })
   end
 

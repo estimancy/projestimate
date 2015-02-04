@@ -37,7 +37,7 @@
             <% end %>
 
             <%# if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
-            <% if ((can? :write_access_to_inreview_project, project) && (can? :commit_project, project)||(can? :manage, project)) %>
+            <% if can?(:commit_project, project) || can?(:manage, project) %>
               <% if can_modify_estimation?(project) %>
                 <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
               <% end %>

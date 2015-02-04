@@ -71,6 +71,7 @@ class PbsProjectElement < ActiveRecord::Base
     })
   end
 
+
   #Metaprogrammation
   #Generate an method folder?, link?, etc...
   #Usage: component1.folder?
