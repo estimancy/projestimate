@@ -1,6 +1,8 @@
 //Update the selected module attributes
-//$('#views_widget_pe_attribute_id').html("<%#= escape_javascript(options_for_select(@module_project_attributes)) %>");
-$('#views_widget_estimation_value_id').html("<%= escape_javascript(grouped_options_for_select(@module_project_attributes)) %>");
+//$('#views_widget_estimation_value_id').html("<%#= escape_javascript(grouped_options_for_select(@module_project_attributes)) %>");
+$('#views_widget_estimation_value_id').html("<%= raw j select_tag 'views_widget[estimation_value_id]',
+                                                        grouped_options_for_select({"input" => @module_project_attributes_input,
+                                                                          "output" => @module_project_attributes_output}), :prompt => false %>");
 
 //Update the possible widget types
 //$('#views_widget_widget_type').html("<%#= escape_javascript(options_for_select(@views_widget_types)) %>");

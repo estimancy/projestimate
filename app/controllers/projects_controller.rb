@@ -415,7 +415,7 @@ class ProjectsController < ApplicationController
     @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module]).map { |i| [i.title, i.id] }
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module]).map{|i| [i.title,i.id]}
 
     # Get the project's current wbs-activity et its Ratio
     @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
@@ -1329,11 +1329,11 @@ public
       old_prj.save #Original project copy number will be incremented to 1
 
       #Managing the component tree : PBS
-      pe_wbs_product = new_prj.root_component
+      pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
       pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
       # For PBS
-      new_prj_components = pe_wbs_product.subtree
+      new_prj_components = pe_wbs_product.pbs_project_elements
       new_prj_components.each do |new_c|
         unless new_c.is_root?
           new_ancestor_ids_list = []
