@@ -2,7 +2,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Model Jugement d'Expert
+        Modèle Jugement d'Expert
       </a>
     </li>
   </ul>
@@ -20,14 +20,17 @@
         <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
 
         <hr>
+        <h3>Cout</h3>
         <%= f.input :cost_unit, label: "Libellé de l'unité de cout du module" %>
         <%= f.input :cost_unit_coefficient, label: "Coefficient de conversion en cout standard" %>
 
         <hr>
+        <h3>Effort</h3>
         <%= f.input :effort_unit, label: "Libellé de l'unité d'effort du module" %>
         <%= f.input :effort_unit_coefficient, label: "Coefficient de l'unité d'effort du module" %>
 
         <hr>
+        <h3>Taille</h3>
         <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module" %>
       </div>
 

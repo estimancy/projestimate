@@ -9,7 +9,7 @@
   </ul>
 
   <div id="taille">
-      <b>Modèle d'UO</b>
+      <b>Modèle d'Unité Oeuvre générique (2 niveaux)</b>
 
       <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
       <br>
@@ -27,7 +27,7 @@
             </td>
             <td class="align-center">
               <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-              <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+              <%= link_to '', guw.guw_model_path(i), method: "DELETE", confirm: I18n.t(:are_you_sure), :class => 'fa fa-trash', :title => I18n.t('delete') %>
             </td>
           </tr>
         <% end %>
@@ -36,7 +36,7 @@
       <br>
       <hr>
       
-      <b>Unité d'oeuvre par groupe</b>
+      <b>Modèle d'Unité d'Oeuvre par groupe (1 niveau)</b>
       <%= render :partial => 'organizations/technology_uow_synthesis' %>
 
   </div>
@@ -214,7 +214,7 @@
         <th class="action"><%= I18n.t(:actions) %></th>
       </tr>
 
-      <% ExpertJudgement::Instance.all.each do |i| %>
+      <% @organization.expert_judgement_instances.each do |i| %>
         <tr>
           <td class="span5">
             <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150204103943) do
+ActiveRecord::Schema.define(:version => 20150204150129) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -312,6 +312,7 @@ ActiveRecord::Schema.define(:version => 20150204103943) do
     t.integer  "organization_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.float    "coefficient"
   end
 
   create_table "ge_ge_models", :force => true do |t|

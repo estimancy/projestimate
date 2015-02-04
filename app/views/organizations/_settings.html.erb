@@ -249,12 +249,14 @@
     <table class="table table-striped table-bordered table-condensed">
       <tr>
         <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:coefficient) %></th>
         <th><%= I18n.t(:actions) %></th>
       </tr>
 
       <% @fields.each do |field| %>
         <tr>
           <td><%= field.name %></td>
+          <td><%= field.coefficient %></td>
           <td class="center span3">
             <%= link_to '', edit_organization_field_path(@organization, field), :class => 'icon-edit' %>
             <%= link_to '', field, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'icon-trash' %>
