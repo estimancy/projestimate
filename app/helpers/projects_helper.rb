@@ -920,7 +920,7 @@ module ProjectsHelper
     module_project = ModuleProject.find(mp_id)
     est_val_pe_attribute = est_val.pe_attribute
     precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
-    if est_val_pe_attribute.alias == "retained_size"
+    if est_val_pe_attribute.alias == "retained_size" || est_val_pe_attribute.alias == "theorical_size"
       "#{value.to_f} #{module_project.size}"
     elsif est_val_pe_attribute.alias == "effort"
       "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
