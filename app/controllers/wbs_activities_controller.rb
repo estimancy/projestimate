@@ -286,6 +286,7 @@ class WbsActivitiesController < ApplicationController
       if est_val.in_out == 'output'
 
         @results = Hash.new
+        tmp_prbl = Array.new
 
         ["low", "most_likely", "high"].each do |level|
           @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
