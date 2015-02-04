@@ -109,17 +109,28 @@ module ViewsWidgetsHelper
         data_probable = estimation_value.string_data_probable[pbs_project_elt.id]
 
         # Get the project wbs_project_element root if module with activities
-        #if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-        #if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
-        #  wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
-        #  wbs_data_low = data_low.nil? ? nil : data_low[wbs_activity_elt_root.id]
-        #  wbs_data_high = data_high.nil? ? nil : data_high[wbs_activity_elt_root.id]
-        #  wbs_data_probable = data_probable.nil? ? nil : data_probable[wbs_activity_elt_root.id]
-        #
-        #  data_low = wbs_data_low.nil? ? nil : wbs_data_low[:value]
-        #  data_high = wbs_data_high.nil? ? nil : wbs_data_high[:value]
-        #  data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
-        #end
+        if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+          #if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
+          #  wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
+          #  wbs_data_low = data_low.nil? ? nil : data_low[wbs_activity_elt_root.id]
+          #  wbs_data_high = data_high.nil? ? nil : data_high[wbs_activity_elt_root.id]
+          #  wbs_data_probable = data_probable.nil? ? nil : data_probable[wbs_activity_elt_root.id]
+          #
+          #  data_low = wbs_data_low.nil? ? nil : wbs_data_low[:value]
+          #  data_high = wbs_data_high.nil? ? nil : wbs_data_high[:value]
+          #  data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
+          #end
+
+          wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
+
+          wbs_data_low = data_low.nil? ? nil : data_low
+          wbs_data_high = data_high.nil? ? nil : data_high
+          wbs_data_probable = data_probable.nil? ? nil : data_probable
+
+          data_low = wbs_data_low.nil? ? nil : wbs_data_low
+          data_high = wbs_data_high.nil? ? nil : wbs_data_high
+          data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[wbs_activity_elt_root.id][:value]
+        end
 
         probable_value_text = display_value(data_probable, estimation_value, module_project_id)
 
@@ -128,7 +139,7 @@ module ViewsWidgetsHelper
 
         #Update the widget data
         #widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
-        widget_data[:data_low] = data_low;
+        widget_data[:data_low] = data_low
         widget_data[:data_high] = data_high
         widget_data[:data_most_likely] = data_most_likely
         widget_data[:data_probable] = data_probable
