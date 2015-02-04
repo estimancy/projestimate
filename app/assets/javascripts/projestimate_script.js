@@ -191,37 +191,8 @@ $(document).ready(function() {
     );
 
 
-    $('.tabs').tabs({
-        show: function (event, ui) {
-            var index = ui.index; //$(ui.tab).parent().index();
-            //$("#table_list_"+current_tab_name).trigger("update");
-            //$("#table_list_"+current_tab_name).trigger("appendCache");
-            jsPlumb.repaintEverything();
-         },
-
-        select: function(event, ui) {
-            // Objects available in the function context:
-            //  ui.tab     // anchor element of the selected (clicked) tab
-            //  ui.panel   // element, that contains the selected/clicked tab contents
-            //  ui.index   // zero-based index of the selected (clicked) tab
-
-            var index_tab = ui.index + 1;
-            var anchor_value = "";
-            $(".current_tab").val("tabs-" + index_tab);
-
-            var re = /#/;
-            window.location.hash = ui.tab.hash.replace(re, "#");
-            anchor_value = ui.tab.hash;
-
-            $.ajax({
-                url:"/",
-                method: 'GET',
-                data: {
-                    anchor_value: anchor_value
-                }
-            });
-        }
-    });
+    $('.tabs').tabs();
+    $('.tabs-project').tabs();
 
     $('.attribute_tooltip').tooltip({'html' : true, 'placement' : 'bottom', container: 'body'});
     $('.button_attribute_tooltip').tooltip({'html' : true, 'placement' : 'bottom', container: 'body'});
@@ -370,16 +341,6 @@ $(document).ready(function() {
             })
         }
     );
-
-    $( ".tabs" ).tabs({
-        beforeLoad: function( event, ui ) {
-            ui.jqXHR.error(function() {
-                ui.panel.html(
-                    "Couldn't load this tab. We'll try to fix this as soon as possible. " +
-                        "If this wouldn't be a demo." );
-            });
-        }
-    });
 
     if(($('.div_tabs_to_disable').data('enable_update')) ==  false){
         $('.div_tabs_to_disable').find('input, textarea, button, select, a').attr('disabled','disabled');

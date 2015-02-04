@@ -1,0 +1,203 @@
+<div class="tabs">
+  <ul>
+    <li><a href="#taille" data-toggle="tab">Taille</a></li>
+    <li><a href="#effort" data-toggle="tab">Effort </a></li>
+    <li><a href="#activite" data-toggle="tab">Activité </a></li>
+    <li><a href="#team" data-toggle="tab">Equipes</a></li>
+    <li><a href="#conversion" data-toggle="tab">Conversion</a></li>
+    <li><a href="#expert" data-toggle="tab">Jugement d'Expert</a></li>
+  </ul>
+
+  <div id="taille">
+      <b>Modèle d'UO</b>
+
+      <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+      <br>
+
+      <table class="table table-bordered">
+        <tr>
+          <th><%= I18n.t(:name) %></th>
+          <th class="action"><%= I18n.t(:actions) %></th>
+        </tr>
+
+        <% @guw_models.each do |i| %>
+          <tr>
+            <td class="span5">
+              <%= link_to i.name, guw.guw_model_path(i) %>
+            </td>
+            <td class="align-center">
+              <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+              <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+
+      <br>
+      <hr>
+      
+      <b>Unité d'oeuvre par groupe</b>
+      <%= render :partial => 'organizations/technology_uow_synthesis' %>
+
+  </div>
+
+  <div id="effort">
+    <b>Module d'Effort Générique</b>
+
+    <%= link_to "Nouvelle instance d'effort", ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+
+    <table class="table table-bordered">
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
+
+      <% Ge::GeModel.all.each do |i| %>
+        <tr>
+          <td class="span5">
+            <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
+          </td>
+          <td class="align-center">
+            <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+            <%= link_to '', ge.ge_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+  <div id="activite">
+      <b><%= I18n.t :wbs_activities %></b>
+      <% if can? :show_wbs_activities, WbsActivity %>
+
+        <% if can? :manage, WbsActivity %>
+          <a href="#myWBSModal" role="button" class="btn pull-right" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal"><%= I18n.t(:import_wbs_activity) %></a>
+          <%= link_to I18n.t(:new_wbs_activity), new_organization_wbs_activity_path(@organization), :class => 'btn pull-right', :title => "#{I18n.t(:guide_create_wbs_activity)}" %>
+        <% end %>
+        <br>
+
+        <table class="table table-bordered">
+          <tr>
+            <th><%= I18n.t(:name) %></th>
+            <th><%= I18n.t(:description) %></th>
+            <th><%= I18n.t(:organizations) %></th>
+            <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
+          </tr>
+
+          <% @wbs_activities.each do |wbs_activity| %>
+            <tr>
+              <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-2')) %></td>
+              <td><%= wbs_activity.description %></td>
+              <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
+              <td class="center">
+                <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
+                <% if can? :manage, WbsActivity %>
+                  <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
+                  <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t(:delete) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+
+        <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <%= form_tag import_wbs_activities_path, :multipart => true, :class => 'simple_form' do %>
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel"><%= I18n.t(:import) %> WBS Activity</h3>
+            </div>
+            <div class="modal-body">
+              <label><%= I18n.t(:file_csv) %></label>
+              <%= file_field_tag :file %>
+
+              <label><%= I18n.t(:separator) %>'<%= I18n.t(:general_csv_separator) %>') </label>
+              <%= text_field_tag :separator %>
+
+              <label><%= I18n.t(:encoding) %></label>
+              <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
+            </div>
+            <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+              <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+            </div>
+            <div class="loading span11 hide">
+              <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %> </h4>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_wbs_activities) %></div>
+      <% end %>
+  </div>
+
+  <div id="team">
+    Pas de module
+  </div>
+
+  <div id="conversion">
+    <%= render :partial => 'organizations/technology_size_type_abacus' %>
+
+    <%= render :partial => 'organizations/technology_size_unit_abacus' %>
+
+    <% if can? :show_size_unit_types, SizeUnitType %>
+      <% if can? :manage, SizeUnitType %>
+        <%= link_to I18n.t('new_size_unit_type'), new_size_unit_type_path(:organization_id => @organization.nil? ? nil : @organization.id), :class => 'btn pull-right' %>
+      <% end %>
+
+      <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
+        <thead>
+        <tr>
+          <th><%= I18n.t(:name) %></th>
+          <th><%= I18n.t(:alias) %></th>
+          <th><%= I18n.t(:description) %></th>
+          <th class="action"><%= I18n.t(:actions) %></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @size_unit_types.each do |i| %>
+          <tr>
+            <td><%= i.name %></td>
+            <td><%= i.alias %></td>
+            <td><%= i.description %></td>
+            <td class="align-center">
+              <%= link_to '', edit_size_unit_type_path(i, organization_id: @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
+              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+            </td>
+          </tr>
+        <% end %>
+        <%= render :partial => 'layouts/footer_table' %>
+        <tbody>
+        </table>
+    <% else %>
+      <div class="red_color"><%= I18n.t(:notice_cannot_view_size_unit_types) %></div>
+    <% end %>
+
+  </div>
+
+  <div id="expert">
+    <b>Expert Judgment</b>
+    <%= link_to "Nouveau modèle de Jugement d'Expert", expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+    <br>
+
+    <table class="table table-bordered">
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
+
+      <% ExpertJudgement::Instance.all.each do |i| %>
+        <tr>
+          <td class="span5">
+            <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
+          </td>
+          <td class="align-center">
+            <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+            <%= link_to '', expert_judgement.instance_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+</div>

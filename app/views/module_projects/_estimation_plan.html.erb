@@ -50,7 +50,7 @@
                       <%= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down a_white' %>
                       <%= link_to '', pemodules_right_path(pmod.id), :class => 'icon-arrow-right a_white' %>
                       <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip a_white" %>
-                      <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-edit a_white" %>
+                      <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
                       <%= link_to '', pmod, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash a_white' %>
                       <% if pmod.show_results_view %>
                         <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-open a_white", :title => I18n.t(:title_hide_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>

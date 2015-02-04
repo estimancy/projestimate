@@ -214,7 +214,12 @@ Projestimate::Application.routes.draw do
     resources :project_areas
     resources :project_security_levels
     resources :work_element_types
+
+    get "authorization" => 'organizations#authorization'
+    get "setting" => 'organizations#setting'
+    get "module_estimation" => 'organizations#module_estimation'
   end
+
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'
   post '/set_technology_size_unit_abacus' => 'organizations#set_technology_size_unit_abacus', :as => 'set_technology_size_unit_abacus'
@@ -224,8 +229,6 @@ Projestimate::Application.routes.draw do
   post 'create_organization_from_image' => 'organizations#create_organization_from_image', as: 'create_organization_from_image'
 
   resources :subcontractors
-  #match '/subcontractors', :to => 'subcontractors#new', :via => :get, :as => :get_subcontractor
-  #match 'subcontractors/:id/edit' => 'subcontractors#update', :via => :put, :as => :put_subcontractor
 
   resources :labor_categories
 
