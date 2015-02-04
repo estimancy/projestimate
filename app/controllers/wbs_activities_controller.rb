@@ -278,8 +278,6 @@ class WbsActivitiesController < ApplicationController
     @pbs_project_element = current_component
     @tmp_results = Hash.new
 
-    eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, 100)
-
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
     current_pbs_estimations.each do |est_val|
@@ -289,6 +287,8 @@ class WbsActivitiesController < ApplicationController
         tmp_prbl = Array.new
 
         ["low", "most_likely", "high"].each do |level|
+          eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f)
+
           @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
 
           level_estimation_value[@pbs_project_element.id] = @tmp_results[level.to_sym]["#{est_val.pe_attribute.alias}_#{current_module_project.id.to_s}".to_sym]
