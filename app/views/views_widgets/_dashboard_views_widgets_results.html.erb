@@ -31,7 +31,6 @@
                       <% if module_project.view %>
                           <% module_project_view_widgets =  module_project.view.views_widgets.order('position').all %>
                           <% module_project_view_widgets.each do |view_widget| %>
-                            <%# view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
                             <!-- Widgets are now showing the value of the widget's module project -->
                             <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
 

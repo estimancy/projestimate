@@ -409,7 +409,7 @@ module ViewsWidgetsHelper
 
     # Only the Modules with activities
     with_activities = pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
-    return res unless with_activities #module_project.pemodule.alias != Projestimate::Application::EFFORT_BREAKDOWN
+    return res unless with_activities
 
     wbs_activity = module_project.wbs_activity
     wbs_activity_elements = wbs_activity.wbs_activity_elements
@@ -450,16 +450,18 @@ module ViewsWidgetsHelper
       res << '</tr>'
     end
     module_project.wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
-      pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
-      wbs_activity_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_activity_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_activity_elt.id][:is_consistent]
-      show_consistency_class = nil
-      unless wbs_activity_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
-        show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_activity_elt.name)}'></span>"
-      end
+
+      #pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
+      #wbs_activity_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_activity_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_activity_elt.id][:is_consistent]
+      #show_consistency_class = nil
+      #unless wbs_activity_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
+      #  show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_activity_elt.name)}'></span>"
+      #end
+
       #For wbs-activity-completion node consistency
       completion_consistency = ""
       title = ""
-      res << "<tr> <td> <span class='tree_element_in_out #{completion_consistency}' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{show_consistency_class}  #{wbs_activity_elt.name} </span> </td>"
+      res << "<tr> <td> <span class='tree_element_in_out' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{wbs_activity_elt.name} </span> </td>"
 
       # Value is in bold for the WBS root element
       bold_class = ""
@@ -473,11 +475,15 @@ module ViewsWidgetsHelper
         res << "<td class=#{bold_class} >"
         level_estimation_values = Hash.new
         level_estimation_values = estimation_value.send("string_data_#{level}")
-        if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
-          res << ' - '
-        else
-          res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], estimation_value, module_project_id)}"
-        end
+        #if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
+        #  res << ' - '
+        #else
+          begin
+            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], estimation_value, module_project_id)}"
+          rescue
+            res << "#{display_value(level_estimation_values[pbs_project_element.id], estimation_value, module_project_id)}"
+          end
+        #end
         res << "</td>"
       end
       res << '</tr>'
