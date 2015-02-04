@@ -371,8 +371,8 @@ module ViewsWidgetsHelper
 
     return chart_data if (!module_project.pemodule.alias.eql?(Projestimate::Application::EFFORT_BREAKDOWN) || estimation_value.nil?)
 
-    wbs_activity = module_project.project.pe_wbs_projects.activities_wbs.first
-    wbs_activity_root = pe_wbs_activity.wbs_activity_elements.first.root
+    wbs_activity = module_project.wbs_activity
+    wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
     view_widget.show_min_max ? (levels = ['low', 'most_likely', 'high', 'probable']) : (levels = ['probable'])
 
     if view_widget.show_min_max
@@ -385,7 +385,7 @@ module ViewsWidgetsHelper
       probable_est_value = estimation_value.send("string_data_probable")
       pbs_probable_for_consistency = probable_est_value.nil? ? nil : probable_est_value[pbs_project_element.id]
       wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
-        if wbs_activity_elt != wbs_activity_root && !wbs_activity_elt.is_added_wbs_root
+        if wbs_activity_elt != wbs_activity_root
           level_estimation_values = probable_est_value
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
             chart_data << ["#{wbs_project_elt.name}", 0]
