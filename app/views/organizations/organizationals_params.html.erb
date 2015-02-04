@@ -31,7 +31,7 @@
               <td><%= i.description %></td>
               <td class="center">
                 <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
-                <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('duplicate'), method: "POST" %>
+                <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
                 <% if can? :manage, Organization %>
                   <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
                   <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
