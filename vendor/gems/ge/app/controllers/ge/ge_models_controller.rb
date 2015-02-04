@@ -92,6 +92,11 @@ class Ge::GeModelsController < ApplicationController
         end
       end
 
+      unless @ge_model.three_points_estimation?
+        tmp_prbl[0] = tmp_prbl[1]
+        tmp_prbl[2] = tmp_prbl[1]
+      end
+
       ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
 
     end
