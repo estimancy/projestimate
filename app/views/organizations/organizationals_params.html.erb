@@ -5,7 +5,6 @@
   <ul>
     <li><a href="#tabs-1"><%= I18n.t(:organizations) %></a></li>
     <li><a href="#tabs-2"><%= I18n.t(:size_unit) %></a></li>
-    <li><a href="#tabs-3"><%= I18n.t(:organizationals_labors_categories) %></a></li>
   </ul>
 
   <div id="tabs-1">
@@ -31,11 +30,11 @@
               <td><%= link_to i.name, edit_organization_path(i) %></td>
               <td><%= i.description %></td>
               <td class="center">
-                <%= link_to '', edit_organization_path(i), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t('edit') %>
-                <%= link_to '', export_organization_path(i), :class => 'icon-euro icon-large', :title => I18n.t('duplicate'), method: "POST" %>
+                <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
+                <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('duplicate'), method: "POST" %>
                 <% if can? :manage, Organization %>
-                  <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'button_attribute_tooltip icon-copy', :title => I18n.t('button_duplicate_organization')) %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'button_attribute_tooltip icon-remove icon-large ', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
                 <% end %>
               </td>
             </tr>
@@ -76,7 +75,7 @@
               <td class="center">
                 <%= link_to '', edit_size_unit_path(i), :class => 'icon-pencil icon-large', :title => I18n.t('edit') %>
                 <% unless i.is_defined? %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove icon-large', :style => 'color:red', :title => I18n.t('delete') %>
+                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash icon-large', :style => 'color:red', :title => I18n.t('delete') %>
                 <% end %>
                 <% if is_master_instance? && !i.is_local_record? %>
                   <% if i.is_retired? %>

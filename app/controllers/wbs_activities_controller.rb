@@ -286,6 +286,7 @@ class WbsActivitiesController < ApplicationController
       if est_val.in_out == 'output'
 
         @results = Hash.new
+        tmp_prbl = Array.new
 
         ["low", "most_likely", "high"].each do |level|
           @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
@@ -368,12 +369,18 @@ class WbsActivitiesController < ApplicationController
         est_val.update_attributes(@results)
       elsif est_val.in_out == 'input'
         in_result = Hash.new
+        tmp_prbl = Array.new
         ['low', 'most_likely', 'high'].each do |level|
           level_estimation_value = Hash.new
           level_estimation_value[@pbs_project_element.id] = params[:values][level]
           in_result["string_data_#{level}"] = level_estimation_value
+
+          tmp_prbl << params[:values][level].to_f
         end
+
         est_val.update_attributes(in_result)
+
+        est_val.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
     redirect_to dashboard_path(@project)

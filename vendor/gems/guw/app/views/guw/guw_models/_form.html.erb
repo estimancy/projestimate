@@ -16,8 +16,8 @@
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
-        <%= f.input :three_points_estimation, inline_label: 'Estimation 3 points' %>
-        <%= f.input :retained_size_unit, inline_label: 'Unité de sortie' %>
+        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
+        <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module" %>
       </div>
 
       <%= f.button :submit, I18n.t('save') %>

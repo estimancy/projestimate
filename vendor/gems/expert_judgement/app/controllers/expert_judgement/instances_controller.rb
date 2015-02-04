@@ -116,8 +116,11 @@ class ExpertJudgement::InstancesController < ApplicationController
         ejie.save
       end
 
-      ["low", "most_likely", "high"].each do |level|
-        ["input", "output"].each do |io|
+      ["input", "output"].each do |io|
+
+        tmp_prbl = Array.new
+
+        ["low", "most_likely", "high"].each do |level|
           ev = EstimationValue.where(module_project_id: current_module_project.id,
                                      pe_attribute_id: attr_id.to_i,
                                      in_out: io).first
@@ -128,10 +131,16 @@ class ExpertJudgement::InstancesController < ApplicationController
             ev.send("string_data_#{level}")[current_component.id] = params[:values][attr_id]["most_likely"][io].to_f
           end
 
+          tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+
           ev.save
         end
-      end
 
+        ev = EstimationValue.where(module_project_id: current_module_project.id,
+                                   pe_attribute_id: attr_id.to_i,
+                                   in_out: io).first
+        ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      end
     end
 
     redirect_to main_app.dashboard_path(@project)

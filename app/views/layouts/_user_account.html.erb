@@ -1,18 +1,12 @@
 <ul class="nav">
-  <!--<li>-->
-    <!--<a href="#" id="toggle_button" title="<%= I18n.t 'title_hide_show_menu' %>">-->
-      <!--<i class="icon-double-angle-down icon-large pull-left" style="margin-top: 1px;"></i>-->
-    <!--</a>-->
-  <!--</li>-->
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t(:estimate) %>">
-      <i class="icon-home icon-large pull-left"></i>&nbsp;
+      <i class="icon icon-home icon-large pull-left"></i>&nbsp;
     </a>
     <ul class="dropdown-menu">
       <li class="dropdown">
         <a href="<%= main_app.projects_url %>">
-          <!--<i class=" icon-list icon-large pull-left"></i> -->
           <%= I18n.t('all_projects') %>
         </a>
       </li>
@@ -41,7 +35,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_organization %>">
-      <i class="icon-tasks icon-large pull-left"></i>&nbsp;</b>
+      <i class="icon-list-ul icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <li class="dropdown"><a href="/organizationals_params">
@@ -70,7 +64,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_admin %>">
-      <i class="icon-cog icon-large pull-left"></i>&nbsp;</b>
+      <i class="icon-question-sign icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <% if can? :manage_master_data, :all %>
@@ -94,7 +88,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_master_admin %>">
-      <i class="icon-key icon-large pull-left"></i></b>
+      <i class="icon-cog icon-large pull-left"></i></b>
     </a>
     <ul class="dropdown-menu">
       <% if can? :manage_master_data, :all %>
@@ -165,7 +159,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'services' %>" >
-      <i class="icon-file"></i>
+      <i class="icon-book"></i>
     </a>
   </li>
 
@@ -173,7 +167,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_service') %>" title="<%= I18n.t 'services' %>">
-      <i class="icon-eye-open"></i>
+      <i class="fa fa-users"></i>
     </a>
   </li>
 
@@ -181,7 +175,7 @@
 
   <li>
     <a href="/about" title="<%= I18n.t 'about' %>">
-      <i class="icon-asterisk"></i>
+      <i class="fa fa-info-circle"></i>
     </a>
   </li>
 

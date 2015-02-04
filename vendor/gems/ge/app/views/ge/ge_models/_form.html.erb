@@ -2,7 +2,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Model d'Unité d'Oeuvres
+        Modèle d'éffort générique
       </a>
     </li>
   </ul>
@@ -14,7 +14,7 @@
         La méthode générique d'éffort correspond à une méthode de calcul de l'éffort
         selon la formule a*x^b ou <b>a</b> correspond au facteur d'ajustement et <b>b</b> au facteur d'échelle.
         <br>
-        L'effort E est généré dans l'unité propre au modèle (h.j, h.m etc...). L'utilisateur doit définir le coefficient de conversion en unité standard du produit (des heures).
+        L'effort E est généré dans l'unité propre au modèle (h.j, h.m etc...). L'utilisateur doit définir le coefficient de conversion en unité standard (des heures).
       </div>
       <%= f.error_notification %>
 
@@ -22,11 +22,12 @@
 
       <div class="form-inputs">
         <%= f.input :name %>
-        <%= f.input :coeff_a, label: "Facteur d'ajustement" %>
-        <%= f.input :coeff_b, label: "Facteur d'échelle" %>
+        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
+        <%= f.input :coeff_a, label: "Facteur d'ajustement : a" %>
+        <%= f.input :coeff_b, label: "Facteur d'échelle : b" %>
+        <%= f.input :size_unit, label: "Libellé de l'unité de taille" %>
+        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort" %>
         <%= f.input :standard_unit_coefficient, label: 'Coefficient de conversion en unité standard (heures)' %>
-        <%= f.input :effort_unit, label: 'Unité de sortie' %>
-        <%= f.input :three_points_estimation, inline_label: 'Estimation 3 points' %>
       </div>
 
       <%= f.button :submit, I18n.t('save') %>

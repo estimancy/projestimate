@@ -1,28 +1,12 @@
-<div class="tabs">
-  <ul>
-    <li><a href="#tabs-1"><%= I18n.t(:estimate) %></a></li>
-  </ul>
+<br>
 
-  <div id="tabs-1">
+<%= I18n.t(:label_filter_on_projects_version) %>
+<%= select_tag 'filter_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1),1], [I18n.t(:label_filter_on_project_version_2),2], [I18n.t(:label_filter_on_project_version_3),3], [I18n.t(:label_filter_on_project_version_4),4]], :selected => 1), :include_blank => false %>
 
-    <table border="0" width="100%">
-      <tr>
-        <td>
-          <%= I18n.t(:label_filter_on_projects_version) %>
-          <%= select_tag 'filter_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1),1], [I18n.t(:label_filter_on_project_version_2),2], [I18n.t(:label_filter_on_project_version_3),3], [I18n.t(:label_filter_on_project_version_4),4]], :selected => 1), :include_blank => false %>
-        </td>
+<% if can? :create_project_from_template, Project %>
+  <%= link_to I18n.t('new_project_from'), projects_from_path, :class => 'btn btn-mni pull-right' %>
+<% end %>
 
-        <td colspan=2 style="text-align:right;">
-          <% if can? :create_project_from_template, Project %>
-            <%= link_to I18n.t('new_project_from'), projects_from_path, :class => 'btn' %>
-          <% end %>
-        </td>
-      </tr>
-    </table>
+<%= render :partial => 'projects', :object => @projects -%>
 
-    <div id="projects">
-      <%= render :partial => 'projects', :object => @projects -%>
-    </div>
 
-  </div>
-</div>

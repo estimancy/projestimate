@@ -7,7 +7,7 @@
       <% if current_module_project.previous.empty? %>
         <h4>Taille en entrée (n/c) </h4>
       <% else %>
-        <h4>Taille en entrée (en <%= current_module_project.expert_judgement_instance %>)</h4>
+        <h4>Taille en entrée (en <%= @ge_model.size_unit %>)</h4>
       <% end %>
 
       <% attr = PeAttribute.find_by_alias("retained_size") %>

@@ -35,7 +35,7 @@
             <td><%= profile.record_status.name unless profile.record_status.nil? %> <%= profile.show_custom_value %></td>
             <td class="center">
               <%= link_to '', edit_profile_path(profile), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !profile.is_local_record? %>
                   <% if profile.is_retired? %>
                       <%= link_to('', "profiles/#{profile.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>

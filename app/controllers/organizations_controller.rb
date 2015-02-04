@@ -41,14 +41,24 @@ class OrganizationsController < ApplicationController
   require 'roo'
   include Roo
 
+  def setting
+    @organization = Organization.find(params[:organization_id])
+
+    @technologies = @organization.organization_technologies
+    @fields = @organization.fields
+    @work_element_types = @organization.work_element_types
+
+  end
+
+  def module_estimation
+  end
+
   # New organization from image
   def new_organization_from_image
-
   end
 
   #Create New organization from selected image organization
   def create_organization_from_image
-
   end
 
 

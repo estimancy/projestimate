@@ -1,7 +1,7 @@
 <%= simple_form_for(@project) do |f| %>
   <%= f.error_notification %>
 
-    <div class="tabs">
+    <div class="tabs-project">
       <ul>
         <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
         <% if action_name.in? %w(edit update) %>

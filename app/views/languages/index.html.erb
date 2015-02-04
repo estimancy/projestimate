@@ -30,7 +30,7 @@
             <td class="center">
               <%= link_to '', edit_language_path(language), :class => 'icon-pencil', :title => I18n.t('edit') %>
               <% unless language.is_defined? %>
-                <%= link_to '', language, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+                <%= link_to '', language, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
               <% if is_master_instance? && !language.is_local_record? %>
                   <% if language.is_retired? %>
