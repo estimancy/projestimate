@@ -121,15 +121,17 @@ module ViewsWidgetsHelper
           #  data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
           #end
 
-          wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
+          if estimation_value.in_out == "output"
+            wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
 
-          wbs_data_low = data_low.nil? ? nil : data_low
-          wbs_data_high = data_high.nil? ? nil : data_high
-          wbs_data_probable = data_probable.nil? ? nil : data_probable
+            wbs_data_low = data_low.nil? ? nil : data_low
+            wbs_data_high = data_high.nil? ? nil : data_high
+            wbs_data_probable = data_probable.nil? ? nil : data_probable
 
-          data_low = wbs_data_low.nil? ? nil : wbs_data_low
-          data_high = wbs_data_high.nil? ? nil : wbs_data_high
-          data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[wbs_activity_elt_root.id][:value]
+            data_low = wbs_data_low.nil? ? nil : wbs_data_low
+            data_high = wbs_data_high.nil? ? nil : wbs_data_high
+            data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[wbs_activity_elt_root.id][:value]
+          end
         end
 
         probable_value_text = display_value(data_probable, estimation_value, module_project_id)
