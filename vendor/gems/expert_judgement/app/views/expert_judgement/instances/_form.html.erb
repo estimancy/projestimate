@@ -15,20 +15,20 @@
 
       <div class="form-inputs">
         <%= f.input :name %>
-        <%= f.input :description %>
+        <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
+
+        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
 
         <hr>
-        <%= f.input :cost_unit %>
-        <%= f.input :cost_unit_coefficient %>
+        <%= f.input :cost_unit, label: "Libellé de l'unité de cout du module" %>
+        <%= f.input :cost_unit_coefficient, label: "Coefficient de conversion en cout standard" %>
 
         <hr>
-        <%= f.input :effort_unit %>
-        <%= f.input :effort_unit_coefficient %>
+        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort du module" %>
+        <%= f.input :effort_unit_coefficient, label: "Coefficient de l'unité d'effort du module" %>
 
         <hr>
-        <%= f.input :retained_size_unit %>
-
-        <%= f.input :three_points_estimation, inline_label: 'Estimation 3 points' %>
+        <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module" %>
       </div>
 
       <%= f.button :submit, I18n.t('save') %>

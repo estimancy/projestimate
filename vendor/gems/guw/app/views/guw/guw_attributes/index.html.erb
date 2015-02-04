@@ -26,7 +26,7 @@
           <td><%= guw_attribute.name %></td>
           <td><%= guw_attribute.description %></td>
           <td>
-            <%= link_to '', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute), class: "fa fa-edit" %>
+            <%= link_to '', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute), class: "fa fa-pencil" %>
             <%= link_to '', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
           </td>
         </tr>

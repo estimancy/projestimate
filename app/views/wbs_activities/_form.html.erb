@@ -74,7 +74,7 @@
                   <td class="align-center">
                     <%= link_to '', edit_wbs_activity_ratio_path(wbs_activity_ratio, :activity_id => wbs_activity_ratio.wbs_activity_id), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
                     <% if can? :delete_wbs_activities, WbsActivity %>
-                        <%= link_to '', wbs_activity_ratio, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-remove', :style => 'color:red', :title => I18n.t(:delete) %>
+                        <%= link_to '', wbs_activity_ratio, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :style => 'color:red', :title => I18n.t(:delete) %>
                     <% end %>
                     <% if can? :edit_wbs_activities, WbsActivity %>
                       <%= link_to '', export_wbs_activity_ratios_path(wbs_activity_ratio), :class => 'button_attribute_tooltip icon-download', :title => I18n.t(:export) %>

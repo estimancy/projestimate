@@ -38,7 +38,7 @@
             <td><%= perm.record_status.name unless perm.record_status.nil? %><%= perm.show_custom_value %></td>
             <td class="center">
               <%= link_to '', edit_permission_path(perm), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', perm, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', perm, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !perm.is_local_record? %>
                 <% if perm.is_retired? %>
                   <%= link_to('', "permissions/#{perm.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>

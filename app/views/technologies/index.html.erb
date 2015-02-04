@@ -29,7 +29,7 @@
           <td><%= technology.record_status.name unless technology.record_status.nil? %> <%= technology.show_custom_value %></td>
           <td class="center">
             <%= link_to '', edit_technology_path(technology), :class => 'icon-pencil', :title => I18n.t('edit') %>
-            <%= link_to '', technology, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', technology, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
 
             <%# unless technology.is_defined? %>
               <%#= link_to '', technology, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>

@@ -8,7 +8,7 @@
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane" id="organization">
+    <div class="tab-pane active" id="organization">
       <div id="accordion2" class="accordion">
         <div class="accordion-group accordion-caret">
           <div class="accordion-heading">
@@ -108,12 +108,3 @@
       <%= render partial: "module_estimations" %>
     </div>
 </div>
-
-<script>
-  $('#myTab a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    $('#myTab a:first').tab('show');
-  })
-</script>
-

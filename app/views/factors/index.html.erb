@@ -34,7 +34,7 @@
           <td><%= factor.record_status.name unless factor.record_status.nil? %> <%= factor.show_custom_value %></td>
           <td class="center">
             <%= link_to '', edit_factor_path(factor), :class => 'icon-pencil', :title => I18n.t('edit') %>
-            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', factor, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
             <% if is_master_instance? && !factor.is_local_record? %>
               <% if factor.is_retired? %>
                 <%= link_to('', "factors/#{factor.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>
@@ -79,7 +79,7 @@
             <td class="span2"><%= c.value %></td>
             <td>
               <%= link_to '', edit_organization_uow_complexity_path(c, organization_id: nil), :class => 'icon-pencil icon-large pull-left', :title => I18n.t('edit') %>
-              <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-remove icon-large pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', c, confirm: I18n.t('are_you_sur'), method: :delete, :class => 'icon-trash icon-large pull-left', :title => I18n.t('delete') %>
               <% if is_master_instance? && !c.is_local_record? %>
                 <% if c.is_retired? %>
                   <%= link_to('', "/organization_uow_complexities/#{c.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>

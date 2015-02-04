@@ -29,7 +29,7 @@
             <td ><%= profile_category.record_status.name unless profile_category.record_status.nil? %> <%= profile_category.show_custom_value %></td>
             <td class="center">
               <%= link_to '', edit_profile_category_path(profile_category), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', profile_category, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', profile_category, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
               <% if is_master_instance? && !profile_category.is_local_record? %>
                   <% if profile_category.is_retired? %>
                       <%= link_to('', "profile_categories/#{profile_category.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>

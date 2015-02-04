@@ -227,7 +227,7 @@
           <td class="align-center">
             <%= link_to '', edit_organization_technology_path(ot.id, :organization_id => @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
             <% if can? :manage, OrganizationTechnology %>
-              <%= link_to '', ot, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', ot, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
             <% end %>
           </td>
           </tr>

@@ -28,7 +28,7 @@
         <td class="center">
           <% if can? :manage, group %>
             <%= link_to '', edit_organization_group_path(@organization, group), :class => 'icon-pencil', :title => I18n.t('edit') %>
-            <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+            <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
           <% end %>
         </td>
       </tr>

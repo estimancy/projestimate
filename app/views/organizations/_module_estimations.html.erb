@@ -26,7 +26,7 @@
               <%= link_to i.name, guw.guw_model_path(i) %>
             </td>
             <td class="align-center">
-              <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+              <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
               <%= link_to '', guw.guw_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
             </td>
           </tr>
@@ -52,18 +52,46 @@
         <th class="action"><%= I18n.t(:actions) %></th>
       </tr>
 
-      <% Ge::GeModel.all.each do |i| %>
+      <% @organization.ge_models.each do |i| %>
         <tr>
           <td class="span5">
             <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
           </td>
           <td class="align-center">
-            <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+            <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
             <%= link_to '', ge.ge_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
           </td>
         </tr>
       <% end %>
     </table>
+
+    <b>Modules Cocomo</b>
+    <table class="table tabel-bordered">
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>Cocomo 81</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Cocomo Intermediate</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Cocomo II</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+
+
+
   </div>
 
   <div id="activite">
@@ -162,7 +190,7 @@
             <td><%= i.description %></td>
             <td class="align-center">
               <%= link_to '', edit_size_unit_type_path(i, organization_id: @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-remove', :style => 'color:red', :title => I18n.t('delete') %>
+              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
             </td>
           </tr>
         <% end %>
@@ -192,7 +220,7 @@
             <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
           </td>
           <td class="align-center">
-            <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-edit' %>
+            <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
             <%= link_to '', expert_judgement.instance_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
           </td>
         </tr>
