@@ -77,16 +77,22 @@ class Ge::GeModelsController < ApplicationController
       tmp_prbl = Array.new
 
       ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-
       ["low", "most_likely", "high"].each do |level|
+
+        if @ge_model.three_points_estimation?
+          size = params[:"retained_size_#{level}"].to_f
+        else
+          size = params[:"retained_size_most_likely"].to_f
+        end
+
         if am.pe_attribute.alias == "effort"
-          effort = (@ge_model.coeff_a * params[:"retained_size_#{level}"].to_f ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient
+          effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
         elsif am.pe_attribute.alias == "retained_size"
           ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-          ev.send("string_data_#{level}")[current_component.id] = params[:"retained_size_#{level}"]
+          ev.send("string_data_#{level}")[current_component.id] = size
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
         end
@@ -100,6 +106,16 @@ class Ge::GeModelsController < ApplicationController
       ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
 
     end
+
+    current_module_project.next.each do |n|
+      ModuleProject::common_attributes(current_module_project, n).each do |ca|
+        ["low", "most_likely", "high"].each do |level|
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { current_component.id => nil } )
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { current_component.id => nil } )
+        end
+      end
+    end
+
     redirect_to main_app.dashboard_path(@project)
   end
 
