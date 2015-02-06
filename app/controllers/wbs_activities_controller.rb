@@ -286,7 +286,7 @@ class WbsActivitiesController < ApplicationController
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
     current_pbs_estimations.each do |est_val|
-      if est_val.pe_attribute.alias == "effort"
+      if est_val.pe_attribute.alias == "effort" || est_val.pe_attribute.alias == "cost"
         if est_val.in_out == 'output'
 
           @results = Hash.new
@@ -299,7 +299,7 @@ class WbsActivitiesController < ApplicationController
 
             level_estimation_value[@pbs_project_element.id] = @tmp_results[level.to_sym]["#{est_val.pe_attribute.alias}_#{current_module_project.id.to_s}".to_sym]
 
-            @results["string_data_#{level}"] = { value: level_estimation_value }
+            @results["string_data_#{level}"] = level_estimation_value
           end
 
           probable_estimation_value = Hash.new

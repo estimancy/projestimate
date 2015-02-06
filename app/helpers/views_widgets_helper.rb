@@ -506,9 +506,17 @@ module ViewsWidgetsHelper
         end
 
         begin
-          res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization).round(precision)} #{@wbs_unit}"
+          if estimation_value.pe_attribute.alias == "cost"
+            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], estimation_value, module_project.id)}"
+          else
+            res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization).round(precision)} #{@wbs_unit}"
+          end
         rescue
-          res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization).round(precision)} #{@wbs_unit}"
+          if estimation_value.pe_attribute.alias == "cost"
+            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], estimation_value, module_project.id)}"
+          else
+            res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization).round(precision)} #{@wbs_unit}"
+          end
         end
 
         res << "</td>"

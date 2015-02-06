@@ -925,7 +925,7 @@ module ProjectsHelper
     elsif est_val_pe_attribute.alias == "effort"
       "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
     elsif est_val_pe_attribute.alias == "cost"
-      "#{convert(value, @project.organization).round(precision)} #{get_attribute_unit(est_val_pe_attribute)}"
+      "#{value} #{get_attribute_unit(est_val_pe_attribute)}"
     else
       case est_val_pe_attribute
         when 'date'
