@@ -234,7 +234,6 @@ class WbsActivitiesController < ApplicationController
     authorize! :manage, WbsActivity
     begin
       wbs_activity = WbsActivity.find(params[:id])
-      #wbs_activity.record_status = @defined_status
       wbs_activity_root_element = WbsActivityElement.where('wbs_activity_id = ? and is_root = ?', wbs_activity.id, true).first
 
       wbs_activity.transaction do
@@ -278,6 +277,7 @@ class WbsActivitiesController < ApplicationController
     @pbs_project_element = current_component
     @tmp_results = Hash.new
     effort_unit_coefficient = current_component.wbs_activity.effort_unit_coefficient.to_f
+    ratio_reference = WbsActivityRatio.find(params[:ratio])
 
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
@@ -288,7 +288,7 @@ class WbsActivitiesController < ApplicationController
         tmp_prbl = Array.new
 
         ["low", "most_likely", "high"].each do |level|
-          eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient)
+          eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient, ratio_reference)
 
           @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
 
@@ -384,6 +384,11 @@ class WbsActivitiesController < ApplicationController
         est_val.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
+
+    wai = WbsActivityInput.where(module_project_id: current_module_project.id).first
+    wai.wbs_activity_ratio_id = params[:ratio].to_i
+    wai.comment = params[:comment][wai.id.to_s]
+    wai.save
 
     current_module_project.next.each do |n|
       ModuleProject::common_attributes(current_module_project, n).each do |ca|

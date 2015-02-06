@@ -415,7 +415,7 @@ class ProjectsController < ApplicationController
     @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module]).map{|i| [i.title,i.id]}
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
 
     # Get the project's current wbs-activity et its Ratio
     @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
@@ -844,13 +844,18 @@ class ProjectsController < ApplicationController
       default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
       my_module_project.view_id = default_view_for_widgets.id
 
+      my_module_project.save
+
       #si le module est un module generic on l'associe le module project
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "effort_breakdown"
-        my_module_project.wbs_activity_id = params[:module_selected].split(',').first
+        wbs_id = params[:module_selected].split(',').first.to_i
+        my_module_project.wbs_activity_id = wbs_id
+        WbsActivityInput.create(module_project_id: my_module_project.id,
+                                wbs_activity_id: wbs_id)
       elsif @pemodule.alias == "expert_judgement"
         eji_id = params[:module_selected].split(',').first
         my_module_project.expert_judgement_instance_id = eji_id.to_i
