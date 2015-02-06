@@ -299,7 +299,7 @@ class WbsActivitiesController < ApplicationController
 
             level_estimation_value[@pbs_project_element.id] = @tmp_results[level.to_sym]["#{est_val.pe_attribute.alias}_#{current_module_project.id.to_s}".to_sym]
 
-            @results["string_data_#{level}"] = level_estimation_value
+            @results["string_data_#{level}"] = { value: level_estimation_value }
           end
 
           probable_estimation_value = Hash.new
@@ -374,7 +374,6 @@ class WbsActivitiesController < ApplicationController
             level_estimation_value = Hash.new
             level_estimation_value[@pbs_project_element.id] = params[:values][level].to_i * effort_unit_coefficient
             in_result["string_data_#{level}"] = level_estimation_value
-
             tmp_prbl << level_estimation_value[@pbs_project_element.id]
           end
           est_val.update_attributes(in_result)

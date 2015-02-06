@@ -422,6 +422,8 @@ module ViewsWidgetsHelper
     module_project = ModuleProject.find(module_project_id)
     pemodule = module_project.pemodule
 
+    precision = estimation_value.pe_attribute.precision.nil? ? user_number_precision : estimation_value.pe_attribute.precision
+
     # Only the Modules with activities
     with_activities = pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
     return res unless with_activities
@@ -441,11 +443,16 @@ module ViewsWidgetsHelper
 
     res << " <table class='table table-condensed table-bordered table_effort_per_phase'>
                <tr><th rowspan=#{rowspan}>Phases</th>"
+
     # Get the module_project probable estimation values for showing element consistency
     probable_est_value_for_consistency = nil
     pbs_level_data_for_consistency = Hash.new
     probable_est_value_for_consistency = estimation_value.send("string_data_probable")
-    res << "<th colspan='#{colspan}'><span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'> #{estimation_value.pe_attribute.name} (#{get_attribute_unit(estimation_value.pe_attribute)})</span></th>"
+
+    res << "<th colspan='#{colspan}'>
+              <span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'> #{estimation_value.pe_attribute.name} (#{get_attribute_unit(estimation_value.pe_attribute)})
+              </span>
+            </th>"
 
     # For is_consistent purpose
     levels.each do |level|
@@ -464,46 +471,42 @@ module ViewsWidgetsHelper
       end
       res << '</tr>'
     end
+
     module_project.wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
-
-      #pbs_probable_for_consistency = probable_est_value_for_consistency.nil? ? nil : probable_est_value_for_consistency[pbs_project_element.id]
-      #wbs_activity_elt_consistency = (pbs_probable_for_consistency.nil? || pbs_probable_for_consistency[wbs_activity_elt.id].nil?) ? false : pbs_probable_for_consistency[wbs_activity_elt.id][:is_consistent]
-      #show_consistency_class = nil
-      #unless wbs_activity_elt_consistency || module_project.pemodule.alias == "effort_breakdown"
-      #  show_consistency_class = "<span class='icon-warning-sign not_consistent attribute_tooltip' title='<strong>#{I18n.t(:warning_caution)}</strong> </br>  #{I18n.t(:warning_wbs_not_complete, :value => wbs_activity_elt.name)}'></span>"
-      #end
-
       #For wbs-activity-completion node consistency
       completion_consistency = ""
       title = ""
-      res << "<tr> <td> <span class='tree_element_in_out' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{wbs_activity_elt.name} </span> </td>"
+      res << "<tr>
+                <td>
+                  <span class='tree_element_in_out' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{wbs_activity_elt.name} </span>
+                </td>"
 
       # Value is in bold for the WBS root element
       bold_class = ""
-      #unless added_wbs_root.nil?
-      #  if wbs_activity_elt.id == added_wbs_root.id
-      #    bold_class = "strong"
-      #  end
-      #end
 
       levels.each do |level|
         res << "<td class=#{bold_class} >"
         level_estimation_values = Hash.new
         level_estimation_values = estimation_value.send("string_data_#{level}")
-        #if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
-        #  res << ' - '
-        #else
+
+        if wbs_activity_elt.is_root?
           begin
-            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], estimation_value, module_project_id)}"
+            @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization)
           rescue
-            res << "#{display_value(level_estimation_values[pbs_project_element.id], estimation_value, module_project_id)}"
+            @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization)
           end
-        #end
+        end
+
+        begin
+          res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization).round(precision)} #{@wbs_unit}"
+        rescue
+          res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization).round(precision)} #{@wbs_unit}"
+        end
+
         res << "</td>"
       end
       res << '</tr>'
     end
-
     res << '</table>'
     res
   end
