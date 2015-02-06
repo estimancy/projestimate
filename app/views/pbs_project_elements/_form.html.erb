@@ -36,21 +36,6 @@
       </table>
       <%# end %>
 
-    <% unless @pbs_project_element.link? %>
-      <span style="color: blue"><%= I18n.t(:text_overloading_default_ratio_table) %></span>
-      <table cellspacing="2" border=0>
-        <tr>
-          <td>
-            <%= f.input :wbs_activity_id, :label => I18n.t(:wbs_activity), :as => :select, :collection => @project_wbs_activity.map { |i| [i.name, i.id] }, :include_blank => (@project_wbs_activity.empty? ? I18n.t(:no_wbs_activity_in_project) : I18n.t('helpers.select.prompt')) %>
-          </td>
-          <td>&nbsp;</td>
-          <td>
-            <%= f.input :wbs_activity_ratio_id, :label => I18n.t(:label_wbs_activity_ratio), :as => :select, :collection => @pbs_wbs_activity_ratios.map { |i| [i.name, i.id] }, :include_blank => I18n.t('helpers.select.prompt') %>
-          </td>
-        </tr>
-      </table>
-    <% end %>
-
     <table cellspacing="2" border="0">
       <tr>
         <td><%= f.input :is_completed, :label => I18n.t(:label_is_completed) %></td>

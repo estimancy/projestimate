@@ -109,7 +109,6 @@ class ProjectsController < ApplicationController
 
     @user = current_user
     @pemodules ||= Pemodule.all
-    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @module_project = current_module_project
     @show_hidden = 'true'
 
@@ -117,13 +116,6 @@ class ProjectsController < ApplicationController
 
     #set_breadcrumbs @project.title => edit_project_path(@project)
     set_breadcrumbs "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => edit_project_path(@project)
-
-    # Get the project default RATIO
-    # Get the wbs_project_element which contain the wbs_activity_ratio
-    project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first
-    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
-    @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
     @project_organization = @project.organization
     @module_projects = @project.module_projects
@@ -271,7 +263,6 @@ class ProjectsController < ApplicationController
     current_user_ps.user = current_user
     current_user_ps.project_security_level = full_control_security_level
 
-    @wbs_activity_elements = []
     @project.is_locked = false
 
     if @project.start_date.nil? or @project.start_date.blank?
@@ -286,10 +277,7 @@ class ProjectsController < ApplicationController
 
           #New default Pe-Wbs-Project
           pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
-          pe_wbs_project_activity = @project.pe_wbs_projects.build(:name => "#{@project.title} WBS-Activity", :wbs_type => 'Activity')
-
           pe_wbs_project_product.add_to_transaction
-          pe_wbs_project_activity.add_to_transaction
 
           pe_wbs_project_product.save!
           ##New root Pbs-Project-Element
@@ -299,19 +287,8 @@ class ProjectsController < ApplicationController
                                                                                   :position => 0,
                                                                                   :start_date => Time.now)
           pbs_project_element.add_to_transaction
-
           pbs_project_element.save!
           pe_wbs_project_product.save!
-
-          pe_wbs_project_activity.save!
-          ##New Root Wbs-Project-Element
-          wbs_project_element = pe_wbs_project_activity.wbs_project_elements.build(:name => "#{@project.title} - WBS-Activity",
-                                                                                   :is_root => true,
-                                                                                   :description => 'WBS-Activity Root Element',
-                                                                                   :author_id => current_user.id)
-          wbs_project_element.add_to_transaction
-          wbs_project_element.save!
-
 
           #Get the initialization module from ApplicationController
           #When creating project, we need to create module_projects for created initialization
@@ -388,22 +365,11 @@ class ProjectsController < ApplicationController
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
-    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-    @wbs_activity_ratios = []
+    #@pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
 
     # Get the max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
-
-    defined_wbs_activities = @project.organization.wbs_activities
-    @wbs_activities = defined_wbs_activities #.reject { |i| @project.included_wbs_activities.include?(i.id) }
-    @wbs_activity_elements = []
-    @wbs_activities.each do |wbs_activity|
-      elements_root = wbs_activity.wbs_activity_elements.elements_root.first
-      unless elements_root.nil?
-        @wbs_activity_elements << elements_root #wbs_activity.wbs_activity_elements.last.root
-      end
-    end
 
     @guw_module = Pemodule.where(alias: "guw").first
     @ge_module = Pemodule.where(alias: "ge").first
@@ -416,21 +382,6 @@ class ProjectsController < ApplicationController
     @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
     @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
-
-    # Get the project's current wbs-activity et its Ratio
-    @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
-    if ! @project_current_wbs_activities.nil?
-      @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
-      @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
-      unless @project_current_wbs_activity.nil?
-        @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
-      end
-    end
-    # Get the project default RATIO
-    project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
-    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
-    @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
     #Project tree as JSON DATA for the graphical representation
     project_root = @project.root
@@ -473,25 +424,9 @@ class ProjectsController < ApplicationController
       project_root.save
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
-      @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
+      #@pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
       @wbs_activity_elements = []
       @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
-      @wbs_activity_ratios = []
-
-      # Get the project's current wbs-activity et its Ratio
-      @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
-      if ! @project_current_wbs_activities.nil?
-        @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
-        @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
-        unless @project_current_wbs_activity.nil?
-          @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
-        end
-      end
-      # Get the project default RATIO
-      project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
-      wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-      # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
-      @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
       @project.organization.users.uniq.each do |u|
         ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
@@ -604,7 +539,6 @@ class ProjectsController < ApplicationController
         #redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, projects_path), notice: "#{I18n.t(:notice_project_successful_updated)}"
         redirect_to edit_organization_path(@project.organization)
       else
-        @wbs_activity_ratios = WbsActivityRatio.all
         render :action => 'edit'
       end
     end
@@ -625,40 +559,13 @@ class ProjectsController < ApplicationController
     end
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
-    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-    @wbs_activity_elements = []
+    #@pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
-    @wbs_activity_ratios = []
-
-    # Get the project's current wbs-activity et its Ratio
-    @project_current_wbs_activities = @pe_wbs_project_activity.wbs_activities.nil? ? nil : @pe_wbs_project_activity.wbs_activities.first
-    if ! @project_current_wbs_activities.nil?
-      @project_current_wbs_activity_elts = @project_current_wbs_activities.wbs_activity_elements
-      @project_current_wbs_activity = @project_current_wbs_activity_elts.nil? ? nil : @project_current_wbs_activity_elts.elements_root.first
-      unless @project_current_wbs_activity.nil?
-        @wbs_activity_ratios = @pe_wbs_project_activity.wbs_activities.first.wbs_activity_ratios
-      end
-    end
-    # Get the project default RATIO
-    project_wbs_project_elt_root = @pe_wbs_project_activity.wbs_project_elements.elements_root.first  # Get the wbs_project_element which contain the wbs_activity_ratio
-    wbs_project_elt_with_ratio = project_wbs_project_elt_root.children.where('is_added_wbs_root = ?', true).first
-    # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
-    @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
     # Get the max X and Y positions of modules
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    #defined_wbs_activities = WbsActivity.where('record_status_id = ?', @defined_status.id).all
-    defined_wbs_activities = @project.organization.wbs_activities.where('record_status_id = ?', @defined_status.id).all
-    @wbs_activities = defined_wbs_activities.reject { |i| @project.included_wbs_activities.include?(i.id) }
-    @wbs_activity_elements = []
-    @wbs_activities.each do |wbs_activity|
-      elements_root = wbs_activity.wbs_activity_elements.elements_root.first
-      unless elements_root.nil?
-        @wbs_activity_elements << elements_root #wbs_activity.wbs_activity_elements.last.root
-      end
-    end
   end
 
   def destroy
@@ -1334,7 +1241,7 @@ public
 
       #Managing the component tree : PBS
       pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
-      pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
+      #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
       # For PBS
       new_prj_components = pe_wbs_product.pbs_project_elements
@@ -1667,7 +1574,7 @@ public
 
           old_prj_copy_number = old_prj.copy_number
           old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
-          old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
+          #old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
 
 
           new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
@@ -1685,13 +1592,13 @@ public
 
             #Managing the component tree : PBS
             pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
-            pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
+            #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
             pe_wbs_product.name = old_prj_pe_wbs_product_name
-            pe_wbs_activity.name = old_prj_pe_wbs_activity_name
+            #pe_wbs_activity.name = old_prj_pe_wbs_activity_name
 
             pe_wbs_product.save
-            pe_wbs_activity.save
+            #pe_wbs_activity.save
 
             # For PBS
             new_prj_components = pe_wbs_product.pbs_project_elements
@@ -1713,18 +1620,18 @@ public
             end
 
             # For WBS
-            new_prj_wbs = pe_wbs_activity.wbs_project_elements
-            new_prj_wbs.each do |new_wbs|
-              unless new_wbs.is_root?
-                new_ancestor_ids_list = []
-                new_wbs.ancestor_ids.each do |ancestor_id|
-                  ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-                  new_ancestor_ids_list.push(ancestor_id)
-                end
-                new_wbs.ancestry = new_ancestor_ids_list.join('/')
-                new_wbs.save
-              end
-            end
+            #new_prj_wbs = pe_wbs_activity.wbs_project_elements
+            #new_prj_wbs.each do |new_wbs|
+            #  unless new_wbs.is_root?
+            #    new_ancestor_ids_list = []
+            #    new_wbs.ancestor_ids.each do |ancestor_id|
+            #      ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
+            #      new_ancestor_ids_list.push(ancestor_id)
+            #    end
+            #    new_wbs.ancestry = new_ancestor_ids_list.join('/')
+            #    new_wbs.save
+            #  end
+            #end
 
             # For ModuleProject associations
             old_prj.module_projects.group(:id).each do |old_mp|
@@ -1733,6 +1640,28 @@ public
                 new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
                 new_mp.associated_module_projects << new_associated_mp
               end
+
+              #Copy the views and widgets for the new project
+              new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+              #We have to copy all the selected view's widgets in a new view for the current module_project
+              if old_mp.view
+                old_mp_view_widgets = old_mp.view.views_widgets.where(module_project_id: old_mp.id).all
+                old_mp_view_widgets.each do |view_widget|
+                  widget_est_val = view_widget.estimation_value
+                  unless widget_est_val.nil?
+                    in_out = widget_est_val.in_out
+                    widget_pe_attribute_id = widget_est_val.pe_attribute_id
+                    estimation_value = new_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+                    estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+                    widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_mp.id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+                                                     icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
+                                                     width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+                  end
+                end
+              end
+              #update the new module_project view
+              new_mp.view = new_view
+              new_mp.save
             end
 
             flash[:success] = I18n.t(:notice_project_successful_checkout)

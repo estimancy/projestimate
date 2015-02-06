@@ -44,16 +44,6 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.new
     set_page_title("New #{@pbs_project_element.name}")
 
-    # get project's wbs-activity and ratios
-    @project_wbs_activity = []
-    uniq_wbs_activity = @project.project_wbs_activity  # Select only Wbs-Activities affected to current project's organization
-    if uniq_wbs_activity.nil?
-      @pbs_wbs_activity_ratios = []
-    else
-      @project_wbs_activity << uniq_wbs_activity
-      @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
-    end
-
     @parent = PbsProjectElement.find(params[:parent_id])
 
     @components = @project.pbs_project_elements
@@ -65,16 +55,6 @@ class PbsProjectElementsController < ApplicationController
 
     @pbs_project_element = PbsProjectElement.find(params[:id])
     set_page_title("Editing #{@pbs_project_element.name}")
-
-    @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-    @project_wbs_activity = []
-    uniq_wbs_activity = @project.project_wbs_activity
-    if uniq_wbs_activity.nil?
-      @pbs_wbs_activity_ratios = []
-    else
-      @project_wbs_activity << uniq_wbs_activity
-      @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
-    end
 
     @parent = @pbs_project_element.parent
 
@@ -102,14 +82,6 @@ class PbsProjectElementsController < ApplicationController
       render :partial => "pbs_project_elements/refresh_tree"
     else
       flash.now[:error] = I18n.t (:error_pbs_project_element_failed_update)
-      @project_wbs_activity = []
-      uniq_wbs_activity = @project.project_wbs_activity  # Select only Wbs-Activities affected to current project's organization
-      if uniq_wbs_activity.nil?
-        @pbs_wbs_activity_ratios = []
-      else
-        @project_wbs_activity << uniq_wbs_activity
-        @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
-      end
 
       if params[:work_element_type] == "folder"
         @work_element_type = WorkElementType.find_by_alias("folder")
@@ -151,16 +123,6 @@ class PbsProjectElementsController < ApplicationController
 
     else
       flash[:error] = I18n.t (:error_pbs_project_element_failed_update)
-      @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
-      # get project's wbs-activity and ratios
-      @project_wbs_activity = []
-      uniq_wbs_activity = @project.project_wbs_activity  # Select only Wbs-Activities affected to current project's organization
-      if uniq_wbs_activity.nil?
-        @pbs_wbs_activity_ratios = []
-      else
-        @project_wbs_activity << uniq_wbs_activity
-        @pbs_wbs_activity_ratios = uniq_wbs_activity.wbs_activity_ratios
-      end
 
       @components = @project.pbs_project_elements
       render :edit
@@ -175,7 +137,6 @@ class PbsProjectElementsController < ApplicationController
 
     @pbs_project_element = @project.root_component
     @module_projects = @project.module_projects
-
 
     elements_to_up = pbs_project_element.siblings.where("position > ?", pbs_project_element.position ).all
 
