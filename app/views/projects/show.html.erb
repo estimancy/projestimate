@@ -5,7 +5,7 @@
     <ul>
       <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
       <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
-      <li><a href="#tabs-3"><%= I18n.t(:wbs_activity) %></a></li>
+      <!--<li><a href="#tabs-3"><%#= I18n.t(:wbs_activity) %></a></li>-->
       <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
       <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
       <li><a href="#tabs-6"><%= I18n.t(:calendar) %> </a></li>
@@ -70,16 +70,16 @@
       </div>
     </div>
 
-    <div id="tabs-3">
-      <div class="show_list">
-        <span class="pull-right"><%= I18n.t(:label_show_hidden_elements) %> <%= check_box_tag 'show_excluded_elt', true, false, :onchange => 'refresh_me();', :remote => true %></span>
-        <br/>
+    <!--<div id="tabs-3">-->
+      <!--<div class="show_list">-->
+        <!--<span class="pull-right"><%#= I18n.t(:label_show_hidden_elements) %> <%#= check_box_tag 'show_excluded_elt', true, false, :onchange => 'refresh_me();', :remote => true %></span>-->
+        <!--<br/>-->
 
-        <div id="wbs_project_elements_section" class="component_tree">
-          <%= render :partial => 'generate_wbs_project_elt_tree', :object => @pe_wbs_project_activity %>
-        </div>
-      </div>
-    </div>
+        <!--<div id="wbs_project_elements_section" class="component_tree">-->
+          <!--<%#= render :partial => 'generate_wbs_project_elt_tree', :object => @pe_wbs_project_activity %>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
 
     <div id="tabs-4" class="tabs_4_with_estimation_plan2">
       <% if controller.controller_name == 'projects' %>
