@@ -491,9 +491,17 @@ module ViewsWidgetsHelper
 
         if wbs_activity_elt.is_root?
           begin
-            @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization)
+            if estimation_value.pe_attribute.alias == "cost"
+              @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
+            else
+              @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization)
+            end
           rescue
-            @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization)
+            if estimation_value.pe_attribute.alias == "cost"
+              @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
+            else
+              @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization)
+            end
           end
         end
 
