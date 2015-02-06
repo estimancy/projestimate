@@ -12,10 +12,13 @@
 
       <% attr = PeAttribute.find_by_alias("retained_size") %>
       <% previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
-                                             :module_project_id => current_module_project.previous.first.id).first %>
+                                             :module_project_id => current_module_project.previous.first.id,
+                                             :in_out => "output").first %>
 
       <% current_ev = EstimationValue.where(:pe_attribute_id => attr.id,
-                                             :module_project_id => current_module_project.id).first %>
+                                             :module_project_id => current_module_project.id,
+                                             :in_out => "input").first %>
+
       <% component_id = current_component.id %>
       <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
 
