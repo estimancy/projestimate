@@ -432,7 +432,6 @@ class ProjectsController < ApplicationController
     # By default, use the project default Ratio as Reference, unless PSB got its own Ratio
     @project_default_ratio = wbs_project_elt_with_ratio.nil? ? nil : wbs_project_elt_with_ratio.wbs_activity_ratio
 
-
     #Project tree as JSON DATA for the graphical representation
     project_root = @project.root
     project_tree = project_root.subtree
@@ -1352,26 +1351,50 @@ public
       end
 
       # For WBS
-      new_prj_wbs = pe_wbs_activity.wbs_project_elements
-      new_prj_wbs.each do |new_wbs|
-        unless new_wbs.is_root?
-          new_ancestor_ids_list = []
-          new_wbs.ancestor_ids.each do |ancestor_id|
-            ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-            new_ancestor_ids_list.push(ancestor_id)
-          end
-          new_wbs.ancestry = new_ancestor_ids_list.join('/')
-          new_wbs.save
-        end
-      end
+      #new_prj_wbs = pe_wbs_activity.wbs_project_elements
+      #new_prj_wbs.each do |new_wbs|
+      #  unless new_wbs.is_root?
+      #    new_ancestor_ids_list = []
+      #    new_wbs.ancestor_ids.each do |ancestor_id|
+      #      ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
+      #      new_ancestor_ids_list.push(ancestor_id)
+      #    end
+      #    new_wbs.ancestry = new_ancestor_ids_list.join('/')
+      #    new_wbs.save
+      #  end
+      #end
 
       # For ModuleProject associations
       old_prj.module_projects.group(:id).each do |old_mp|
         new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
+
+        # ModuleProject Associations for the new project
         old_mp.associated_module_projects.each do |associated_mp|
           new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
           new_mp.associated_module_projects << new_associated_mp
         end
+
+        #Copy the views and widgets for the new project
+        new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+        #We have to copy all the selected view's widgets in a new view for the current module_project
+        if old_mp.view
+          old_mp_view_widgets = old_mp.view.views_widgets.where(module_project_id: old_mp.id).all
+          old_mp_view_widgets.each do |view_widget|
+            widget_est_val = view_widget.estimation_value
+            unless widget_est_val.nil?
+              in_out = widget_est_val.in_out
+              widget_pe_attribute_id = widget_est_val.pe_attribute_id
+              estimation_value = new_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+              estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+              widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_mp.id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+                                            icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
+                                             width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+            end
+          end
+        end
+        #update the new module_project view
+        new_mp.view = new_view
+        new_mp.save
       end
 
       flash[:success] = I18n.t(:notice_project_successful_duplicated)

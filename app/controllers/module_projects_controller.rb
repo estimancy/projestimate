@@ -75,7 +75,7 @@ class ModuleProjectsController < ApplicationController
             selected_view.views_widgets.each do |view_widget|
               widget_est_val = view_widget.estimation_value
               in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
-              estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).first
+              estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
               estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
               widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
                                                show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
