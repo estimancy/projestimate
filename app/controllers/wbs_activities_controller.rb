@@ -277,6 +277,7 @@ class WbsActivitiesController < ApplicationController
   def save_effort_breakdown
     @pbs_project_element = current_component
     @tmp_results = Hash.new
+    effort_unit_coefficient = current_component.wbs_activity.effort_unit_coefficient.to_f
 
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
@@ -287,7 +288,7 @@ class WbsActivitiesController < ApplicationController
         tmp_prbl = Array.new
 
         ["low", "most_likely", "high"].each do |level|
-          eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f)
+          eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient)
 
           @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
 
@@ -372,10 +373,10 @@ class WbsActivitiesController < ApplicationController
         tmp_prbl = Array.new
         ['low', 'most_likely', 'high'].each do |level|
           level_estimation_value = Hash.new
-          level_estimation_value[@pbs_project_element.id] = params[:values][level]
+          level_estimation_value[@pbs_project_element.id] = params[:values][level].to_i * effort_unit_coefficient
           in_result["string_data_#{level}"] = level_estimation_value
 
-          tmp_prbl << params[:values][level].to_f
+          tmp_prbl << level_estimation_value[@pbs_project_element.id]
         end
 
         est_val.update_attributes(in_result)
