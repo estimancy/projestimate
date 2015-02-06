@@ -50,6 +50,7 @@ class WbsActivity < ActiveRecord::Base
 
   has_many :wbs_activity_elements, :dependent => :destroy
   has_many :wbs_activity_ratios, :dependent => :destroy
+  has_many :wbs_activity_inputs, :dependent => :destroy
 
   has_many :pe_wbs_projects
   has_many :pbs_project_elements

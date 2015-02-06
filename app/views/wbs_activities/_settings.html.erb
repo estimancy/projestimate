@@ -7,6 +7,7 @@
                                :in_out => "output").first %>
 <% component_id = current_component.id %>
 <% organization = @project.organization %>
+<% wai = WbsActivityInput.where(module_project_id: current_module_project.id, wbs_activity_id: current_component.wbs_activity_id).first_or_create! %>
 
 <%= form_tag save_effort_breakdown_path do %>
   <table class="table table-bordered">
@@ -16,12 +17,13 @@
       <th>L</th>
       <th>M</th>
       <th>H</th>
+      <th>Commentaire</th>
     </tr>
     <tr>
       <td>Effort (<%= current_module_project.wbs_activity.effort_unit %>)</td>
 
       <td>
-        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}) %>
+        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id) %>
       </td>
 
       <% if cev.string_data_low[component_id].blank? %>
@@ -41,6 +43,32 @@
       <% else %>
         <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization) %></td>
       <% end %>
+
+      <td>
+        <span class="pull-left" >
+          <%= link_to (wai.comment.nil? || wai.comment.blank?) ? '----' : wai.comment.truncate(25), "#", title: wai.comment, :"data-toggle" => "modal", :"data-target" => "#comment#{wai.id}", :"data-backdrop" => "static"  %>
+        </span>
+        <div class="modal fade" id="comment<%= wai.id %>" tabindex="-1" role="dialog" aria-labelledby="comment_label<%= wai.id %>" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="comment_label<%= wai.id %>">
+                  <b>
+                    <%= wai.wbs_activity.name %>
+                  </b>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <%= text_area_tag "comment[#{wai.id}]", wai.comment, class: "attribute_note_area" %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
+                <button type="submit" class="btn btn-default">Sauvegarder</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
     </tr>
   </table>
   <%= submit_tag "Run Estimation", class: "pull-right btn btn-mini" %>

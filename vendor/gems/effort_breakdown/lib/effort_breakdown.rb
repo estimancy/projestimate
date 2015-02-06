@@ -46,11 +46,12 @@ module EffortBreakdown
 
     attr_accessor :pbs_project_element, :module_project, :input_effort, :project #module input/output parameters
 
-    def initialize(c, mp, e)
+    def initialize(c, mp, e, r)
       #puts "INPUT_DATA = #{module_input_data}"   for ex. : INPUT_DATA = {:effort=>"10", :pbs_project_element_id=>271, :module_project_id=>265}
       @pbs_project_element = c
       @module_project = mp
       @project = @module_project.project
+      @ratio = r
       e.nil? ? @input_effort = nil : @input_effort = e
     end
 
@@ -97,15 +98,11 @@ module EffortBreakdown
       # Get the wbs_activity_element which contain the wbs_activity_ratio
       wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
 
-      # Use project default Ratio, unless PSB got its own Ratio,
-      # If default ratio was defined in PBS, it will override the one defined in module-project
-      ratio_reference = wbs_activity.wbs_activity_ratios.first
-
-      #Get the referenced wbs_activity_elt of the ratio_reference
-      referenced_ratio_elements = WbsActivityRatioElement.where('wbs_activity_ratio_id =? and multiple_references = ?', ratio_reference.id, true)
+      #Get the referenced wbs_activity_elt of the @ratio
+      referenced_ratio_elements = WbsActivityRatioElement.where('wbs_activity_ratio_id =? and multiple_references = ?', @ratio.id, true)
       # If there is no referenced elements, all elements will be consider as references
       if referenced_ratio_elements.nil? || referenced_ratio_elements.empty?
-        referenced_ratio_elements = WbsActivityRatioElement.where('wbs_activity_ratio_id =?', ratio_reference.id)
+        referenced_ratio_elements = WbsActivityRatioElement.where('wbs_activity_ratio_id =?', @ratio.id)
       end
 
       referenced_values_efforts = 0
@@ -123,7 +120,7 @@ module EffortBreakdown
             # Element effort is really computed only on leaf element
             if element.is_childless? || element.has_new_complement_child?
               # Get the ratio Value of current element
-              corresponding_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, element.id).first
+              corresponding_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', @ratio.id, element.id).first
               unless corresponding_ratio_elt.nil?
                 corresponding_ratio_value = corresponding_ratio_elt.ratio_value
                 current_output_effort = @input_effort.nil? ? nil : (@input_effort.to_f * corresponding_ratio_value.to_f / referenced_values_efforts)

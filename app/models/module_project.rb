@@ -63,6 +63,8 @@ class ModuleProject < ActiveRecord::Base
   has_many :second_module_projects, :class_name => 'AssociatedModuleProject', :foreign_key => 'associated_module_project_id'
   has_many :inverse_associated_module_projects, :through => :second_module_projects, :source => :module_project
 
+  has_many :wbs_activity_inputs, :dependent => :destroy
+
   default_scope :order => 'position_x ASC, position_y ASC'
 
   amoeba do
