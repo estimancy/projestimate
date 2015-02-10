@@ -507,15 +507,15 @@ module ViewsWidgetsHelper
 
         begin
           if estimation_value.pe_attribute.alias == "cost"
-            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].round(precision), estimation_value, module_project.id)}"
+            res << "#{convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], 2)}"
           else
-            res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization).round(precision)} #{@wbs_unit}"
+            res << "#{convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
           end
         rescue
           if estimation_value.pe_attribute.alias == "cost"
-            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], estimation_value, module_project.id)}"
+            res << "#{ convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], 2) }"
           else
-            res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization).round(precision)} #{@wbs_unit}"
+            res << "#{ convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}"
           end
         end
 

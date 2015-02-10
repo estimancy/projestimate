@@ -143,6 +143,7 @@ class ViewsWidgetsController < ApplicationController
         ProjectField.create(project_id: @project.id,
                             field_id: params["field"],
                             views_widget_id: @views_widget.id,
+                            #TODO : champs dans la base / coefficient de champs
                             value: get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show])
       else
         pf.value = get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show]

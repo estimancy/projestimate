@@ -35,15 +35,15 @@
         <tr>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id), class: "input-medium" %>
+              <%= text_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id), class: "input-medium", readonly: @ge_model.enabled_input %>
             </td>
           <% end %>
           <td>
-            <%= text_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id), class: "input-medium" %>
+            <%= text_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id), class: "input-medium", readonly: @ge_model.enabled_input %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id), class: "input-medium" %>
+              <%= text_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id), class: "input-medium", readonly: @ge_model.enabled_input %>
             </td>
           <% end %>
         </tr>

@@ -921,9 +921,9 @@ module ProjectsHelper
     est_val_pe_attribute = est_val.pe_attribute
     precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
     if est_val_pe_attribute.alias == "retained_size" || est_val_pe_attribute.alias == "theorical_size"
-      "#{value.to_f} #{module_project.size}"
+      "#{convert_with_precision(value.to_f, precision)} #{module_project.size}"
     elsif est_val_pe_attribute.alias == "effort"
-      "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
+      "#{convert_with_precision(convert(value, @project.organization), precision)} #{convert_label(value, @project.organization)}"
     elsif est_val_pe_attribute.alias == "cost"
       "#{value} #{get_attribute_unit(est_val_pe_attribute)}"
     else
@@ -931,7 +931,7 @@ module ProjectsHelper
         when 'date'
           display_date(value)
         when 'float'
-          "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
+          "#{ convert_with_precision(convert(value, @project.organization), precision) } #{convert_label(value, @project.organization)}"
         when 'integer'
           "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
         else
@@ -1044,7 +1044,6 @@ module ProjectsHelper
     end
   end
 
-
   def show_project_history_graph(project)
     require 'gratr/import'
     require 'gratr/dot'
@@ -1115,6 +1114,10 @@ module ProjectsHelper
   # Got the right to delete the estimation
   def can_delete_estimation?(estimation)
     return can_do_action_on_estimation?(estimation, "delete_project")
+  end
+
+  def convert_with_precision(value, precision)
+    "%.#{precision}f" % value
   end
 
 
