@@ -507,7 +507,7 @@ module ViewsWidgetsHelper
 
         begin
           if estimation_value.pe_attribute.alias == "cost"
-            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], estimation_value, module_project.id)}"
+            res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].round(precision), estimation_value, module_project.id)}"
           else
             res << "#{convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization).round(precision)} #{@wbs_unit}"
           end
