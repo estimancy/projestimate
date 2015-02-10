@@ -96,6 +96,7 @@ class ViewsWidgetsController < ApplicationController
 
     respond_to do |format|
       if @views_widget.save
+
         unless params["field"].blank?
           ProjectField.create( project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
                                value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
@@ -139,10 +140,15 @@ class ViewsWidgetsController < ApplicationController
     else
       pf = ProjectField.where(field_id: params["field"]).first
       if pf.nil?
-        ProjectField.create(project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
+        ProjectField.create(project_id: @project.id,
+                            field_id: params["field"],
+                            views_widget_id: @views_widget.id,
                             value: get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show])
       else
         pf.value = get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show]
+        pf.views_widget_id = @views_widget.id
+        pf.field_id = params["field"].to_i
+        pf.project_id = @project.id
         pf.save
       end
     end
