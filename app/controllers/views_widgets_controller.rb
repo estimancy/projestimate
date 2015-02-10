@@ -139,14 +139,14 @@ class ViewsWidgetsController < ApplicationController
       pfs.destroy_all
     else
       pf = ProjectField.where(field_id: params["field"]).first
+      value = @views_widget.estimation_value.string_data_probable[current_component.id]
       if pf.nil?
         ProjectField.create(project_id: @project.id,
                             field_id: params["field"],
                             views_widget_id: @views_widget.id,
-                            #TODO : champs dans la base / coefficient de champs
-                            value: get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show])
+                            value: value)
       else
-        pf.value = get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show]
+        pf.value = value
         pf.views_widget_id = @views_widget.id
         pf.field_id = params["field"].to_i
         pf.project_id = @project.id

@@ -32,7 +32,7 @@
         <th class="text_left"><%= I18n.t(:label_product_name) %></th>
         <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
         <% @organization.fields.each do |field| %>
-            <th><%= field.name  %></th>
+          <th><%= field.name  %></th>
         <% end %>
 
         <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
@@ -53,9 +53,10 @@
             <td class="center"><%= project.version %></td>
             <td class="text_field_text_overflow"><%= project.root_component %></td>
             <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
+
             <% @organization.fields.each do |field| %>
-                <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
-                <td class="project_field_text_overflow"><%= pf.nil? ? '-' : pf.value.to_f.round(2) * field.coefficient.to_f %></td>
+              <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
+              <td class="project_field_text_overflow"><%= pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) %></td>
             <% end %>
 
             <td class="center"><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
@@ -71,9 +72,9 @@
 
               <%# if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
               <% if can?(:commit_project, project) || can?(:manage, project) %>
-                  <% if can_modify_estimation?(project) %>
-                      <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
-                  <% end %>
+                <% if can_modify_estimation?(project) %>
+                  <%= link_to('', { :controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
+                <% end %>
               <% end %>
 
               <%# if (project.checkpoint? || project.released?) && ((can? :commit_project, project)||(can? :manage, project)) %>
@@ -87,9 +88,9 @@
               <% end %>
 
               <% if (can? :delete_project, project) || (can? :manage, project) %>
-                  <% if project.is_childless? && can_delete_estimation?(project) %>   <%# if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
-                      <%= (link_to('', confirm_deletion_path(project.id), :class => 'button_attribute_tooltip icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
-                  <% end %>
+                <% if project.is_childless? && can_delete_estimation?(project) %>   <%# if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
+                  <%= (link_to('', confirm_deletion_path(project.id), :class => 'button_attribute_tooltip icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
+                <% end %>
               <% end %>
 
               <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart pull-left', :title => I18n.t('label_project_history')) %>

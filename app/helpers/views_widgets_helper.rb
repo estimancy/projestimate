@@ -450,7 +450,8 @@ module ViewsWidgetsHelper
     probable_est_value_for_consistency = estimation_value.send("string_data_probable")
 
     res << "<th colspan='#{colspan}'>
-              <span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'> #{estimation_value.pe_attribute.name}
+              <span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'>
+                #{estimation_value.pe_attribute.name} (#{@project.organization.currency})
               </span>
             </th>"
 
