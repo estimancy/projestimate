@@ -49,6 +49,7 @@ class ModuleProject < ActiveRecord::Base
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
   has_many :guw_unit_of_works, class_name: "Guw::GuwUnitOfWork"
+
   has_many :estimation_values, :dependent => :destroy
   has_many :input_cocomos
   has_many :factors, :through => :input_cocomos

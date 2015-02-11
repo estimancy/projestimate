@@ -286,7 +286,7 @@ class WbsActivitiesController < ApplicationController
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
     current_pbs_estimations.each do |est_val|
-      if est_val.pe_attribute.alias == "effort" ||
+      if est_val.pe_attribute.alias == "effort"
         if est_val.in_out == 'output'
 
           @results = Hash.new
