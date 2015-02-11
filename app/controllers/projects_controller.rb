@@ -1242,7 +1242,6 @@ public
     @result_hash
   end
 
-
   #Method to duplicate project and associated pe_wbs_project
   def duplicate
     authorize! :create_project_from_template, Project
@@ -1257,40 +1256,18 @@ public
 
       #Managing the component tree : PBS
       pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
-      #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
       # For PBS
       new_prj_components = pe_wbs_product.pbs_project_elements
       new_prj_components.each do |new_c|
-        unless new_c.is_root?
-          new_ancestor_ids_list = []
-          new_c.ancestor_ids.each do |ancestor_id|
-            ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
-            new_ancestor_ids_list.push(ancestor_id)
-          end
-          new_c.ancestry = new_ancestor_ids_list.join('/')
-
-          # For PBS-Project-Element Links with modules
-          old_pbs = PbsProjectElement.find(new_c.copy_id)
-          new_c.module_projects = old_pbs.module_projects
-
-          new_c.save
+        new_ancestor_ids_list = []
+        new_c.ancestor_ids.each do |ancestor_id|
+          ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
+          new_ancestor_ids_list.push(ancestor_id)
         end
+        new_c.ancestry = new_ancestor_ids_list.join('/')
+        new_c.save
       end
-
-      # For WBS
-      #new_prj_wbs = pe_wbs_activity.wbs_project_elements
-      #new_prj_wbs.each do |new_wbs|
-      #  unless new_wbs.is_root?
-      #    new_ancestor_ids_list = []
-      #    new_wbs.ancestor_ids.each do |ancestor_id|
-      #      ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-      #      new_ancestor_ids_list.push(ancestor_id)
-      #    end
-      #    new_wbs.ancestry = new_ancestor_ids_list.join('/')
-      #    new_wbs.save
-      #  end
-      #end
 
       # For ModuleProject associations
       old_prj.module_projects.group(:id).each do |old_mp|
@@ -1307,7 +1284,7 @@ public
 
         #We have to copy all the selected view's widgets in a new view for the current module_project
         if old_mp.view
-          old_mp_view_widgets = old_mp.view.views_widgets.all#.where(module_project_id: old_mp.id).all
+          old_mp_view_widgets = old_mp.view.views_widgets.all
           old_mp_view_widgets.each do |view_widget|
             new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
             new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
@@ -1316,10 +1293,25 @@ public
               in_out = widget_est_val.in_out
               widget_pe_attribute_id = widget_est_val.pe_attribute_id
               estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+
+              #new_prj_components.each
+              #  new_prj_components.each do |element|
+              #    estimation_value.string_data_low[999] = nil
+              #    estimation_value.string_data_most_likely[999] = nil
+              #    estimation_value.string_data_high[999] = nil
+              #
+              #    estimation_value.string_data_probable[element.id.to_s] = nil
+              #    estimation_value.string_data_probable[element.id.to_s] = nil
+              #    estimation_value.save
+              #
+              #    p estimation_value
+              #  end
+              #end
+
               estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
               widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
-                                            icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
-                                            width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+                                               icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
+                                               width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
             end
           end
         end
