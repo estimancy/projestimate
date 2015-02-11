@@ -12,7 +12,7 @@
       <%= I18n.t(:groups) %>
     </b>
     <% if can? :show_groups, Group %>
-      <%= render :partial => 'organizations/groups' %>
+      <%= render :partial => 'organizations/groups', object: @groups %>
     <% else %>
       <div class="red_color"><%= I18n.t(:notice_cannot_view_groups) %></div>
     <% end %>

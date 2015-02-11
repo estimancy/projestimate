@@ -61,7 +61,7 @@ class PbsProjectElement < ActiveRecord::Base
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
     enable
-    exclude_association [:estimation_values]
+    exclude_association [:estimation_values, :views_widgets]
 
     customize(lambda { |original_pbs_project_elt, new_pbs_project_elt|
       new_pbs_project_elt.copy_id = original_pbs_project_elt.id

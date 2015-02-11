@@ -48,7 +48,8 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :wbs_activity
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
-  has_many :guw_unit_of_works, class_name: "Guw::GuwUnitOfWork"
+  has_many :guw_unit_of_works, :through => :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWork"
+
   has_many :estimation_values, :dependent => :destroy
   has_many :input_cocomos
   has_many :factors, :through => :input_cocomos
@@ -70,7 +71,7 @@ class ModuleProject < ActiveRecord::Base
   amoeba do
     enable
     ###include_field [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works, :views_widgets]
-    include_association [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works]
+    include_association [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups]
 
     customize(lambda { |original_module_project, new_module_project|
       new_module_project.copy_id = original_module_project.id

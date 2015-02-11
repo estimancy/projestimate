@@ -9,10 +9,10 @@ describe ProjectsController do
     @module_project = FactoryGirl.create(:module_project)
     @project = FactoryGirl.create(:project)
     @pe_wbs_product = FactoryGirl.create(:pe_wbs_project, :wbs_product, project: @project )
-    @pe_wbs_activity = FactoryGirl.create(:pe_wbs_project, :wbs_activity, project: @project)
+    #@pe_wbs_activity = FactoryGirl.create(:pe_wbs_project, :wbs_activity, project: @project)
 
     @pbs_root = FactoryGirl.create(:pbs_folder, is_root: true, pe_wbs_project: @pe_wbs_product)
-    @wbs_root = FactoryGirl.create(:wbs_project_element, is_root: true, pe_wbs_project: @pe_wbs_activity)
+    #@wbs_root = FactoryGirl.create(:wbs_project_element, is_root: true, pe_wbs_project: @pe_wbs_activity)
 
     @user = FactoryGirl.create(:user)
 

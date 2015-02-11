@@ -2,10 +2,12 @@
 
   <ul class="nav nav-pills" id="myTab">
     <li class="active"><a href="#organization" data-toggle="tab">Définition</a></li>
-    <li><a href="#authorizations" data-toggle="tab">Autorisation </a></li>
-    <li><a href="#estimations" data-toggle="tab">Estimations </a></li>
-    <li><a href="#settings" data-toggle="tab">Paramétrage </a></li>
-    <li><a href="#module_estimations" data-toggle="tab">Modules</a></li>
+    <% if action_name.in?(%w(edit update)) %>
+        <li><a href="#authorizations" data-toggle="tab">Autorisation </a></li>
+        <li><a href="#estimations" data-toggle="tab">Estimations </a></li>
+        <li><a href="#settings" data-toggle="tab">Paramétrage </a></li>
+        <li><a href="#module_estimations" data-toggle="tab">Modules</a></li>
+    <% end %>
   </ul>
 
   <div class="tab-content">
@@ -97,8 +99,10 @@
       <% end %>
     </div>
 
+  <% if action_name.in?(%w(edit update)) %>
+
     <div class="tab-pane" id="authorizations">
-      <%= render partial: "authorizations" %>
+      <%= render partial: "authorizations", object: @groups %>
     </div>
 
     <div class="tab-pane" id="estimations">
@@ -146,4 +150,6 @@
     <div class="tab-pane" id="module_estimations">
       <%= render partial: "module_estimations" %>
     </div>
+
+  <% end %>
 </div>

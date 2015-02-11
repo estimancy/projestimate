@@ -1288,25 +1288,44 @@ public
 
         #Copy the views and widgets for the new project
         new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+
         #We have to copy all the selected view's widgets in a new view for the current module_project
         if old_mp.view
-          old_mp_view_widgets = old_mp.view.views_widgets.where(module_project_id: old_mp.id).all
+          old_mp_view_widgets = old_mp.view.views_widgets.all#.where(module_project_id: old_mp.id).all
           old_mp_view_widgets.each do |view_widget|
+            new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
+            new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
             widget_est_val = view_widget.estimation_value
             unless widget_est_val.nil?
               in_out = widget_est_val.in_out
               widget_pe_attribute_id = widget_est_val.pe_attribute_id
-              estimation_value = new_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+              estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
               estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
-              widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_mp.id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+              widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
                                             icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
-                                             width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+                                            width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
             end
           end
         end
         #update the new module_project view
-        new_mp.view = new_view
-        new_mp.save
+        new_mp.update_attribute(:view_id, new_view.id)
+
+        #Update the Unit of works's groups
+        new_mp.guw_unit_of_work_groups.each do |guw_group|
+          new_pbs_project_element = new_prj_components.find_by_copy_id(guw_group.pbs_project_element_id)
+          new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+          guw_group.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+
+          # Update the group unit of works and attributes
+          guw_group.guw_unit_of_works.each do |guw_uow|
+            new_uow_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, guw_uow.module_project_id)
+            new_uow_mp_id = new_uow_mp.nil? ? nil : new_uow_mp.id
+
+            new_pbs = new_prj_components.find_by_copy_id(guw_uow.pbs_project_element_id)
+            new_pbs_id = new_pbs.nil? ? nil : new_pbs.id
+            guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id)
+          end
+        end
       end
 
       flash[:success] = I18n.t(:notice_project_successful_duplicated)

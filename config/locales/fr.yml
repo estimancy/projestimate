@@ -1395,3 +1395,8 @@ fr:
   is_image_organization: "Est une organisation image ?"
   new_organization_from_image: "Créer une organisation à partir d'une image"
   coefficient: "Coefficient"
+  label_organization_name: "Nom de l'organisation"
+  label_organization_image: "Organisation image"
+  label_change_password_required: "Changement de mot de passe obligatoire ?"
+  label_login: "Identifiant de connexion"
+  label_request_create_organization: "Demande de création d'une organisation à partir d'organisation image"

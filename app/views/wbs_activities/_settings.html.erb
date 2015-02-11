@@ -54,7 +54,7 @@
               <div class="modal-header">
                 <h4 class="modal-title" id="comment_label<%= wai.id %>">
                   <b>
-                    <%= wai.wbs_activity.name %>
+                    <%= wai.wbs_activity.nil? ? '' : wai.wbs_activity.name %>
                   </b>
                 </h4>
               </div>

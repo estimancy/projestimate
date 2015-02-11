@@ -1337,4 +1337,9 @@ de:
   is_image_organization: "Is an image organization ?"
   new_organization_from_image: "Create organization from image"
   coefficient: "Coefficient"
+  label_organization_name: "Organization name"
+  label_organization_image: "Image organization"
+  label_change_password_required: "change password required"
+  label_login: "Login"
+  label_request_create_organization: "Request to create an organization from image"
 

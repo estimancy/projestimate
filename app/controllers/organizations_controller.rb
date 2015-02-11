@@ -47,7 +47,6 @@ class OrganizationsController < ApplicationController
     @technologies = @organization.organization_technologies
     @fields = @organization.fields
     @work_element_types = @organization.work_element_types
-
   end
 
   def module_estimation
@@ -67,6 +66,7 @@ class OrganizationsController < ApplicationController
 
     set_page_title 'Organizations'
     @organization = Organization.new
+    @groups = @organization.groups
   end
 
   def edit
