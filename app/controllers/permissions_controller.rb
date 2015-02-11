@@ -124,7 +124,7 @@ class PermissionsController < ApplicationController
 
   #Set all global rights
   def set_rights
-    authorize! :manage_roles, Permission
+    authorize! :manage_global_and_master_permissions, Permission
 
     if params[:commit] == I18n.t('cancel')
       redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"

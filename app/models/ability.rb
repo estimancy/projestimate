@@ -57,11 +57,11 @@ class Ability
     # Notice the edit action is aliased to update. This means if the user is able to update a record he also has permission to edit it.
     alias_action [:show_groups, Group], :to => [:manage, Group]
     alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
-    alias_action :show_global_permissions, :to => :manage_roles
+    alias_action :show_global_permissions, :to => :manage_global_and_master_permissions
     alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :alter_estimation_plan, :to => :manage_estimation_plan
 
     #For organization
-    alias_action :show_organizations, :create_organizations, :to => :edit_organizations
+    alias_action :show_organizations, :to => :edit_organizations
     alias_action :edit_organizations, :to => :create_organizations
 
     #When user can create a project template, he also can create a project from scratch

@@ -112,7 +112,7 @@
           <% end %>
         <% end %>
       </table>
-      <% if can? :manage_roles, Permission %>
+      <% if can? :manage_global_and_master_permissions, Permission %>
         <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
       <% end %>
@@ -168,7 +168,7 @@
               <% end %>
             <% end %>
           </table>
-          <% if can? :manage_roles, Permission %>
+          <% if can? :manage_global_and_master_permissions, Permission %>
             <%= submit_tag I18n.t('apply'), :class => 'btn' %>
             <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
           <% end %>
