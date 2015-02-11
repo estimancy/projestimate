@@ -62,7 +62,7 @@ class Ability
 
     #For organization
     alias_action :show_organizations, :create_organizations, :to => :edit_organizations
-    alias_action :create_organizations, :to => :edit_organizations
+    alias_action :edit_organizations, :to => :create_organizations
 
     #When user can create a project template, he also can create a project from scratch
     alias_action :create_project_from_scratch, :to => :create_project_template
