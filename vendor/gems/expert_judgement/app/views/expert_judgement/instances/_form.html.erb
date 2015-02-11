@@ -21,20 +21,41 @@
 
         <hr>
         <h3>Cout</h3>
-        <%= f.input :cost_unit, label: "Libellé de l'unité de cout du module" %>
-        <%= f.input :cost_unit_coefficient, label: "Coefficient de conversion en cout standard" %>
+        <%= f.input :enabled_cost, label: "Activer les couts" %>
+        <%= f.input :cost_unit, label: "Libellé de l'unité de cout du module", disabled: !@instance.enabled_cost %>
+        <%= f.input :cost_unit_coefficient, label: "Coefficient de conversion en cout standard", disabled: !@instance.enabled_cost %>
 
         <hr>
         <h3>Effort</h3>
-        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort du module" %>
-        <%= f.input :effort_unit_coefficient, label: "Coefficient de l'unité d'effort du module" %>
+        <%= f.input :enabled_effort, label: "Activer les efforts" %>
+        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort du module", disabled: !@instance.enabled_effort %>
+        <%= f.input :effort_unit_coefficient, label: "Coefficient de l'unité d'effort du module", disabled: !@instance.enabled_effort %>
 
         <hr>
         <h3>Taille</h3>
-        <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module" %>
+        <%= f.input :enabled_size, label: "Activer la taille" %>
+        <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module", disabled: !@instance.enabled_size %>
       </div>
 
       <%= f.button :submit, I18n.t('save') %>
     <% end %>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $("#instance_enabled_cost").on("change", function(){
+      $("#instance_cost_unit").prop('disabled', function(i, v) { return !v; });
+      $("#instance_cost_unit_coefficient").prop('disabled', function(i, v) { return !v; });
+    });
+
+    $("#instance_enabled_effort").on("change", function(){
+      $("#instance_effort_unit").prop('disabled', function(i, v) { return !v; });
+      $("#instance_effort_unit_coefficient").prop('disabled', function(i, v) { return !v; });
+    });
+
+    $("#instance_enabled_size").on("change", function(){
+      $("#instance_retained_size_unit").prop('disabled', function(i, v) { return !v; });
+    });
+  });
+</script>

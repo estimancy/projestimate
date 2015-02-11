@@ -131,8 +131,24 @@ class ProjectsController < ApplicationController
       else
         @expert_judgement_instance = current_module_project.expert_judgement_instance
       end
-      @expert_judgement_attributes = PeAttribute.where(alias: ["cost", "retained_size", "effort"])
-      ["effort", "cost", "retained_size"].each do |a|
+
+      array_attributes = Array.new
+
+      if @expert_judgement_instance.enabled_size?
+        array_attributes << "retained_size"
+      end
+
+      if @expert_judgement_instance.enabled_effort?
+        array_attributes << "effort"
+      end
+
+      if @expert_judgement_instance.enabled_cost?
+        array_attributes << "cost"
+      end
+
+      @expert_judgement_attributes = PeAttribute.where(alias: array_attributes)
+
+      array_attributes.each do |a|
         ie = ExpertJudgement::InstanceEstimate.where(  pe_attribute_id: PeAttribute.find_by_alias(a).id,
                                                        expert_judgement_instance_id: @expert_judgement_instance.id.to_i,
                                                        module_project_id: current_module_project.id,
