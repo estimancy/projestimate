@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150206100036) do
+ActiveRecord::Schema.define(:version => 20150210144659) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -275,6 +275,7 @@ ActiveRecord::Schema.define(:version => 20150206100036) do
     t.float   "effort_unit_coefficient"
     t.float   "cost_unit_coefficient"
     t.boolean "three_points_estimation"
+    t.boolean "enabled_input"
   end
 
   create_table "factor_translations", :force => true do |t|
@@ -1259,6 +1260,7 @@ ActiveRecord::Schema.define(:version => 20150206100036) do
     t.float    "cost_unit_coefficient"
     t.string   "effort_unit"
     t.float    "effort_unit_coefficient"
+    t.boolean  "enabled_input"
   end
 
   add_index "wbs_activities", ["owner_id"], :name => "index_wbs_activities_on_owner_id"

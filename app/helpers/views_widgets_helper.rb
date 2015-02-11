@@ -451,7 +451,7 @@ module ViewsWidgetsHelper
 
     res << "<th colspan='#{colspan}'>
               <span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'>
-                #{estimation_value.pe_attribute.name} (#{@project.organization.currency})
+                #{estimation_value.pe_attribute.name} (#{estimation_value.pe_attribute.alias == "cost" ? @project.organization.currency : ''})
               </span>
             </th>"
 
@@ -482,44 +482,43 @@ module ViewsWidgetsHelper
                   <span class='tree_element_in_out' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{wbs_activity_elt.name} </span>
                 </td>"
 
-      # Value is in bold for the WBS root element
-      bold_class = ""
-
       levels.each do |level|
-        res << "<td class=#{bold_class} >"
-        level_estimation_values = Hash.new
-        level_estimation_values = estimation_value.send("string_data_#{level}")
+        res << "<td class=''>"
+        res << "<span class='pull-right'>"
+          level_estimation_values = Hash.new
+          level_estimation_values = estimation_value.send("string_data_#{level}")
 
-        if wbs_activity_elt.is_root?
+          if wbs_activity_elt.is_root?
+            begin
+              if estimation_value.pe_attribute.alias == "cost"
+                @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
+              else
+                @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization)
+              end
+            rescue
+              if estimation_value.pe_attribute.alias == "cost"
+                @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
+              else
+                @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization)
+              end
+            end
+          end
+
           begin
             if estimation_value.pe_attribute.alias == "cost"
-              @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
+              res << "#{convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], 2)}"
             else
-              @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization)
+              res << "#{convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
             end
           rescue
             if estimation_value.pe_attribute.alias == "cost"
-              @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
+              res << "#{ convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], 2) }"
             else
-              @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization)
+              res << "#{ convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}"
             end
           end
-        end
 
-        begin
-          if estimation_value.pe_attribute.alias == "cost"
-            res << "#{convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], 2)}"
-          else
-            res << "#{convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
-          end
-        rescue
-          if estimation_value.pe_attribute.alias == "cost"
-            res << "#{ convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], 2) }"
-          else
-            res << "#{ convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}"
-          end
-        end
-
+        res << "</span>"
         res << "</td>"
       end
       res << '</tr>'

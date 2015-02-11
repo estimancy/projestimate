@@ -76,8 +76,6 @@ class ViewsWidgetsController < ApplicationController
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-    #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-    #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
     #the view_widget type
     if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -113,8 +111,6 @@ class ViewsWidgetsController < ApplicationController
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-        #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-        #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
         #the view_widget type
         if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -171,8 +167,6 @@ class ViewsWidgetsController < ApplicationController
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-        #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-        #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
         #the view_widget type
         if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -188,7 +182,6 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def destroy
-    #authorize! :alter_widget, ViewsWidget
 
     if can?(:manage_estimation_plan, Project) || ( can? :alter_widget, ViewsWidget { |widget| widget.project_fields.empty? } )
       @views_widget = ViewsWidget.find(params[:id])
@@ -197,7 +190,6 @@ class ViewsWidgetsController < ApplicationController
       flash[:warning] = I18n.t(:notice_cannot_delete_widgets)
     end
 
-    #render :partial => "views_widgets/refresh_views_widgets_results"
     redirect_to dashboard_path(@project)
   end
 

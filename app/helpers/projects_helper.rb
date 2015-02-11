@@ -925,7 +925,9 @@ module ProjectsHelper
     elsif est_val_pe_attribute.alias == "effort"
       "#{convert_with_precision(convert(value, @project.organization), precision)} #{convert_label(value, @project.organization)}"
     elsif est_val_pe_attribute.alias == "cost"
-      "#{value} #{get_attribute_unit(est_val_pe_attribute)}"
+      unless value.class == Hash
+        "#{convert_with_precision(value, 2)} #{get_attribute_unit(est_val_pe_attribute)}"
+      end
     else
       case est_val_pe_attribute
         when 'date'
