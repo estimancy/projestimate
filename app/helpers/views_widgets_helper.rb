@@ -136,7 +136,9 @@ module ViewsWidgetsHelper
           end
         end
 
-        probable_value_text = display_value(data_probable, estimation_value, module_project_id)
+        #TODO : remove this log
+        p estimation_value
+        probable_value_text = display_value(data_probable.to_f, estimation_value, module_project_id)
 
         max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
         min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, module_project_id)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
@@ -529,11 +531,9 @@ module ViewsWidgetsHelper
 
   def view_widget_title(view_widget)
     title = String.new
-    #title ="<div>"
     title << "#{view_widget.name} \n"
     title << "#{I18n.t(:associate_pbs_element)} : #{current_component.to_s} \n"
     title << "Module : #{view_widget.module_project.to_s}"
-    #title << "</div>"
     title
   end
 
