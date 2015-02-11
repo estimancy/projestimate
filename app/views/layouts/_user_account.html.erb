@@ -1,41 +1,16 @@
 <ul class="nav">
 
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t(:estimate) %>">
-      <i class="icon icon-home icon-large pull-left"></i>&nbsp;
+    <a href="<%= main_app.projects_url %>" title="<%= I18n.t(:estimate) %>">
+      <i class="icon icon-list-ul icon-large pull-left"></i>&nbsp;
     </a>
-    <ul class="dropdown-menu">
-      <li class="dropdown">
-        <a href="<%= main_app.projects_url %>">
-          <%= I18n.t('all_projects') %>
-        </a>
-      </li>
-
-      <% if @project %>
-        <% if !@project.nil? && !@project.new_record? %>
-          <li class="dropdown">
-            <a href="<%= main_app.dashboard_path(@project)%>">
-              <%= @project %>
-            </a>
-          </li>
-        <% end %>
-      <% end %>
-
-      <% if (can? :create_project_from_scratch, Project) or (can? :create_project_from_template, Project) %>
-        <li class="dropdown">
-          <a href="/projects_from">
-            <!--<i class="icon-plus icon-large pull-left"></i>-->
-            <%= I18n.t('new_project_from') %></a>
-        </li>
-      <% end %>
-    </ul>
   </li>
 
   <li class="divider-vertical"></li>
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_organization %>">
-      <i class="icon-list-ul icon-large pull-left"></i>&nbsp;</b>
+      <i class="fa fa-calculator icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <li class="dropdown"><a href="/organizationals_params">
@@ -64,7 +39,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_admin %>">
-      <i class="icon-question-sign icon-large pull-left"></i>&nbsp;</b>
+      <i class="fa fa-user icon-large pull-left"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <% if can? :manage_master_data, :all %>
@@ -143,7 +118,7 @@
 
   <li>
     <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
-      <%= current_user %> > <%= @project.nil? ? "" : @project.title %>
+      <%= current_user %> | <%= @project.nil? ? "" : @project.organization %> | <%= @project.nil? ? "" : @project.title %>
     </a>
   </li>
 
@@ -151,7 +126,7 @@
 
   <li>
     <a href="<%= main_app.destroy_user_session_path %>#" data-method="delete" rel="nofollow" title="<%= I18n.t 'logout' %>">
-      <i class="icon-off"></i>
+      <i class="icon-off icon-large"></i>
     </a>
   </li>
 
@@ -159,7 +134,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'services' %>" >
-      <i class="icon-book"></i>
+      <i class="icon-book icon-large"></i>
     </a>
   </li>
 
@@ -167,7 +142,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_service') %>" title="<%= I18n.t 'services' %>">
-      <i class="fa fa-users"></i>
+      <i class="fa fa-users fa-lg" style="color: #000000"></i>
     </a>
   </li>
 
@@ -175,7 +150,7 @@
 
   <li>
     <a href="/about" title="<%= I18n.t 'about' %>">
-      <i class="fa fa-info-circle"></i>
+      <i class="fa fa-info-circle fa-lg" style="color: #000000"></i>
     </a>
   </li>
 

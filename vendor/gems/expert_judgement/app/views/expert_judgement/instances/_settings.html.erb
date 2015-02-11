@@ -1,19 +1,36 @@
+<h3>
+  Jugement d'expert
+</h3>
 <%= form_tag expert_judgement.instance_save_efforts_path(@expert_judgement_instance) do %>
   <table class="table">
     <tr>
       <th class="text_left">Type de valeurs</th>
       <th class="text_left">Description</th>
-      <th class="text_left">Valeurs proposée</th>
-      <th class="text_left">Valeurs saisies</th>
+      <th class="text_left">Valeurs proposées</th>
+      <th class="text_left">Valeurs retenues</th>
       <th class="text_left">Commentaires</th>
       <th class="text_left">Traçabilité</th>
-
     </tr>
     <tr>
       <th></th>
       <th></th>
-      <th class="text_left">L / M / H</th>
-      <th class="text_left">L / M / H</th>
+      <th class="text_left">
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          Bas /
+        <% end %>
+          Probable
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          / Haut
+        <% end %>
+      </th>
+      <th class="text_left">
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          Bas /
+        <% end %>
+        Probable
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          / Haut
+        <% end %></th>
       <th></th>
       <th></th>
     </tr>
@@ -65,15 +82,15 @@
           <span class="pull-left">
 
             <% if @expert_judgement_instance.three_points_estimation? %>
-              <%= text_field_tag "values[#{eja.id}][low][input]", ie.convert_effort("low", eja, ev, current_component), class: "input-small" %>
+              <%= text_field_tag "values[#{eja.id}][low][input]", ie.convert_effort("low", eja, ev, current_component), class: "input-small", readonly: true %>
               <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
             <% end %>
 
-            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.convert_effort("most_likely", eja, ev, current_component), class: "input-small" %>
+            <%= text_field_tag "values[#{eja.id}][most_likely][input]", ie.convert_effort("most_likely", eja, ev, current_component), class: "input-small", readonly: true %>
             <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
 
             <% if @expert_judgement_instance.three_points_estimation? %>
-              <%= text_field_tag "values[#{eja.id}][high][input]", ie.convert_effort("high", eja, ev, current_component), class: "input-small" %>
+              <%= text_field_tag "values[#{eja.id}][high][input]", ie.convert_effort("high", eja, ev, current_component), class: "input-small", readonly: true %>
               <%= @expert_judgement_instance.send("#{eja.alias}_unit") %>
             <% end %>
 

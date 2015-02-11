@@ -276,112 +276,112 @@ class WbsActivitiesController < ApplicationController
   def save_effort_breakdown
     @pbs_project_element = current_component
     @tmp_results = Hash.new
+
     effort_unit_coefficient = current_component.wbs_activity.effort_unit_coefficient.to_f
-    ratio_reference = WbsActivityRatio.find(params[:ratio])
+    @ratio_reference = WbsActivityRatio.find(params[:ratio])
+
+    # Project wbs_activity
+    @wbs_activity = current_module_project.wbs_activity
 
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
     current_pbs_estimations.each do |est_val|
-      if est_val.in_out == 'output'
+      if est_val.pe_attribute.alias == "effort"
+        if est_val.in_out == 'output'
 
-        @results = Hash.new
-        tmp_prbl = Array.new
+          @results = Hash.new
+          tmp_prbl = Array.new
 
-        ["low", "most_likely", "high"].each do |level|
-          eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient, ratio_reference)
+          ["low", "most_likely", "high"].each do |level|
+            eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient, @ratio_reference)
 
-          @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
+            @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
 
-          level_estimation_value[@pbs_project_element.id] = @tmp_results[level.to_sym]["#{est_val.pe_attribute.alias}_#{current_module_project.id.to_s}".to_sym]
+            level_estimation_value[@pbs_project_element.id] = @tmp_results[level.to_sym]["#{est_val.pe_attribute.alias}_#{current_module_project.id.to_s}".to_sym]
 
-          @results["string_data_#{level}"] = level_estimation_value
-        end
+            @results["string_data_#{level}"] = level_estimation_value
+          end
 
-        probable_estimation_value = Hash.new
-        probable_estimation_value = est_val.send('string_data_probable')
-        probable_estimation_value[@pbs_project_element.id] = probable_value(@tmp_results, est_val)
+          probable_estimation_value = Hash.new
+          probable_estimation_value = est_val.send('string_data_probable')
+          probable_estimation_value[@pbs_project_element.id] = probable_value(@tmp_results, est_val)
 
-        ####### Get the project referenced ratio #####
-        # Project wbs_activity
-        wbs_activity = current_module_project.wbs_activity
-        # Get the wbs_project_element which contain the wbs_activity_ratio
-        wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
-        # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
+          ####### Get the project referenced ratio #####
+          # Get the wbs_project_element which contain the wbs_activity_ratio
+          wbs_activity_root = @wbs_activity.wbs_activity_elements.first.root
+          # If we manage more than one wbs_activity per project, this will be depend on the wbs_project_element ancestry(witch has the wbs_activity_ratio)
 
-        # Use project default Ratio, unless PSB got its own Ratio,
-        # If default ratio was defined in PBS, it will override the one defined in module-project
-        ratio_reference = WbsActivityRatio.find(params[:ratio])
+          # Get the referenced ratio wbs_activity_ratio_profiles
+          referenced_wbs_activity_ratio_profiles = @ratio_reference.wbs_activity_ratio_profiles
+          profiles_probable_value = {}
+          parent_profile_est_value = {}
 
-        # Get the referenced ratio wbs_activity_ratio_profiles
-        referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles
-        profiles_probable_value = {}
-        parent_profile_est_value = {}
+          # get the wbs_project_elements that have at least one child
+          wbs_activity_elements = @wbs_activity.wbs_activity_elements.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
 
-        # get the wbs_project_elements that have at least one child
-        wbs_activity_elements = wbs_activity.wbs_activity_elements.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
+          @project.organization.organization_profiles.each do |profile|
+            profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
+            # Parent values are reset to zero
+            wbs_activity_elements.each{ |elt| parent_profile_est_value["#{elt}"] = 0 }
 
-        @project.organization.organization_profiles.each do |profile|
-          profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
-          # Parent values are reset to zero
-          wbs_activity_elements.each{ |elt| parent_profile_est_value["#{elt}"] = 0 }
+            probable_estimation_value[@pbs_project_element.id].each do |wbs_activity_elt_id, hash_value|
+              # Get the probable value profiles values
 
-          probable_estimation_value[@pbs_project_element.id].each do |wbs_activity_elt_id, hash_value|
-            # Get the probable value profiles values
+              if hash_value["profiles"].nil?
+                # create a new hash for profiles estimations results
+                probable_estimation_value[@pbs_project_element.id][wbs_activity_elt_id]["profiles"] = Hash.new
+              end
 
-            if hash_value["profiles"].nil?
-              # create a new hash for profiles estimations results
-              probable_estimation_value[@pbs_project_element.id][wbs_activity_elt_id]["profiles"] = Hash.new
-            end
+              current_probable_profiles = probable_estimation_value[@pbs_project_element.id][wbs_activity_elt_id]["profiles"]
 
-            current_probable_profiles = probable_estimation_value[@pbs_project_element.id][wbs_activity_elt_id]["profiles"]
+              wbs_activity_element = WbsActivityElement.find(wbs_activity_elt_id)
+              wbs_activity_elt_id = wbs_activity_element.id
 
-            wbs_activity_element = WbsActivityElement.find(wbs_activity_elt_id)
-            wbs_activity_elt_id = wbs_activity_element.id
+              # Wbs_project_element root element doesn't have a wbs_activity_element
+              if !wbs_activity_elt_id.nil? ||
+                  wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', @ratio_reference.id, wbs_activity_elt_id).first
+                if !wbs_activity_ratio_elt.nil?
+                  # get the wbs_activity_ratio_profile
+                  corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
+                  # Get current profile ratio value for the referenced ratio
+                  corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
+                  estimation_value_profile = nil
+                  unless corresponding_ratio_profile_value.nil?
+                    estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
 
-            # Wbs_project_element root element doesn't have a wbs_activity_element
-            if !wbs_activity_elt_id.nil? ||
-                wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
-              if !wbs_activity_ratio_elt.nil?
-                # get the wbs_activity_ratio_profile
-                corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
-                # Get current profile ratio value for the referenced ratio
-                corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
-                estimation_value_profile = nil
-                unless corresponding_ratio_profile_value.nil?
-                  estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
+                    #the update the parent's value
+                    parent_profile_est_value["#{wbs_activity_element.parent_id}"] = parent_profile_est_value["#{wbs_activity_element.parent_id}"].to_f + estimation_value_profile
+                  end
 
-                  #the update the parent's value
-                  parent_profile_est_value["#{wbs_activity_element.parent_id}"] = parent_profile_est_value["#{wbs_activity_element.parent_id}"].to_f + estimation_value_profile
+                  current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => estimation_value_profile} }
                 end
-
-                current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => estimation_value_profile} }
               end
             end
+
+            #Need to calculate the parents effort by profile : addition of its children values
+            wbs_activity_elements.each do |wbs_activity_element_id|
+              probable_estimation_value[@pbs_project_element.id][wbs_activity_element_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_activity_element_id}"]} }
+            end
           end
 
-          #Need to calculate the parents effort by profile : addition of its children values
-          wbs_activity_elements.each do |wbs_activity_element_id|
-            probable_estimation_value[@pbs_project_element.id][wbs_activity_element_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_activity_element_id}"]} }
+          @results['string_data_probable'] = probable_estimation_value
+          #Update current pbs estimation values
+          est_val.update_attributes(@results)
+        elsif est_val.in_out == 'input'
+          in_result = Hash.new
+          tmp_prbl = Array.new
+          ['low', 'most_likely', 'high'].each do |level|
+            level_estimation_value = Hash.new
+            level_estimation_value[@pbs_project_element.id] = params[:values][level].to_i * effort_unit_coefficient
+            in_result["string_data_#{level}"] = level_estimation_value
+            tmp_prbl << level_estimation_value[@pbs_project_element.id]
           end
+          est_val.update_attributes(in_result)
+          est_val.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
-
-        @results['string_data_probable'] = probable_estimation_value
-        #Update current pbs estimation values
-        est_val.update_attributes(@results)
-      elsif est_val.in_out == 'input'
-        in_result = Hash.new
-        tmp_prbl = Array.new
-        ['low', 'most_likely', 'high'].each do |level|
-          level_estimation_value = Hash.new
-          level_estimation_value[@pbs_project_element.id] = params[:values][level].to_i * effort_unit_coefficient
-          in_result["string_data_#{level}"] = level_estimation_value
-
-          tmp_prbl << level_estimation_value[@pbs_project_element.id]
-        end
-
-        est_val.update_attributes(in_result)
-
-        est_val.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      elsif est_val.pe_attribute.alias == "ratio"
+        ratio_global = @ratio_reference.wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
+        est_val.update_attribute(:"string_data_probable", { current_component.id => ratio_global })
       end
     end
 

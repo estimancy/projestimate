@@ -1,82 +1,116 @@
-<table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
-  <thead>
-  <tr>
-    <th class="text_left"><%= I18n.t(:label_project_name) %></th>
-    <th><%= I18n.t(:label_project_version) %></th>
-    <th class="text_left"><%= I18n.t(:label_product_name) %></th>
-    <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
-    <% @organization.fields.each do |field| %>
-        <th><%= field.name  %></th>
-    <% end %>
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-group">Estimations</a></li>
+  </ul>
 
-    <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
-    <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @projects.each do |project| %>
-    <% if can_see_estimation?(project) %>
+  <div id="tabs-estimations" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+
+    <table>
       <tr>
-        <td class="text_field_text_overflow">
-          <% if can_show_estimation?(project) %>   <!-- Have the rigth to consult the project -->
-              <%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %>
-          <% else %>
-              <%= project.title %>
-          <% end %>
+        <td>
+          <%= I18n.t(:label_filter_on_projects_version) %>
+          <%= select_tag 'filter_organization_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1),1], [I18n.t(:label_filter_on_project_version_2),2], [I18n.t(:label_filter_on_project_version_3),3], [I18n.t(:label_filter_on_project_version_4),4]], :selected => 1), 'data-organization_id' => @organization.id, :include_blank => false %>
         </td>
-        <td class="span1 center"><%= project.version %></td>
-        <td class="text_field_text_overflow"><%= project.root_component %></td>
-        <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
-        <% @organization.fields.each do |field| %>
-            <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
-            <td class="project_field_text_overflow"><%= pf.nil? ? '-' : pf.value.to_f.round(2) %></td>
-        <% end %>
 
-        <td class="center"><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
-
-        <td class="center span3">
-          <% if can_modify_estimation?(project) %>
-              <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
+        <td colspan=2 style="text-align:right;">
+          <% if can? :create_project_from_template, Project %>
+            <%= link_to I18n.t('new_project_from'), projects_from_path, :class => 'btn' %>
           <% end %>
 
-          <% if can_show_estimation?(project) %>
-              <%= link_to('', dashboard_path(project), :class => 'button_attribute_tooltip icon-star pull-left', :title => I18n.t('button_activate_project')) %>
+          <% if can? :create_project_from_scratch, Project %>
+            <%= link_to I18n.t('new_project'), new_project_path(organization_id: @organization.id), :class => 'btn' %>
           <% end %>
-
-          <%# if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
-          <% if can?(:commit_project, project) || can?(:manage, project) %>
-              <% if can_modify_estimation?(project) %>
-                  <%= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
-              <% end %>
-          <% end %>
-
-          <%# if (project.checkpoint? || project.released?) && ((can? :commit_project, project)||(can? :manage, project)) %>
-          <% if can?(:commit_project, project) || can?(:manage, project) %>
-              <%= link_to('', {:controller => 'projects', :action => 'checkout', :project_id => project.id}, :class => 'icon-step-forward pull-left button_attribute_tooltip', :title => I18n.t('button_checkout_project'), :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?)) %>
-          <% end %>
-
-          <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'button_attribute_tooltip icon-info pull-left', :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
-          <% if (can? :create_project_from_template, Project) || (can? :manage, project )%>
-              <%= link_to('', duplicate_path(project.id), :class => 'button_attribute_tooltip icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
-          <% end %>
-
-          <% if (can? :delete_project, project) || (can? :manage, project) %>
-              <% if project.is_childless? && can_delete_estimation?(project) %>   <%# if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
-                  <%= (link_to('', confirm_deletion_path(project.id), :class => 'button_attribute_tooltip icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
-              <% end %>
-          <% end %>
-
-          <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart pull-left', :title => I18n.t('label_project_history')) %>
-
-          <% if can_modify_estimation?(project) %>
-              <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "button_attribute_tooltip icon-comment pull-left", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
-          <% end %>
-
         </td>
       </tr>
-    <% end %>
-  <% end %>
+    </table>
 
-  <%= render :partial => 'layouts/footer_table' %>
-  </tbody>
-</table>
+    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th class="text_left"><%= I18n.t(:label_project_name) %></th>
+        <th><%= I18n.t(:label_project_version) %></th>
+        <th class="text_left"><%= I18n.t(:label_product_name) %></th>
+        <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
+        <% @organization.fields.each do |field| %>
+          <th><%= field.name  %></th>
+        <% end %>
+
+        <th class="filter-select" data-value="false" style="width: 50px"><%= I18n.t(:is_model) %></th>
+        <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @projects.each do |project| %>
+        <% if can_see_estimation?(project) %>
+          <tr>
+            <td class="text_field_text_overflow span1">
+              <% if can_show_estimation?(project) %>   <!-- Have the rigth to consult the project -->
+                  <%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %>
+              <% else %>
+                  <%= project.title %>
+              <% end %>
+            </td>
+            <td class="center"><%= project.version %></td>
+            <td class="text_field_text_overflow"><%= project.root_component %></td>
+            <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
+
+            <% @organization.fields.each do |field| %>
+              <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
+              <td class="project_field_text_overflow"><%= pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) %></td>
+            <% end %>
+
+            <td class="center"><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
+
+            <td class="center span3">
+              <% if can_modify_estimation?(project) %>
+                  <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil pull-left', :title => I18n.t('edit')) %>
+              <% end %>
+
+              <% if can_show_estimation?(project) %>
+                  <%= link_to('', dashboard_path(project), :class => 'button_attribute_tooltip icon-star pull-left', :title => I18n.t('button_activate_project')) %>
+              <% end %>
+
+              <%# if (project.preliminary? || project.in_progress? || (project.in_review? && (can? :write_access_to_inreview_project, project))) && ((can? :commit_project, project)||(can? :manage, project)) %>
+              <% if can?(:commit_project, project) || can?(:manage, project) %>
+                <% if can_modify_estimation?(project) %>
+                  <%= link_to('', { :controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'button_attribute_tooltip icon-ok-circle pull-left', :title => I18n.t('button_commit_project')) %>
+                <% end %>
+              <% end %>
+
+              <%# if (project.checkpoint? || project.released?) && ((can? :commit_project, project)||(can? :manage, project)) %>
+              <% if can?(:commit_project, project) || can?(:manage, project) %>
+                  <%= link_to('', {:controller => 'projects', :action => 'checkout', :project_id => project.id}, :class => 'icon-step-forward pull-left button_attribute_tooltip', :title => I18n.t('button_checkout_project'), :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?)) %>
+              <% end %>
+
+              <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'button_attribute_tooltip icon-info pull-left', :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
+              <% if (can? :create_project_from_template, Project) || (can? :manage, project )%>
+                  <%= link_to('', duplicate_path(project.id), :class => 'button_attribute_tooltip icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
+              <% end %>
+
+              <% if (can? :delete_project, project) || (can? :manage, project) %>
+                <% if project.is_childless? && can_delete_estimation?(project) %>   <%# if project.is_childless? && !project.rejected? && !project.released? && !project.checkpoint?  %>
+                  <%= (link_to('', confirm_deletion_path(project.id), :class => 'button_attribute_tooltip icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete')) if can? :delete_project, project) %>
+                <% end %>
+              <% end %>
+
+              <%= link_to('', edit_project_path(project, :anchor => 'tabs-history'), :class => 'button_attribute_tooltip icon-signal icon-bar-chart pull-left', :title => I18n.t('label_project_history')) %>
+
+              <% if can_modify_estimation?(project) %>
+                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "button_attribute_tooltip icon-comment pull-left", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
+              <% end %>
+
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+
+      <%= render :partial => 'layouts/footer_table' %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<script>
+  <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js]%>
+</script>

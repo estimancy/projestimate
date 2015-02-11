@@ -76,8 +76,6 @@ class ViewsWidgetsController < ApplicationController
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-    #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-    #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
     #the view_widget type
     if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -96,6 +94,7 @@ class ViewsWidgetsController < ApplicationController
 
     respond_to do |format|
       if @views_widget.save
+
         unless params["field"].blank?
           ProjectField.create( project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
                                value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
@@ -112,8 +111,6 @@ class ViewsWidgetsController < ApplicationController
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-        #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-        #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
         #the view_widget type
         if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -138,11 +135,17 @@ class ViewsWidgetsController < ApplicationController
       pfs.destroy_all
     else
       pf = ProjectField.where(field_id: params["field"]).first
+      value = @views_widget.estimation_value.string_data_probable[current_component.id]
       if pf.nil?
-        ProjectField.create(project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
-                            value: get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show])
+        ProjectField.create(project_id: @project.id,
+                            field_id: params["field"],
+                            views_widget_id: @views_widget.id,
+                            value: value)
       else
-        pf.value = get_view_widget_data(@views_widget.module_project.id, @views_widget.id)[:value_to_show]
+        pf.value = value
+        pf.views_widget_id = @views_widget.id
+        pf.field_id = params["field"].to_i
+        pf.project_id = @project.id
         pf.save
       end
     end
@@ -164,8 +167,6 @@ class ViewsWidgetsController < ApplicationController
 
         # Get the possible attribute grouped by type (input, output)
         @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-        #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-        #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
         #the view_widget type
         if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -181,7 +182,6 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def destroy
-    #authorize! :alter_widget, ViewsWidget
 
     if can?(:manage_estimation_plan, Project) || ( can? :alter_widget, ViewsWidget { |widget| widget.project_fields.empty? } )
       @views_widget = ViewsWidget.find(params[:id])
@@ -190,7 +190,6 @@ class ViewsWidgetsController < ApplicationController
       flash[:warning] = I18n.t(:notice_cannot_delete_widgets)
     end
 
-    #render :partial => "views_widgets/refresh_views_widgets_results"
     redirect_to dashboard_path(@project)
   end
 

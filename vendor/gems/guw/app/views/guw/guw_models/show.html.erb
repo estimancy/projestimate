@@ -34,9 +34,7 @@
 
       <div id="tabs-<%= guw_type.name.gsub(" ", "-") %>">
 
-        <b>
-          <%= guw_type.description %>
-        </b>
+        <%= simple_format(guw_type.description) %>
         <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
 
         <hr>

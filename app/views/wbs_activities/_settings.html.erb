@@ -1,3 +1,7 @@
+<h3>
+  Ventilation par activités
+</h3>
+
 <% effort = PeAttribute.find_by_alias("effort") %>
 <% cev = EstimationValue.where(:pe_attribute_id => effort.id,
                                :module_project_id => current_module_project.id,
@@ -27,21 +31,21 @@
       </td>
 
       <% if cev.string_data_low[component_id].blank? %>
-        <td><%= text_field_tag "values[low]", pev.nil? ? '' : convert(pev.string_data_low[component_id], organization ) %></td>
+        <td><%= text_field_tag "values[low]", pev.nil? ? '' : convert(pev.string_data_low[component_id], organization), readonly: !current_component.wbs_activity.enabled_input %></td>
       <% else %>
-        <td><%= text_field_tag "values[low]", convert(cev.string_data_low[component_id], organization) %></td>
+        <td><%= text_field_tag "values[low]", convert(cev.string_data_low[component_id], organization), readonly: !current_component.wbs_activity.enabled_input %></td>
       <% end %>
 
       <% if cev.string_data_most_likely[component_id].blank? %>
-        <td><%= text_field_tag "values[most_likely]", pev.nil? ? '' : convert(pev.string_data_most_likely[component_id], organization ) %></td>
+        <td><%= text_field_tag "values[most_likely]", pev.nil? ? '' : convert(pev.string_data_most_likely[component_id], organization), readonly: !current_component.wbs_activity.enabled_input %></td>
       <% else %>
-        <td><%= text_field_tag "values[most_likely]", convert(cev.string_data_most_likely[component_id], organization) %></td>
+        <td><%= text_field_tag "values[most_likely]", convert(cev.string_data_most_likely[component_id], organization), readonly: !current_component.wbs_activity.enabled_input %></td>
       <% end %>
 
       <% if cev.string_data_high[component_id].blank? %>
-        <td><%= text_field_tag "values[high]", pev.nil? ? '' : convert(pev.string_data_high[component_id], organization ) %></td>
+        <td><%= text_field_tag "values[high]", pev.nil? ? '' : convert(pev.string_data_high[component_id], organization), readonly: !current_component.wbs_activity.enabled_input  %></td>
       <% else %>
-        <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization) %></td>
+        <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization), readonly: !current_component.wbs_activity.enabled_input  %></td>
       <% end %>
 
       <td>
