@@ -61,7 +61,8 @@ class Ability
     alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :alter_estimation_plan, :to => :manage_estimation_plan
 
     #For organization
-    alias_action :show_organizations, :to => :edit_organizations
+    alias_action :show_organizations, :create_organizations, :to => :edit_organizations
+    alias_action :create_organizations, :to => :edit_organizations
 
     #When user can create a project template, he also can create a project from scratch
     alias_action :create_project_from_scratch, :to => :create_project_template
