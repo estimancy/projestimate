@@ -54,28 +54,33 @@
 
                 <table class="table">
                   <tr>
+                    <th>Valeur min. du seuil</th>
                     <th>Valeur max. du seuil</th>
                     <th>Coefficient de conversion standard (heure)</th>
                     <th>Unité d'effort</th>
                   </tr>
 
                   <tr>
-                    <td class="center"><%= text_field_tag "organization[limit1]", @organization.limit1 %></td>
+                    <td class="center"><%= text_field_tag "", 0, disabled: true %></td>
+                    <td class="center"><%= text_field_tag "organization[limit1]", @organization.limit1  %></td>
                     <td class="center"><%= text_field_tag "organization[limit1_coef]", @organization.limit1_coef %></td>
                     <td class="center"><%= text_field_tag "organization[limit1_unit]", @organization.limit1_unit %></td>
                   </tr>
 
                   <tr>
+                    <td class="center"><%= text_field_tag "", @organization.limit1, disabled: true %></td>
                     <td class="center"><%= text_field_tag "organization[limit2]", @organization.limit2 %></td>
                     <td class="center"><%= text_field_tag "organization[limit2_coef]", @organization.limit2_coef %></td>
                     <td class="center"><%= text_field_tag "organization[limit2_unit]", @organization.limit2_unit %></td>
                   </tr>
                   <tr>
+                    <td class="center"><%= text_field_tag "", @organization.limit2, disabled: true %></td>
                     <td class="center"><%= text_field_tag "organization[limit3]", @organization.limit3 %></td>
                     <td class="center"><%= text_field_tag "organization[limit3_coef]", @organization.limit3_coef %></td>
                     <td class="center"><%= text_field_tag "organization[limit3_unit]", @organization.limit3_unit %></td>
                   </tr>
                   <tr>
+                    <td class="center"><%= text_field_tag "", @organization.limit3, disabled: true %></td>
                     <td class="center"><%= text_field_tag "organization[limit4]", @organization.limit4 %></td>
                     <td class="center"><%= text_field_tag "organization[limit4_coef]", @organization.limit4_coef %></td>
                     <td class="center"><%= text_field_tag "organization[limit4_unit]", @organization.limit4_unit %></td>
