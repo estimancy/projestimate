@@ -1,3 +1,6 @@
+<h3>
+  Jugement d'expert
+</h3>
 <%= form_tag expert_judgement.instance_save_efforts_path(@expert_judgement_instance) do %>
   <table class="table">
     <tr>
@@ -11,8 +14,23 @@
     <tr>
       <th></th>
       <th></th>
-      <th class="text_left">L / M / H</th>
-      <th class="text_left">L / M / H</th>
+      <th class="text_left">
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          Bas /
+        <% end %>
+          Probable
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          / Haut
+        <% end %>
+      </th>
+      <th class="text_left">
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          Bas /
+        <% end %>
+        Probable
+        <% if @expert_judgement_instance.three_points_estimation? %>
+          / Haut
+        <% end %></th>
       <th></th>
       <th></th>
     </tr>

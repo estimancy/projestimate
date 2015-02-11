@@ -1,3 +1,7 @@
+<h3>
+  Ventilation par activités
+</h3>
+
 <% effort = PeAttribute.find_by_alias("effort") %>
 <% cev = EstimationValue.where(:pe_attribute_id => effort.id,
                                :module_project_id => current_module_project.id,

@@ -1,14 +1,18 @@
+<h3>
+  Calcul de l'effort
+</h3>
 <div class="alert alert-dismissable">
   Formule de calcul de l'effort = ax^b ou <b>a</b> = <%= @ge_model.coeff_a %> et <b>b</b> = <%= @ge_model.coeff_b %>
 </div>
 <%= form_tag ge.ge_model_save_efforts_path(@ge_model) do %>
   <div class="row-fluid">
     <div class="span6">
-      <% if current_module_project.previous.empty? %>
-        <h4>Taille en entrée (n/c) </h4>
-      <% else %>
-        <h4>Taille en entrée (en <%= @ge_model.size_unit %>)</h4>
-      <% end %>
+
+        <h4>
+          <b>
+            Taille en entrée (en <%= @ge_model.size_unit %>)
+          </b>
+        </h4>
 
       <% attr = PeAttribute.find_by_alias("retained_size") %>
       <% previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
@@ -25,11 +29,11 @@
       <table class="table table-condensed table-striped">
         <tr>
           <% if @ge_model.three_points_estimation == true %>
-            <th>L</th>
+            <th>Bas</th>
           <% end %>
-          <th>M</th>
+          <th>Probable</th>
           <% if @ge_model.three_points_estimation == true %>
-            <th>H</th>
+            <th>Haut</th>
           <% end %>
         </tr>
         <tr>
@@ -54,15 +58,19 @@
       <% attr = PeAttribute.find_by_alias("effort") %>
       <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id).first %>
       <% component_id = current_component.id %>
-      <h4>Effort en sortie (en <%= convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization) %>)</h4>
+      <h4>
+        <b>
+          Effort calculé (en <%= convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization) %>)
+        </b>
+      </h4>
       <table class="table table-condensed table-striped">
         <tr>
           <% if @ge_model.three_points_estimation == true %>
-            <th>L</th>
+            <th>Bas</th>
           <% end %>
-          <th>M</th>
+          <th>Probable</th>
           <% if @ge_model.three_points_estimation == true %>
-            <th>H</th>
+            <th>Haut</th>
           <% end %>
         </tr>
         <tr>
