@@ -116,7 +116,7 @@
                 <table class="table table-striped table-bordered table-condensed">
                   <tr>
                     <th>User name</th>
-                    <% @organization.project_security_levels.each do |prj_level| %>
+                    <% @project.organization.project_security_levels.each do |prj_level| %>
                         <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                     <% end %>
                   </tr>
@@ -125,7 +125,7 @@
                       <% securities = user.project_securities_for_select(@project.id) %>
                       <tr>
                         <td><%= user.name %>
-                          <% @organization.project_security_levels.each do |prj_level| %>
+                          <% @project.organization.project_security_levels.each do |prj_level| %>
                             <td><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id)), :disabled => true) %> </td>
                         <% end %>
                       </tr>
@@ -150,7 +150,7 @@
                 <table class="table table-striped table-bordered table-condensed">
                   <tr>
                     <th>Group name</th>
-                    <% @organization.project_security_levels.each do |prj_level| %>
+                    <% @project.organization.project_security_levels.each do |prj_level| %>
                         <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                     <% end %>
                   </tr>
@@ -158,7 +158,7 @@
                       <% securities = group.project_securities_for_select(@project.id) %>
                       <tr>
                         <td><%= group.name %>
-                          <% @organization.project_security_levels.each do |prj_level| %>
+                          <% @project.organization.project_security_levels.each do |prj_level| %>
                             <td><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id)), :disabled => true) %> </td>
                         <% end %>
                       </tr>
