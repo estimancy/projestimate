@@ -629,7 +629,7 @@ fr:
   identity: "Identité de l'utilisateur"
   first_name: "Prénom"
   last_name: "Nom"
-  login_name: "Id de connexion"
+  login_name: "Identifiant de connexion"
   email: "Courriel"
   initials: "Initiales"
   text_user_associated_groups: "Groupes associés (groupes dont l'utilisateur est membre)"
@@ -1391,6 +1391,7 @@ fr:
   notice_cannot_view_factors_complexities: "Vous n'avez pas les autorisations nécessaires pour voir les facteurs d'ajustement"
   notice_cannot_view_estimation_statuses: "Vous n'avez pas les autorisations nécessaires pour voir les statuts des estimations"
   notice_cannot_delete_widgets: "Vous n'avez pas les autorisations nécessaires pour supprimer les vignettes"
+  notice_cannot_view_organization_users: "Vous n'avez pas les autorisations nécessaires pour voir les utilisateurs"
 
   is_image_organization: "Est une organisation image ?"
   new_organization_from_image: "Créer une organisation à partir d'une image"

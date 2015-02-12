@@ -3,6 +3,7 @@
   <ul class="nav nav-pills" id="myTab">
     <li class="active"><a href="#organization" data-toggle="tab">Définition</a></li>
     <% if action_name.in?(%w(edit update)) %>
+        <li><a href="#users" data-toggle="tab"><%= I18n.t(:users) %> </a></li>
         <li><a href="#authorizations" data-toggle="tab">Autorisation </a></li>
         <li><a href="#estimations" data-toggle="tab">Estimations </a></li>
         <li><a href="#settings" data-toggle="tab">Paramétrage </a></li>
@@ -105,6 +106,10 @@
     </div>
 
   <% if action_name.in?(%w(edit update)) %>
+
+    <div class="tab-pane" id="users">
+      <%= render partial: "organizations/organization_users", object: @users %>
+    </div>
 
     <div class="tab-pane" id="authorizations">
       <%= render partial: "authorizations", object: @groups %>

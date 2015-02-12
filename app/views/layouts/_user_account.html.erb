@@ -51,7 +51,7 @@
         </li>
       <% end %>
 
-      <% if can? :manage, User %>
+      <% if can? :manage_master_data, :all %>
         <li class="dropdown">
           <a href="<%= main_app.users_path %>"> <%= I18n.t(:users) %> </a>
         </li>
