@@ -41,6 +41,8 @@ class Ability
   #Initialize Ability then load permissions
   def initialize(user)
 
+    ##can :manage, :all
+
     #Uncomment in order to authorize everybody to manage all the app
     if Rails.env == "test" || user.super_admin == true
       can :manage, :all
@@ -67,6 +69,7 @@ class Ability
     #When user can create a project template, he also can create a project from scratch
     alias_action :create_project_from_scratch, :to => :create_project_template
 
+    #When user can manage all Users, he will be able to create/Modify/Delete users
 
     #Load user groups permissions
     if user && !user.groups.empty?

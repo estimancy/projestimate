@@ -164,12 +164,14 @@
 
 
         <div class="actions">
-          <% if action_name.in?(%w(new create)) %>
-              <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+          <% if can? :manage, User %>
+              <% if action_name.in?(%w(new create)) %>
+                  <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+              <% end %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <%= submit_tag I18n.t('save'), :class => 'btn' %>
-          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-          <%= link_to I18n.t('back'), users_path, :class => 'btn' %>
+          <%= link_to I18n.t('back'), :back, :class => 'btn' %> <%#= link_to I18n.t('back'), users_path, :class => 'btn' %>
         </div>
     </div>
 <% end %>

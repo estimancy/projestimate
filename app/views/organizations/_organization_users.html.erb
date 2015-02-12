@@ -1,0 +1,55 @@
+<div class="tabs" style="min-height: 50px">
+
+  <% if can? :show_organization_users, User %>
+
+    <% if can? :manage, User %>
+       <div style="float: right; margin-bottom: 5px; margin-top: 5px">
+          <%= link_to I18n.t('new_user'), new_user_path, :class => 'btn' %>
+       </div>
+    <% end %>
+
+    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th><%= I18n.t(:last_name) %></th>
+        <th><%= I18n.t(:first_name) %></th>
+        <th><%= I18n.t(:login_name) %></th>
+        <th><%= I18n.t(:email) %></th>
+        <th><%= I18n.t(:last_login) %></th>
+        <th class="filter-select"><%= I18n.t(:authentication) %></th>
+        <th class="action" style="width: 110px"><%= I18n.t(:actions) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @users.empty? %>
+          <p style="text-align:center;"> <%= I18n.t('empty') %></p>
+      <% else %>
+          <% @users.each do |user| %>
+              <tr>
+                <td><%= user.last_name %></td>
+                <td><%= user.first_name %></td>
+                <td><%= user.login_name %></td>
+                <td><%= user.email %></td>
+                <td><%= I18n.l(user.last_sign_in_at) unless user.last_sign_in_at.nil? %></td>
+                <td><%= user.auth_method %></td>
+                <td style="min-width: 105px;" class="align-center">
+                  <%= link_to('', edit_user_path(user, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit')) %>
+                  <% if can? :manage, User %>
+                      <%= link_to('', "users/#{user.id}/activate", :class => 'icon-legal', :style => 'color:green', :title => I18n.t('button_activate_user_account')) %>
+                      <%= link_to(' ', {:controller => 'users', :action => 'find_use_user', :user_id => user.id}, :remote => true, :class => 'icon-info', :title => I18n.t('button_find_use')) %>
+                      <%= link_to(' ', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete')) %>
+                  <% end %>
+                </td>
+              </tr>
+          <% end %>
+
+          <%= render :partial => 'layouts/footer_table' %>
+      <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+      <div class="red_color" style="margin-top: 20px"><%= I18n.t(:notice_cannot_view_organization_users) %></div>
+  <% end %>
+
+</div>

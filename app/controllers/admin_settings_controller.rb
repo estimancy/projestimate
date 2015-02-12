@@ -42,21 +42,21 @@ class AdminSettingsController < ApplicationController
   helper_method :admin_setting_selected_status
 
   def index
-    authorize! :show_admin_setting, AdminSetting
+    authorize! :manage_master_data, :all
 
     set_page_title 'Parameters'
     @admin_settings = AdminSetting.all
   end
 
   def new
-    authorize! :manage, AdminSetting
+    authorize! :manage_master_data, :all
 
     set_page_title 'Parameters'
     @admin_setting = AdminSetting.new
   end
 
   def edit
-    authorize! :manage, AdminSetting
+    authorize! :manage_master_data, :all
 
     set_page_title 'Parameters'
     @admin_setting = AdminSetting.find(params[:id])
@@ -72,7 +72,7 @@ class AdminSettingsController < ApplicationController
   end
 
   def create
-    authorize! :manage, AdminSetting
+    authorize! :manage_master_data, :all
 
     @admin_setting = AdminSetting.new(params[:admin_setting])
 
@@ -90,7 +90,7 @@ class AdminSettingsController < ApplicationController
 
 
   def update
-    authorize! :manage, AdminSetting
+    authorize! :manage_master_data, :all
 
     @admin_setting = nil
     current_admin_setting = AdminSetting.find(params[:id])
@@ -115,7 +115,7 @@ class AdminSettingsController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, AdminSetting
+    authorize! :manage_master_data, :all
 
     @admin_setting = AdminSetting.find(params[:id])
 

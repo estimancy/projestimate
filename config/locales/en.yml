@@ -1391,6 +1391,7 @@ en:
   notice_cannot_view_factors_complexities: "You don't have the rights to view the factors complexities"
   notice_cannot_view_estimation_statuses: "You don't have the rights to view the estimation's statuses"
   notice_cannot_delete_widgets: "You don't have the rights to delete the widgets"
+  notice_cannot_view_organization_users: "You don't have the rights to view the users"
 
   is_image_organization: "Is an image organization ?"
   new_organization_from_image: "Create organization from image"

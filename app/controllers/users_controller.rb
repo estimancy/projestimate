@@ -56,7 +56,9 @@ protected
 public
 
   def index
-    authorize! :manage, User
+    #authorize! :manage, User
+    #all users menu/page is only visible by master users
+    authorize! :manage_master_data, :all
 
     set_page_title 'Users'
     @users = User.all
@@ -100,7 +102,7 @@ public
     if current_user == @user
       set_page_title 'Edit your user account'
     else
-      authorize! :manage, User
+      authorize! :show_organization_users, User
     end
   end
 
