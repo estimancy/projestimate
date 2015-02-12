@@ -117,7 +117,7 @@
 
         <td>
           <span class="pull-left">
-            <%= link_to ie.comments.blank? ? '------' : ie.comments, "#", title: ie.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{ie.id}", :"data-backdrop" => "static"  %>
+            <%= link_to ie.comments.blank? ? '------' : ie.comments.truncate(50), "#", title: ie.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{ie.id}", :"data-backdrop" => "static"  %>
           </span>
         </td>
         <div class="modal fade" id="comments<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="comments_label<%= ie.id %>" aria-hidden="true">
@@ -144,7 +144,7 @@
 
         <td>
           <span class="pull-left">
-            <%= link_to ie.tracking.blank? ? '------' : ie.tracking, "#", title: ie.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{ie.id}", :"data-backdrop" => "static"  %>
+            <%= link_to ie.tracking.blank? ? '------' : ie.tracking.truncate(50), "#", title: ie.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{ie.id}", :"data-backdrop" => "static"  %>
           </span>
         </td>
         <div class="modal fade" id="tracking<%= ie.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= ie.id %>" aria-hidden="true">

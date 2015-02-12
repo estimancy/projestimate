@@ -286,7 +286,7 @@ class WbsActivitiesController < ApplicationController
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
     current_pbs_estimations.each do |est_val|
-      if est_val.pe_attribute.alias == "effort"
+      if est_val.pe_attribute.alias == "effort" || est_val.pe_attribute.alias == "cost"
         if est_val.in_out == 'output'
 
           @results = Hash.new
@@ -317,7 +317,7 @@ class WbsActivitiesController < ApplicationController
           parent_profile_est_value = {}
 
           # get the wbs_project_elements that have at least one child
-          wbs_activity_elements = @wbs_activity.wbs_activity_elements.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
+          wbs_activity_elements = @wbs_activity.wbs_activity_elements#.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
 
           @project.organization.organization_profiles.each do |profile|
             profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
@@ -338,9 +338,9 @@ class WbsActivitiesController < ApplicationController
               wbs_activity_elt_id = wbs_activity_element.id
 
               # Wbs_project_element root element doesn't have a wbs_activity_element
-              if !wbs_activity_elt_id.nil? ||
-                  wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', @ratio_reference.id, wbs_activity_elt_id).first
-                if !wbs_activity_ratio_elt.nil?
+              #if !wbs_activity_elt_id.nil? ||
+                  wbs_activity_ratio_elt = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: wbs_activity_elt_id).first
+                unless wbs_activity_ratio_elt.nil?
                   # get the wbs_activity_ratio_profile
                   corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
                   # Get current profile ratio value for the referenced ratio
@@ -355,12 +355,16 @@ class WbsActivitiesController < ApplicationController
 
                   current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => estimation_value_profile} }
                 end
-              end
+            #  end
             end
 
             #Need to calculate the parents effort by profile : addition of its children values
             wbs_activity_elements.each do |wbs_activity_element_id|
-              probable_estimation_value[@pbs_project_element.id][wbs_activity_element_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_activity_element_id}"]} }
+              begin
+                probable_estimation_value[@pbs_project_element.id][wbs_activity_element_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_activity_element_id}"]} }
+              rescue
+
+              end
             end
           end
 

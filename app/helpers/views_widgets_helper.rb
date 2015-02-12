@@ -137,7 +137,6 @@ module ViewsWidgetsHelper
         end
 
         #TODO : remove this log
-        p estimation_value
         probable_value_text = display_value(data_probable.to_f, estimation_value, module_project_id)
 
         max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
@@ -292,11 +291,12 @@ module ViewsWidgetsHelper
 
     wbs_activity = module_project.wbs_activity
     wbs_activity_element_root = wbs_activity.wbs_activity_elements.first.root
-    if wbs_activity_element_root
-      wbs_activity_ratio = wbs_activity.wbs_activity_ratios.first
-    end
-    ratio_reference = wbs_activity_ratio
 
+    if wbs_activity_element_root
+      wbs_activity_ratio = WbsActivityInput.where(wbs_activity_id: wbs_activity, module_project_id: current_module_project.id).first.wbs_activity_ratio
+    end
+
+    ratio_reference = wbs_activity_ratio
 
     project_organization = module_project.project.organization
     wbs_activity_elements = wbs_activity.wbs_activity_elements
@@ -320,10 +320,22 @@ module ViewsWidgetsHelper
     case view_widget.widget_type
 
       when "effort_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_activity_ratio} )
+        result = raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements,
+                                                                                                pe_attribute: estimation_value.pe_attribute,
+                                                                                                module_project: module_project,
+                                                                                                project_organization_profiles: project_organization_profiles,
+                                                                                                estimation_pbs_probable_results: pbs_probable_est_value,
+                                                                                                ratio_reference: ratio_reference,
+                                                                                                wbs_elt_with_ratio: wbs_activity_ratio} )
 
       when "cost_per_phases_profiles_table"
-        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements, pe_attribute: estimation_value.pe_attribute, module_project: module_project, project_organization_profiles: project_organization_profiles, estimation_pbs_probable_results: pbs_probable_est_value, ratio_reference: ratio_reference, wbs_elt_with_ratio: wbs_activity_ratio} )
+        result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements,
+                                                                                              pe_attribute: estimation_value.pe_attribute,
+                                                                                              module_project: module_project,
+                                                                                              project_organization_profiles: project_organization_profiles,
+                                                                                              estimation_pbs_probable_results: pbs_probable_est_value,
+                                                                                              ratio_reference: ratio_reference,
+                                                                                              wbs_elt_with_ratio: wbs_activity_ratio} )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
         #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
