@@ -42,10 +42,10 @@
                   <% if project_organization_profiles.length > 0 %>
                     <% project_organization_profiles.each do |profile| %>
                       <% wbs_profiles_value = nil %>
-                      <% unless  (wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?) %>
-                          <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
-                      <% end %>
                       <% begin %>
+                        <% unless  (wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?) %>
+                          <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
+                        <% end %>
                         <td style="text-align: right"><%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} #{@wbs_activity.cost_unit}" %></td>
                       <% rescue %>
                         <td style="text-align: right"><%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} " %></td>
