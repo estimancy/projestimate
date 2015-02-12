@@ -566,6 +566,12 @@ class ProjectsController < ApplicationController
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
+    @organization = Organization.find(params[:organization_id])
+    @project_areas = @organization.project_areas
+    @platform_categories = @organization.platform_categories
+    @acquisition_categories = @organization.platform_categories
+    @project_categories = @organization.project_categories
+
     authorize! :show_project, @project
     set_page_title 'Show estimation'
 

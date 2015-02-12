@@ -45,7 +45,7 @@ class OrganizationTechnologiesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, OrganizationTechnology
+    authorize! :show_organization_technologies, OrganizationTechnology
 
     @organization_technology = OrganizationTechnology.find(params[:id])
     @organization = @organization_technology.organization

@@ -46,7 +46,7 @@ class ProjectSecurityLevelsController < ApplicationController
   end
 
   def edit
-    authorize! :manage, ProjectSecurityLevel
+    authorize! :show_project_security_levels, ProjectSecurityLevel
     set_page_title 'Project security levels'
     @project_security_level = ProjectSecurityLevel.find(params[:id])
     @organization = Organization.find(params[:organization_id])
