@@ -19,20 +19,12 @@
   </div>
 
   <div id="tabs-project-security-levels" style="min-height: 50px;">
-    <b>
-      <%= I18n.t(:security_level) %>
-    </b>
+    <b><%= I18n.t(:security_level) %></b>
 
     <% if can? :show_project_security_levels, ProjectSecurityLevel %>
 
       <% if can? :manage, ProjectSecurityLevel %>
-        <table border="0" width="100%">
-          <tr>
-            <td style="text-align:right;">
-              <%= link_to I18n.t('new_project_security_level'), new_organization_project_security_level_path(@organization), :class => 'btn' %>
-            </td>
-          </tr>
-        </table>
+         <%= link_to I18n.t('new_project_security_level'), new_organization_project_security_level_path(@organization), :class => 'btn pull-right' %>
       <% end %>
 
       <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -49,8 +41,8 @@
             <td><%= project_security_level.name %></td>
             <td><%= project_security_level.description %></td>
             <td class="center">
+              <%= link_to '', edit_organization_project_security_level_path(@organization, project_security_level), :class => 'icon-pencil', :title => I18n.t('edit') %>
               <% if can? :manage, ProjectSecurityLevel %>
-                <%= link_to '', edit_organization_project_security_level_path(@organization, project_security_level), :class => 'icon-pencil', :title => I18n.t('edit') %>
                 <%= link_to '', organization_project_security_level_path(@organization, project_security_level), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>

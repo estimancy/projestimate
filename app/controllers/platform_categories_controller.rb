@@ -50,7 +50,7 @@ class PlatformCategoriesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, PlatformCategory
+    authorize! :show_platform_categories, PlatformCategory
 
     set_page_title 'Platform Category'
     @platform_category = PlatformCategory.find(params[:id])

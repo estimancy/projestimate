@@ -28,7 +28,7 @@ class ProfileCategoriesController < ApplicationController
   end
 
   def edit
-    authorize! :manage_master_data, :all
+    authorize! :show_profile_categories, ProfileCategory
 
     set_page_title 'Edit profile Categories'
     @profile_category = ProfileCategory.find(params[:id])

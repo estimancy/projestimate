@@ -49,7 +49,7 @@ class AcquisitionCategoriesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, AcquisitionCategory
+    authorize! :show_acquisition_categories, AcquisitionCategory
 
     set_page_title I18n.t (:acquisition_category)
     @acquisition_category = AcquisitionCategory.find(params[:id])

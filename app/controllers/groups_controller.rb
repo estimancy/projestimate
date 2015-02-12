@@ -53,11 +53,12 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    authorize! :manage, Group
+    authorize! :show_groups, Group
+
+    @group = Group.find(params[:id])
 
     set_page_title 'Edit group'
 
-    @group = Group.find(params[:id])
     @organization = Organization.find(params[:organization_id])
 
     #set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)

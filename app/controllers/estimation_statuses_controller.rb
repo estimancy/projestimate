@@ -74,7 +74,8 @@ class EstimationStatusesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, EstimationStatus
+
+    authorize! :show_estimation_statuses, EstimationStatus
 
     @estimation_status = EstimationStatus.find(params[:id])
     @organization = @estimation_status.organization
