@@ -778,7 +778,8 @@ class ProjectsController < ApplicationController
         wbs_id = params[:module_selected].split(',').first.to_i
         my_module_project.wbs_activity_id = wbs_id
         WbsActivityInput.create(module_project_id: my_module_project.id,
-                                wbs_activity_id: wbs_id)
+                                wbs_activity_id: wbs_id,
+                                wbs_activity_ratio_id: my_module_project.wbs_activity.wbs_activity_ratios.first )
       elsif @pemodule.alias == "expert_judgement"
         eji_id = params[:module_selected].split(',').first
         my_module_project.expert_judgement_instance_id = eji_id.to_i

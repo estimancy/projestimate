@@ -292,11 +292,15 @@ module ViewsWidgetsHelper
     wbs_activity = module_project.wbs_activity
     wbs_activity_element_root = wbs_activity.wbs_activity_elements.first.root
 
-    if wbs_activity_element_root
-      wbs_activity_ratio = WbsActivityInput.where(wbs_activity_id: wbs_activity, module_project_id: current_module_project.id).first.wbs_activity_ratio
+    wai = WbsActivityInput.where(wbs_activity_id: wbs_activity, module_project_id: current_module_project.id).first
+
+    if wai.nil?
+      ratio_reference = wbs_activity.wbs_activity_ratios.first
+    else
+      ratio_reference = wai.wbs_activity_ratio
     end
 
-    ratio_reference = wbs_activity_ratio
+
 
     project_organization = module_project.project.organization
     wbs_activity_elements = wbs_activity.wbs_activity_elements
@@ -305,8 +309,8 @@ module ViewsWidgetsHelper
     project_organization_profiles = []
     ratio_profiles_with_nil_ratio = []
     wbs_activity_ratio_profiles = []
-    unless wbs_activity_ratio.nil?
-      wbs_activity_ratio.wbs_activity_ratio_elements.each do |ratio_elt|
+    unless ratio_reference.nil?
+      ratio_reference.wbs_activity_ratio_elements.each do |ratio_elt|
         ratio_profiles_with_nil_ratio << ratio_elt.wbs_activity_ratio_profiles
       end
       # Reject all RatioProfile with nil ratio_value
@@ -325,8 +329,7 @@ module ViewsWidgetsHelper
                                                                                                 module_project: module_project,
                                                                                                 project_organization_profiles: project_organization_profiles,
                                                                                                 estimation_pbs_probable_results: pbs_probable_est_value,
-                                                                                                ratio_reference: ratio_reference,
-                                                                                                wbs_elt_with_ratio: wbs_activity_ratio} )
+                                                                                                ratio_reference: ratio_reference } )
 
       when "cost_per_phases_profiles_table"
         result = raw(render :partial => 'views_widgets/cost_by_phases_profiles', :locals => { project_wbs_activity_elements: wbs_activity_elements,
@@ -334,8 +337,7 @@ module ViewsWidgetsHelper
                                                                                               module_project: module_project,
                                                                                               project_organization_profiles: project_organization_profiles,
                                                                                               estimation_pbs_probable_results: pbs_probable_est_value,
-                                                                                              ratio_reference: ratio_reference,
-                                                                                              wbs_elt_with_ratio: wbs_activity_ratio} )
+                                                                                              ratio_reference: ratio_reference } )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
         #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
