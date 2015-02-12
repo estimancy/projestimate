@@ -43,7 +43,6 @@ class WbsActivitiesController < ApplicationController
 
   #Import a new WBS-Activities from a CVS file
   def import
-    authorize! :manage, WbsActivity
 
     begin
       WbsActivityElement.import(params[:file], params[:separator])
@@ -57,7 +56,6 @@ class WbsActivitiesController < ApplicationController
   end
 
   def refresh_ratio_elements
-    authorize! :edit_wbs_activities, WbsActivity
 
     @wbs_activity_ratio_elements = []
     @wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
@@ -105,7 +103,6 @@ class WbsActivitiesController < ApplicationController
   end
 
   def update
-    authorize! :edit_wbs_activities, WbsActivity
 
     @wbs_activity = WbsActivity.find(params[:id])
     @wbs_activity_elements = @wbs_activity.wbs_activity_elements
@@ -127,16 +124,12 @@ class WbsActivitiesController < ApplicationController
   end
 
   def new
-    authorize! :manage, WbsActivity
-
     set_page_title 'WBS activities'
     @wbs_activity = WbsActivity.new
     @organization_id = params['organization_id']
   end
 
   def create
-    authorize! :manage, WbsActivity
-
     @wbs_activity = WbsActivity.new(params[:wbs_activity])
     @organization_id = params['wbs_activity']['organization_id']
 
@@ -150,8 +143,6 @@ class WbsActivitiesController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, WbsActivity
-
     @wbs_activity = WbsActivity.find(params[:id])
     @organization_id = @wbs_activity.organization_id
     @wbs_activity.destroy
@@ -163,8 +154,6 @@ class WbsActivitiesController < ApplicationController
 
   #Method to duplicate WBS-Activity and associated WBS-Activity-Elements
   def duplicate_wbs_activity
-    authorize! :manage, WbsActivity
-
     #Update ancestry depth caching
     WbsActivityElement.rebuild_depth_cache!
 
@@ -231,7 +220,6 @@ class WbsActivitiesController < ApplicationController
 
   #This function will validate the WBS-Activity and all its elements
   def validate_change_with_children
-    authorize! :manage, WbsActivity
     begin
       wbs_activity = WbsActivity.find(params[:id])
       wbs_activity_root_element = WbsActivityElement.where('wbs_activity_id = ? and is_root = ?', wbs_activity.id, true).first
