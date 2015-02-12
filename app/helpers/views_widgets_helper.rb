@@ -137,7 +137,6 @@ module ViewsWidgetsHelper
         end
 
         #TODO : remove this log
-        p estimation_value
         probable_value_text = display_value(data_probable.to_f, estimation_value, module_project_id)
 
         max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
