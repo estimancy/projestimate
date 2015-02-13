@@ -231,7 +231,7 @@
               <td><%= field.name %></td>
               <td><%= field.coefficient %></td>
               <td class="center span3">
-                <%= link_to '', edit_organization_field_path(@organization, field), :class => 'icon-edit' %>
+                <%= link_to '', edit_organization_field_path(@organization, field), :class => 'icon-pencil' %>
                 <% if can? :manage, Field %>
                     <%= link_to '', field, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'icon-trash' %>
                 <% end %>

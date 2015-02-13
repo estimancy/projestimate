@@ -70,7 +70,7 @@ class WorkElementTypesController < ApplicationController
 
     if @work_element_type.save
       flash[:notice] = I18n.t(:notice_work_element_type_successful_created)
-      redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-wet'))
+      redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), edit_organization_path(@organization, :anchor => 'settings'))
     else
       render action: 'new'
     end
@@ -106,6 +106,6 @@ class WorkElementTypesController < ApplicationController
       @work_element_type.destroy
     end
 
-    redirect_to edit_organization_path(organization_id)
+    redirect_to edit_organization_path(organization_id, anchor: "settings")
   end
 end

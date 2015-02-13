@@ -37,7 +37,7 @@ class EstimationStatusesController < ApplicationController
           status.update_attribute('to_transition_status_ids', params[:status_workflow][status.id.to_s])
         end
       end
-      redirect_to edit_organization_path(@organization, :anchor => "tabs-estimations-statuses"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
+      redirect_to edit_organization_path(@organization, :anchor => "settings"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
     end
   end
 
@@ -64,7 +64,7 @@ class EstimationStatusesController < ApplicationController
     end
 
     ##status.estimation_status_group_roles(force_reload = true)
-    redirect_to edit_organization_path(@organization, :anchor => "tabs-estimations-statuses"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
+    redirect_to edit_organization_path(@organization, :anchor => "settings"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
   end
 
   def new
@@ -91,7 +91,7 @@ class EstimationStatusesController < ApplicationController
       # Create the status self transition
       StatusTransition.create(from_transition_status_id: @estimation_status.id, to_transition_status_id: @estimation_status.id)
       flash[:notice] = I18n.t (:notice_estimation_status_successful_created)
-      redirect_to redirect_apply(nil, new_estimation_status_path(params[:estimation_status]), edit_organization_path(@organization, :anchor => 'tabs-estimations-statuses'))
+      redirect_to redirect_apply(nil, new_estimation_status_path(params[:estimation_status]), edit_organization_path(@organization, :anchor => 'settings'))
     else
       render action: 'new', :organization_id => @organization.id
     end
@@ -106,7 +106,7 @@ class EstimationStatusesController < ApplicationController
 
     if @estimation_status.update_attributes(params[:estimation_status])
       flash[:notice] = I18n.t (:notice_estimation_status_successful_updated)
-      redirect_to redirect_apply(edit_estimation_status_path(params[:estimation_status]), nil, edit_organization_path(@organization, :anchor => 'tabs-estimations-statuses'))
+      redirect_to redirect_apply(edit_estimation_status_path(params[:estimation_status]), nil, edit_organization_path(@organization, :anchor => 'settings'))
     else
       render action: 'edit', :organization_id => @organization.id
     end
@@ -127,7 +127,7 @@ class EstimationStatusesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-estimations-statuses')) }
+      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'settings')) }
     end
   end
 end

@@ -254,14 +254,6 @@ class ApplicationController < ActionController::Base
     session[:now] = request.referer
   end
 
-  #def current_user_SAVE
-  #  begin
-  #    (User.find(session[:current_user_id]) if session[:current_user_id]) || (User.find_by_email(cookies[:login]) if cookies[:login] || nil)
-  #  rescue ActiveRecord::RecordNotFound
-  #    reset_session
-  #  end
-  #end
-
   def set_current_project
     begin
       if params[:project_id].present? && !params[:project_id].nil?

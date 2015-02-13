@@ -126,10 +126,6 @@ public
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
 
-    #@user.project_ids = params[:user][:project_ids]
-    #@user.group_ids = params[:user][:group_ids]
-    #@user.organization_ids = params[:user][:organization_ids]
-
     #validation conditions
     if params[:user][:password].blank?
       # User is not updating his password
@@ -152,7 +148,7 @@ public
 
       #session[:current_password] = nil;  session[:password] = nil; session[:password_confirmation] = nil
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
-      redirect_to redirect_apply(edit_user_path(@user, :anchor => "tabs-5"), nil, users_path)
+      redirect_to redirect_apply(edit_user_path(@user, :anchor => "tabs-5"), nil, session[:previous])
     else
       #session[:current_password] = params[:user][:current_password];  session[:password] = params[:user][:password]; session[:password_confirmation] = params[:user][:password_confirmation]
       @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]

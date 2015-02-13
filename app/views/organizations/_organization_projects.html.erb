@@ -44,10 +44,10 @@
         <% if can_see_estimation?(project) %>
           <tr>
             <td class="text_field_text_overflow span1">
-              <% if can_show_estimation?(project) %>   <!-- Have the rigth to consult the project -->
-                  <%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %>
+              <% if can_show_estimation?(project) %>
+                <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip')  %>
               <% else %>
-                  <%= project.title %>
+                <%= project.title %>
               <% end %>
             </td>
             <td class="center"><%= project.version %></td>
@@ -80,8 +80,8 @@
 
               <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'fa fa-map-marker pull-left', style: "color: black; margin-top:4px;", :id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
 
-              <% if can_modify_estimation?(project) %>
-                <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'fa fa-edit pull-left', style: "color: black; margin-top:4px;", :title => I18n.t('edit')) %>
+              <% if can_modify_estimation?(project) && ((can? :manage, Project) || can?(:show, Project)) %>
+                <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'fa fa-pencil pull-left', style: "color: black; margin-top:4px;", :title => I18n.t('edit')) %>
               <% end %>
 
               <% if (can? :create_project_from_template, Project) || (can? :manage, project )%>
