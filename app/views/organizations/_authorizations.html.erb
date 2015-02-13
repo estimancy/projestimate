@@ -105,8 +105,8 @@
         <% end %>
       </table>
       <% if can? :manage_global_and_master_permissions, Permission %>
-        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-        <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
+        <%= submit_tag I18n.t('apply'), :class => 'btn', data: {:tab_name => 'tabs-global-permissions'} %>
+        <%= submit_tag I18n.t('cancel'),  :class => 'btn', :tab_name => 'tabs-global-permissions' %>
       <% end %>
     <% else %>
       <div class="red_color"><%= I18n.t(:notice_cannot_view_global_permissions) %></div>
@@ -161,8 +161,8 @@
             <% end %>
           </table>
           <% if can? :manage_global_and_master_permissions, Permission %>
-            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-            <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn', :tab_name => 'tabs-master-permissions' %>
+            <%= submit_tag I18n.t('cancel'),  :class => 'btn', :tab_name => 'tabs-master-permissions' %>
           <% end %>
         <% else %>
           <div class="red_color"><%= I18n.t(:notice_cannot_view_master_permissions) %></div>
@@ -228,8 +228,8 @@
         </table>
 
         <% if can? :manage_estimations_permissions, Permission %>
-          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-          <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
+          <%= submit_tag I18n.t('apply'), :class => 'btn', :tab_name => 'tabs-estimation-permissions' %>
+          <%= submit_tag I18n.t('cancel'),  :class => 'btn', :tab_name => 'tabs-estimation-permissions' %>
         <% end %>
       <% end %>
     <% else %>

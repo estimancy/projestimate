@@ -14,7 +14,7 @@ class FieldsController < ApplicationController
 
   # GET /fields/1/edit
   def edit
-    authorize! :show_fields, Field
+    authorize! :show_custom_fields, Field
     @field = Field.find(params[:id])
   end
 

@@ -274,7 +274,15 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    full_control_security_level = ProjectSecurityLevel.find_by_name('FullControl')
+    full_control_security_level = ProjectSecurityLevel.where(name: 'FullControl', organization_id: @organization.id).first_or_create(name: 'FullControl', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+    manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
+    # Add the "manage project" authorization to the "FullControl" security level
+    if manage_project_permission
+      if !manage_project_permission.in?(full_control_security_level.permission_ids)
+        full_control_security_level.update_attribute('permission_ids', manage_project_permission.id)
+      end
+    end
+
     current_user_ps = @project.project_securities.build
     current_user_ps.user = current_user
     current_user_ps.project_security_level = full_control_security_level
@@ -566,7 +574,7 @@ class ProjectsController < ApplicationController
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
-    @organization = Organization.find(params[:organization_id])
+    @organization = @project.organization #Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
     @acquisition_categories = @organization.platform_categories

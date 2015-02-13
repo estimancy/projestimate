@@ -66,9 +66,11 @@ class WorkElementTypesController < ApplicationController
   def create
     authorize! :manage, WorkElementType
     @work_element_type = WorkElementType.new(params[:work_element_type])
+    @organization = @work_element_type.organization
 
     if @work_element_type.save
-      redirect_to redirect_apply(nil, new_organization_path(@work_element_type.organization), edit_organization_path(@work_element_type.organization))
+      flash[:notice] = ""
+      redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-wet'))
     else
       render action: 'new'
     end
