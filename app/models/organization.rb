@@ -54,8 +54,6 @@ class Organization < ActiveRecord::Base
   has_many :organization_technologies, :dependent => :destroy
   has_many :organization_uow_complexities, :dependent => :destroy
   has_many :unit_of_works, :dependent => :destroy
-  has_many :subcontractors, :dependent => :delete_all
-  has_many :subcontractors, :dependent => :destroy
   has_many :projects, :dependent => :destroy
   has_many :organization_profiles, :dependent => :destroy
   has_many :profile_categories
@@ -106,7 +104,7 @@ class Organization < ActiveRecord::Base
   amoeba do
     enable
     include_association [:attribute_organizations, :organization_technologies, :organization_profiles,
-                         :unit_of_works, :subcontractors, :size_unit_types, :technology_size_types,
+                         :unit_of_works, :size_unit_types, :technology_size_types,
                          :organization_uow_complexities, :estimation_statuses, :fields]
 
     customize(lambda { |original_organization, new_organization|

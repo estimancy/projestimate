@@ -2,7 +2,7 @@
 
   <li class="dropdown">
     <a href="<%= main_app.projects_url %>" title="<%= I18n.t(:estimate) %>">
-      <i class="icon icon-list-ul icon-large pull-left"></i>&nbsp;
+      <i class="icon icon-list-ul icon-large pull-left" style="margin-top: -2px;"></i>&nbsp;
     </a>
   </li>
 
@@ -10,7 +10,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_organization %>">
-      <i class="fa fa-calculator icon-large pull-left"></i>&nbsp;</b>
+      <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <li class="dropdown"><a href="/organizationals_params">
@@ -39,7 +39,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_admin %>">
-      <i class="fa fa-user icon-large pull-left"></i>&nbsp;</b>
+      <i class="fa fa-user fa-lg pull-left" style="margin-top: 4px; color: black;"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
       <% if can? :manage_master_data, :all %>
@@ -126,7 +126,7 @@
 
   <li>
     <a href="<%= main_app.destroy_user_session_path %>#" data-method="delete" rel="nofollow" title="<%= I18n.t 'logout' %>">
-      <i class="icon-off icon-large"></i>
+      <i class="icon-off icon-large" style="margin-top: -4px; vertical-align: 0;"></i>
     </a>
   </li>
 
@@ -134,7 +134,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'services' %>" >
-      <i class="icon-book icon-large"></i>
+      <i class="icon-book icon-large"style="vertical-align: 0;"></i>
     </a>
   </li>
 
@@ -142,7 +142,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_service') %>" title="<%= I18n.t 'services' %>">
-      <i class="fa fa-users fa-lg" style="color: #000000"></i>
+      <i class="fa fa-users fa-lg" style="color: #000000;"></i>
     </a>
   </li>
 
