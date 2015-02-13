@@ -214,7 +214,7 @@
   <div id="tabs-fields">
     <b><%= I18n.t(:fields) %></b>
 
-    <% if can? :show_fields, Field %>
+    <% if can? :show_custom_fields, Field %>
         <% if can? :manage, Field %>
             <%= link_to I18n.t(:new_field), new_organization_field_path(@organization), class: "btn pull-right" %>
         <% end %>
