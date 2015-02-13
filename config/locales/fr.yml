@@ -903,6 +903,7 @@ fr:
   error_wbs_project_element_ratio_failed_update: "Erreur lors du changement de ratio"
   warning_work_element_type_cant_be_edit: "Ce type d'élément de travail ne peut être modifié, les modifications précédentes n'ont pas encore été validé."
   notice_work_element_type_successful_updated: "Work element type a été mis à jour avec succès.."
+  notice_work_element_type_successful_created: "Work element type a été créé avec succès.."
   notice_attribute_module_successful_created: "L'attribute module a été créé avec succès."
   notice_master_data_successful_validated: "Les changement sur l'enregistrement ont été validé avec succès."
   error_master_data_failed_validate: "La validation des modifications a échouée : %{value}"

@@ -69,7 +69,7 @@ class WorkElementTypesController < ApplicationController
     @organization = @work_element_type.organization
 
     if @work_element_type.save
-      flash[:notice] = ""
+      flash[:notice] = I18n.t(:notice_work_element_type_successful_created)
       redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-wet'))
     else
       render action: 'new'
@@ -88,7 +88,7 @@ class WorkElementTypesController < ApplicationController
     end
 
     if @work_element_type.update_attributes(params[:work_element_type])
-      flash[:notice] =  I18n.t (:notice_work_element_type_successful_updated)
+      flash[:notice] =  I18n.t(:notice_work_element_type_successful_updated)
       redirect_to redirect_apply(nil, new_organization_path(@work_element_type.organization), edit_organization_path(@work_element_type.organization))
     else
       render action: 'edit'

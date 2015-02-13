@@ -899,6 +899,7 @@ en-gb:
   notice_ratio_successful_changed: "Ratio was successfully changed"
   error_wbs_project_element_ratio_failed_update: "Error when changing Wbs activity ratio"
   warning_work_element_type_cant_be_edit: "This work element type can not be edited, previous changes have not yet been validated."
+  notice_work_element_type_successful_created: "Work element type was successfully created."
   notice_work_element_type_successful_updated: "Work element type was successfully updated."
   notice_attribute_module_successful_created: "Attribute module was successfully created."
   notice_master_data_successful_validated: "Changes on record was successfully validated."

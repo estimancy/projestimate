@@ -60,7 +60,7 @@ class Ability
     alias_action [:show_groups, Group], :to => [:manage, Group]
     alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
     alias_action :show_global_and_master_permissions, :to => :manage_global_and_master_permissions
-    alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :alter_estimation_plan, :to => :manage_estimation_plan
+    alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :to => :alter_estimation_plan
 
     #For organization
     alias_action :show_organizations, :to => :edit_organizations
