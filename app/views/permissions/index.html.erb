@@ -18,6 +18,7 @@
         <tr>
           <th><%= I18n.t(:name) %></th>
           <th><%= I18n.t(:alias) %></th>
+          <th class="filter-select"><%= I18n.t(:object_type) %></th>
           <th class="filter-select"><%= I18n.t(:category) %></th>
           <th class="filter-select"><%= I18n.t(:is_permission_project) %></th>
           <th class="filter-select"><%= I18n.t(:is_permission_master) %></th>
@@ -31,6 +32,7 @@
           <tr>
             <td><span class = "attribute_tooltip" title ='<%= perm.description%>' ><%= perm.name %></span></td>
             <td><%= perm.alias %></td>
+            <td><%= perm.object_type %></td>
             <td><%= perm.category %></td>
             <td><%= perm.is_permission_project %></td>
             <td><%= perm.is_master_permission %></td>

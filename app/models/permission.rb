@@ -36,7 +36,7 @@
 
 #Permission  of the users and the groups
 class Permission < ActiveRecord::Base
-  attr_accessible :alias, :name, :description, :category, :is_master_permission, :is_permission_project, :object_associated, :record_status_id, :custom_value, :change_comment
+  attr_accessible :alias, :name, :description, :category, :is_master_permission, :is_permission_project, :object_type, :object_associated, :record_status_id, :custom_value, :change_comment
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 

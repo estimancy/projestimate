@@ -529,7 +529,7 @@ fr:
 
   #permissions
   is_permission_project: "Est une permission projet"
-  is_permission_master: "Est une permission master"
+  is_permission_master: "Est une permission global"
   label_associated_object: "Objet associé"
   edit_permission: "Editer la permission \"%{value}\" ..."
   new_permission: "Créer une nouvelle permission"
@@ -1403,3 +1403,4 @@ fr:
   label_change_password_required: "Changement de mot de passe obligatoire ?"
   label_login: "Identifiant de connexion"
   label_request_create_organization: "Demande de création d'une organisation à partir d'organisation image"
+  object_type: "Type d'objet"

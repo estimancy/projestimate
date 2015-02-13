@@ -1681,4 +1681,5 @@ es:
   label_change_password_required: "change password required"
   label_login: "Login"
   label_request_create_organization: "Request to create an organization from image"
+  object_type: "Object type"
 
