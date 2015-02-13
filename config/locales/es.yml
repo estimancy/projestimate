@@ -631,6 +631,7 @@ es:
 #  text_user_associated_projects: "Proyectos asociados (Proyectos cuyo el usuario tiene acceso)"
 #  settings: "Preferencias"
 #  authentication: "Autenticaci�n del usuario"
+#  authentication_mode: "Users's Authentication mode"
 #  password: "Clave"
 #  password_confirmation: "Confirmaci�n del clave"
 #  auth_type: "Autenticaci�n del usuario"

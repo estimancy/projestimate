@@ -262,6 +262,7 @@ de:
 #  project_permissions: "Projektrechte"
 #  master_permissions: "Master-Berechtigungen"
 #  auth_methods: "Authentifizierungsmethoden"
+#  authentication_mode: "Users's Authentication mode"
 #  events: "Geschehen"
 #
 #  master: "Master Parameter"

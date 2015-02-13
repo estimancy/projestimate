@@ -638,6 +638,7 @@ fr:
   text_user_associated_projects: "Projets associés (projets auxquels l'utilisateur a accès)"
   settings: "Préférences"
   authentication: "Authentification de l'utilisateur"
+  authentication_mode: "Mode d'authentification de l'utilisateur"
   password: "Mot de passe"
   password_confirmation: "Confirmation du mot de passe"
   auth_type: "Authentification de l'utilisateur"

@@ -635,6 +635,7 @@ en-gb:
   text_user_associated_projects: "Associated projects (projects in which the user has access)"
   settings: "Preferences"
   authentication: "Users's Authentication"
+  authentication_mode: "Users's Authentication mode"
   password: "Password"
   password_confirmation: "Password Confirmation"
   auth_type: "User Authentication"

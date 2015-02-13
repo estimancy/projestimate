@@ -137,6 +137,7 @@ class PermissionsController < ApplicationController
       end
 
       redirect_to :back
+      #redirect_to(edit_organization_path(@organization, anchor: params[:name]))
     end
   end
 
@@ -160,6 +161,7 @@ class PermissionsController < ApplicationController
       end
 
       redirect_to :back
+      #redirect_to(edit_organization_path(@organization, anchor: params[:name]))
     end
   end
 end
