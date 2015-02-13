@@ -44,10 +44,10 @@
         <% if can_see_estimation?(project) %>
           <tr>
             <td class="text_field_text_overflow span1">
-              <% if can_show_estimation?(project) %>   <!-- Have the rigth to consult the project -->
-                  <%= link_to(project.title, edit_project_path(project), :class => 'button_attribute_tooltip')  %>
+              <% if can_show_estimation?(project) %>
+                <%= link_to(project.title, dahsboard_path(project), :class => 'button_attribute_tooltip')  %>
               <% else %>
-                  <%= project.title %>
+                <%= project.title %>
               <% end %>
             </td>
             <td class="center"><%= project.version %></td>
