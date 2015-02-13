@@ -94,7 +94,6 @@ class OrganizationsController < ApplicationController
 
     @ot = @organization.organization_technologies.first
     @unitofworks = @organization.unit_of_works
-    @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
 
     @users = @organization.users
     @groups = @organization.groups
@@ -134,16 +133,6 @@ class OrganizationsController < ApplicationController
 
     #A la sauvegarde, on crée des sous traitants
     if @organization.save
-
-      #Create the organization's default subcontractor
-      subcontractors = [
-          ['Undefined', '_undefined', "Haven't a clue if it will be subcontracted or made internally"],
-          ['Internal', '_internal', 'Will be made internally'],
-          ['Subcontracted', '_subcontracted', "Will be subcontracted (but don't know the subcontractor yet)"]
-      ]
-      subcontractors.each do |i|
-        @organization.subcontractors.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
-      end
 
       #Create default the size unit type's
       size_unit_types = [
@@ -261,7 +250,6 @@ class OrganizationsController < ApplicationController
       @complexities = @organization.organization_uow_complexities
       @ot = @organization.organization_technologies.first
       @unitofworks = @organization.unit_of_works
-      @default_subcontractors = @organization.subcontractors.where('alias IN (?)', %w(undefined internal subcontracted))
       @factors = Factor.order("factor_type")
       @technologies = OrganizationTechnology.all
       @size_unit_types = SizeUnitType.all
