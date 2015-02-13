@@ -53,7 +53,6 @@ class WbsProjectElementsController < ApplicationController
 
   def new
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsactivities, @project
 
     @wbs_project_element = WbsProjectElement.new
     @selected_parent ||= WbsProjectElement.find_by_id(params[:selected_parent_id])
@@ -110,7 +109,6 @@ class WbsProjectElementsController < ApplicationController
 
   def update
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsactivities, @project
 
     @wbs_project_element = WbsProjectElement.find(params[:id])
     @selected_parent ||= WbsProjectElement.find_by_id(params[:wbs_project_element][:parent_id])
@@ -157,7 +155,6 @@ class WbsProjectElementsController < ApplicationController
 
   def update_wbs_project_ratio_value
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsactivities, @project
 
     @wbs_project_element = WbsProjectElement.find(params[:wbs_project_id])
     @possible_wbs_activity_ratios = @wbs_project_element.wbs_activity.wbs_activity_ratios

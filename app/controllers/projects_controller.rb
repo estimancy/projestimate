@@ -1426,7 +1426,6 @@ public
   #Add/Import a WBS-Activity template from Library to Project
   def add_wbs_activity_to_project
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsactivities, @project
 
     @pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
     @wbs_project_elements_root = @project.wbs_project_element_root
