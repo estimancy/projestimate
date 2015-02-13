@@ -243,25 +243,40 @@ module ViewsWidgetsHelper
             end
 
           when "table_effort_per_phase", "table_cost_per_phase"
-            value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
+            unless estimation_value.in_out == "input"
+              value_to_show =  raw estimation_value.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_elt, module_project, estimation_value, view_widget_id)
+            end
 
           when "histogram_effort_per_phase", "histogram_cost_per_phase"
-            chart_height = height-90
-            chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
-            value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
+
+            unless estimation_value.in_out == "input"
+              chart_height = height-90
+              chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+              value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
+            end
 
           when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
             chart_height = height-90
-            chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+
+            unless estimation_value.in_out == "input"
+              chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
+            end
+
             value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {title: chart_title})
 
           when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
-            value_to_show = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+
+            unless estimation_value.in_out == "input"
+              value_to_show = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+            end
 
           when "stacked_bar_chart_effort_per_phases_profiles"
-            chart_height = height-90
-            stacked_chart_data = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
-            value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+
+            unless estimation_value.in_out == "input"
+              chart_height = height-90
+              stacked_chart_data = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
+              value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+            end
 
           when "stacked_bar_chart_cost_per_phases_profiles"
 
@@ -299,8 +314,6 @@ module ViewsWidgetsHelper
     else
       ratio_reference = wai.wbs_activity_ratio
     end
-
-
 
     project_organization = module_project.project.organization
     wbs_activity_elements = wbs_activity.wbs_activity_elements

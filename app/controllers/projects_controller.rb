@@ -302,8 +302,8 @@ class ProjectsController < ApplicationController
           #New default Pe-Wbs-Project
           pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
           pe_wbs_project_product.add_to_transaction
-
           pe_wbs_project_product.save!
+
           ##New root Pbs-Project-Element
           pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{@product_name.blank? ? @project_title : @product_name}",
                                                                                   :is_root => true,
