@@ -35,14 +35,13 @@
                 <td style="min-width: 105px;" class="align-center">
                   <%= link_to('', edit_user_path(user, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit')) %>
                   <% if can? :manage, User %>
-                      <%= link_to('', "users/#{user.id}/activate", :class => 'icon-legal', :style => 'color:green', :title => I18n.t('button_activate_user_account')) %>
-                      <%= link_to(' ', {:controller => 'users', :action => 'find_use_user', :user_id => user.id}, :remote => true, :class => 'icon-info', :title => I18n.t('button_find_use')) %>
-                      <%= link_to(' ', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete')) %>
+                    <%= link_to('', "users/#{user.id}/activate", :class => 'icon-legal', :style => 'color:green', :title => I18n.t('button_activate_user_account')) %>
+                    <%= link_to(' ', {:controller => 'users', :action => 'find_use_user', :user_id => user.id}, :remote => true, :class => 'icon-info', :title => I18n.t('button_find_use')) %>
+                    <%= link_to(' ', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete')) %>
                   <% end %>
                 </td>
               </tr>
           <% end %>
-
           <%= render :partial => 'layouts/footer_table' %>
       <% end %>
       </tbody>

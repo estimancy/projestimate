@@ -93,7 +93,7 @@ class ProjectCategoriesController < ApplicationController
 
     if @project_category.update_attributes(params[:project_category])
       flash[:notice] = I18n.t (:notice_project_categories_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-project-categories'))
+      redirect_to redirect_apply(nil, new_organization_project_category_path(@organization), edit_organization_path(@organization, :anchor => 'settings'))
     else
       render action: 'edit'
     end
@@ -113,6 +113,6 @@ class ProjectCategoriesController < ApplicationController
     end
 
     flash[:notice] = I18n.t (:notice_project_categories_successful_deleted)
-    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-project-categories')
+    redirect_to edit_organization_path(organization_id, :anchor => 'settings')
   end
 end

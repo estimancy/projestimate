@@ -82,7 +82,7 @@ class PermissionsController < ApplicationController
     @permission.alias = params[:permission][:alias].underscore.gsub(' ', '_')
 
     if @permission.save
-      redirect_to redirect_apply(nil, new_permission_path(), permissions_path), notice: "#{I18n.t (:notice_permission_successful_created)}"
+      redirect_to redirect_apply(nil, new_permission_path(), session[:previous] + "#authorizations"), notice: "#{I18n.t (:notice_permission_successful_created)}"
     else
       render action: 'new'
     end
@@ -103,7 +103,7 @@ class PermissionsController < ApplicationController
     if @permission.update_attributes(params[:permission])
       @permission.alias = @permission.alias.underscore.gsub(' ', '_')
       @permission.save
-      redirect_to redirect_apply(edit_permission_path(@permission), nil, permissions_path ), notice: "#{I18n.t (:notice_function_successful_updated)}"
+      redirect_to session[:previous] + "#authorizations"
     else
       render action: 'edit'
     end

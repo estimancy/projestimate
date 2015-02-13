@@ -72,7 +72,7 @@ class ProfileCategoriesController < ApplicationController
     if @profile_category.save
       flash[:notice] = I18n.t (:notice_profile_category_successful_created)
       if params[:profile_category][:organization_id]
-        redirect_to edit_organization_path(@organization, anchor: 'tabs-profile')  ###redirect_to :back
+        redirect_to edit_organization_path(@organization, anchor: 'settings')  ###redirect_to :back
       else
         redirect_to redirect_apply(nil, new_profile_category_path(), profile_categories_path)
       end
@@ -153,7 +153,7 @@ class ProfileCategoriesController < ApplicationController
 
     respond_to do |format|
       if @organization_profile.save
-        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_created) }
+        format.html { redirect_to edit_organization_path(@organization, anchor: 'settings'), notice: I18n.t(:notice_profile_successful_created) }
         format.json { render json: @organization_profile, status: :created, location: @organization_profile }
       else
         flash[:error] = I18n.t(:error_profile_failed_created)
