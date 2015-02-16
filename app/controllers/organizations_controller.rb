@@ -83,7 +83,6 @@ class OrganizationsController < ApplicationController
   def estimations
     @organization = Organization.find(params[:organization_id])
     @projects = @organization.projects
-
   end
 
   # New organization from image
@@ -93,7 +92,27 @@ class OrganizationsController < ApplicationController
   #Create New organization from selected image organization
   def create_organization_from_image
     #Create the organization from image organization
+    puts "Test"
+    organization_image_id = params[:organization_image]
+    if !organization_image_id.nil?
+      organization_image = Organization.find(organization_image_id)
+      organization_name = params[:organization_name]
+      firstname = params[:firstname]
+      lastname = params[:lastname]
+      email = params[:email]
+      login = params[:identifiant]
+      change_password_required = params[:change_password_required]
 
+      #new_organization = organization_image.amoeba_dup
+      #if new_organization.save
+      #  organization_image.save #Original organization copy number will be incremented to 1
+      #else
+      #end
+
+    else
+
+    end
+    redirect_to :back
   end
 
 

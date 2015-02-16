@@ -46,6 +46,11 @@ class Ability
       can :manage, :all
     end
 
+    #Only the super-admin has the rights to manage the master-data
+    if user.super_admin?
+      can :manage_master_data, :all
+    end
+
     can :edit, Project
     can :update, Project
     cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, ProjectArea,
