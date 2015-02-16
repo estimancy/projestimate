@@ -43,6 +43,9 @@ class OrganizationsController < ApplicationController
 
   def authorization
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @groups = @organization.groups
 
     @global_permissions = Permission.order('name').defined.select{ |i| i.object_type == "general_objects" }
@@ -60,6 +63,8 @@ class OrganizationsController < ApplicationController
   def setting
     @organization = Organization.find(params[:organization_id])
 
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @technologies = @organization.organization_technologies
     @fields = @organization.fields
     @work_element_types = @organization.work_element_types
@@ -71,6 +76,9 @@ class OrganizationsController < ApplicationController
 
   def module_estimation
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @guw_models = @organization.guw_models
     @wbs_activities = @organization.wbs_activities
     @size_units = SizeUnit.all
@@ -80,10 +88,15 @@ class OrganizationsController < ApplicationController
 
   def users
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
   end
 
   def estimations
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @projects = @organization.projects
 
   end
@@ -95,7 +108,6 @@ class OrganizationsController < ApplicationController
   #Create New organization from selected image organization
   def create_organization_from_image
     #Create the organization from image organization
-
   end
 
 
@@ -299,6 +311,9 @@ class OrganizationsController < ApplicationController
 
   def organizationals_params
     set_page_title 'Organizational Parameters'
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Liste des organizations" => ""
+
     if can? :manage, :all
       @organizations = Organization.all
     else
