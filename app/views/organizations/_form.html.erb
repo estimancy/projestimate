@@ -1,16 +1,6 @@
-  <br>
-
-  <ul class="nav nav-pills" id="myTab">
-    <li class="active"><a href="#organization" data-toggle="tab">Définition</a></li>
-    <% if action_name.in?(%w(edit update)) %>
-        <li><a href="#users" data-toggle="tab"><%= I18n.t(:users) %> </a></li>
-        <li><a href="#authorizations" data-toggle="tab">Autorisation </a></li>
-        <li><a href="#estimations" data-toggle="tab">Estimations </a></li>
-        <li><a href="#settings" data-toggle="tab">Paramétrage </a></li>
-        <li><a href="#module_estimations" data-toggle="tab">Modules</a></li>
-    <% end %>
-  </ul>
-
+<h4>
+  <%= @organization %>
+</h4>
   <div class="tab-content">
     <div class="tab-pane active" id="organization">
       <div id="accordion2" class="accordion">
@@ -104,28 +94,4 @@
         </div>
       <% end %>
     </div>
-
-  <% if action_name.in?(%w(edit update)) %>
-
-    <div class="tab-pane" id="users">
-      <%= render partial: "organizations/organization_users", object: @users %>
-    </div>
-
-    <div class="tab-pane" id="authorizations">
-      <%= render partial: "authorizations", object: @groups %>
-    </div>
-
-    <div class="tab-pane" id="estimations">
-      <%= render :partial => 'organizations/organization_projects', object: [@organization, @projects] %>
-    </div>
-
-    <div class="tab-pane" id="settings">
-      <%= render partial: "settings" %>
-    </div>
-
-    <div class="tab-pane" id="module_estimations">
-      <%= render partial: "module_estimations" %>
-    </div>
-
-  <% end %>
 </div>

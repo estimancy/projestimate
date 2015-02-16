@@ -4,15 +4,14 @@
 <div class="tabs">
   <ul>
     <li><a href="#tabs-1"><%= I18n.t(:organizations) %></a></li>
-    <li><a href="#tabs-2"><%= I18n.t(:size_unit) %></a></li>
   </ul>
 
   <div id="tabs-1">
     <% if can? :create_organizations, Organization %>
-        <div style="float: right">
-          <%= link_to I18n.t('new_organization'), new_organization_path, :class => 'btn' %>
-          <%= link_to I18n.t('new_organization_from_image'), new_organization_from_image_path, :class => 'btn' %>
-        </div>
+      <div style="float: right">
+        <%= link_to I18n.t('new_organization'), new_organization_path, :class => 'btn' %>
+        <%= link_to I18n.t('new_organization_from_image'), new_organization_from_image_path, :class => 'btn' %>
+      </div>
     <% end %>
 
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -23,80 +22,25 @@
           <th class="action"><%= I18n.t(:actions) %></th>
         </tr>
       </thead>
-
       <tbody>
         <% @organizations.each do |i| %>
-            <tr>
-              <td><%= link_to i.name, edit_organization_path(i) %></td>
-              <td><%= i.description %></td>
-              <td class="center">
-                <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
-                <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
-                <% if can? :manage, Organization %>
-                  <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
-                <% end %>
-              </td>
-            </tr>
+          <tr>
+            <td><%= link_to i.name, organization_estimations_path(i) %></td>
+            <td><%= i.description %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
+              <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
+              <% if can? :manage, Organization %>
+                <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
+          </tr>
         <% end %>
         <%= render :partial => 'layouts/footer_table' %>
       </tbody>
     </table>
   </div>
-
-  <div id="tabs-2">
-    <% if can? :manage, Organization %>
-      <table border="0" width="100%">
-        <tr>
-          <td style="text-align:right;">
-            <%= link_to "New Size Unit", new_size_unit_path, :class => 'btn' %>
-          </td>
-        </tr>
-      </table>
-
-      <table id="table1" class="table tablesorterPager table-striped table-bordered table-condensed">
-        <thead>
-          <tr>
-            <th><%= I18n.t(:name) %></th>
-            <th><%= I18n.t(:alias) %></th>
-            <th><%= I18n.t(:description) %></th>
-            <th></th>
-            <th class="action"><%= I18n.t(:actions) %></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @size_units.each do |i| %>
-            <tr>
-              <td><%= i.name %></td>
-              <td><%= i.alias %></td>
-              <td><%= i.description %></td>
-              <td><%= i.record_status.name unless i.record_status.nil? %> <%= i.show_custom_value %></td>
-              <td class="center">
-                <%= link_to '', edit_size_unit_path(i), :class => 'icon-pencil icon-large', :title => I18n.t('edit') %>
-                <% unless i.is_defined? %>
-                  <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash icon-large', :style => 'color:red', :title => I18n.t('delete') %>
-                <% end %>
-                <% if is_master_instance? && !i.is_local_record? %>
-                  <% if i.is_retired? %>
-                    <%= link_to('', "size_units/#{i.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo icon-large', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-                  <% else %>
-                    <% unless i.is_defined? %>
-                      <%= link_to('', "size_units/#{i.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok icon-large', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                    <% end %>
-                  <% end %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-
-          <%= render :partial => 'layouts/footer_table' %>
-
-          <tbody>
-        </table>
-    <% end %>
-  </div>
-
 </div>
 
 

@@ -267,7 +267,7 @@ class ApplicationController < ActionController::Base
           session[:project_id] = @project.id
         end
       else
-        @project = nil
+        @project = current_user.organizations.first.projects.first
       end
     rescue
       @project = nil
