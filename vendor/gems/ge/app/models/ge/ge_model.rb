@@ -15,7 +15,11 @@ module Ge
 
     def self.display_size(p, c, level, component_id)
       if c.send("string_data_#{level}")[component_id].nil?
-        nil
+        begin
+          p.send("string_data_#{level}")[component_id]
+        rescue
+          nil
+        end
       else
         c.send("string_data_#{level}")[component_id]
       end
