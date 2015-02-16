@@ -1,22 +1,61 @@
 <ul class="nav">
 
   <li class="dropdown">
-    <a href="<%= main_app.projects_url %>" title="<%= I18n.t(:estimate) %>">
+    <a href="<%= main_app.organization_estimations_path(@project.organization) %>" title="Liste des estimations">
       <i class="icon icon-list-ul icon-large pull-left" style="margin-top: -2px;"></i>&nbsp;
+    </a>
+  </li>
+
+  <li class="dropdown">
+    <% if @project %>
+      <a href="<%= main_app.dashboard_path(@project) %>" title="Estimation en cours">
+        <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
+      </a>
+    <% else %>
+      <a href="<%= main_app.projects_path %>">
+        <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
+      </a>
+    <% end %>
+  </li>
+
+  <li class="dropdown">
+    <a href="#" title="Rapport">
+      <i class="icon icon-print icon-large pull-left" style="margin-top: -2px;"></i>&nbsp;
     </a>
   </li>
 
   <li class="divider-vertical"></li>
 
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_organization %>">
-      <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Environnement utilisateur">
+      <i class="fa fa-user fa-lg pull-left" style="margin-top: 4px; color: black;"></i>&nbsp;</b>
     </a>
     <ul class="dropdown-menu">
-      <li class="dropdown"><a href="/organizationals_params">
-        <!--<i class="icon-globe icon-large pull-left"></i>-->
-        <%= I18n.t(:organization_setting) %></a>
+      <li>
+        <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
+          <%= current_user %>
+        </a>
       </li>
+
+      <li class="dropdown">
+        <a href="<%= main_app.organization_authorization_path(@project.organization) %>"> Authorisations </a>
+      </li>
+
+      <li class="dropdown">
+        <a href="<%= main_app.organization_users_path(@project.organization) %>"> Utilisateurs </a>
+      </li>
+
+      <li class="dropdown">
+        <a href="/organizationals_params"> Changement d'organisation </a>
+      </li>
+    </ul>
+  </li>
+
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Configuration et paramétrage">
+      <i class="icon-cog icon-large pull-left"></i></b>
+    </a>
+    <ul class="dropdown-menu">
       <% if @project %>
         <% if !@project.organization.nil? %>
           <li class="dropdown">
@@ -24,103 +63,77 @@
               <%= @project.organization %>
             </a>
           </li>
+          <li class="dropdown">
+            <a href="<%= main_app.organization_setting_path(@project.organization)%>">
+              Paramétrage
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="<%= main_app.organization_module_estimation_path(@project.organization)%>">
+              Module
+            </a>
+          </li>
         <% end %>
       <% end %>
-      <% if can? :manage_master_data, :all %>
-          <li class="dropdown"><a href="<%= main_app.factors_path %>">
-            <!--<i class="icon-globe icon-large pull-left"></i>-->
-            <%= I18n.t(:factors) %></a>
+    </ul>
+  </li>
+
+  <li class="dropdown">
+    <% if current_user.super_admin? %>
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_master_admin %>">
+          <i class="icon icon-wrench pull-left"></i></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li class="dropdown"><a href="organizationals_params">
+            <%= I18n.t(:organizations) %></a>
           </li>
-      <% end %>
-    </ul>
-  </li>
 
-  <li class="divider-vertical"></li>
+          <li class="dropdown"><a href="<%= main_app.pe_attributes_path %>">
+            <%= I18n.t(:pe_attributes) %></a>
+          </li>
 
-  <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_admin %>">
-      <i class="fa fa-user fa-lg pull-left" style="margin-top: 4px; color: black;"></i>&nbsp;</b>
-    </a>
-    <ul class="dropdown-menu">
-      <% if can? :manage_master_data, :all %>
-        <li class="dropdown">
-          <a href="<%= main_app.admin_settings_path %>"> <%= I18n.t(:administration) %> </a>
-        </li>
-        <li class="dropdown">
-          <a href="<%= main_app.auth_methods_path %>"><%= I18n.t(:auth_methods) %></a>
-        </li>
-      <% end %>
+          <li class="dropdown"><a href="<%= main_app.pemodules_path %>">
+              <%= I18n.t(:projestimate_module) %></a>
+          </li>
 
-      <% if can? :manage_master_data, :all %>
-        <li class="dropdown">
-          <a href="<%= main_app.users_path %>"> <%= I18n.t(:users) %> </a>
-        </li>
-      <% end %>
-    </ul>
-  </li>
+          <li class="dropdown"><a href="<%= main_app.permissions_path %>">
+              <%= I18n.t(:all_permissions) %></a>
+          </li>
 
-  <li class="divider-vertical"></li>
+          <li class="dropdown"><a href="<%= main_app.languages_path %>">
+              <%= I18n.t(:languages) %></a>
+          </li>
 
-  <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_master_admin %>">
-      <i class="icon-cog icon-large pull-left"></i></b>
-    </a>
-    <ul class="dropdown-menu">
-      <% if can? :manage_master_data, :all %>
-        <li class="dropdown"><a href="<%= main_app.pe_attributes_path %>">
-          <%= I18n.t(:pe_attributes) %></a>
-        </li>
+          <li class="dropdown"><a href="/translations">
+              <%= I18n.t(:translations) %></a>
+          </li>
 
-        <li class="dropdown"><a href="<%= main_app.attribute_categories_path %>">
-          <%= I18n.t(:attribute_categories) %></a>
-        </li>
+          <li class="dropdown"><a href="<%= main_app.record_statuses_path %>">
+              <%= I18n.t(:record_status) %></a>
+          </li>
 
-        <li class="dropdown"><a href="<%= main_app.pemodules_path %>">
-            <%= I18n.t(:projestimate_module) %></a>
-        </li>
+          <li class="dropdown"><a href="<%= main_app.currencies_path %>">
+              <%= I18n.t(:currencies) %></a>
+          </li>
 
-        <li class="dropdown"><a href="<%= main_app.permissions_path %>">
-            <%= I18n.t(:all_permissions) %></a>
-        </li>
+          <li class="dropdown"><a href="<%= main_app.factors_path %>">
+              <%= I18n.t(:factors) %></a>
+          </li>
 
-        <li class="dropdown"><a href="<%= main_app.languages_path %>">
-            <%= I18n.t(:languages) %></a>
-        </li>
+          <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
 
-        <li class="dropdown"><a href="/translations">
-            <%= I18n.t(:translations) %></a>
-        </li>
+          <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
 
-        <li class="dropdown"><a href="<%= main_app.record_statuses_path %>">
-            <%= I18n.t(:record_status) %></a>
-        </li>
-
-        <li class="dropdown"><a href="<%= main_app.currencies_path %>">
-            <%= I18n.t(:currencies) %></a>
-        </li>
-
-        <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
-
-        <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
-      <% end %>
-
-      <li class="dropdown"><a href="<%= main_app.technologies_path %>">
-        <%= I18n.t(:organization_technology) %></a>
-      </li>
-
-    </ul>
+          <li class="dropdown"><a href="<%= main_app.technologies_path %>">
+            <%= I18n.t(:organization_technology) %></a>
+          </li>
+        </ul>
+    <% end %>
   </li>
 </ul>
 
 
 <ul class="nav pull-right">
-  <li class="divider-vertical"></li>
-
-  <li>
-    <a href="<%= main_app.edit_user_path(current_user) %>" title="<%= I18n.t 'edit' %>">
-      <%= current_user %> | <%= @project.nil? ? "" : @project.organization %> | <%= @project.nil? ? "" : @project.title %>
-    </a>
-  </li>
 
   <li class="divider-vertical"></li>
 

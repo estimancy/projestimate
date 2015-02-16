@@ -270,7 +270,7 @@ en:
   events: "Events"
 
   master: "Master parameters"
-  label_menu_master_admin: "Master Administration"
+  label_menu_master_admin: "Menu Super Administrateur"
   project_global_parameters: "Project global parameters"
   pemodule_global_parameters: "Module global parameters"
   pe_attributes: "Attributes"

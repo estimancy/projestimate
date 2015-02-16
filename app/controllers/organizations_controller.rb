@@ -41,15 +41,49 @@ class OrganizationsController < ApplicationController
   require 'roo'
   include Roo
 
+  def authorization
+    @organization = Organization.find(params[:organization_id])
+    @groups = @organization.groups
+    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
+    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
+    @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
+
+    @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
+    @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
+    @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
+
+    @project_security_levels = @organization.project_security_levels
+  end
+
   def setting
     @organization = Organization.find(params[:organization_id])
 
     @technologies = @organization.organization_technologies
     @fields = @organization.fields
     @work_element_types = @organization.work_element_types
+
+    @organization_profiles = @organization.organization_profiles
+
+    @organization_group = @organization.groups
   end
 
   def module_estimation
+    @organization = Organization.find(params[:organization_id])
+    @guw_models = @organization.guw_models
+    @wbs_activities = @organization.wbs_activities
+    @size_units = SizeUnit.all
+    @technologies = @organization.organization_technologies
+    @size_unit_types = @organization.size_unit_types
+  end
+
+  def users
+    @organization = Organization.find(params[:organization_id])
+  end
+
+  def estimations
+    @organization = Organization.find(params[:organization_id])
+    @projects = @organization.projects
+
   end
 
   # New organization from image
@@ -84,13 +118,6 @@ class OrganizationsController < ApplicationController
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
     @complexities = @organization.organization_uow_complexities
-    @projects = @organization.projects
-
-    @wbs_activities = @organization.wbs_activities
-
-    @technologies = @organization.organization_technologies
-    @size_units = SizeUnit.all
-    @size_unit_types = @organization.size_unit_types
 
     @factors = Factor.order("factor_type")
 
@@ -98,14 +125,10 @@ class OrganizationsController < ApplicationController
     @unitofworks = @organization.unit_of_works
 
     @users = @organization.users
-    @groups = @organization.groups
     @fields = @organization.fields
 
-    ####@global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
-    #@permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
-    @global_permissions = Permission.order('name').defined.select{ |i| i.object_type == "general_objects" }
-    @permission_projects = Permission.order('name').defined.select{ |i| i.object_type == "project_dependencies_objects" }
-    @modules_permissions = Permission.order('name').defined.select{ |i| i.object_type == "module_objects" }
+    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
+    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
     @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
 
     @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
@@ -117,10 +140,6 @@ class OrganizationsController < ApplicationController
     @organization_profiles = @organization.organization_profiles
 
     @work_element_types = @organization.work_element_types
-
-    #Get the Master defined groups and the organization's group
-    @organization_group = @organization.groups
-    @guw_models = @organization.guw_models
   end
 
   def refresh_value_elements

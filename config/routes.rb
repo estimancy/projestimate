@@ -218,6 +218,8 @@ Projestimate::Application.routes.draw do
     get "authorization" => 'organizations#authorization'
     get "setting" => 'organizations#setting'
     get "module_estimation" => 'organizations#module_estimation'
+    get "users" => 'organizations#users'
+    get "estimations" => 'organizations#estimations'
   end
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
@@ -331,5 +333,5 @@ Projestimate::Application.routes.draw do
   post 'update_selected_attribute_organizations' => 'attribute_organizations#update_selected_attribute_organizations'
   post 'save_cocomo_basic' => 'cocomo_basics#save_cocomo_basic', :as => 'EstimationControllers/save_cocomo_basic'
 
-  root :to => 'projects#index'
+  root :to => 'organizations#organizationals_params'
 end
