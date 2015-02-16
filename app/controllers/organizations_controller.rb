@@ -44,8 +44,10 @@ class OrganizationsController < ApplicationController
   def authorization
     @organization = Organization.find(params[:organization_id])
     @groups = @organization.groups
-    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
-    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
+
+    @global_permissions = Permission.order('name').defined.select{ |i| i.object_type == "general_objects" }
+    @permission_projects = Permission.order('name').defined.select{ |i| i.object_type == "project_dependencies_objects" }
+    @modules_permissions = Permission.order('name').defined.select{ |i| i.object_type == "module_objects" }
     @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
 
     @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
@@ -124,16 +126,6 @@ class OrganizationsController < ApplicationController
 
     @users = @organization.users
     @fields = @organization.fields
-
-    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
-    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
-    @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
-
-    @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
-    @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
-    @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
-
-    @project_security_levels = @organization.project_security_levels
 
     @organization_profiles = @organization.organization_profiles
 
