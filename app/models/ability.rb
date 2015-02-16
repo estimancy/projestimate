@@ -72,7 +72,7 @@ class Ability
     alias_action :edit_organizations, :to => :create_organizations
 
     #When user can create a project template, he also can create a project from scratch
-    alias_action :create_project_from_scratch, :to => :manage_project_template
+    alias_action :create_project_from_scratch, :to => :manage_estimation_models
 
     #When user can manage all Users, he will be able to create/Modify/Delete users
 
