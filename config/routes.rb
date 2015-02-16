@@ -238,6 +238,7 @@ Projestimate::Application.routes.draw do
 
   resources :permissions
   post 'set_rights' => 'permissions#set_rights', :as => 'set_rights'
+  post 'set_estimations_rights' => 'permissions#set_estimations_rights', :as => 'set_estimations_rights'
   post 'set_rights_project_security' => 'permissions#set_rights_project_security', :as => 'set_rights_project_security'
   get 'globals_permissions' => 'permissions#globals_permissions', :as => 'globals_permissions'
 

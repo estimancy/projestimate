@@ -1,53 +1,59 @@
-<br>
-<h4><b><%= I18n.t(:label_request_create_organization) %></b></h4>
+<br><br>
 
-<%= form_tag '/create_organization_from_image', :method => 'POST', :class => 'simple_form' do %>
-    <div>
+<div class="tabs">
+    <h4><b><%= I18n.t(:label_request_create_organization) %></b></h4>
 
-    </div>
+    <%= form_tag '/create_organization_from_image', :method => 'POST', :class => 'simple_form' do %>
+     <div style="margin: 30px; width: 50%">
+        <div class="row">
+            <div class="span2"><%= I18n.t(:label_organization_name) %> : </div>
+            <div class="span4"> <%= text_field_tag "organization_name", nil, class: 'simple_form' %> </div>
+        </div>
 
-    <table border="0" width="100%">
-      <tr style="float: left">
-        <td><%= I18n.t(:label_organization_name) %>:</td>
-        <td><%= text_field_tag "organization_name", nil, class: 'simple_form' %></td>
-      </tr>
+       <div class="row">
+         <div class="span2"><%= I18n.t(:label_organization_image) %>  : </div>
+         <div class="span4"><%= select_tag "organization_image", options_from_collection_for_select(Organization.where(is_image_organization: true), "id", "name") %> </div>
+       </div>
 
-      <tr>
-        <td><%= I18n.t(:label_organization_image) %>:</td>
-        <td><%= select_tag "organization_image", options_from_collection_for_select(Organization.where(is_image_organization: true), "id", "name") %></td>
-      </tr>
+       <br>
+       <div class="row">
+         <div class="span2"><%= I18n.t(:label_login) %> : </div>
+         <div class="span4"><%= text_field_tag "identifiant", nil, class: 'simple_form' %> </div>
+       </div>
 
-      <tr>
-        <td><%= I18n.t(:label_login) %>:</td>
-        <td><%= text_field_tag "identifiant", nil, class: 'simple_form' %></td>
-      </tr>
-      <tr>
-        <td><%= I18n.t(:password) %>:</td>
-        <td><%= password_field_tag "password", nil, class: 'simple_form' %></td>
-      </tr>
-      <tr>
-        <td><%= I18n.t(:last_name) %>:</td>
-        <td><%= text_field_tag "lastname", nil, class: 'simple_form' %> </td>
-      </tr>
-      <tr>
-        <td><%= I18n.t(:first_name) %>:</td>
-        <td><%= text_field_tag "firstname", nil, class: 'simple_form' %></td>
-      </tr>
+       <div class="row">
+         <div class="span2"><%= I18n.t(:password) %> : </div>
+         <div class="span4"><%= password_field_tag "password", nil, class: 'simple_form' %> </div>
+       </div>
 
-      <tr>
-        <td><%= I18n.t(:email) %>:</td>
-        <td><%= text_field_tag "email", nil, class: 'simple_form' %></td>
-      </tr>
+       <br>
+       <div class="row">
+         <div class="span2"><%= I18n.t(:last_name) %> : </div>
+         <div class="span4"><%= text_field_tag "lastname", nil, class: 'simple_form' %> </div>
+       </div>
 
-      <tr>
-        <td><%= I18n.t(:label_change_password_required) %>:</td>
-        <td><%= check_box_tag "change_password_required" %></td>
-      </tr>
+       <div class="row">
+         <div class="span2"><%= I18n.t(:first_name) %> : </div>
+         <div class="span4"><%= text_field_tag "firstname", nil, class: 'simple_form' %> </div>
+       </div>
 
-      <tr>
-        <td> <%= submit_tag I18n.t('apply'), :class => 'btn' %></td>
-        <td><%= link_to I18n.t('back'), organizationals_params_path, :class => 'btn' %></td>
-      </tr>
+       <div class="row">
+         <div class="span2"><%= I18n.t(:email) %>  : </div>
+         <div class="span4"><%= text_field_tag "email", nil, class: 'simple_form' %> </div>
+       </div>
 
-    </table>
-<% end %>
+       <br>
+       <div class="row">
+         <div class="span4"><%= I18n.t(:label_change_password_required) %> : </div>
+         <div class="span4"><%= check_box_tag "change_password_required" %> </div>
+       </div>
+
+       <br>
+       <div class="row">
+         <div class="span2"><%= submit_tag I18n.t('apply'), :class => 'btn' %> </div>
+         <div class="span4"><%= link_to I18n.t('back'), organizationals_params_path, :class => 'btn' %> </div>
+       </div>
+     </div>
+
+    <% end %>
+</div>

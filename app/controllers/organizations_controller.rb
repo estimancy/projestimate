@@ -99,8 +99,11 @@ class OrganizationsController < ApplicationController
     @groups = @organization.groups
     @fields = @organization.fields
 
-    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
-    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
+    ####@global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
+    #@permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
+    @global_permissions = Permission.order('name').defined.select{ |i| i.object_type == "general_objects" }
+    @permission_projects = Permission.order('name').defined.select{ |i| i.object_type == "project_dependencies_objects" }
+    @modules_permissions = Permission.order('name').defined.select{ |i| i.object_type == "module_objects" }
     @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
 
     @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
