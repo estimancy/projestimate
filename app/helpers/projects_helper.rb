@@ -1076,23 +1076,30 @@ module ProjectsHelper
   # The possible project_permission_action_alias = ("see_project", "show_project", "edit_project", "delete_project")
   def can_do_action_on_estimation?(estimation, project_permission_action_alias)
     can_do_something = false
-    begin
-      permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
-      ###if can?(:show_project, estimation)
-      #if can?(:see_project, estimation)
-        # if at least one of the current_user's groups is in the estimation's organization groups
-        groups_intersection = current_user.groups.all & estimation.organization.groups
-        unless groups_intersection.nil?
-          groups_intersection.each do |group|
-            if estimation.estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include?(permission_to_show_project.id)
-              can_do_something = true
-              break if can_do_something
+
+    # SuperAdmin user or those who has all permissions has all rights
+    if current_user.super_admin? || can?(:manage, :all)
+      can_do_something = true
+
+    else
+      begin
+        permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
+        ###if can?(:show_project, estimation)
+        #if can?(:see_project, estimation)
+          # if at least one of the current_user's groups is in the estimation's organization groups
+          groups_intersection = current_user.groups.all & estimation.organization.groups
+          unless groups_intersection.nil?
+            groups_intersection.each do |group|
+              if estimation.estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include?(permission_to_show_project.id)
+                can_do_something = true
+                break if can_do_something
+              end
             end
           end
-        end
-      #end
-    rescue
-      false
+        #end
+      rescue
+        false
+      end
     end
 
     can_do_something

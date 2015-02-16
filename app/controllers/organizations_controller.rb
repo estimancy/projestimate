@@ -58,6 +58,8 @@ class OrganizationsController < ApplicationController
 
   #Create New organization from selected image organization
   def create_organization_from_image
+    #Create the organization from image organization
+
   end
 
 
