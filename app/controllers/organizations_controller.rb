@@ -43,9 +43,14 @@ class OrganizationsController < ApplicationController
 
   def authorization
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @groups = @organization.groups
-    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
-    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
+
+    @global_permissions = Permission.order('name').defined.select{ |i| i.object_type == "general_objects" }
+    @permission_projects = Permission.order('name').defined.select{ |i| i.object_type == "project_dependencies_objects" }
+    @modules_permissions = Permission.order('name').defined.select{ |i| i.object_type == "module_objects" }
     @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
 
     @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
@@ -58,6 +63,8 @@ class OrganizationsController < ApplicationController
   def setting
     @organization = Organization.find(params[:organization_id])
 
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @technologies = @organization.organization_technologies
     @fields = @organization.fields
     @work_element_types = @organization.work_element_types
@@ -69,6 +76,9 @@ class OrganizationsController < ApplicationController
 
   def module_estimation
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @guw_models = @organization.guw_models
     @wbs_activities = @organization.wbs_activities
     @size_units = SizeUnit.all
@@ -78,11 +88,17 @@ class OrganizationsController < ApplicationController
 
   def users
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
   end
 
   def estimations
     @organization = Organization.find(params[:organization_id])
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+
     @projects = @organization.projects
+
   end
 
   # New organization from image
@@ -145,16 +161,6 @@ class OrganizationsController < ApplicationController
 
     @users = @organization.users
     @fields = @organization.fields
-
-    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
-    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
-    @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
-
-    @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
-    @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
-    @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
-
-    @project_security_levels = @organization.project_security_levels
 
     @organization_profiles = @organization.organization_profiles
 
@@ -326,6 +332,9 @@ class OrganizationsController < ApplicationController
 
   def organizationals_params
     set_page_title 'Organizational Parameters'
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Liste des organizations" => ""
+
     if can? :manage, :all
       @organizations = Organization.all
     else

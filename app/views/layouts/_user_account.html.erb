@@ -1,7 +1,7 @@
 <ul class="nav">
 
   <li class="dropdown">
-    <a href="<%= main_app.organization_estimations_path(@project.organization) %>" title="Liste des estimations">
+    <a href="<%= main_app.organization_estimations_path(@organization) %>" title="Liste des estimations">
       <i class="icon icon-list-ul icon-large pull-left" style="margin-top: -2px;"></i>&nbsp;
     </a>
   </li>
@@ -38,11 +38,11 @@
       </li>
 
       <li class="dropdown">
-        <a href="<%= main_app.organization_authorization_path(@project.organization) %>"> Authorisations </a>
+        <a href="<%= main_app.organization_authorization_path(@organization) %>"> Authorisations </a>
       </li>
 
       <li class="dropdown">
-        <a href="<%= main_app.organization_users_path(@project.organization) %>"> Utilisateurs </a>
+        <a href="<%= main_app.organization_users_path(@organization) %>"> Utilisateurs </a>
       </li>
 
       <li class="dropdown">
@@ -59,17 +59,17 @@
       <% if @project %>
         <% if !@project.organization.nil? %>
           <li class="dropdown">
-            <a href="<%= main_app.edit_organization_path(@project.organization)%>">
+            <a href="<%= main_app.edit_organization_path(@organization)%>">
               <%= @project.organization %>
             </a>
           </li>
           <li class="dropdown">
-            <a href="<%= main_app.organization_setting_path(@project.organization)%>">
+            <a href="<%= main_app.organization_setting_path(@organization)%>">
               Paramétrage
             </a>
           </li>
           <li class="dropdown">
-            <a href="<%= main_app.organization_module_estimation_path(@project.organization)%>">
+            <a href="<%= main_app.organization_module_estimation_path(@organization)%>">
               Module
             </a>
           </li>

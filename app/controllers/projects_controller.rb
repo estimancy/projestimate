@@ -100,8 +100,6 @@ class ProjectsController < ApplicationController
   public
 
   def dashboard
-    set_page_title 'Dashboard'
-
     # return if user doesn't have the rigth to consult the estimation
     if !can_show_estimation?(@project)
       redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
@@ -115,7 +113,7 @@ class ProjectsController < ApplicationController
     @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
 
     #set_breadcrumbs @project.title => edit_project_path(@project)
-    set_breadcrumbs "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => edit_project_path(@project)
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "Dashboard" => ""
 
     @project_organization = @project.organization
     @module_projects = @project.module_projects
