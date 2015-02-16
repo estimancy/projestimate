@@ -1394,6 +1394,7 @@ fr:
   notice_cannot_view_estimation_statuses: "Vous n'avez pas les autorisations nécessaires pour voir les statuts des estimations"
   notice_cannot_delete_widgets: "Vous n'avez pas les autorisations nécessaires pour supprimer les vignettes"
   notice_cannot_view_organization_users: "Vous n'avez pas les autorisations nécessaires pour voir les utilisateurs"
+  notice_cannot_view_modules_permissions: "Vous n'avez pas les autorisations nécessaires pour voir les permissions des instances des modules"
 
   is_image_organization: "Est une organisation image ?"
   new_organization_from_image: "Créer une organisation à partir d'une image"
@@ -1401,6 +1402,9 @@ fr:
   label_organization_name: "Nom de l'organisation"
   label_organization_image: "Organisation image"
   label_change_password_required: "Changement de mot de passe obligatoire ?"
-  label_login: "Identifiant de connexion"
+  label_login: "Identifiant connexion"
   label_request_create_organization: "Demande de création d'une organisation à partir d'organisation image"
   object_type: "Type d'objet"
+  organization_permissions: "Permissions de l'organisation"
+  estimations_permissions: "Permissions des estimations"
+  modules_permissions: "Permissions des modules"

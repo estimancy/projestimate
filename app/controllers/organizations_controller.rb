@@ -125,6 +125,18 @@ class OrganizationsController < ApplicationController
     @users = @organization.users
     @fields = @organization.fields
 
+    @global_permissions = Permission.order('name').defined.select{ |i| !i.is_permission_project and !i.is_master_permission }
+    @permission_projects = Permission.order('name').defined.select{ |i| i.is_permission_project }
+    @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
+
+    @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
+    @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
+    @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
+
+    @project_security_levels = @organization.project_security_levels
+
+    @organization_profiles = @organization.organization_profiles
+
     @work_element_types = @organization.work_element_types
   end
 

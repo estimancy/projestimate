@@ -124,7 +124,7 @@ class PermissionsController < ApplicationController
 
   #Set all global rights
   def set_rights
-    authorize! :manage_global_and_master_permissions, Permission
+    authorize! :manage_organization_permissions, Permission
 
     if params[:commit] == I18n.t('cancel')
       redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
@@ -136,8 +136,25 @@ class PermissionsController < ApplicationController
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
       end
 
-      redirect_to :back
-      #redirect_to(edit_organization_path(@organization, anchor: params[:name]))
+      #redirect_to :back
+      redirect_to(edit_organization_path(@organization, anchor: "tabs-organization-permissions"))
+    end
+  end
+
+  def set_estimations_rights
+    authorize! :manage_estimations_permissions, Permission
+
+    if params[:commit] == I18n.t('cancel')
+      redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
+    else
+      @groups = Group.all
+      @permissions = Permission.defined
+
+      @groups.each do |group|
+        group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
+      end
+
+      redirect_to(edit_organization_path(@organization, anchor: "estimations_permissions"))
     end
   end
 

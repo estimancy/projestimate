@@ -27,6 +27,7 @@ class EstimationStatusGroupRole < ActiveRecord::Base
   belongs_to :permission
   belongs_to :organization
 
-  validates :group_id, :permission_id, :organization_id, presence: true
+  #Review validation for AMOEBA
+  ###validates :group_id, :permission_id, :organization_id, presence: true
 
 end

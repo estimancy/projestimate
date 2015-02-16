@@ -53,11 +53,13 @@ class Ability
                      WorkElementType, Currency, AdminSetting, AuthMethod, Group, ProjectSecurityLevel,
                      Permission], :record_status => {:name => 'Retired'}
 
+    #For organization and estimations permissions
+    alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
+    alias_action :manage_estimations_permissions, :show_organization_permissions, :to => :manage_organization_permissions
+
     # Add Action Aliases, for example:  alias_action :edit, :to => :update
     # Notice the edit action is aliased to update. This means if the user is able to update a record he also has permission to edit it.
     alias_action [:show_groups, Group], :to => [:manage, Group]
-    alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
-    alias_action :show_global_and_master_permissions, :to => :manage_global_and_master_permissions
     alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :to => :alter_estimation_plan
 
     #For organization
