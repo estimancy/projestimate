@@ -802,6 +802,18 @@ ActiveRecord::Schema.define(:version => 20150213142114) do
     t.datetime "updated_at"
   end
 
+  create_table "plans", :force => true do |t|
+    t.string   "name"
+    t.string   "alias"
+    t.text     "description"
+    t.integer  "estimation_number"
+    t.integer  "organization_number"
+    t.integer  "user_number"
+    t.integer  "admin_number"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "platform_categories", :force => true do |t|
     t.string   "name"
     t.text     "description"

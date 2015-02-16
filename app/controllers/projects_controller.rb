@@ -791,9 +791,11 @@ class ProjectsController < ApplicationController
       elsif @pemodule.alias == "effort_breakdown"
         wbs_id = params[:module_selected].split(',').first.to_i
         my_module_project.wbs_activity_id = wbs_id
-        WbsActivityInput.create(module_project_id: my_module_project.id,
+        wai = WbsActivityInput.new(module_project_id: my_module_project.id,
                                 wbs_activity_id: wbs_id,
                                 wbs_activity_ratio_id: my_module_project.wbs_activity.wbs_activity_ratios.first )
+
+        wai.save
       elsif @pemodule.alias == "expert_judgement"
         eji_id = params[:module_selected].split(',').first
         my_module_project.expert_judgement_instance_id = eji_id.to_i
@@ -1307,23 +1309,8 @@ public
             unless widget_est_val.nil?
               in_out = widget_est_val.in_out
               widget_pe_attribute_id = widget_est_val.pe_attribute_id
-              estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
-
-              #new_prj_components.each
-              #  new_prj_components.each do |element|
-              #    estimation_value.string_data_low[999] = nil
-              #    estimation_value.string_data_most_likely[999] = nil
-              #    estimation_value.string_data_high[999] = nil
-              #
-              #    estimation_value.string_data_probable[element.id.to_s] = nil
-              #    estimation_value.string_data_probable[element.id.to_s] = nil
-              #    estimation_value.save
-              #
-              #    p estimation_value
-              #  end
-              #end
-
-              estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+              new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+              estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
               widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
                                                icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
                                                width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
@@ -1349,17 +1336,31 @@ public
             guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id)
           end
         end
+
+        ["input", "output"].each do |io|
+          new_mp.pemodule.pe_attributes.each do |attr|
+            old_prj.pbs_project_elements.each do |old_component|
+              new_prj_components.each do |new_component|
+                ev = new_mp.estimation_values.where(pe_attribute_id: attr.id, in_out: io).first
+                unless ev.nil?
+                  ev.string_data_low[new_component.id.to_i] = ev.string_data_low.delete old_component.id
+                  ev.string_data_most_likely[new_component.id.to_i] = ev.string_data_most_likely.delete old_component.id
+                  ev.string_data_high[new_component.id.to_i] = ev.string_data_high.delete old_component.id
+                  ev.string_data_probable[new_component.id.to_i] = ev.string_data_probable.delete old_component.id
+                  ev.save
+                end
+              end
+            end
+          end
+        end
       end
 
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
       redirect_to edit_project_path(new_prj) and return
-
     else
       flash[:error] = I18n.t(:error_project_failed_duplicate)
       redirect_to projects_path
     end
-
-
   end
 
 
