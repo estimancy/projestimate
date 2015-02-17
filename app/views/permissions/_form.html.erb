@@ -15,7 +15,7 @@
 
       <%= f.input :object_type, :label => I18n.t(:object_type), :collection => [ ['General Objects','general_objects'], ['Project Dependencies Objects','project_dependencies_objects'], ['Modules Objects','module_objects']], :input_html => {:class => 'input-xxlarge'}, include_blank: false %>
 
-      <%= f.input :category, :label => I18n.t('category'), :collection => ['Admin', 'Library - Organization', 'Organization Estimation Template', 'Library - Project Settings', 'Projects', 'Project', 'Organization Data', 'Cocomo Data', '1 level Unit of Work Data'], :input_html => {:class => 'input-xxlarge'} %>
+      <%= f.input :category, :label => I18n.t('category'), :collection => ['Admin', 'Library - Organization', 'Organization Estimation Template', 'Library - Project Settings', 'Projects', 'Project', 'Organization Data', 'Module Instances', 'Cocomo Data', '1 level Unit of Work Data'], :input_html => {:class => 'input-xxlarge'} %>
 
       <%= f.input :is_master_permission, :label => I18n.t('is_permission_master'), :input_html => {:class => 'input-xxlarge'}, :as => :boolean %>
 
