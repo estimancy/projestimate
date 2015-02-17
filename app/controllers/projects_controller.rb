@@ -371,9 +371,7 @@ class ProjectsController < ApplicationController
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
-    if (cannot? :edit_project, @project) ||                                               # No write access to project
-        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) #||      # frozen project
-        #(@project.in_review? && (cannot? :write_access_to_inreview_project, @project))    # InReview project
+    if cannot?(:edit_project, @project)    # No write access to project
       redirect_to(:action => 'show') and return
     end
 
@@ -438,9 +436,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    unless (cannot? :edit_project, @project) || # No write access to project
-        (@project.in_frozen_status? && (cannot? :alter_frozen_project, @project)) #||   # frozen project
-        #(@project.in_review? && (cannot? :write_access_to_inreview_project, @project)) # InReview project
+    unless cannot?(:edit_project, @project) # No write access to project
 
       @product_name = params[:project][:product_name]
       project_root = @project.root_component

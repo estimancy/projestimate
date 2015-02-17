@@ -81,10 +81,6 @@
 
       <div class="actions-tabs">
         <% if @project.state.in?(%w(rejected released checkpoint))%>
-          <% if can? :alter_frozen_project, @project %>
-            <%= render :partial => 'submit_project', :object => f %>
-          <% end %>
-        <% else %>
           <%= render :partial => 'submit_project', :object => f %>
         <% end %>
 

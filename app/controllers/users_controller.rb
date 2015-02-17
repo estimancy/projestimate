@@ -91,7 +91,9 @@ public
     @user.group_ids << Group.find_by_name('Everyone').id
 
     if @user.save
-      redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path), :notice => "#{I18n.t (:notice_account_successful_created)}"
+      @organization = @user.organization
+      flash[:notice] = I18n.t(:notice_account_successful_created)
+      redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
     else
       render(:new)
     end
@@ -148,7 +150,9 @@ public
 
       #session[:current_password] = nil;  session[:password] = nil; session[:password_confirmation] = nil
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
-      redirect_to redirect_apply(edit_user_path(@user, :anchor => "tabs-5"), nil, session[:previous])
+      #redirect_to redirect_apply(edit_user_path(@user, :anchor => "tabs-5"), nil, session[:previous])
+      @organization = @user.organization
+      redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
     else
       #session[:current_password] = params[:user][:current_password];  session[:password] = params[:user][:password]; session[:password_confirmation] = params[:user][:password_confirmation]
       @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]
@@ -201,7 +205,7 @@ public
     @user = User.find(params[:id])
     @user.destroy
 
-    redirect_to users_path
+    organization_users_path(@user.organization)  #redirect_to users_path
   end
 
   def find_use_user
