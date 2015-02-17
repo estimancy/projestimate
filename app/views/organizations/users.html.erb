@@ -7,6 +7,7 @@
       <th><%= I18n.t(:first_name) %></th>
       <th><%= I18n.t(:last_name) %></th>
       <th><%= I18n.t(:login_name) %></th>
+      <th><%= I18n.t(:actions) %></th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
       <td><%= user.first_name %></td>
       <td><%= user.last_name %></td>
       <td><%= user.login_name %></td>
+      <td class="center"><%= link_to "", edit_user_path(user), class: "icon icon-pencil" %></td>
     </tr>
   <% end %>
   <%= render :partial => 'layouts/footer_table' %>

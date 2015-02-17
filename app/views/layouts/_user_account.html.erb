@@ -88,6 +88,35 @@
             <%= I18n.t(:organizations) %></a>
           </li>
 
+          <li class="dropdown"><a href="<%= main_app.users_path %>"> <%= I18n.t(:users) %></a></li>
+
+          <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
+
+          <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
+
+          <li class="dropdown"><a href="<%= main_app.technologies_path %>">
+            <%= I18n.t(:organization_technology) %></a>
+          </li>
+
+          <li class="dropdown"><a href="<%= main_app.currencies_path %>">
+            <%= I18n.t(:currencies) %></a>
+          </li>
+
+          <li class="dropdown"><a href="<%= main_app.factors_path %>">
+            <%= I18n.t(:factors) %></a>
+          </li>
+
+          <li class="divider"></li>
+
+          <li class="dropdown"><a href="<%= main_app.admin_settings_path %>">
+            Paramétrages techniques</a>
+          </li>
+
+          <li class="dropdown"><a href="<%= main_app.audits_path %>"> Audits </a></li>
+
+          <li class="divider"></li>
+
+
           <li class="dropdown"><a href="<%= main_app.pe_attributes_path %>">
             <%= I18n.t(:pe_attributes) %></a>
           </li>
@@ -110,22 +139,6 @@
 
           <li class="dropdown"><a href="<%= main_app.record_statuses_path %>">
               <%= I18n.t(:record_status) %></a>
-          </li>
-
-          <li class="dropdown"><a href="<%= main_app.currencies_path %>">
-              <%= I18n.t(:currencies) %></a>
-          </li>
-
-          <li class="dropdown"><a href="<%= main_app.factors_path %>">
-              <%= I18n.t(:factors) %></a>
-          </li>
-
-          <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
-
-          <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
-
-          <li class="dropdown"><a href="<%= main_app.technologies_path %>">
-            <%= I18n.t(:organization_technology) %></a>
           </li>
         </ul>
     <% end %>

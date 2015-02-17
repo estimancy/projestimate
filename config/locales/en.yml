@@ -1140,7 +1140,7 @@ en:
   text_almost_done_provide_password_to_finish: "You are almost Done! For a first connection, please provide a password to finish setting up your account. You can also modify the connexion id if needed."
   text_measuring_units: "Measuring units"
   number_hours_per_day: "Number hours per day"
-  number_hours_per_month: "Number hours per month"
+  number_hours_per_month: "Number hours per month (Cocomo)"
   cost_unit: "Cost unit"
   cost_per_hour: "Cost per hour"
   notice_measuring_units_successfully_updated: "Organization measuring units were successfully updated"

@@ -1140,7 +1140,7 @@ fr:
   text_almost_done_provide_password_to_finish: "Vous avez presque fini!\n\n Pour une première connexion, merci de fournir un mot de passe pour terminer la configuration de votre compte.\n\n Vous pouvez aussi modifier votre identifiant de connexion si besoin."
   text_measuring_units: "Unités de mesure"
   number_hours_per_day: "Nombre d'heures par jour"
-  number_hours_per_month: "Nombre d'heures par mois"
+  number_hours_per_month: "Nombre d'heures par mois (pour Cocomo)"
   cost_unit: "Unité de coût"
   cost_per_hour: "Coût horaire"
   notice_measuring_units_successfully_updated: "Les unités de mesure de l'organisation ont été mises à jour avec succès"
