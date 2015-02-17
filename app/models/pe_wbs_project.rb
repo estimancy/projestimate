@@ -38,8 +38,8 @@
 class PeWbsProject < ActiveRecord::Base
   attr_accessible :name, :project_id, :wbs_type
 
-  has_many :pbs_project_elements, :dependent => :destroy
-  has_many :wbs_project_elements, :dependent => :destroy
+  has_many :pbs_project_elements#, :dependent => :destroy
+  has_many :wbs_project_elements#, :dependent => :destroy
   has_many :wbs_activities, :through => :wbs_project_elements
 
   belongs_to :project, :touch => true
