@@ -182,9 +182,9 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def destroy
-    #if can?(:alter_estimation_plan, Project) || ( can? :manage_estimation_widgets, @project { |widget| widget.project_fields.empty? } )
-    if can?(:alter_estimation_plan, Project) || ( can? :manage_estimation_widgets, @project )
-      @views_widget = ViewsWidget.find(params[:id])
+    @views_widget = ViewsWidget.find(params[:id])
+    #if can?(:alter_estimation_plan, @project) || ( can?(:manage_estimation_widgets, @project) { |widget| widget.project_fields.empty? } )
+    if can?(:alter_estimation_plan, @project) || ( can?(:manage_estimation_widgets, @project) if @views_widget.project_fields.empty? )
       @views_widget.destroy
     else
       flash[:warning] = I18n.t(:notice_cannot_delete_widgets)

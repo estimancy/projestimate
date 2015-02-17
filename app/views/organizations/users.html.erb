@@ -1,32 +1,36 @@
 <h4>
-  Utilisateurs
+  <%= I18n.t(:users) %>
 </h4>
-<table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
-  <thead>
-    <tr>
-      <th><%= I18n.t(:first_name) %></th>
-      <th><%= I18n.t(:last_name) %></th>
-      <th><%= I18n.t(:login_name) %></th>
-      <th><%= I18n.t(:actions) %></th>
-    </tr>
-  </thead>
-  <tbody>
-  <% @organization.users.each do |user| %>
-    <tr>
-      <td><%= user.first_name %></td>
-      <td><%= user.last_name %></td>
-      <td><%= user.login_name %></td>
-      <td class="center"><%= link_to "", edit_user_path(user), class: "icon icon-pencil" %></td>
-    </tr>
-  <% end %>
-  <%= render :partial => 'layouts/footer_table' %>
-  </tbody>
-</table>
+<% if can? :show_organization_users, User %>
+    <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th><%= I18n.t(:first_name) %></th>
+          <th><%= I18n.t(:last_name) %></th>
+          <th><%= I18n.t(:login_name) %></th>
+          <th><%= I18n.t(:actions) %></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @organization.users.each do |user| %>
+        <tr>
+          <td><%= user.first_name %></td>
+          <td><%= user.last_name %></td>
+          <td><%= user.login_name %></td>
+          <td class="center"><%= link_to "", edit_user_path(user), class: "icon icon-pencil" %></td>
+        </tr>
+      <% end %>
+      <%= render :partial => 'layouts/footer_table' %>
+      </tbody>
+    </table>
 
-<% if action_name == 'new' || action_name=='create' %>
-  <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+    <!--<%# if action_name == 'new' || action_name=='create' %>-->
+      <!--<%#= submit_tag I18n.t('save_and_create'), :class => 'btn' %>-->
+    <!--<%# end %>-->
+    <!--<%#= submit_tag I18n.t('save'), :class => 'btn' %>-->
+    <!--<%#= submit_tag I18n.t('apply'), :class => 'btn' %>-->
+
+    <%= link_to I18n.t('back'), :back, :class => 'btn' %>
+<% else %>
+    <div class="red_color"><%= I18n.t(:notice_cannot_view_organization_users) %></div>
 <% end %>
-
-<%= submit_tag I18n.t('save'), :class => 'btn' %>
-<%= submit_tag I18n.t('apply'), :class => 'btn' %>
-<%= link_to I18n.t('back'), groups_path, :class => 'btn' %>
