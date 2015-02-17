@@ -287,7 +287,12 @@ class WbsActivitiesController < ApplicationController
           tmp_prbl = Array.new
 
           ["low", "most_likely", "high"].each do |level|
-            eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient, @ratio_reference)
+
+            if @wbs_activity.three_points_estimation?
+              eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values][level].to_f * effort_unit_coefficient, @ratio_reference)
+            else
+              eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values]["most_likely"].to_f * effort_unit_coefficient, @ratio_reference)
+            end
 
             @tmp_results[level.to_sym] = { "#{est_val.pe_attribute.alias}_#{current_module_project.id}".to_sym => eb.send("get_#{est_val.pe_attribute.alias}") }
 
@@ -370,14 +375,16 @@ class WbsActivitiesController < ApplicationController
           tmp_prbl = Array.new
           ['low', 'most_likely', 'high'].each do |level|
             level_estimation_value = Hash.new
-            level_estimation_value[@pbs_project_element.id] = params[:values][level].to_f * effort_unit_coefficient
-            in_result["string_data_#{level}"] = level_estimation_value
-            tmp_prbl << level_estimation_value[@pbs_project_element.id]
-          end
 
-          unless @wbs_activity.three_points_estimation?
-            tmp_prbl[0] = tmp_prbl[1]
-            tmp_prbl[2] = tmp_prbl[1]
+            if @wbs_activity.three_points_estimation?
+              level_estimation_value[@pbs_project_element.id] = params[:values][level].to_f * effort_unit_coefficient
+              in_result["string_data_#{level}"] = level_estimation_value
+            else
+              level_estimation_value[@pbs_project_element.id] = params[:values]["most_likely"].to_f * effort_unit_coefficient
+              in_result["string_data_most_likely"] = level_estimation_value
+            end
+
+            tmp_prbl << level_estimation_value[@pbs_project_element.id]
           end
 
           est_val.update_attributes(in_result)
