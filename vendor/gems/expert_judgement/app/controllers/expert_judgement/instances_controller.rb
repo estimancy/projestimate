@@ -69,7 +69,7 @@ class ExpertJudgement::InstancesController < ApplicationController
     @instance = ExpertJudgement::Instance.find(params[:id])
     organization_id = @instance.organization_id
 
-    @guw_model.module_projects.each do |mp|
+    @instance.module_projects.each do |mp|
       mp.destroy
     end
 
