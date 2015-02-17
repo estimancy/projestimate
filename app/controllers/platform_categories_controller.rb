@@ -55,13 +55,6 @@ class PlatformCategoriesController < ApplicationController
     set_page_title 'Platform Category'
     @platform_category = PlatformCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])
-
-    unless @platform_category.child_reference.nil?
-      if @platform_category.child_reference.is_proposed_or_custom?
-        flash[:warning] = I18n.t (:warning_platform_category_cant_be_edit)
-        redirect_to redirect(edit_organization_path(:anchor => 'tabs-platform-categories'))
-      end
-    end
   end
 
   def create
@@ -83,14 +76,7 @@ class PlatformCategoriesController < ApplicationController
     authorize! :manage, PlatformCategory
 
     @organization = Organization.find(params[:organization_id])
-    @platform_category = nil
-    current_platform_category = PlatformCategory.find(params[:id])
-    if current_platform_category.is_defined?
-      @platform_category = current_platform_category.amoeba_dup
-      @platform_category.owner_id = current_user.id
-    else
-      @platform_category = current_platform_category
-    end
+    @platform_category = PlatformCategory.find(params[:id])
 
     if @platform_category.update_attributes(params[:platform_category])
       flash[:notice] = I18n.t (:notice_platform_category_successful_updated)
@@ -105,12 +91,7 @@ class PlatformCategoriesController < ApplicationController
 
     @platform_category = PlatformCategory.find(params[:id])
     organization_id = @platform_category.organization_id
-    if @platform_category.is_defined? || @platform_category.is_custom?
-      #logical deletion: delete don't have to suppress records anymore
-      @platform_category.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @platform_category.destroy
-    end
+    @platform_category.destroy
 
     flash[:notice] = I18n.t (:notice_platform_category_successful_deleted)
     redirect_to edit_organization_path(organization_id, :anchor => 'tabs-platform-categories')

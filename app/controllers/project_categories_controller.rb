@@ -50,18 +50,11 @@ class ProjectCategoriesController < ApplicationController
   end
 
   def edit
-    authorize! :manage, ProjectCategory
+    authorize! :show_project_categories, ProjectCategory
 
     set_page_title 'Project Category'
     @project_category = ProjectCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])
-
-    unless @project_category.child_reference.nil?
-      if @project_category.child_reference.is_proposed_or_custom?
-        flash[:warning] = I18n.t (:warning_project_categories_cant_be_edit)
-        redirect_to redirect(projects_global_params_path(:anchor => 'tabs-2'))
-      end
-    end
   end
 
   def create
@@ -82,14 +75,7 @@ class ProjectCategoriesController < ApplicationController
     authorize! :manage, ProjectCategory
 
     @organization = Organization.find(params[:organization_id])
-    @project_category = nil
-    current_project_category = ProjectCategory.find(params[:id])
-    if current_project_category.is_defined?
-      @project_category = current_project_category.amoeba_dup
-      @project_category.owner_id = current_user.id
-    else
-      @project_category = current_project_category
-    end
+    @project_category = ProjectCategory.find(params[:id])
 
     if @project_category.update_attributes(params[:project_category])
       flash[:notice] = I18n.t (:notice_project_categories_successful_updated)
@@ -104,13 +90,7 @@ class ProjectCategoriesController < ApplicationController
 
     @project_category = ProjectCategory.find(params[:id])
     organization_id = @project_category.organization_id
-
-    if @project_category.is_defined? || @project_category.is_custom?
-      #logical deletion: delete don't have to suppress records anymore on defined record
-      @project_category.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @project_category.destroy
-    end
+    @project_category.destroy
 
     flash[:notice] = I18n.t (:notice_project_categories_successful_deleted)
     redirect_to edit_organization_path(organization_id, :anchor => 'settings')

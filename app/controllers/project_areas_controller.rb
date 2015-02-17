@@ -35,7 +35,7 @@
 #############################################################################
 
 class ProjectAreasController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
+  #include DataValidationHelper #Module for master data changes validation
 
   load_resource
 
@@ -59,17 +59,10 @@ class ProjectAreasController < ApplicationController
   end
 
   def edit
-    authorize! :manage, ProjectArea
+    authorize! :show_project_areas, ProjectArea
     set_page_title 'Project Area'
     @project_area = ProjectArea.find(params[:id])
     @organization = Organization.find(params[:organization_id])
-
-    unless @project_area.child_reference.nil?
-      if @project_area.child_reference.is_proposed_or_custom?
-        flash[:warning] = I18n.t (:warning_project_area_cant_be_edit)
-        redirect_to redirect(projects_global_params_path(:anchor => 'tabs-1'))
-      end
-    end
   end
 
   def create
@@ -90,15 +83,7 @@ class ProjectAreasController < ApplicationController
   def update
     authorize! :manage, ProjectArea
     @organization = Organization.find(params[:organization_id])
-
-    @project_area = nil
-    current_project_area = ProjectArea.find(params[:id])
-    if current_project_area.is_defined?
-      @project_area = current_project_area.amoeba_dup
-      @project_area.owner_id = current_user.id
-    else
-      @project_area = current_project_area
-    end
+    @project_area = ProjectArea.find(params[:id])
 
     if @project_area.update_attributes(params[:project_area])
       flash[:notice] = I18n.t (:notice_project_area_successful_updated)
@@ -113,15 +98,9 @@ class ProjectAreasController < ApplicationController
 
     @project_area = ProjectArea.find(params[:id])
     organization_id = @project_area.organization_id
-
-    if @project_area.is_defined? || @project_area.is_custom?
-      #logical deletion: delete don't have to suppress records anymore if record status is defined
-      @project_area.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @project_area.destroy
-    end
+    @project_area.destroy
 
     flash[:notice] = I18n.t (:notice_project_area_successful_deleted)
-    redirect_to edit_organization_id(organization_id, :anchor => 'settings')
+    redirect_to edit_organization_path(organization_id, :anchor => 'settings')
   end
 end

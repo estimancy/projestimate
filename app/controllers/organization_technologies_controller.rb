@@ -67,7 +67,7 @@ class OrganizationTechnologiesController < ApplicationController
 
     if @organization_technology.save
       flash[:notice] = I18n.t (:notice_organization_technology_successful_created)
-      redirect_to redirect_apply(nil, new_organization_technology_path(params[:organization_technology]), edit_organization_path(@organization, :anchor => 'settings'))
+      redirect_to redirect_apply(nil, new_organization_technology_path(params[:organization_technology]), edit_organization_path(@organization, :anchor => 'tabs-technology'))
     else
       render action: 'new', :organization_id => @organization.id
     end
@@ -81,7 +81,7 @@ class OrganizationTechnologiesController < ApplicationController
 
     if @organization_technology.update_attributes(params[:organization_technology])
       flash[:notice] = I18n.t (:notice_organization_technology_successful_updated)
-      redirect_to redirect_apply(edit_organization_technology_path(params[:organization_technology]), nil, edit_organization_path(@organization, :anchor => 'settings'))
+      redirect_to redirect_apply(edit_organization_technology_path(params[:organization_technology]), nil, edit_organization_path(@organization, :anchor => 'tabs-technology'))
     else
       render action: 'edit', :organization_id => @organization.id
     end
@@ -94,7 +94,7 @@ class OrganizationTechnologiesController < ApplicationController
     organization_id = @organization_technology.organization_id
     @organization_technology.delete
     respond_to do |format|
-      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'settings')), notice: "#{I18n.t (:notice_organization_technology_successful_deleted)}" }
+      format.html { redirect_to redirect(edit_organization_path(organization_id, :anchor => 'tabs-technology')), notice: "#{I18n.t (:notice_organization_technology_successful_deleted)}" }
     end
   end
 

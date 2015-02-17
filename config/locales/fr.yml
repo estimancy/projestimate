@@ -1051,7 +1051,7 @@ fr:
   label_WbsActivity: "WBS-Activité"
   label_Pemodule: "Module"
   label_PeAttribute: "Attribut"
-  label_WorkElementType: "Elèment de travail"
+  label_WorkElementType: "Élément de travail"
   label_Organization: "Organisation"
   label_User: "Utilisateur"
   label_Group: "Groupe"

@@ -13,9 +13,8 @@ class OrganizationProfilesController < ApplicationController
 
   # GET /organization_profiles/1/edit
   def edit
-    set_page_title 'Edit organization profile'
     authorize! :show_organization_profiles, OrganizationProfile
-
+    set_page_title 'Edit organization profile'
     @organization_profile = OrganizationProfile.find(params[:id])
 
     @organization = @organization_profile.organization

@@ -23,14 +23,21 @@
         <tr>
           <th><%= I18n.t('name') %></th>
           <th><%= I18n.t('description') %></th>
+          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
         </thead>
 
         <tbody>
-        <% @organization.project_areas.each do |i| %>
+        <% @organization.project_areas.each do |pa| %>
           <tr>
-            <td><%= i.name %></td>
-            <td><%= i.description %></td>
+            <td><%= pa.name %></td>
+            <td><%= pa.description %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_project_area_path(@organization, pa), :class => 'icon-pencil' %>
+              <% if can? :manage, ProjectArea %>
+                  <%= link_to '',  { :organization_id => @organization.id, :id => pa.id }, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
         <%= render :partial => 'layouts/footer_table' %>
@@ -54,6 +61,7 @@
         <tr>
           <th><%= I18n.t('name') %></th>
           <th><%= I18n.t('description') %></th>
+          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
         </thead>
 
@@ -62,6 +70,12 @@
           <tr>
             <td><%= i.name %></td>
             <td><%= i.description %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_project_category_path(@organization, i), :class => 'icon-pencil' %>
+              <% if can? :manage, ProjectCategory %>
+                  <%= link_to '',  { :organization_id => @organization.id, :id => i.id }, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
 
@@ -85,6 +99,7 @@
         <tr>
           <th><%= I18n.t('name') %></th>
           <th><%= I18n.t('description') %></th>
+          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
         </thead>
         <tbody>
@@ -92,6 +107,12 @@
           <tr>
             <td><%= i.name %></td>
             <td><%= i.description %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_platform_category_path(@organization, i), :class => 'icon-pencil' %>
+              <% if can? :manage, PlatformCategory %>
+                  <%= link_to '',  { :organization_id => @organization.id, :id => i.id }, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
         <%= render :partial => 'layouts/footer_table' %>
@@ -108,12 +129,13 @@
          <%= link_to I18n.t(:new_work_element_type), new_organization_work_element_type_path(@organization), :class => 'btn pull-right' %>
       <% end %>
 
-      <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
         <tr>
           <th><%= I18n.t(:name) %></th>
-          <th>Alias</th>
+          <th><%= I18n.t(:alias) %></th>
           <th><%= I18n.t(:description) %></th>
+          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
         </thead>
         <tbody>
@@ -122,6 +144,12 @@
             <td><%= work_element_type.name %></td>
             <td><%= work_element_type.alias %></td>
             <td><%= work_element_type.description %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_work_element_type_path(@organization, work_element_type), :class => 'icon-pencil' %>
+              <% if can? :manage, WorkElementType %>
+                  <%= link_to '',  { :organization_id => @organization.id, :id => work_element_type.id }, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
         </tbody>
@@ -139,11 +167,12 @@
          <%= link_to I18n.t('new_acquisition_category'), new_organization_acquisition_category_path(@organization), :class => 'btn pull-right' %>
       <% end %>
 
-      <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <table id="table_list_5" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
         <tr>
           <th><%= I18n.t('name') %></th>
           <th><%= I18n.t('description') %></th>
+          <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
         </tr>
         </thead>
 
@@ -152,6 +181,12 @@
           <tr>
             <td><%= i.name %></td>
             <td><%= i.description %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_acquisition_category_path(@organization, i), :class => 'icon-pencil' %>
+              <% if can? :manage, AcquisitionCategory %>
+                  <%= link_to '',  { :organization_id => @organization.id, :id => i.id }, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
         <%= render :partial => 'layouts/footer_table' %>
@@ -171,7 +206,7 @@
         <%= link_to I18n.t('new_organization_technology'), new_organization_technology_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
       <% end %>
 
-      <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <table id="table_list_6" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
         <tr>
           <th><%= I18n.t(:name) %></th>
@@ -194,7 +229,7 @@
           <td><%= ot.alias %></td>
           <td><%= ot.description %></td>
           <td><%= ot.productivity_ratio %></td>
-          <td class="align-center">
+          <td class="center">
             <%= link_to '', edit_organization_technology_path(ot.id, :organization_id => @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
             <% if can? :manage, OrganizationTechnology %>
               <%= link_to '', ot, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
@@ -223,7 +258,7 @@
           <tr>
             <th><%= I18n.t(:name) %></th>
             <th><%= I18n.t(:coefficient) %></th>
-            <th><%= I18n.t(:actions) %></th>
+            <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
           </tr>
 
           <% @fields.each do |field| %>
@@ -233,7 +268,7 @@
               <td class="center span3">
                 <%= link_to '', edit_organization_field_path(@organization, field), :class => 'icon-pencil' %>
                 <% if can? :manage, Field %>
-                    <%= link_to '', field, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'icon-trash' %>
+                    <%= link_to '', field, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'icon-trash', :title => I18n.t('delete') %>
                 <% end %>
               </td>
             </tr>
