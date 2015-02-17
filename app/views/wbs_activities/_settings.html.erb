@@ -18,9 +18,13 @@
     <tr>
       <th></th>
       <th>Activity Ratio</th>
-      <th>L</th>
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <th>L</th>
+      <% end %>
       <th>M</th>
-      <th>H</th>
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <th>H</th>
+      <% end %>
       <th>Commentaire</th>
     </tr>
     <tr>
@@ -30,10 +34,12 @@
         <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id) %>
       </td>
 
-      <% if cev.string_data_low[component_id].blank? %>
-        <td><%= text_field_tag "values[low]", pev.nil? ? '' : convert(pev.string_data_low[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
-      <% else %>
-        <td><%= text_field_tag "values[low]", convert(cev.string_data_low[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <% if cev.string_data_low[component_id].blank? %>
+          <td><%= text_field_tag "values[low]", pev.nil? ? '' : convert(pev.string_data_low[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+        <% else %>
+          <td><%= text_field_tag "values[low]", convert(cev.string_data_low[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+        <% end %>
       <% end %>
 
       <% if cev.string_data_most_likely[component_id].blank? %>
@@ -42,10 +48,13 @@
         <td><%= text_field_tag "values[most_likely]", convert(cev.string_data_most_likely[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
       <% end %>
 
-      <% if cev.string_data_high[component_id].blank? %>
-        <td><%= text_field_tag "values[high]", pev.nil? ? '' : convert(pev.string_data_high[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input  %></td>
-      <% else %>
-        <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input  %></td>
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+
+        <% if cev.string_data_high[component_id].blank? %>
+          <td><%= text_field_tag "values[high]", pev.nil? ? '' : convert(pev.string_data_high[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input  %></td>
+        <% else %>
+          <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input  %></td>
+        <% end %>
       <% end %>
 
       <td>

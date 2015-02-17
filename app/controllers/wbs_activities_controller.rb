@@ -365,7 +365,7 @@ class WbsActivitiesController < ApplicationController
           tmp_prbl = Array.new
           ['low', 'most_likely', 'high'].each do |level|
             level_estimation_value = Hash.new
-            level_estimation_value[@pbs_project_element.id] = params[:values][level].to_i * effort_unit_coefficient
+            level_estimation_value[@pbs_project_element.id] = params[:values][level].to_f * effort_unit_coefficient
             in_result["string_data_#{level}"] = level_estimation_value
             tmp_prbl << level_estimation_value[@pbs_project_element.id]
           end
