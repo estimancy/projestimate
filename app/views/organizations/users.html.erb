@@ -3,7 +3,7 @@
 </h4>
 <% if can? :show_organization_users, User %>
 
-    <% if can? :manage, User %>
+    <% if can? :manage, User, :organization_id => @organization.id %>
         <%= link_to I18n.t('new_user'), new_user_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
     <% end %>
 
@@ -24,7 +24,7 @@
           <td><%= user.login_name %></td>
           <td class="center">
             <%= link_to "", edit_user_path(user), class: "icon icon-pencil", :title => I18n.t('edit') %>
-            <% if can? :manage, User %>
+            <% if can? :manage, User, :organization_id => @organization.id %>
                 <%= link_to '', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
             <% end %>
           </td>

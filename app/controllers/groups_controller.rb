@@ -77,15 +77,8 @@ class GroupsController < ApplicationController
     @enable_update_in_local = true
     @organization = Organization.find_by_id(params['group']['organization_id'])
 
-    #If we are on local instance, Status is set to "Local"
-    if is_master_instance? && @organization.nil?
-      @group.record_status = @proposed_status
-    else
-      @group.record_status = @local_status
-    end
-
     if @group.save
-      redirect_to edit_organization_path(@organization, anchor: "tabs-group")
+      redirect_to organization_authorization_path(@organization, anchor: "tabs-group")
     else
       render action: 'new'
     end
@@ -158,7 +151,7 @@ class GroupsController < ApplicationController
       #redirect_to redirect(groups_path), :notice => "#{I18n.t (:notice_group_successful_updated)}"
       flash[:notice] =  "#{I18n.t (:notice_group_successful_updated)}"
       #redirect_to edit_organization_path(@organization)
-      redirect_to redirect_apply(edit_organization_group_path(@organization, @group, anchor: "tabs-group"), nil, edit_organization_path(@group.organization_id, :anchor => '#authorizations'))
+      redirect_to redirect_apply(edit_organization_group_path(@organization, @group, anchor: "tabs-group"), nil, organization_authorization_path(@organization, :anchor => 'tabs-group'))
     else
       render action: 'edit'
     end
@@ -172,7 +165,7 @@ class GroupsController < ApplicationController
     @group.destroy
 
     flash[:notice] = I18n.t (:notice_group_successful_deleted)
-    redirect_to edit_organization_path(@organization, anchor: "tabs-group")
+    redirect_to organization_authorization_path(@organization, anchor: "tabs-group")
   end
 
 protected
