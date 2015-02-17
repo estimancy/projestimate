@@ -58,7 +58,7 @@ class Project < ActiveRecord::Base
   has_many :pemodules, :through => :module_projects
   has_many :project_securities, :dependent => :destroy
 
-  has_many :pe_wbs_projects, :dependent => :destroy
+  has_many :pe_wbs_projects
   has_many :pbs_project_elements, :through => :pe_wbs_projects
   has_many :wbs_project_elements, :through => :pe_wbs_projects
 
