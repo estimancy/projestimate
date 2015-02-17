@@ -40,7 +40,7 @@ class ViewsWidgetsController < ApplicationController
 
 
   def new
-    authorize! :alter_widget, ViewsWidget
+    authorize! :manage_estimation_widgets, @project
 
     @views_widget = ViewsWidget.new(params[:views_widget])
     @view_id = params[:view_id]
@@ -63,7 +63,7 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def edit
-    authorize! :alter_widget, ViewsWidget
+    authorize! :manage_estimation_widgets, @project
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
@@ -86,7 +86,7 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def create
-    authorize! :alter_widget, ViewsWidget
+    authorize! :manage_estimation_widgets, @project
 
     @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1, :width => 3, :height => 3))
       # Add the position_x and position_y to params
@@ -125,7 +125,7 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def update
-    authorize! :alter_widget, ViewsWidget
+    authorize! :manage_estimation_widgets, @project
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
@@ -182,8 +182,8 @@ class ViewsWidgetsController < ApplicationController
   end
 
   def destroy
-
-    if can?(:alter_estimation_plan, Project) || ( can? :alter_widget, ViewsWidget { |widget| widget.project_fields.empty? } )
+    #if can?(:alter_estimation_plan, Project) || ( can? :manage_estimation_widgets, @project { |widget| widget.project_fields.empty? } )
+    if can?(:alter_estimation_plan, Project) || ( can? :manage_estimation_widgets, @project )
       @views_widget = ViewsWidget.find(params[:id])
       @views_widget.destroy
     else

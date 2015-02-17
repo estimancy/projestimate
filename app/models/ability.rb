@@ -65,7 +65,7 @@ class Ability
     # Add Action Aliases, for example:  alias_action :edit, :to => :update
     # Notice the edit action is aliased to update. This means if the user is able to update a record he also has permission to edit it.
     alias_action [:show_groups, Group], :to => [:manage, Group]
-    alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :alter_widget, :to => :alter_estimation_plan
+    alias_action :execute_estimation_plan, :alter_estimation_plan_modules_input_data, :manage_estimation_widgets, :to => :alter_estimation_plan
 
     #For organization
     alias_action :show_organizations, :to => :edit_organizations

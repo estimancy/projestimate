@@ -16,7 +16,7 @@
                 <div class="view_header_data">
                   <h5 class="view_title"><%= "#{module_project}" %></h5>
                   <div class="pull-right">
-                    <% if can_modify_estimation?(@project) && can?(:alter_widget, ViewsWidget) %>
+                    <% if can_modify_estimation?(@project) && can?(:manage_estimation_widgets, @project) %>
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
                     <% end %>
                   </div>
@@ -84,7 +84,7 @@
                                     </div>
                                     <div id="show_view_widget_params_<%= view_widget.id %>" class="span3 widget_icon_edit">
                                       <% if can_modify_estimation?(@project) %>
-                                          <% if can?(:alter_estimation_plan, Project) || ( can?(:alter_widget, ViewsWidget){ |widget| widget.project_fields.empty? } ) %>
+                                          <% if can?(:alter_estimation_plan, Project) || ( can?(:manage_estimation_widgets, @project){ |widget| widget.project_fields.empty? } ) %>
                                             <%= link_to(' ', view_widget, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash icon_smaller', :title => I18n.t('delete')) %>
                                             <%= link_to '', edit_views_widget_path(view_widget, module_project_id: module_project.id, view_id: module_project.view_id), class: 'icon-pencil icon_smaller', title: I18n.t(:edit_widget, :value => view_widget.name), remote: true %>
                                           <% end %>

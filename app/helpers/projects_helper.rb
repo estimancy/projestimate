@@ -1082,6 +1082,7 @@ module ProjectsHelper
       can_do_something = true
 
     else
+
       begin
         permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
         ###if can?(:show_project, estimation)

@@ -50,17 +50,10 @@ class WorkElementTypesController < ApplicationController
 
   # GET /work_element_types/1/edit
   def edit
-    authorize! :manage, WorkElementType
+    authorize! :show_work_element_types, WorkElementType
     set_page_title 'Work Element Type'
     @work_element_type = WorkElementType.find(params[:id])
     @organization = Organization.find(params[:organization_id])
-
-    unless @work_element_type.child_reference.nil?
-      if @work_element_type.child_reference.is_proposed_or_custom?
-        flash[:warning] = I18n.t (:warning_work_element_type_cant_be_edit)
-        redirect_to edit_organization_path(@work_element_type.organization)
-      end
-    end
   end
 
   def create
@@ -70,7 +63,7 @@ class WorkElementTypesController < ApplicationController
 
     if @work_element_type.save
       flash[:notice] = I18n.t(:notice_work_element_type_successful_created)
-      redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), edit_organization_path(@organization, :anchor => 'settings'))
+      redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-wet'))
     else
       render action: 'new'
     end
@@ -78,18 +71,12 @@ class WorkElementTypesController < ApplicationController
 
   def update
     authorize! :manage, WorkElementType
-    @work_element_type = nil
-    current_work_element_type = WorkElementType.find(params[:id])
-    if current_work_element_type.is_defined?
-      @work_element_type = current_work_element_type.amoeba_dup
-      @work_element_type.owner_id = current_user.id
-    else
-      @work_element_type = current_work_element_type
-    end
+    @work_element_type = WorkElementType.find(params[:id])
+    @organization = @work_element_type.organization
 
     if @work_element_type.update_attributes(params[:work_element_type])
       flash[:notice] =  I18n.t(:notice_work_element_type_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_path(@work_element_type.organization), edit_organization_path(@work_element_type.organization))
+      redirect_to redirect_apply(nil, new_organization_path(@work_element_type.organization), edit_organization_path(@organization, anchor: "tabs-wet"))
     else
       render action: 'edit'
     end
@@ -99,13 +86,8 @@ class WorkElementTypesController < ApplicationController
     authorize! :manage, WorkElementType
     @work_element_type = WorkElementType.find(params[:id])
     organization_id = @work_element_type.organization
-    if @work_element_type.is_defined? || @work_element_type.is_custom?
-      #logical deletion: delete don't have to suppress records anymore
-      @work_element_type.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @work_element_type.destroy
-    end
+    @work_element_type.destroy
 
-    redirect_to edit_organization_path(organization_id, anchor: "settings")
+    redirect_to edit_organization_path(organization_id, anchor: "tabs-wet")
   end
 end
