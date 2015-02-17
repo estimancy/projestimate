@@ -64,7 +64,7 @@ class AcquisitionCategoriesController < ApplicationController
 
     if @acquisition_category.save
       flash[:notice] = I18n.t (:notice_acquisition_category_successful_created)
-      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), edit_organization_path(@organization, anchor: "tabs-acquisition-categories"))
+      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), organization_setting_path(@organization, anchor: "tabs-acquisition-categories"))
     else
       render action: "edit"
     end
@@ -78,7 +78,7 @@ class AcquisitionCategoriesController < ApplicationController
 
     if @acquisition_category.update_attributes(params[:acquisition_category])
       flash[:notice] = I18n.t (:notice_acquisition_category_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), edit_organization_path(@organization, anchor: "tabs-acquisition-categories"))
+      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), organization_setting_path(@organization, anchor: "tabs-acquisition-categories"))
     else
       render action: "edit"
     end
@@ -92,6 +92,6 @@ class AcquisitionCategoriesController < ApplicationController
     @acquisition_category.destroy
 
     flash[:notice] = I18n.t (:notice_acquisition_category_successful_destroyed)
-    redirect_to edit_organization_path(organization_id, :anchor => "tabs-acquisition-categories")
+    redirect_to organization_setting_path(organization_id, :anchor => "tabs-acquisition-categories")
   end
 end

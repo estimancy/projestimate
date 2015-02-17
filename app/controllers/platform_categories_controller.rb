@@ -66,7 +66,7 @@ class PlatformCategoriesController < ApplicationController
 
     if @platform_category.save
       flash[:notice] = I18n.t (:notice_platform_category_successful_created)
-      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-platform-categories'))
+      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'new'
     end
@@ -80,7 +80,7 @@ class PlatformCategoriesController < ApplicationController
 
     if @platform_category.update_attributes(params[:platform_category])
       flash[:notice] = I18n.t (:notice_platform_category_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), edit_organization_path(@organization, :anchor => 'tabs-platform-categories'))
+      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'edit'
     end
@@ -94,6 +94,6 @@ class PlatformCategoriesController < ApplicationController
     @platform_category.destroy
 
     flash[:notice] = I18n.t (:notice_platform_category_successful_deleted)
-    redirect_to edit_organization_path(organization_id, :anchor => 'tabs-platform-categories')
+    redirect_to organization_setting_path(organization_id, :anchor => 'tabs-platform-categories')
   end
 end

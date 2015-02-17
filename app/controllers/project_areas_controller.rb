@@ -74,7 +74,7 @@ class ProjectAreasController < ApplicationController
 
     if @project_area.save
       flash[:notice] = I18n.t (:notice_project_area_successful_created)
-      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), edit_organization_path(@organization, :anchor => 'settings') )
+      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-project-areas') )
     else
        render action: 'new'
     end
@@ -87,7 +87,7 @@ class ProjectAreasController < ApplicationController
 
     if @project_area.update_attributes(params[:project_area])
       flash[:notice] = I18n.t (:notice_project_area_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), edit_organization_path(@organization, :anchor => 'settings') )
+      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-project-areas') )
     else
       render action: 'edit'
     end
@@ -101,6 +101,6 @@ class ProjectAreasController < ApplicationController
     @project_area.destroy
 
     flash[:notice] = I18n.t (:notice_project_area_successful_deleted)
-    redirect_to edit_organization_path(organization_id, :anchor => 'settings')
+    redirect_to organization_setting_path(organization_id, :anchor => 'tabs-project-areas')
   end
 end
