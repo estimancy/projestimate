@@ -14,7 +14,12 @@
         <%= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
       </div>
 
-      <%= f.button :submit, I18n.t(:save) %>
+        <div class="actions">
+          <% if can? :manage, Field %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <% end %>
+          <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: 'tabs-fields'), :class => 'btn' %>
+        </div>
     <% end %>
   </div>
 </div>

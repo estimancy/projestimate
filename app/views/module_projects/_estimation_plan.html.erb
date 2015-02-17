@@ -7,7 +7,9 @@
     <theader>
     <tr>
       <td class="center">
-        <%= link_to "", locked_plan_path(@project.id), :class => "#{ @project.locked? ? 'icon-lock' : 'icon-unlock' } icon-large", :title => "#{ @project.locked? ? 'Unlock estimation plan' : 'Lock estimation plan' }" %>
+        <% if can? :alter_estimation_plan, @project %>
+            <%= link_to "", locked_plan_path(@project.id), :class => "#{ @project.locked? ? 'icon-lock' : 'icon-unlock' } icon-large", :title => "#{ @project.locked? ? 'Unlock estimation plan' : 'Lock estimation plan' }" %>
+        <% end %>
       </td>
       <% for x in 1..@module_positions_x.to_i do %>
         <td class="center">
@@ -45,13 +47,18 @@
                     <%= pmod %>
                     <br>
                     <% unless @project.locked? || (@project.in_frozen_status? && action_name=="show") %>
-                      <%= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left a_white' %>
-                      <%= link_to '', pemodules_up_path(pmod.id), :class => 'icon-arrow-up a_white' %>
-                      <%= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down a_white' %>
-                      <%= link_to '', pemodules_right_path(pmod.id), :class => 'icon-arrow-right a_white' %>
-                      <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip a_white" %>
-                      <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
-                      <%= link_to '', pmod, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash a_white' %>
+                      <% if can? :alter_estimation_plan, @project %>
+                          <%= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left a_white' %>
+                          <%= link_to '', pemodules_up_path(pmod.id), :class => 'icon-arrow-up a_white' %>
+                          <%= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down a_white' %>
+                          <%= link_to '', pemodules_right_path(pmod.id), :class => 'icon-arrow-right a_white' %>
+                          <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip a_white" %>
+                          <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
+                          <%= link_to '', pmod, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash a_white' %>
+                      <% else %>
+                          <%= link_to '', '#', :title => "#{pmod.pemodule.title}: \n #{pmod.pemodule.description}", :class => "icon-info attribute_tooltip a_white" %>
+                      <% end %>
+
                       <% if pmod.show_results_view %>
                         <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-open a_white", :title => I18n.t(:title_hide_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>
                       <% else %>

@@ -56,6 +56,7 @@ class OrganizationsController < ApplicationController
     @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
     @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
     @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
+    @permissions_classes_modules = @modules_permissions.map(&:category).uniq.sort
 
     @project_security_levels = @organization.project_security_levels
   end

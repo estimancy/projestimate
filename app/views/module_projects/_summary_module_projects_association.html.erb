@@ -51,7 +51,9 @@
         <% end %>
       </table>
 
-      <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+      <% if can? :alter_estimation_plan, @project %>
+        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+      <% end %>
       <%= link_to I18n.t('back'), edit_project_path(@project, :anchor => 'tabs-4'), :class => 'btn' %>
 
     <% end %>
