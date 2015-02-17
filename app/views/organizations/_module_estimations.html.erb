@@ -27,7 +27,7 @@
             </td>
             <td class="align-center">
               <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-              <%= link_to '', guw.guw_model_path(i), method: "DELETE", confirm: I18n.t(:are_you_sure), :class => 'fa fa-trash', :title => I18n.t('delete') %>
+              <%= link_to '', guw.guw_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE", confirm: I18n.t(:are_you_sure), :class => 'fa fa-trash', :title => I18n.t('delete') %>
             </td>
           </tr>
         <% end %>
@@ -59,7 +59,7 @@
           </td>
           <td class="align-center">
             <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-            <%= link_to '', ge.ge_model_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+            <%= link_to '', ge.ge_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
           </td>
         </tr>
       <% end %>
@@ -88,10 +88,6 @@
         <td></td>
       </tr>
     </table>
-
-
-
-
   </div>
 
   <div id="activite">
@@ -221,7 +217,7 @@
           </td>
           <td class="align-center">
             <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-            <%= link_to '', expert_judgement.instance_path(i), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+            <%= link_to '', expert_judgement.instance_path(i),  confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
           </td>
         </tr>
       <% end %>
