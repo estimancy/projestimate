@@ -3,7 +3,7 @@ module Ge
     validates_presence_of :name, :organization_id
 
     belongs_to :organization
-    belongs_to :module_project
+    has_many :module_projects, :dependent => :destroy
 
     def to_s(mp=nil)
       if mp.nil?

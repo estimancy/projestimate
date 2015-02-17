@@ -5,9 +5,9 @@ module Guw
     has_many :guw_unit_of_works
     has_many :guw_attributes
     has_many :guw_work_units
+    has_many :module_projects
 
     belongs_to :organization
-    belongs_to :module_project
 
     validates_presence_of :name, :organization_id
 

@@ -68,6 +68,11 @@ class Guw::GuwModelsController < ApplicationController
   def destroy
     @guw_model = Guw::GuwModel.find(params[:id])
     organization_id = @guw_model.organization_id
+
+    @guw_model.module_projects.each do |mp|
+      mp.destroy
+    end
+
     @guw_model.delete
     redirect_to main_app.edit_organization_path(organization_id)
   end

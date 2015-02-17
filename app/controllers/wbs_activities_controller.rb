@@ -145,6 +145,11 @@ class WbsActivitiesController < ApplicationController
   def destroy
     @wbs_activity = WbsActivity.find(params[:id])
     @organization_id = @wbs_activity.organization_id
+
+    @wbs_activity.module_projects.each do |mp|
+      mp.destroy
+    end
+
     @wbs_activity.destroy
 
     flash[:notice] = I18n.t(:notice_wbs_activity_successful_deleted)
