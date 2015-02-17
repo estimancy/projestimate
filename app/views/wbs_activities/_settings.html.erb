@@ -7,7 +7,7 @@
                                :module_project_id => current_module_project.id,
                                :in_out => "input").first %>
 <% pev = EstimationValue.where(:pe_attribute_id => effort.id,
-                               :module_project_id => current_module_project.previous.first.id,
+                               :module_project_id => current_module_project.previous.first,
                                :in_out => "output").first %>
 <% component_id = current_component.id %>
 <% organization = @project.organization %>
