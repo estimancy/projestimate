@@ -6,13 +6,14 @@
     </td>
     <td colspan="<%= @module_positions_x %>" class="module_bloc_size">
       <div class="<%=  %> module_project <%= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
-        <%#= link_to @initialization_module.title, "#", class: "a_white" %>
         <%= link_to pmod, "#", class: "a_white" %>
 
         <% unless @project.locked? %>
           <%#= link_to '', '#', :title => "#{@initialization_module.title}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
           <%= link_to '', '#', :title => "#{@project}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
-          <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
+          <% if can? :alter_estimation_plan, @project %>
+            <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
+          <% end %>
         <% end %>
 
         <% if pmod.show_results_view %>

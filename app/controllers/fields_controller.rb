@@ -27,7 +27,7 @@ class FieldsController < ApplicationController
 
     respond_to do |format|
       if @field.save
-        format.html { redirect_to edit_organization_path(@field.organization_id, anchor: "tabs-fields"), notice: 'Field was successfully created.' }
+        format.html { redirect_to organization_setting_path(@field.organization_id, anchor: "tabs-fields"), notice: 'Field was successfully created.' }
         format.json { render json: @field, status: :created, location: @field }
       else
         format.html { render action: "new" }
@@ -42,10 +42,11 @@ class FieldsController < ApplicationController
     authorize! :manage, Field
 
     @field = Field.find(params[:id])
+    @organization = @field.organization
 
     respond_to do |format|
       if @field.update_attributes(params[:field])
-        format.html { redirect_to edit_organization_path(@field.organization_id, anchor: "tabs-fields"), notice: 'Field was successfully updated.' }
+        format.html { redirect_to organization_setting_path(@organization, anchor: "tabs-fields"), notice: 'Field was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -64,7 +65,7 @@ class FieldsController < ApplicationController
     @field.destroy
 
     respond_to do |format|
-      format.html { redirect_to edit_organization_path(@field.organization_id, anchor: "tabs-fields") }
+      format.html { redirect_to organization_setting_path(organization_id, anchor: "tabs-fields") }
       format.json { head :no_content }
     end
   end

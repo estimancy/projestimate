@@ -99,11 +99,13 @@
           </table>
         </div>
 
-        <% if action_name == 'new' || action_name=='create' %>
-            <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+        <% if can? :manage, Group %>
+            <% if action_name == 'new' || action_name=='create' %>
+                <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+            <% end %>
+            <%= submit_tag I18n.t('save'), :class => 'btn' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
-        <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <%= link_to I18n.t('back'), groups_path, :class => 'btn' %>
 
     <% end -%>
