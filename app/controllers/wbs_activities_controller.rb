@@ -265,11 +265,12 @@ class WbsActivitiesController < ApplicationController
     @pbs_project_element = current_component
     @tmp_results = Hash.new
 
-    effort_unit_coefficient = current_component.wbs_activity.effort_unit_coefficient.to_f
     @ratio_reference = WbsActivityRatio.find(params[:ratio])
 
     # Project wbs_activity
     @wbs_activity = current_module_project.wbs_activity
+    effort_unit_coefficient = @wbs_activity.effort_unit_coefficient.to_f
+
 
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
@@ -364,10 +365,16 @@ class WbsActivitiesController < ApplicationController
           tmp_prbl = Array.new
           ['low', 'most_likely', 'high'].each do |level|
             level_estimation_value = Hash.new
-            level_estimation_value[@pbs_project_element.id] = params[:values][level].to_i * effort_unit_coefficient
+            level_estimation_value[@pbs_project_element.id] = params[:values][level].to_f * effort_unit_coefficient
             in_result["string_data_#{level}"] = level_estimation_value
             tmp_prbl << level_estimation_value[@pbs_project_element.id]
           end
+
+          unless @wbs_activity.three_points_estimation?
+            tmp_prbl[0] = tmp_prbl[1]
+            tmp_prbl[2] = tmp_prbl[1]
+          end
+
           est_val.update_attributes(in_result)
           est_val.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end

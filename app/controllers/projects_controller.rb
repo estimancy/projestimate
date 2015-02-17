@@ -115,7 +115,7 @@ class ProjectsController < ApplicationController
     @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
 
     #set_breadcrumbs @project.title => edit_project_path(@project)
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "Dashboard" => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => ""
 
     @project_organization = @project.organization
     @module_projects = @project.module_projects
