@@ -265,11 +265,12 @@ class WbsActivitiesController < ApplicationController
     @pbs_project_element = current_component
     @tmp_results = Hash.new
 
-    effort_unit_coefficient = current_component.wbs_activity.effort_unit_coefficient.to_f
     @ratio_reference = WbsActivityRatio.find(params[:ratio])
 
     # Project wbs_activity
     @wbs_activity = current_module_project.wbs_activity
+    effort_unit_coefficient = @wbs_activity.effort_unit_coefficient.to_f
+
 
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
