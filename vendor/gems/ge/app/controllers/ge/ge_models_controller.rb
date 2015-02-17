@@ -67,6 +67,11 @@ class Ge::GeModelsController < ApplicationController
   def destroy
     @ge_model = Ge::GeModel.find(params[:id])
     organization_id = @ge_model.organization_id
+
+    @ge_model.module_projects.each do |mp|
+      mp.destroy
+    end
+
     @ge_model.delete
     redirect_to main_app.edit_organization_path(organization_id)
   end

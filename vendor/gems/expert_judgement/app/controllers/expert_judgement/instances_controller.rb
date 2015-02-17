@@ -68,6 +68,11 @@ class ExpertJudgement::InstancesController < ApplicationController
   def destroy
     @instance = ExpertJudgement::Instance.find(params[:id])
     organization_id = @instance.organization_id
+
+    @instance.module_projects.each do |mp|
+      mp.destroy
+    end
+
     @instance.delete
     redirect_to main_app.edit_organization_path(organization_id)
   end

@@ -54,6 +54,7 @@ class WbsActivity < ActiveRecord::Base
 
   has_many :pe_wbs_projects
   has_many :pbs_project_elements
+  has_many :module_projects
 
   validates :organization_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :scope => :organization_id }

@@ -42,10 +42,10 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :project, :touch => true
   belongs_to :view    # the current selected view
 
-  belongs_to :guw_model, class_name: "Guw::GuwModel"
-  belongs_to :ge_model, class_name: "Ge::GeModel"
-  belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
-  belongs_to :wbs_activity
+  belongs_to :guw_model, class_name: "Guw::GuwModel", dependent: :delete
+  belongs_to :ge_model, class_name: "Ge::GeModel", dependent: :delete
+  belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance", dependent: :delete
+  belongs_to :wbs_activity, dependent: :delete
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
   has_many :guw_unit_of_works, :through => :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWork"
