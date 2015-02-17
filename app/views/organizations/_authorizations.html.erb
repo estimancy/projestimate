@@ -61,48 +61,50 @@
       <b><%= I18n.t(:organization_permissions) %></b>
 
       <% if can? :show_organization_permissions, Permission %>
-        <table class="table table-striped table-bordered table-condensed">
-          <tr>
-            <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
-            <% @groups.each_with_index do |group, i| %>
-              <th>
-                <%= link_to group.name, "#", title: group.description %>
-                &nbsp;
-                <%= link_to '', '#', :id => "cols_select_all_global_#{group.id}", 'data-group_global_id' => group.id, 'data-rows_or_cols_global' => 'cols', :remote => true, :class => 'fa fa-check-square-o', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
-              </th>
-            <% end %>
-          </tr>
+        <table class="table table-bordered table-condensed">
 
-          <% @permissions_classes_globals.each do |cla| %>
             <tr>
-              <th style="text-align:left; vertical-align:middle;">
-                <%= cla.blank? ? '' : cla %>
-              </th>
-              <% @groups.each do |group| %>
-                <th style="text-align:center; font-style:italic; vertical-align:bottom; font-size: 85%; color: #999; border-left: 0;">
-                  <%= group.name %>
+              <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
+              <% @groups.each_with_index do |group, i| %>
+                <th>
+                  <%= link_to group.name, "#", title: group.description %>
+                  &nbsp;
+                  <%= link_to '', '#', :id => "cols_select_all_global_#{group.id}", 'data-group_global_id' => group.id, 'data-rows_or_cols_global' => 'cols', :remote => true, :class => 'fa fa-check-square-o', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
                 </th>
               <% end %>
             </tr>
-            <% @global_permissions.each do |perm| %>
+
+            <% @permissions_classes_globals.each do |cla| %>
               <tr>
-                <% if perm.category.to_s == cla %>
-                  <td>
-                    &nbsp;
-                    <%= link_to '', '#', :id => "lines_select_all_global_#{perm.id}", 'data-permission_global_id' => perm.id, 'data-rows_or_cols_global' => 'rows', :remote => true, :class => 'fa-check-square-o fa', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
-                    &nbsp;
-                    <%= link_to perm.name, edit_permission_path(perm), title: perm.description %>
+                <td style="text-align:left; vertical-align:middle; font-style:italic;">
+                  <%= cla.blank? ? '' : cla %>
+                </td>
+                <% @groups.each do |group| %>
+                  <td style="text-align:center; font-style:italic; vertical-align:bottom; font-size: 85%; border-left: 0;">
+                    <%= group.name %>
                   </td>
-                  <% @groups.each do |group| %>
-                    <%= hidden_field_tag "permissions[#{group.id}][]" %>
-                    <td style="text-align: center;">
-                      <%= check_box_tag("permissions[#{group.id}][]", perm.id, (group.permissions.map(&:id).include? perm.id), :id => nil, :class => "group_global_id_#{group.id} permission_global_id_#{perm.id}") %>
-                    </td>
-                  <% end %>
                 <% end %>
               </tr>
+              <% @global_permissions.each do |perm| %>
+                <tr>
+                  <% if perm.category.to_s == cla %>
+                    <td>
+                      &nbsp;
+                      <%= link_to '', '#', :id => "lines_select_all_global_#{perm.id}", 'data-permission_global_id' => perm.id, 'data-rows_or_cols_global' => 'rows', :remote => true, :class => 'fa-check-square-o fa', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
+                      &nbsp;
+                      <%= link_to perm.name, edit_permission_path(perm), title: perm.description %>
+                    </td>
+                    <% @groups.each do |group| %>
+                      <%= hidden_field_tag "permissions[#{group.id}][]" %>
+                      <td style="text-align: center;">
+                        <%= check_box_tag("permissions[#{group.id}][]", perm.id, (group.permissions.map(&:id).include? perm.id), :id => nil, :class => "group_global_id_#{group.id} permission_global_id_#{perm.id}") %>
+                      </td>
+                    <% end %>
+                  <% end %>
+                </tr>
+              <% end %>
             <% end %>
-          <% end %>
+
         </table>
 
         <% if can? :manage_organization_permissions, Permission %>
@@ -115,22 +117,21 @@
       <% end %>
     </div>
 
-
     <% if is_master_instance? %>
       <div id="tabs-modules-permissions">
         <b><%= I18n.t(:modules_permissions) %></b>
 
         <% if can? :show_modules_permissions, Permission %>
 
-              <table class="table table-striped table-bordered table-condensed">
+              <table class="table table-bordered table-condensed">
                 <tr>
                   <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
                   <% @groups.each do |group| %>
-                      <th style="text-align:center;">
-                        <%= link_to group.name, "#", title: group.description %>
-                        &nbsp;
-                        <%= link_to '', '#', :id => "cols_select_all_master_#{group.id}", 'data-group_master_id' => group.id, 'data-rows_or_cols_master' => 'cols', :remote => true, :class => 'fa fa-check-square-o', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_master_id', 'permission_master_id', 'master');" %>
-                      </th>
+                    <th style="text-align:center;">
+                      <%= link_to group.name, "#", title: group.description %>
+                      &nbsp;
+                      <%= link_to '', '#', :id => "cols_select_all_master_#{group.id}", 'data-group_master_id' => group.id, 'data-rows_or_cols_master' => 'cols', :remote => true, :class => 'fa fa-check-square-o', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_master_id', 'permission_master_id', 'master');" %>
+                    </th>
                   <% end %>
                 </tr>
 
@@ -146,21 +147,21 @@
                       <% end %>
                     </tr>
                     <% @modules_permissions.each do |perm| %>
-                        <tr>
-                          <% if perm.category.to_s == cla %>
-                              <td>
-                                &nbsp;
-                                <%= link_to '', '#', :id => "lines_select_all_global_#{perm.id}", 'data-permission_global_id' => perm.id, 'data-rows_or_cols_global' => 'rows', :remote => true, :class => 'fa-check-square-o fa', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
-                                &nbsp;
-                                <%= link_to perm.name, edit_permission_path(perm), title: perm.description %>
+                      <tr>
+                        <% if perm.category.to_s == cla %>
+                          <td>
+                            &nbsp;
+                            <%= link_to '', '#', :id => "lines_select_all_global_#{perm.id}", 'data-permission_global_id' => perm.id, 'data-rows_or_cols_global' => 'rows', :remote => true, :class => 'fa-check-square-o fa', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
+                            &nbsp;
+                            <%= link_to perm.name, edit_permission_path(perm), title: perm.description %>
+                          </td>
+                          <% @groups.each do |group| %>
+                              <td style="text-align: center;">
+                                <%= check_box_tag("permissions[#{group.id}][]", perm.id, (group.permissions.map(&:id).include? perm.id), :id => nil, :class => "group_master_id_#{group.id} permission_master_id_#{perm.id}") %>
                               </td>
-                              <% @groups.each do |group| %>
-                                  <td style="text-align: center;">
-                                    <%= check_box_tag("permissions[#{group.id}][]", perm.id, (group.permissions.map(&:id).include? perm.id), :id => nil, :class => "group_master_id_#{group.id} permission_master_id_#{perm.id}") %>
-                                  </td>
-                              <% end %>
                           <% end %>
-                        </tr>
+                        <% end %>
+                      </tr>
                     <% end %>
                 <% end %>
               </table>
@@ -184,7 +185,7 @@
 
         <%= hidden_field_tag :organization_id, @organization.id %>
 
-        <table class="table table-striped table-bordered table-condensed">
+        <table class="table table-bordered table-condensed">
             <tr>
                 <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
                 <% @project_security_levels.each do |ps| %>

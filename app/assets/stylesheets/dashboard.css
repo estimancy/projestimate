@@ -166,9 +166,9 @@ div.actions-tabs {
 .table tr.checked td {
     background-color: #FFFFE3 !important;
 }
-.table-striped tbody > tr:nth-child(2n+1) > td, .table-striped tbody > tr:nth-child(2n+1) > th {
-    background-color: #FCFCFC;
-}
+/*.table-striped tbody > tr:nth-child(2n+1) > td, .table-striped tbody > tr:nth-child(2n+1) > th {*/
+    /*background-color: #FCFCFC;*/
+/*}*/
 .table-hover tbody > tr:hover > td {
     background-color: #f5f5f5;
 }
