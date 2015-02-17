@@ -11,7 +11,7 @@
       <div class="label label-info pull-right">
         Total <%= @guw_model.retained_size_unit %> retenu :
         <span class="ajusted_effort">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
         </span>
       </div>
 
