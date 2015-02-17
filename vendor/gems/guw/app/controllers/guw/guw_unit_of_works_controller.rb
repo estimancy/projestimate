@@ -227,7 +227,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
                                                      organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-          uo_weight_low = cwu.value * tcplx.coefficient.to_f
+          uo_weight_low = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
         end
 
         if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
@@ -236,7 +236,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
                                                      organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-          uo_weight_ml = cwu.value * tcplx.coefficient.to_f
+          uo_weight_ml = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
         end
 
         if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
@@ -245,7 +245,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
                                                      organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-          uo_weight_high = cwu.value * tcplx.coefficient.to_f
+          uo_weight_high = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
         end
 
         @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]

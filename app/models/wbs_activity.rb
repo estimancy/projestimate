@@ -79,7 +79,6 @@ class WbsActivity < ActiveRecord::Base
   scoped_search :in => :wbs_activity_elements, :on => [:name, :description]
   scoped_search :in => :wbs_activity_ratios, :on => [:name, :description]
 
-
   def to_s(mp=nil)
     if mp.nil?
       self.name
