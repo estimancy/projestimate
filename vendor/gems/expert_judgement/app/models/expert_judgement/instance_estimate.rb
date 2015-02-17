@@ -1,9 +1,10 @@
 module ExpertJudgement
   class InstanceEstimate < ActiveRecord::Base
     belongs_to :pbs_project_element
-    belongs_to :module_project
     belongs_to :pe_attribute
     belongs_to :instance, foreign_key: "expert_judgement_instance_id"
+
+    belongs_to :module_project, dependent: :destroy
 
     def convert_effort(level, eja, ev, component)
       gross = (self.send("#{level}_input").blank? ? ev.nil? ? '' : ev.send("string_data_#{level}")[component.id] : self.send("#{level}_input")).to_f

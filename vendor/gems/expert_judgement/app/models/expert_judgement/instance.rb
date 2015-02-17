@@ -1,6 +1,9 @@
 module ExpertJudgement
   class Instance < ActiveRecord::Base
+
     belongs_to :organization
+    has_many :instance_estimates, foreign_key: "expert_judgement_instance_id"
+
     validates_presence_of :name, :organization_id
 
     def to_s(mp=nil)

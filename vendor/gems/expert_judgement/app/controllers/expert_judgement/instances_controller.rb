@@ -56,25 +56,26 @@ class ExpertJudgement::InstancesController < ApplicationController
     @instance = ExpertJudgement::Instance.new(params[:instance])
     @instance.organization_id = params[:instance][:organization_id].to_i
     @instance.save
-    redirect_to main_app.edit_organization_path(@instance.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@instance.organization_id)
   end
 
   def update
     @instance = ExpertJudgement::Instance.find(params[:id])
     @instance.update_attributes(params[:instance])
-    redirect_to main_app.edit_organization_path(@instance.organization_id)
+
+    redirect_to main_app.organization_module_estimation_path(@instance.organization_id)
   end
 
   def destroy
     @instance = ExpertJudgement::Instance.find(params[:id])
     organization_id = @instance.organization_id
 
-    @instance.module_projects.each do |mp|
-      mp.destroy
+    @instance.instance_estimates.each do |ie|
+      ie.destroy
     end
 
     @instance.delete
-    redirect_to main_app.edit_organization_path(organization_id)
+    redirect_to main_app.organization_module_estimation_path(@instance.organization_id)
   end
 
   def save_efforts

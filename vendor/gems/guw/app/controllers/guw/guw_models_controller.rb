@@ -56,24 +56,22 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model = Guw::GuwModel.new(params[:guw_model])
     @guw_model.organization_id = params[:guw_model][:organization_id].to_i
     @guw_model.save
-    redirect_to main_app.edit_organization_path(@guw_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
 
   def update
     @guw_model = Guw::GuwModel.find(params[:id])
     @guw_model.update_attributes(params[:guw_model])
-    redirect_to main_app.edit_organization_path(@guw_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
 
   def destroy
     @guw_model = Guw::GuwModel.find(params[:id])
     organization_id = @guw_model.organization_id
-
     @guw_model.module_projects.each do |mp|
       mp.destroy
     end
-
     @guw_model.delete
-    redirect_to main_app.edit_organization_path(organization_id)
+    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
 end

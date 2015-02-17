@@ -42,7 +42,7 @@
                                                        pbs_project_element_id: current_component.id).first %>
 
       <% ev = EstimationValue.where(:pe_attribute_id => eja.id,
-                                    :module_project_id => current_module_project.previous.first.id,
+                                    :module_project_id => current_module_project.previous.first,
                                     :in_out => "output").first %>
 
       <tr>
