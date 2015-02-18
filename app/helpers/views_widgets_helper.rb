@@ -307,8 +307,7 @@ module ViewsWidgetsHelper
     wbs_activity_element_root = wbs_activity.wbs_activity_elements.first.root
 
     wai = WbsActivityInput.where(wbs_activity_id: wbs_activity, module_project_id: current_module_project.id).first
-
-    if wai.nil?
+    if wai.wbs_activity_ratio.nil?
       ratio_reference = wbs_activity.wbs_activity_ratios.first
     else
       ratio_reference = wai.wbs_activity_ratio
