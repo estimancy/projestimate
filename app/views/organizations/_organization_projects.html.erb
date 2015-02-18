@@ -39,6 +39,7 @@
         <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
       </tr>
       </thead>
+
       <tbody>
       <% @projects.each do |project| %>
         <% if can_see_estimation?(project) %>

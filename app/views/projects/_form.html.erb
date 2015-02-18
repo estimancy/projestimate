@@ -80,13 +80,13 @@
        <br>
 
       <div class="actions-tabs">
-        <% if @project.state.in?(%w(rejected released checkpoint))%>
+        <% if can_modify_estimation?(@project) %>
           <%= render :partial => 'submit_project', :object => f %>
         <% end %>
 
         <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
 
-        <% if !@project.is_model && can?(:delete_project, @project) %>
+        <% if !@project.is_model && can_delete_estimation?(@project) %>
           <%= link_to I18n.t('delete'), @project, method: :delete, confirm: "Etes vous sur de vouloir annuler le projet ?", :class => 'btn' %>
         <% end %>
       </div>
