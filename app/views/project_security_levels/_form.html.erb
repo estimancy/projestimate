@@ -17,13 +17,15 @@
       <%= f.input :organization_id, as: :hidden, :input_html => { value: params[:organization_id] } %>
 
       <div class="actions-tabs">
-        <% if action_name.in?(%w(new create)) %>
-          <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-        <% elsif action_name == 'edit' || action_name=="update" %>
-          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+        <% if can? :manage, ProjectSecurityLevel %>
+            <% if action_name.in?(%w(new create)) %>
+                <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+            <% elsif action_name == 'edit' || action_name=="update" %>
+                <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+            <% end %>
+            <%= submit_tag I18n.t('save'), :class => 'btn' %>
         <% end %>
-        <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= link_to I18n.t('back'), edit_organization_path(params[:organization_id], anchor: "tabs-project-security-levels"), :class => 'btn' %>
+        <%= link_to I18n.t('back'), organization_authorization_path(@organization, anchor: "tabs-project-security-levels"), :class => 'btn' %>
       </div>
 
     <% end %>

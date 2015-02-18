@@ -68,9 +68,11 @@ class ProjectSecurityLevelsController < ApplicationController
     authorize! :manage, ProjectSecurityLevel
 
     @project_security_level = ProjectSecurityLevel.find(params[:id])
+    @organization = @project_security_level.organization
 
     if @project_security_level.update_attributes(params[:project_security_level])
-      redirect_to organization_authorization_path(@project_security_level.organization_id, anchor: "tabs-project-security-levels"), notice: "#{I18n.t (:notice_project_securities_level_successful_updated)}"
+      #redirect_to organization_authorization_path(@project_security_level.organization_id, anchor: "tabs-project-security-levels"), notice: "#{I18n.t (:notice_project_securities_level_successful_updated)}"
+      redirect_to redirect_apply(edit_organization_project_security_level_path(@organization, @project_security_level, anchor: "tabs-project-security-levels"), nil, organization_authorization_path(@organization, :anchor => 'tabs-project-security-levels')), notice: "#{I18n.t (:notice_project_securities_level_successful_updated)}"
     else
       render action: 'edit'
     end

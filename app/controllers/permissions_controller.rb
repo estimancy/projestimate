@@ -140,22 +140,6 @@ class PermissionsController < ApplicationController
     end
   end
 
-  #def set_estimations_rights
-  #  authorize! :manage_estimations_permissions, Permission
-  #
-  #  if params[:commit] == I18n.t('cancel')
-  #    redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
-  #  else
-  #    @groups = Group.all
-  #    @permissions = Permission.defined
-  #
-  #    @groups.each do |group|
-  #      group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
-  #    end
-  #
-  #    redirect_to organization_authorization_path(@organization)
-  #  end
-  #end
 
   def set_rights_project_security
     authorize! :manage_estimations_permissions, Permission
