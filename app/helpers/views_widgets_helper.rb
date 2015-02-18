@@ -430,7 +430,7 @@ module ViewsWidgetsHelper
         if wbs_activity_elt != wbs_activity_root
           level_estimation_values = probable_est_value
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
-            chart_data << ["#{wbs_project_elt.name}", 0]
+            chart_data << ["#{wbs_activity_elt.name}", 0]
           else
             wbs_value = level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value]
             chart_data << ["#{wbs_activity_elt.name}", wbs_value]

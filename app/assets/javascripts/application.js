@@ -10,6 +10,6 @@
 //= require jquery-ui
 //= require tinymce-jquery
 //= require tinymce
+//= require jit
 //= require_self
 //= require_tree .
-//= require jit
