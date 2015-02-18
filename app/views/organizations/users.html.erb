@@ -23,7 +23,7 @@
           <td><%= user.last_name %></td>
           <td><%= user.login_name %></td>
           <td class="center">
-            <%= link_to "", edit_user_path(user), class: "icon icon-pencil", :title => I18n.t('edit') %>
+            <%= link_to "", edit_user_path(user, @organization), class: "icon icon-pencil", :title => I18n.t('edit') %>
             <% if can? :manage, User, :organization_id => @organization.id %>
                 <%= link_to '', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
             <% end %>

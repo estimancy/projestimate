@@ -51,12 +51,7 @@ class Ability
       can :manage_master_data, :all
     end
 
-    can :edit, Project
-    can :update, Project
-    cannot :update, [WbsActivityElement, WbsActivity, Language, PeAttribute, ProjectArea,
-                     ProjectCategory, PlatformCategory, AcquisitionCategory,
-                     WorkElementType, Currency, AdminSetting, AuthMethod, Group, ProjectSecurityLevel,
-                     Permission], :record_status => {:name => 'Retired'}
+    #cannot :update, [Language, PeAttribute, Currency, AdminSetting, AuthMethod, Permission], :record_status => {:name => 'Retired'}
 
     #For organization and estimations permissions
     alias_action :show_estimations_permissions, :to => :manage_estimations_permissions

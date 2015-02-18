@@ -118,6 +118,9 @@ public
 
     set_page_title 'Edit user'
 
+    #Get the current organization
+    @organization = Organization.find(params[:organization_id])
+
     # Get the Application authType
     application_auth_type = AuthMethod.where('name = ? AND record_status_id =?', 'Application', @defined_record_status.id).first
 
@@ -151,7 +154,6 @@ public
       #session[:current_password] = nil;  session[:password] = nil; session[:password_confirmation] = nil
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
       #redirect_to redirect_apply(edit_user_path(@user, :anchor => "tabs-5"), nil, session[:previous])
-      @organization = @user.organization
       redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
     else
       #session[:current_password] = params[:user][:current_password];  session[:password] = params[:user][:password]; session[:password_confirmation] = params[:user][:password_confirmation]

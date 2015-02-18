@@ -444,7 +444,6 @@ class ProjectsController < ApplicationController
       project_root.save
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
-      #@pe_wbs_project_activity = @project.pe_wbs_projects.activities_wbs.first
       @wbs_activity_elements = []
       @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
@@ -488,8 +487,7 @@ class ProjectsController < ApplicationController
 
       if @project.update_attributes(params[:project])
         begin
-          #start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
-          start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))
+          start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))     #start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
           @project.start_date = date
         rescue
           @project.start_date = Time.now.to_date
@@ -510,19 +508,14 @@ class ProjectsController < ApplicationController
             unless @project.organization.attribute_organizations.nil?
               @project.organization.attribute_organizations.each do |am|
                 ['input', 'output'].each do |in_out|
-                  mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id,
-                                               :module_project_id => cap_module_project.id,
-                                               :in_out => in_out,
-                                               :is_mandatory => am.is_mandatory,
-                                               :description => am.pe_attribute.description,
-                                               :display_order => nil,
+                  mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id, :module_project_id => cap_module_project.id, :in_out => in_out,
+                                               :is_mandatory => am.is_mandatory, :description => am.pe_attribute.description, :display_order => nil,
                                                :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
                                                :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
                                                :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
                 end
               end
             end
-
             # When project organization exists
           elsif !project_organization.nil?
 
@@ -556,8 +549,7 @@ class ProjectsController < ApplicationController
 
         @project.save
 
-        #redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, projects_path), notice: "#{I18n.t(:notice_project_successful_updated)}"
-        redirect_to edit_organization_path(@project.organization)
+        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)), notice: "#{I18n.t(:notice_project_successful_updated)}"
       else
         render :action => 'edit'
       end
@@ -660,6 +652,7 @@ class ProjectsController < ApplicationController
   def confirm_deletion
     @project = Project.find(params[:project_id])
     authorize! :delete_project, @project
+
     @from_tree_history_view = params[:from_tree_history_view]
     @current_showed_project_id = params['current_showed_project_id']
 
@@ -1587,8 +1580,11 @@ public
   end
 
   def projects_from
-    @projects = Project.where(:is_model => true)
     authorize! :create_project_from_template, Project
+
+    @organization = Organization.find(params[:organization_id])
+    @projects = @organization.projects.where(:is_model => true)
+
   end
 
   #Checkout the project

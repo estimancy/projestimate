@@ -9,9 +9,12 @@
   </ul>
 
   <div id="taille">
-      <b>Modèle d'Unité Oeuvre générique (2 niveaux)</b>
+    <b>Modèle d'Unité Oeuvre générique (2 niveaux)</b>
 
-      <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+    <% if can? :show_modules_instances, ModuleProject %>
+      <% if can? :manage_modules_instances, ModuleProject %>
+        <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+      <% end %>
       <br>
 
       <table class="table table-bordered">
@@ -38,35 +41,40 @@
       
       <b>Modèle d'Unité d'Oeuvre par groupe (1 niveau)</b>
       <%= render :partial => 'organizations/technology_uow_synthesis' %>
-
+    <% end %>
   </div>
 
   <div id="effort">
     <b>Module d'Effort Générique</b>
 
-    <%= link_to "Nouvelle instance d'effort", ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+    <% if can? :show_modules_instances, ModuleProject %>
+        <% if can? :manage_modules_instances, ModuleProject %>
+            <%= link_to "Nouvelle instance d'effort", ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+        <% end %>
 
-    <table class="table table-bordered">
-      <tr>
-        <th><%= I18n.t(:name) %></th>
-        <th class="action"><%= I18n.t(:actions) %></th>
-      </tr>
+        <table class="table table-bordered">
+          <tr>
+            <th><%= I18n.t(:name) %></th>
+            <th class="action"><%= I18n.t(:actions) %></th>
+          </tr>
 
-      <% @organization.ge_models.each do |i| %>
-        <tr>
-          <td class="span5">
-            <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
-          </td>
-          <td class="align-center">
-            <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-            <%= link_to '', ge.ge_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
-          </td>
-        </tr>
-      <% end %>
-    </table>
+          <% @organization.ge_models.each do |i| %>
+            <tr>
+              <td class="span5">
+                <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
+              </td>
+              <td class="align-center">
+                <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
+                <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to '', ge.ge_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
 
-    <b>Modules Cocomo</b>
-    <table class="table tabel-bordered">
+        <b>Modules Cocomo</b>
+        <table class="table tabel-bordered">
       <tr>
         <th>Nom</th>
         <th>Description</th>
@@ -88,13 +96,16 @@
         <td></td>
       </tr>
     </table>
+    <% else %>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
+    <% end %>
   </div>
 
   <div id="activite">
       <b><%= I18n.t :wbs_activities %></b>
-      <% if can? :show_wbs_activities, WbsActivity %>
+      <% if can? :show_modules_instances, ModuleProject %>
 
-        <% if can? :manage, WbsActivity %>
+        <% if can? :manage_modules_instances, ModuleProject %>
           <a href="#myWBSModal" role="button" class="btn pull-right" title="<%= I18n.t(:guide_import_wbs_activity) %>" data-toggle="modal"><%= I18n.t(:import_wbs_activity) %></a>
           <%= link_to I18n.t(:new_wbs_activity), new_organization_wbs_activity_path(@organization), :class => 'btn pull-right', :title => "#{I18n.t(:guide_create_wbs_activity)}" %>
         <% end %>
@@ -115,7 +126,7 @@
               <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
               <td class="center">
                 <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
-                <% if can? :manage, WbsActivity %>
+                <% if can? :manage_modules_instances, ModuleProject %>
                   <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
                   <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t(:delete) %>
                 <% end %>
@@ -150,7 +161,7 @@
           <% end %>
         </div>
       <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_wbs_activities) %></div>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
       <% end %>
   </div>
 
@@ -159,12 +170,14 @@
   </div>
 
   <div id="conversion">
-    <%= render :partial => 'organizations/technology_size_type_abacus' %>
+    <% if can? :show_modules_instances, ModuleProject %>
+      <%= render :partial => 'organizations/technology_size_type_abacus' %>
 
-    <%= render :partial => 'organizations/technology_size_unit_abacus' %>
+      <%= render :partial => 'organizations/technology_size_unit_abacus' %>
 
-    <% if can? :show_size_unit_types, SizeUnitType %>
-      <% if can? :manage, SizeUnitType %>
+      <%# if can? :show_size_unit_types, SizeUnitType %>
+      <%# if can? :manage, SizeUnitType %>
+      <% if can? :manage_modules_instances, ModuleProject %>
         <%= link_to I18n.t('new_size_unit_type'), new_size_unit_type_path(:organization_id => @organization.nil? ? nil : @organization.id), :class => 'btn pull-right' %>
       <% end %>
 
@@ -186,7 +199,9 @@
             <td><%= i.description %></td>
             <td class="align-center">
               <%= link_to '', edit_size_unit_type_path(i, organization_id: @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+              <% if can? :manage_modules_instances, ModuleProject %>
+                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+              <% end %>
             </td>
           </tr>
         <% end %>
@@ -194,34 +209,41 @@
         <tbody>
         </table>
     <% else %>
-      <div class="red_color"><%= I18n.t(:notice_cannot_view_size_unit_types) %></div>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
     <% end %>
-
   </div>
 
   <div id="expert">
     <b>Expert Judgment</b>
-    <%= link_to "Nouveau modèle de Jugement d'Expert", expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
-    <br>
-
-    <table class="table table-bordered">
-      <tr>
-        <th><%= I18n.t(:name) %></th>
-        <th class="action"><%= I18n.t(:actions) %></th>
-      </tr>
-
-      <% @organization.expert_judgement_instances.each do |i| %>
-        <tr>
-          <td class="span5">
-            <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
-          </td>
-          <td class="align-center">
-            <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-            <%= link_to '', expert_judgement.instance_path(i),  confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
-          </td>
-        </tr>
+    <% if can? :show_modules_instances, ModuleProject %>
+      <% if can? :manage_modules_instances, ModuleProject %>
+        <%= link_to "Nouveau modèle de Jugement d'Expert", expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
       <% end %>
-    </table>
+      <br>
+
+      <table class="table table-bordered">
+          <tr>
+            <th><%= I18n.t(:name) %></th>
+            <th class="action"><%= I18n.t(:actions) %></th>
+          </tr>
+
+          <% @organization.expert_judgement_instances.each do |i| %>
+            <tr>
+              <td class="span5">
+                <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
+              </td>
+              <td class="align-center">
+                <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
+                <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to '', expert_judgement.instance_path(i),  confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+      </table>
+    <% else %>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
+    <% end %>
   </div>
 
 </div>
