@@ -307,9 +307,10 @@ module ViewsWidgetsHelper
     wbs_activity_element_root = wbs_activity.wbs_activity_elements.first.root
 
     wai = WbsActivityInput.where(wbs_activity_id: wbs_activity, module_project_id: current_module_project.id).first
-    if wai.wbs_activity_ratio.nil?
+
+    begin
       ratio_reference = wbs_activity.wbs_activity_ratios.first
-    else
+    rescue
       ratio_reference = wai.wbs_activity_ratio
     end
 
@@ -351,11 +352,6 @@ module ViewsWidgetsHelper
                                                                                               ratio_reference: ratio_reference } )
 
       when "stacked_bar_chart_effort_per_phases_profiles"
-        #Data structure for stacked bar chart : data = [ {name: "profile_name1", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}}, {name: "profile_name2", data: {"wbs_project_elt_name1" => value, "wbs_project_elt_name2" => value}]
-        #data = [
-        #    {"name" => "Workout", "data"=> {"2013-02-10 00:00:00 -0800" => 3, "2013-02-17 00:00:00 -0800" => 4}},
-        #    {"name" =>"Call parents", "data"=> {"2013-02-10 00:00:00 -0800" => 5, "2013-02-17 00:00:00 -0800" => 3}}
-        #]
 
         if project_organization_profiles.length > 0
           project_organization_profiles.each do |profile|
@@ -364,8 +360,8 @@ module ViewsWidgetsHelper
           end
 
           #Update chart data
-          wbs_activity_elements.each do |wbs_project_elt|
-            wbs_probable_value = pbs_probable_est_value[wbs_project_elt.id]
+          wbs_activity_elements.each do |wbs_activity_elt|
+            wbs_probable_value = pbs_probable_est_value[wbs_activity_elt.id]
             unless wbs_probable_value.nil?
               wbs_estimation_profiles_values = wbs_probable_value["profiles"]
               project_organization_profiles.each do |profile|
@@ -375,12 +371,12 @@ module ViewsWidgetsHelper
                     wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value]
                   end
                 end
-                if !wbs_project_elt.is_root? && !wbs_project_elt.is_added_wbs_root
+                if !wbs_activity_elt.is_root?
                   if wbs_profiles_value.nil?
-                    profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_project_elt.name}"] = 0
+                    profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_activity_elt.name}"] = 0
                   else
                     value = number_with_delimiter(wbs_profiles_value.round(estimation_value.pe_attribute.precision.nil? ? user_number_precision : estimation_value.pe_attribute.precision))
-                    profiles_wbs_data["profile_id_#{profile.wbs_project_elt_with_ratio.id}"]["#{wbs_project_elt.name}"] = value
+                    profiles_wbs_data["profile_id_#{profile.id}"]["#{wbs_activity_elt.name}"] = value
                   end
                 end
               end
@@ -430,7 +426,7 @@ module ViewsWidgetsHelper
         if wbs_activity_elt != wbs_activity_root
           level_estimation_values = probable_est_value
           if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value].nil?
-            chart_data << ["#{wbs_project_elt.name}", 0]
+            chart_data << ["#{wbs_activity_elt.name}", 0]
           else
             wbs_value = level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value]
             chart_data << ["#{wbs_activity_elt.name}", wbs_value]
