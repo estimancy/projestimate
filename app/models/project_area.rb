@@ -40,7 +40,6 @@ class ProjectArea < ActiveRecord::Base
   attr_accessible :name, :description, :record_status_id, :custom_value, :change_comment, :acquisition_category_ids, :platform_category_ids, :project_category_ids, :labor_category_ids, :organization_id
 
   #include MasterDataHelper  #Module master data management (UUID generation, deep clone, ...)
-  has_and_belongs_to_many :labor_categories
   has_and_belongs_to_many :platform_categories
   has_and_belongs_to_many :acquisition_categories
   has_and_belongs_to_many :project_categories

@@ -14,7 +14,7 @@
 
         <td colspan=2 style="text-align:right;">
           <% if can? :create_project_from_template, Project %>
-            <%= link_to I18n.t('new_project_from'), projects_from_path, :class => 'btn' %>
+            <%= link_to I18n.t('new_project_from'), projects_from_path(organization_id: @organization.id), :class => 'btn' %>
           <% end %>
 
           <% if can? :create_project_from_scratch, Project %>
@@ -39,6 +39,7 @@
         <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
       </tr>
       </thead>
+
       <tbody>
       <% @projects.each do |project| %>
         <% if can_see_estimation?(project) %>

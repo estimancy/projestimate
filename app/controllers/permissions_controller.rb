@@ -122,7 +122,7 @@ class PermissionsController < ApplicationController
     redirect_to permissions_path, notice: "#{I18n.t (:notice_permission_successful_deleted)}"
   end
 
-  #Set all global rights
+  #Set all global rights : organization and modules permissions
   def set_rights
     authorize! :manage_organization_permissions, Permission
 
@@ -136,18 +136,18 @@ class PermissionsController < ApplicationController
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
       end
 
-      redirect_to organization_authorization_path(@organization)
+      redirect_to organization_authorization_path(@organization, anchor: "tabs-organization-permissions")
     end
   end
 
-
+  #Set rights on estimations permissions
   def set_rights_project_security
     authorize! :manage_estimations_permissions, Permission
 
     @organization = Organization.find(params[:organization_id])
     #For the cancel button
     if params[:commit] == I18n.t('cancel')
-      redirect_to edit_organization_path(@organization, :anchor => "tabs-projects"), :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
+      redirect_to organization_authorization_path(@organization, :anchor => "tabs-estimations-permissions"), :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
     else
       @project_security_levels = @organization.project_security_levels
       @permissions = Permission.defined
@@ -160,7 +160,7 @@ class PermissionsController < ApplicationController
         end
       end
 
-      redirect_to organization_authorization_path(@organization)
+      redirect_to organization_authorization_path(@organization, anchor: "tabs-estimations-permissions")
     end
   end
 end

@@ -1396,6 +1396,7 @@ en:
   notice_cannot_view_organization_users: "You don't have the rights to view the users"
   notice_cannot_view_modules_permissions: "You don't have the rights to view the modules permissions"
   notice_cannot_view_organization_users: "You don't have the rights to view the users"
+  notice_cannot_view_modules_instances: "You don't have the rights to view the modules instances"
 
   is_image_organization: "Is an image organization ?"
   new_organization_from_image: "Create organization from image"

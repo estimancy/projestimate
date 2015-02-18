@@ -29,24 +29,29 @@
           <p style="text-align:center;"> <%= I18n.t('empty') %></p>
         <% else %>
           <% @projects.each do |project| %>
-            <tr>
-              <td><%= link_to project.title, "#", :class => "attribute_tooltip", :title => project.description %></td>
-              <td><%= project.alias %></td>
-              <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
-              <td><%= I18n.l(project.start_date)  unless project.start_date.nil? %></td>
-              <td><%= project.organization %></td>
-              <td>
-                <%=
-                  link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'icon-pencil pull-left', :title => I18n.t('edit')) +
-                  link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon-info pull-left',:id => 'find_use_projects', :title => I18n.t('button_find_use')) +
-                  link_to('', duplicate_path(project), :class => 'icon-copy pull-left', :title => I18n.t('button_duplicate_model'))
-                %>
-              </td>
-            </tr>
+            <!-- We only can duplicate projects for which we have rights -->
+            <% if can_see_estimation?(project) %>
+                <tr>
+                  <td><%= link_to project.title, "#", :class => "attribute_tooltip", :title => project.description %></td>
+                  <td><%= project.alias %></td>
+                  <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
+                  <td><%= I18n.l(project.start_date)  unless project.start_date.nil? %></td>
+                  <td><%= project.organization %></td>
+                  <td>
+                    <% if can_show_estimation?(project) %>
+                        <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'icon-pencil pull-left', :title => I18n.t('edit')) %>
+                        <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon-info pull-left',:id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
+                    <% end %>
+                    <% if can? :create_project_from_template, Project %>
+                        <%= link_to('', duplicate_path(project), :class => 'icon-copy pull-left', :title => I18n.t('button_duplicate_model')) %>
+                    <% end %>
+                  </td>
+                </tr>
+            <% end %>
           <% end %>
 
           <%= render :partial => 'layouts/footer_table' %>
-        <%end%>
+        <% end %>
         </tbody>
       </table>
     </div>

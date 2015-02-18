@@ -1,20 +1,11 @@
 <%= hidden_field_tag "organization_id", params[:id] %>
 
-<table border="0" width="100%">
-  <tr>
-    <td style="text-align:right;">
-      <% if can? :manage, Group  %>
-        <%= link_to I18n.t('new_group'), new_group_path(:organization_id => params[:id]), :class => 'btn' %>
-      <% end %>
-    </td>
-  </tr>
-</table>
 <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
   <thead>
   <tr>
     <th><%= I18n.t(:name) %></th>
     <th><%= I18n.t(:description) %></th>
-    <th  class="action"><%= I18n.t(:actions) %></th>
+    <th class="action"><%= I18n.t(:actions) %></th>
   </tr>
   </thead>
 
@@ -26,7 +17,7 @@
         <td><%= group.description %></td>
         <td class="center">
           <%= link_to '', edit_organization_group_path(@organization, group), :class => 'icon-pencil', :title => I18n.t('edit') %>
-          <% if can? :manage, group %>
+          <% if can? :manage, Group %>
             <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
           <% end %>
         </td>

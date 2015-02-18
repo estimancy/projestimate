@@ -22,14 +22,24 @@
       <tbody>
         <% @organizations.each do |i| %>
           <tr>
-            <td><%= link_to i.name, organization_estimations_path(i) %></td>
+            <td>
+              <% if can? :show_organizations, Organization %>
+                <%= link_to i.name, organization_estimations_path(i) %>
+              <% else %>
+                  <%= i.name %>
+              <% end %>
+            </td>
+
             <td><%= i.description %></td>
             <td class="center">
-              <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
-              <% if can? :manage, Organization %>
-                <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
+              <% if can? :show_organizations, Organization %>
+                  <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
+
+                  <% if can? :manage, Organization %>
+                    <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
+                    <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
+                    <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
+                  <% end %>
               <% end %>
             </td>
           </tr>

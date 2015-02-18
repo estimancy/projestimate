@@ -37,7 +37,7 @@ class EstimationStatusesController < ApplicationController
           status.update_attribute('to_transition_status_ids', params[:status_workflow][status.id.to_s])
         end
       end
-      redirect_to edit_organization_path(@organization, :anchor => "settings"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
+      redirect_to organization_setting_path(@organization, anchor: 'tabs-estimations-statuses'), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
     end
   end
 
@@ -64,7 +64,7 @@ class EstimationStatusesController < ApplicationController
     end
 
     ##status.estimation_status_group_roles(force_reload = true)
-    redirect_to edit_organization_path(@organization, :anchor => "tabs-estimations-statuses"), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
+    redirect_to organization_setting_path(@organization, anchor: 'tabs-estimations-statuses'), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
   end
 
   def new

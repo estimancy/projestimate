@@ -80,15 +80,23 @@
        <br>
 
       <div class="actions-tabs">
-        <% if @project.state.in?(%w(rejected released checkpoint))%>
-          <%= render :partial => 'submit_project', :object => f %>
+        <% if action_name == 'edit'%>
+            <% if can_modify_estimation?(@project) %>
+                <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
+                <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+            <% end %>
+
+        <% elsif action_name == 'new' %>
+            <% if can? :create_project_from_scratch, Project %>
+                <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+            <% end %>
         <% end %>
 
         <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
 
-        <% if !@project.is_model && can?(:delete_project, @project) %>
-          <%= link_to I18n.t('delete'), @project, method: :delete, confirm: "Etes vous sur de vouloir annuler le projet ?", :class => 'btn' %>
-        <% end %>
+        <%# if !@project.is_model && can_delete_estimation?(@project) %>
+          <%#= link_to I18n.t('delete'), @project, method: :delete, confirm: "Etes vous sur de vouloir annuler le projet ?", :class => 'btn' %>
+        <%# end %>
       </div>
   <% end %>
 </div>

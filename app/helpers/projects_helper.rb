@@ -1108,22 +1108,26 @@ module ProjectsHelper
 
   # Got the right to see the estimation from estimations list
   def can_see_estimation?(estimation)
-    can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    authorization =  can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    authorization && can?(:see_project, estimation)
   end
 
   # Got the right to show the estimation details
   def can_show_estimation?(estimation)
-    return can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    authorization = can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    authorization && can?(:show_project, estimation)
   end
 
   # Got the right to edit and modify the estimation details
   def can_modify_estimation?(estimation)
-    return can_do_action_on_estimation?(estimation, "edit_project")
+    authorization = can_do_action_on_estimation?(estimation, "edit_project")
+    authorization && can?(:edit_project, estimation)
   end
 
   # Got the right to delete the estimation
   def can_delete_estimation?(estimation)
-    return can_do_action_on_estimation?(estimation, "delete_project")
+    authorization = can_do_action_on_estimation?(estimation, "delete_project")
+    authorization && can?(:delete_project, estimation)
   end
 
   def convert_with_precision(value, precision)
