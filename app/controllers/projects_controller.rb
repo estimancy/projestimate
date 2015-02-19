@@ -661,7 +661,7 @@ class ProjectsController < ApplicationController
       if @from_tree_history_view
         redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'), :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
       else
-        redirect_to projects_path, :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
+        redirect_to main_app.root_url, :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
       end
     end
   end
