@@ -80,7 +80,7 @@ class PlatformCategoriesController < ApplicationController
 
     if @platform_category.update_attributes(params[:platform_category])
       flash[:notice] = I18n.t (:notice_platform_category_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_platform_category_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-platform-categories'))
+      redirect_to redirect_apply(edit_organization_platform_category_path(@organization, @platform_category), nil, organization_setting_path(@organization, :anchor => 'tabs-platform-categories'))
     else
       render action: 'edit'
     end

@@ -53,6 +53,7 @@ class EstimationStatus < ActiveRecord::Base
     #exclude_field [:projects, :estimation_status_group_roles]
     #include_field [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
     include_association [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
+    propagate
   end
 
   # Status alias validation

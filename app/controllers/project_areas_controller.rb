@@ -87,7 +87,7 @@ class ProjectAreasController < ApplicationController
 
     if @project_area.update_attributes(params[:project_area])
       flash[:notice] = I18n.t (:notice_project_area_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_project_area_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-project-areas') )
+      redirect_to redirect_apply(edit_organization_project_area_path(@organization, @project_area), nil, organization_setting_path(@organization, :anchor => 'tabs-project-areas') )
     else
       render action: 'edit'
     end

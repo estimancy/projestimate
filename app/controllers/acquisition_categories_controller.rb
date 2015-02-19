@@ -78,7 +78,7 @@ class AcquisitionCategoriesController < ApplicationController
 
     if @acquisition_category.update_attributes(params[:acquisition_category])
       flash[:notice] = I18n.t (:notice_acquisition_category_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_acquisition_category_path(@organization), organization_setting_path(@organization, anchor: "tabs-acquisition-categories"))
+      redirect_to redirect_apply(edit_organization_acquisition_category_path(@organization, @acquisition_category), nil, organization_setting_path(@organization, anchor: "tabs-acquisition-categories"))
     else
       render action: "edit"
     end

@@ -62,11 +62,8 @@ class Organization < ActiveRecord::Base
 
   #Estimations statuses
   has_many :estimation_statuses, :dependent => :destroy
-  has_many :estimation_status_group_roles, :through => :estimation_statuses
   has_many :status_transitions, :through => :estimation_statuses
-
-  #Groups created on local, will be attached to an organization
-  has_many :groups, dependent: :destroy
+  has_many :estimation_status_group_roles, :through => :estimation_statuses
 
   #Guw Model
   has_many :guw_models, class_name: "Guw::GuwModel", dependent: :destroy
@@ -103,9 +100,11 @@ class Organization < ActiveRecord::Base
   # Add the amoeba gem for the copy
   amoeba do
     enable
-    include_association [:attribute_organizations, :organization_technologies, :organization_profiles,
-                         :unit_of_works, :size_unit_types, :technology_size_types,
-                         :organization_uow_complexities, :estimation_statuses, :fields]
+    include_association [:project_areas, :project_categories, :platform_categories, :acquisition_categories,
+                         :work_element_types, :attribute_organizations, :organization_technologies,
+                         :organization_profiles, :unit_of_works, :size_unit_types, :technology_size_types,
+                         :organization_uow_complexities, :fields, :groups, :project_security_levels,
+                         :estimation_statuses]
 
     customize(lambda { |original_organization, new_organization|
       new_copy_number = original_organization.copy_number.to_i+1

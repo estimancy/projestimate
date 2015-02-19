@@ -76,7 +76,7 @@ class WorkElementTypesController < ApplicationController
 
     if @work_element_type.update_attributes(params[:work_element_type])
       flash[:notice] =  I18n.t(:notice_work_element_type_successful_updated)
-      redirect_to redirect_apply(nil, new_organization_work_element_type_path(@organization), organization_setting_path(@organization, anchor: "tabs-wet"))
+      redirect_to redirect_apply(edit_organization_work_element_type_path(@organization, @work_element_type), nil, organization_setting_path(@organization, anchor: "tabs-wet"))
     else
       render action: 'edit'
     end
