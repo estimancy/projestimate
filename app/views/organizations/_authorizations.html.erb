@@ -65,8 +65,7 @@
       <b><%= I18n.t(:organization_permissions) %></b>
 
       <% if can? :show_organization_permissions, Permission %>
-        <table class="table table-bordered table-condensed">
-
+        <table class="table table-bordered table-condensed table-striped">
             <tr>
               <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
               <% @groups.each_with_index do |group, i| %>
@@ -126,7 +125,7 @@
 
         <% if can? :show_modules_permissions, Permission %>
 
-              <table class="table table-bordered table-condensed">
+              <table class="table table-bordered table-condensed table-striped">
                 <tr>
                   <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
                   <% @groups.each do |group| %>
@@ -187,7 +186,7 @@
 
         <%= hidden_field_tag :organization_id, @organization.id %>
 
-        <table class="table table-bordered table-condensed">
+        <table class="table table-bordered table-condensed table-striped">
             <tr>
                 <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
                 <% @project_security_levels.each do |ps| %>

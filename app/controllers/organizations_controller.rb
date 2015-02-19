@@ -40,6 +40,7 @@ class OrganizationsController < ApplicationController
   require 'rubygems'
   require 'roo'
   include Roo
+  require 'securerandom'
 
   def authorization
     @organization = Organization.find(params[:organization_id])
@@ -118,14 +119,25 @@ class OrganizationsController < ApplicationController
       lastname = params[:lastname]
       email = params[:email]
       login = params[:identifiant]
+      password = params[:password]
+      if password.empty?
+        password = SecureRandom.hex(8)
+      end
       change_password_required = params[:change_password_required]
 
-      #new_organization = organization_image.amoeba_dup
-      #if new_organization.save
-      #  organization_image.save #Original organization copy number will be incremented to 1
-      #else
-      #end
+      new_organization = organization_image.amoeba_dup
+      if new_organization.save
+        organization_image.save #Original organization copy number will be incremented to 1
 
+        #Then copy the image organization estimation models
+        organization_image.projects.where(is_model: true).all.each do |est_model|
+
+        end
+
+        # Create a user in the Admin group of the new organization
+        admin_user = User.new(first_name: firstname, last_name: lastname, login_name: login, email: email, password: password, password_confirmation: password)
+      else
+      end
     else
 
     end
@@ -323,6 +335,9 @@ class OrganizationsController < ApplicationController
     # Before destroying, we should check if the organization is used by one or more projects/estimations before to be able to delete it.
     if @organization.projects.empty? || @organization.projects.nil?
       @organization.destroy
+      if session[:organization_id] == params[:id]
+        session[:organization_id] = nil
+      end
       flash[:notice] = I18n.t(:notice_organization_successful_deleted)
     else
       flash[:warning] = I18n.t(:warning_organization_cannot_be_deleted, value: @organization.name)

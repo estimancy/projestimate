@@ -276,19 +276,20 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_organization
-    if params[:organization_id].present?
-      session[:organization_id] = params[:organization_id]
-      @organization = Organization.find(session[:organization_id])
-    elsif !session[:organization_id].nil?
-      @organization = Organization.find(session[:organization_id])
-    else
-      begin
+    begin
+      if params[:organization_id].present?
+        session[:organization_id] = params[:organization_id]
+        @organization = Organization.find(session[:organization_id])
+      elsif !session[:organization_id].nil?
+        @organization = Organization.find(session[:organization_id])
+      else
         session[:organization_id] = current_user.organizations.first
         @organization = Organization.find(session[:organization_id])
-      rescue
-        session[:organization_id] = nil
-        @organization = nil
       end
+
+    rescue
+      session[:organization_id] = nil
+      @organization = nil
     end
   end
 
