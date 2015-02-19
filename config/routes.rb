@@ -48,19 +48,13 @@ Projestimate::Application.routes.draw do
 
   resources :widgets
 
-
   resources :views
 
-
   resources :plans
-
 
   resources :estimation_statuses
   post '/set_estimation_status_workflow' => 'estimation_statuses#set_estimation_status_workflow', as: 'set_estimation_status_workflow'
   post '/set_estimation_status_group_roles' => 'estimation_statuses#set_estimation_status_group_roles', as: 'set_estimation_status_group_roles'
-
-
-  resources :profile_categories
 
 
   resources :organization_profiles
@@ -70,12 +64,9 @@ Projestimate::Application.routes.draw do
 
   resources :profiles
 
-
   resources :size_unit_types
 
-
   resources :size_units
-
 
   # Mount the Sidekiq web interface
   mount Sidekiq::Web, at: "/sidekiq"
@@ -214,6 +205,7 @@ Projestimate::Application.routes.draw do
     resources :project_areas
     resources :project_security_levels
     resources :work_element_types
+    resources :organization_profiles
 
     get "authorization" => 'organizations#authorization'
     get "setting" => 'organizations#setting'

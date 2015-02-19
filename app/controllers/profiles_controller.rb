@@ -19,7 +19,6 @@ class ProfilesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @profile = Profile.new
-    @profile_categories = ProfileCategory.defined.all
   end
 
   # GET /profiles/1/edit
@@ -28,7 +27,6 @@ class ProfilesController < ApplicationController
 
     set_page_title 'Edit profile'
     @profile = Profile.find(params[:id])
-    @profile_categories = ProfileCategory.defined.all
 
     unless @profile.child_reference.nil?
       if @profile.child_reference.is_proposed_or_custom?
@@ -48,7 +46,6 @@ class ProfilesController < ApplicationController
 
     @profile = Profile.new(params[:profile])
     @profile.owner_id = current_user.id
-    @profile_categories = ProfileCategory.defined.all
 
     @profile.record_status = @proposed_status
     if @profile.save

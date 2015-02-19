@@ -65,6 +65,12 @@ class Ability
     alias_action :show_organizations, :to => :edit_organizations
     alias_action :edit_organizations, :to => :create_organizations
 
+    # For estimation: when we can edit a project, we can also see and show it
+    alias_action :see_project, :to => :show_project
+    alias_action :show_project, :to => :edit_project
+
+
+
     #When user can create a project template, he also can create a project from scratch
     alias_action :create_project_from_scratch, :to => :manage_estimation_models
 

@@ -1,9 +1,8 @@
 class Profile < ActiveRecord::Base
-  attr_accessible :cost_per_hour, :description, :name, :record_status, :record_status_id, :custom_value, :change_comment, :profile_category_id
+  attr_accessible :cost_per_hour, :description, :name, :record_status, :record_status_id, :custom_value, :change_comment
 
   include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
-  belongs_to :profile_category
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 

@@ -100,7 +100,7 @@ class ProjectsController < ApplicationController
   public
 
   def dashboard
-    authorize! :show_project, Project
+    authorize! :show_project, @project
 
     # return if user doesn't have the rigth to consult the estimation
     if !can_show_estimation?(@project)

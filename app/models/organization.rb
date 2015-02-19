@@ -56,7 +56,6 @@ class Organization < ActiveRecord::Base
   has_many :unit_of_works, :dependent => :destroy
   has_many :projects, :dependent => :destroy
   has_many :organization_profiles, :dependent => :destroy
-  has_many :profile_categories
   has_many :size_unit_types, :dependent => :destroy
   has_many :technology_size_types, :through => :size_unit_types
 

@@ -62,11 +62,10 @@
       <i class="icon-cog icon-large pull-left"></i></b>
     </a>
     <ul class="dropdown-menu">
-      <% if @project %>
-        <% if !@project.organization.nil? %>
+      <% if @organization %>
           <li class="dropdown">
             <a href="<%= main_app.edit_organization_path(@organization)%>">
-              <%= @project.organization %>
+              <%= @organization %>
             </a>
           </li>
           <li class="dropdown">
@@ -79,7 +78,6 @@
               Module
             </a>
           </li>
-        <% end %>
       <% end %>
     </ul>
   </li>
@@ -95,8 +93,6 @@
           </li>
 
           <li class="dropdown"><a href="<%= main_app.users_path %>"> <%= I18n.t(:users) %></a></li>
-
-          <li class="dropdown"><a href="<%= main_app.profile_categories_path %>"> <%= I18n.t(:profile_categories) %></a></li>
 
           <li class="dropdown"><a href="<%= main_app.profiles_path %>"> <%= I18n.t(:profiles) %> </a></li>
 

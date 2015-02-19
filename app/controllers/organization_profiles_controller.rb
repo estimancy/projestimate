@@ -8,7 +8,6 @@ class OrganizationProfilesController < ApplicationController
     set_page_title 'New organization profile'
     @organization = Organization.find_by_id(params[:organization_id])
     @organization_profile = OrganizationProfile.new
-    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
   end
 
   # GET /organization_profiles/1/edit
@@ -18,7 +17,6 @@ class OrganizationProfilesController < ApplicationController
     @organization_profile = OrganizationProfile.find(params[:id])
 
     @organization = @organization_profile.organization
-    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
   end
 
   # POST /organization_profiles
@@ -29,11 +27,10 @@ class OrganizationProfilesController < ApplicationController
 
     @organization_profile = OrganizationProfile.new(params[:organization_profile])
     @organization = Organization.find_by_id(params['organization_profile']['organization_id'])
-    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
 
     respond_to do |format|
       if @organization_profile.save
-        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_created) }
+        format.html { redirect_to organization_setting_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_created) }
         format.json { render json: @organization_profile, status: :created, location: @organization_profile }
       else
         flash[:error] = I18n.t(:error_profile_failed_created)
@@ -51,11 +48,10 @@ class OrganizationProfilesController < ApplicationController
 
     @organization_profile = OrganizationProfile.find(params[:id])
     @organization = @organization_profile.organization
-    @profile_categories = (ProfileCategory.defined + @organization.profile_categories.all).flatten
 
     respond_to do |format|
       if @organization_profile.update_attributes(params[:organization_profile])
-        format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_updated) }
+        format.html { redirect_to organization_setting_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_updated) }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -75,7 +71,7 @@ class OrganizationProfilesController < ApplicationController
     @organization_profile.destroy
 
     respond_to do |format|
-      format.html { redirect_to edit_organization_path(@organization, anchor: 'tabs-profile') }
+      format.html { redirect_to organization_setting_path(@organization, anchor: 'tabs-profile') }
       format.json { head :no_content }
     end
   end
