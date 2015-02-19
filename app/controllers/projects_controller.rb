@@ -601,7 +601,7 @@ class ProjectsController < ApplicationController
             if !params[:from_tree_history_view].blank? && params['current_showed_project_id'] != params[:id]
               redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
             else
-              redirect_to projects_path
+              redirect_to organization_estimations_path(@organization)
             end
           else
             flash[:warning] = I18n.t(:error_access_denied)
@@ -612,7 +612,7 @@ class ProjectsController < ApplicationController
           render :template => 'projects/confirm_deletion'
         end
       when I18n.t('cancel')
-        redirect_to projects_path
+        redirect_to organization_estimations_path(@organization)
       else
         render :template => 'projects/confirm_deletion'
     end
