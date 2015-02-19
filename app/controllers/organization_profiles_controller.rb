@@ -28,15 +28,13 @@ class OrganizationProfilesController < ApplicationController
     @organization_profile = OrganizationProfile.new(params[:organization_profile])
     @organization = Organization.find_by_id(params['organization_profile']['organization_id'])
 
-    respond_to do |format|
-      if @organization_profile.save
-        format.html { redirect_to organization_setting_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_created) }
-        format.json { render json: @organization_profile, status: :created, location: @organization_profile }
-      else
-        flash[:error] = I18n.t(:error_profile_failed_created)
-        format.html { render action: "new" }
-        format.json { render json: @organization_profile.errors, status: :unprocessable_entity }
-      end
+    if @organization_profile.save
+      falsh[:notice] = I18n.t(:notice_profile_successful_created)
+     redirect_to organization_setting_path(@organization, anchor: 'tabs-profile')
+     redirect_to redirect_apply(nil, new_organization_organization_profile_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-profile'))
+    else
+      flash[:error] = I18n.t(:error_profile_failed_created)
+      render action: "new"
     end
   end
 
@@ -51,7 +49,7 @@ class OrganizationProfilesController < ApplicationController
 
     respond_to do |format|
       if @organization_profile.update_attributes(params[:organization_profile])
-        format.html { redirect_to organization_setting_path(@organization, anchor: 'tabs-profile'), notice: I18n.t(:notice_profile_successful_updated) }
+        format.html { redirect_to redirect_apply(edit_organization_organization_profile_path(@organization, @organization_profile), nil, organization_setting_path(@organization, :anchor => 'tabs-profile') ), notice: I18n.t(:notice_profile_successful_updated) }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
