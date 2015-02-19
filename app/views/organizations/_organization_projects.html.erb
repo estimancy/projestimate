@@ -57,7 +57,9 @@
 
             <% @organization.fields.each do |field| %>
               <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
-              <td class="project_field_text_overflow"><%= pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) %></td>
+              <td class="project_field_text_overflow">
+                <%= pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) %>
+              </td>
             <% end %>
 
             <td class="center"><%= project.is_model? ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
