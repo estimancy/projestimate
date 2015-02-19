@@ -214,13 +214,14 @@
 
                     <td>
                       <span class="pull-left">
-                        <% if guow.guw_complexity.nil? %>
-                          <%= link_to "------", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
-                        <% elsif guow.off_line == true %>
-                          <%= link_to "HS", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
-                        <% else %>
-                          <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
-                        <% end %>
+                          <% if guow.guw_complexity.nil? %>
+                            <%= link_to "------", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+                          <% elsif guow.off_line == true %>
+                            <%= link_to "HS", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                          <% else %>
+                            <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+                          <% end %>
+                          <%# select_tag "dedez", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }) %>
                       </span>
                     </td>
 

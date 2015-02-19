@@ -36,10 +36,4 @@
 
 #Some helper for the app...
 module ApplicationHelper
-  #include InputsHelper
-
-  def javascript_heads
-    tags = javascript_tag("$(window).load(function(){ warn_me('#{escape_javascript I18n.t (:text_warn_on_leaving_unsaved)}'); });")
-    tags
-  end
 end

@@ -197,9 +197,26 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-      guw_unit_of_work.result_low = @lows.sum
-      guw_unit_of_work.result_most_likely = @mls.sum
-      guw_unit_of_work.result_high = @highs.sum
+      if @lows.sum == 0
+        guw_unit_of_work.guw_complexity_id = nil
+        guw_unit_of_work.result_low = nil
+      else
+        guw_unit_of_work.result_low = @lows.sum
+      end
+
+      if @mls.sum == 0
+        guw_unit_of_work.guw_complexity_id = nil
+        guw_unit_of_work.result_most_likely = nil
+      else
+        guw_unit_of_work.result_most_likely = @mls.sum
+      end
+
+      if @highs.sum == 0
+        guw_unit_of_work.guw_complexity_id = nil
+        guw_unit_of_work.result_high = nil
+      else
+        guw_unit_of_work.result_high = @highs.sum
+      end
 
       guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
@@ -221,7 +238,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
-        if (guw_unit_of_work.result_low >= guw_c.bottom_range) and (guw_unit_of_work.result_low < guw_c.top_range)
+        if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
                                                  guw_work_unit_id: guw_work_unit.id).first
           tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
@@ -230,7 +247,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           uo_weight_low = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
         end
 
-        if (guw_unit_of_work.result_most_likely >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely < guw_c.top_range)
+        if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
                                                  guw_work_unit_id: guw_work_unit.id).first
           tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
@@ -239,7 +256,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           uo_weight_ml = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
         end
 
-        if (guw_unit_of_work.result_high >= guw_c.bottom_range) and (guw_unit_of_work.result_high < guw_c.top_range)
+        if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
                                                  guw_work_unit_id: guw_work_unit.id).first
           tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
