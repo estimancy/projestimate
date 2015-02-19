@@ -204,18 +204,11 @@ class OrganizationsController < ApplicationController
       ]
       size_unit_types.each do |i|
 
-        sut = SizeUnitType.create(:name => i[0],
-                                  :alias => i[1],
-                                  :description => i[2],
-                                  :organization_id => @organization.id)
+        sut = SizeUnitType.create(:name => i[0], :alias => i[1], :description => i[2], :organization_id => @organization.id)
 
         @organization.organization_technologies.each do |ot|
           SizeUnit.all.each do |su|
-            TechnologySizeType.create(organization_id: sut.organization_id,
-                                      organization_technology_id: ot.id,
-                                      size_unit_id: su.id,
-                                      size_unit_type_id: sut.id,
-                                      value: 1)
+            TechnologySizeType.create(organization_id: sut.organization_id, organization_technology_id: ot.id, size_unit_id: su.id, size_unit_type_id: sut.id, value: 1)
           end
         end
       end
@@ -244,9 +237,7 @@ class OrganizationsController < ApplicationController
       ]
       levels.each do |i|
         @organization.unit_of_works.each do |uow|
-          ouc = OrganizationUowComplexity.new(:name => i[0], :alias => i[1],
-                                              :description => i[2], :state => i[4], :unit_of_work_id => uow.id,
-                                              :organization_id => @organization.id)
+          ouc = OrganizationUowComplexity.new(:name => i[0], :alias => i[1], :description => i[2], :state => i[4], :unit_of_work_id => uow.id, :organization_id => @organization.id)
           ouc.save(validate: false)
 
           @organization.size_unit_types.each do |sut|
@@ -281,7 +272,7 @@ class OrganizationsController < ApplicationController
       end
 
       #Add a default view for widgets
-      view = View.create(:name => "Default view", :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.", :organization_id => @organization.id)
+      view = View.create(:name => "Default view", :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.", :organization_id => @organization.id)
 
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
     else
