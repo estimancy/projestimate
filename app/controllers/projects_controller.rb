@@ -250,7 +250,7 @@ class ProjectsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
-    @acquisition_categories = @organization.platform_categories
+    @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
     set_breadcrumbs "Estimations" => projects_path
@@ -365,7 +365,7 @@ class ProjectsController < ApplicationController
 
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
-    @acquisition_categories = @organization.platform_categories
+    @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)

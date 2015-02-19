@@ -22,7 +22,7 @@
           </tr>
           <tr>
             <td><%= f.association :pbs_project_element, label: I18n.t(:associate_pbs_element), collection: @project_pbs_project_elements, selected: @pbs_project_element_id, include_blank: false  %></td>
-            <td><%= f.association :module_project, label: "Module", collection: @module_project.project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false %></td>
+            <td><%= f.association :module_project, label: "Modules", collection: @project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false %></td>
           </tr>
           <tr>
             <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false %></td>
