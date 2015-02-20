@@ -135,7 +135,8 @@ class OrganizationsController < ApplicationController
         end
 
         # Create a user in the Admin group of the new organization
-        admin_user = User.new(first_name: firstname, last_name: lastname, login_name: login, email: email, password: password, password_confirmation: password)
+        admin_user = User.new(first_name: firstname, last_name: lastname, login_name: login, email: email, password: password, password_confirmation: password, super_admin: true)
+        admin_user.save
       else
       end
     else
