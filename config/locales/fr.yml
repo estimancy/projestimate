@@ -1410,3 +1410,5 @@ fr:
   organization_permissions: "Permissions de l'organisation"
   estimations_permissions: "Permissions des estimations"
   modules_permissions: "Permissions des modules"
+  is_super_admin: "Est super administrator ?"
+  text_help_super_admin: "Un utilisateur super administrateur a tous les droits sur toute l'application et sur toutes les organisations"
