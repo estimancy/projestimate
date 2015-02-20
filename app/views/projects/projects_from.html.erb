@@ -1,65 +1,80 @@
 <div class="tabs">
   <ul>
-    <li><a href="#tabs-1"><%= I18n.t(:projects) %></a></li>
+    <li><a href="#tabs-group">Estimations</a></li>
   </ul>
-  <div id="tabs-1">
-    <table border="0" width="100%">
+
+  <div id="tabs-estimations" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+
+    <table>
       <tr>
-        <td><b><%= I18n.t(:text_create_project_from_template) %></b></td>
+        <td>
+          <%= I18n.t(:label_filter_on_projects_version) %>
+          <%= select_tag 'filter_organization_projects_version', options_for_select([[I18n.t(:label_filter_on_project_version_1),1], [I18n.t(:label_filter_on_project_version_2),2], [I18n.t(:label_filter_on_project_version_3),3], [I18n.t(:label_filter_on_project_version_4),4]], :selected => 1), 'data-organization_id' => @organization.id, :include_blank => false %>
+        </td>
+
         <td colspan=2 style="text-align:right;">
-          <%= link_to I18n.t('back'), :back, :class => 'btn' %>
+          <% if can? :create_project_from_template, Project %>
+            <%= link_to I18n.t('new_project_from'), projects_from_path(organization_id: @organization.id), :class => 'btn' %>
+          <% end %>
+
+          <% if can? :create_project_from_scratch, Project %>
+            <%= link_to I18n.t('new_project'), new_project_path(organization_id: @organization.id), :class => 'btn' %>
+          <% end %>
         </td>
       </tr>
     </table>
 
-    <div id="projects">
-      <table class="table tablesorterPager table-striped table-bordered table-condensed">
-        <thead>
+    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <thead>
         <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th style="width: 100px">Alias</th>
-          <th style="width: 100px"  class="filter-select"><%= I18n.t(:record_status) %></th>
-          <th style="width: 120px"><%= I18n.t(:start_date) %></th>
-          <th class="filter-select"><%= I18n.t(:organizations) %></th>
-          <th class="action" style="width: 165px"><%= I18n.t(:actions) %></th>
+          <th class="text_left"><%= I18n.t(:label_project_name) %></th>
+          <th>Vers.</th>
+          <th class="text_left"><%= I18n.t(:label_product_name) %></th>
+          <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
+          <th>Secteur</th>
+          <th>Catégorie</th>
+          <th>Plateforme</th>
+          <th>Acquisition</th>
+          <th class="action"><%= I18n.t(:actions) %></th>
         </tr>
-        </thead>
-        <tbody>
-        <% if @projects.empty? %>
-          <p style="text-align:center;"> <%= I18n.t('empty') %></p>
-        <% else %>
-          <% @projects.each do |project| %>
-            <!-- We only can duplicate projects for which we have rights -->
-            <% if can_see_estimation?(project) %>
-                <tr>
-                  <td><%= link_to project.title, "#", :class => "attribute_tooltip", :title => project.description %></td>
-                  <td><%= project.alias %></td>
-                  <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
-                  <td><%= I18n.l(project.start_date)  unless project.start_date.nil? %></td>
-                  <td><%= project.organization %></td>
-                  <td>
-                    <% if can_show_estimation?(project) %>
-                        <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'icon-pencil pull-left', :title => I18n.t('edit')) %>
-                        <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon-info pull-left',:id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
+      </thead>
 
-                        <% if can? :create_project_from_template, Project %>
-                            <%= link_to('', duplicate_path(project, action_name: "create_project_from_template"), :class => 'icon-copy pull-left', :title => I18n.t('button_duplicate_model')) %>
-                        <% end %>
-                    <% end %>
-                  </td>
-                </tr>
-            <% end %>
+      <tbody>
+        <% @projects.each do |project| %>
+          <% if can_see_estimation?(project) %>
+            <tr>
+              <td>
+                <% if can_show_estimation?(project) %>
+                  <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
+                <% else %>
+                  <%= project.title %>
+                <% end %>
+              </td>
+              <td><%= project.version %></td>
+              <td class="text_field_text_overflow"><%= project.root_component %></td>
+              <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
+              <td class="project_field_text_overflow"><%= project.project_area %></td>
+              <td class="project_field_text_overflow"><%= project.project_category %></td>
+              <td class="project_field_text_overflow"><%= project.acquisition_category %></td>
+              <td class="project_field_text_overflow"><%= project.platform_category %></td>
+              <td style="min-width:130px;">
+                <% if can_show_estimation?(project) %>
+                  <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit')) %>
+                  <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon-info',:id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
+
+                  <% if can? :create_project_from_template, Project %>
+                    <%= link_to('', duplicate_path(project), :class => 'icon-copy', :title => I18n.t('button_duplicate_model')) %>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
-
-          <%= render :partial => 'layouts/footer_table' %>
         <% end %>
-        </tbody>
-      </table>
-    </div>
+      </tbody>
+    </table>
   </div>
 </div>
 
-
 <script>
-  <%= render :partial => 'layouts/sort_date.js.erb'%>
+  <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js]%>
 </script>

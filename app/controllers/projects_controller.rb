@@ -1262,6 +1262,7 @@ public
 
     new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
     new_prj.ancestry = nil
+    new_prj.is_model = false
 
     if new_prj.save
       old_prj.save #Original project copy number will be incremented to 1
@@ -1356,7 +1357,7 @@ public
       redirect_to edit_project_path(new_prj) and return
     else
       flash[:error] = I18n.t(:error_project_failed_duplicate)
-      redirect_to projects_path
+      redirect_to organization_estimations_path(@organization)
     end
   end
 
@@ -1375,7 +1376,7 @@ public
     if params[:from_tree_history_view]
       redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
     else
-      redirect_to '/projects'
+      redirect_to organization_estimations_path(@organization)
     end
   end
 

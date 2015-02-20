@@ -222,6 +222,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
 
+
+      if @guw_model.one_level_model == true
+        guw_unit_of_work.guw_complexity_id = params[:guw_complexity_id].to_i
+        guw_unit_of_work.save
+      end
+
       guw_unit_of_work.save
 
       @guw_type.guw_complexities.each do |guw_c|
@@ -229,7 +235,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         #Save if uo is simple/ml/high
         value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
 
-        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
+        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range) and @guw_model.one_level_model == false
           guw_unit_of_work.guw_complexity_id = guw_c.id
           guw_unit_of_work.save
         end
