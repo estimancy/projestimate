@@ -1253,6 +1253,7 @@ public
     authorize! :create_project_from_template, Project
 
     old_prj = Project.find(params[:project_id])
+    old_prj.is_model = false
 
     new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
     new_prj.ancestry = nil

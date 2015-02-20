@@ -90,7 +90,6 @@ class Project < ActiveRecord::Base
       new_project.version = '1.0'
       new_project.description = " #{original_project.description} \n \n This project is a duplication of project \"#{original_project.title} (#{original_project.alias}) - #{original_project.version}\" "
       new_project.copy_number = 0
-      new_project.is_model = false
       original_project.copy_number = new_copy_number
     })
 

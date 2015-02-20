@@ -214,6 +214,9 @@
 
                     <td>
                       <span class="pull-left">
+                        <% if @guw_model.one_level_model == true %>
+                          <%= select_tag "guw_complexity_id", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
+                        <% else %>
                           <% if guow.guw_complexity.nil? %>
                             <%= link_to "------", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
                           <% elsif guow.off_line == true %>
@@ -221,7 +224,7 @@
                           <% else %>
                             <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
                           <% end %>
-                          <%# select_tag "dedez", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }) %>
+                        <% end %>
                       </span>
                     </td>
 
