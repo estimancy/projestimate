@@ -1250,7 +1250,13 @@ public
 
   #Method to duplicate project and associated pe_wbs_project
   def duplicate
-    authorize! :create_project_from_template, Project
+    # To duplicate a project user need to have the "show_project" and "create_project_from_scratch" authorizations
+    if params[:action_name] == "duplication"
+      authorize! :create_project_from_scratch, Project
+    # To Create a project from a template user need to have "create_project_from_template" authorization
+    elsif params[:action_name] == "create_project_from_template"
+      authorize! :create_project_from_template, Project
+    end
 
     old_prj = Project.find(params[:project_id])
 

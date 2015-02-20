@@ -63,7 +63,7 @@
                   <%= link_to('', {:controller => 'projects', :action => 'find_use_project', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon-info',:id => 'find_use_projects', :title => I18n.t('button_find_use')) %>
 
                   <% if can? :create_project_from_template, Project %>
-                    <%= link_to('', duplicate_path(project), :class => 'icon-copy', :title => I18n.t('button_duplicate_model')) %>
+                    <%= link_to('', duplicate_path(project, action_name: "create_project_from_template"), :class => 'icon-copy', :title => I18n.t('button_duplicate_model')) %>
                   <% end %>
                 <% end %>
               </td>
