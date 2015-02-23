@@ -428,11 +428,12 @@ class ProjectsController < ApplicationController
     set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
-    if !can_modify_estimation?(@project) || !can_alter_estimation?(@project)
+    if !can_modify_estimation?(@project) && !can_alter_estimation?(@project)
+      flash[:warning] = I18n.t(:warning_no_modify_permission_on_project_status)
       if can_show_estimation?(@project)
-        redirect_to(:action => 'show', flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
+        redirect_to(:action => 'show') and return
       else
-        redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+        redirect_to(organization_estimations_path(@organization)) and return
       end
     end
 
@@ -567,7 +568,7 @@ class ProjectsController < ApplicationController
     @organization = @project.organization #Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
-    @acquisition_categories = @organization.platform_categories
+    @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
     authorize! :show_project, @project

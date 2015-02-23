@@ -70,7 +70,9 @@
 
               <hr class="table">
 
-              <% input.technology_id.nil? ? (@unit_of_works = current_component.organization_technology.unit_of_works) : (@unit_of_works = input.organization_technology.unit_of_works) %>
+              <%# input.technology_id.nil? ? (@unit_of_works = current_component.organization_technology.unit_of_works) : (@unit_of_works = input.organization_technology.unit_of_works) %>
+              <% input.technology_id.nil? ? (organization_technology = current_component.organization_technology) : (organization_technology = input.organization_technology) %>
+              <% @unit_of_works = organization_technology.nil? ? [] : organization_technology.unit_of_works %>
               <%= select_tag "uow[#{i+1}]", options_for_select(@unit_of_works.map{|uow| [uow.name, uow.id]}, selected: input.unit_of_work_id.nil? ? current_component.uow_inputs.last.unit_of_work_id : input.unit_of_work_id), {class: "uow input-small", prompt: I18n.t(:select_uow), required: true} %>
 
               <hr class="table">
