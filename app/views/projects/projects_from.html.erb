@@ -28,7 +28,7 @@
       <thead>
         <tr>
           <th class="text_left"><%= I18n.t(:label_project_name) %></th>
-          <th>Vers.</th>
+          <th class="center">Vers.</th>
           <th class="text_left"><%= I18n.t(:label_product_name) %></th>
           <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
           <th>Secteur</th>
@@ -50,13 +50,13 @@
                   <%= project.title %>
                 <% end %>
               </td>
-              <td><%= project.version %></td>
+              <td class="center"><%= project.version %></td>
               <td class="text_field_text_overflow"><%= project.root_component %></td>
               <td><span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span></td>
-              <td class="project_field_text_overflow"><%= project.project_area %></td>
-              <td class="project_field_text_overflow"><%= project.project_category %></td>
-              <td class="project_field_text_overflow"><%= project.acquisition_category %></td>
-              <td class="project_field_text_overflow"><%= project.platform_category %></td>
+              <td class="text_field_text_overflow"><%= project.project_area %></td>
+              <td class="text_field_text_overflow"><%= project.project_category %></td>
+              <td class="text_field_text_overflow"><%= project.acquisition_category %></td>
+              <td class="text_field_text_overflow"><%= project.platform_category %></td>
               <td style="min-width:130px;">
                 <% if can_show_estimation?(project) %>
                   <%= link_to('', edit_project_path(project, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit')) %>
