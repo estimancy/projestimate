@@ -428,15 +428,15 @@ class ProjectsController < ApplicationController
     set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
-    if !can_modify_estimation?(@project)
+    if !can_modify_estimation?(@project) || !can_alter_estimation?(@project)
       if can_show_estimation?(@project)
-        redirect_to(:action => 'show', flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+        redirect_to(:action => 'show', flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
       else
-        redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+        redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
       end
     end
 
-    unless cannot?(:edit_project, @project) # No write access to project
+    if can?(:edit_project, @project) || can_alter_estimation?(@project) # Have the write access to project
 
       @product_name = params[:project][:product_name]
       project_root = @project.root_component
@@ -480,9 +480,11 @@ class ProjectsController < ApplicationController
       project_organization = @project.organization
 
       # Before saving project, update the project comment when the status has changed
-      new_status_id = params[:project][:estimation_status_id].to_i
-      if @project.estimation_status_id != new_status_id
-        @project.status_comment = auto_update_status_comment(params[:id], new_status_id)
+      if params[:project][:estimation_status_id]
+        new_status_id = params[:project][:estimation_status_id].to_i
+        if @project.estimation_status_id != new_status_id
+          @project.status_comment = auto_update_status_comment(params[:id], new_status_id)
+        end
       end
 
       if @project.update_attributes(params[:project])
@@ -549,7 +551,7 @@ class ProjectsController < ApplicationController
 
         @project.save
 
-        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)), notice: "#{I18n.t(:notice_project_successful_updated)}"
+        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)), notice: "#{I18n.t(:notice_project_successful_updated)}" and return
       else
         render :action => 'edit'
       end

@@ -1397,6 +1397,7 @@ fr:
   notice_cannot_view_modules_permissions: "Vous n'avez pas les autorisations nécessaires pour voir les permissions des instances des modules"
   notice_cannot_view_organization_users: "Vous n'avez pas les autorisations nécessaires pour voir les utilisateurs"
   notice_cannot_view_modules_instances: "Vous n'avez pas les autorisations nécessaires pour voir les instances de modules"
+  warning_no_modify_permission_on_project_status: "Vous n'avez pas les autorisations nécessaires pour modifier le projet dans son statut actuel"
 
   is_image_organization: "Est une organisation image ?"
   new_organization_from_image: "Créer une organisation à partir d'une image"

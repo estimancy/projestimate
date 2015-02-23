@@ -7,7 +7,7 @@
     <theader>
     <tr>
       <td class="center">
-        <% if can? :alter_estimation_plan, @project %>
+        <% if can_alter_estimation?(@project) && can?(:alter_estimation_plan, @project) %>
             <%= link_to "", locked_plan_path(@project.id), :class => "#{ @project.locked? ? 'icon-lock' : 'icon-unlock' } icon-large", :title => "#{ @project.locked? ? 'Unlock estimation plan' : 'Lock estimation plan' }" %>
         <% end %>
       </td>

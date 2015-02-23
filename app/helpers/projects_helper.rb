@@ -1124,6 +1124,11 @@ module ProjectsHelper
     authorization && can?(:edit_project, estimation)
   end
 
+  # Got the right to Alter and modify only some parts of the estimation details if user has the rights to edit the project in its status
+  def can_alter_estimation?(estimation)
+    can?(:show_project, estimation) && can_do_action_on_estimation?(estimation, "edit_project")
+  end
+
   # Got the right to delete the estimation
   def can_delete_estimation?(estimation)
     authorization = can_do_action_on_estimation?(estimation, "delete_project")

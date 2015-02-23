@@ -56,7 +56,11 @@
       <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'}, :disabled => cannot?(:alter_project_categories, @project) %>
 
       <div class="actions-tabs">
-        <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
+        <% if can_alter_estimation?(@project) && ( can?(:alter_project_areas, @project) || can?(:alter_acquisition_categories, @project) || can?(:alter_platform_categories, @project) || can?(:alter_project_categories, @project) ) %>
+            <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+        <% end %>
+        <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
       </div>
     </div>
 <% end %>
@@ -111,6 +115,7 @@
                 <b><%= I18n.t(:label_user_security_resume) %></b>
               </a>
             </div>
+            <% can_alter_project_securities = can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
             <div id="collapseOne" class="accordion-body in collapse">
               <div class="accordion-inner">
                 <table class="table table-striped table-bordered table-condensed">
@@ -126,12 +131,16 @@
                       <tr>
                         <td><%= user.name %>
                           <% @project.organization.project_security_levels.each do |prj_level| %>
-                            <td><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id)), :disabled => true) %> </td>
+                            <td class="center"><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id)), :disabled => !can_alter_project_securities) %> </td>
                         <% end %>
                       </tr>
                   <% end %>
                 </table>
-                <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
+                <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                    <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                <% end %>
+                <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
               </div>
             </div>
           </div>
@@ -159,12 +168,16 @@
                       <tr>
                         <td><%= group.name %>
                           <% @project.organization.project_security_levels.each do |prj_level| %>
-                            <td><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id)), :disabled => true) %> </td>
+                            <td class="center"><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id)), :disabled => !can_alter_project_securities) %> </td>
                         <% end %>
                       </tr>
                   <% end %>
                 </table>
-                <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
+                <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                    <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                <% end %>
+                <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
               </div>
             </div>
           </div>
