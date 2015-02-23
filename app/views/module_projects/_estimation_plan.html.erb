@@ -46,8 +46,8 @@
                 <div class="<%= pbs_class %> module_project <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
                     <%= pmod %>
                     <br>
-                    <% unless @project.locked? || (@project.in_frozen_status? && action_name=="show") %>
-                      <% if can? :alter_estimation_plan, @project %>
+                    <% unless @project.locked? %>
+                      <% if can_alter_estimation?(@project) && can?(:alter_estimation_plan, @project) %>
                           <%= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left a_white' %>
                           <%= link_to '', pemodules_up_path(pmod.id), :class => 'icon-arrow-up a_white' %>
                           <%= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down a_white' %>

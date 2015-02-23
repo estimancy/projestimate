@@ -1359,7 +1359,11 @@ public
       redirect_to edit_project_path(new_prj) and return
     else
       flash[:error] = I18n.t(:error_project_failed_duplicate)
-      redirect_to organization_estimations_path(@organization)
+      if params[:action_name] == "create_project_from_template"
+        redirect_to projects_from_path(organization_id: @organization.id) and return
+      else
+        redirect_to organization_estimations_path(@organization)
+      end
     end
   end
 
