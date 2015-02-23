@@ -92,11 +92,7 @@
             <% end %>
         <% end %>
 
-        <%= link_to I18n.t('back'), projects_path, :class => 'btn' %>
-
-        <%# if !@project.is_model && can_delete_estimation?(@project) %>
-          <%#= link_to I18n.t('delete'), @project, method: :delete, confirm: "Etes vous sur de vouloir annuler le projet ?", :class => 'btn' %>
-        <%# end %>
+        <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
       </div>
   <% end %>
 </div>

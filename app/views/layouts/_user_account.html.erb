@@ -13,12 +13,12 @@
           <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
         </a>
       <% else %>
-        <a href="<%= main_app.projects_path %>">
+        <a href="<%= main_app.organization_estimations_path(@organization) %>">
           <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
         </a>
       <% end %>
     <% rescue %>
-      <a href="<%= main_app.projects_path %>">
+      <a href="<%= main_app.organization_estimations_path(@organization) %>">
         <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
       </a>
     <% end %>

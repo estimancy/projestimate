@@ -104,7 +104,7 @@ class ProjectsController < ApplicationController
 
     # return if user doesn't have the rigth to consult the estimation
     if !can_show_estimation?(@project)
-      redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
     @user = current_user
@@ -253,7 +253,7 @@ class ProjectsController < ApplicationController
     @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
-    set_breadcrumbs "Estimations" => projects_path
+    set_breadcrumbs "Estimations" => organization_estimations_path(@organization)
     set_page_title 'New estimation'
   end
 
@@ -369,7 +369,7 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
-    set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     if cannot?(:edit_project, @project)    # No write access to project
       redirect_to(:action => 'show') and return
@@ -380,7 +380,7 @@ class ProjectsController < ApplicationController
       if can_show_estimation?(@project)
         redirect_to(:action => 'show')
       else
-        redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+        redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
       end
     end
 
@@ -425,14 +425,14 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
-    set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_modify_estimation?(@project) || !can_alter_estimation?(@project)
       if can_show_estimation?(@project)
         redirect_to(:action => 'show', flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
       else
-        redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
+        redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
       end
     end
 
@@ -562,7 +562,7 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
-    set_breadcrumbs "Estimations" => projects_path, "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     @organization = @project.organization #Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
@@ -575,7 +575,7 @@ class ProjectsController < ApplicationController
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_show_estimation?(@project)
-      redirect_to(projects_path, flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)})
+      redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)})
     end
 
     @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
@@ -607,7 +607,7 @@ class ProjectsController < ApplicationController
             end
           else
             flash[:warning] = I18n.t(:error_access_denied)
-            redirect_to (params[:from_tree_history_view].nil? ?  projects_path : edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'))
+            redirect_to (params[:from_tree_history_view].nil? ?  organization_estimations_path(@organization) : edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'))
           end
         else
           flash[:warning] = I18n.t('warning_need_check_box_confirmation')
@@ -1369,7 +1369,7 @@ public
     authorize! :commit_project, project
 
     if !can_modify_estimation?(project)
-      redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      redirect_to(organization_estimations_path(@organization), flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
     #change project's status
@@ -1602,7 +1602,7 @@ public
 
     #if !can_modify_estimation?(project)
     if !can_modify_estimation?(old_prj)
-      redirect_to(projects_path, flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      redirect_to(organization_estimations_path(@organization), flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
     #if old_prj.checkpoint? || old_prj.released?
@@ -1923,7 +1923,7 @@ public
       flash[:error] = flash_error + I18n.t('collapsible_project_only')
     end
     if params['current_showed_project_id'].nil? || (params['current_showed_project_id'] && params['current_showed_project_id'].in?(params[:project_ids]) )
-      redirect_to projects_path, :notice => I18n.t('notice_successful_collapse_project_version')
+      redirect_to organization_estimations_path(@organization), :notice => I18n.t('notice_successful_collapse_project_version')
     else
       redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'), :notice => I18n.t('notice_successful_collapse_project_version')
     end
