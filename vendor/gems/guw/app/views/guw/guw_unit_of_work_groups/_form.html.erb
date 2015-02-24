@@ -15,9 +15,12 @@
         <%= f.input :name %>
         <%= f.input :organization_technology_id, as: :select, collection: @project.organization.organization_technologies %>
       </div>
-      <%= f.button :submit, I18n.t('save') %>
-      <% unless controller.action_name == "new" %>
-        <%= link_to 'Supprimer', guw.guw_unit_of_work_group_path(@guw_unit_of_work_group), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'btn' %>
+
+      <% if can? :execute_estimation_plan, @project %>
+          <%= f.button :submit, I18n.t('save') %>
+          <% unless controller.action_name == "new" %>
+            <%= link_to 'Supprimer', guw.guw_unit_of_work_group_path(@guw_unit_of_work_group), method: "delete", confirm: I18n.t('are_you_sure'), :class => 'btn' %>
+          <% end %>
       <% end %>
   <% end %>
   </div>

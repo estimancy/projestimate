@@ -89,6 +89,8 @@ class Ge::GeModelsController < ApplicationController
   end
 
   def save_efforts
+    authorize! :execute_estimation_plan, @project
+
     @ge_model = Ge::GeModel.find(params[:ge_model_id])
     current_module_project.pemodule.attribute_modules.each do |am|
       tmp_prbl = Array.new

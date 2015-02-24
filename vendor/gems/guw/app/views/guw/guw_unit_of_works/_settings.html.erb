@@ -47,8 +47,10 @@
   <hr>
 
   <% if @unit_of_work_groups.empty? %>
-    <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-    <%= link_to I18n.t(:new_unit_of_work), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
+    <% if can? :execute_estimation_plan, @project %>
+        <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
+        <%= link_to I18n.t(:new_unit_of_work), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
+    <% end %>
   <% end %>
 
   <div id="table_guw_model">
@@ -99,11 +101,13 @@
           <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
             <div class="accordion-inner">
 
-              <button type="submit" class="btn btn-default btn-mini pull-right">Sauvegarder</button>
-              <%= link_to "RAZ", "#", class: "btn btn-mini reset_retained button_margin_right pull-right" %>
+              <% if can? :execute_estimation_plan, @project %>
+                  <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
+                  <%= link_to "RAZ", "#", class: "btn btn-mini reset_retained button_margin_right pull-right" %>
 
-              <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-              <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
+                  <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
+                  <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
+              <% end %>
 
               <table class="table table-condensed table-striped" style="margin-top: 45px;">
                 <tr>
@@ -166,8 +170,10 @@
                               <%= text_area_tag "comments[#{guow.id}]", guow.comments, class: "attribute_note_area" %>
                             </div>
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
-                              <button type="submit" class="btn btn-default">Sauvegarder</button>
+                              <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
+                              <% if can? :execute_estimation_plan, @project %>
+                                    <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
+                              <% end %>
                             </div>
                           </div>
                         </div>
@@ -204,8 +210,10 @@
                               <%= text_area_tag "tracking[#{guow.id}]", guow.tracking, class: "attribute_note_area" %>
                             </div>
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
-                              <button type="submit" class="btn btn-default">Sauvegarder</button>
+                              <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
+                              <% if can? :execute_estimation_plan, @project %>
+                                <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
+                              <% end %>
                             </div>
                           </div>
                         </div>
@@ -242,11 +250,13 @@
 
                     <td>
                       <span class="pull-left">
-                        <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
-                        <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
-                        <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
-                        <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-pencil" %>
-                        <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
+                        <% if can? :execute_estimation_plan, @project %>
+                            <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
+                            <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
+                            <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
+                            <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-pencil" %>
+                            <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
+                        <% end %>
                       </span>
                     </td>
 
@@ -302,7 +312,9 @@
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer sans calculer</button>
-                              <button type="submit" class="btn btn-default">Calculer</button>
+                              <% if can? :execute_estimation_plan, @project %>
+                                    <button type="submit" class="btn btn-default">Calculer</button>
+                              <% end %>
                             </div>
                           </div>
                         </div>
@@ -312,10 +324,13 @@
                 <% end %>
               </table>
             </div>
-            <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-            <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
 
-            <button type="submit" class="btn btn-default btn-mini pull-right">Sauvegarder</button>
+            <% if can? :execute_estimation_plan, @project %>
+                <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
+                <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
+
+                <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
+            <% end %>
           </div>
 
       </div>

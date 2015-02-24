@@ -171,5 +171,7 @@
     <% end %>
   </table>
 
-  <%= submit_tag "Sauvegarder", class: "pull-right btn btn-mini" %>
+  <% if can? :execute_estimation_plan, @project %>
+        <%= submit_tag I18n.t(:save), class: "pull-right btn btn-mini" %>
+  <% end %>
 <% end %>

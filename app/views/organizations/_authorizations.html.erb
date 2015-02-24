@@ -169,8 +169,8 @@
               </table>
               <% if can? :manage_modules_permissions, Permission %>
                 <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-                <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
               <% end %>
+              <%= submit_tag I18n.t('cancel'),  :class => 'btn' %>
         <% else %>
             <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_permissions) %></div>
         <% end %>
