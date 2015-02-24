@@ -52,7 +52,7 @@
 
 </table>
 
-<% if can? :update_wbs_activities, WbsActivity %>
+<% if can? :manage_modules_instances, ModuleProject %>
     <%= submit_tag I18n.t('save'), :class => 'btn ' %>
     <%= submit_tag I18n.t('apply'), :class => 'btn' %>
 <% end %>

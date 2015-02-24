@@ -445,9 +445,9 @@ class OrganizationsController < ApplicationController
   end
 
   def set_technology_uow_synthesis
-    authorize! :edit_organizations, Organization
+    authorize! :manage_modules_instances, ModuleProject
 
-    @organization = Organization.find(params[:organization])
+    #@organization = Organization.find(params[:organization])
     params[:abacus].each do |sut|
       sut.last.each do |ot|
         ot.last.each do |uow|
@@ -461,7 +461,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(edit_organization_path(@organization, :anchor => 'tabs-synthesis-uow-techno'), nil, '/organizationals_params')
+    redirect_to redirect_apply(organization_module_estimation_path(@organization, :anchor => 'taille'), nil, '/organizationals_params')
   end
 
   def import_abacus

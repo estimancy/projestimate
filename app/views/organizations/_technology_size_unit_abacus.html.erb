@@ -6,7 +6,7 @@
     <%= render 'organizations/size_unit_abacus_table_values' %>
   </div>
 
-  <% if can? :edit_organizations, Organization %>
+  <% if can? :manage_modules_instances, ModuleProject %>
     <%= submit_tag I18n.t('apply'), :class => 'btn' %>
   <% end %>
 

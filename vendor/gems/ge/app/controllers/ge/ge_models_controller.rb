@@ -38,20 +38,28 @@
 class Ge::GeModelsController < ApplicationController
 
   def show
+    authorize! :show_modules_instances, ModuleProject
+
     @ge_model = Ge::GeModel.find(params[:id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
   end
 
   def new
+    authorize! :manage_modules_instances, ModuleProject
+
     @ge_model = Ge::GeModel.new
   end
 
   def edit
+    authorize! :show_modules_instances, ModuleProject
+
     @ge_model = Ge::GeModel.find(params[:id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
   end
 
   def create
+    authorize! :manage_modules_instances, ModuleProject
+
     @ge_model = Ge::GeModel.new(params[:ge_model])
     @ge_model.organization_id = params[:ge_model][:organization_id].to_i
     @ge_model.save
@@ -59,12 +67,16 @@ class Ge::GeModelsController < ApplicationController
   end
 
   def update
+    authorize! :manage_modules_instances, ModuleProject
+
     @ge_model = Ge::GeModel.find(params[:id])
     @ge_model.update_attributes(params[:ge_model])
     redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id)
   end
 
   def destroy
+    authorize! :manage_modules_instances, ModuleProject
+
     @ge_model = Ge::GeModel.find(params[:id])
     organization_id = @ge_model.organization_id
 

@@ -3,6 +3,7 @@ class SizeUnitTypesController < ApplicationController
 
   def index
     authorize! :show_size_unit_types, SizeUnitType
+
     @size_unit_types = SizeUnitType.all
   end
 

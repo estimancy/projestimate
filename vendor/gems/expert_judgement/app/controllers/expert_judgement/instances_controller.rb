@@ -37,22 +37,31 @@
 class ExpertJudgement::InstancesController < ApplicationController
 
   def index
+    authorize! :show_modules_instances, ModuleProject
+
     ExpertJudgement::Instance.all
   end
 
   def show
+    authorize! :show_modules_instances, ModuleProject
     @instance = ExpertJudgement::Instance.find(params[:id])
   end
 
   def new
+    authorize! :manage_modules_instances, ModuleProject
+
     @instance = ExpertJudgement::Instance.new
   end
 
   def edit
+    authorize! :show_modules_instances, ModuleProject
+
     @instance = ExpertJudgement::Instance.find(params[:id])
   end
 
   def create
+    authorize! :manage_modules_instances, ModuleProject
+
     @instance = ExpertJudgement::Instance.new(params[:instance])
     @instance.organization_id = params[:instance][:organization_id].to_i
     @instance.save
@@ -60,6 +69,8 @@ class ExpertJudgement::InstancesController < ApplicationController
   end
 
   def update
+    authorize! :manage_modules_instances, ModuleProject
+
     @instance = ExpertJudgement::Instance.find(params[:id])
     @instance.update_attributes(params[:instance])
 
@@ -67,6 +78,8 @@ class ExpertJudgement::InstancesController < ApplicationController
   end
 
   def destroy
+    authorize! :manage_modules_instances, ModuleProject
+
     @instance = ExpertJudgement::Instance.find(params[:id])
     organization_id = @instance.organization_id
 

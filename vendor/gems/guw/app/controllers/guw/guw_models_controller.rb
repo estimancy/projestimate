@@ -38,21 +38,29 @@
 class Guw::GuwModelsController < ApplicationController
 
   def show
+    authorize! :show_modules_instances, ModuleProject
+
     @guw_model = Guw::GuwModel.find(params[:id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def new
+    authorize! :manage_modules_instances, ModuleProject
+
     @guw_model = Guw::GuwModel.new
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(params['organization_id']), @guw_model.organization => ""
   end
 
   def edit
+    authorize! :show_modules_instances, ModuleProject
+
     @guw_model = Guw::GuwModel.find(params[:id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def create
+    authorize! :manage_modules_instances, ModuleProject
+
     @guw_model = Guw::GuwModel.new(params[:guw_model])
     @guw_model.organization_id = params[:guw_model][:organization_id].to_i
     @guw_model.save
@@ -60,12 +68,16 @@ class Guw::GuwModelsController < ApplicationController
   end
 
   def update
+    authorize! :manage_modules_instances, ModuleProject
+
     @guw_model = Guw::GuwModel.find(params[:id])
     @guw_model.update_attributes(params[:guw_model])
     redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
 
   def destroy
+    authorize! :manage_modules_instances, ModuleProject
+
     @guw_model = Guw::GuwModel.find(params[:id])
     organization_id = @guw_model.organization_id
     @guw_model.module_projects.each do |mp|
