@@ -448,28 +448,34 @@ class ProjectsController < ApplicationController
       @wbs_activity_elements = []
       @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
-      @project.organization.users.uniq.each do |u|
-        ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
-        if ps
-          ps.project_security_level_id = params["user_securities_#{u.id}"]
-          ps.save
-        elsif !params["user_securities_#{u.id}"].blank?
-          new_ps = @project.project_securities.build #ProjectSecurity.new
-          new_ps.user_id = u.id
-          new_ps.project_security_level_id = params["user_securities_#{u.id}"]
+      # we can update user securities levels on edit or on show with some restrictions
+      if params['is_project_show_view'].nil? || (params['is_project_show_view'] =="true" && !params['user_security_levels'].nil?)
+        @project.organization.users.uniq.each do |u|
+          ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
+          if ps
+            ps.project_security_level_id = params["user_securities_#{u.id}"]
+            ps.save
+          elsif !params["user_securities_#{u.id}"].blank?
+            new_ps = @project.project_securities.build #ProjectSecurity.new
+            new_ps.user_id = u.id
+            new_ps.project_security_level_id = params["user_securities_#{u.id}"]
+          end
         end
       end
 
-      @project.organization.groups.uniq.each do |gpe|
-        ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
-        if ps
-          ps.project_security_level_id = params["group_securities_#{gpe.id}"]
-          ps.save
-        elsif !params["group_securities_#{gpe.id}"].blank?
-          #ProjectSecurity.create(:group_id => gpe.id, :project_id => @project.id, :project_security_level_id => params["group_securities_#{gpe.id}"])
-          new_ps = @project.project_securities.build
-          new_ps.group_id = gpe.id
-          new_ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+      # we can update group securities levels on edit or on show with some restrictions
+      if params['is_project_show_view'].nil? || (params['is_project_show_view'] == "true" && !params['group_security_levels'].nil?)
+          @project.organization.groups.uniq.each do |gpe|
+          ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
+          if ps
+            ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+            ps.save
+          elsif !params["group_securities_#{gpe.id}"].blank?
+            #ProjectSecurity.create(:group_id => gpe.id, :project_id => @project.id, :project_security_level_id => params["group_securities_#{gpe.id}"])
+            new_ps = @project.project_securities.build
+            new_ps.group_id = gpe.id
+            new_ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+          end
         end
       end
 

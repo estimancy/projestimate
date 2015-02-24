@@ -126,8 +126,8 @@
                   <% end %>
                 </table>
                 <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
-                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                    <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                    <%= submit_tag I18n.t('save'), :name => "user_security_levels", :class => 'btn' %>
+                    <%= submit_tag I18n.t('apply'), :name => "user_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
                 <% end %>
                 <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
               </div>
@@ -163,8 +163,8 @@
                   <% end %>
                 </table>
                 <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
-                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                    <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                    <%= submit_tag I18n.t('save'), :name => "group_security_levels", :class => 'btn' %>
+                    <%= submit_tag I18n.t('apply'), :name => "group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
                 <% end %>
                 <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
               </div>
