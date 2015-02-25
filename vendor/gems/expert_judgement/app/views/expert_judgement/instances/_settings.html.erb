@@ -134,8 +134,10 @@
                 <%= text_area_tag "comments[#{eja.id}]", ie.comments, class: "attribute_note_area" %>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
-                <button type="submit" class="btn btn-default">Sauvegarder</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
+                <% if can? :execute_estimation_plan, @project %>
+                    <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
+                <% end %>
               </div>
             </div>
           </div>
@@ -160,8 +162,10 @@
                 <%= text_area_tag "tracking[#{eja.id}]", ie.tracking, class: "attribute_note_area" %>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
-                <button type="submit" class="btn btn-default">Sauvegarder</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
+                <% if can? :execute_estimation_plan, @project %>
+                    <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
+                <% end %>
               </div>
             </div>
           </div>

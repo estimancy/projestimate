@@ -1003,7 +1003,7 @@ class ProjectsController < ApplicationController
   #Save output values: only for current pbs_project_element
   def save_estimation_results(start_module_project, input_attributes, output_data)
     #@project = current_project
-    authorize! :alter_estimation_plan, @project
+    authorize! :execute_estimation_plan, @project
 
     @pbs_project_element = current_component
 
@@ -1162,7 +1162,7 @@ private
 
   #This method set result in DB with the :value key for node estimation value
   def set_element_value_with_activities(estimation_result, module_project)
-    authorize! :alter_estimation_plan, @project
+    authorize! :execute_estimation_plan, @project
 
     result_with_consistency = Hash.new
     consistency = true
@@ -1963,7 +1963,7 @@ public
 
   # Display the estimation results with activities by profile
   def results_with_activities_by_profile
-    authorize! :alter_estimation_plan, @project
+    authorize! :execute_estimation_plan, @project
 
     @current_component = current_component
     @project_organization = @project.organization
