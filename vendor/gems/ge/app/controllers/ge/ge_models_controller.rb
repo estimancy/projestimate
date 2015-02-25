@@ -63,7 +63,7 @@ class Ge::GeModelsController < ApplicationController
     @ge_model = Ge::GeModel.new(params[:ge_model])
     @ge_model.organization_id = params[:ge_model][:organization_id].to_i
     @ge_model.save
-    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
   end
 
   def update
@@ -71,7 +71,7 @@ class Ge::GeModelsController < ApplicationController
 
     @ge_model = Ge::GeModel.find(params[:id])
     @ge_model.update_attributes(params[:ge_model])
-    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
   end
 
   def destroy
@@ -85,7 +85,7 @@ class Ge::GeModelsController < ApplicationController
     end
 
     @ge_model.delete
-    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
   end
 
   def save_efforts
