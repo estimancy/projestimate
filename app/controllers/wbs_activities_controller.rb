@@ -267,6 +267,8 @@ class WbsActivitiesController < ApplicationController
   end
 
   def save_effort_breakdown
+    authorize! :execute_estimation_plan, @project
+
     @pbs_project_element = current_component
     @tmp_results = Hash.new
 
