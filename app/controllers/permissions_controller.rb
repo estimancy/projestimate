@@ -126,8 +126,8 @@ class PermissionsController < ApplicationController
   def set_rights
     authorize! :manage_organization_permissions, Permission
 
-    if params[:commit] == I18n.t('cancel')
-      redirect_to session[:return_to], :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
+    if params[:organization_permissions] == I18n.t('cancel') || params[:modules_permissions] == I18n.t('cancel')
+      flash[:notice] = I18n.t(:notice_permission_successful_cancelled)
     else
       @groups = @organization.groups
       @permissions = Permission.defined
@@ -135,9 +135,13 @@ class PermissionsController < ApplicationController
       @groups.each do |group|
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
       end
-
-      redirect_to organization_authorization_path(@organization, anchor: "tabs-organization-permissions")
     end
+
+    redirect_tab = "tabs-organization-permissions"
+    if !params[:modules_permissions].nil?
+      redirect_tab = "tabs-modules-permissions"
+    end
+    redirect_to organization_authorization_path(@organization, anchor: redirect_tab)
   end
 
   #Set rights on estimations permissions
