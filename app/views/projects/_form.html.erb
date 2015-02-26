@@ -5,7 +5,6 @@
       <ul>
         <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
         <% if action_name.in? %w(edit update) %>
-          <!--<li><a href="#tabs-3"><%#= I18n.t(:wbs_activity) %></a></li>-->
           <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
           <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
           <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
@@ -137,25 +136,24 @@
     <div id="tabs-4" class="tabs_4_with_estimation_plan2">
       <% if controller.controller_name == 'projects' %>
         <% if @project.is_locked == false or @project.is_locked.nil? %>
-          <% if can? :alter_estimation_plan, @project %>
-              <div class="row-fluid">
-                <div class="span12">
-                  <%= I18n.t(:label_add_a_module_to_project) %>
-                  <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
-                                                                              "Modules de Jugement d'Expert" => @ej_modules,
-                                                                              "Modules Activités / Profils" => @wbs_instances,
-                                                                              "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
-                                                                              "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
-                </div>
-              </div>
+          <div class="row-fluid">
+            <div class="span12">
+              <%= I18n.t(:label_add_a_module_to_project) %>
+              <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
+                                                                          "Modules de Jugement d'Expert" => @ej_modules,
+                                                                          "Modules Activités / Profils" => @wbs_instances,
+                                                                          "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
+                                                                          "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
+            </div>
+          </div>
 
-              <div class="row-fluid">
-                <div class="span12">
-                  <%= hidden_field_tag 'project_id', @project.id %>
-                  <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
-                </div>
-              </div>
-          <% end %>
+          <br>
+          <div class="row-fluid">
+            <div class="span12">
+              <%= hidden_field_tag 'project_id', @project.id %>
+              <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
+            </div>
+          </div>
         <% end %>
       <% end %>
 
@@ -195,10 +193,9 @@
                         </tr>
                     <% end %>
                   </table>
-                  <% if can? :manage_project_security, @project %>
-                      <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                      <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
-                  <% end %>
+
+                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
                   <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
                 </div>
               </div>
@@ -232,10 +229,9 @@
                         </tr>
                     <% end %>
                   </table>
-                  <% if can? :manage_project_security, @project %>
-                      <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                      <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
-                  <% end %>
+
+                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
                   <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
                 </div>
               </div>

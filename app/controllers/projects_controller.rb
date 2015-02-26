@@ -593,6 +593,17 @@ class ProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
+    @guw_module = Pemodule.where(alias: "guw").first
+    @ge_module = Pemodule.where(alias: "ge").first
+    @ej_module = Pemodule.where(alias: "expert_judgement").first
+    @ebd_module = Pemodule.where(alias: "effort_breakdown").first
+
+    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
+    @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
+
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
   end
 
   def destroy
@@ -1192,7 +1203,7 @@ private
   # After estimation, need to know if node value are consistent or not for WBS-Completion modules
   def set_wbs_completion_node_consistency(estimation_result, wbs_project_element)
     #@project = current_project
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     consistency = true
     estimation_result_without_null_value = []

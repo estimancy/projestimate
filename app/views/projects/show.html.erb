@@ -29,7 +29,7 @@
         <tr>
           <td><%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-xxlarge'}, :disabled => true %></td>
           <td><%= f.input :estimation_status_id, label: "Estimation Status", as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
-          <% if can_alter_estimation?(@project) && can?(:comment_project, @project) %>
+          <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
             <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
           <% end %>
         </tr>
@@ -80,16 +80,38 @@
     <div id="tabs-4" class="tabs_4_with_estimation_plan2">
       <% if controller.controller_name == 'projects' %>
           <% if @project.is_locked == false or @project.is_locked.nil? %>
-              <table style="width: 100%" border=0>
-                <tr>
-                  <td class="pull-right">
-                    <%= I18n.t(:label_filter_on_pbs_element) %>
-                    <%= select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>
-                  </td>
-                </tr>
-              </table>
-          <% end %>
+              <% if can? :alter_estimation_plan, @project %>
+                  <div class="row-fluid">
+                    <div class="span12">
+                      <%= I18n.t(:label_add_a_module_to_project) %>
+                      <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
+                                                                                  "Modules de Jugement d'Expert" => @ej_modules,
+                                                                                  "Modules Activités / Profils" => @wbs_instances,
+                                                                                  "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
+                                                                                  "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
+                    </div>
+                  </div>
+
+                  <br>
+                  <div class="row-fluid">
+                    <div class="span12">
+                      <%= hidden_field_tag 'project_id', @project.id %>
+                      <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
+                    </div>
+                  </div>
+              <% end %>
+
+              <!--<table style="width: 100%" border=0>-->
+                <!--<tr>-->
+                  <!--<td class="pull-right">-->
+                    <!--<%#= I18n.t(:label_filter_on_pbs_element) %>-->
+                    <!--<%#= select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>-->
+                  <!--</td>-->
+                <!--</tr>-->
+              <!--</table>-->
+          <!--<% end %>-->
       <% end %>
+
 
       <br>
       <div class="module_box"  style=" width: auto; overflow-x:auto;">

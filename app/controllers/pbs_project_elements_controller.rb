@@ -39,7 +39,7 @@ class PbsProjectElementsController < ApplicationController
   #Create a new pbs_project_element and refresh the partials
   def new
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     @pbs_project_element = PbsProjectElement.new
     set_page_title("New #{@pbs_project_element.name}")
@@ -51,7 +51,7 @@ class PbsProjectElementsController < ApplicationController
 
   def edit
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     @pbs_project_element = PbsProjectElement.find(params[:id])
     set_page_title("Editing #{@pbs_project_element.name}")
@@ -64,7 +64,7 @@ class PbsProjectElementsController < ApplicationController
 
   def create
     @project = Project.find(params[:project_id])
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     @pbs_project_element = PbsProjectElement.new(params[:pbs_project_element])
     @pbs_project_element.position = @pbs_project_element.siblings.length + 1
@@ -103,7 +103,7 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element = PbsProjectElement.find(params[:id])
     @project = @pbs_project_element.pe_wbs_project.project
 
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     #start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], '%m/%d/%Y')
     start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], I18n.t("date.formats.default"))
@@ -133,7 +133,7 @@ class PbsProjectElementsController < ApplicationController
     pbs_project_element = PbsProjectElement.find(params[:id])
     @project = pbs_project_element.pe_wbs_project.project
 
-    authorize! :manage, @project
+    authorize! :alter_project_pbs_products, @project
 
     @pbs_project_element = @project.root_component
     @module_projects = @project.module_projects
@@ -179,7 +179,7 @@ class PbsProjectElementsController < ApplicationController
   def up
     @project = Project.find(params[:project_id])
 
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     component_a = PbsProjectElement.find(params[:pbs_project_element_id])
     component_b = component_a.siblings.all.select{|i| i.position == component_a.position - 1 }.first
@@ -198,7 +198,7 @@ class PbsProjectElementsController < ApplicationController
   def down
     @project = Project.find(params[:project_id])
 
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     component_a = PbsProjectElement.find(params[:pbs_project_element_id])
     component_b = component_a.siblings.all.select{|i| i.position == component_a.position + 1 }.first
