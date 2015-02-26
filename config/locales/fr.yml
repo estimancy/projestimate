@@ -1413,3 +1413,7 @@ fr:
   modules_permissions: "Permissions des modules"
   is_super_admin: "Est super administrator ?"
   text_help_super_admin: "Un utilisateur super administrateur a tous les droits sur toute l'application et sur toutes les organisations"
+  create_organization_confirmation_instructions: "Bonjour %{firstname} %{lastname} \n
+                                                  Votre  mot de passe temporaire est « %{password} », vous serez invité à le changer lors de votre première connexion, il vous sera aussi demandé de compléter le paramétrage de d’organisation « %{organization_name} ».\n
+                                                   Votre identifiant « %{login_name} » pour l’organisation « %{organization_name} » vient d’être créé, merci de vous connecter avec l’url suivante : %{connexion_url} pour continuer.\n  Bonne réception"
+

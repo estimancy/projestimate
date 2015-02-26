@@ -1,4 +1,12 @@
-<p><%= I18n.t(:text_welcome) %> <%= @email %>!</p>
+<% if @resource.super_admin? %>
+
+    <p><%= I18n.t(:create_organization_confirmation_instructions, firstname: @firstname, lastname: @lastname, password: @password, login_name: @login_name, organization_name: @organization_name, connexion_url: SETTINGS['HOST_URL']) %> </p>
+
+<% else %>
+
+    <p><%= I18n.t(:text_welcome) %> <%= @email %>!</p>
+
+<% end %>
 
 <p><%= I18n.t(:mail_confirm_account_through_link_below) %></p>
 

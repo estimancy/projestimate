@@ -109,19 +109,20 @@ class OrganizationsController < ApplicationController
 
   #Create New organization from selected image organization
   def create_organization_from_image
+    authorize! :manage, Organization
+
     #Create the organization from image organization
-    puts "Test"
     organization_image_id = params[:organization_image]
     if !organization_image_id.nil?
       organization_image = Organization.find(organization_image_id)
-      organization_name = params[:organization_name]
-      firstname = params[:firstname]
-      lastname = params[:lastname]
-      email = params[:email]
-      login = params[:identifiant]
-      password = params[:password]
-      if password.empty?
-        password = SecureRandom.hex(8)
+      @organization_name = params[:organization_name]
+      @firstname = params[:firstname]
+      @lastname = params[:lastname]
+      @email = params[:email]
+      @login_name = params[:identifiant]
+      @password = params[:password]
+      if @password.empty?
+        @password = SecureRandom.hex(8)
       end
       change_password_required = params[:change_password_required]
 
@@ -131,16 +132,21 @@ class OrganizationsController < ApplicationController
 
         #Then copy the image organization estimation models
         organization_image.projects.where(is_model: true).all.each do |est_model|
-
         end
 
         # Create a user in the Admin group of the new organization
-        admin_user = User.new(first_name: firstname, last_name: lastname, login_name: login, email: email, password: password, password_confirmation: password, super_admin: true)
+        admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: true)
+        # Add the user to the created organization
+        admin_user.organizations << new_organization
+
         admin_user.save
+
+        flash[:notice] = I18n.t(:notice_organization_successful_created)
       else
+        flash[:error] = I18n.t(:errors.messages.not_saved)
       end
     else
-
+      flash[:warning] = "Veuillez sélectionner une organisation image pour continuer"
     end
     redirect_to :back
   end
@@ -156,7 +162,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     #authorize! :edit_organizations, Organization
-    authorize! :show_organizations, Organization
+    authorize! :edit_organizations, Organization
 
     set_page_title 'Organizations'
     @organization = Organization.find(params[:id])
@@ -275,7 +281,7 @@ class OrganizationsController < ApplicationController
       #Add a default view for widgets
       view = View.create(:name => "Default view", :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.", :organization_id => @organization.id)
 
-      redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t (:notice_organization_successful_created)}"
+      redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t(:notice_organization_successful_created)}"
     else
       render action: 'new'
     end

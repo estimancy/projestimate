@@ -1379,4 +1379,7 @@ en-gb:
   modules_permissions: "Modules permissions"
   is_super_admin: "Is a super administrator user ?"
   text_help_super_admin: "A super administrator user has full rights to the entire application and all organizations"
+  create_organization_confirmation_instructions: "Hello %{firstname} %{lastname} \n
+                                                         Your temporary password is « %{password} », you will be prompted to change it when you first logged in, you will also be asked to complete the organizational setting of « %{organization_name} ». \n
+                                                         Your login name « %{login_name} » for the « %{organization_name} » organization has been created, thank you log in with the following url: %{connexion_url} to continue. \n Good reception"
 
