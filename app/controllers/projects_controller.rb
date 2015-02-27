@@ -114,8 +114,12 @@ class ProjectsController < ApplicationController
 
     @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
 
-    #set_breadcrumbs @project.title => edit_project_path(@project)
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => ""
+    ###set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => ""
+    status_comment_link = ""
+    if can_alter_estimation?(@project) && ( can?(:alter_estimation_status, @project) || can?(:alter_project_status_comment, @project))
+      status_comment_link = "#{main_app.add_comment_on_status_change_path(:project_id => @project.id)}"
+    end
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => status_comment_link
 
     @project_organization = @project.organization
     @module_projects = @project.module_projects
@@ -2383,11 +2387,29 @@ public
   # update comments on estimation status changes
   def update_comments_status_change
     @project = Project.find(params[:project_id])
+
+    # Before saving project, update the project comment when the status has changed
+    if params[:project][:estimation_status_id]
+      new_status_id = params[:project][:estimation_status_id].to_i
+      if @project.estimation_status_id != new_status_id
+        @project.status_comment = auto_update_status_comment(params[:project_id], new_status_id)
+      end
+    end
+
     current_comments = ""
     # Add and update comments on estimation status change
     current_comments = @project.status_comment.nil? ? "" : @project.status_comment
     # Add and update comments on estimation status change
-    @project.status_comment =  show_status_change_comments(params["project"]["status_comment"])
+    #@project.status_comment =  show_status_change_comments(params["project"]["status_comment"])
+    if params["project"]["new_status_comment"] and !params["project"]["new_status_comment"].empty?
+      if @project.estimation_status_id != params[:project][:estimation_status_id].to_i
+        @project.status_comment <<  show_status_change_comments(params["project"]["new_status_comment"])
+      else
+        @project.status_comment = show_status_change_comments(params["project"]["new_status_comment"])
+      end
+    end
+    #update estimation status
+    @project.estimation_status_id = params["project"]["estimation_status_id"]
 
     if @project.save
       flash[:notice] = I18n.t(:notice_comment_status_successfully_updated)
@@ -2399,15 +2421,16 @@ public
   end
 
   # Display comments about estimation status changes
-  def show_status_change_comments(comments, current_note_length = 0)
+  def show_status_change_comments(new_comments, current_note_length = 0)
     current_comments = ""
     user_infos = ""
     current_comments = @project.status_comment.nil? ? "" : @project.status_comment
-    appended_text = comments.sub(current_comments, '')
+    #appended_text = new_comments.sub(current_comments, '')
 
-    user_infos << "#{current_comments} \r\n"
-    user_infos << "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n"
-    user_infos << "#{appended_text} \r\n"
+
+    user_infos << "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n \r\n"
+    user_infos << "#{new_comments} \r\n \r\n"
+    user_infos << "#{current_comments} \r\n \r\n"
     user_infos << "____________________________________________________________________\r\n"
   end
 
@@ -2424,7 +2447,8 @@ public
       new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
       new_comments << "______________________________________________________________________\r\n \r\n"
 
-      current_comments << new_comments
+      #current_comments << new_comments
+      new_comments << current_comments
     end
   end
 

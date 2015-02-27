@@ -1,12 +1,29 @@
-<%#= form_tag url_for( {:action => 'destroy', :controller => 'projects', :id => @project.id}), {:method => 'delete', :class=>'simple_form'} do %>
 <%= simple_form_for @project, :url => update_comments_status_change_path(params[:id]) do |f| %>
-<%#= simple_form_for(@project, url: 'projects/update_comments_status_change', project_id: params[:id] ) do |f| %>
 
-<%#= form_tag '/update_comments_status_change', :method => :post, :project_id => params[:id], :remote => true do |f| %>
   <%= hidden_field_tag :project_id, params[:project_id] %>
 
-  <%#= f.input :comment_status, :as => :text, label: I18n.t(:comment) , :input_html => { :value => @text_comments.to_s, :class => 'attribute_note_area'} %>
-  <%= f.input :status_comment, :as => :text, label: I18n.t(:comment) , :input_html => { :value => @text_comments.to_s, :class => 'attribute_note_area'} %>
+  <% if can?(:alter_project_status_comment, @project) %>
+    <%#= f.input :status_comment, :as => :text, label: I18n.t(:comment), :input_html => { :value => @text_comments.to_s, :class => 'attribute_note_area'} %>
+    <%= f.input :new_status_comment, :as => :text, label: I18n.t(:comment), :input_html => { :class => 'input-xxlarge', :rows => 5 } %>
+  <% end %>
+
+  <% if can?(:alter_estimation_status, @project) %>
+    <%= f.input :estimation_status_id, label: I18n.t(:change_estimation_status), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %>
+  <% end %>
+
+  <div class="widget-box collapsible">
+    <div class="widget-title">
+      <a href="#collapseIn" data-toggle="collapse"> <span class="icon"> <i class="icon-align-left"></i> </span>  </a>
+      <h5> <%= I18n.t(:comment_history) %> </h5>
+    </div>
+
+    <div class="collapse in" id="collapseIn">
+      <div class="widget-content tab-content">
+        <%= @text_comments.to_s %>
+      </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal-footer-left">
     <%= f.submit I18n.t('save'), :class => 'btn', :id => 'add_comment_on_status_change' %>

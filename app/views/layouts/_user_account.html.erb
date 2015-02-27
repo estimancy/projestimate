@@ -204,7 +204,11 @@
             </a>
             <span class="divider">/</span>
           <% else %>
-            <%= k[0].to_s.html_safe %>
+              <% if k[1] != "" %>
+                <%= link_to(k[0].to_s.html_safe, k[1], :title => "#{I18n.t(:label_add_status_change_comment)}", :remote => true) %>
+              <% else %>
+                <%= k[0].to_s.html_safe %>
+              <% end %>
         <% end %>
         </li>
     <% end %>

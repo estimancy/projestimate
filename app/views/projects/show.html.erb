@@ -59,7 +59,7 @@
       <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'}, :disabled => !( can_alter_estimation?(@project) && can?(:alter_project_categories, @project) ) %>
 
       <div class="actions-tabs">
-        <% if can_alter_estimation?(@project) && ( can?(:alter_project_areas, @project) || can?(:alter_acquisition_categories, @project) || can?(:alter_platform_categories, @project) || can?(:alter_project_categories, @project) ) %>
+        <% if can_alter_estimation?(@project) %>
             <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
             <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
         <% end %>

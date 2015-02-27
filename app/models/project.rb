@@ -39,7 +39,7 @@ class Project < ActiveRecord::Base
                   :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
                   :acquisition_category_id, :platform_category_id, :parent_id
 
-  attr_accessor :product_name, :project_organization_statuses
+  attr_accessor :product_name, :project_organization_statuses, :new_status_comment
 
   include ActionView::Helpers
   include ActiveModel::Dirty

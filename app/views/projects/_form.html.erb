@@ -53,17 +53,14 @@
         </tr>
 
         <tr>
-          <!--<td><%#= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-large'} %></td>-->
           <td>
             <%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => [[@organization.name, @organization.id]], selected: @organization.id, :input_html => {:class => 'input-large'}, disabled: true %>
             <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization.id } %>
           </td>
 
-          <td>
-            <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %>
-          </td>
+          <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %></td>
           <% unless @project.new_record? %>
-            <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
+            <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}", :remote => true) %></td>
           <% end %>
         </tr>
       </table>
