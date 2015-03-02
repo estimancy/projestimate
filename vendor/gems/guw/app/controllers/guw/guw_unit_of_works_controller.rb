@@ -235,7 +235,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         #Save if uo is simple/ml/high
         value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
 
-        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range) and @guw_model.one_level_model == false
+        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
           guw_unit_of_work.guw_complexity_id = guw_c.id
           guw_unit_of_work.save
         end
