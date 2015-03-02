@@ -54,6 +54,8 @@
     <% if can? :manage_modules_instances, ModuleProject %>
       <%= submit_tag I18n.t('apply'), :class => 'btn' %>
     <% end %>
+    <%= link_to "Liste des Unités d'Oeuvres", unit_of_works_path(organization_id: @organization), class: "btn" %>
+    <%= link_to "Créer une nouvelle Unité d'Oeuvre", new_unit_of_work_path(organization_id: @organization), class: "btn" %>
 
 <% end %>
 

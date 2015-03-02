@@ -26,8 +26,8 @@ class UnitOfWorksController < ApplicationController
   def index
     authorize! :show_unit_of_works, UnitOfWork
 
-    @organization = Organization.find(params[:id])
-    @organization_uow_complexities = @organization.unit_of_works
+    @organization = Organization.find(params[:organization_id])
+    @unit_of_works = @organization.unit_of_works
   end
 
   def edit

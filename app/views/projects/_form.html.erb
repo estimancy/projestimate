@@ -158,9 +158,13 @@
                         <%= hidden_field_tag "user_securities_#{user.id}" %>
                         <% securities = user.project_securities_for_select(@project.id) %>
                         <tr>
-                          <td><%= user.name %>
-                            <% @organization.project_security_levels.each do |prj_level| %>
-                              <td style="text-align: center"><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %> </td>
+                          <td>
+                            <%= user.name %>
+                          </td>
+                          <% @organization.project_security_levels.each do |prj_level| %>
+                            <td style="text-align: center">
+                              <%= check_box_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %>
+                            </td>
                           <% end %>
                         </tr>
                     <% end %>
@@ -196,7 +200,7 @@
                         <tr>
                           <td><%= group.name %>
                             <% @organization.project_security_levels.each do |prj_level| %>
-                              <td style="text-align: center"><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id))) %> </td>
+                              <td style="text-align: center"><%= check_box_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id))) %> </td>
                           <% end %>
                         </tr>
                     <% end %>

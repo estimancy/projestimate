@@ -1,0 +1,26 @@
+<div class="tabs">
+  <ul>
+    <li><a href="#taille" data-toggle="tab">Taille</a></li>
+  </ul>
+
+  <div>
+    <table class="table table-bordered">
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
+
+      <% @unit_of_works.each do |uow| %>
+        <tr>
+          <td class="span5">
+            <%= uow.name %>
+          </td>
+          <td class="align-center">
+            <%= link_to '', edit_unit_of_work_path(uow, organization_id: uow.organization_id), class: "fa fa-pencil" %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+

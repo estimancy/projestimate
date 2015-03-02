@@ -77,8 +77,9 @@
 
               <hr class="table">
 
-              <%= select_tag "complexity[#{i+1}]", options_for_select(OrganizationUowComplexity.where(unit_of_work_id: input.unit_of_work_id,
-                                                                                                      organization_technology_id: input.technology_id).all.map{|i| [i.name, i.id]}, :selected => input.complexity_id ), :class => "complexity input-small" %>
+              <% ouc = OrganizationUowComplexity.where(unit_of_work_id: input.unit_of_work_id,
+                                                       organization_technology_id: organization_technology.id).all.map{|i| [i.name, i.id]} %>
+              <%= select_tag "complexity[#{i+1}]", options_for_select(ouc, :selected => input.complexity_id ), :class => "complexity input-small" %>
             </td>
 
             <td class="center">
