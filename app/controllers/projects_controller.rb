@@ -405,7 +405,6 @@ class ProjectsController < ApplicationController
 
     @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
 
-    #Project tree as JSON DATA for the graphical representation
     project_root = @project.root
     project_tree = project_root.subtree
     arranged_projects = project_tree.arrange
