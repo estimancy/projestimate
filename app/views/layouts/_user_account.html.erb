@@ -2,7 +2,7 @@
 
   <li class="dropdown">
     <a href="<%= main_app.organization_estimations_path(@organization) %>" title="Liste des estimations">
-      <i class="icon icon-list-ul icon-large pull-left" style="margin-top: -2px;"></i>&nbsp;
+      <i class="fa fa-list-ul fa-lg pull-left"></i>&nbsp;
     </a>
   </li>
 
@@ -10,23 +10,23 @@
     <% begin %>
       <% if @project %>
         <a href="<%= main_app.dashboard_path(@project) %>" title="Estimation en cours">
-          <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
+          <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
         </a>
       <% else %>
         <a href="<%= main_app.organization_estimations_path(@organization) %>">
-          <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
+          <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
         </a>
       <% end %>
     <% rescue %>
       <a href="<%= main_app.organization_estimations_path(@organization) %>">
-        <i class="fa fa-calculator icon-large pull-left" style="margin-top: -1px;"></i>&nbsp;</b>
+        <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
       </a>
     <% end %>
   </li>
 
   <li class="dropdown">
     <a href="#" title="Rapport">
-      <i class="icon icon-print icon-large pull-left" style="margin-top: -2px;"></i>&nbsp;
+      <i class="fa fa-print fa-lg pull-left"></i>&nbsp;
     </a>
   </li>
 
@@ -59,7 +59,7 @@
 
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Configuration et paramétrage">
-      <i class="icon-cog icon-large pull-left"></i></b>
+      <i class="fa fa-cog fa-lg pull-left"></i></b>
     </a>
     <ul class="dropdown-menu">
       <% if @organization %>
@@ -86,7 +86,7 @@
     <% if current_user.super_admin? %>
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_master_admin %>">
           <!--<i class="icon icon-wrench pull-left"></i></b>-->
-          <i class="icon icon-male icon-large pull-left"></i>
+          <i class="fa fa-user-plus fa-lg pull-left"></i>
         </a>
         <ul class="dropdown-menu">
           <li class="dropdown"><a href="<%= main_app.organizationals_params_path %> ">
@@ -155,7 +155,7 @@
 
   <li>
     <a href="<%= main_app.destroy_user_session_path %>#" data-method="delete" rel="nofollow" title="<%= I18n.t 'logout' %>">
-      <i class="icon-off icon-large" style="margin-top: -4px; vertical-align: 0;"></i>
+      <i class="fa fa-power-off fa-lg"></i>
     </a>
   </li>
 
@@ -163,7 +163,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'services' %>" >
-      <i class="icon-book icon-large"style="vertical-align: 0;"></i>
+      <i class="fa fa-book fa-lg" ></i>
     </a>
   </li>
 
@@ -171,7 +171,7 @@
 
   <li>
     <a href="<%= load_admin_setting('url_service') %>" title="<%= I18n.t 'services' %>">
-      <i class="fa fa-users fa-lg" style="color: #000000;"></i>
+      <i class="fa fa-users fa-lg" ></i>
     </a>
   </li>
 
@@ -179,7 +179,7 @@
 
   <li>
     <a href="/about" title="<%= I18n.t 'about' %>">
-      <i class="fa fa-info-circle fa-lg" style="color: #000000"></i>
+      <i class="fa fa-info-circle fa-lg" ></i>
     </a>
   </li>
 
