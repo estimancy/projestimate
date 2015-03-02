@@ -25,9 +25,11 @@
         <tr>
           <td><%= guw_attribute.name %></td>
           <td><%= guw_attribute.description %></td>
-          <td>
+          <td class="center">
             <%= link_to '', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute), class: "fa fa-pencil" %>
-            <%= link_to '', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
+            <% if can? :manage_modules_instances, ModuleProject %>
+                <%= link_to '', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -37,5 +39,7 @@
 
 <br>
 
-<%= link_to 'Nouvel attribut', guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>
+<% if can? :manage_modules_instances, ModuleProject %>
+    <%= link_to 'Nouvel attribut', guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>
+<% end %>
 <%= link_to "Retour", guw.guw_model_path(params[:guw_model_id]), class: "btn" %>

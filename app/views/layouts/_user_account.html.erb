@@ -85,10 +85,11 @@
   <li class="dropdown">
     <% if current_user.super_admin? %>
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="<%= I18n.t :label_menu_master_admin %>">
-          <i class="icon icon-wrench pull-left"></i></b>
+          <!--<i class="icon icon-wrench pull-left"></i></b>-->
+          <i class="icon icon-male icon-large pull-left"></i>
         </a>
         <ul class="dropdown-menu">
-          <li class="dropdown"><a href="organizationals_params">
+          <li class="dropdown"><a href="<%= main_app.organizationals_params_path %> ">
             <%= I18n.t(:organizations) %></a>
           </li>
 
@@ -203,7 +204,11 @@
             </a>
             <span class="divider">/</span>
           <% else %>
-            <%= k[0].to_s.html_safe %>
+              <% if k[1] != "" %>
+                <%= link_to(k[0].to_s.html_safe, k[1], :title => "#{I18n.t(:label_add_status_change_comment)}", :remote => true) %>
+              <% else %>
+                <%= k[0].to_s.html_safe %>
+              <% end %>
         <% end %>
         </li>
     <% end %>

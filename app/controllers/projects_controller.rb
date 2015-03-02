@@ -114,8 +114,12 @@ class ProjectsController < ApplicationController
 
     @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
 
-    #set_breadcrumbs @project.title => edit_project_path(@project)
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => ""
+    ###set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => ""
+    status_comment_link = ""
+    if can_alter_estimation?(@project) && ( can?(:alter_estimation_status, @project) || can?(:alter_project_status_comment, @project))
+      status_comment_link = "#{main_app.add_comment_on_status_change_path(:project_id => @project.id)}"
+    end
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => status_comment_link
 
     @project_organization = @project.organization
     @module_projects = @project.module_projects
@@ -427,15 +431,16 @@ class ProjectsController < ApplicationController
     set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
-    if !can_modify_estimation?(@project)
+    if !can_modify_estimation?(@project) && !can_alter_estimation?(@project)
+      flash[:warning] = I18n.t(:warning_no_modify_permission_on_project_status)
       if can_show_estimation?(@project)
-        redirect_to(:action => 'show', flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+        redirect_to(:action => 'show') and return
       else
-        redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)})
+        redirect_to(organization_estimations_path(@organization)) and return
       end
     end
 
-    unless cannot?(:edit_project, @project) # No write access to project
+    if can?(:edit_project, @project) || can_alter_estimation?(@project) # Have the write access to project
 
       @product_name = params[:project][:product_name]
       project_root = @project.root_component
@@ -446,28 +451,34 @@ class ProjectsController < ApplicationController
       @wbs_activity_elements = []
       @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
 
-      @project.organization.users.uniq.each do |u|
-        ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
-        if ps
-          ps.project_security_level_id = params["user_securities_#{u.id}"]
-          ps.save
-        elsif !params["user_securities_#{u.id}"].blank?
-          new_ps = @project.project_securities.build #ProjectSecurity.new
-          new_ps.user_id = u.id
-          new_ps.project_security_level_id = params["user_securities_#{u.id}"]
+      # we can update user securities levels on edit or on show with some restrictions
+      if params['is_project_show_view'].nil? || (params['is_project_show_view'] =="true" && !params['user_security_levels'].nil?)
+        @project.organization.users.uniq.each do |u|
+          ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
+          if ps
+            ps.project_security_level_id = params["user_securities_#{u.id}"]
+            ps.save
+          elsif !params["user_securities_#{u.id}"].blank?
+            new_ps = @project.project_securities.build #ProjectSecurity.new
+            new_ps.user_id = u.id
+            new_ps.project_security_level_id = params["user_securities_#{u.id}"]
+          end
         end
       end
 
-      @project.organization.groups.uniq.each do |gpe|
-        ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
-        if ps
-          ps.project_security_level_id = params["group_securities_#{gpe.id}"]
-          ps.save
-        elsif !params["group_securities_#{gpe.id}"].blank?
-          #ProjectSecurity.create(:group_id => gpe.id, :project_id => @project.id, :project_security_level_id => params["group_securities_#{gpe.id}"])
-          new_ps = @project.project_securities.build
-          new_ps.group_id = gpe.id
-          new_ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+      # we can update group securities levels on edit or on show with some restrictions
+      if params['is_project_show_view'].nil? || (params['is_project_show_view'] == "true" && !params['group_security_levels'].nil?)
+          @project.organization.groups.uniq.each do |gpe|
+          ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
+          if ps
+            ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+            ps.save
+          elsif !params["group_securities_#{gpe.id}"].blank?
+            #ProjectSecurity.create(:group_id => gpe.id, :project_id => @project.id, :project_security_level_id => params["group_securities_#{gpe.id}"])
+            new_ps = @project.project_securities.build
+            new_ps.group_id = gpe.id
+            new_ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+          end
         end
       end
 
@@ -479,9 +490,11 @@ class ProjectsController < ApplicationController
       project_organization = @project.organization
 
       # Before saving project, update the project comment when the status has changed
-      new_status_id = params[:project][:estimation_status_id].to_i
-      if @project.estimation_status_id != new_status_id
-        @project.status_comment = auto_update_status_comment(params[:id], new_status_id)
+      if params[:project][:estimation_status_id]
+        new_status_id = params[:project][:estimation_status_id].to_i
+        if @project.estimation_status_id != new_status_id
+          @project.status_comment = auto_update_status_comment(params[:id], new_status_id)
+        end
       end
 
       if @project.update_attributes(params[:project])
@@ -548,7 +561,7 @@ class ProjectsController < ApplicationController
 
         @project.save
 
-        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)), notice: "#{I18n.t(:notice_project_successful_updated)}"
+        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)), notice: "#{I18n.t(:notice_project_successful_updated)}" and return
       else
         render :action => 'edit'
       end
@@ -564,7 +577,7 @@ class ProjectsController < ApplicationController
     @organization = @project.organization #Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
-    @acquisition_categories = @organization.platform_categories
+    @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
     authorize! :show_project, @project
@@ -583,6 +596,17 @@ class ProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
+    @guw_module = Pemodule.where(alias: "guw").first
+    @ge_module = Pemodule.where(alias: "ge").first
+    @ej_module = Pemodule.where(alias: "expert_judgement").first
+    @ebd_module = Pemodule.where(alias: "effort_breakdown").first
+
+    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
+    @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
+
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
   end
 
   def destroy
@@ -993,7 +1017,7 @@ class ProjectsController < ApplicationController
   #Save output values: only for current pbs_project_element
   def save_estimation_results(start_module_project, input_attributes, output_data)
     #@project = current_project
-    authorize! :alter_estimation_plan, @project
+    authorize! :execute_estimation_plan, @project
 
     @pbs_project_element = current_component
 
@@ -1152,7 +1176,7 @@ private
 
   #This method set result in DB with the :value key for node estimation value
   def set_element_value_with_activities(estimation_result, module_project)
-    authorize! :alter_estimation_plan, @project
+    authorize! :execute_estimation_plan, @project
 
     result_with_consistency = Hash.new
     consistency = true
@@ -1182,7 +1206,7 @@ private
   # After estimation, need to know if node value are consistent or not for WBS-Completion modules
   def set_wbs_completion_node_consistency(estimation_result, wbs_project_element)
     #@project = current_project
-    authorize! :alter_wbsproducts, @project
+    authorize! :alter_project_pbs_products, @project
 
     consistency = true
     estimation_result_without_null_value = []
@@ -1356,7 +1380,11 @@ public
       redirect_to edit_project_path(new_prj) and return
     else
       flash[:error] = I18n.t(:error_project_failed_duplicate)
-      redirect_to organization_estimations_path(@organization)
+      if params[:action_name] == "create_project_from_template"
+        redirect_to projects_from_path(organization_id: @organization.id) and return
+      else
+        redirect_to organization_estimations_path(@organization)
+      end
     end
   end
 
@@ -1949,7 +1977,7 @@ public
 
   # Display the estimation results with activities by profile
   def results_with_activities_by_profile
-    authorize! :alter_estimation_plan, @project
+    authorize! :execute_estimation_plan, @project
 
     @current_component = current_component
     @project_organization = @project.organization
@@ -2358,11 +2386,29 @@ public
   # update comments on estimation status changes
   def update_comments_status_change
     @project = Project.find(params[:project_id])
+
+    # Before saving project, update the project comment when the status has changed
+    if params[:project][:estimation_status_id]
+      new_status_id = params[:project][:estimation_status_id].to_i
+      if @project.estimation_status_id != new_status_id
+        @project.status_comment = auto_update_status_comment(params[:project_id], new_status_id)
+      end
+    end
+
     current_comments = ""
     # Add and update comments on estimation status change
     current_comments = @project.status_comment.nil? ? "" : @project.status_comment
     # Add and update comments on estimation status change
-    @project.status_comment =  show_status_change_comments(params["project"]["status_comment"])
+    #@project.status_comment =  show_status_change_comments(params["project"]["status_comment"])
+    if params["project"]["new_status_comment"] and !params["project"]["new_status_comment"].empty?
+      if @project.estimation_status_id != params[:project][:estimation_status_id].to_i
+        @project.status_comment <<  show_status_change_comments(params["project"]["new_status_comment"])
+      else
+        @project.status_comment = show_status_change_comments(params["project"]["new_status_comment"])
+      end
+    end
+    #update estimation status
+    @project.estimation_status_id = params["project"]["estimation_status_id"]
 
     if @project.save
       flash[:notice] = I18n.t(:notice_comment_status_successfully_updated)
@@ -2374,15 +2420,16 @@ public
   end
 
   # Display comments about estimation status changes
-  def show_status_change_comments(comments, current_note_length = 0)
+  def show_status_change_comments(new_comments, current_note_length = 0)
     current_comments = ""
     user_infos = ""
     current_comments = @project.status_comment.nil? ? "" : @project.status_comment
-    appended_text = comments.sub(current_comments, '')
+    #appended_text = new_comments.sub(current_comments, '')
 
-    user_infos << "#{current_comments} \r\n"
-    user_infos << "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n"
-    user_infos << "#{appended_text} \r\n"
+
+    user_infos << "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name} \r\n \r\n"
+    user_infos << "#{new_comments} \r\n \r\n"
+    user_infos << "#{current_comments} \r\n \r\n"
     user_infos << "____________________________________________________________________\r\n"
   end
 
@@ -2399,7 +2446,8 @@ public
       new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}.  \r\n"
       new_comments << "______________________________________________________________________\r\n \r\n"
 
-      current_comments << new_comments
+      #current_comments << new_comments
+      new_comments << current_comments
     end
   end
 

@@ -193,7 +193,7 @@ class ModuleProjectsController < ApplicationController
     session[:module_project_id] = params[:module_project_id]
     @module_project = ModuleProject.find(params[:module_project_id])
 
-    authorize! :alter_estimation_plan, @project
+    authorize! :show_project, @project
 
     @module_projects ||= @project.module_projects
     @pbs_project_element = current_component

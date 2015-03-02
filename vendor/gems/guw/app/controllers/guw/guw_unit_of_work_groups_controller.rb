@@ -40,12 +40,16 @@ class Guw::GuwUnitOfWorkGroupsController < ApplicationController
   end
 
   def update
+    authorize! :execute_estimation_plan, @project
+
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.find(params[:id])
     @guw_unit_of_work_group.update_attributes(params[:guw_unit_of_work_group])
     redirect_to main_app.dashboard_path(@project)
   end
 
   def destroy
+    authorize! :execute_estimation_plan, @project
+
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.find(params[:id])
     @guw_unit_of_work_group.destroy
     redirect_to main_app.dashboard_path(@project)

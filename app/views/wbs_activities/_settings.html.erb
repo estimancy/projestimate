@@ -14,6 +14,7 @@
 <% wai = WbsActivityInput.where(module_project_id: current_module_project.id, wbs_activity_id: current_module_project.wbs_activity_id).first_or_create! %>
 
 <%= form_tag save_effort_breakdown_path do %>
+
   <table class="table table-bordered">
     <tr>
       <th></th>
@@ -31,29 +32,29 @@
       <td>Effort (<%= current_module_project.wbs_activity.effort_unit %>)</td>
 
       <td>
-        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id) %>
+        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id), readonly: cannot?(:execute_estimation_plan, @project) %>
       </td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <% if cev.string_data_low[component_id].blank? %>
-          <td><%= text_field_tag "values[low]", pev.nil? ? '' : convert(pev.string_data_low[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+          <td><%= text_field_tag "values[low]", pev.nil? ? '' : convert(pev.string_data_low[component_id], organization), readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
         <% else %>
-          <td><%= text_field_tag "values[low]", convert(cev.string_data_low[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+          <td><%= text_field_tag "values[low]", convert(cev.string_data_low[component_id], organization), readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
         <% end %>
       <% end %>
 
       <% if cev.string_data_most_likely[component_id].blank? %>
-        <td><%= text_field_tag "values[most_likely]", pev.nil? ? '' : convert(pev.string_data_most_likely[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+        <td><%= text_field_tag "values[most_likely]", pev.nil? ? '' : convert(pev.string_data_most_likely[component_id], organization), readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% else %>
-        <td><%= text_field_tag "values[most_likely]", convert(cev.string_data_most_likely[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input %></td>
+        <td><%= text_field_tag "values[most_likely]", convert(cev.string_data_most_likely[component_id], organization), readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% end %>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
 
         <% if cev.string_data_high[component_id].blank? %>
-          <td><%= text_field_tag "values[high]", pev.nil? ? '' : convert(pev.string_data_high[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input  %></td>
+          <td><%= text_field_tag "values[high]", pev.nil? ? '' : convert(pev.string_data_high[component_id], organization), readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
         <% else %>
-          <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization), readonly: !current_module_project.wbs_activity.enabled_input  %></td>
+          <td><%= text_field_tag "values[high]", convert(cev.string_data_high[component_id], organization), readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
         <% end %>
       <% end %>
 
@@ -75,8 +76,10 @@
                 <%= text_area_tag "comment[#{wai.id}]", wai.comment, class: "attribute_note_area" %>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer</button>
-                <button type="submit" class="btn btn-default">Sauvegarder</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
+                <% if can?(:execute_estimation_plan, @project) %>
+                    <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
+                <% end %>
               </div>
             </div>
           </div>
@@ -84,5 +87,7 @@
       </td>
     </tr>
   </table>
-  <%= submit_tag "Run Estimation", class: "pull-right btn btn-mini" %>
+  <% if can?(:execute_estimation_plan, @project) %>
+    <%= submit_tag "Run Estimation", class: "pull-right btn btn-mini" %>
+  <% end %>
 <% end %>

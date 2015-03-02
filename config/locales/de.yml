@@ -1238,9 +1238,9 @@ de:
   warning_estimation_status_cannot_be_deleted: "The \"%{value}\" status cannot be deleted, it is used by one or more estimations"
   warning_organization_cannot_be_deleted: "The \"%{value}\" organization cannot be deleted, it is used by one or more estimations"
   user_need_at_least_one_organization: "Please create your first organization before continue"
-  label_add_status_change_comment: "Add new comment regarding the change in status of the estimate"
+  label_add_status_change_comment: "Status management - Add comment"
   notice_comment_status_successfully_updated: "Comment on estimation status change is successfully updated"
-  change_estimation_status_from_to: "Estimate's status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
+  change_estimation_status_from_to: "Status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
   views_widgets: "Views & Widgets"
   label_view: "View"
   label_widget: "Widget"
@@ -1338,6 +1338,7 @@ de:
   notice_cannot_view_modules_permissions: "You don't have the rights to view the modules permissions"
   notice_cannot_view_organization_users: "You don't have the rights to view the users"
   notice_cannot_view_modules_instances: "You don't have the rights to view the modules instances"
+  warning_no_modify_permission_on_project_status: "You don't have the rights to modify the estimation in its actual status"
 
   is_image_organization: "Is an image organization ?"
   new_organization_from_image: "Create organization from image"
@@ -1353,4 +1354,9 @@ de:
   modules_permissions: "Modules permissions"
   is_super_admin: "Is a super administrator user ?"
   text_help_super_admin: "A super administrator user has full rights to the entire application and all organizations"
+  create_organization_confirmation_instructions: "Hello %{firstname} %{lastname} \n
+                                                         Your temporary password is « %{password} », you will be prompted to change it when you first logged in, you will also be asked to complete the organizational setting of « %{organization_name} ». \n
+                                                         Your login name « %{login_name} » for the « %{organization_name} » organization has been created, thank you log in with the following url: %{connexion_url} to continue. \n Good reception"
+  change_estimation_status: "Change estimation's status"
+  comment_history: "Comment history"
 

@@ -5,7 +5,6 @@
       <ul>
         <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
         <% if action_name.in? %w(edit update) %>
-          <!--<li><a href="#tabs-3"><%#= I18n.t(:wbs_activity) %></a></li>-->
           <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
           <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
           <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
@@ -54,28 +53,25 @@
         </tr>
 
         <tr>
-          <!--<td><%#= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-large'} %></td>-->
           <td>
             <%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => [[@organization.name, @organization.id]], selected: @organization.id, :input_html => {:class => 'input-large'}, disabled: true %>
             <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization.id } %>
           </td>
 
-          <td>
-            <%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %>
-          </td>
+          <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %></td>
           <% unless @project.new_record? %>
-            <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
+            <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}", :remote => true) %></td>
           <% end %>
         </tr>
       </table>
 
-      <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'}, disabled: cannot?(:alter_project_areas, @project) %>
+      <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :acquisition_category_id, :label => "#{I18n.t 'acquisition_category'}", :as => :select, :collection => @acquisition_categories, :input_html => {:class => 'input-xxlarge'}, disabled: cannot?(:alter_acquisition_categories, @project) %>
+      <%= f.input :acquisition_category_id, :label => "#{I18n.t 'acquisition_category'}", :as => :select, :collection => @acquisition_categories, :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :platform_category_id, :label => "#{I18n.t 'platform_category'}", :as => :select, :collection => @platform_categories, :input_html => {:class => 'input-xxlarge'}, disabled: cannot?(:alter_platform_categories, @project) %>
+      <%= f.input :platform_category_id, :label => "#{I18n.t 'platform_category'}", :as => :select, :collection => @platform_categories, :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'}, disabled: cannot?(:alter_project_categories, @project) %>
+      <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'} %>
 
        <br>
 
@@ -109,53 +105,27 @@
       </div>
     </div>
 
-    <!--<div id="tabs-3">-->
-      <!--<%# unless @project.nil? || @pe_wbs_project_activity.nil? %>-->
-        <!--<div class="well well-small add_wbs_component_tree">-->
-          <!--<%#= form_tag '/add_wbs_activity_to_project', :method => :post, :id => 'form_select_and_add_wbs_activity', :remote => true do %>-->
-            <!--<p style="margin: 10px; ">-->
-              <!--<label><%#= simple_format(I18n.t(:available_wbs_activity)) %></label>-->
-              <!--<%#= hidden_field_tag :project_id, @project.id %>-->
-              <!--<%#= select_tag 'wbs_activity_element', options_for_select(@wbs_activity_elements.map {|i| [i.wbs_activity.name, i.id]}, selected: (@project_current_wbs_activity.nil? ? nil : @project_current_wbs_activity.id)), :prompt => "#{I18n.t('helpers.select.prompt')} #{I18n.t(:label_wbs_activity)}" %>-->
-              <!--<%#= select_tag 'project_default_wbs_activity_ratio', options_for_select(@wbs_activity_ratios.map { |i| [i.name, i.id] }, selected: (@project_default_ratio.nil? ? nil : @project_default_ratio.id)), :prompt => "#{I18n.t('helpers.select.prompt')} #{I18n.t(:label_ratio)}" %>-->
-              <!--<%#= submit_tag I18n.t(:apply), :class => 'btn', :id => 'add_activity_and_ratio_to_project', :disabled => true %>-->
-            <!--</p>-->
-          <!--<%# end %>-->
-        <!--</div>-->
-      <!--<%# end %>-->
-
-      <!--<div class="show_list">-->
-        <!--<span class="pull-right"><%#= I18n.t(:label_show_hidden_elements) %> <%#= check_box_tag 'show_excluded_elt', true, false, :onchange => 'refresh_me();', :remote => true %></span>-->
-        <!--<br/>-->
-        <!--<div id="wbs_project_elements_section" class="component_tree">-->
-          <!--<div class="wbs_previsualization"></div>-->
-          <!--<%#= render :partial => 'generate_wbs_project_elt_tree', :object => @pe_wbs_project_activity %>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-
     <div id="tabs-4" class="tabs_4_with_estimation_plan2">
       <% if controller.controller_name == 'projects' %>
         <% if @project.is_locked == false or @project.is_locked.nil? %>
-          <% if can? :alter_estimation_plan, @project %>
-              <div class="row-fluid">
-                <div class="span12">
-                  <%= I18n.t(:label_add_a_module_to_project) %>
-                  <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
-                                                                              "Modules de Jugement d'Expert" => @ej_modules,
-                                                                              "Modules Activités / Profils" => @wbs_instances,
-                                                                              "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
-                                                                              "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
-                </div>
-              </div>
+          <div class="row-fluid">
+            <div class="span12">
+              <%= I18n.t(:label_add_a_module_to_project) %>
+              <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
+                                                                          "Modules de Jugement d'Expert" => @ej_modules,
+                                                                          "Modules Activités / Profils" => @wbs_instances,
+                                                                          "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
+                                                                          "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
+            </div>
+          </div>
 
-              <div class="row-fluid">
-                <div class="span12">
-                  <%= hidden_field_tag 'project_id', @project.id %>
-                  <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
-                </div>
-              </div>
-          <% end %>
+          <br>
+          <div class="row-fluid">
+            <div class="span12">
+              <%= hidden_field_tag 'project_id', @project.id %>
+              <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
+            </div>
+          </div>
         <% end %>
       <% end %>
 
@@ -195,10 +165,10 @@
                         </tr>
                     <% end %>
                   </table>
-                  <% if can? :manage_project_security, @project %>
-                      <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                      <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
-                  <% end %>
+
+                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
                 </div>
               </div>
             </div>
@@ -231,10 +201,10 @@
                         </tr>
                     <% end %>
                   </table>
-                  <% if can? :manage_project_security, @project %>
-                      <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                      <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
-                  <% end %>
+
+                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
                 </div>
               </div>
             </div>

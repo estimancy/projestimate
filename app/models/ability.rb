@@ -69,13 +69,15 @@ class Ability
     alias_action :see_project, :to => :show_project
     alias_action :show_project, :to => :edit_project
     alias_action :alter_project_areas, :alter_acquisition_categories, :alter_platform_categories, :alter_project_categories, :to => :edit_project
-
+    alias_action :execute_estimation_plan, :manage_estimation_widgets, :alter_estimation_status, :alter_project_status_comment, :commit_project, :to => :alter_estimation_plan
+    alias_action :alter_estimation_plan, :manage_project_security, :to => :edit_project
 
 
     #When user can create a project template, he also can create a project from scratch
     alias_action :create_project_from_scratch, :to => :manage_estimation_models
 
-    #When user can manage all Users, he will be able to create/Modify/Delete users
+    #For instance modules
+    alias_action :show_modules_instances, :to => :manage_modules_instances
 
     #Load user groups permissions
     if user && !user.groups.empty?
@@ -118,8 +120,10 @@ class Ability
           specific_permissions_array = []
           prj_scrts.each do |prj_scrt|
             # Get the project/estimation permissions
-            prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
-              can i.alias.to_sym, prj_scrt.project
+            unless prj_scrt.project_security_level.nil?
+              prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
+                can i.alias.to_sym, prj_scrt.project
+              end
             end
           end
         end

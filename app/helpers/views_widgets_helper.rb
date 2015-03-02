@@ -510,34 +510,35 @@ module ViewsWidgetsHelper
         res << "<span class='pull-right'>"
           level_estimation_values = Hash.new
           level_estimation_values = estimation_value.send("string_data_#{level}")
+          pbs_estimation_values = level_estimation_values[pbs_project_element.id]
 
           if wbs_activity_elt.is_root?
             begin
               if estimation_value.pe_attribute.alias == "cost"
                 @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
               else
-                @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization)
+                @wbs_unit = convert_label(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization)
               end
             rescue
               if estimation_value.pe_attribute.alias == "cost"
                 @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
               else
-                @wbs_unit = convert_label(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization)
+                @wbs_unit = convert_label(pbs_estimation_values[wbs_activity_elt.id], @project.organization) unless pbs_estimation_values.nil?
               end
             end
           end
 
           begin
             if estimation_value.pe_attribute.alias == "cost"
-              res << "#{convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], 2)}"
+              res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
             else
-              res << "#{convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
+              res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
             end
           rescue
             if estimation_value.pe_attribute.alias == "cost"
-              res << "#{ convert_with_precision(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], 2) }"
+              res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
             else
-              res << "#{ convert_with_precision(convert(level_estimation_values[pbs_project_element.id][wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}"
+              res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
             end
           end
 

@@ -22,8 +22,10 @@
         <%= f.input :top_range %>
       </div>
 
-      <%= f.button :submit, I18n.t('save') %>
-
+      <% if can? :manage_modules_instances, ModuleProject %>
+        <%= f.button :submit, I18n.t('save') %>
+      <% end %>
+        <%= link_to I18n.t(:back), :back, class: "btn" %>
     <% end %>
   </div>
 </div>

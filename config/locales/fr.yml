@@ -1291,9 +1291,9 @@ fr:
   warning_estimation_status_cannot_be_deleted: "Impossible de supprimer le status \"%{value}\", car il est utilisé par une ou plusieurs estimations"
   warning_organization_cannot_be_deleted: "Impossible de supprimer l'organisation \"%{value}\", car elle est liée à une ou plusieurs estimations"
   user_need_at_least_one_organization: "Veuillez créer votre première organisation avant de continuer"
-  label_add_status_change_comment: "Ajouter un nouveau commentaire concernant le changement de statut de l'estimation"
+  label_add_status_change_comment: "Gestion du statut - Ajout de commentaire"
   notice_comment_status_successfully_updated: "Le commentaire concernant le changement de status a été mis à jour avec succès"
-  change_estimation_status_from_to: "Estimate's status changed from \"%{from_status}\" to \"%{to_status}\" by %{current_user_name}"
+  change_estimation_status_from_to: "Status changé de \"%{from_status}\" à \"%{to_status}\" par %{current_user_name}"
   views_widgets: "Vues & Vignettes"
   label_view: "Vue"
   label_widget: "Vignette"
@@ -1397,6 +1397,7 @@ fr:
   notice_cannot_view_modules_permissions: "Vous n'avez pas les autorisations nécessaires pour voir les permissions des instances des modules"
   notice_cannot_view_organization_users: "Vous n'avez pas les autorisations nécessaires pour voir les utilisateurs"
   notice_cannot_view_modules_instances: "Vous n'avez pas les autorisations nécessaires pour voir les instances de modules"
+  warning_no_modify_permission_on_project_status: "Vous n'avez pas les autorisations nécessaires pour modifier le projet dans son statut actuel"
 
   is_image_organization: "Est une organisation image ?"
   new_organization_from_image: "Créer une organisation à partir d'une image"
@@ -1412,3 +1413,9 @@ fr:
   modules_permissions: "Permissions des modules"
   is_super_admin: "Est super administrator ?"
   text_help_super_admin: "Un utilisateur super administrateur a tous les droits sur toute l'application et sur toutes les organisations"
+  create_organization_confirmation_instructions: "Bonjour %{firstname} %{lastname} \n
+                                                  Votre  mot de passe temporaire est « %{password} », vous serez invité à le changer lors de votre première connexion, il vous sera aussi demandé de compléter le paramétrage de d’organisation « %{organization_name} ».\n
+                                                   Votre identifiant « %{login_name} » pour l’organisation « %{organization_name} » vient d’être créé, merci de vous connecter avec l’url suivante : %{connexion_url} pour continuer.\n  Bonne réception"
+
+  change_estimation_status: "Changer le statut de l'estimation"
+  comment_history: "Historique des commentaires"

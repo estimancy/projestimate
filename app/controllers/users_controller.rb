@@ -207,7 +207,13 @@ public
     @user = User.find(params[:id])
     @user.destroy
 
-    organization_users_path(@user.organization)  #redirect_to users_path
+    if params[:organization_id]
+      redirect_to organization_users_path(organization_id: params[:organization_id]) and return
+    elsif current_user.super_admin?
+      redirect_to users_path and return
+    else
+      redirect_to :back
+    end
   end
 
   def find_use_user

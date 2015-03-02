@@ -34,7 +34,7 @@
   <% end %>
 </table>
 
-<% if can? :update_wbs_activities, WbsActivity %>
+<% if can? :manage_modules_instances, ModuleProject %>
   <%= submit_tag I18n.t(:save ), :id => 'reference_value_submit_save', :class => 'btn' %>
 <% end %>
 
