@@ -30,8 +30,6 @@ class SizeUnitTypesController < ApplicationController
     authorize! :manage_modules_instances, ModuleProject
 
     @size_unit_type = SizeUnitType.new(params[:size_unit_type])
-    #@size_unit_type.organization_id = params[:size_unit_type][:organization_id]
-    @organization = Organization.find_by_id(params['size_unit_type']['organization_id'])
 
     if @size_unit_type.save
 
@@ -45,7 +43,7 @@ class SizeUnitTypesController < ApplicationController
         end
       end
 
-      redirect_to organization_module_estimation_path(@size_unit_type.organization_id, anchor: "conversion"), notice: 'Size unit type was successfully created.'
+      redirect_to organization_setting_path(@organization.id), notice: 'Size unit type was successfully created.'
     else
       render action: "new", :organization_id => @organization.id
     end
@@ -55,11 +53,9 @@ class SizeUnitTypesController < ApplicationController
     authorize! :manage_modules_instances, ModuleProject
 
     @size_unit_type = SizeUnitType.find(params[:id])
-    #@size_unit_type.organization_id = params[:size_unit_type][:organization_id]
-    @organization = @size_unit_type.organization
 
     if @size_unit_type.update_attributes(params[:size_unit_type])
-      redirect_to organization_module_estimation_path(@size_unit_type.organization_id, anchor: "conversion"), notice: 'Size unit type was successfully updated.'
+      redirect_to organization_setting_path(@organization.id), notice: 'Size unit type was successfully updated.'
     else
       render action: "edit", :organization_id => @organization.id
     end
@@ -70,6 +66,6 @@ class SizeUnitTypesController < ApplicationController
 
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.destroy
-    redirect_to organization_module_estimation_path(@size_unit_type.organization_id), notice: 'Size unit type was successfully deleted.'
+    redirect_to organization_setting_path(@organization.id), notice: 'Size unit type was successfully deleted.'
   end
 end

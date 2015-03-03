@@ -317,7 +317,7 @@
           <td><%= size_unit_type.name %></td>
           <td><%= size_unit_type.alias %></td>
           <td><%= size_unit_type.description %></td>
-          <td><%= link_to 'Edit', edit_size_unit_type_path(size_unit_type) %></td>
+          <td><%= link_to 'Edit', edit_size_unit_type_path(size_unit_type, organization_id: @organization.id) %></td>
           <td><%= link_to 'Destroy', size_unit_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
@@ -325,7 +325,7 @@
 
     <br />
 
-    <%= link_to 'New Size unit type', new_size_unit_type_path %>
+    <%= link_to 'New Size unit type', new_size_unit_type_path(organization_id: @organization.id) %>
   </div>
 
 </div>
