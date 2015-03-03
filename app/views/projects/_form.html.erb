@@ -24,7 +24,7 @@
           <% if can? :manage_estimation_models, Project %>
               <td>
                 <label class="checkbox"></label>
-                <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :boolean, :input_html => {:class => 'input-large'} %>
+                <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: params[:is_model], :class => 'input-large'} %>
               </td>
           <% end %>
         </tr>
@@ -142,7 +142,7 @@
               <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
                   <i class="icon-caret-down"></i>
-                  <b><%= I18n.t(:label_user_security_resume) %></b>
+                  <b><%= @project.is_model ? I18n.t(:label_model_user_security_resume) : I18n.t(:label_user_security_resume) %></b>
                 </a>
               </div>
               <div id="collapseOne" class="accordion-body in collapse">
@@ -183,7 +183,7 @@
               <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
                   <i class="icon-caret-down"></i>
-                  <b><%= I18n.t(:label_group_security_resume) %></b>
+                  <b><%= @project.is_model ? I18n.t(:label_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
                 </a>
               </div>
               <div id="collapseTwo" class="accordion-body in collapse">

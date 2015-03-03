@@ -247,7 +247,7 @@ fr:
   all_projects: "Toutes les estimations"
   create_new_project: "Nouvelle estimation"
   label_user_security_resume: "Gestion des droits utilisateurs de l'estimation"
-  label_group_security_resume: "Gestion des groupes de l'estimation"
+  label_group_security_resume: "Gestion des droits des groupes de l'estimation"
 
   label_menu_organization: "Organisations"
   project_global_setting: "Paramètres projets"
@@ -1419,3 +1419,13 @@ fr:
 
   change_estimation_status: "Changer le statut de l'estimation"
   comment_history: "Historique des commentaires"
+  estimation_models: "Modèles d'estimation"
+  notice_cannot_view_estimation_models: "Vous n'avez pas les autorisations nécessaires pour voir les modèles d'estimation"
+  new_estimation_model: "Créer un model d'estimation"
+  estimation_models: "Modèles d'estimation"
+  label_model_name: "Nom du modèle"
+  text_find_use_estimation_model: "Liste des estimations créées à partir du modèle \"%{model_name}\""
+  notice_no_estimation_created_from_model: "Il n'existe pas d'estimation créée à partir du modèle \"%{model_name}\""
+  text_confirm_estimation_model_deletion: "Ëtes-vous Sûr de vouloir supprimer ce modèle d'estimation et les données dépendantes ?"
+  label_model_user_security_resume: "Gestion des droits utilisateurs de l'estimation créée à partir de ce modèle"
+  label_model_group_security_resume: "Gestion des droits des groupes de l'estimation créée à partir de ce modèle"

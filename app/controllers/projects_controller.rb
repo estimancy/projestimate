@@ -249,16 +249,23 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    authorize! :create_project_from_scratch, Project
+    # To create an estimation model, use should have a :manage_estimation_models authorization
+    if params[:is_model]
+
+      authorize! :manage_estimation_models, Project
+      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models")
+      set_page_title 'New estimation model'
+    else
+      authorize! :create_project_from_scratch, Project
+      set_breadcrumbs "Estimations" => organization_estimations_path(@organization)
+      set_page_title 'New estimation'
+    end
 
     @organization = Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
     @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
-
-    set_breadcrumbs "Estimations" => organization_estimations_path(@organization)
-    set_page_title 'New estimation'
   end
 
   #Create a new project
@@ -373,7 +380,11 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
-    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    if @project.is_model
+      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    else
+      set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    end
 
     if cannot?(:edit_project, @project)    # No write access to project
       redirect_to(:action => 'show') and return
@@ -1289,6 +1300,11 @@ public
     new_prj.ancestry = nil
     new_prj.is_model = false
 
+    #if creation from template
+    if params[:action_name] == "create_project_from_template"
+      new_prj.original_model_id = old_prj.id
+    end
+
     if new_prj.save
       old_prj.save #Original project copy number will be incremented to 1
 
@@ -1409,6 +1425,15 @@ public
     end
   end
 
+  #Find which projects/estimations are created from this model
+  def find_use_estimation_model
+    @project = Project.find(params[:project_id])
+    authorize! :show_estimation_models, Project
+
+    @related_projects = Project.where(original_model_id: @project.id).all
+  end
+
+  #Find where is used the project
   def find_use_project
     @project = Project.find(params[:project_id])
     authorize! :show_project, @project
@@ -1619,8 +1644,7 @@ public
     authorize! :create_project_from_template, Project
 
     @organization = Organization.find(params[:organization_id])
-    @projects = @organization.projects.where(:is_model => true)
-
+    @estimation_models = @organization.projects.where(:is_model => true)
   end
 
   #Checkout the project
@@ -2390,6 +2414,7 @@ public
     @project = Project.find(params[:project_id])
 
     new_comments = ""
+    auto_updated_comments = ""
     # Add and update comments on estimation status change
     if params["project"]["new_status_comment"] and !params["project"]["new_status_comment"].empty?
       new_comments << show_status_change_comments(params["project"]["new_status_comment"])
@@ -2399,7 +2424,8 @@ public
     if params[:project][:estimation_status_id]
       new_status_id = params[:project][:estimation_status_id].to_i
       if @project.estimation_status_id != new_status_id
-        new_comments << auto_update_status_comment(params[:project_id], new_status_id)
+        auto_updated_comments << auto_update_status_comment(params[:project_id], new_status_id)
+        new_comments = auto_updated_comments + new_comments
         #update estimation status
         @project.estimation_status_id = params["project"]["estimation_status_id"]
       end
@@ -2422,7 +2448,7 @@ public
   # Display comments about estimation status changes
   def show_status_change_comments(new_comments, current_note_length = 0)
     user_infos = ""
-    current_comments = @project.status_comment.nil? ? "" : @project.status_comment
+    #current_comments = @project.status_comment.nil? ? "" : @project.status_comment
     #appended_text = new_comments.sub(current_comments, '')
 
     user_infos << "#{I18n.l(Time.now)} : #{I18n.t(:notes_updated_by)}  #{current_user.name}\r\n"
@@ -2440,7 +2466,7 @@ public
       # Get changes on the project estimation_status_id after the update (to be compra with the last one)
       new_estimation_status_name = new_status_id.nil? ? "" : EstimationStatus.find(new_status_id).name
 
-      current_comments = project.status_comment.to_s
+      #current_comments = project.status_comment.to_s
       new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}. \r\n"
       new_comments << "___________________________________________________________________________\r\n"
       #new_comments << current_comments

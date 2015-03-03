@@ -9,6 +9,7 @@
     <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
     <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
     <li><a href="#tabs-fields"><%= I18n.t(:fields) %></a></li>
+    <li><a href="#tabs-estimation-models"><%= I18n.t(:estimation_models) %></a></li>
   </ul>
 
   <div id="tabs-project-areas">
@@ -301,6 +302,16 @@
         <div class="red_color"><%= I18n.t(:notice_cannot_view_estimation_statuses) %></div>
     <% end %>
 
+  </div>
+
+  <div id="tabs-estimation-models">
+    <b><%= I18n.t(:estimation_models) %></b>
+
+    <% if can? :show_estimation_models, Project %>
+        <%= render partial: "projects/estimation_models", object: @estimation_models %>
+    <% else %>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_estimation_models) %></div>
+    <% end %>
   </div>
 
 </div>

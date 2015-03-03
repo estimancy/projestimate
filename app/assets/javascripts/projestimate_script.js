@@ -489,6 +489,17 @@ $(document).ready(function() {
         return false;
     });
 
+    $("#find_use_estimation_model").click(function(){
+            $.ajax({
+                url:"/find_use_estimation_model",
+                method: 'GET',
+                data: {
+                    project_id: $(this).data("project_id")
+                }
+            });
+            return false;
+        });
+
 
     //Filter estimations according to the estimation version
     $("#filter_projects_version, #filter_organization_projects_version").on('change', function() {

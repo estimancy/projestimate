@@ -978,6 +978,10 @@ h5.view_title{
     font-weight:normal
 }
 
+table.table_effort_per_phase th{
+    background-color: transparent;
+}
+
 .effort_per_phase{
     overflow: auto;
 }

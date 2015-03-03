@@ -284,6 +284,7 @@ Projestimate::Application.routes.draw do
   get 'activate_project' => 'projects#activate', :as => 'activate_project'
   match 'projects/:project_id/choose_project' => 'projects#choose_project', :as => 'choose_project'
   get 'find_use_project' => 'projects#find_use_project', :as => 'find_use_project'
+  get 'find_use_estimation_model' => 'projects#find_use_estimation_model', :as => 'find_use_estimation_model'
   get 'check_in' => 'projects#check_in', :as => 'check_in'
   get 'check_out' => 'projects#check_out', :as => 'check_out'
   get 'select_pbs_project_elements' => 'projects#select_pbs_project_elements', :as => 'select_pbs_project_elements'
