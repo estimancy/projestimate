@@ -101,7 +101,7 @@ class OrganizationsController < ApplicationController
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
-    @projects = @organization.projects.where(is_model: false)
+    @projects = @organization.projects.where(is_model: false).all
 
   end
 

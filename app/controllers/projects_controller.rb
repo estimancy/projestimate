@@ -438,7 +438,6 @@ class ProjectsController < ApplicationController
     @acquisition_categories = @organization.platform_categories
     @project_categories = @organization.project_categories
 
-    #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     # We need to verify user's groups rights on estimation according to the current estimation status

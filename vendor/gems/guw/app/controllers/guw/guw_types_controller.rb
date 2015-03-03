@@ -53,19 +53,19 @@ class Guw::GuwTypesController < ApplicationController
     @guw_type.guw_model_id = params[:guw_type][:guw_model_id]
     @guw_type.save
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
-    redirect_to guw.guw_model_path(@guw_type.guw_model)
+    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name}")
   end
 
   def update
     @guw_type = Guw::GuwType.find(params[:id])
     @guw_type.update_attributes(params[:guw_type])
-    redirect_to guw.guw_model_path(@guw_type.guw_model)
+    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name}")
   end
 
   def destroy
     @guw_type = Guw::GuwType.find(params[:id])
     guw_model_id = @guw_type.guw_model.id
     @guw_type.delete
-    redirect_to guw.guw_model_path(guw_model_id)
+    redirect_to guw.guw_model_path(guw_model_id, anchor: "tabs-#{@guw_type.name}")
   end
 end
