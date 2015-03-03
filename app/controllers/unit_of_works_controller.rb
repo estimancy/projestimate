@@ -51,10 +51,24 @@ class UnitOfWorksController < ApplicationController
     @organization = Organization.find_by_id(params[:unit_of_work][:organization_id])
 
     if @unit_of_work.save
+
+      ["Simple", "Medium", "Complexe", "Très Complexe"].each do |level|
+        @unit_of_work.organization_technologies.each do |ot|
+          uoc = OrganizationUowComplexity.new(name: level,
+                                              state: "draft",
+                                              unit_of_work_id: @unit_of_work.id,
+                                              organization_technology_id: ot.id,
+                                              organization_id: @organization.id,
+                                              uuid: UUIDTools::UUID.random_create.to_s,
+                                              record_status_id: @defined_record_status)
+          uoc.save(validate: false)
+        end
+      end
+
       flash[:notice] = I18n.t(:notice_unit_of_work_successful_created)
       redirect_to redirect_apply(nil,
                                  new_unit_of_work_path(params[:unit_of_work]),
-                                 edit_organization_path(params[:unit_of_work][:organization_id], :anchor => 'tabs-uow'))
+                                 organization_module_estimation_path(params[:unit_of_work][:organization_id]))
     else
       render action: 'new', :organization_id => @organization.id
     end

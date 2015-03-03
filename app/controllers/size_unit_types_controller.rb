@@ -70,6 +70,6 @@ class SizeUnitTypesController < ApplicationController
 
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.destroy
-    redirect_to organization_module_estimation_path(@size_unit_type.organization_id, anchor: "conversion"), notice: 'Size unit type was successfully deleted.'
+    redirect_to organization_module_estimation_path(@size_unit_type.organization_id), notice: 'Size unit type was successfully deleted.'
   end
 end

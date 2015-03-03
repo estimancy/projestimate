@@ -176,43 +176,10 @@
 
   <div id="conversion">
     <% if can? :show_modules_instances, ModuleProject %>
-      <%= render :partial => 'organizations/technology_size_type_abacus' %>
 
+      <%= render :partial => 'organizations/technology_size_type_abacus' %>
       <%= render :partial => 'organizations/technology_size_unit_abacus' %>
 
-      <%# if can? :show_size_unit_types, SizeUnitType %>
-      <%# if can? :manage, SizeUnitType %>
-      <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to I18n.t('new_size_unit_type'), new_size_unit_type_path(:organization_id => @organization.nil? ? nil : @organization.id), :class => 'btn pull-right' %>
-      <% end %>
-
-      <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
-        <thead>
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th><%= I18n.t(:alias) %></th>
-          <th><%= I18n.t(:description) %></th>
-          <th class="action"><%= I18n.t(:actions) %></th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <% @size_unit_types.each do |i| %>
-          <tr>
-            <td><%= i.name %></td>
-            <td><%= i.alias %></td>
-            <td><%= i.description %></td>
-            <td class="center">
-              <%= link_to '', edit_size_unit_type_path(i, organization_id: @organization.id), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <% if can? :manage_modules_instances, ModuleProject %>
-                <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-        <%= render :partial => 'layouts/footer_table' %>
-        <tbody>
-        </table>
     <% else %>
         <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
     <% end %>

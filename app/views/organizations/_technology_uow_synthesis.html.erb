@@ -15,7 +15,7 @@
         <th>Unit of Work</th>
         <th>Complexity</th>
         <% @organization.size_unit_types.each do |sut| %>
-          <th><%= link_to "#{sut.name} (hours)", edit_size_unit_type_path(sut, organization_id: @organization.id) %></th>
+          <th><%= link_to "#{sut.name}", edit_size_unit_type_path(sut, organization_id: @organization.id) %></th>
         <% end %>
       </tr>
 
@@ -32,7 +32,7 @@
               </td>
 
               <td>
-                <%= link_to cplx.name, edit_unit_of_work_path(uow, organization_id: @organization.id, anchor: "#tabs-2") %>
+                <%= link_to cplx, edit_organization_uow_complexity_path(cplx, organization_id: @organization.id, uo_id: uow.id) %>
               </td>
 
               <% @organization.size_unit_types.each do |sut| %>
@@ -54,8 +54,9 @@
     <% if can? :manage_modules_instances, ModuleProject %>
       <%= submit_tag I18n.t('apply'), :class => 'btn' %>
     <% end %>
+    <%= link_to "Liste des Technologies", organization_setting_path(organization_id: @organization, anchor: "tabs-technology"), class: "btn" %>
     <%= link_to "Liste des Unités d'Oeuvres", unit_of_works_path(organization_id: @organization), class: "btn" %>
-    <%= link_to "Créer une nouvelle Unité d'Oeuvre", new_unit_of_work_path(organization_id: @organization), class: "btn" %>
+    <%= link_to "Liste des Types d'Acquisitions", organization_setting_path(organization_id: @organization, anchor: "tabs-size_unit"), class: "btn" %>
 
 <% end %>
 

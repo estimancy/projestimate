@@ -9,6 +9,7 @@
     <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
     <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
     <li><a href="#tabs-fields"><%= I18n.t(:fields) %></a></li>
+    <li><a href="#tabs-size_unit"><%= I18n.t(:size_unit) %></a></li>
   </ul>
 
   <div id="tabs-project-areas">
@@ -290,7 +291,6 @@
   </div>
 
   <div id="tabs-estimations-statuses" style="min-height: 50px;">
-    <b><%#= I18n.t(:manage_estimations_statuses_workflow) %></b>
     <br>
     <% if can? :show_estimation_statuses, EstimationStatus %>
         <% if can? :manage, EstimationStatus %>
@@ -300,7 +300,32 @@
     <% else %>
         <div class="red_color"><%= I18n.t(:notice_cannot_view_estimation_statuses) %></div>
     <% end %>
+  </div>
 
+  <div id="tabs-size_unit">
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <th>Alias</th>
+        <th>Description</th>
+        <th></th>
+        <th></th>
+      </tr>
+
+      <% @organization.size_unit_types.each do |size_unit_type| %>
+        <tr>
+          <td><%= size_unit_type.name %></td>
+          <td><%= size_unit_type.alias %></td>
+          <td><%= size_unit_type.description %></td>
+          <td><%= link_to 'Edit', edit_size_unit_type_path(size_unit_type) %></td>
+          <td><%= link_to 'Destroy', size_unit_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </table>
+
+    <br />
+
+    <%= link_to 'New Size unit type', new_size_unit_type_path %>
   </div>
 
 </div>

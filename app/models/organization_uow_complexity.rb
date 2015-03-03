@@ -43,7 +43,7 @@ class OrganizationUowComplexity < ActiveRecord::Base
   belongs_to :organization_technology
   belongs_to :size_unit_type
 
-  default_scope order('display_order ASC')
+  #default_scope order('display_order ASC')
 
   validates :record_status, :presence => true
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
