@@ -190,7 +190,7 @@ class ProjectsController < ApplicationController
       @complexities = current_component_technology.nil? ? [] : current_component_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
       @module_project.pemodule.attribute_modules.each do |am|
-        if am.pe_attribute.alias ==  "effort"
+        if am.pe_attribute.alias ==  "retained_size"
           @size = EstimationValue.where(:module_project_id => @module_project.id,
                                         :pe_attribute_id => am.pe_attribute.id,
                                         :in_out => "input" ).first

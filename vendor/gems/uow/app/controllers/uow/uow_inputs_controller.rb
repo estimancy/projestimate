@@ -109,7 +109,7 @@ class Uow::UowInputsController < ApplicationController
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
-          if am.pe_attribute.alias == "effort"
+          if am.pe_attribute.alias == "retained_size"
             level_est_val = ev.send("string_data_#{level}")
             level_est_val[current_component.id] = @gross.map(&:"gross_#{level}").compact.sum
             tmp_prbl << level_est_val[current_component.id]
@@ -117,7 +117,7 @@ class Uow::UowInputsController < ApplicationController
           ev.update_attribute(:"string_data_#{level}", level_est_val)
         end
 
-        if am.pe_attribute.alias == "effort" and ev.in_out == "output"
+        if am.pe_attribute.alias == "retained_size" and ev.in_out == "output"
           ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
       end
@@ -186,7 +186,7 @@ class Uow::UowInputsController < ApplicationController
     @complexities = current_component.organization_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
 
     @module_project.pemodule.attribute_modules.each do |am|
-      if am.pe_attribute.alias ==  "effort"
+      if am.pe_attribute.alias ==  "retained_size"
         @size = EstimationValue.where(:module_project_id => @module_project.id,
                                       :pe_attribute_id => am.pe_attribute.id,
                                       :in_out => "input" ).first

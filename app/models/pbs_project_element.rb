@@ -56,7 +56,8 @@ class PbsProjectElement < ActiveRecord::Base
   has_and_belongs_to_many :module_projects
 
   validates :name, :start_date, :work_element_type_id, presence: true
-  #validates :wbs_activity_ratio_id, :uniqueness => { :scope => :wbs_activity_id }  #TODO Review validation
+  validates_presence_of :organization_technology_id
+  #validates :wbs_activity_ratio_id, :uniqueness => { :scope => :wbs_activity_id }
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
