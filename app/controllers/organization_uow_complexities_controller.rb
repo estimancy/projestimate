@@ -40,7 +40,7 @@ class OrganizationUowComplexitiesController < ApplicationController
   def edit
     #No authorize required since everyone can edit
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
-    @organization = @organization_uow_complexity.organization
+    @organization = Organization.find(params[:organization_id])
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization_uow_complexity.name => ""
   end
@@ -72,8 +72,8 @@ class OrganizationUowComplexitiesController < ApplicationController
       flash[:notice] = I18n.t(:notice_organization_uow_complexity_successful_created)
 
       redirect_to redirect_apply(nil,
-                                 new_organization_uow_complexity_path(params[:organization_uow_complexity]),
-                                 edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow'))
+                                 edit_unit_of_work_path(@organization_uow_complexity.unit_of_work),
+                                 edit_unit_of_work_path(@organization_uow_complexity.unit_of_work))
     else
       render action: 'new', :organization_id => @organization
     end
@@ -97,7 +97,7 @@ class OrganizationUowComplexitiesController < ApplicationController
 
     if @organization_uow_complexity.update_attributes(params[:organization_uow_complexity])
       flash[:notice] = I18n.t (:notice_organization_uow_complexity_successful_updated)
-      redirect_to edit_organization_path(params[:organization_uow_complexity][:organization_id], :anchor => 'tabs-cplx-uow')
+      redirect_to organization_module_estimation_path(params[:organization_uow_complexity][:organization_id])
     else
       render action: 'edit', :organization_id => @organization.id
     end

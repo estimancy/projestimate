@@ -49,16 +49,20 @@
   </div>
 
   <div id="tabs-2" style="min-height: 50px;">
-
-    <% if can? :edit_organizations, Organization %>
-      <p>
-        <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(:organization_id => @organization.id, :anchor => 'tabs-uow'), :class => 'btn pull-right' %>
-      </p>
-    <% end %>
-
     <% @unit_of_work.organization_technologies.each do |ot| %>
 
-      <h4><%= @unit_of_work.name %> - <%= ot.name %></h4>
+      <% if can? :edit_organizations, Organization %>
+        <p>
+          <%= link_to I18n.t('new_uow_complexity'), new_organization_uow_complexity_path(organization_id: @organization.id,
+                                                                                         technology_id: ot.id,
+                                                                                         uo_id: @unit_of_work.id, :anchor => 'tabs-uow'), :class => 'btn btn-mini pull-right' %>
+        </p>
+      <% end %>
+
+      <h4>
+        <%= @unit_of_work.name %> - <%= ot.name %>
+      </h4>
+
       <table id="table_list_5" class="table table-bordered">
         <thead>
           <tr>
@@ -78,7 +82,7 @@
                 <%= link_to '', oc, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete') %>
               <% end %>
             </td>
-         </tr>
+          </tr>
         <% end %>
         </tbody>
       </table>

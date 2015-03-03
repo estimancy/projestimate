@@ -58,7 +58,6 @@
                   <%= (link_to('', confirm_deletion_path(project.id), :class => 'icon-trash pull-left', :title => I18n.t('delete')) if can? :delete_project, project) %>
                 <% end %>
               <% end %>
-
             </td>
           </tr>
       <% end %>
