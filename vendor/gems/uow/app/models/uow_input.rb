@@ -41,7 +41,7 @@ class UowInput < ActiveRecord::Base
   belongs_to :organization_uow_complexity, :foreign_key => :complexity_id
   belongs_to :size_unit_type
 
-  validates :technology_id, :unit_of_work_id, presence: true
+  #validates :technology_id, :unit_of_work_id, presence: true
 
   def self.export(mp, pbs)
     @inputs = UowInput.where(module_project_id: mp, pbs_project_element_id: pbs).all

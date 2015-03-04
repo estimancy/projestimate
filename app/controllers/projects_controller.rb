@@ -1382,6 +1382,13 @@ public
           end
         end
 
+        new_mp.uow_inputs.each do |uo|
+          new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+          new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+
+          uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+        end
+
         ["input", "output"].each do |io|
           new_mp.pemodule.pe_attributes.each do |attr|
             old_prj.pbs_project_elements.each do |old_component|
