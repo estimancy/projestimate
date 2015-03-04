@@ -87,15 +87,15 @@ module ProjectsHelper
     unless v.class == Hash
       value = v.to_f
       if value < organization.limit1.to_i
-        value / organization.limit1_coef.to_f
+        convert_with_precision(value / organization.limit1_coef.to_f, user_number_precision)
       elsif value < organization.limit2.to_i
-        value / organization.limit2_coef.to_f
+        convert_with_precision(value / organization.limit2_coef.to_f, user_number_precision)
       elsif value < organization.limit3.to_i
-        value / organization.limit3_coef.to_f
+        convert_with_precision(value / organization.limit3_coef.to_f, user_number_precision)
       elsif value < organization.limit4.to_i
-        value / organization.limit4_coef.to_f
+        convert_with_precision(value / organization.limit4_coef.to_f, user_number_precision)
       else
-        value / organization.limit4_coef.to_f
+        convert_with_precision(value / organization.limit4_coef.to_f, user_number_precision)
       end
     else
       0
