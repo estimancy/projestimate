@@ -123,10 +123,17 @@ class Uow::UowInputsController < ApplicationController
       end
     end
 
+    current_module_project.next.each do |n|
+      ModuleProject::common_attributes(current_module_project, n).each do |ca|
+        ["low", "most_likely", "high"].each do |level|
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { current_component.id => nil } )
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { current_component.id => nil } )
+        end
+      end
+    end
+
     @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).all
-
     redirect_to main_app.dashboard_path(@project)
-
   end
 
   def load_gross
