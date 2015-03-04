@@ -465,7 +465,7 @@ class ProjectsController < ApplicationController
       # we can update user securities levels on edit or on show with some restrictions
       if params['is_project_show_view'].nil? || (params['is_project_show_view'] =="true" && !params['user_security_levels'].nil?)
         @project.organization.users.uniq.each do |u|
-          ps = ProjectSecurity.find_by_user_id_and_project_id(udef.id, @project.id)
+          ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
           if ps
             ps.project_security_level_id = params["user_securities_#{u.id}"]
             ps.save
