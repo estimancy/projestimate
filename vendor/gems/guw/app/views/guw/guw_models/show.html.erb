@@ -39,15 +39,13 @@
         <%= simple_format(guw_type.description) %>
         <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
 
-        <hr>
-
         <h4>
           <b>
             Seuils de complexité de <%= guw_type %>
           </b>
 
           <% if can? :manage_modules_instances, ModuleProject %>
-            <%= link_to "Créer un seuil", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+            <%= link_to "Créer un seuil de type d'UO", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
           <% end %>
         </h4>
 
@@ -136,7 +134,7 @@
         <h4>
           <b>Seuils de complexité des attributs de <%= guw_type %> </b>
           <% if can? :manage_modules_instances, ModuleProject %>
-            <%= link_to 'Créer un seuil', guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+            <%= link_to "Créer un seuil d'attribut", guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
           <% end %>
         </h4>
 
