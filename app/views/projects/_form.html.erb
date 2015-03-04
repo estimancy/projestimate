@@ -21,15 +21,16 @@
       <table>
         <tr>
           <td><%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></td>
-
-          <td>
-            <label class="checkbox"></label>
-            <% if can? :manage_estimation_models, Project and !params[:is_model].nil? %>
-              <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: params[:is_model], :class => 'input-large'} %>
-            <% else %>
-              <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: false, :class => 'input-large'} %>
-            <% end %>
-          </td>
+          <% if action_name == 'new' %>
+              <td>
+                <label class="checkbox"></label>
+                <% if can? :manage_estimation_models, Project and params[:is_model] %>
+                  <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: params[:is_model], :class => 'input-large'} %>
+                <% else %>
+                  <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: false, :class => 'input-large'} %>
+                <% end %>
+              </td>
+          <% end %>
         </tr>
         <tr>
           <td><%= f.input :alias, :label => I18n.t('alias'), :input_html => {:class => 'input-xlarge'} %></td>

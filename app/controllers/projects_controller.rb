@@ -648,7 +648,7 @@ class ProjectsController < ApplicationController
           render :template => 'projects/confirm_deletion'
         end
       when I18n.t('cancel')
-        redirect_to organization_estimations_path(@organization)
+        redirect_to (@project.is_model ? organization_setting_path(@organization, anchor: "tabs-estimation-models") : organization_estimations_path(@organization))
       else
         render :template => 'projects/confirm_deletion'
     end
@@ -697,7 +697,8 @@ class ProjectsController < ApplicationController
       if @from_tree_history_view
         redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'), :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
       else
-        redirect_to main_app.root_url, :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
+        flash[:warning] = I18n.t(:warning_project_cannot_be_deleted)
+        redirect_to (@project.is_model ? organization_setting_path(@organization, anchor: "tabs-estimation-models") : organization_estimations_path(@organization))
       end
     end
   end
