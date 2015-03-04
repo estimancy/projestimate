@@ -50,7 +50,7 @@ class PbsProjectElement < ActiveRecord::Base
   belongs_to :organization_technology
 
   has_many :estimation_values
-  has_many :uow_inputs
+  has_many :uow_inputs, dependent: :destroy
   has_many :views_widgets, dependent: :destroy
 
   has_and_belongs_to_many :module_projects
@@ -62,7 +62,7 @@ class PbsProjectElement < ActiveRecord::Base
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
     enable
-    exclude_association [:estimation_values, :views_widgets]
+    exclude_association [:estimation_values, :views_widgets, :uow_inputs]
 
     customize(lambda { |original_pbs_project_elt, new_pbs_project_elt|
       new_pbs_project_elt.copy_id = original_pbs_project_elt.id
