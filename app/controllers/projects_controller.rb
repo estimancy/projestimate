@@ -1312,6 +1312,7 @@ public
       #Update the project securities for the current user who create the estimation from model
       if params[:action_name] == "create_project_from_template"
         creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
+        creator_securities.update_attribute(:user_id, current_user.id)
       end
 
       #Managing the component tree : PBS
