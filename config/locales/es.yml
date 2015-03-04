@@ -1706,3 +1706,4 @@ es:
   text_confirm_estimation_model_deletion: "Are you SURE you want to delete this Estimation Model and all related data ?"
   label_model_user_security_resume: "User securities resume of estimation created from this model"
   label_model_group_security_resume: "Group securities resume of estimation created from this model"
+  estimation_creator_from_model: "Creator of estimation from this model"
