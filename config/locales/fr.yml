@@ -1421,7 +1421,7 @@ fr:
   comment_history: "Historique des commentaires"
   estimation_models: "Modèles d'estimation"
   notice_cannot_view_estimation_models: "Vous n'avez pas les autorisations nécessaires pour voir les modèles d'estimation"
-  new_estimation_model: "Créer un model d'estimation"
+  new_estimation_model: "Créer un modèle d'estimation"
   estimation_models: "Modèles d'estimation"
   label_model_name: "Nom du modèle"
   text_find_use_estimation_model: "Liste des estimations créées à partir du modèle \"%{model_name}\""
