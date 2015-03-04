@@ -21,7 +21,7 @@
       <table>
         <tr>
           <td><%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></td>
-          <% if can? :manage_estimation_models, Project %>
+          <% if can?(:manage_estimation_models, Project) && params[:is_model] %>
               <td>
                 <label class="checkbox"></label>
                 <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: params[:is_model], :class => 'input-large'} %>
@@ -154,20 +154,40 @@
                           <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                       <% end %>
                     </tr>
-                    <% @project.organization.users.uniq.each do |user| %>
-                        <%= hidden_field_tag "user_securities_#{user.id}" %>
+
+                    <!--If project is an estimation model, the user permission will be affected to the creator of the created estimation from this model-->
+                    <% if @project.is_model %>
+
+                        <% user = @project.creator %>
+                        <% model_creator_id = @project.creator_id %>
+                        <%= hidden_field_tag "user_securities_#{model_creator_id}" %>
                         <% securities = user.project_securities_for_select(@project.id) %>
                         <tr>
-                          <td>
-                            <%= user.name %>
-                          </td>
+                          <td> <%= I18n.t(:estimation_creator_from_model) %> </td>
                           <% @organization.project_security_levels.each do |prj_level| %>
-                            <td style="text-align: center">
-                              <%= check_box_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %>
-                            </td>
+                              <td style="text-align: center">
+                                <%= check_box_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %>
+                              </td>
                           <% end %>
                         </tr>
+
+                    <% else %>
+                        <% @project.organization.users.uniq.each do |user| %>
+                            <%= hidden_field_tag "user_securities_#{user.id}" %>
+                            <% securities = user.project_securities_for_select(@project.id) %>
+                            <tr>
+                              <td>
+                                <%= user.name %>
+                              </td>
+                              <% @organization.project_security_levels.each do |prj_level| %>
+                                <td style="text-align: center">
+                                  <%= check_box_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id))) %>
+                                </td>
+                              <% end %>
+                            </tr>
+                        <% end %>
                     <% end %>
+
                   </table>
 
                   <%= submit_tag I18n.t('save'), :class => 'btn' %>

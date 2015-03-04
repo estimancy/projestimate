@@ -1429,3 +1429,4 @@ fr:
   text_confirm_estimation_model_deletion: "Ëtes-vous Sûr de vouloir supprimer ce modèle d'estimation et les données dépendantes ?"
   label_model_user_security_resume: "Gestion des droits utilisateurs de l'estimation créée à partir de ce modèle"
   label_model_group_security_resume: "Gestion des droits des groupes de l'estimation créée à partir de ce modèle"
+  estimation_creator_from_model: "Créateur de l'estimation qui sera créée à partir de ce model"

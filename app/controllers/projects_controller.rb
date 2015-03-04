@@ -1308,6 +1308,11 @@ public
     if new_prj.save
       old_prj.save #Original project copy number will be incremented to 1
 
+      #Update the project securities for the current user who create the estimation from model
+      if params[:action_name] == "create_project_from_template"
+        creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
+      end
+
       #Managing the component tree : PBS
       pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
 
