@@ -319,6 +319,7 @@ class ProjectsController < ApplicationController
           pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{@product_name.blank? ? @project_title : @product_name}",
                                                                                   :is_root => true,
                                                                                   :work_element_type_id => default_work_element_type.id,
+                                                                                  :organization_technology_id => @organization.organization_technologies.first.id,
                                                                                   :position => 0,
                                                                                   :start_date => Time.now)
           pbs_project_element.add_to_transaction
@@ -464,7 +465,7 @@ class ProjectsController < ApplicationController
       # we can update user securities levels on edit or on show with some restrictions
       if params['is_project_show_view'].nil? || (params['is_project_show_view'] =="true" && !params['user_security_levels'].nil?)
         @project.organization.users.uniq.each do |u|
-          ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
+          ps = ProjectSecurity.find_by_user_id_and_project_id(udef.id, @project.id)
           if ps
             ps.project_security_level_id = params["user_securities_#{u.id}"]
             ps.save
