@@ -802,6 +802,18 @@ ActiveRecord::Schema.define(:version => 20150303135117) do
     t.datetime "updated_at"
   end
 
+  create_table "plans", :force => true do |t|
+    t.string   "name"
+    t.string   "alias"
+    t.text     "description"
+    t.integer  "estimation_number"
+    t.integer  "organization_number"
+    t.integer  "user_number"
+    t.integer  "admin_number"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "platform_categories", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -826,6 +838,21 @@ ActiveRecord::Schema.define(:version => 20150303135117) do
     t.integer  "project_area_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "profile_categories", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "organization_id"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "profiles", :force => true do |t|
@@ -1116,13 +1143,13 @@ ActiveRecord::Schema.define(:version => 20150303135117) do
     t.integer  "complexity_id"
     t.string   "flag"
     t.string   "name"
-    t.integer  "weight"
-    t.integer  "size_low"
-    t.integer  "size_most_likely"
-    t.integer  "size_high"
-    t.integer  "gross_low"
-    t.integer  "gross_most_likely"
-    t.integer  "gross_high"
+    t.float    "weight"
+    t.float    "size_low"
+    t.float    "size_most_likely"
+    t.float    "size_high"
+    t.float    "gross_low"
+    t.float    "gross_most_likely"
+    t.float    "gross_high"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
     t.integer  "pbs_project_element_id"
