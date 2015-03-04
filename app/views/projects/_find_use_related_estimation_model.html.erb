@@ -4,7 +4,7 @@
 <% else %>
     <table border="0" width="100%" class="table tablesorterPager table-striped table-bordered table-condensed">
       <tr>
-        <th><%= I18n.t(:text_project_name) %></th>
+        <th><%= I18n.t(:text_find_use_estimation_model, :model_name => @project.title) %></th>
       </tr>
       <% @related_projects.each do |project| %>
           <% if can_see_estimation?(project) %>

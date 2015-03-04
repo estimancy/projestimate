@@ -455,8 +455,8 @@ class ProjectsController < ApplicationController
 
       @product_name = params[:project][:product_name]
       project_root = @project.root_component
-      project_root.name = "#{@product_name.blank? ? @project.title : @product_name}"
-      project_root.save
+      project_root_name = "#{@product_name.blank? ? @project.title : @product_name}"
+      project_root.update_attribute(:name, project_root_name)
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
       @wbs_activity_elements = []
