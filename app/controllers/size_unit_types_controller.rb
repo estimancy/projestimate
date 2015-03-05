@@ -43,9 +43,9 @@ class SizeUnitTypesController < ApplicationController
         end
       end
 
-      redirect_to organization_setting_path(@organization.id), notice: 'Size unit type was successfully created.'
+      redirect_to organization_setting_path(@current_organization.id), notice: 'Size unit type was successfully created.'
     else
-      render action: "new", :organization_id => @organization.id
+      render action: "new", :organization_id => @current_organization.id
     end
   end
 
@@ -55,9 +55,9 @@ class SizeUnitTypesController < ApplicationController
     @size_unit_type = SizeUnitType.find(params[:id])
 
     if @size_unit_type.update_attributes(params[:size_unit_type])
-      redirect_to organization_setting_path(@organization.id), notice: 'Size unit type was successfully updated.'
+      redirect_to organization_setting_path(@current_organization.id), notice: 'Size unit type was successfully updated.'
     else
-      render action: "edit", :organization_id => @organization.id
+      render action: "edit", :organization_id => @current_organization.id
     end
   end
 
@@ -66,6 +66,6 @@ class SizeUnitTypesController < ApplicationController
 
     @size_unit_type = SizeUnitType.find(params[:id])
     @size_unit_type.destroy
-    redirect_to organization_setting_path(@organization.id), notice: 'Size unit type was successfully deleted.'
+    redirect_to organization_setting_path(@current_organization.id), notice: 'Size unit type was successfully deleted.'
   end
 end
