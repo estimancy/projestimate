@@ -638,7 +638,7 @@ class ProjectsController < ApplicationController
             if !params[:from_tree_history_view].blank? && params['current_showed_project_id'] != params[:id]
               redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
             else
-              redirect_to organization_estimations_path(@organization)
+              redirect_to organization_estimations_path(@current_organization)
             end
           else
             flash[:warning] = I18n.t(:error_access_denied)
@@ -649,7 +649,7 @@ class ProjectsController < ApplicationController
           render :template => 'projects/confirm_deletion'
         end
       when I18n.t('cancel')
-        redirect_to (@project.is_model ? organization_setting_path(@organization, anchor: "tabs-estimation-models") : organization_estimations_path(@organization))
+        redirect_to (@project.is_model ? organization_setting_path(@current_organization, anchor: "tabs-estimation-models") : organization_estimations_path(@current_organization))
       else
         render :template => 'projects/confirm_deletion'
     end
@@ -1360,6 +1360,14 @@ public
                 widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
                                                  icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
                                                  width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+
+
+                pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+                unless pf.nil?
+                  pf.views_widget_id = widget_copy.id
+                  pf.save
+                end
+
               end
             end
           end
