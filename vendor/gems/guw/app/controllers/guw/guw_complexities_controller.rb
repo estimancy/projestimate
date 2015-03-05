@@ -8,10 +8,12 @@ class Guw::GuwComplexitiesController < ApplicationController
 
   def new
     @guw_complexity = Guw::GuwComplexity.new
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
   end
 
   def edit
     @guw_complexity = Guw::GuwComplexity.find(params[:id])
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
   end
 
   def create

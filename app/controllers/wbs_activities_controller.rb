@@ -282,7 +282,10 @@ class WbsActivitiesController < ApplicationController
     level_estimation_value = Hash.new
     current_pbs_estimations = current_module_project.estimation_values
     current_pbs_estimations.each do |est_val|
-      if est_val.pe_attribute.alias == "effort" || est_val.pe_attribute.alias == "cost"
+      if est_val.pe_attribute.alias == "ratio_name"
+        ratio_name = @ratio_reference.name
+        est_val.update_attribute(:"string_data_probable", { current_component.id => ratio_name })
+      elsif est_val.pe_attribute.alias == "effort" || est_val.pe_attribute.alias == "cost"
         if est_val.in_out == 'output'
 
           @results = Hash.new

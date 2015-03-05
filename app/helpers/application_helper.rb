@@ -36,4 +36,7 @@
 
 #Some helper for the app...
 module ApplicationHelper
+  def is_number?(v)
+    true if Float(v) rescue false
+  end
 end

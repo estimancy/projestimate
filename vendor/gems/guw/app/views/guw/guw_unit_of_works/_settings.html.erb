@@ -103,7 +103,7 @@
 
               <% if can? :execute_estimation_plan, @project %>
                   <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
-                  <%= link_to "RAZ", "#", class: "btn btn-mini reset_retained button_margin_right pull-right" %>
+                  <%= link_to "RAZ", "#!", class: "btn btn-mini reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
 
                   <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
                   <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
@@ -244,18 +244,18 @@
 
                     <td>
                       <span class="pull-left">
-                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini retained" %>
+                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort, class: "input-mini retained-#{uowg.id}" %>
                       </span>
                     </td>
 
                     <td>
                       <span class="pull-left">
                         <% if can? :execute_estimation_plan, @project %>
-                            <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
-                            <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
-                            <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
-                            <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-pencil" %>
-                            <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
+                          <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
+                          <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
+                          <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
+                          <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow), class: "fa fa-pencil" %>
+                          <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", class: "fa fa-trash" %>
                         <% end %>
                       </span>
                     </td>
@@ -326,10 +326,9 @@
             </div>
 
             <% if can? :execute_estimation_plan, @project %>
-                <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-                <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
-
-                <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
+              <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
+              <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model), class: "btn btn-mini pull-left button_margin_right" %>
+              <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
             <% end %>
           </div>
 
@@ -339,11 +338,13 @@
 <% end %>
 
 <script>
-  $(document).ready(function () {
-    $('.reset_retained').on('click', function(){
-      $('.retained').val("");
-    });
+  function raz(group){
+    $('.retained-' + group).val('');
+    return false; // prevent default click action from happening!
+    e.preventDefault();
+  }
 
+  $(document).ready(function () {
     $('.selected').change(function(){
       $.ajax({
         url: "<%= guw.change_selected_state_path %>",

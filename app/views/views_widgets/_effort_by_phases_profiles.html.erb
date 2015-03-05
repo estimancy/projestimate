@@ -5,21 +5,21 @@
     </h4>
 
     <table id="profiles_per_activity" class="table table-bordered table-condensed table_effort_per_phase">
-        <tr>
-          <th colspan="2"><%= I18n.t(:phases) %></th>
-          <th colspan="<%= project_organization_profiles.length %>"><%= I18n.t(:profiles) %></th>
-        </tr>
-        <tr>
-          <th></th>
-          <th><%= I18n.t(:effort_per_phase) %></th>
-          <% if project_organization_profiles.length > 0 %>
-            <% project_organization_profiles.each do |profile| %>
-              <th><%= profile.name %></th>
-            <% end %>
-          <% else %>
-              <th><%= I18n.t(:no_profiles_for_wbs_activity_organization) %></th>
+      <tr>
+        <th colspan="2"><%= I18n.t(:phases) %></th>
+        <th colspan="<%= project_organization_profiles.length %>"><%= I18n.t(:profiles) %></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th><%= I18n.t(:effort_per_phase) %></th>
+        <% if project_organization_profiles.length > 0 %>
+          <% project_organization_profiles.each do |profile| %>
+            <th><%= profile.name %></th>
           <% end %>
-        </tr>
+        <% else %>
+            <th><%= I18n.t(:no_profiles_for_wbs_activity_organization) %></th>
+        <% end %>
+      </tr>
 
         <% unless estimation_pbs_probable_results.nil? %>
             <% referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles %>
@@ -34,14 +34,6 @@
                     <% unless wbs_activity_elt_id.nil?
                          wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
                     end %>
-                    <%# # Value is in bold for the WBS root element
-                       bold_class = ""
-                       unless wbs_elt_with_ratio.nil?
-                         if wbs_activity_elt.id == wbs_elt_with_ratio.id
-                            bold_class = "strong"
-                         end
-                       end
-                    %>
                     <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
                     <tr>
                       <td><span style="float: left; margin-left:<%=wbs_activity_elt.depth%>em"> <%= wbs_activity_elt.name %> </span></td>
@@ -65,15 +57,17 @@
 
                           <% wbs_profiles_value = nil %>
                           <% unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty? || wbs_estimation_profiles_values["profile_id_#{profile.id}"].nil? %>
-                              <% if !wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil? %>
-                                <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
-                              <% end %>
+                            <% if !wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil? %>
+                              <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
+                            <% end %>
                           <% end %>
-                          <% begin %>
-                            <td class='attribute_tooltip2' title='<%= profile_ratio_percentage %>' style="text-align: center"><%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %></td>
-                          <% rescue %>
-                          <td class='attribute_tooltip2' title='<%= profile_ratio_percentage %>' style="text-align: center"><%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)}" %></td>
-                          <% end %>
+                          <td style="text-align: right">
+                            <% begin %>
+                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>
+                            <% rescue %>
+                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)}" %>
+                            <% end %>
+                          </td>
                         <% end %>
                       <% else %>
                         <td></td>
