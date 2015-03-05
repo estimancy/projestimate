@@ -54,7 +54,7 @@
 
             <td class="center">
               <%= link_to "", uow.new_item_path(current_module_project.id, current_component.id, i + 4), :class => "icon icon-plus", title: "New item" %>
-              <%= link_to "", uow.remove_item_path(current_module_project.id, input.id, current_component.id, i+1), :class => "icon icon-trash", title: "Remove item" %>
+              <%= link_to "", uow.remove_item_path(current_module_project.id, input.id, current_component.id, i+1), confirm: I18n.t(:are_you_sure), :class => "icon icon-trash", title: "Remove item" %>
               <%= link_to "", "#", :class => "icon icon-question-sign", title: "Criteria", :"data-toggle" => "modal", :"data-target" => "#modal_description" %>
               <span class="icon icon-star <%= input.flag.blank? ? 'black-question-mark' : input.flag %>"></span>
               <%= hidden_field_tag "flag[#{i+1}]", input.flag.blank? ? 'black-question-mark' : input.flag %>
