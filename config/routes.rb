@@ -293,6 +293,7 @@ Projestimate::Application.routes.draw do
   get 'collapse_project_version' => 'projects#collapse_project_version', :as => 'collapse_project_version'
   get 'update_organization_estimation_statuses' => 'projects#update_organization_estimation_statuses', as: 'update_organization_estimation_statuses'
   get 'add_comment_on_status_change' => 'projects#add_comment_on_status_change', as: 'add_comment_on_status_change'
+  get 'change_new_estimation_data' => 'projects#change_new_estimation_data', as: 'change_new_estimation_data'
 
   match 'update_comments_status_change' => 'projects#update_comments_status_change', as: 'update_comments_status_change'
   post 'add_wbs_activity_to_project' => 'projects#add_wbs_activity_to_project',  :as => 'add_wbs_activity_to_project'

@@ -21,11 +21,11 @@
       <table>
         <tr>
           <td><%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></td>
-          <% if action_name == 'new' %>
+          <% if action_name.in?(['new', 'create']) %>
               <td>
                 <label class="checkbox"></label>
-                <% if can? :manage_estimation_models, Project and params[:is_model] %>
-                  <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: params[:is_model], :class => 'input-large'} %>
+                <% if can?(:manage_estimation_models, Project) && @is_model %>
+                  <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: @is_model, :class => 'input-large'} %>
                 <% else %>
                   <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: false, :class => 'input-large'} %>
                 <% end %>
@@ -45,15 +45,15 @@
           <td><%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %></td>
 
           <script>
-              $(document).ready(function () {
-                  $(".date-picker").datepicker({
-                      language: '<%= set_user_language %>',
-                      autoclose: true,
-                      todayHighlight: true,
-                      todayBtn: true
-                  });
-              });
-          </script>
+            $(document).ready(function () {
+                $(".date-picker").datepicker({
+                    language: '<%= set_user_language %>',
+                    autoclose: true,
+                    todayHighlight: true,
+                    todayBtn: true
+                });
+            });
+        </script>
         </tr>
 
         <tr>
@@ -80,19 +80,23 @@
        <br>
 
       <div class="actions-tabs">
-        <% if action_name == 'edit'%>
-            <% if can_modify_estimation?(@project) %>
+        <% if action_name.in?(['edit', 'update']) %>
+            <% if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && can_modify_estimation?(@project)) %>
                 <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
                 <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
             <% end %>
 
-        <% elsif action_name == 'new' %>
-            <% if can? :create_project_from_scratch, Project %>
+        <% elsif action_name.in?(['new', 'create']) %>
+            <% if (@is_model.in?(["true", true]) && can?(:manage_estimation_models, Project)) || (!@is_model.in?(["true", true]) && can?(:create_project_from_scratch, Project)) %>
                 <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
             <% end %>
         <% end %>
 
-        <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
+        <% if @project.is_model %>
+            <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
+        <% else %>
+            <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
+        <% end %>
       </div>
   <% end %>
 </div>

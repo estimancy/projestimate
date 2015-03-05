@@ -49,7 +49,8 @@
             <td class="text_field_text_overflow"><%= project.platform_category %></td>
             <td style="min-width:130px;">
               <% if can? :create_project_from_template, Project %>
-                  <%= link_to('', duplicate_path(project, action_name: "create_project_from_template"), :class => 'icon-repeat pull-left', :title => I18n.t('button_duplicate_model')) %>
+                  <%#= link_to('Test', duplicate_path(project, action_name: "create_project_from_template"), :class => 'icon-repeat pull-left', :title => I18n.t('button_duplicate_model')) %>
+                  <%= link_to('', change_new_estimation_data_path(template_id: project.id, action_name: "create_project_from_template"), :class => 'icon-repeat pull-left', :title => I18n.t('button_duplicate_model'), remote: true) %>
               <% end %>
 
               <% if can? :show_estimation_models, Project %>

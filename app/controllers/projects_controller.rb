@@ -248,10 +248,22 @@ class ProjectsController < ApplicationController
     @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |j| !j.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
   end
 
+  #Allow to user to change the estimation data when creating from template
+  def change_new_estimation_data
+    @project_template = Project.find(params[:template_id])
+    @new_project = Project.new
+
+    #@organization = Organization.find(params[:organization_id])
+    @project_areas = @organization.project_areas
+    @platform_categories = @organization.platform_categories
+    @acquisition_categories = @organization.acquisition_categories
+    @project_categories = @organization.project_categories
+  end
+
   def new
     # To create an estimation model, use should have a :manage_estimation_models authorization
-    if params[:is_model]
-
+    @is_model = params[:is_model]
+    if @is_model
       authorize! :manage_estimation_models, Project
       set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models")
       set_page_title 'New estimation model'
@@ -270,7 +282,13 @@ class ProjectsController < ApplicationController
 
   #Create a new project
   def create
-    authorize! :create_project_from_scratch, Project
+    @is_model = params[:project][:is_model]
+    if @is_model == "true"
+      authorize! :manage_estimation_models, Project
+    else
+      authorize! :create_project_from_scratch, Project
+    end
+
     set_page_title 'Create estimation'
 
     @product_name = params[:project][:product_name]
@@ -317,11 +335,9 @@ class ProjectsController < ApplicationController
 
           ##New root Pbs-Project-Element
           pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{@product_name.blank? ? @project_title : @product_name}",
-                                                                                  :is_root => true,
+                                                                                  :is_root => true, :start_date => Time.now, :position => 0,
                                                                                   :work_element_type_id => default_work_element_type.id,
-                                                                                  :organization_technology_id => @organization.organization_technologies.first.id,
-                                                                                  :position => 0,
-                                                                                  :start_date => Time.now)
+                                                                                  :organization_technology_id => @organization.organization_technologies.first.id)
           pbs_project_element.add_to_transaction
           pbs_project_element.save!
           pe_wbs_project_product.save!
@@ -356,13 +372,13 @@ class ProjectsController < ApplicationController
           redirect_to redirect_apply(edit_project_path(@project)), notice: "#{I18n.t(:notice_project_successful_created)}"
         else
           flash[:error] = "#{I18n.t(:error_project_creation_failed)} #{@project.errors.full_messages.to_sentence}"
-          render :new
+          render action: :new
         end
 
         #raise ActiveRecord::Rollback
       rescue ActiveRecord::UnknownAttributeError, ActiveRecord::StatementInvalid, ActiveRecord::RecordInvalid => error
         flash[:error] = "#{I18n.t (:error_project_creation_failed)} #{@project.errors.full_messages.to_sentence}"
-        redirect_to edit_organization_path(@project.organization)
+        redirect_to (@project.is_model ? organization_setting_path(@organization, anchor: "tabs-estimation-models") : organization_estimations_path(@organization))
       end
     end
   end
@@ -383,20 +399,29 @@ class ProjectsController < ApplicationController
     #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
     if @project.is_model
       set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+
+      if cannot?(:manage_estimation_models, Project)    # No write access to project
+        if can?(:show_estimation_models)
+          redirect_to(:action => 'show') and return
+        else
+          redirect_to(organization_setting_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+        end
+      end
+
     else
       set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
-    end
 
-    if cannot?(:edit_project, @project)    # No write access to project
-      redirect_to(:action => 'show') and return
-    end
+      if cannot?(:edit_project, @project)    # No write access to project
+        redirect_to(:action => 'show') and return
+      end
 
-    # We need to verify user's groups rights on estimation according to the current estimation status
-    if !can_modify_estimation?(@project)
-      if can_show_estimation?(@project)
-        redirect_to(:action => 'show')
-      else
-        redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      # We need to verify user's groups rights on estimation according to the current estimation status
+      if !can_modify_estimation?(@project)
+        if can_show_estimation?(@project)
+          redirect_to(:action => 'show')
+        else
+          redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+        end
       end
     end
 
@@ -439,19 +464,32 @@ class ProjectsController < ApplicationController
     @acquisition_categories = @organization.platform_categories
     @project_categories = @organization.project_categories
 
-    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    if @project.is_model
+      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
-    # We need to verify user's groups rights on estimation according to the current estimation status
-    if !can_modify_estimation?(@project) && !can_alter_estimation?(@project)
-      flash[:warning] = I18n.t(:warning_no_modify_permission_on_project_status)
-      if can_show_estimation?(@project)
-        redirect_to(:action => 'show') and return
-      else
-        redirect_to(organization_estimations_path(@organization)) and return
+      if cannot?(:manage_estimation_models, Project)    # No write access to project
+        if can?(:show_estimation_models)
+          redirect_to(:action => 'show') and return
+        else
+          redirect_to(organization_setting_path(@organization), flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
+        end
+      end
+
+    else
+      set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+
+      # We need to verify user's groups rights on estimation according to the current estimation status
+      if !can_modify_estimation?(@project) && !can_alter_estimation?(@project)
+        flash[:warning] = I18n.t(:warning_no_modify_permission_on_project_status)
+        if can_show_estimation?(@project)
+          redirect_to(:action => 'show') and return
+        else
+          redirect_to(organization_estimations_path(@organization)) and return
+        end
       end
     end
 
-    if can?(:edit_project, @project) || can_alter_estimation?(@project) # Have the write access to project
+    if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && (can?(:edit_project, @project) || can_alter_estimation?(@project))) # Have the write access to project
 
       @product_name = params[:project][:product_name]
       project_root = @project.root_component
@@ -559,10 +597,8 @@ class ProjectsController < ApplicationController
                 ['input', 'output'].each do |in_out|
                   mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id,
                                                :module_project_id => cap_module_project.id,
-                                               :in_out => in_out,
-                                               :is_mandatory => am.is_mandatory,
-                                               :description => am.pe_attribute.description,
-                                               :display_order => nil,
+                                               :in_out => in_out, :is_mandatory => am.is_mandatory,
+                                               :description => am.pe_attribute.description, :display_order => nil,
                                                :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
                                                :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
                                                :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
@@ -574,7 +610,12 @@ class ProjectsController < ApplicationController
 
         @project.save
 
-        redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)), notice: "#{I18n.t(:notice_project_successful_updated)}" and return
+        flash[:notice] = I18n.t(:notice_project_successful_updated)
+        if @project.is_model
+          redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_setting_path(@project.organization, anchor: "tabs-estimation-models")) and return
+        else
+          redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)) and return
+        end
       else
         render :action => 'edit'
       end
@@ -1291,7 +1332,8 @@ public
     if params[:action_name] == "duplication"
       authorize! :create_project_from_scratch, Project
     # To Create a project from a template user need to have "create_project_from_template" authorization
-    elsif params[:action_name] == "create_project_from_template"
+    #elsif params[:action_name] == "create_project_from_template"
+    elsif !params[:create_project_from_template].nil?
       authorize! :create_project_from_template, Project
     end
 
@@ -1302,15 +1344,24 @@ public
     new_prj.is_model = false
 
     #if creation from template
-    if params[:action_name] == "create_project_from_template"
+    if !params[:create_project_from_template].nil?
       new_prj.original_model_id = old_prj.id
+
+      #Update some params with the form input data
+      new_prj.title = params['project']['title']
+      new_prj.alias = params['project']['alias']
+      new_prj.version = params['project']['version']
+      new_prj.description = params['project']['description']
+      start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
+      new_prj.start_date = start_date
     end
 
     if new_prj.save
       old_prj.save #Original project copy number will be incremented to 1
 
       #Update the project securities for the current user who create the estimation from model
-      if params[:action_name] == "create_project_from_template"
+      #if params[:action_name] == "create_project_from_template"
+      if !params[:create_project_from_template].nil?
         creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
         creator_securities.update_attribute(:user_id, current_user.id)
       end
@@ -1412,7 +1463,8 @@ public
       redirect_to edit_project_path(new_prj) and return
     else
       flash[:error] = I18n.t(:error_project_failed_duplicate)
-      if params[:action_name] == "create_project_from_template"
+      #if params[:action_name] == "create_project_from_template"
+      if !params[:create_project_from_template].nil?
         redirect_to projects_from_path(organization_id: @organization.id) and return
       else
         redirect_to organization_estimations_path(@organization)

@@ -1430,3 +1430,4 @@ fr:
   label_model_user_security_resume: "Gestion des droits utilisateurs de l'estimation créée à partir de ce modèle"
   label_model_group_security_resume: "Gestion des droits des groupes de l'estimation créée à partir de ce modèle"
   estimation_creator_from_model: "Créateur de l'estimation qui sera créée à partir de ce model"
+  text_create_from_model: "Créer une nouvelle estimation à partir du modèle \"%{model_name}\""
