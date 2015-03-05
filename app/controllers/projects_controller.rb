@@ -119,7 +119,7 @@ class ProjectsController < ApplicationController
     if can_alter_estimation?(@project) && ( can?(:alter_estimation_status, @project) || can?(:alter_project_status_comment, @project))
       status_comment_link = "#{main_app.add_comment_on_status_change_path(:project_id => @project.id)}"
     end
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => status_comment_link
+    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization.to_s => organization_estimations_path(@current_organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => status_comment_link
 
     @project_organization = @project.organization
     @module_projects = @project.module_projects
@@ -265,11 +265,11 @@ class ProjectsController < ApplicationController
     @is_model = params[:is_model]
     if @is_model
       authorize! :manage_estimation_models, Project
-      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models")
+      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@current_organization, anchor: "tabs-estimation-models")
       set_page_title 'New estimation model'
     else
       authorize! :create_project_from_scratch, Project
-      set_breadcrumbs "Estimations" => organization_estimations_path(@organization)
+      set_breadcrumbs "Estimations" => organization_estimations_path(@current_organization)
       set_page_title 'New estimation'
     end
 
@@ -625,10 +625,11 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+
+    @organization = @project.organization
+
     set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
-    @organization = @project.organization #Organization.find(params[:organization_id])
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
     @acquisition_categories = @organization.acquisition_categories
@@ -678,7 +679,7 @@ class ProjectsController < ApplicationController
             if !params[:from_tree_history_view].blank? && params['current_showed_project_id'] != params[:id]
               redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
             else
-              redirect_to organization_estimations_path(@organization)
+              redirect_to organization_estimations_path(@current_organization)
             end
           else
             flash[:warning] = I18n.t(:error_access_denied)
@@ -689,7 +690,7 @@ class ProjectsController < ApplicationController
           render :template => 'projects/confirm_deletion'
         end
       when I18n.t('cancel')
-        redirect_to (@project.is_model ? organization_setting_path(@organization, anchor: "tabs-estimation-models") : organization_estimations_path(@organization))
+        redirect_to (@project.is_model ? organization_setting_path(@current_organization, anchor: "tabs-estimation-models") : organization_estimations_path(@current_organization))
       else
         render :template => 'projects/confirm_deletion'
     end
@@ -739,7 +740,7 @@ class ProjectsController < ApplicationController
         redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'), :flash => {:warning => I18n.t(:warning_project_cannot_be_deleted)}
       else
         flash[:warning] = I18n.t(:warning_project_cannot_be_deleted)
-        redirect_to (@project.is_model ? organization_setting_path(@organization, anchor: "tabs-estimation-models") : organization_estimations_path(@organization))
+        redirect_to (@project.is_model ? organization_setting_path(@current_organization, anchor: "tabs-estimation-models") : organization_estimations_path(@current_organization))
       end
     end
   end
@@ -1410,6 +1411,14 @@ public
                 widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
                                                  icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
                                                  width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+
+
+                pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+                unless pf.nil?
+                  pf.views_widget_id = widget_copy.id
+                  pf.save
+                end
+
               end
             end
           end
@@ -1467,7 +1476,7 @@ public
       if !params[:create_project_from_template].nil?
         redirect_to projects_from_path(organization_id: @organization.id) and return
       else
-        redirect_to organization_estimations_path(@organization)
+        redirect_to organization_estimations_path(@current_organization)
       end
     end
   end
@@ -1478,7 +1487,7 @@ public
     authorize! :commit_project, project
 
     if !can_modify_estimation?(project)
-      redirect_to(organization_estimations_path(@organization), flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      redirect_to(organization_estimations_path(@current_organization), flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
     #change project's status
@@ -1487,7 +1496,7 @@ public
     if params[:from_tree_history_view]
       redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
     else
-      redirect_to organization_estimations_path(@organization)
+      redirect_to organization_estimations_path(@current_organization)
     end
   end
 
@@ -1719,7 +1728,7 @@ public
 
     #if !can_modify_estimation?(project)
     if !can_modify_estimation?(old_prj)
-      redirect_to(organization_estimations_path(@organization), flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      redirect_to(organization_estimations_path(@current_organization), flash: {warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
     #if old_prj.checkpoint? || old_prj.released?
@@ -2040,7 +2049,7 @@ public
       flash[:error] = flash_error + I18n.t('collapsible_project_only')
     end
     if params['current_showed_project_id'].nil? || (params['current_showed_project_id'] && params['current_showed_project_id'].in?(params[:project_ids]) )
-      redirect_to organization_estimations_path(@organization), :notice => I18n.t('notice_successful_collapse_project_version')
+      redirect_to organization_estimations_path(@current_organization), :notice => I18n.t('notice_successful_collapse_project_version')
     else
       redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history'), :notice => I18n.t('notice_successful_collapse_project_version')
     end

@@ -279,17 +279,17 @@ class ApplicationController < ActionController::Base
     begin
       if params[:organization_id].present?
         session[:organization_id] = params[:organization_id]
-        @organization = Organization.find(session[:organization_id])
+        @current_organization = Organization.find(session[:organization_id])
       elsif !session[:organization_id].nil?
-        @organization = Organization.find(session[:organization_id])
+        @current_organization = Organization.find(session[:organization_id])
       else
         session[:organization_id] = current_user.organizations.first
-        @organization = Organization.find(session[:organization_id])
+        @current_organization = Organization.find(session[:organization_id])
       end
 
     rescue
       session[:organization_id] = nil
-      @organization = nil
+      @current_organization = nil
     end
   end
 

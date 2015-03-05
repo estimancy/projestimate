@@ -110,19 +110,8 @@ module ViewsWidgetsHelper
 
         # Get the project wbs_project_element root if module with activities
         if estimation_value.module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-          #if pemodule.yes_for_output_with_ratio? || pemodule.yes_for_output_without_ratio? || pemodule.yes_for_input_output_with_ratio? || pemodule.yes_for_input_output_without_ratio?
-          #  wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
-          #  wbs_data_low = data_low.nil? ? nil : data_low[wbs_activity_elt_root.id]
-          #  wbs_data_high = data_high.nil? ? nil : data_high[wbs_activity_elt_root.id]
-          #  wbs_data_probable = data_probable.nil? ? nil : data_probable[wbs_activity_elt_root.id]
-          #
-          #  data_low = wbs_data_low.nil? ? nil : wbs_data_low[:value]
-          #  data_high = wbs_data_high.nil? ? nil : wbs_data_high[:value]
-          #  data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[:value]
-          #end
-
           if estimation_value.in_out == "output"
-            unless estimation_value.pe_attribute.alias == "ratio"
+            unless estimation_value.pe_attribute.alias == "ratio" || estimation_value.pe_attribute.alias == "ratio_name"
               wbs_activity_elt_root = module_project.wbs_activity.wbs_activity_elements.first.root
 
               wbs_data_low = data_low.nil? ? nil : data_low
@@ -136,7 +125,15 @@ module ViewsWidgetsHelper
           end
         end
 
-        probable_value_text = display_value(data_probable.to_f, estimation_value, module_project_id)
+        if data_probable.nil?
+          probable_value_text = display_value(data_probable.to_f, estimation_value, module_project_id)
+        else
+          if is_number?(data_probable)
+            probable_value_text = display_value(data_probable.to_f, estimation_value, module_project_id)
+          else
+            probable_value_text = data_probable
+          end
+        end
 
         max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
         min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, module_project_id)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"

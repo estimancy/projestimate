@@ -1,7 +1,7 @@
 <ul class="nav">
 
   <li class="dropdown">
-    <a href="<%= main_app.organization_estimations_path(@organization) %>" title="Liste des estimations">
+    <a href="<%= main_app.organization_estimations_path(@current_organization) %>" title="Liste des estimations">
       <i class="fa fa-list-ul fa-lg pull-left"></i>&nbsp;
     </a>
   </li>
@@ -9,16 +9,16 @@
   <li class="dropdown">
     <% begin %>
       <% if @project %>
-        <a href="<%= main_app.dashboard_path(@project) %>" title="Estimation en cours">
+        <a href="<%= main_app.dashboard_path(@current_organization) %>" title="Estimation en cours">
           <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
         </a>
       <% else %>
-        <a href="<%= main_app.organization_estimations_path(@organization) %>">
+        <a href="<%= main_app.organization_estimations_path(@current_organization) %>">
           <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
         </a>
       <% end %>
     <% rescue %>
-      <a href="<%= main_app.organization_estimations_path(@organization) %>">
+      <a href="<%= main_app.organization_estimations_path(@current_organization) %>">
         <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
       </a>
     <% end %>
@@ -44,11 +44,11 @@
       </li>
 
       <li class="dropdown">
-        <a href="<%= main_app.organization_authorization_path(@organization) %>"> Autorisations </a>
+        <a href="<%= main_app.organization_authorization_path(@current_organization) %>"> Autorisations </a>
       </li>
 
       <li class="dropdown">
-        <a href="<%= main_app.organization_users_path(@organization) %>"> <%= I18n.t(:users) %> </a>
+        <a href="<%= main_app.organization_users_path(@current_organization) %>"> <%= I18n.t(:users) %> </a>
       </li>
 
       <li class="dropdown">
@@ -62,19 +62,19 @@
       <i class="fa fa-cog fa-lg pull-left"></i></b>
     </a>
     <ul class="dropdown-menu">
-      <% if @organization %>
+      <% if @current_organization %>
           <li class="dropdown">
-            <a href="<%= main_app.edit_organization_path(@organization)%>">
-              <%= @organization %>
+            <a href="<%= main_app.edit_organization_path(@current_organization)%>">
+              <%= @current_organization %>
             </a>
           </li>
           <li class="dropdown">
-            <a href="<%= main_app.organization_setting_path(@organization)%>">
+            <a href="<%= main_app.organization_setting_path(@current_organization)%>">
               Paramétrage
             </a>
           </li>
           <li class="dropdown">
-            <a href="<%= main_app.organization_module_estimation_path(@organization)%>">
+            <a href="<%= main_app.organization_module_estimation_path(@current_organization)%>">
               Modules
             </a>
           </li>

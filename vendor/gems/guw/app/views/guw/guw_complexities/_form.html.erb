@@ -18,8 +18,10 @@
 
         <%= f.input :name %>
         <%= f.input :alias %>
-        <%= f.input :bottom_range %>
-        <%= f.input :top_range %>
+        <% if @guw_model.one_level_model == false %>
+          <%= f.input :bottom_range %>
+          <%= f.input :top_range %>
+        <% end %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
