@@ -123,7 +123,14 @@ class Ability
             # Get the project/estimation permissions
             unless prj_scrt.project_security_level.nil?
               prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
-                can i.alias.to_sym, prj_scrt.project
+                if prj_scrt.project.is_model
+                  #For template/model, only the model's permissions will be taken in account
+                  if prj_scrt.is_model_permission
+                    can i.alias.to_sym, prj_scrt.project
+                  end
+                else
+                  can i.alias.to_sym, prj_scrt.project
+                end
               end
             end
           end

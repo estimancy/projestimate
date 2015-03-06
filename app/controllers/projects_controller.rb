@@ -517,8 +517,13 @@ class ProjectsController < ApplicationController
 
       # we can update group securities levels on edit or on show with some restrictions
       if params['is_project_show_view'].nil? || (params['is_project_show_view'] == "true" && !params['group_security_levels'].nil?)
-          @project.organization.groups.uniq.each do |gpe|
-          ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id).first
+        is_model_permission = nil
+        # if this is a model permission, is_model_permission should be true
+        if !params[:model_group_security_levels].nil?
+          is_model_permission = true
+        end
+        @project.organization.groups.uniq.each do |gpe|
+          ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id, :is_model_permission => is_model_permission).first
           if ps
             ps.project_security_level_id = params["group_securities_#{gpe.id}"]
             ps.save
@@ -527,6 +532,7 @@ class ProjectsController < ApplicationController
             new_ps = @project.project_securities.build
             new_ps.group_id = gpe.id
             new_ps.project_security_level_id = params["group_securities_#{gpe.id}"]
+            new_ps.is_model_permission = is_model_permission
           end
         end
       end
@@ -1355,6 +1361,9 @@ public
       new_prj.description = params['project']['description']
       start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
       new_prj.start_date = start_date
+
+      #Only the securities for the generated project will be taken in account
+      new_prj.project_securities = new_prj.project_securities.where(is_model_permission: true)
     end
 
     if new_prj.save

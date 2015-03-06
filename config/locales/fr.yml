@@ -1431,3 +1431,5 @@ fr:
   label_model_group_security_resume: "Gestion des droits des groupes de l'estimation créée à partir de ce modèle"
   estimation_creator_from_model: "Créateur de l'estimation qui sera créée à partir de ce model"
   text_create_from_model: "Créer une nouvelle estimation à partir du modèle \"%{model_name}\""
+  model_securities: "Autorisations du modèle"
+  securities_for_generated_project: "Autorisations de l'estimation créée à partir de ce modèle"
