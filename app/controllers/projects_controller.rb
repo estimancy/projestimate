@@ -104,7 +104,7 @@ class ProjectsController < ApplicationController
 
     # return if user doesn't have the rigth to consult the estimation
     if !can_show_estimation?(@project)
-      redirect_to(organization_estimations_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+      redirect_to(organization_estimations_path(@current_organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
     @user = current_user
@@ -114,7 +114,6 @@ class ProjectsController < ApplicationController
 
     @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
 
-    ###set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => ""
     status_comment_link = ""
     if can_alter_estimation?(@project) && ( can?(:alter_estimation_status, @project) || can?(:alter_project_status_comment, @project))
       status_comment_link = "#{main_app.add_comment_on_status_change_path(:project_id => @project.id)}"
@@ -253,11 +252,10 @@ class ProjectsController < ApplicationController
     @project_template = Project.find(params[:template_id])
     @new_project = Project.new
 
-    #@organization = Organization.find(params[:organization_id])
-    @project_areas = @organization.project_areas
-    @platform_categories = @organization.platform_categories
-    @acquisition_categories = @organization.acquisition_categories
-    @project_categories = @organization.project_categories
+    @project_areas = @current_organization.project_areas
+    @platform_categories = @current_organization.platform_categories
+    @acquisition_categories = @current_organization.acquisition_categories
+    @project_categories = @current_organization.project_categories
   end
 
   def new
