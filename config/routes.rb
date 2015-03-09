@@ -212,6 +212,8 @@ Projestimate::Application.routes.draw do
     get "module_estimation" => 'organizations#module_estimation'
     get "users" => 'organizations#users'
     get "estimations" => 'organizations#estimations'
+    get "report" => 'organizations#report'
+    post "generate_report" => 'organizations#generate_report'
   end
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'

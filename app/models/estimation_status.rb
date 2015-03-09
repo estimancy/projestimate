@@ -67,4 +67,8 @@ class EstimationStatus < ActiveRecord::Base
     "#{status_number} - #{name}"
   end
 
+  def to_s
+    libelle
+  end
+
 end
