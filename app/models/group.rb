@@ -74,8 +74,13 @@ class Group < ActiveRecord::Base
   end
 
   #Return group project_securities for selected project_id
-  def project_securities_for_select(prj_id)
-    self.project_securities.select { |i| i.project_id == prj_id }.first
+  def project_securities_for_select(prj_id, is_model_permission=nil)
+    if is_model_permission == true
+      #self.project_securities.select { |i| i.project_id == prj_id }.first
+      self.project_securities.select { |i| i.project_id == prj_id && i.is_model_permission == true}.first
+    else
+      self.project_securities.select { |i| i.project_id == prj_id && i.is_model_permission != true}.first
+    end
   end
 
   amoeba do
