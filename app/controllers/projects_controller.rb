@@ -1361,7 +1361,7 @@ public
       new_prj.start_date = start_date
 
       #Only the securities for the generated project will be taken in account
-      new_prj.project_securities = new_prj.project_securities.where(is_model_permission: true)
+      new_prj.project_securities = new_prj.project_securities.where(is_model_permission: [false, nil])
     end
 
     if new_prj.save
@@ -1371,7 +1371,9 @@ public
       #if params[:action_name] == "create_project_from_template"
       if !params[:create_project_from_template].nil?
         creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
-        creator_securities.update_attribute(:user_id, current_user.id)
+        unless creator_securities.nil?
+          creator_securities.update_attribute(:user_id, current_user.id)
+        end
       end
 
       #Managing the component tree : PBS
