@@ -1,6 +1,8 @@
 <% if @resource.super_admin? %>
 
-    <p><%= I18n.t(:create_organization_confirmation_instructions, firstname: @firstname, lastname: @lastname, password: @password, login_name: @login_name, organization_name: @organization_name, connexion_url: SETTINGS['HOST_URL']) %> </p>
+    <% @confirmation_text =  I18n.t(:create_organization_confirmation_instructions, firstname: @firstname, lastname: @lastname, password: @password, login_name: @login_name, organization_name: @organization_name, connexion_url: SETTINGS['HOST_URL']) %>
+
+    <%= simple_format(@confirmation_text.to_s) %>
 
 <% else %>
 

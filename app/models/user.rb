@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :projects
   has_and_belongs_to_many :permissions
-  #has_and_belongs_to_many :organizations
+  ###has_and_belongs_to_many :organizations  ##to comment if not working
 
   belongs_to :language, :foreign_key => 'language_id', :touch => true
   belongs_to :auth_method, :foreign_key => 'auth_type', :touch => true
@@ -75,6 +75,10 @@ class User < ActiveRecord::Base
   has_many :groups, through: :groups_users
 
   has_many :organizations, through: :groups, :uniq => true
+
+  #For user without group
+  has_many :organizations_users, class_name: 'OrganizationsUsers'
+  has_many :organizations, through: :organizations_users, uniq: true
 
   #Master and Special Data Tables
   has_many :change_on_acquisition_categories, :foreign_key => 'owner_id', :class_name => 'AcquisitionCategory'

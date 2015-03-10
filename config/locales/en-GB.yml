@@ -1396,5 +1396,5 @@ en-gb:
   label_model_group_security_resume: "Group securities resume of estimation created from this model"
   estimation_creator_from_model: "Creator of estimation from this model"
   text_create_from_model: "Create project from the \"%{model_name}\" template"
-  model_securities: "The model's permissions"
+  model_securities: "Permissions on the model"
   securities_for_generated_project: "Permissions for the generated estimation"
