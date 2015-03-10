@@ -337,8 +337,8 @@ class OrganizationsController < ApplicationController
         # Create a user in the Admin group of the new organization
         admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: true)
         # Add the user to the created organization
-        user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
         if admin_user.save
+          user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
           user_first_organization.save
         end
 
