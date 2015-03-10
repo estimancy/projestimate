@@ -1,6 +1,7 @@
 <% if @resource.super_admin? %>
 
-    <% @confirmation_text =  I18n.t(:create_organization_confirmation_instructions, firstname: @firstname, lastname: @lastname, password: @password, login_name: @login_name, organization_name: @organization_name, connexion_url: SETTINGS['HOST_URL']) %>
+    <%# @confirmation_text =  I18n.t(:create_organization_confirmation_instructions, firstname: @firstname, lastname: @lastname, password: @password, login_name: @login_name, organization_name: @organization_name, connexion_url: SETTINGS['HOST_URL']) %>
+    <% @confirmation_text =  I18n.t(:create_organization_confirmation_instructions, firstname: @resource.first_name, lastname: @resource.last_name, password: @resource.password, login_name: @resource.login_name, organization_name: @resource.organizations.last, connexion_url: SETTINGS['HOST_URL']) %>
 
     <%= simple_format(@confirmation_text.to_s) %>
 
