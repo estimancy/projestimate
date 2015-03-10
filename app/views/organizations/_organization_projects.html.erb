@@ -20,6 +20,12 @@
           <% if can? :create_project_from_scratch, Project %>
             <%= link_to I18n.t('new_project'), new_project_path(organization_id: @organization.id), :class => 'btn' %>
           <% end %>
+
+          <% if can? :show_project, Project %>
+            <%= link_to "Générateur de rapport", organization_report_path(@organization), :class => 'btn' %>
+
+            <%= link_to "Générer un rapport à partir du tableau", "#!", :class => 'btn export' %>
+          <% end %>
         </td>
       </tr>
     </table>
@@ -27,14 +33,14 @@
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
       <tr>
-        <th class="text_left"><%= I18n.t(:label_project_name) %></th>
-        <th class="center">Vers.</th>
-        <th class="text_left"><%= I18n.t(:label_product_name) %></th>
-        <th style="width: 50px" class="filter-select"> <%= I18n.t(:state) %></th>
-        <th>Secteur</th>
-        <th>Catégorie</th>
-        <th>Plateforme</th>
-        <th>Acquisition</th>
+        <th class="text_left exportable"><%= I18n.t(:label_project_name) %></th>
+        <th class="center exportable">Vers.</th>
+        <th class="text_left exportable"><%= I18n.t(:label_product_name) %></th>
+        <th style="width: 50px" class="filter-select exportable"> <%= I18n.t(:state) %></th>
+        <th class="exportable">Secteur</th>
+        <th class="exportable">Catégorie</th>
+        <th class="exportable">Plateforme</th>
+        <th class="exportable">Acquisition</th>
         <% @organization.fields.each do |field| %>
           <th><%= field.name  %></th>
         <% end %>
@@ -46,39 +52,38 @@
       <% @projects.each do |project| %>
         <% if can_see_estimation?(project) %>
           <tr>
-            <td>
+            <td class="exportable">
               <% if can_show_estimation?(project) %>
                 <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
               <% else %>
                 <%= project.title %>
               <% end %>
             </td>
-            <td class="center"><%= project.version %></td>
-            <td class="text_field_text_overflow"><%= project.root_component %></td>
-            <td>
+            <td class="center exportable"><%= project.version %></td>
+            <td class="text_field_text_overflow exportable"><%= project.root_component %></td>
+            <td class="exportable">
               <% if can_show_estimation?(project) %>
-                    <span class="badge" style="background-color: <%= project.status_background_color %>">
-                      <%= link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %>
-                    </span>
-                <% else %>
-                    <span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span>
-                <% end %>
+                <span class="badge" style="background-color: <%= project.status_background_color %>">
+                  <%= link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %>
+                </span>
+              <% else %>
+                  <span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span>
+              <% end %>
             </td>
-            <td class="text_field_text_overflow"><%= project.project_area %></td>
-            <td class="text_field_text_overflow"><%= project.project_category %></td>
-            <td class="text_field_text_overflow"><%= project.platform_category  %></td>
-            <td class="text_field_text_overflow"><%= project.acquisition_category %></td>
+            <td class="text_field_text_overflow exportable"><%= project.project_area %></td>
+            <td class="text_field_text_overflow exportable"><%= project.project_category %></td>
+            <td class="text_field_text_overflow exportable"><%= project.platform_category  %></td>
+            <td class="text_field_text_overflow exportable"><%= project.acquisition_category %></td>
 
             <% @organization.fields.each do |field| %>
               <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
-              <td class="project_field_text_overflow">
+              <td class="project_field_text_overflow exportable">
                 <%= pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) %>
               </td>
             <% end %>
 
             <td style="min-width: 130px;">
               <% if can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) %>
-                <%#= link_to('', {:controller => 'projects', :action => 'commit', :project_id => project.id}, :confirm => send_notice(project), :class => 'fa fa-share pull-left', style: "color: black; margin-top:4px;", :title => I18n.t('button_commit_project')) %>
                   <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "fa fa-share pull-left", style: "color: black; margin-top:4px;", :title => "#{I18n.t(:button_commit_project)}" , :remote => true) %>
               <% end %>
 
@@ -86,7 +91,6 @@
                 <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "icon-comment pull-left", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %> <!-- Link to comment the estimation status change add_comment_on_status_change -->
               <% end %>
 
-              <%# if can?(:commit_project, project) || can?(:manage, project) %>
               <% if can_alter_estimation?(@project) && can?(:commit_project, @project) %>
                 <%= link_to('', {:controller => 'projects', :action => 'checkout', :project_id => project.id}, :class => 'fa fa-code-fork pull-left', style: "color: black; margin-top:4px;", :title => I18n.t('button_checkout_project'), :confirm => (I18n.t(:confirm_new_branch_project_checkout) unless project.is_childless?)) %>
               <% end %>
@@ -122,4 +126,57 @@
 
 <script>
   <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js]%>
+</script>
+
+<script>
+  $(document).ready(function () {
+
+    function exportTableToCSV($table, filename) {
+
+      var $rows = $table.find('tr:has(th), tr:has(td)').not(".filtered"),
+
+      // Temporary delimiter characters unlikely to be typed by keyboard
+      // This is to avoid accidentally splitting the actual contents
+              tmpColDelim = String.fromCharCode(11), // vertical tab character
+              tmpRowDelim = String.fromCharCode(0), // null character
+
+      // actual delimiter characters for CSV format
+              colDelim = '"<%= I18n.t(:general_csv_separator) %>"',
+              rowDelim = '"\r\n"',
+
+      // Grab text from table into CSV formatted string
+              csv = '"' + $rows.map(function (i, row) {
+                var $row = $(row),
+                        $cols = $row.find('th.exportable, td.exportable');
+
+                return $cols.map(function (j, col) {
+                  var $col = $(col), text = $col.text();
+
+                  return text.replace('"', '""'); // escape double quotes
+
+                }).get().join(tmpColDelim);
+
+              }).get().join(tmpRowDelim)
+                      .split(tmpRowDelim).join(rowDelim)
+                      .split(tmpColDelim).join(colDelim) + '"',
+
+      // Data URI
+              csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+      $(this).attr({
+                'download': filename,
+                'href': csvData,
+                'target': '_blank'
+              });
+    }
+
+    // This must be a hyperlink
+    $(".export").on('click', function (event) {
+      // CSV
+      exportTableToCSV.apply(this, [$('#table_list_1'), 'RapportTableau.csv']);
+
+      // IF CSV, don't do event.preventDefault() or return false
+      // We actually need this to be a typical hyperlink
+    });
+  });
 </script>

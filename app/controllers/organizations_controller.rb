@@ -36,11 +36,62 @@
 
 class OrganizationsController < ApplicationController
   load_resource
-  require 'axlsx'
+  #include Roo
+  #require 'axlsx'
   require 'rubygems'
-  require 'roo'
-  include Roo
+  #require 'roo'
   require 'securerandom'
+  include ProjectsHelper
+
+  def generate_report
+    conditions = Hash.new
+    params[:report].each do |i|
+      unless i.last.blank? or i.last.nil?
+        conditions[i.first] = i.last
+      end
+    end
+
+    @projects = Project.where(conditions).all
+    @organization = Organization.find(params[:organization_id])
+
+    csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
+      if params[:with_header] == "checked"
+        csv << [
+            "Nom du projet",
+            "Nom du produit",
+            "Date de début",
+            "Catégorie de platforme",
+            "Catégorie de projet",
+            "Catégorie d'acquisition",
+            "Secteur de projet",
+            "Status de l'estimation",
+        ]
+        #@organization.fields.map(&:name).join(I18n.t(:general_csv_separator))
+      end
+
+      @projects.each do |project|
+        csv << [
+            project.title,
+            project.product_name,
+            project.start_date,
+            project.platform_category,
+            project.project_category,
+            project.acquisition_category,
+            project.project_area,
+            project.estimation_status
+        ]
+        #@organization.fields.each do |field|
+        #  pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+        #  csv << ["", "", "", "", "", "", "", "", pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision)]
+        #end
+      end
+    end
+    send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
+  end
+
+  def report
+    @organization = Organization.find(params[:organization_id])
+  end
 
 
   def authorization
@@ -604,7 +655,6 @@ class OrganizationsController < ApplicationController
       sut.last.each do |ot|
         ot.last.each do |uow|
           uow.last.each do |cplx|
-            #sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i, organization_uow_complexity_id: cplx.first.to_i).first
             sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i, organization_uow_complexity_id: cplx.first.to_i).first_or_create
             sutc.value = cplx.last
             sutc.save
@@ -616,188 +666,188 @@ class OrganizationsController < ApplicationController
     redirect_to redirect_apply(organization_module_estimation_path(@organization, :anchor => 'taille'), nil, '/organizationals_params')
   end
 
-  def import_abacus
-    authorize! :edit_organizations, Organization
-    @organization = Organization.find(params[:id])
-
-    file = params[:file]
-
-    case File.extname(file.original_filename)
-      when ".ods"
-        workbook = Roo::Spreadsheet.open(file.path, extension: :ods)
-      when ".xls"
-        workbook = Roo::Spreadsheet.open(file.path, extension: :xls)
-      when ".xlsx"
-        workbook = Roo::Spreadsheet.open(file.path, extension: :xlsx)
-      when ".xlsm"
-        workbook = Roo::Spreadsheet.open(file.path, extension: :xlsx)
-    end
-
-    workbook.sheets.each_with_index do |worksheet, k|
-      #if sheet name blank, we use sheetN as default name
-      name = worksheet
-      if name != 'ReadMe' #The ReadMe sheet is only for guidance and don't have to be proceed
-
-        @ot = OrganizationTechnology.find_or_create_by_name_and_alias_and_organization_id(:name => name,
-                                                                                          :alias => name,
-                                                                                          :organization_id => @organization.id)
-
-        workbook.default_sheet=workbook.sheets[k]
-        workbook.each_with_index do |row, i|
-          row.each_with_index do |cell, j|
-            unless row.nil?
-              unless workbook.cell(1,j+1) == "Abacus" or workbook.cell(i+1,1) == "Abacus"
-                if can? :manage, Organization
-                  @ouc = OrganizationUowComplexity.find_or_create_by_name_and_organization_id(:name => workbook.cell(1,j+1), :organization_id => @organization.id)
-                end
-
-                if can? :manage, Organization
-                  @uow = UnitOfWork.find_or_create_by_name_and_alias_and_organization_id(:name => workbook.cell(i+1,1), :alias => workbook.cell(i+1,1), :organization_id => @organization.id)
-                  unless @uow.organization_technologies.map(&:id).include?(@ot.id)
-                    @uow.organization_technologies << @ot
-                  end
-                  @uow.save
-                end
-
-                ao = AbacusOrganization.find_by_unit_of_work_id_and_organization_uow_complexity_id_and_organization_technology_id_and_organization_id(
-                    @uow.id,
-                    @ouc.id,
-                    @ot.id,
-                    @organization.id
-                )
-
-                if ao.nil?
-                  if can? :manage, Organization
-                    AbacusOrganization.create(
-                        :unit_of_work_id => @uow.id,
-                        :organization_uow_complexity_id => @ouc.id,
-                        :organization_technology_id => @ot.id,
-                        :organization_id => @organization.id,
-                        :value => workbook.cell(i+1, j+1))
-                  end
-                else
-                  ao.update_attribute(:value, workbook.cell(i+1, j+1))
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-
-    redirect_to redirect_apply(edit_organization_path(@organization.id), nil, '/organizationals_params')
-  end
-
-  def export_abacus
-    authorize! :edit_organizations, Organization
-
-    @organization = Organization.find(params[:id])
-    p=Axlsx::Package.new
-    wb=p.workbook
-    @organization.organization_technologies.each_with_index do |ot|
-      wb.add_worksheet(:name => ot.name) do |sheet|
-        style_title = sheet.styles.add_style(:bg_color => 'B0E0E6', :sz => 14, :b => true, :alignment => {:horizontal => :center})
-        style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
-        style_title_red = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF0000', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
-        style_title_orange = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
-        style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 14, :b => true, :alignment => {:horizontal => :right})
-        style_title_right_red = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
-        style_title_right_orange = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
-        style_data = sheet.styles.add_style(:sz => 12, :alignment => {:horizontal => :center}, :locked => false)
-        style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS')
-        head = ['Abacus']
-        head_style = [style_title2]
-        @organization.organization_uow_complexities.each_with_index do |comp|
-          head.push(comp.name)
-          if comp.state == 'retired'
-            head_style.push(style_title_red)
-          elsif comp.state == 'draft'
-            head_style.push(style_title_orange)
-          else
-            head_style.push(style_title)
-          end
-        end
-        row=sheet.add_row(head, :style => head_style)
-        ot.unit_of_works.each_with_index do |uow|
-          uow_row = []
-          if uow.state == 'retired'
-            uow_row_style=[style_title_right_red]
-          elsif uow.state == 'draft'
-            uow_row_style=[style_title_right_orange]
-          else
-            uow_row_style=[style_title_right]
-          end
-          uow_row = [uow.name]
-
-          @organization.organization_uow_complexities.each_with_index do |comp2, i|
-            if AbacusOrganization.where(:unit_of_work_id => uow.id, :organization_uow_complexity_id => comp2.id, :organization_technology_id => ot.id, :organization_id => @organization.id).first.nil?
-              data = ''
-            else
-              data = AbacusOrganization.where(:unit_of_work_id => uow.id,
-                                              :organization_uow_complexity_id => comp2.id,
-                                              :organization_technology_id => ot.id, :organization_id => @organization.id).first.value
-            end
-            uow_row_style.push(style_data)
-            uow_row.push(data)
-          end
-          row=sheet.add_row(uow_row, :style => uow_row_style)
-        end
-        sheet.sheet_protection.delete_rows = true
-        sheet.sheet_protection.delete_columns = true
-        sheet.sheet_protection.format_cells = true
-        sheet.sheet_protection.insert_columns = false
-        sheet.sheet_protection.insert_rows = false
-        sheet.sheet_protection.select_locked_cells = false
-        sheet.sheet_protection.select_unlocked_cells = false
-        sheet.sheet_protection.objects = false
-        sheet.sheet_protection.sheet = true
-      end
-    end
-    wb.add_worksheet(:name => 'ReadMe') do |sheet|
-      style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
-      style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 13, :b => true, :alignment => {:horizontal => :right})
-      style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS', :alignment => {:horizontal => :left})
-      style_text = sheet.styles.add_style(:alignment => {:wrapText => :true})
-      style_field = sheet.styles.add_style(:bg_color => 'F5F5F5', :sz => 12, :b => true)
-
-      sheet.add_row(['This File is an export of a ProjEstimate abacus'], :style => style_title2)
-      sheet.merge_cells 'A1:F1'
-      sheet.add_row(['Organization: ', "#{@organization.name} (#{@organization.id})", @organization.description], :style => [style_title_right, 0, style_text])
-      sheet.add_row(['Date: ', Time.now], :style => [style_title_right, style_date])
-      sheet.add_row([' '])
-      sheet.merge_cells 'A5:F5'
-      sheet.add_row(['There is one sheet by technology. Each sheet is organized with the complexity by column and the Unit Of work by row.'])
-      sheet.merge_cells 'A6:F6'
-      sheet.add_row(['For the complexity and the Unit Of Work state, we are using the following color code : Red=Retired, Orange=Draft).'])
-      sheet.merge_cells 'A7:F7'
-      sheet.add_row(['In order to allow this abacus to be re-imported into ProjEstimate and to prevent users from accidentally changing the structure of the sheets, workbooks have been protected.'])
-      sheet.merge_cells 'A8:F8'
-      sheet.add_row(['Advanced users can remove the protection (there is no password). For further information you can have a look on the ProjEstimate Help.'])
-      row=sheet.add_row(['For ProjEstimate Help, Click to go'])
-      sheet.add_hyperlink :location => 'http://forge.estimancy.com/projects/pe/wiki/Organizations', :ref => "A#{row.index+1}"
-      sheet.add_row([' '])
-      sheet.add_row([' '])
-      sheet.add_row(['Technologies'], :style => [style_title_right])
-      sheet.add_row(['Alias', 'Name', 'Description', 'State', 'Productivity Ratio'], :style => style_field)
-      @organization.organization_technologies.each_with_index do |ot|
-        sheet.add_row([ot.alias, ot.name, ot.description, ot.state, ot.productivity_ratio], :style => [0, 0, style_text])
-      end
-      sheet.add_row([' '])
-      sheet.add_row(['Complexities'], :style => [style_title_right])
-      sheet.add_row(['Display Order', 'Name', 'Description', 'State'], :style => style_field)
-      @organization.organization_uow_complexities.each_with_index do |comp|
-        sheet.add_row([comp.display_order, comp.name, comp.description, comp.state], :style => [0, 0, style_text])
-      end
-      sheet.add_row([' '])
-      sheet.add_row(['Units OF Works'], :style => [style_title_right])
-      sheet.add_row(['Alias', 'Name', 'Description', 'State'], :style => style_field)
-      @organization.unit_of_works.each_with_index do |uow|
-        sheet.add_row([uow.alias, uow.name, uow.description, uow.state], :style => [0, 0, style_text])
-      end
-      sheet.column_widths 20, 32, 80, 10, 18
-    end
-    send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
-  end
+  #def import_abacus
+  #  authorize! :edit_organizations, Organization
+  #  @organization = Organization.find(params[:id])
+  #
+  #  file = params[:file]
+  #
+  #  case File.extname(file.original_filename)
+  #    when ".ods"
+  #      workbook = Roo::Spreadsheet.open(file.path, extension: :ods)
+  #    when ".xls"
+  #      workbook = Roo::Spreadsheet.open(file.path, extension: :xls)
+  #    when ".xlsx"
+  #      workbook = Roo::Spreadsheet.open(file.path, extension: :xlsx)
+  #    when ".xlsm"
+  #      workbook = Roo::Spreadsheet.open(file.path, extension: :xlsx)
+  #  end
+  #
+  #  workbook.sheets.each_with_index do |worksheet, k|
+  #    #if sheet name blank, we use sheetN as default name
+  #    name = worksheet
+  #    if name != 'ReadMe' #The ReadMe sheet is only for guidance and don't have to be proceed
+  #
+  #      @ot = OrganizationTechnology.find_or_create_by_name_and_alias_and_organization_id(:name => name,
+  #                                                                                        :alias => name,
+  #                                                                                        :organization_id => @organization.id)
+  #
+  #      workbook.default_sheet=workbook.sheets[k]
+  #      workbook.each_with_index do |row, i|
+  #        row.each_with_index do |cell, j|
+  #          unless row.nil?
+  #            unless workbook.cell(1,j+1) == "Abacus" or workbook.cell(i+1,1) == "Abacus"
+  #              if can? :manage, Organization
+  #                @ouc = OrganizationUowComplexity.find_or_create_by_name_and_organization_id(:name => workbook.cell(1,j+1), :organization_id => @organization.id)
+  #              end
+  #
+  #              if can? :manage, Organization
+  #                @uow = UnitOfWork.find_or_create_by_name_and_alias_and_organization_id(:name => workbook.cell(i+1,1), :alias => workbook.cell(i+1,1), :organization_id => @organization.id)
+  #                unless @uow.organization_technologies.map(&:id).include?(@ot.id)
+  #                  @uow.organization_technologies << @ot
+  #                end
+  #                @uow.save
+  #              end
+  #
+  #              ao = AbacusOrganization.find_by_unit_of_work_id_and_organization_uow_complexity_id_and_organization_technology_id_and_organization_id(
+  #                  @uow.id,
+  #                  @ouc.id,
+  #                  @ot.id,
+  #                  @organization.id
+  #              )
+  #
+  #              if ao.nil?
+  #                if can? :manage, Organization
+  #                  AbacusOrganization.create(
+  #                      :unit_of_work_id => @uow.id,
+  #                      :organization_uow_complexity_id => @ouc.id,
+  #                      :organization_technology_id => @ot.id,
+  #                      :organization_id => @organization.id,
+  #                      :value => workbook.cell(i+1, j+1))
+  #                end
+  #              else
+  #                ao.update_attribute(:value, workbook.cell(i+1, j+1))
+  #              end
+  #            end
+  #          end
+  #        end
+  #      end
+  #    end
+  #  end
+  #
+  #  redirect_to redirect_apply(edit_organization_path(@organization.id), nil, '/organizationals_params')
+  #end
+  #
+  #def export_abacus
+  #  authorize! :edit_organizations, Organization
+  #
+  #  @organization = Organization.find(params[:id])
+  #  p=Axlsx::Package.new
+  #  wb=p.workbook
+  #  @organization.organization_technologies.each_with_index do |ot|
+  #    wb.add_worksheet(:name => ot.name) do |sheet|
+  #      style_title = sheet.styles.add_style(:bg_color => 'B0E0E6', :sz => 14, :b => true, :alignment => {:horizontal => :center})
+  #      style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
+  #      style_title_red = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF0000', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
+  #      style_title_orange = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
+  #      style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 14, :b => true, :alignment => {:horizontal => :right})
+  #      style_title_right_red = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
+  #      style_title_right_orange = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
+  #      style_data = sheet.styles.add_style(:sz => 12, :alignment => {:horizontal => :center}, :locked => false)
+  #      style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS')
+  #      head = ['Abacus']
+  #      head_style = [style_title2]
+  #      @organization.organization_uow_complexities.each_with_index do |comp|
+  #        head.push(comp.name)
+  #        if comp.state == 'retired'
+  #          head_style.push(style_title_red)
+  #        elsif comp.state == 'draft'
+  #          head_style.push(style_title_orange)
+  #        else
+  #          head_style.push(style_title)
+  #        end
+  #      end
+  #      row=sheet.add_row(head, :style => head_style)
+  #      ot.unit_of_works.each_with_index do |uow|
+  #        uow_row = []
+  #        if uow.state == 'retired'
+  #          uow_row_style=[style_title_right_red]
+  #        elsif uow.state == 'draft'
+  #          uow_row_style=[style_title_right_orange]
+  #        else
+  #          uow_row_style=[style_title_right]
+  #        end
+  #        uow_row = [uow.name]
+  #
+  #        @organization.organization_uow_complexities.each_with_index do |comp2, i|
+  #          if AbacusOrganization.where(:unit_of_work_id => uow.id, :organization_uow_complexity_id => comp2.id, :organization_technology_id => ot.id, :organization_id => @organization.id).first.nil?
+  #            data = ''
+  #          else
+  #            data = AbacusOrganization.where(:unit_of_work_id => uow.id,
+  #                                            :organization_uow_complexity_id => comp2.id,
+  #                                            :organization_technology_id => ot.id, :organization_id => @organization.id).first.value
+  #          end
+  #          uow_row_style.push(style_data)
+  #          uow_row.push(data)
+  #        end
+  #        row=sheet.add_row(uow_row, :style => uow_row_style)
+  #      end
+  #      sheet.sheet_protection.delete_rows = true
+  #      sheet.sheet_protection.delete_columns = true
+  #      sheet.sheet_protection.format_cells = true
+  #      sheet.sheet_protection.insert_columns = false
+  #      sheet.sheet_protection.insert_rows = false
+  #      sheet.sheet_protection.select_locked_cells = false
+  #      sheet.sheet_protection.select_unlocked_cells = false
+  #      sheet.sheet_protection.objects = false
+  #      sheet.sheet_protection.sheet = true
+  #    end
+  #  end
+  #  wb.add_worksheet(:name => 'ReadMe') do |sheet|
+  #    style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
+  #    style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 13, :b => true, :alignment => {:horizontal => :right})
+  #    style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS', :alignment => {:horizontal => :left})
+  #    style_text = sheet.styles.add_style(:alignment => {:wrapText => :true})
+  #    style_field = sheet.styles.add_style(:bg_color => 'F5F5F5', :sz => 12, :b => true)
+  #
+  #    sheet.add_row(['This File is an export of a ProjEstimate abacus'], :style => style_title2)
+  #    sheet.merge_cells 'A1:F1'
+  #    sheet.add_row(['Organization: ', "#{@organization.name} (#{@organization.id})", @organization.description], :style => [style_title_right, 0, style_text])
+  #    sheet.add_row(['Date: ', Time.now], :style => [style_title_right, style_date])
+  #    sheet.add_row([' '])
+  #    sheet.merge_cells 'A5:F5'
+  #    sheet.add_row(['There is one sheet by technology. Each sheet is organized with the complexity by column and the Unit Of work by row.'])
+  #    sheet.merge_cells 'A6:F6'
+  #    sheet.add_row(['For the complexity and the Unit Of Work state, we are using the following color code : Red=Retired, Orange=Draft).'])
+  #    sheet.merge_cells 'A7:F7'
+  #    sheet.add_row(['In order to allow this abacus to be re-imported into ProjEstimate and to prevent users from accidentally changing the structure of the sheets, workbooks have been protected.'])
+  #    sheet.merge_cells 'A8:F8'
+  #    sheet.add_row(['Advanced users can remove the protection (there is no password). For further information you can have a look on the ProjEstimate Help.'])
+  #    row=sheet.add_row(['For ProjEstimate Help, Click to go'])
+  #    sheet.add_hyperlink :location => 'http://forge.estimancy.com/projects/pe/wiki/Organizations', :ref => "A#{row.index+1}"
+  #    sheet.add_row([' '])
+  #    sheet.add_row([' '])
+  #    sheet.add_row(['Technologies'], :style => [style_title_right])
+  #    sheet.add_row(['Alias', 'Name', 'Description', 'State', 'Productivity Ratio'], :style => style_field)
+  #    @organization.organization_technologies.each_with_index do |ot|
+  #      sheet.add_row([ot.alias, ot.name, ot.description, ot.state, ot.productivity_ratio], :style => [0, 0, style_text])
+  #    end
+  #    sheet.add_row([' '])
+  #    sheet.add_row(['Complexities'], :style => [style_title_right])
+  #    sheet.add_row(['Display Order', 'Name', 'Description', 'State'], :style => style_field)
+  #    @organization.organization_uow_complexities.each_with_index do |comp|
+  #      sheet.add_row([comp.display_order, comp.name, comp.description, comp.state], :style => [0, 0, style_text])
+  #    end
+  #    sheet.add_row([' '])
+  #    sheet.add_row(['Units OF Works'], :style => [style_title_right])
+  #    sheet.add_row(['Alias', 'Name', 'Description', 'State'], :style => style_field)
+  #    @organization.unit_of_works.each_with_index do |uow|
+  #      sheet.add_row([uow.alias, uow.name, uow.description, uow.state], :style => [0, 0, style_text])
+  #    end
+  #    sheet.column_widths 20, 32, 80, 10, 18
+  #  end
+  #  send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
+  #end
 
 
   # Duplicate the organization

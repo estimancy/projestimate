@@ -9,7 +9,7 @@ module Guw
 
     has_many :guw_unit_of_work_attributes, dependent: :destroy
 
-    ###validates_presence_of :name, :guw_type_id, :guw_unit_of_work_group_id, :display_order
+    validates_presence_of :name, :guw_type_id, :guw_unit_of_work_group_id
 
     amoeba do
       enable

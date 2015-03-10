@@ -104,8 +104,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       #reorder to keep good order
       reorder guw_unit_of_work.guw_unit_of_work_group
 
-      @guw_type = guw_unit_of_work.guw_type
-
+      @guw_type = Guw::GuwType.find(params[:guw_type]["#{guw_unit_of_work.id}"])
       @lows = Array.new
       @mls = Array.new
       @highs = Array.new
@@ -221,57 +220,68 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
-
-
-      if @guw_model.one_level_model == true
-        guw_unit_of_work.guw_complexity_id = params[:guw_complexity_id].to_i
-        guw_unit_of_work.save
-      end
-
       guw_unit_of_work.save
 
-      @guw_type.guw_complexities.each do |guw_c|
-
-        #Save if uo is simple/ml/high
-        value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
-
-        if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
-          guw_unit_of_work.guw_complexity_id = guw_c.id
-          guw_unit_of_work.save
-        end
-
-        #Save effective effort (or weight) of uo
+      if @guw_model.one_level_model == true
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+        guw_complexity_id = params[:guw_complexity_id].to_i
+
+        guw_unit_of_work.guw_complexity_id = guw_complexity_id
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+        guw_unit_of_work.guw_type_id = @guw_type.id
 
-        if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
-          cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
-                                                 guw_work_unit_id: guw_work_unit.id).first
-          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
-                                                     organization_technology_id: guw_unit_of_work.organization_technology_id).first
+        cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
+                                               guw_work_unit_id: guw_work_unit.id).first
 
-          uo_weight_low = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
+                                                   organization_technology_id: guw_unit_of_work.organization_technology_id).first
+
+        @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        guw_unit_of_work.save
+      else
+        @guw_type.guw_complexities.each do |guw_c|
+
+          #Save if uo is simple/ml/high
+          value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
+
+          if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
+            guw_unit_of_work.guw_complexity_id = guw_c.id
+            guw_unit_of_work.save
+          end
+
+          #Save effective effort (or weight) of uo
+          guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+          guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+
+          if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
+            cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
+                                                   guw_work_unit_id: guw_work_unit.id).first
+            tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
+                                                       organization_technology_id: guw_unit_of_work.organization_technology_id).first
+
+            uo_weight_low = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+          end
+
+          if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
+            cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
+                                                   guw_work_unit_id: guw_work_unit.id).first
+            tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
+                                                       organization_technology_id: guw_unit_of_work.organization_technology_id).first
+
+            uo_weight_ml = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+          end
+
+          if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
+            cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
+                                                   guw_work_unit_id: guw_work_unit.id).first
+            tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
+                                                       organization_technology_id: guw_unit_of_work.organization_technology_id).first
+
+            uo_weight_high = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+          end
+
+          @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
         end
-
-        if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
-          cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
-                                                 guw_work_unit_id: guw_work_unit.id).first
-          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
-                                                     organization_technology_id: guw_unit_of_work.organization_technology_id).first
-
-          uo_weight_ml = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-        end
-
-        if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
-          cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id,
-                                                 guw_work_unit_id: guw_work_unit.id).first
-          tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id,
-                                                     organization_technology_id: guw_unit_of_work.organization_technology_id).first
-
-          uo_weight_high = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-        end
-
-        @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
       end
 
       guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum)
@@ -288,11 +298,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       else
         guw_unit_of_work.flagged = true
       end
-
       guw_unit_of_work.save
-
     end
-
     #we save the effort now in estimation values
     @module_project = current_module_project
     @module_project.guw_model_id = @guw_model.id
