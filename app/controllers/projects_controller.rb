@@ -1350,31 +1350,31 @@ public
 
 
   #Method to duplicate project and associated pe_wbs_project
-  def duplicate_SAVE
-    @organization = Organization.find(params[:organization_id])
-    # To duplicate a project user need to have the "show_project" and "create_project_from_scratch" authorizations
-    if params[:action_name] == "duplication"
-      authorize! :create_project_from_scratch, Project
-      # To Create a project from a template user need to have "create_project_from_template" authorization
-      #elsif params[:action_name] == "create_project_from_template"
-    elsif !params[:create_project_from_template].nil?
-      authorize! :create_project_from_template, Project
-    end
-
-    new_prj = execute_duplication(params[:project_id], params[:create_project_from_template])
-
-    if new_prj && !new_prj.nil?
-      flash[:success] = I18n.t(:notice_project_successful_duplicated)
-      redirect_to edit_project_path(new_prj), flash: { success: I18n.t(:notice_project_successful_duplicated) } and return
-    else
-      flash[:error] = I18n.t(:error_project_failed_duplicate)
-      if !params[:create_project_from_template].nil?   #if params[:action_name] == "create_project_from_template"
-        redirect_to projects_from_path(organization_id: @organization.id) and return
-      else
-        redirect_to organization_estimations_path(@current_organization)
-      end
-    end
-  end
+  #def duplicate_SAVE
+  #  @organization = Organization.find(params[:organization_id])
+  #  # To duplicate a project user need to have the "show_project" and "create_project_from_scratch" authorizations
+  #  if params[:action_name] == "duplication"
+  #    authorize! :create_project_from_scratch, Project
+  #    # To Create a project from a template user need to have "create_project_from_template" authorization
+  #    #elsif params[:action_name] == "create_project_from_template"
+  #  elsif !params[:create_project_from_template].nil?
+  #    authorize! :create_project_from_template, Project
+  #  end
+  #
+  #  new_prj = execute_duplication(params[:project_id], params[:create_project_from_template])
+  #
+  #  if new_prj && !new_prj.nil?
+  #    flash[:success] = I18n.t(:notice_project_successful_duplicated)
+  #    redirect_to edit_project_path(new_prj), flash: { success: I18n.t(:notice_project_successful_duplicated) } and return
+  #  else
+  #    flash[:error] = I18n.t(:error_project_failed_duplicate)
+  #    if !params[:create_project_from_template].nil?   #if params[:action_name] == "create_project_from_template"
+  #      redirect_to projects_from_path(organization_id: @organization.id) and return
+  #    else
+  #      redirect_to organization_estimations_path(@current_organization)
+  #    end
+  #  end
+  #end
 
 
   def duplicate
@@ -1408,7 +1408,7 @@ public
       new_prj.start_date = start_date
 
       #Only the securities for the generated project will be taken in account
-      new_prj.project_securities = new_prj.project_securities.where(is_model_permission: [false, nil])
+      new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }
     end
 
     if new_prj.save
