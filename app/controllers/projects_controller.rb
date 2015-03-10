@@ -520,17 +520,32 @@ class ProjectsController < ApplicationController
         if !params[:model_group_security_levels].nil?
           is_model_permission = true
         end
-        @project.organization.groups.uniq.each do |gpe|
-          ps = ProjectSecurity.where(:group_id => gpe.id, :project_id => @project.id, :is_model_permission => is_model_permission).first
-          if ps
-            ps.project_security_level_id = params["group_securities_#{gpe.id}"]
-            ps.save
-          elsif !params["group_securities_#{gpe.id}"].blank?
-            #ProjectSecurity.create(:group_id => gpe.id, :project_id => @project.id, :project_security_level_id => params["group_securities_#{gpe.id}"])
-            new_ps = @project.project_securities.build
-            new_ps.group_id = gpe.id
-            new_ps.project_security_level_id = params["group_securities_#{gpe.id}"]
-            new_ps.is_model_permission = is_model_permission
+
+        @project.project_securities.delete_all
+        params["group_securities"].each do |psl|
+          params["group_securities"][psl.first].each do |group|
+            ProjectSecurity.create(group_id: group.first.to_i,
+                                   project_id: @project.id,
+                                   project_security_level_id: psl.first,
+                                   is_model_permission: true)
+          end
+        end
+
+        params["group_securities_from_model"].each do |psl|
+          params["group_securities_from_model"][psl.first].each do |group|
+            ProjectSecurity.create(group_id: group.first.to_i,
+                                   project_id: @project.id,
+                                   project_security_level_id: psl.first,
+                                   is_model_permission: false)
+          end
+        end
+
+        params["user_securities_from_model"].each do |psl|
+          params["user_securities_from_model"][psl.first].each do |group|
+            ProjectSecurity.create(user_id: group.first.to_i,
+                                   project_id: @project.id,
+                                   project_security_level_id: psl.first,
+                                   is_model_permission: false)
           end
         end
       end

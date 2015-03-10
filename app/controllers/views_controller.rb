@@ -104,9 +104,9 @@ class ViewsController < ApplicationController
     @view.destroy
 
     # the organization default view
-    @organization_default_iew = View.where("name = ? AND organization_id = ?", "Default view", organization_id).first_or_create(name: "Default view", organization_id: organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+    @organization_default_view = View.where("name = ? AND organization_id = ?", "Default view", organization_id).first_or_create(name: "Default view", organization_id: organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
     #After destroy, we need to assigned all this view module_project to the organization default view
-    view_module_projects.update_all(view_id: @organization_default_iew)
+    view_module_projects.update_all(view_id: @organization_default_view)
 
     redirect_to edit_module_project_path(params['module_project_id'], :anchor => 'tabs-view-widgets-parameters')
   end
