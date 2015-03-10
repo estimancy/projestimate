@@ -1,6 +1,7 @@
 <%= simple_form_for @new_project, :url => duplicate_path(params[:template_id]) do |f| %>
     <%= f.error_notification %>
 
+    <%= hidden_field_tag(:organization_id, params[:organization_id]) %>
     <%= hidden_field_tag(:project_id, params[:template_id]) %>
     <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-large', :autofocus => (controller.action_name == 'new')} %>
     <table>
@@ -13,7 +14,7 @@
     <table>
       <tr>
         <td>
-          <%= f.input :start_date, :as => :string, :input_html => { :class => 'date-picker', :value => I18n.l(Time.now.to_date) } %>
+          <%= f.input :start_date, :as => :string, label: I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => I18n.l(Time.now.to_date) } %>
         </td>
         <script>
             $(document).ready(function () {

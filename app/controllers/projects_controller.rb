@@ -672,6 +672,8 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     authorize! :delete_project, @project
 
+    is_model = @project.is_model
+
     case params[:commit]
       when I18n.t('delete')
         if params[:yes_confirmation] == 'selected'
@@ -683,7 +685,7 @@ class ProjectsController < ApplicationController
             if !params[:from_tree_history_view].blank? && params['current_showed_project_id'] != params[:id]
               redirect_to edit_project_path(:id => params['current_showed_project_id'], :anchor => 'tabs-history')
             else
-              redirect_to organization_estimations_path(@current_organization)
+              redirect_to (is_model ? organization_setting_path(@current_organization, anchor: "tabs-estimation-models") : organization_estimations_path(@current_organization))
             end
           else
             flash[:warning] = I18n.t(:error_access_denied)
@@ -694,7 +696,7 @@ class ProjectsController < ApplicationController
           render :template => 'projects/confirm_deletion'
         end
       when I18n.t('cancel')
-        redirect_to (@project.is_model ? organization_setting_path(@current_organization, anchor: "tabs-estimation-models") : organization_estimations_path(@current_organization))
+        redirect_to (is_model ? organization_setting_path(@current_organization, anchor: "tabs-estimation-models") : organization_estimations_path(@current_organization))
       else
         render :template => 'projects/confirm_deletion'
     end
@@ -1331,16 +1333,46 @@ public
     @result_hash
   end
 
+
   #Method to duplicate project and associated pe_wbs_project
+  def duplicate_SAVE
+    @organization = Organization.find(params[:organization_id])
+    # To duplicate a project user need to have the "show_project" and "create_project_from_scratch" authorizations
+    if params[:action_name] == "duplication"
+      authorize! :create_project_from_scratch, Project
+      # To Create a project from a template user need to have "create_project_from_template" authorization
+      #elsif params[:action_name] == "create_project_from_template"
+    elsif !params[:create_project_from_template].nil?
+      authorize! :create_project_from_template, Project
+    end
+
+    new_prj = execute_duplication(params[:project_id], params[:create_project_from_template])
+
+    if new_prj && !new_prj.nil?
+      flash[:success] = I18n.t(:notice_project_successful_duplicated)
+      redirect_to edit_project_path(new_prj), flash: { success: I18n.t(:notice_project_successful_duplicated) } and return
+    else
+      flash[:error] = I18n.t(:error_project_failed_duplicate)
+      if !params[:create_project_from_template].nil?   #if params[:action_name] == "create_project_from_template"
+        redirect_to projects_from_path(organization_id: @organization.id) and return
+      else
+        redirect_to organization_estimations_path(@current_organization)
+      end
+    end
+  end
+
+
   def duplicate
     # To duplicate a project user need to have the "show_project" and "create_project_from_scratch" authorizations
     if params[:action_name] == "duplication"
       authorize! :create_project_from_scratch, Project
-    # To Create a project from a template user need to have "create_project_from_template" authorization
-    #elsif params[:action_name] == "create_project_from_template"
+      # To Create a project from a template user need to have "create_project_from_template" authorization
+      #elsif params[:action_name] == "create_project_from_template"
     elsif !params[:create_project_from_template].nil?
       authorize! :create_project_from_template, Project
     end
+
+    @organization = Organization.find(params[:organization_id])
 
     old_prj = Project.find(params[:project_id])
 
