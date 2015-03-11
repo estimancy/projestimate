@@ -522,30 +522,36 @@ class ProjectsController < ApplicationController
         end
 
         @project.project_securities.delete_all
-        params["group_securities"].each do |psl|
-          params["group_securities"][psl.first].each do |group|
-            ProjectSecurity.create(group_id: group.first.to_i,
-                                   project_id: @project.id,
-                                   project_security_level_id: psl.first,
-                                   is_model_permission: true)
+        unless params["group_securities"].nil?
+          params["group_securities"].each do |psl|
+            params["group_securities"][psl.first].each do |group|
+              ProjectSecurity.create(group_id: group.first.to_i,
+                                     project_id: @project.id,
+                                     project_security_level_id: psl.first,
+                                     is_model_permission: true)
+            end
           end
         end
 
-        params["group_securities_from_model"].each do |psl|
-          params["group_securities_from_model"][psl.first].each do |group|
-            ProjectSecurity.create(group_id: group.first.to_i,
-                                   project_id: @project.id,
-                                   project_security_level_id: psl.first,
-                                   is_model_permission: false)
+        unless params["group_securities_from_model"].nil?
+          params["group_securities_from_model"].each do |psl|
+            params["group_securities_from_model"][psl.first].each do |group|
+              ProjectSecurity.create(group_id: group.first.to_i,
+                                     project_id: @project.id,
+                                     project_security_level_id: psl.first,
+                                     is_model_permission: false)
+            end
           end
         end
 
-        params["user_securities_from_model"].each do |psl|
-          params["user_securities_from_model"][psl.first].each do |group|
-            ProjectSecurity.create(user_id: group.first.to_i,
-                                   project_id: @project.id,
-                                   project_security_level_id: psl.first,
-                                   is_model_permission: false)
+        unless params["user_securities_from_model"].nil?
+          params["user_securities_from_model"].each do |psl|
+            params["user_securities_from_model"][psl.first].each do |group|
+              ProjectSecurity.create(user_id: group.first.to_i,
+                                     project_id: @project.id,
+                                     project_security_level_id: psl.first,
+                                     is_model_permission: false)
+            end
           end
         end
       end
