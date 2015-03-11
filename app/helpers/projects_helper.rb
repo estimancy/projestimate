@@ -1108,31 +1108,36 @@ module ProjectsHelper
 
   # Got the right to see the estimation from estimations list
   def can_see_estimation?(estimation)
-    authorization =  can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
-    authorization && can?(:see_project, estimation)
+    #authorization =  can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    #authorization && can?(:see_project, estimation)
+    true
   end
 
   # Got the right to show the estimation details
   def can_show_estimation?(estimation)
-    authorization = can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
-    authorization && can?(:show_project, estimation)
+    #authorization = can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    #authorization && can?(:show_project, estimation)
+    true
   end
 
   # Got the right to edit and modify the estimation details
   def can_modify_estimation?(estimation)
-    authorization = can_do_action_on_estimation?(estimation, "edit_project")
-    authorization && can?(:edit_project, estimation)
+    #authorization = can_do_action_on_estimation?(estimation, "edit_project")
+    #authorization && can?(:edit_project, estimation)
+    true
   end
 
   # Got the right to Alter and modify only some parts of the estimation details if user has the rights to edit the project in its status
   def can_alter_estimation?(estimation)
-    can?(:show_project, estimation) && can_do_action_on_estimation?(estimation, "edit_project")
+    #can?(:show_project, estimation) && can_do_action_on_estimation?(estimation, "edit_project")
+    true
   end
 
   # Got the right to delete the estimation
   def can_delete_estimation?(estimation)
-    authorization = can_do_action_on_estimation?(estimation, "delete_project")
-    authorization && can?(:delete_project, estimation)
+    #authorization = can_do_action_on_estimation?(estimation, "delete_project")
+    #authorization && can?(:delete_project, estimation)
+    true
   end
 
   def convert_with_precision(value, precision)
