@@ -456,7 +456,7 @@ class OrganizationsController < ApplicationController
 
       #A la sauvegarde, on copies des technologies
       Technology.all.each do |technology|
-        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name,  description: technology.description, organization_id: @organization.id)
+        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name, description: technology.description, organization_id: @organization.id)
         ot.save(validate: false)
       end
 
@@ -480,7 +480,9 @@ class OrganizationsController < ApplicationController
       end
 
       #Add a default view for widgets
-      view = View.create(:name => "Default view", :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.", :organization_id => @organization.id)
+      view = View.create(:name => "Default view",
+                         :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.",
+                         :organization_id => @organization.id)
 
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t(:notice_organization_successful_created)}"
     else
