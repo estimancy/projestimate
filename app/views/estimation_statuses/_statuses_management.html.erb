@@ -18,7 +18,7 @@
             <td style='width: 10px;'><%= estimation_status.status_number %></td>
             <td><%= estimation_status.status_alias %></td>
             <td><%= estimation_status.name %></td>
-            <td style='width: 10%; background-color: <%= "##{estimation_status.status_color}" %>'><%#= "##{estimation_status.status_color}" %></td>
+            <td style='width: 10%; background-color: <%= "##{estimation_status.status_color}" %>'></td>
             <td><%= estimation_status.description %></td>
             <td class="center">
               <%= link_to '', edit_estimation_status_path(estimation_status), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
@@ -93,14 +93,7 @@
                 </tr>
 
                 <tr>
-                  <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
-                  <% @organization_group.each do |group| %>
-                    <th>
-                      <% ['see_project', 'show_project', 'edit_project', 'delete_project'].each do |permission| %>
-                          <span class="span3" style="font-weight: normal; color: darkorange"><%= I18n.t("label_#{permission}_status") %></span>
-                      <% end %>
-                    </th>
-                  <% end %>
+                  <th colspan="2" style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
                 </tr>
 
             <% else %>
@@ -121,12 +114,7 @@
                   <% if @organization_group.length >= 1 %>
                       <% @organization_group.each do |group| %>
                         <td class="center">
-                        <% ['see_project', 'show_project', 'edit_project', 'delete_project'].each do |permission_label| %>
-                            <% permission = Permission.find_by_alias(permission_label) %>
-                            <span class="span3">
-                              <%= check_box_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", permission.id, (estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include? permission.id)) %>
-                            </span>
-                        <% end %>
+                          <%= select_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", options_for_select(@organization.project_security_levels.map{|i| [i.name, i.id]})) %>
                         </td>
                       <% end %>
                   <% else %>
@@ -134,7 +122,6 @@
                   <% end %>
                 </tr>
             <% end %>
-
           </table>
           <% if can? :manage, EstimationStatus %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>

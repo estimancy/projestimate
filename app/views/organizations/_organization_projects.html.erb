@@ -22,8 +22,6 @@
           <% end %>
 
           <% if can? :show_project, Project %>
-            <%= link_to "Générateur de rapport", organization_report_path(@organization), :class => 'btn' %>
-
             <%= link_to "Générer un rapport à partir du tableau", "#!", :class => 'btn export' %>
           <% end %>
         </td>

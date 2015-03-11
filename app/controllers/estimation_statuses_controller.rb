@@ -63,7 +63,6 @@ class EstimationStatusesController < ApplicationController
       end
     end
 
-    ##status.estimation_status_group_roles(force_reload = true)
     redirect_to organization_setting_path(@organization, anchor: 'tabs-estimations-statuses'), :notice => "#{I18n.t (:notice_estimation_status_successful_updated)}"
   end
 

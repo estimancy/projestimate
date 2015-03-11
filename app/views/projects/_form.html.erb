@@ -286,12 +286,10 @@
                         <td>
                           <%= group.name %>
                           <% @organization.project_security_levels.each do |prj_level| %>
-                            <%
-                               ps = ProjectSecurity.where(group_id: group.id,
+                            <% ps = ProjectSecurity.where(group_id: group.id,
                                                           project_id: @project.id,
                                                           project_security_level_id: prj_level.id,
-                                                          is_model_permission: false).first
-                            %>
+                                                          is_model_permission: false).first %>
                           <td style="text-align: center">
                             <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?) %>
                           </td>
