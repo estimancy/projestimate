@@ -49,7 +49,7 @@ class Organization < ActiveRecord::Base
 
   #For user without group
   has_many :organizations_users, class_name: 'OrganizationsUsers'
-  has_many :users, through: :organizations_users, uniq: true
+  #has_many :users, through: :organizations_users, uniq: true
 
   has_many :fields, :dependent => :destroy
   has_many :wbs_activities, :dependent => :destroy
