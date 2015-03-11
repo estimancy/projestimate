@@ -24,18 +24,18 @@
   <tbody>
 
   <% @organization_profiles.each do |profile| %>
-      <tr>
-        <td class="td_min_width"><%= profile.name %></td>
-        <td><%= profile.description %></td>
-        <td><%= profile.cost_per_hour %></td>
+    <tr>
+      <td class="td_min_width"><%= profile.name %></td>
+      <td><%= profile.description %></td>
+      <td><%= profile.cost_per_hour %></td>
 
-        <td class="align-center">
-          <%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil', :title => I18n.t('edit') %>
-          <% if can? :manage, OrganizationProfile %>
-            <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-          <% end %>
-        </td>
-      </tr>
+      <td class="align-center">
+        <%= link_to '', edit_organization_profile_path(profile), :class => 'icon-pencil', :title => I18n.t('edit') %>
+        <% if can? :manage, OrganizationProfile %>
+          <%= link_to '', profile, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+        <% end %>
+      </td>
+    </tr>
   <% end %>
   <%= render :partial => 'layouts/footer_table' %>
   </tbody>

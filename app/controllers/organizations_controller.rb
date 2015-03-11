@@ -51,7 +51,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    @projects = Project.where(conditions).all
+    @projects = Project.where(is_model: false).where(conditions).all
     @organization = Organization.find(params[:organization_id])
 
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
@@ -65,12 +65,12 @@ class OrganizationsController < ApplicationController
             "Catégorie d'acquisition",
             "Secteur de projet",
             "Status de l'estimation",
-        ]
-        #@organization.fields.map(&:name).join(I18n.t(:general_csv_separator))
+        ] + @organization.fields.map(&:name)
       end
 
+      tmp = Array.new
       @projects.each do |project|
-        csv << [
+        tmp = [
             project.title,
             project.product_name,
             project.start_date,
@@ -80,10 +80,12 @@ class OrganizationsController < ApplicationController
             project.project_area,
             project.estimation_status
         ]
-        #@organization.fields.each do |field|
-        #  pf = ProjectField.where(field_id: field.id, project_id: project.id).first
-        #  csv << ["", "", "", "", "", "", "", "", pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision)]
-        #end
+        @organization.fields.each do |field|
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          tmp = tmp + [ pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) ]
+        end
+
+        csv << tmp
       end
     end
     send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
@@ -454,7 +456,7 @@ class OrganizationsController < ApplicationController
 
       #A la sauvegarde, on copies des technologies
       Technology.all.each do |technology|
-        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name,  description: technology.description, organization_id: @organization.id)
+        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name, description: technology.description, organization_id: @organization.id)
         ot.save(validate: false)
       end
 
@@ -478,7 +480,9 @@ class OrganizationsController < ApplicationController
       end
 
       #Add a default view for widgets
-      view = View.create(:name => "Default view", :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.", :organization_id => @organization.id)
+      view = View.create(:name => "Default view",
+                         :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.",
+                         :organization_id => @organization.id)
 
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t(:notice_organization_successful_created)}"
     else

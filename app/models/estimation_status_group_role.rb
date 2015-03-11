@@ -20,11 +20,11 @@
 #############################################################################
 
 class EstimationStatusGroupRole < ActiveRecord::Base
-  attr_accessible :estimation_status_id, :group_id, :permission_id, :organization_id
+  attr_accessible :estimation_status_id, :group_id, :project_security_level_id, :organization_id
 
   belongs_to :group
   belongs_to :estimation_status
-  belongs_to :permission
+  belongs_to :project_security_level
   belongs_to :organization
 
   #Review validation for AMOEBA

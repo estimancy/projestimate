@@ -1,4 +1,4 @@
-<%= simple_form_for(@project) do |f| %>
+  <%= simple_form_for(@project) do |f| %>
     <%= f.error_notification %>
 
     <div class="tabs">
@@ -69,50 +69,41 @@
         <% end %>
       </div>
     </div>
-<% end %>
+  <% end %>
 
 
     <div id="tabs-2">
       <div class="component_tree" id="project_wbs_product_section">
         <% unless @project.nil? || @pe_wbs_project_product.nil? %>
-            <%= raw generate_wbs_product(@project.root_component, @project, '', 5, true) unless @pe_wbs_project_product.pbs_project_elements.last.nil? %>
+          <%= raw generate_wbs_product(@project.root_component, @project, '', 5, true) unless @pe_wbs_project_product.pbs_project_elements.last.nil? %>
         <% end %>
       </div>
     </div>
 
     <div id="tabs-4" class="tabs_4_with_estimation_plan2">
       <% if controller.controller_name == 'projects' %>
-          <% if @project.is_locked == false or @project.is_locked.nil? %>
-              <% if can? :alter_estimation_plan, @project %>
-                  <div class="row-fluid">
-                    <div class="span12">
-                      <%= I18n.t(:label_add_a_module_to_project) %>
-                      <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
-                                                                                  "Modules de Jugement d'Expert" => @ej_modules,
-                                                                                  "Modules Activités / Profils" => @wbs_instances,
-                                                                                  "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
-                                                                                  "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
-                    </div>
-                  </div>
+        <% if @project.is_locked == false or @project.is_locked.nil? %>
+          <% if can? :alter_estimation_plan, @project %>
+            <div class="row-fluid">
+              <div class="span12">
+                <%= I18n.t(:label_add_a_module_to_project) %>
+                <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
+                                                                            "Modules de Jugement d'Expert" => @ej_modules,
+                                                                            "Modules Activités / Profils" => @wbs_instances,
+                                                                            "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
+                                                                            "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
+              </div>
+            </div>
 
-                  <br>
-                  <div class="row-fluid">
-                    <div class="span12">
-                      <%= hidden_field_tag 'project_id', @project.id %>
-                      <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
-                    </div>
-                  </div>
-              <% end %>
-
-              <!--<table style="width: 100%" border=0>-->
-                <!--<tr>-->
-                  <!--<td class="pull-right">-->
-                    <!--<%#= I18n.t(:label_filter_on_pbs_element) %>-->
-                    <!--<%#= select_tag 'select_pbs_project_elements', options_for_select(@project.root_component.subtree.map { |i| [i.name, i.id] }), :prompt => '' %>-->
-                  <!--</td>-->
-                <!--</tr>-->
-              <!--</table>-->
-          <!--<% end %>-->
+            <br>
+            <div class="row-fluid">
+              <div class="span12">
+                <%= hidden_field_tag 'project_id', @project.id %>
+                <%= link_to I18n.t(:button_build_estimation_path), module_projects_matrix_path(@project.id), :class => 'btn' %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
       <% end %>
 
 
@@ -142,15 +133,22 @@
                         <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                     <% end %>
                   </tr>
-                  <% @project.organization.users.each do |user| %>
-                      <%= hidden_field_tag "user_securities_#{user.id}" %>
-                      <% securities = user.project_securities_for_select(@project.id) %>
-                      <tr>
-                        <td><%= user.name %>
-                          <% @project.organization.project_security_levels.each do |prj_level| %>
-                            <td class="center"><%= radio_button_tag("user_securities_#{user.id}", prj_level.id, ((securities.nil? || securities.project_security_level.nil?) ? false : (securities.project_security_level.id == prj_level.id)), :disabled => !can_alter_project_securities) %> </td>
-                        <% end %>
-                      </tr>
+                  <% @organization.users.each do |user| %>
+                    <tr>
+                      <td>
+                        <%= user %>
+                        <% @organization.project_security_levels.each do |prj_level| %>
+                          <%
+                             ps = ProjectSecurity.where(user_id: user.id,
+                                                        project_id: @project.id,
+                                                        project_security_level_id: prj_level.id,
+                                                        is_model_permission: false).first
+                          %>
+                        <td style="text-align: center">
+                          <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true, disabled: !can_alter_project_securities) %>
+                        </td>
+                      <% end %>
+                    </tr>
                   <% end %>
                 </table>
                 <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
@@ -177,23 +175,36 @@
                   <tr>
                     <th>Group name</th>
                     <% @project.organization.project_security_levels.each do |prj_level| %>
-                        <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
+                      <th>
+                        <span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'>
+                          <%= prj_level.name %>
+                        </span>
+                      </th>
                     <% end %>
                   </tr>
-                  <% @project.organization.groups.each do |group| %>
-                      <% securities = group.project_securities_for_select(@project.id) %>
-                      <tr>
-                        <td><%= group.name %>
-                          <% @project.organization.project_security_levels.each do |prj_level| %>
-                            <td class="center"><%= radio_button_tag("group_securities_#{group.id}", prj_level.id, (securities.nil? ? false : (securities.project_security_level_id == prj_level.id)), :disabled => !can_alter_project_securities) %> </td>
-                        <% end %>
-                      </tr>
+
+                  <% @organization.groups.each do |group| %>
+                    <tr>
+                      <td>
+                        <%= group.name %>
+                        <% @organization.project_security_levels.each do |prj_level| %>
+                          <% ps = ProjectSecurity.where(group_id: group.id,
+                                                        project_id: @project.id,
+                                                        project_security_level_id: prj_level.id,
+                                                        is_model_permission: false).first %>
+                        <td style="text-align: center">
+                          <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?, disabled: !can_alter_project_securities) %>
+                        </td>
+                      <% end %>
+                    </tr>
                   <% end %>
                 </table>
+
                 <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
-                    <%= submit_tag I18n.t('save'), :name => "group_security_levels", :class => 'btn' %>
-                    <%= submit_tag I18n.t('apply'), :name => "group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <%= submit_tag I18n.t('save'), :name => "group_security_levels", :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :name => "group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
                 <% end %>
+
                 <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
               </div>
             </div>

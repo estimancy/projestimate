@@ -136,6 +136,23 @@ class Ability
           end
         end
       end
+
+      user.groups.each do |grp|
+        grp.estimation_status_group_roles.each do |esgr|
+          esgr.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
+            esgr.organization.projects.each do |project|
+              #if project.is_model
+                #For template/model, only the model's permissions will be taken in account
+                #if esgr.is_model_permission
+                #  can i.alias.to_sym, project
+                #end
+              #else
+                can permission.alias.to_sym, project, estimation_status_id: esgr.estimation_status_id
+              #end
+            end
+          end
+        end
+      end
     end
   end
 end
