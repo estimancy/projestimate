@@ -85,42 +85,45 @@
             </tr>
 
             <% if @organization_group.length >= 1 %>
-                <tr>
-                  <th></th>
-                  <% @organization_group.each do |group| %>
-                      <th scope='colgroup'><%= group.name %></th>
-                  <% end %>
-                </tr>
+              <tr>
+                <th></th>
+                <% @organization_group.each do |group| %>
+                    <th scope='colgroup'><%= group.name %></th>
+                <% end %>
+              </tr>
 
-                <tr>
-                  <th colspan="2" style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
-                </tr>
-
+              <tr>
+                <th colspan="3" style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
+              </tr>
             <% else %>
-                <tr>
-                  <th></th>
-                 <th><%= I18n.t(:no_group_in_organization, value: @organization.name) %></th>
-                </tr>
+              <tr>
+                <th></th>
+               <th><%= I18n.t(:no_group_in_organization, value: @organization.name) %></th>
+              </tr>
 
-                <tr>
-                  <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
-                  <th></th>
-                </tr>
+              <tr>
+                <th style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
+                <th></th>
+              </tr>
             <% end %>
 
             <% @organization.estimation_statuses.each do |estimation_status| %>
-                <tr>
-                  <td><%= estimation_status.libelle %></td>
-                  <% if @organization_group.length >= 1 %>
-                      <% @organization_group.each do |group| %>
-                        <td class="center">
-                          <%= select_tag("status_group_role[#{estimation_status.id}][#{group.id}][]", options_for_select(@organization.project_security_levels.map{|i| [i.name, i.id]})) %>
-                        </td>
-                      <% end %>
-                  <% else %>
-                    <td></td>
+              <tr>
+                <td><%= estimation_status.libelle %></td>
+                <% if @organization_group.length >= 1 %>
+                  <% @organization_group.each do |group| %>
+                    <td class="center">
+                      <% esgr = EstimationStatusGroupRole.where(group_id: group.id,
+                                                                estimation_status_id: estimation_status.id,
+                                                                organization_id: @organization.id ).first %>
+
+                      <%= select_tag("status_group_role[#{estimation_status.id}][#{group.id}]", options_for_select(@organization.project_security_levels.map{|i| [i.name, i.id]}, selected: esgr.nil? ? '' : esgr.project_security_level_id )) %>
+                    </td>
                   <% end %>
-                </tr>
+                <% else %>
+                  <td></td>
+                <% end %>
+              </tr>
             <% end %>
           </table>
           <% if can? :manage, EstimationStatus %>

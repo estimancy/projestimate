@@ -50,16 +50,15 @@ class EstimationStatusesController < ApplicationController
 
     @organization.estimation_statuses.all.each do |status|
       params[:status_group_role][status.id.to_s] ||= {}
-      Group.all.each do |group|
+      @organization.groups.each do |group|
         params[:status_group_role][status.id.to_s][group.id.to_s] ||= []
 
         est_status_groups = status.estimation_status_group_roles.where(group_id: group.id)
         est_status_groups.delete_all
-
-        params[:status_group_role][status.id.to_s][group.id.to_s].each do |permission|
-          status.estimation_status_group_roles.build(organization_id: @organization.id, group_id: group.id, permission_id: permission)
-          status.save
-        end
+        status.estimation_status_group_roles.build(organization_id: @organization.id,
+                                                   group_id: group.id,
+                                                   project_security_level_id: params[:status_group_role][status.id.to_s][group.id.to_s].to_i)
+        status.save
       end
     end
 
