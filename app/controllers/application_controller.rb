@@ -500,8 +500,24 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
   def layout_by_controller
     devise_controller? ? 'devise' : 'application'
+  end
+
+  # After authentication, user need to change their password during the first connection
+  # So user will be redirect to the "edit_user_registration_path"
+  def after_sign_in_path_for(resource)
+    # return the path based on resource
+    if resource.password_changed
+      if resource.organizations.size == 1
+        organization_estimations_path(resource.organizations.first)
+      else
+        root_path
+      end
+    else
+      edit_user_registration_path(resource, action_to_do: "update_password_first_connexion")
+    end
   end
 
 

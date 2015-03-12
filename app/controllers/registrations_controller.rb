@@ -53,11 +53,38 @@ class RegistrationsController < Devise::RegistrationsController
     end
 
   def update
-    #super do |resource|
-    #  #resource.save
-    #  #redirect_to edit_user_path(current_user)
-    #end
-    super
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+
+    resource_updated = update_resource(resource, account_update_params.merge(password_changed: true))
+    yield resource if block_given?
+
+    if resource_updated
+      #resource.password_changed = true
+      #resource.save
+
+      if is_flashing_format?
+        flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
+            :update_needs_confirmation : :updated
+        set_flash_message :notice, flash_key
+      end
+      sign_in resource_name, resource, bypass: true
+      respond_with resource, location: after_update_path_for(resource)
+    else
+      clean_up_passwords resource
+      respond_with resource
+    end
+  end
+
+
+  protected
+
+  def after_update_path_for(resource)
+    if resource.organizations.size == 1
+      organization_estimations_path(resource.organizations.first)
+    else
+      root_path
+    end
   end
 
   private

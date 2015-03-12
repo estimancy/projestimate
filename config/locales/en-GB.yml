@@ -1398,3 +1398,5 @@ en-gb:
   text_create_from_model: "Create project from the \"%{model_name}\" template"
   model_securities: "Permissions on the model"
   securities_for_generated_project: "Permissions for the generated estimation"
+  update_password_first_connexion: "You must change your password during your first connection"
+  update_email_login_password: "Update email / login / password"

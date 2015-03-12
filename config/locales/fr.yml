@@ -1435,3 +1435,5 @@ fr:
   text_create_from_model: "Créer une nouvelle estimation à partir du modèle \"%{model_name}\""
   model_securities: "Autorisations sur le modèle"
   securities_for_generated_project: "Autorisations de l'estimation créée à partir de ce modèle"
+  update_password_first_connexion: "You must change your password during your first connection"
+  update_email_login_password: "Modifier email / identifiant / mot de passe"
