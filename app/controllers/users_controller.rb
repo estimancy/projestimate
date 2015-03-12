@@ -35,6 +35,7 @@
 #############################################################################
 
 class UsersController < ApplicationController
+  require 'securerandom'
 
   #before_filter :verify_authentication, :except => [:show, :create_inactive_user]
   before_filter :load_data, :only => [:update, :edit, :new, :create, :create_inactive_user]
@@ -70,8 +71,10 @@ public
 
     set_page_title 'New user'
 
+    @organization = Organization.find_by_id(params[:organization_id])
     @user = User.new
     @user.auth_type = AuthMethod.first.id
+    @generated_password = SecureRandom.hex(8)
 
     @users = current_user.organizations
 
@@ -91,16 +94,18 @@ public
     @user.group_ids << Group.find_by_name('Everyone').id
 
     if @user.save
-      @organization = @user.organization
+      @organization = @current_organization  #@user.organization
       flash[:notice] = I18n.t(:notice_account_successful_created)
       redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
     else
+      @organization = Organization.find(params[:organization_id])
       render(:new)
     end
   end
 
   def edit
     @user = User.find(params[:id])
+
     if current_user == @user
       set_page_title 'Edit your user account'
     else
@@ -157,6 +162,7 @@ public
       redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
     else
       #session[:current_password] = params[:user][:current_password];  session[:password] = params[:user][:password]; session[:password_confirmation] = params[:user][:password_confirmation]
+      @organization = Organization.find(params[:organization_id])
       @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]
       render(:edit)
     end

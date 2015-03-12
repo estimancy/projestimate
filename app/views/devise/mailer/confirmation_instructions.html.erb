@@ -7,10 +7,12 @@
 
 <% else %>
 
-    <p><%= I18n.t(:text_welcome) %> <%= @email %>!</p>
+    <p><%= I18n.t(:text_welcome) %> <%= @email %>,</p>
 
 <% end %>
 
+<br>
+<p><%= I18n.t(:text_your_password_message, password: @resource.password) %></p> <br>
 <p><%= I18n.t(:mail_confirm_account_through_link_below) %></p>
 
 <p><%= link_to I18n.t(:label_confirm_my_account), confirmation_url(@resource, confirmation_token: @token) %></p>

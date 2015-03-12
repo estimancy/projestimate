@@ -1368,3 +1368,4 @@ it:
   securities_for_generated_project: "Permissions for the generated estimation"
   update_password_first_connexion: "Vous devez modifier votre mot de passe lors de votre 1ere connexion"
   update_email_login_password: "Update email / login / password"
+  text_your_password_message: "Your current password is: \"%{password}\". You must change it the first time you log into the application. "

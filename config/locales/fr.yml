@@ -1437,3 +1437,4 @@ fr:
   securities_for_generated_project: "Autorisations de l'estimation créée à partir de ce modèle"
   update_password_first_connexion: "You must change your password during your first connection"
   update_email_login_password: "Modifier email / identifiant / mot de passe"
+  text_your_password_message: "Votre mot de passe actuel est : \"%{password}\". Vous devez le modifier lors de votre première connexion à l'application. "
