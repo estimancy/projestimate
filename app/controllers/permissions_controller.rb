@@ -129,7 +129,7 @@ class PermissionsController < ApplicationController
     if params[:organization_permissions] == I18n.t('cancel') || params[:modules_permissions] == I18n.t('cancel')
       flash[:notice] = I18n.t(:notice_permission_successful_cancelled)
     else
-      @groups = @organization.groups
+      @groups = @current_organization.groups
       @permissions = Permission.defined
 
       @groups.each do |group|
