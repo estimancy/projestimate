@@ -20,7 +20,7 @@
               </div>
               <div id="collapseOne" class="accordion-body in collapse">
                 <div class="accordion-inner">
-                  <%= hidden_field_tag 'organization_id', @organization.id %>
+                  <%= hidden_field_tag 'organization_id', @current_organization.id %>
                   <table>
                     <tr>
                       <td><%= f.input :first_name, :label => I18n.t('first_name'), :input_html => {:autofocus => (controller.action_name == 'new'), :class => 'input-large'} %></td>
@@ -175,7 +175,7 @@
               <%= submit_tag I18n.t('save'), :class => 'btn' %>
               <%= submit_tag I18n.t('apply'), :class => 'btn' %>
           <% end %>
-          <%= link_to I18n.t('back'), organization_users_path(@organization), :class => 'btn' %>
+          <%= link_to I18n.t('back'), organization_users_path(@current_organization), :class => 'btn' %>
         </div>
     </div>
 <% end %>

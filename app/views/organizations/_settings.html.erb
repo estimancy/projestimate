@@ -332,11 +332,11 @@
   <div id="tabs-estimation-models">
     <b><%= I18n.t(:estimation_models) %></b>
 
-    <% if can? :show_estimation_models, Project %>
+    <%# if can? :show_estimation_models, Project %>
         <%= render partial: "projects/estimation_models", object: @estimation_models %>
-    <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_estimation_models) %></div>
-    <% end %>
+    <%# else %>
+        <!--<div class="red_color"><%# I18n.t(:notice_cannot_view_estimation_models) %></div>-->
+    <%# end %>
   </div>
 
 </div>

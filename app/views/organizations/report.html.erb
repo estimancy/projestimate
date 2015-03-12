@@ -29,7 +29,16 @@
       <div class="row-fluid">
         <div class="span12">
           <%= label_tag "Date de début" %>
-          <%= text_field_tag "report[start_date]", "", class: 'date-picker' %>
+          <%= text_field_tag "report_date[start_date]", "", class: 'date-picker' %>
+        </div>
+      </div>
+
+      <br>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <%= label_tag "Date de fin" %>
+          <%= text_field_tag "report_date[end_date]", "", class: 'date-picker' %>
         </div>
       </div>
 
@@ -85,7 +94,7 @@
           <%= label_tag "Avec en-tête" %>
           <%= check_box_tag "with_header", "checked" %>
 
-          <%= submit_tag "Générer le rapport", class: "btn btn-success pull-right" %>
+          <%= submit_tag "Générer le rapport", class: "btn pull-right" %>
         </div>
       </div>
 
