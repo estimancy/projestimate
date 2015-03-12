@@ -49,7 +49,7 @@ class Organization < ActiveRecord::Base
 
   #For user without group
   has_many :organizations_users, class_name: 'OrganizationsUsers'
-  #has_many :users, through: :organizations_users, uniq: true
+  has_many :users_from_organization, through: :organizations_users, :source => :user, uniq: true
 
   has_many :fields, :dependent => :destroy
   has_many :wbs_activities, :dependent => :destroy
@@ -100,6 +100,7 @@ class Organization < ActiveRecord::Base
   def to_s
     name
   end
+
 
   # Add the amoeba gem for the copy
   amoeba do

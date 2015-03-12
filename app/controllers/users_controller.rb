@@ -85,6 +85,8 @@ public
 
     set_page_title 'New user'
 
+    @organization = Organization.find(params[:organization_id])
+
     @user = User.new(params[:user])
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
@@ -94,11 +96,13 @@ public
     @user.group_ids << Group.find_by_name('Everyone').id
 
     if @user.save
-      @organization = @current_organization  #@user.organization
+      #@organization = @current_organization  #@user.organization
+      user_first_organization = OrganizationsUsers.new(organization_id: @organization.id, user_id: @user.id)
+      user_first_organization.save
+
       flash[:notice] = I18n.t(:notice_account_successful_created)
       redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
     else
-      @organization = Organization.find(params[:organization_id])
       render(:new)
     end
   end

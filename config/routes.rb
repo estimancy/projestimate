@@ -89,9 +89,9 @@ Projestimate::Application.routes.draw do
     get "sign_in",   :to => "devise/sessions#new"
     get "sign_out",  :to => "devise/sessions#destroy"
     get "cancel_user_registration", :to => "devise/registrations#cancel"
-    post "user_registration",       :to => "users#create"
-    get "new_user_registration",    :to => "users#new"
-    get "edit_user_registration",   :to => "users#edit"
+    post "user_registration",       :to => "devise/registrations#create"
+    get "new_user_registration",    :to => "devise/registrations#new"
+    get "edit_user_registration",   :to => "devise/registrations#edit"
     get "help_login" => "registrations", :as => 'help_login'
   end
   get 'awaiting_confirmation' => 'registrations#awaiting_confirmation', :as => 'awaiting_confirmation'
