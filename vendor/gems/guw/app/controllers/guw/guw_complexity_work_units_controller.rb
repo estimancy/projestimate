@@ -38,19 +38,21 @@
 class Guw::GuwComplexityWorkUnitsController < ApplicationController
 
   def save_complexity_work_units
-    params[:value].each do |i|
-      i.last.each do |j|
-        wu = Guw::GuwWorkUnit.find(j.first.to_i)
-        cplx = Guw::GuwComplexity.find(i.first.to_i)
+    unless params[:value].nil?
+      params[:value].each do |i|
+        i.last.each do |j|
+          wu = Guw::GuwWorkUnit.find(j.first.to_i)
+          cplx = Guw::GuwComplexity.find(i.first.to_i)
 
-        cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id,
-                                               guw_work_unit_id: wu.id).first
+          cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id,
+                                                 guw_work_unit_id: wu.id).first
 
-        if cwu.nil?
-          Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id, value: params[:value]["#{cplx.id}"]["#{wu.id}"])
-        else
-          cwu.value = params[:value]["#{cplx.id}"]["#{wu.id}"]
-          cwu.save
+          if cwu.nil?
+            Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id, value: params[:value]["#{cplx.id}"]["#{wu.id}"])
+          else
+            cwu.value = params[:value]["#{cplx.id}"]["#{wu.id}"]
+            cwu.save
+          end
         end
       end
     end

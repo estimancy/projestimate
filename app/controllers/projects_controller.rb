@@ -1718,7 +1718,6 @@ public
 
   #On edit page, select ratios according to the selected wbs_activity
   def refresh_wbs_activity_ratios
-    authorize! :edit_wbs_activities, WbsActivity
 
     if params[:wbs_activity_element_id].empty? || params[:wbs_activity_element_id].nil?
       @wbs_activity_ratios = []

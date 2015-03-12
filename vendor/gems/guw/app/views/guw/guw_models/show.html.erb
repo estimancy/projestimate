@@ -71,7 +71,7 @@
                 <td>Seuils</td>
                 <% guw_type.guw_complexities.each do |guw_cplx| %>
                   <td class="align-center">
-                    <%= guw_cplx.bottom_range %> - <%= guw_cplx.top_range %>
+                    [ <%= guw_cplx.bottom_range %> ; <%= guw_cplx.top_range %> [
                   </td>
                 <% end %>
               </tr>
@@ -157,11 +157,21 @@
                   </th>
                 <% end %>
               </tr>
+
               <tr>
                 <th></th>
                 <% guw_type.guw_type_complexities.each do |type_complexity| %>
                   <th>
                     <%= I18n.t :weight %> : <%= type_complexity.value.to_i %>
+                  </th>
+                <% end %>
+              </tr>
+
+              <tr>
+                <th></th>
+                <% guw_type.guw_type_complexities.each do |type_complexity| %>
+                  <th>
+                    [ &nbsp; ; &nbsp; [
                   </th>
                 <% end %>
               </tr>
@@ -175,7 +185,7 @@
                     <td class="align-center">
                       <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
                       <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
-                      <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini"  %>
+                      <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini" %>
                     </td>
                   <% end %>
                 </tr>
@@ -184,7 +194,7 @@
 
             <% unless @guw_model.guw_attributes.empty? %>
               <% if can? :manage_modules_instances, ModuleProject %>
-                  <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
+                <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
               <% end %>
               <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right' %>
             <% end %>

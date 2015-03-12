@@ -18,6 +18,10 @@ class Guw::GuwComplexitiesController < ApplicationController
 
   def create
     @guw_complexity = Guw::GuwComplexity.new(params[:guw_complexity])
+
+    @guw_complexity.bottom_range = params[:guw_complexity][:bottom_range].to_i
+    @guw_complexity.top_range = params[:guw_complexity][:top_range].to_i
+
     @guw_complexity.save
     redirect_to guw.guw_model_path(@guw_complexity.guw_type.guw_model)
   end

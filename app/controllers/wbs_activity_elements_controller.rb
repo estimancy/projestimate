@@ -38,7 +38,7 @@ class WbsActivityElementsController < ApplicationController
   include PeWbsHelper
 
   def new
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
 
     set_page_title 'WBS-Activity elements'
     @wbs_activity_element = WbsActivityElement.new
@@ -52,7 +52,7 @@ class WbsActivityElementsController < ApplicationController
   end
 
   def edit
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
 
     set_page_title 'WBS-Activity elements'
     @wbs_activity_element = WbsActivityElement.find(params[:id])
@@ -66,19 +66,10 @@ class WbsActivityElementsController < ApplicationController
     end
 
     @selected_parent = @wbs_activity_element.parent
-    #@selected_record_status = RecordStatus.where('id = ? ', @wbs_activity_element.record_status_id).first
-
-    #unless is_master_instance?
-    #  if @wbs_activity_element.is_defined?
-    #    flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
-    #    redirect_to edit_wbs_activity_path(@wbs_activity_element.wbs_activity, :anchor => 'tabs-2') and return
-      #end
-    #end
   end
 
   def create
-    authorize! :edit_wbs_activities, WbsActivity
-
+    authorize! :manage_modules_instances, ModuleProject
     @wbs_activity_element = WbsActivityElement.new(params[:wbs_activity_element])
 
     @selected_parent ||= WbsActivityElement.find(params[:wbs_activity_element][:parent_id])
@@ -114,8 +105,7 @@ class WbsActivityElementsController < ApplicationController
   end
 
   def update
-    authorize! :edit_wbs_activities, WbsActivity
-
+    authorize! :manage_modules_instances, ModuleProject
     @wbs_activity_element = WbsActivityElement.find(params[:id])
 
     @wbs_activity ||= WbsActivity.find_by_id(params[:wbs_activity_element][:wbs_activity_id])
@@ -175,7 +165,7 @@ class WbsActivityElementsController < ApplicationController
   end
 
   def update_status_collection
-    authorize! :edit_wbs_activities, WbsActivity  ###TODO: Verify as this method is not accessible from view
+    authorize! :manage_modules_instances, ModuleProject
 
     @wbs_record_status_collection = []
     unless params[:selected_parent_id].blank?

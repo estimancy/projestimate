@@ -1,14 +1,4 @@
 jQuery ->
-  $("#select_module").on 'change', ->
-    unless $("#select_module").val() is ""
-      $.ajax
-        url: "/append_pemodule"
-        method: "get"
-        data:
-          module_selected: $(this).val()
-          project_id: $("#project_id").val()
-          pbs_project_element_id: $("#select_pbs_project_elements").val()
-
   $("#select_pbs_project_elements").on 'change', ->
     $.ajax
       url: "/select_pbs_project_elements",

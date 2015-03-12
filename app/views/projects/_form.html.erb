@@ -124,6 +124,31 @@
                                                                           "Modules Activités / Profils" => @wbs_instances,
                                                                           "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
                                                                           "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
+              <script>
+                $(document).ready(function(){
+                  $("#select_module").on('change', function() {
+                    if ($("#select_module").val() !== "") {
+                      return $.ajax({
+                        url: "/append_pemodule",
+                        method: "get",
+                        data: {
+                          module_selected: $(this).val(),
+                          project_id: $("#project_id").val(),
+                          pbs_project_element_id: $("#select_pbs_project_elements").val()
+                        }
+                        ,
+                        success: function(data) {
+                          //return alert("success");
+                          //jsPlumb.repaintEverything();
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                          return alert("Error! :" + textStatus + ";" + errorThrown );
+                        }
+                      });
+                    }
+                  });
+                });
+              </script>
             </div>
           </div>
 
@@ -308,7 +333,6 @@
                         <% end %>
                       </tr>
                     <% end %>
-                  </tbody>
                 </table>
 
                 <%= submit_tag I18n.t('save'), :class => 'btn' %>
@@ -341,9 +365,5 @@
 
 <% end %>
 </div>
-
-<%# if can? :commit_project, @project %>
-  <%#= render :partial => 'check_state', :locals => { :can => 'admin_project_state'} %>
-<%# end %>
 
 

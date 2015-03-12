@@ -44,7 +44,7 @@ class WbsActivityRatiosController < ApplicationController
   end
 
   def import
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
 
     @wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
     begin
@@ -69,7 +69,7 @@ class WbsActivityRatiosController < ApplicationController
   end
 
   def edit
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     set_page_title 'Edit wbs-activity ratio'
     @activity_id = params[:activity_id]
     @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
@@ -78,7 +78,7 @@ class WbsActivityRatiosController < ApplicationController
 
 
   def update
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
     @wbs_activity=@wbs_activity_ratio.wbs_activity
 
@@ -97,14 +97,14 @@ class WbsActivityRatiosController < ApplicationController
   end
 
   def new
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     set_page_title 'New wbs-activity ratio'
     @activity_id = params[:activity_id]
     @wbs_activity_ratio = WbsActivityRatio.new
   end
 
   def create
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     @wbs_activity_ratio = WbsActivityRatio.new(params[:wbs_activity_ratio])
     @wbs_activity_ratio.owner_id = current_user.id
 
@@ -154,7 +154,7 @@ class WbsActivityRatiosController < ApplicationController
   end
 
   def validate_ratio
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
 
     @ratio = WbsActivityRatio.find(params[:ratio_id])
     @ratio.record_status =  @defined_status
