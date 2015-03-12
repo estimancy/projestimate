@@ -399,7 +399,7 @@ class ProjectsController < ApplicationController
       set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
       if cannot?(:manage_estimation_models, Project)    # No write access to project
-        if can?(:show_estimation_models)
+        if can_show_estimation?(@project)
           redirect_to(:action => 'show') and return
         else
           redirect_to(organization_setting_path(@organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
@@ -466,7 +466,7 @@ class ProjectsController < ApplicationController
       set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
       if cannot?(:manage_estimation_models, Project)    # No write access to project
-        if can?(:show_estimation_models)
+        if can_show_estimation?(@project)
           redirect_to(:action => 'show') and return
         else
           redirect_to(organization_setting_path(@organization), flash: { warning: I18n.t(:warning_no_modify_permission_on_project_status)}) and return
@@ -1565,7 +1565,7 @@ public
   #Find which projects/estimations are created from this model
   def find_use_estimation_model
     @project = Project.find(params[:project_id])
-    authorize! :show_estimation_models, Project
+    authorize! :show_project, @project
 
     @related_projects = Project.where(original_model_id: @project.id).all
   end
