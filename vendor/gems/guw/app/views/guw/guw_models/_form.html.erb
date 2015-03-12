@@ -24,7 +24,7 @@
       <% if can? :manage_modules_instances, ModuleProject %>
         <%= f.button :submit, I18n.t('save') %>
       <% end %>
-      <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@organization, anchor: "taille"), class: "btn" %>
+      <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "taille"), class: "btn" %>
     <% end %>
   </div>
 </div>
