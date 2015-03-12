@@ -55,9 +55,12 @@ class EstimationStatusesController < ApplicationController
 
         est_status_groups = status.estimation_status_group_roles.where(group_id: group.id)
         est_status_groups.delete_all
-        status.estimation_status_group_roles.build(organization_id: @organization.id,
-                                                   group_id: group.id,
-                                                   project_security_level_id: params[:status_group_role][status.id.to_s][group.id.to_s].to_i)
+
+        unless params[:status_group_role][status.id.to_s][group.id.to_s].blank?
+          status.estimation_status_group_roles.build(organization_id: @organization.id,
+                                                     group_id: group.id,
+                                                     project_security_level_id: params[:status_group_role][status.id.to_s][group.id.to_s].to_i)
+        end
         status.save
       end
     end
