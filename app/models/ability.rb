@@ -75,7 +75,7 @@ class Ability
 
     #When user can create a project template, he also can create a project from scratch
     #alias_action :create_project_from_scratch, :create_project_from_template, :show_estimation_models, :to => :manage_estimation_models
-    alias_action :show_estimation_models, :to => :manage_estimation_models
+    alias_action :edit_project, :to => :manage_estimation_models
 
     #For instance modules
     alias_action :show_modules_instances, :to => :manage_modules_instances

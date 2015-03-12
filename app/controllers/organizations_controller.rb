@@ -52,6 +52,7 @@ class OrganizationsController < ApplicationController
     end
 
     @projects = Project.where(is_model: false).where(conditions).all
+    #@projects = Project.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).all
     @organization = Organization.find(params[:organization_id])
 
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|

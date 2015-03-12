@@ -272,26 +272,6 @@ $(document).ready(function() {
             })
     });
 
-//    $('table .input-small').bind("blur",(
-//        function(){
-//            $.ajax({
-//                url:"check_attribute",
-//                type: 'POST',
-//                data: "value=" + this.value + "&level=" + this.className.split(/\s/)[1] + "&est_val_id=" + $(this).data("est_val_id") + "&wbs_project_elt_id=" + $(this).data("wbs_project_elt_id")
-//            })
-//        }
-//    ));
-
-//    $('table .input-mini').bind("blur",(
-//        function(){
-//            $.ajax({
-//                url:"/check_attribute_modules",
-//                type: 'POST',
-//                data: "value=" + this.value + "&level=" + this.className.split(/\s/)[1] + "&attr_id=" + this.className.split(/\s/)[2]
-//            })
-//        }
-//    ));
-
     $('#states').change(
         function(){
             $.ajax({
@@ -520,29 +500,6 @@ $(document).ready(function() {
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     return alert("Error! :" + textStatus + ";" + errorThrown );
                 }
-            });
-        }
-    });
-
-
-    $("#select_module").on('change', function() {
-        if ($("#select_module").val() !== "") {
-            return $.ajax({
-                url: "/append_pemodule",
-                method: "get",
-                data: {
-                    module_selected: $(this).val(),
-                    project_id: $("#project_id").val(),
-                    pbs_project_element_id: $("#select_pbs_project_elements").val()
-                }
-//                ,
-//                success: function(data) {
-//                    //return alert("success");
-//                    //jsPlumb.repaintEverything();
-//                },
-//                error: function(XMLHttpRequest, textStatus, errorThrown) {
-//                    return alert("Error! :" + textStatus + ";" + errorThrown );
-//                }
             });
         }
     });

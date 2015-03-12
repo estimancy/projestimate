@@ -286,7 +286,6 @@ class ApplicationController < ActionController::Base
         session[:organization_id] = current_user.organizations.first
         @current_organization = Organization.find(session[:organization_id])
       end
-
     rescue
       session[:organization_id] = nil
       @current_organization = nil

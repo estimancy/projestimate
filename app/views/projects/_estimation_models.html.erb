@@ -53,10 +53,11 @@
                   <%= link_to('', change_new_estimation_data_path(template_id: project.id, organization_id: project.organization_id, action_name: "create_project_from_template"), :class => 'icon-repeat pull-left', :title => I18n.t('button_duplicate_model'), remote: true) %>
               <% end %>
 
-              <% if can? :show_estimation_models, Project %>
-                  <%= link_to('', {:controller => 'projects', :action => 'find_use_estimation_model', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon icon-map-marker pull-left', :id => 'find_use_estimation_model', :title => I18n.t('button_find_use')) %>
-                  <%= link_to('', edit_project_path(project, is_model: true, :anchor => 'tabs-1'), :class => 'icon-pencil pull-left', :title => I18n.t('edit')) %>
+              <% if can_show_estimation?(project) %>
+                <%= link_to('', {:controller => 'projects', :action => 'find_use_estimation_model', :project_id => project.id}, :remote => true, 'data-project_id' => project.id, :class => 'icon icon-map-marker pull-left', :id => 'find_use_estimation_model', :title => I18n.t('button_find_use')) %>
+                <%= link_to('', edit_project_path(project, is_model: true, :anchor => 'tabs-1'), :class => 'icon-pencil pull-left', :title => I18n.t('edit')) %>
               <% end %>
+
               <% if can? :manage_estimation_models, Project %>
                   <%= link_to('', confirm_deletion_path(project.id), :class => 'icon-trash pull-left', :title => I18n.t('delete')) %>
               <% end %>

@@ -63,9 +63,9 @@ class Guw::GuwWorkUnitsController < ApplicationController
   end
 
   def destroy
-    guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+    @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     guw_model_id = @guw_work_unit.guw_model.id
     @guw_work_unit.delete
-    redirect_to main_app.dashboard_path(@project)
+    redirect_to guw.guw_model_path(guw_model_id)
   end
 end

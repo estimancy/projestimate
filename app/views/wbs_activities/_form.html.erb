@@ -14,24 +14,24 @@
 
         <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization_id } %>
         <% if controller.action_name == 'edit' and @wbs_activity.retired? %>
-            <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm.states_for_select, :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm.states_for_select, :input_html => {:class => 'input-xxlarge'} %>
         <% else %>
-            <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-            <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
-            <%= f.input :three_points_estimation, :label => "Estimation 3 points" %>
-            <%= f.input :enabled_input, label: "Modification des valeurs d'entrées" %>
-            <%= f.input :effort_unit, :label => "Libellé de l'unité d'effort du module" %>
-            <%= f.input :effort_unit_coefficient, :label => "Coefficient de conversion en effort standard" %>
+          <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+          <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+          <%= f.input :three_points_estimation, :label => "Estimation 3 points" %>
+          <%= f.input :enabled_input, label: "Modification des valeurs d'entrées" %>
+          <%= f.input :effort_unit, :label => "Libellé de l'unité d'effort du module" %>
+          <%= f.input :effort_unit_coefficient, :label => "Coefficient de conversion en effort standard" %>
 
         <% end %>
 
         <% if can? :manage_modules_instances, ModuleProject %>
-            <% if action_name == 'new' || action_name=='create' %>
-              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-            <% elsif action_name == 'edit' || action_name=='update' %>
-              <%= submit_tag I18n.t('save'), :class => 'btn' %>
-              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-            <% end %>
+          <% if action_name == 'new' || action_name=='create' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+          <% elsif action_name == 'edit' || action_name=='update' %>
+            <%= submit_tag I18n.t('save'), :class => 'btn' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+          <% end %>
         <% end %>
 
         <%= link_to I18n.t('back'), organization_module_estimation_path(@organization_id, anchor: "activite"), :class => 'btn back' %>

@@ -40,19 +40,19 @@ class WbsActivityRatioElementsController < ApplicationController
   #before_filter :get_record_statuses
 
   def edit
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     set_page_title 'Edit wbs-activity ratio'
     @wbs_activity_ratio_element = WbsActivityRatioElement.find(params[:id])
   end
 
   def new
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     set_page_title 'New wbs-activity ratio'
     @wbs_activity_ratio_element = WbsActivityRatioElement.new
   end
 
   def save_values
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     #set ratio values
     ratio_values = params[:ratio_values]
     ratio_values.each do |key, value|
@@ -109,7 +109,7 @@ class WbsActivityRatioElementsController < ApplicationController
 
   # Profiles per activity(phase)
   def save_wbs_activity_ratio_per_profile
-    authorize! :edit_wbs_activities, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
 
     @wbs_activity = WbsActivity.find(params[:wbs_activity_id])
     @wbs_activity_organization = @wbs_activity.organization

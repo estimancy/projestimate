@@ -141,7 +141,7 @@ class PermissionsController < ApplicationController
     if !params[:modules_permissions].nil?
       redirect_tab = "tabs-modules-permissions"
     end
-    redirect_to organization_authorization_path(@organization, anchor: redirect_tab)
+    redirect_to organization_authorization_path(@current_organization, anchor: redirect_tab)
   end
 
   #Set rights on estimations permissions
