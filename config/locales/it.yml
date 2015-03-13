@@ -1370,3 +1370,4 @@ it:
   update_password_first_connexion: "Vous devez modifier votre mot de passe lors de votre 1ere connexion"
   update_email_login_password: "Update email / login / password"
   text_your_password_message: "Your current password is: \"%{password}\". You must change it the first time you log into the application. "
+  you_have_no_right_to_continue: "You do not have the necessary rights to continue. \n Thank you to contact the administrator of the application."

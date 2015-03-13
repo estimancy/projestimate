@@ -76,17 +76,6 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-
-  protected
-
-  def after_update_path_for(resource)
-    if resource.organizations.size == 1
-      organization_estimations_path(resource.organizations.first)
-    else
-      root_path
-    end
-  end
-
   private
 
   def is_an_automatic_account_activation?

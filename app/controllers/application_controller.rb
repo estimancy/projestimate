@@ -510,6 +510,10 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     # return the path based on resource
     if resource.password_changed
+      # if user has no organization, this means that his has no group, so no right
+      #if resource.organizations.size == 0
+        #sign_out(resource)
+        #new_session_path(:user, flash: { warning: I18n.t(:you_have_no_right_to_continue) })
       if resource.organizations.size == 1
         organization_estimations_path(resource.organizations.first)
       else
