@@ -116,13 +116,32 @@ class Ability
 
       ###user.group_for_project_securities.each do |grp|       # Only the groups for project_securities will take on account
       user.groups.each do |grp|       # Only the groups will take on account
+        grp.estimation_status_group_roles.each do |esgr|
+          @arr2 = esgr.project_security_level.permissions.select{|i| i.is_permission_project }
+          @arr2.each do |permission|
+            esgr.organization.projects.each do |project|
+              #if project.is_model
+                #For template/model, only the model's permissions will be taken in account
+                #if esgr.is_model_permission
+                #  can i.alias.to_sym, project
+                #else
+                can permission.alias.to_sym, project do |p|
+                  (p.estimation_status_id == esgr.estimation_status_id && p.organization.group_ids.include?(grp.id))
+                end
+              #end
+              #p "#{permission.alias.to_sym} - #{project} - #{esgr.estimation_status} - #{user.groups.map(&:name).join(",")}"
+            end
+          end
+        end
+
         prj_scrts = ProjectSecurity.find_all_by_group_id(grp.id)
         unless prj_scrts.empty?
           specific_permissions_array = []
           prj_scrts.each do |prj_scrt|
             # Get the project/estimation permissions
             unless prj_scrt.project_security_level.nil?
-              prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |i|
+             @arr1 = prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }
+             @arr1.map do |i|
                 if prj_scrt.project.is_model
                   #For template/model, only the model's permissions will be taken in account
                   if prj_scrt.is_model_permission
@@ -130,25 +149,9 @@ class Ability
                   end
                 else
                   can i.alias.to_sym, prj_scrt.project
+                  #p "#{i.alias.to_sym} - #{prj_scrt.project}"
                 end
               end
-            end
-          end
-        end
-      end
-
-      user.groups.each do |grp|
-        grp.estimation_status_group_roles.each do |esgr|
-          esgr.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-            esgr.organization.projects.each do |project|
-              #if project.is_model
-                #For template/model, only the model's permissions will be taken in account
-                #if esgr.is_model_permission
-                #  can i.alias.to_sym, project
-                #end
-              #else
-                can permission.alias.to_sym, project, estimation_status_id: esgr.estimation_status_id
-              #end
             end
           end
         end
