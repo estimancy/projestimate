@@ -4,7 +4,7 @@
 <% if can? :show_organization_users, User %>
 
     <% if can? :manage, User, :organization_id => @organization.id %>
-        <%= link_to I18n.t('new_user'), new_user_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
+        <%= link_to I18n.t('new_user'), new_organization_user_path(@organization), :class => 'btn pull-right' %>
     <% end %>
 
     <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-      <% @organization.users.each do |user| %>
+      <% (@organization.users+@organization.users_from_organization).uniq.each do |user| %>
         <tr>
           <td><%= user.first_name %></td>
           <td><%= user.last_name %></td>
@@ -29,9 +29,9 @@
               <td class="center"><%= check_box_tag "is_super_admin", user.super_admin, user.super_admin, disabled: true %></td>
           <% end %>
           <td class="center">
-            <%= link_to "", edit_user_path(user, @organization), class: "icon icon-pencil", :title => I18n.t('edit') %>
+            <%= link_to "", edit_organization_user_path(@organization, user), class: "icon icon-pencil", :title => I18n.t('edit') %>
             <% if can? :manage, User, :organization_id => @organization.id %>
-                <%= link_to '', user_path(user, organization_id: @organization.id), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+                <%= link_to '', organization_user_path(user, organization_id: @organization.id), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
             <% end %>
           </td>
         </tr>

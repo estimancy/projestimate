@@ -78,13 +78,24 @@ Projestimate::Application.routes.draw do
 
   resources :factors
 
-  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}
-
+  #devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}
+  #devise_scope :user do
+  #  get "help_login" => "registrations", :as => 'help_login'
+  #end
+  #==========
+  devise_for :users, :skip => [:registrations]
   devise_scope :user do
+    #get "signup",   :to => "accounts#new"
+    get "sign_in",   :to => "devise/sessions#new"
+    get "sign_out",  :to => "devise/sessions#destroy"
+    get "cancel_user_registration", :to => "devise/registrations#cancel"
+    post "user_registration",       :to => "devise/registrations#create"
+    get "new_user_registration",    :to => "devise/registrations#new"
+    get "edit_user_registration",   :to => "devise/registrations#edit"
     get "help_login" => "registrations", :as => 'help_login'
   end
-
   get 'awaiting_confirmation' => 'registrations#awaiting_confirmation', :as => 'awaiting_confirmation'
+#=====================
 
   resources :users
 
@@ -199,6 +210,7 @@ Projestimate::Application.routes.draw do
     resources :fields
     resources :wbs_activities
     resources :groups
+    resources :users, only: [:new, :create, :show, :edit, :update, :destroy]
     resources :project_categories
     resources :platform_categories
     resources :acquisition_categories
@@ -210,7 +222,7 @@ Projestimate::Application.routes.draw do
     get "authorization" => 'organizations#authorization'
     get "setting" => 'organizations#setting'
     get "module_estimation" => 'organizations#module_estimation'
-    get "users" => 'organizations#users'
+    get "users" => 'organizations#users', as: 'organization_users'
     get "estimations" => 'organizations#estimations'
     get "report" => 'organizations#report'
     post "generate_report" => 'organizations#generate_report'

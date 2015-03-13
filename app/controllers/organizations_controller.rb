@@ -104,11 +104,13 @@ class OrganizationsController < ApplicationController
 
     @groups = @organization.groups
 
+    @organization_permissions = Permission.order('name').defined.select{ |i| i.object_type == "organization_super_admin_objects" }
     @global_permissions = Permission.order('name').defined.select{ |i| i.object_type == "general_objects" }
     @permission_projects = Permission.order('name').defined.select{ |i| i.object_type == "project_dependencies_objects" }
     @modules_permissions = Permission.order('name').defined.select{ |i| i.object_type == "module_objects" }
     @master_permissions = Permission.order('name').defined.select{ |i| i.is_master_permission }
 
+    @permissions_classes_organization = @organization_permissions.map(&:category).uniq.sort
     @permissions_classes_globals = @global_permissions.map(&:category).uniq.sort
     @permissions_classes_projects = @permission_projects.map(&:category).uniq.sort
     @permissions_classes_masters = @master_permissions.map(&:category).uniq.sort
@@ -338,12 +340,13 @@ class OrganizationsController < ApplicationController
         end
 
         # Create a user in the Admin group of the new organization
-        admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: true)
+        admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
         # Add the user to the created organization
-        if admin_user.save
-          user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
-          user_first_organization.save
-        end
+        admin_group = Organization.groups.where(name: '*USER').first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
+        admin_user.groups << admin_group
+        admin_user.save
+        #user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
+        #user_first_organization.save
 
         flash[:notice] = I18n.t(:notice_organization_successful_created)
       else
