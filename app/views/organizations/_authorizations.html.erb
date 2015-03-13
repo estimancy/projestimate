@@ -3,6 +3,7 @@
     <li><a href="#tabs-group"><%= I18n.t(:groups) %></a></li>
     <li><a href="#tabs-project-security-levels"><%= I18n.t(:security_level) %></a></li>
     <li><a href="#tabs-organization-permissions"><%= I18n.t(:organization_permissions) %></a></li>
+    <li><a href="#tabs-global-permissions"><%= I18n.t(:global_permissions) %></a></li>
     <li><a href="#tabs-modules-permissions"><%= I18n.t(:modules_permissions) %></a></li>
     <li><a href="#tabs-estimations-permissions"><%= I18n.t(:estimations_permissions) %></a></li>
   </ul>
@@ -64,7 +65,7 @@
     <div id="tabs-organization-permissions">
       <b><%= I18n.t(:organization_permissions) %></b>
 
-      <% if can? :show_organization_permissions, Permission %>
+      <% if current_user.super_admin %>
         <table class="table table-bordered table-condensed table-striped">
             <tr>
               <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
@@ -77,7 +78,7 @@
               <% end %>
             </tr>
 
-            <% @permissions_classes_globals.each do |cla| %>
+            <% @permissions_classes_organization.each do |cla| %>
               <tr>
                 <td style="text-align:left; vertical-align:middle; font-style:italic;">
                   <%= cla.blank? ? '' : cla %>
@@ -88,7 +89,7 @@
                   </td>
                 <% end %>
               </tr>
-              <% @global_permissions.each do |perm| %>
+              <% @organization_permissions.each do |perm| %>
                 <tr>
                   <% if perm.category.to_s == cla %>
                     <td>
@@ -110,13 +111,70 @@
 
         </table>
 
-        <% if can? :manage_organization_permissions, Permission %>
-          <%= submit_tag I18n.t('apply'), name: "organization_permissions", :class => 'btn' %>
-          <%= submit_tag I18n.t('cancel'), name: "organization_permissions", :class => 'btn'%>
-        <% end %>
+        <%= submit_tag I18n.t('apply'), name: "organization_permissions", :class => 'btn' %>
+        <%= submit_tag I18n.t('cancel'), name: "organization_permissions", :class => 'btn'%>
 
       <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_global_permissions) %></div>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_organization_super_admin_permissions) %></div>
+      <% end %>
+    </div>
+
+    <div id="tabs-global-permissions">
+      <b><%= I18n.t(:organization_permissions) %></b>
+
+      <% if can? :show_organization_permissions, Permission %>
+          <table class="table table-bordered table-condensed table-striped">
+            <tr>
+              <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
+              <% @groups.each_with_index do |group, i| %>
+                  <th>
+                    <%= link_to group.name, "#", title: group.description %>
+                    &nbsp;
+                    <%= link_to '', '#', :id => "cols_select_all_global_#{group.id}", 'data-group_global_id' => group.id, 'data-rows_or_cols_global' => 'cols', :remote => true, :class => 'fa fa-check-square-o', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
+                  </th>
+              <% end %>
+            </tr>
+
+            <% @permissions_classes_globals.each do |cla| %>
+                <tr>
+                  <td style="text-align:left; vertical-align:middle; font-style:italic;">
+                    <%= cla.blank? ? '' : cla %>
+                  </td>
+                  <% @groups.each do |group| %>
+                      <td style="text-align:center; font-style:italic; vertical-align:bottom; font-size: 85%; border-left: 0;">
+                        <%= group.name %>
+                      </td>
+                  <% end %>
+                </tr>
+                <% @global_permissions.each do |perm| %>
+                    <tr>
+                      <% if perm.category.to_s == cla %>
+                          <td>
+                            &nbsp;
+                            <%= link_to '', '#', :id => "lines_select_all_global_#{perm.id}", 'data-permission_global_id' => perm.id, 'data-rows_or_cols_global' => 'rows', :remote => true, :class => 'fa-check-square-o fa', :title => I18n.t('select_unselect_all'), :onclick => "select_or_unselect_all_permissions(this, 'group_global_id', 'permission_global_id', 'global');" %>
+                            &nbsp;
+                            <%= link_to perm.name, edit_permission_path(perm), title: perm.description %>
+                          </td>
+                          <% @groups.each do |group| %>
+                              <%= hidden_field_tag "permissions[#{group.id}][]" %>
+                              <td style="text-align: center;">
+                                <%= check_box_tag("permissions[#{group.id}][]", perm.id, (group.permissions.map(&:id).include? perm.id), :id => nil, :class => "group_global_id_#{group.id} permission_global_id_#{perm.id}") %>
+                              </td>
+                          <% end %>
+                      <% end %>
+                    </tr>
+                <% end %>
+            <% end %>
+
+          </table>
+
+          <% if can? :manage_organization_permissions, Permission %>
+              <%= submit_tag I18n.t('apply'), name: "global_permissions", :class => 'btn' %>
+              <%= submit_tag I18n.t('cancel'), name: "gloabal_permissions", :class => 'btn'%>
+          <% end %>
+
+      <% else %>
+          <div class="red_color"><%= I18n.t(:notice_cannot_view_global_permissions) %></div>
       <% end %>
     </div>
 

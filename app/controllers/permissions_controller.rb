@@ -137,9 +137,11 @@ class PermissionsController < ApplicationController
       end
     end
 
-    redirect_tab = "tabs-organization-permissions"
+    redirect_tab = "tabs-global-permissions"
     if !params[:modules_permissions].nil?
       redirect_tab = "tabs-modules-permissions"
+    elsif !params[:organization_permissions].nil?
+      redirect_tab = "tabs-organization-permissions"
     end
     redirect_to organization_authorization_path(@current_organization, anchor: redirect_tab)
   end
