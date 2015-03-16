@@ -83,15 +83,16 @@ Projestimate::Application.routes.draw do
   #  get "help_login" => "registrations", :as => 'help_login'
   #end
   #==========
-  devise_for :users#, :skip => [:registrations]
+  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}, :skip => [:registrations]
+  #devise_for :users, :skip => [:registrations]
   devise_scope :user do
-    #get "signup",   :to => "accounts#new"
+    #get "signup",   :to => "users#new"
     get "sign_in",   :to => "devise/sessions#new"
     get "sign_out",  :to => "devise/sessions#destroy"
     get "cancel_user_registration", :to => "devise/registrations#cancel"
-    post "user_registration",       :to => "devise/registrations#create"
-    #put "registration",             :to => "devise/registrations#update"
-    get "new_user_registration",    :to => "devise/registrations#new"
+    post "user_registration",       :to => "registrations#create"
+    put "user_registration",        :to => "registrations#update", as: :update_user_registration
+    get "new_user_registration",    :to => "registrations#new"
     get "edit_user_registration",   :to => "devise/registrations#edit"
     get "help_login" => "registrations", :as => 'help_login'
   end

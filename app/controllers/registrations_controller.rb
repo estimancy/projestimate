@@ -76,6 +76,21 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  protected
+
+  def after_update_path_for(resource)
+    # if user has no group, he has no rights, so cannot continue
+    if resource.organizations.size == 0
+      flash[:warning] = I18n.t(:you_have_no_right_to_continue)
+      sign_out(resource)
+      new_session_path(:user)
+    elsif resource.organizations.size == 1
+      organization_estimations_path(resource.organizations.first)
+    else
+      root_path
+    end
+  end
+
   private
 
   def is_an_automatic_account_activation?
