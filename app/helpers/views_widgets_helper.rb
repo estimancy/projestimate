@@ -170,19 +170,18 @@ module ViewsWidgetsHelper
 
           when "line_chart"
             #value_to_show = line_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: view_widget.color})
-            value_to_show =  line_chart([
-                                            {name: I18n.t(:low), data: {Time.new => data_low} },  #10
-                                            {name: I18n.t(:most_likely), data: {Time.new => data_most_likely} }, #30
-                                            {name: I18n.t(:high), data: {Time.new => data_high} } ],  #50
-                                        {height: "#{chart_height}px", library: {title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: chart_vAxis}}})
+            value_to_show =  line_chart([ {name: I18n.t(:low), data: {Time.new => data_low} },  #10
+                                          {name: I18n.t(:most_likely), data: {Time.new => data_most_likely} }, #30
+                                          {name: I18n.t(:high), data: {Time.new => data_high} } ],  #50
+                                          {height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: chart_vAxis}}})
           when "bar_chart"
-            value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+            value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
 
           when "area_chart"
-            value_to_show = area_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+            value_to_show = area_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
 
           when "pie_chart"
-            value_to_show = pie_chart(chart_level_values, height: "#{chart_height}px", library: {title: chart_title})
+            value_to_show = pie_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title})
 
           when "stacked_bar_chart"
             value_to_show = probable_value_text
@@ -233,7 +232,7 @@ module ViewsWidgetsHelper
             end
 
             if is_ok == true
-              value_to_show = timeline(timeline_data, library: {title: view_widget_attribute_name})
+              value_to_show = timeline(timeline_data, library: {backgroundColor: "transparent", title: view_widget_attribute_name})
             else
               value_to_show = "" #I18n.t(:error_invalid_date)
             end
@@ -248,7 +247,7 @@ module ViewsWidgetsHelper
             unless estimation_value.in_out == "input"
               chart_height = height-90
               chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
-              value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
+              value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {backgroundColor: "transparent", weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
             end
 
           when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
@@ -258,7 +257,7 @@ module ViewsWidgetsHelper
               chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
             end
 
-            value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {title: chart_title})
+            value_to_show = pie_chart(chart_data, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title})
 
           when "effort_per_phases_profiles_table", "cost_per_phases_profiles_table"
 
@@ -271,7 +270,7 @@ module ViewsWidgetsHelper
             unless estimation_value.in_out == "input"
               chart_height = height-90
               stacked_chart_data = get_chart_data_by_phase_and_profile(pbs_project_elt, module_project, estimation_value, view_widget)
-              value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {title: chart_title, vAxis: {title: chart_vAxis}})
+              value_to_show = column_chart(stacked_chart_data, stacked: true, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
             end
 
           when "stacked_bar_chart_cost_per_phases_profiles"
