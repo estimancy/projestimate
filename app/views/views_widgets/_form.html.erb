@@ -44,6 +44,9 @@
             <td>
               <label class="checkbox"></label>
               <%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %>
+              <% if @module_project.wbs_activity %>
+                <%= f.input :show_wbs_activity_ratio, as: :boolean, label: I18n.t(:show_wbs_activity_ratio) %>
+              <% end %>
             </td>
             <td>
               <label><%= I18n.t :fields %></label>
