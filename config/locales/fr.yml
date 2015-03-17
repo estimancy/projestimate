@@ -1320,6 +1320,8 @@ fr:
   width: "Longueur"
   height: "Hauteur"
   show_min_max: "Afficher les valeurs Min/Max"
+  show_wbs_activity_ratio: "Afficher le Ratio sélectionné"
+  ratio: "Ratio"
   widget_size: "Taille de la vignette L x H :"
   label_update_view_widgets_order: "Sauvegarder la vue"
 

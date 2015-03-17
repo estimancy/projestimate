@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150311083721) do
+ActiveRecord::Schema.define(:version => 20150317094458) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -210,10 +210,10 @@ ActiveRecord::Schema.define(:version => 20150311083721) do
   create_table "estimation_status_group_roles", :force => true do |t|
     t.integer  "estimation_status_id"
     t.integer  "group_id"
-    t.integer  "permission_id"
+    t.integer  "project_security_level_id"
     t.integer  "organization_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "estimation_statuses", :force => true do |t|
@@ -1214,10 +1214,11 @@ ActiveRecord::Schema.define(:version => 20150311083721) do
     t.string   "height"
     t.string   "widget_type"
     t.boolean  "show_min_max"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
     t.integer  "position"
     t.boolean  "show_name"
+    t.boolean  "show_wbs_activity_ratio"
   end
 
   create_table "wbs_activities", :force => true do |t|

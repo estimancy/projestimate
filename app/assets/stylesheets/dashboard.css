@@ -945,7 +945,8 @@ h5.view_title{
     white-space: nowrap;
 }
 
-.widget_name{
+.widget_name, span.widget_name{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     overflow-x: hidden;
     width: 100%;
 }
