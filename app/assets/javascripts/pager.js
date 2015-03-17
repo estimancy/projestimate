@@ -199,8 +199,6 @@ $(function table_sorter_filter() {
 
 });
 
-
-
 // ################################# TABLE SORTER #################################
 
 /*!
@@ -313,7 +311,7 @@ $(function table_sorter_filter() {
             /* debuging utils */
             function log(s) {
                 if (typeof console !== "undefined" && typeof console.log !== "undefined") {
-                    console.log(s);
+//                    console.log(s);
                 } else {
                     alert(s);
                 }
