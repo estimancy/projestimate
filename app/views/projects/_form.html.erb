@@ -177,7 +177,7 @@
               <div class="accordion-group accordion-caret">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_model" href="#collapseModel">
-                    <i class="icon-caret-down"></i>
+                    <i class="fa-caret-down"></i>
                     <b><%= @project.is_model ? I18n.t(:label_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
                   </a>
                 </div>
@@ -230,7 +230,7 @@
             <div class="accordion-group accordion-caret">
               <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-                  <i class="icon-caret-down"></i>
+                  <i class="fa fa-caret-down"></i>
                   <b><%= @project.is_model ? I18n.t(:label_from_model_user_security_resume) : I18n.t(:label_user_security_resume) %></b>
                 </a>
               </div>
@@ -241,7 +241,9 @@
                       <tr>
                         <th>User name</th>
                         <% @organization.project_security_levels.each do |prj_level| %>
-                            <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
+                          <th class="filter-select">
+                            <span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span>
+                          </th>
                         <% end %>
                       </tr>
                     </thead>
@@ -302,7 +304,7 @@
           <div class="accordion-group accordion-caret">
             <div class="accordion-heading">
               <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                <i class="icon-caret-down"></i>
+                <i class="fa fa-caret-down"></i>
                 <b><%= @project.is_model ? I18n.t(:label_from_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
               </a>
             </div>

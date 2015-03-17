@@ -1080,27 +1080,25 @@ module ProjectsHelper
     # SuperAdmin user or those who has all permissions has all rights
     if current_user.super_admin? || can?(:manage, :all)
       can_do_something = true
-
     else
-
-      begin
-        permission_to_show_project = Permission.find_by_alias(project_permission_action_alias)
+      #begin
+        permission_to_show_project = ProjectSecurityLevel.find_by_alias(project_permission_action_alias)
         ###if can?(:show_project, estimation)
         #if can?(:see_project, estimation)
           # if at least one of the current_user's groups is in the estimation's organization groups
           groups_intersection = current_user.groups.all & estimation.organization.groups
           unless groups_intersection.nil?
             groups_intersection.each do |group|
-              if estimation.estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:permission_id).include?(permission_to_show_project.id)
+              if estimation.estimation_status.estimation_status_group_roles.where(group_id: group.id).map(&:project_security_level_id).include?(permission_to_show_project.id)
                 can_do_something = true
                 break if can_do_something
               end
             end
           end
         #end
-      rescue
-        false
-      end
+      #rescue
+      #  false
+      #end
     end
 
     can_do_something
@@ -1108,14 +1106,14 @@ module ProjectsHelper
 
   # Got the right to see the estimation from estimations list
   def can_see_estimation?(estimation)
-    #authorization =  can_do_action_on_estimation?(estimation, "see_project") || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    #authorization =  can_do_action_on_estimation?(estimation, "see_project")# || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
     #authorization &&
     can?(:see_project, estimation)
   end
 
   # Got the right to show the estimation details
   def can_show_estimation?(estimation)
-    #authorization = can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
+    #authorization = can_do_action_on_estimation?(estimation, "show_project")# || can_do_action_on_estimation?(estimation, "edit_project")
     #authorization &&
     can?(:show_project, estimation)
   end
@@ -1129,8 +1127,8 @@ module ProjectsHelper
 
   # Got the right to Alter and modify only some parts of the estimation details if user has the rights to edit the project in its status
   def can_alter_estimation?(estimation)
-    #can?(:show_project, estimation) && can_do_action_on_estimation?(estimation, "edit_project")
-    can?(:show_project, estimation)
+    can?(:show_project, estimation)# && can_do_action_on_estimation?(estimation, "edit_project")
+    #can?(:show_project, estimation, estimation_status_id: estimation.estimation_status_id)
   end
 
   # Got the right to delete the estimation

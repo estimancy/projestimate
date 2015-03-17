@@ -74,28 +74,28 @@
           <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
             <%= hidden_field_tag 'group_id', @group.id %>
             <%= hidden_field_tag 'group[user_ids][]' %>
-            <thead>
-            <tr>
-              <th><%= I18n.t(:first_name) %></th>
-              <th><%= I18n.t(:last_name) %></th>
-              <th><%= I18n.t(:login_name) %></th>
-              <th class="filter-select"><%= I18n.t(:selected) %></th>
-            </tr>
-            </thead>
+              <thead>
+                <tr>
+                  <th><%= I18n.t(:first_name) %></th>
+                  <th><%= I18n.t(:last_name) %></th>
+                  <th><%= I18n.t(:login_name) %></th>
+                  <th class="filter-select"><%= I18n.t(:selected) %></th>
+                </tr>
+              </thead>
             <tbody>
-            <% @users.each do |group_user| %>
+              <% @users.each do |group_user| %>
                 <tr>
                   <td><%= group_user.first_name %></td>
                   <td><%= group_user.last_name %></td>
                   <td><%= group_user.login_name %></td>
                   <td class="align-center">
                     <span class="hidden">
-                          <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>
+                      <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>
                     </span>
                     <%= check_box_tag('group[user_ids][]', group_user.id, (@group.users.map(&:id).include? group_user.id), :id => nil, :class => "group_#{group_user.id}") %>
                   </td>
                 </tr>
-            <% end %>
+              <% end %>
             <%= render :partial => 'layouts/footer_table' %>
             </tbody>
           </table>

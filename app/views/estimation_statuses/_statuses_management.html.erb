@@ -3,14 +3,14 @@
 
   <table class="table tablesorterPager table-striped table-bordered table-condensed">
     <thead>
-          <tr>
-            <th><%= I18n.t(:status_number) %></th>
-            <th><%= I18n.t(:alias) %></th>
-            <th><%= I18n.t(:name) %></th>
-            <th><%= I18n.t(:status_color) %></th>
-            <th><%= I18n.t(:description) %></th>
-            <th class="action"><%= I18n.t(:actions) %></th>
-          </tr>
+      <tr>
+        <th><%= I18n.t(:status_number) %></th>
+        <th><%= I18n.t(:alias) %></th>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:status_color) %></th>
+        <th><%= I18n.t(:description) %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
     </thead>
     <tbody>
       <% @organization.estimation_statuses.each do |estimation_status| %>
@@ -93,7 +93,7 @@
               </tr>
 
               <tr>
-                <th colspan="3" style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
+                <th colspan="<%= @organization_group.size + 1 %>" style="text-align: left"><%= I18n.t(:estimations_statuses) %></th>
               </tr>
             <% else %>
               <tr>
@@ -109,15 +109,18 @@
 
             <% @organization.estimation_statuses.each do |estimation_status| %>
               <tr>
-                <td><%= estimation_status.libelle %></td>
+                <td class="span2"><%= estimation_status.libelle %></td>
                 <% if @organization_group.length >= 1 %>
                   <% @organization_group.each do |group| %>
-                    <td class="center">
+                    <td class="center span1">
                       <% esgr = EstimationStatusGroupRole.where(group_id: group.id,
                                                                 estimation_status_id: estimation_status.id,
                                                                 organization_id: @organization.id ).first %>
 
-                      <%= select_tag("status_group_role[#{estimation_status.id}][#{group.id}]", options_for_select(@organization.project_security_levels.map{|i| [i.name, i.id]}, selected: esgr.nil? ? '' : esgr.project_security_level_id), prompt: "Aucune permission") %>
+                      <%= select_tag("status_group_role[#{estimation_status.id}][#{group.id}]", options_for_select(@organization.project_security_levels.map{|i| [i.name, i.id]},
+                                                                                                                   selected: esgr.nil? ? '' : esgr.project_security_level_id),
+                                                                                                                   prompt: "Aucune permission",
+                                                                                                                   class: "input-small") %>
                     </td>
                   <% end %>
                 <% else %>
