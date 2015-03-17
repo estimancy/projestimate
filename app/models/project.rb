@@ -70,7 +70,7 @@ class Project < ActiveRecord::Base
   serialize :included_wbs_activities, Array
 
   validates :title, :presence => true, :uniqueness => { :scope => :organization_id, case_sensitive: false, :message => I18n.t(:error_validation_project) }
-  validates :alias, :presence => true, :uniqueness => { :scope => :organization_id, case_sensitive: false, :message => I18n.t(:error_validation_project) }
+  ###validates :alias, :presence => true, :uniqueness => { :scope => :organization_id, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => :title, :scope => :alias, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates_presence_of :organization_id, :estimation_status_id
 
