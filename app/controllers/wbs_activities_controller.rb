@@ -103,7 +103,6 @@ class WbsActivitiesController < ApplicationController
   end
 
   def update
-
     @wbs_activity = WbsActivity.find(params[:id])
     @wbs_activity_elements = @wbs_activity.wbs_activity_elements
     @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios

@@ -11,13 +11,12 @@
       <%= f.input :wbs_activity_id, :label => 'WBS Activity', :as => :hidden, :input_html => {:class => 'input-xxlarge', :rows => 5, :value => @activity_id} %>
 
       <div class="actions-tabs">
+
         <% if can? :manage_modules_instances, ModuleProject and action_name.in?(%w(new create)) %>
           <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
           <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <% elsif can? :update_wbs_activities, WbsActivity and (action_name == 'edit' || action_name=='update') %>
-          <%= submit_tag I18n.t('save'), :class => 'btn' %>
-          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
+
         <% params[:activity_id].nil? ? @activity_id=@wbs_activity_ratio.wbs_activity_id : @activity_id=params[:activity_id] %>
         <%= link_to I18n.t('back'), edit_wbs_activity_path(@activity_id , :anchor => 'tabs-3'), :class => 'btn back' %>
       </div>

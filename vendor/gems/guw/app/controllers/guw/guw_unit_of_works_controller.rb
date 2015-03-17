@@ -375,7 +375,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    @module_project.next.each do |n|
+    @module_project.nexts.each do |n|
       ModuleProject::common_attributes(@module_project, n).each do |ca|
         ["low", "most_likely", "high"].each do |level|
           EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { @component.id => nil } )

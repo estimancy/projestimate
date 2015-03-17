@@ -90,6 +90,12 @@ class ModuleProject < ActiveRecord::Base
     mps = ModuleProject.where("position_y > #{self.position_y.to_i} AND project_id = #{self.project.id}")
   end
 
+  def nexts
+    ModuleProject.where("position_x = #{self.position_x.to_i} AND project_id = #{self.project.id}").all.reject do |i|
+      i.id = self.id
+    end
+  end
+
   #Return the inputs attributes of a module_projects
   def input_attributes
     res = Array.new
