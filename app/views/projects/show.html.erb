@@ -115,6 +115,62 @@
 
     <div id="tabs-5">
       <div id="accordion-security">
+        <!--define the security of the model itself-->
+        <% if @project.is_model %>
+          <div id="accordion_model" class="accordion">
+            <div class="accordion-group accordion-caret">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_model" href="#collapseModel">
+                  <i class="fa-caret-down"></i>
+                  <b><%= @project.is_model ? I18n.t(:label_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
+                </a>
+              </div>
+              <% can_alter_project_securities = can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+              <div id="collapseModel" class="accordion-body in collapse">
+                <div class="accordion-inner">
+                  <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                      <th>Group name</th>
+                      <% @organization.project_security_levels.each do |prj_level| %>
+                        <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
+                      <% end %>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @organization.groups.each do |group| %>
+                      <tr>
+                        <td>
+                          <%= group.name %>
+                          <% @organization.project_security_levels.each do |prj_level| %>
+                            <%
+                               ps = ProjectSecurity.where(group_id: group.id,
+                                                          project_id: @project.id,
+                                                          project_security_level_id: prj_level.id,
+                                                          is_model_permission: true).first
+                            %>
+                          <td style="text-align: center">
+                            <%= check_box_tag("group_securities[#{prj_level.id}][#{group.id}]", group.name, !ps.nil?, disabled: !can_alter_project_securities) %>
+                          </td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                    <%= render :partial => 'layouts/footer_table' %>
+                  </table>
+
+                  <%= submit_tag I18n.t('save'), :name => "model_group_security_levels", :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :name => "model_group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <br>
+      </div>
+
+      <div id="accordion-security">
         <div class="accordion" id="accordion1">
           <div class="accordion-group accordion-caret">
             <div class="accordion-heading">
@@ -171,7 +227,9 @@
             <div class="accordion-heading">
               <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
                 <i class="fa fa-caret-down"></i>
-                <b><%= I18n.t(:label_group_security_resume) %></b>
+                <b>
+                  <%= I18n.t(:label_group_security_resume) %>
+                </b>
               </a>
             </div>
             <div id="collapseTwo" class="accordion-body in collapse">
