@@ -80,20 +80,23 @@ class ModuleProject < ActiveRecord::Base
     })
   end
 
-  #Return in a array previous modules project of self.
+  #Return in a array previous modules project include self.
   def preceding
     mps = ModuleProject.where("position_y < #{self.position_y.to_i} AND project_id = #{self.project.id}")
   end
 
-  #Return in a array next modules project of self.
+  #Return in a array next modules project include self.
   def following
-    mps = ModuleProject.where("position_y > #{self.position_y.to_i} AND project_id = #{self.project.id}")
+    ModuleProject.where("position_y >= #{self.position_y.to_i} AND
+                         position_x = #{self.position_x.to_i} AND
+                         project_id = #{self.project.id}").all
   end
 
+  #Return in a array next modules project without self.
   def nexts
-    ModuleProject.where("position_x = #{self.position_x.to_i} AND project_id = #{self.project.id}").all.reject do |i|
-      i.id = self.id
-    end
+    ModuleProject.where("position_y > #{self.position_y.to_i} AND
+                         position_x = #{self.position_x.to_i} AND
+                         project_id = #{self.project.id}").all.select{|i| i.id != self.id }
   end
 
   #Return the inputs attributes of a module_projects
@@ -128,7 +131,7 @@ class ModuleProject < ActiveRecord::Base
     results = Array.new
     tmp_results = self.associated_module_projects + self.inverse_associated_module_projects
     tmp_results.each do |r|
-      if self.following.map(&:id).include?(r.id)
+      if self.nexts.map(&:id).include?(r.id)
         results << r
       end
     end

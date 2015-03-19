@@ -405,7 +405,7 @@ class WbsActivitiesController < ApplicationController
     wai.comment = params[:comment][wai.id.to_s]
     wai.save
 
-    current_module_project.next.each do |n|
+    current_module_project.nexts.each do |n|
       ModuleProject::common_attributes(current_module_project, n).each do |ca|
         ["low", "most_likely", "high"].each do |level|
           EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { current_component.id => nil } )
@@ -413,6 +413,7 @@ class WbsActivitiesController < ApplicationController
         end
       end
     end
+    session[:module_project_id] = current_module_project.nexts.first.id
 
     redirect_to dashboard_path(@project)
   end

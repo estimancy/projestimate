@@ -227,6 +227,7 @@ Projestimate::Application.routes.draw do
     get "estimations" => 'organizations#estimations'
     get "report" => 'organizations#report'
     post "generate_report" => 'organizations#generate_report'
+    post "import_user" => 'organizations#import_user'
   end
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
@@ -335,6 +336,7 @@ Projestimate::Application.routes.draw do
 
   match 'wbs_activities/:id/validate_change_with_children' => 'wbs_activities#validate_change_with_children', :as => 'validate_change_with_children'
   post 'save_wbs_activity_ratio_per_profile' => 'wbs_activity_ratio_elements#save_wbs_activity_ratio_per_profile', :as => 'save_wbs_activity_ratio_per_profile'
+  post "execute_estimation" => "projects#execute_estimation"
 
   resources :translations
   get 'load_translations' => 'translations#load_translations', :as => 'load_translations'
