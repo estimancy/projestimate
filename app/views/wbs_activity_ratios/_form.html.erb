@@ -12,7 +12,7 @@
 
       <div class="actions-tabs">
 
-        <% if can? :manage_modules_instances, ModuleProject and action_name.in?(%w(new create)) %>
+        <% if can? :manage_modules_instances, ModuleProject %>
           <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
           <%= submit_tag I18n.t('save'), :class => 'btn' %>
         <% end %>

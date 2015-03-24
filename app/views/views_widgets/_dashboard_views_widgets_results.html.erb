@@ -96,7 +96,7 @@
                                     <% if view_widget.show_wbs_activity_ratio %>
                                         <% wa_input = WbsActivityInput.where(wbs_activity_id: view_widget.module_project.wbs_activity, module_project_id: view_widget.module_project_id).first %>
                                         <span class="widget_name">
-                                          <%= "#{I18n.t(:ratio)}:" %>  <%= wa_input.nil? ? "-" : wa_input.wbs_activity %>
+                                          <%= "#{I18n.t(:ratio)}:" %>  <%= wa_input.nil? ? "-" : wa_input.wbs_activity_ratio %>
                                         </span>
                                     <% end %>
 
