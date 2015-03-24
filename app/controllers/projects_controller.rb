@@ -293,6 +293,7 @@ class ProjectsController < ApplicationController
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
+    @project.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_by, username: current_user.name)} \r\n"
     @organization = Organization.find(params[:project][:organization_id])
 
     @project_areas = @organization.project_areas
@@ -873,7 +874,8 @@ class ProjectsController < ApplicationController
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
 
       #Select the default view for module_project
-      default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+      #default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+      default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :description => "Default view for the #{@pemodule}. If no view is selected for module project, this view will be automatically selected.")
       my_module_project.view_id = default_view_for_widgets.id
 
       my_module_project.save
@@ -1406,6 +1408,7 @@ public
       new_prj.original_model_id = old_prj.id
 
       #Update some params with the form input data
+      new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_model_by, model_name: old_prj, username: current_user.name)} \r\n"
       new_prj.title = params['project']['title']
       new_prj.alias = params['project']['alias']
       new_prj.version = params['project']['version']

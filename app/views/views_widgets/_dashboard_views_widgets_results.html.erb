@@ -12,12 +12,13 @@
 
           <div class='<%= "span#{span_size}" %>'> <!-- div for X position -->
             <div class="widget-box collapsible">  <!-- One widget-box by module -->
-              <div class="widget-title" title='<%= I18n.t(:used_view, value: module_project.view.nil? ? '-' : module_project.view.name) %>' style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
+              <div class="widget-title" title='<%= I18n.t(:used_view, value: module_project.view.nil? ? '-' : module_project.view.name) %>' style="background-color: <%= module_project.color.nil? ? "lightgrey" : "#{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
                 <div class="view_header_data">
                   <h5 class="view_title"><%= "#{module_project}" %></h5>
                   <div class="pull-right">
                     <% if can?(:alter_estimation_plan, @project) || can?(:manage_estimation_widgets, @project) %>
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
+                      <%= link_to "", edit_module_project_view_config_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog", title: I18n.t(:label_add_new_view_widget), remote: true %>
                     <% end %>
                   </div>
                 </div>
@@ -32,7 +33,8 @@
                           <% module_project_view_widgets =  module_project.view.views_widgets.order('position').all %>
                           <% module_project_view_widgets.each do |view_widget| %>
                             <!-- Widgets are now showing the value of the widget's module project -->
-                            <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
+                            <%# view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
+                            <% view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
 
                             <% value_to_show = view_widget_data[:value_to_show] %>
                             <% view_widget_height = view_widget_data[:height] ; view_widget_width = view_widget_data[:width] %>
@@ -95,15 +97,17 @@
                                     <!--Show the selected Ratio name-->
                                     <% if view_widget.show_wbs_activity_ratio %>
                                         <% wa_input = WbsActivityInput.where(wbs_activity_id: view_widget.module_project.wbs_activity, module_project_id: view_widget.module_project_id).first %>
-                                        <span class="widget_name">
-                                          <%= "#{I18n.t(:ratio)}:" %>  <%= wa_input.nil? ? "-" : wa_input.wbs_activity %>
-                                        </span>
+                                        <div class="row-fluid" style="margin-bottom: 10px;">
+                                            <span class="widget_name">
+                                              <%= "#{I18n.t(:ratio)}:" %>  <%= wa_input.nil? ? "-" : wa_input.wbs_activity %>
+                                            </span>
+                                        </div>
                                     <% end %>
 
                                     <% if view_widget.show_min_max && effort_per_phase_class.empty? %>
                                         <% one_height = "one_height" %>
                                         <div class="row-fluid">
-                                          <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="margin-top: 10px; font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
+                                          <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
                                             <%= value_to_show %>
                                           </div>
 
@@ -113,7 +117,7 @@
                                           </div>
                                         </div>
                                     <% else %>
-                                        <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="margin-top: 10px; font-size: <%=view_widget_text_size%>em" >
+                                        <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
                                           <%= value_to_show %>
                                         </div>
                                     <% end %>

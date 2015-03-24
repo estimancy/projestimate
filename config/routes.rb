@@ -195,6 +195,7 @@ Projestimate::Application.routes.draw do
   match 'module_projects/:module_project_id/activate_module_project' => 'module_projects#activate_module_project', :as => 'activate_module_project'
   get 'selected_balancing_attribute' => 'module_projects#selected_balancing_attribute', :as => 'selected_balancing_attribute'
   get 'show_module_project_results_view' => 'module_projects#show_module_project_results_view', :as => 'show_module_project_results_view'
+  get 'edit_module_project_view_config' => 'module_projects#edit_module_project_view_config', as: 'edit_module_project_view_config'
 
   resources :languages
 
@@ -219,6 +220,7 @@ Projestimate::Application.routes.draw do
     resources :project_security_levels
     resources :work_element_types
     resources :organization_profiles
+    resources :views
 
     get "authorization" => 'organizations#authorization'
     get "setting" => 'organizations#setting'

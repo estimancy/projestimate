@@ -51,6 +51,9 @@ class Pemodule < ActiveRecord::Base
   has_many :attribute_modules, :dependent => :destroy
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_modules
 
+  #each module can have multiple associated views
+  has_many :views
+
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 

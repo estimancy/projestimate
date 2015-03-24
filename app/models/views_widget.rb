@@ -17,5 +17,9 @@ class ViewsWidget < ActiveRecord::Base
     include_association [:project_fields]
   end
 
+  def to_s
+    name
+  end
+
 end
 

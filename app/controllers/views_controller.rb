@@ -63,15 +63,11 @@ class ViewsController < ApplicationController
     @view = View.new(params[:view])
     @organization = Organization.find_by_id(params['view']['organization_id'])
 
-    respond_to do |format|
-      if @view.save
-        flash[:notice] = I18n.t(:view_successfully_created)
-        format.html { redirect_to redirect_apply(nil, new_view_path(params[:view]), edit_organization_path(@organization, :anchor => 'tabs-views-widgets'))}
-        format.json { render json: @view, status: :created, location: @view }
-      else
-        format.html { render action: "new", :organization_id => @organization.id }
-        format.json { render json: @view.errors, status: :unprocessable_entity }
-      end
+    if @view.save
+      flash[:notice] = I18n.t(:view_successfully_created)
+      redirect_to redirect_apply(nil, new_view_path(params[:view]), organization_setting_path(@organization, :anchor => 'tabs-views'))
+    else
+      render action: "new", :organization_id => @organization.id
     end
   end
 
@@ -81,33 +77,33 @@ class ViewsController < ApplicationController
     @view = View.find(params[:id])
     @organization = @view.organization
 
-    respond_to do |format|
-      if @view.update_attributes(params[:view])
-        flash[:notice] = I18n.t(:view_successfully_updated)
-        format.html { redirect_to redirect_apply(edit_view_path(params[:view]), nil, edit_organization_path(@organization, :anchor => 'tabs-view-widgets')) }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit", :organization_id => @organization.id }
-        format.json { render json: @view.errors, status: :unprocessable_entity }
-      end
+    if @view.update_attributes(params[:view])
+      flash[:notice] = I18n.t(:view_successfully_updated)
+      redirect_to redirect_apply(edit_organization_view_path(params[:view]), nil, organization_setting_path(@organization, :anchor => 'tabs-views'))
+    else
+      render action: "edit", :organization_id => @organization.id
     end
+
   end
 
   # DELETE /views/1
   # DELETE /views/1.json
   def destroy
     @view = View.find(params[:id])
+    @organization = @view.organization
     organization_id = @view.organization_id
+    view_pemodule = @view.pemodule
     #Get the view module_projects
     view_module_projects = @view.module_projects
 
     @view.destroy
 
     # the organization default view
-    @organization_default_view = View.where("name = ? AND organization_id = ?", "Default view", organization_id).first_or_create(name: "Default view", organization_id: organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+    @organization_default_view = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  organization_id, view_pemodule.id, true).first_or_create(organization_id: organization_id, pemodule_id: view_pemodule.id, is_default_view: true, :description => "Default view for the #{view_pemodule}. If no view is selected for module project, this view will be automatically selected.")
+
     #After destroy, we need to assigned all this view module_project to the organization default view
     view_module_projects.update_all(view_id: @organization_default_view)
 
-    redirect_to edit_module_project_path(params['module_project_id'], :anchor => 'tabs-view-widgets-parameters')
+    redirect_to organization_setting_path(@organization, :anchor => 'tabs-views')
   end
 end

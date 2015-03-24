@@ -1,7 +1,8 @@
 class View < ActiveRecord::Base
-  attr_accessible :name, :description, :organization_id
+  attr_accessible :name, :description, :organization_id, :pemodule_id, :is_default_view, :is_temporary_view, :initial_view_id
 
   belongs_to :organization
+  belongs_to :pemodule
 
   has_many :module_projects
   has_many :views_widgets, dependent: :destroy

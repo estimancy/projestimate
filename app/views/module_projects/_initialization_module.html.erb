@@ -11,9 +11,9 @@
         <% unless @project.locked? %>
           <%#= link_to '', '#', :title => "#{@initialization_module.title}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
           <%= link_to '', '#', :title => "#{@project}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
-          <% if can? :alter_estimation_plan, @project %>
-            <%= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
-          <% end %>
+          <%# if can? :alter_estimation_plan, @project %>
+            <%#= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
+          <%# end %>
         <% end %>
 
         <% if pmod.show_results_view %>
