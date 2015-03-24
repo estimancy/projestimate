@@ -82,7 +82,6 @@ class Project < ActiveRecord::Base
 
   amoeba do
     enable
-    ####include_field [:pe_wbs_projects, :module_projects, :project_securities]
     include_association [:pe_wbs_projects, :module_projects, :project_securities, :project_fields]
 
     customize(lambda { |original_project, new_project|
