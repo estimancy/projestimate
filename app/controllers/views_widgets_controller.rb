@@ -129,13 +129,15 @@ class ViewsWidgetsController < ApplicationController
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
-    project = @views_widget.estimation_value.module_project
+    project = @views_widget.estimation_value.module_project.project
 
     if params["field"].blank?
       pfs = @views_widget.project_fields
       pfs.destroy_all
     else
-      pf = ProjectField.where(field_id: params["field"]).first
+
+      pf = ProjectField.where(field_id: params["field"], project_id: project.id).first
+
       if @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
         begin
           @value = @views_widget.estimation_value.string_data_probable[current_component.id][@views_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
