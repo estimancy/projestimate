@@ -129,6 +129,7 @@ class ViewsWidgetsController < ApplicationController
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
+    project = @views_widget.estimation_value.module_project
 
     if params["field"].blank?
       pfs = @views_widget.project_fields
@@ -150,7 +151,7 @@ class ViewsWidgetsController < ApplicationController
       end
 
       if pf.nil?
-        ProjectField.create(project_id: @project.id,
+        ProjectField.create(project_id: project.id,
                             field_id: params["field"],
                             views_widget_id: @views_widget.id,
                             value: @value)
@@ -158,7 +159,7 @@ class ViewsWidgetsController < ApplicationController
         pf.value = @value
         pf.views_widget_id = @views_widget.id
         pf.field_id = params["field"].to_i
-        pf.project_id = @project.id
+        pf.project_id = project.id
         pf.save
       end
     end
