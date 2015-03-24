@@ -47,26 +47,24 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @guw_unit_of_work.display_order = params[:position].to_i - 1
     end
 
-    if @guw_unit_of_work.save
+    reorder @guw_unit_of_work.guw_unit_of_work_group
 
-      reorder @guw_unit_of_work.guw_unit_of_work_group
-
-      @guw_model.guw_attributes.all.each do |gac|
-        Guw::GuwUnitOfWorkAttribute.create(
-            guw_type_id: @guw_type.id,
-            guw_unit_of_work_id: @guw_unit_of_work.id,
-            guw_attribute_id: gac.id)
-      end
-      redirect_to main_app.dashboard_path(@project) and return
-    else
-      render :edit
+    @guw_model.guw_attributes.all.each do |gac|
+      Guw::GuwUnitOfWorkAttribute.create(
+          guw_type_id: @guw_type.id,
+          guw_unit_of_work_id: @guw_unit_of_work.id,
+          guw_attribute_id: gac.id)
     end
+    redirect_to main_app.dashboard_path(@project) and return
   end
 
   def update
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
-    @guw_unit_of_work.update_attributes(params[:guw_unit_of_work])
-    redirect_to main_app.dashboard_path(@project)
+    if @guw_unit_of_work.update_attributes(params[:guw_unit_of_work])
+      redirect_to main_app.dashboard_path(@project) and return
+    else
+      render :edit
+    end
   end
 
   def destroy

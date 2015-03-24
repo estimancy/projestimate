@@ -103,7 +103,7 @@
                                     <% if view_widget.show_min_max && effort_per_phase_class.empty? %>
                                         <% one_height = "one_height" %>
                                         <div class="row-fluid">
-                                          <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="margin-top: 10px; font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
+                                          <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
                                             <%= value_to_show %>
                                           </div>
 
@@ -113,7 +113,7 @@
                                           </div>
                                         </div>
                                     <% else %>
-                                        <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="margin-top: 10px; font-size: <%=view_widget_text_size%>em" >
+                                        <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
                                           <%= value_to_show %>
                                         </div>
                                     <% end %>

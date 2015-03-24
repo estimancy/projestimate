@@ -7,7 +7,7 @@ module Guw
     belongs_to :pbs_project_element
     belongs_to :organization_technology
 
-    ###validates_presence_of :name, :organization_technology_id
+    validates_presence_of :name#, :organization_technology_id
 
     amoeba do
       enable
