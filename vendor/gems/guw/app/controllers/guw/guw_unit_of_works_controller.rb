@@ -47,18 +47,20 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @guw_unit_of_work.display_order = params[:position].to_i - 1
     end
 
-    @guw_unit_of_work.save
+    if @guw_unit_of_work.save
 
-    reorder @guw_unit_of_work.guw_unit_of_work_group
+      reorder @guw_unit_of_work.guw_unit_of_work_group
 
-    @guw_model.guw_attributes.all.each do |gac|
-      Guw::GuwUnitOfWorkAttribute.create(
-          guw_type_id: @guw_type.id,
-          guw_unit_of_work_id: @guw_unit_of_work.id,
-          guw_attribute_id: gac.id)
+      @guw_model.guw_attributes.all.each do |gac|
+        Guw::GuwUnitOfWorkAttribute.create(
+            guw_type_id: @guw_type.id,
+            guw_unit_of_work_id: @guw_unit_of_work.id,
+            guw_attribute_id: gac.id)
+      end
+      redirect_to main_app.dashboard_path(@project) and return
+    else
+      render :edit
     end
-
-    redirect_to main_app.dashboard_path(@project)
   end
 
   def update
@@ -383,7 +385,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       end
     end
-    #session[:module_project_id] = current_module_project.nexts.first.id
+
+    @current_organization.fields.each do |field|
+      @module_project.views_widgets.each do |vw|
+        ViewsWidget::update_field(vw, field.id, @module_project.project, current_component)
+      end
+    end
 
     redirect_to main_app.dashboard_path(@project)
   end

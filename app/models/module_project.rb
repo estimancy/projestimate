@@ -163,8 +163,6 @@ class ModuleProject < ActiveRecord::Base
   end
 
   def to_s
-    #self.pemodule.title.humanize
-
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
       self.project.title
     elsif self.pemodule.alias == "ge"
@@ -178,7 +176,6 @@ class ModuleProject < ActiveRecord::Base
     else
       "#{self.pemodule.title.humanize} (#{Projestimate::Application::ALPHABETICAL[self.position_x.to_i-1]};#{self.position_y.to_i})"
     end
-
   end
 
   def size

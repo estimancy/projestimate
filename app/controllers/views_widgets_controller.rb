@@ -135,35 +135,7 @@ class ViewsWidgetsController < ApplicationController
       pfs = @views_widget.project_fields
       pfs.destroy_all
     else
-
-      pf = ProjectField.where(field_id: params["field"], project_id: project.id).first
-
-      if @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
-        begin
-          @value = @views_widget.estimation_value.string_data_probable[current_component.id][@views_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
-        rescue
-          begin
-            @value = @views_widget.estimation_value.string_data_probable[current_component.id]
-          rescue
-            @value = 0
-          end
-        end
-      else
-        @value = @views_widget.estimation_value.string_data_probable[current_component.id]
-      end
-
-      if pf.nil?
-        ProjectField.create(project_id: project.id,
-                            field_id: params["field"],
-                            views_widget_id: @views_widget.id,
-                            value: @value)
-      else
-        pf.value = @value
-        pf.views_widget_id = @views_widget.id
-        pf.field_id = params["field"].to_i
-        pf.project_id = project.id
-        pf.save
-      end
+      ViewsWidget::update_field(@views_widget, params["field"], project, current_module_project)
     end
 
     respond_to do |format|
