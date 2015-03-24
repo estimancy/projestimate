@@ -1375,7 +1375,6 @@ public
 
       #Update some params with the form input data
       new_prj.title = params['project']['title']
-      new_prj.alias = params['project']['alias']
       new_prj.version = params['project']['version']
       new_prj.description = params['project']['description']
       start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
@@ -1403,6 +1402,12 @@ public
       # For PBS
       new_prj_components = pe_wbs_product.pbs_project_elements
       new_prj_components.each do |new_c|
+
+        if new_c.is_root == true
+          new_c.name = params['project']['product_name']
+          new_c.save
+        end
+
         new_ancestor_ids_list = []
         new_c.ancestor_ids.each do |ancestor_id|
           ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
