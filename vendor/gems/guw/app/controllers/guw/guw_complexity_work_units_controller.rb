@@ -43,6 +43,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
         i.last.each do |j|
           wu = Guw::GuwWorkUnit.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
+          @guw_type = cplx.guw_type
 
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id,
                                                  guw_work_unit_id: wu.id).first
@@ -74,6 +75,6 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
       end
     end
 
-    redirect_to :back
+    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name}")
   end
 end

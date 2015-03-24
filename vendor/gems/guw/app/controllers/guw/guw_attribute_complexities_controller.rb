@@ -41,6 +41,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
     params["bottom"].each do |attribute|
       attribute.last.each do |type_complexity|
         tc = Guw::GuwTypeComplexity.find(type_complexity.first.to_i)
+        @guw_type = tc.guw_type
         a = Guw::GuwAttribute.find(attribute.first.to_i)
 
         gac = Guw::GuwAttributeComplexity.where( guw_type_id: params[:guw_type_id],
@@ -59,7 +60,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
         end
       end
     end
-    redirect_to guw.guw_model_path(params[:guw_model_id])
+    redirect_to guw.guw_model_path(params[:guw_model_id], anchor: "tabs-#{@guw_type.name}")
   end
 
 end
