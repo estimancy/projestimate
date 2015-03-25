@@ -47,6 +47,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @guw_unit_of_work.display_order = params[:position].to_i - 1
     end
 
+    @guw_unit_of_work.save
+
     reorder @guw_unit_of_work.guw_unit_of_work_group
 
     @guw_model.guw_attributes.all.each do |gac|
@@ -55,7 +57,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_unit_of_work_id: @guw_unit_of_work.id,
           guw_attribute_id: gac.id)
     end
-    @guw_unit_of_work.save
     redirect_to main_app.dashboard_path(@project)
   end
 
