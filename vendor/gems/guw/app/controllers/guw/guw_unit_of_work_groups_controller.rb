@@ -35,7 +35,8 @@ class Guw::GuwUnitOfWorkGroupsController < ApplicationController
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.new(params[:guw_unit_of_work_group])
     @guw_unit_of_work_group.module_project_id = current_module_project.id
     @guw_unit_of_work_group.pbs_project_element_id = current_component.id
-    redirect_to main_app.dashboard_path(@project) and return
+    @guw_unit_of_work_group.save
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def update
