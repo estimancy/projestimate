@@ -17,36 +17,40 @@ class ViewsWidget < ActiveRecord::Base
     include_association [:project_fields]
   end
 
-  def self.update_field(view_widget, field_id, project, component)
-    pf = ProjectField.where(field_id: field_id, project_id: project.id, views_widget_id: view_widget.id).first
+  def self.update_field(view_widget, organization, project, component)
 
-    @value = 0
+    organization.fields.each do |field|
 
-    if view_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
-      begin
-        @value = view_widget.estimation_value.string_data_probable[component.id][view_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
-      rescue
+      pf = ProjectField.where(field_id: field.id,
+                              project_id: project.id,
+                              views_widget_id: view_widget.id).first
+
+      if view_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
         begin
-          @value = view_widget.estimation_value.string_data_probable[project.root_component.id]
+          @value = view_widget.estimation_value.string_data_probable[component.id][view_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
         rescue
-          @value = 0
+          #begin
+            @value = view_widget.estimation_value.string_data_probable[project.root_component.id]
+          #rescue
+          #  @value = 0
+          #end
         end
+      else
+        @value = view_widget.estimation_value.string_data_probable[component.id]
       end
-    else
-      @value = view_widget.estimation_value.string_data_probable[component.id]
-    end
 
-    if pf.nil?
-      ProjectField.create(project_id: project.id,
-                          field_id: field_id,
-                          views_widget_id: view_widget.id,
-                          value: @value)
-    else
-      pf.value = @value
-      pf.views_widget_id = view_widget.id
-      pf.field_id = field_id
-      pf.project_id = project.id
-      pf.save
+      unless pf.nil?
+      #  ProjectField.create(project_id: project.id,
+      #                      field_id: field.id,
+      #                      views_widget_id: view_widget.id,
+      #                      value: @value)
+      #else
+        pf.value = @value
+        pf.views_widget_id = view_widget.id
+        pf.field_id = field.id
+        pf.project_id = project.id
+        pf.save
+      end
     end
   end
 

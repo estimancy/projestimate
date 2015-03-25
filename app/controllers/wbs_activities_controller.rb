@@ -414,11 +414,9 @@ class WbsActivitiesController < ApplicationController
       end
     end
 
-    #@current_organization.fields.each do |field|
-    #  current_module_project.views_widgets.each do |vw|
-    #    ViewsWidget::update_field(vw, field.id, current_module_project.project, current_component)
-    #  end
-    #end
+    current_module_project.views_widgets.each do |vw|
+      ViewsWidget::update_field(vw, @current_organization, current_module_project.project, current_component)
+    end
 
     redirect_to dashboard_path(@project)
   end
