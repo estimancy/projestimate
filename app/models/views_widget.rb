@@ -17,9 +17,43 @@ class ViewsWidget < ActiveRecord::Base
     include_association [:project_fields]
   end
 
+
   def to_s
     name
   end
 
-end
+  def self.update_field(view_widget, field_id, project, component)
+    pf = ProjectField.where(field_id: field_id, project_id: project.id, views_widget_id: view_widget.id).first
 
+    @value = 0
+
+    if view_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+      begin
+        @value = view_widget.estimation_value.string_data_probable[component.id][view_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
+      rescue
+        begin
+          @value = view_widget.estimation_value.string_data_probable[project.root_component.id]
+        rescue
+          @value = 0
+        end
+      end
+    else
+      @value = view_widget.estimation_value.string_data_probable[component.id]
+    end
+
+    if pf.nil?
+      ProjectField.create(project_id: project.id,
+                          field_id: field_id,
+                          views_widget_id: view_widget.id,
+                          value: @value)
+    else
+      pf.value = @value
+      pf.views_widget_id = view_widget.id
+      pf.field_id = field_id
+      pf.project_id = project.id
+      pf.save
+    end
+  end
+
+
+end

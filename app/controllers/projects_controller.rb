@@ -1407,8 +1407,10 @@ public
       new_prj_components.each do |new_c|
 
         if new_c.is_root == true
-          new_c.name = params['project']['product_name']
-          new_c.save
+          if !params[:create_project_from_template].nil?
+            new_c.name = params['project']['product_name']
+            new_c.save
+          end
         end
 
         new_ancestor_ids_list = []

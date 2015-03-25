@@ -43,8 +43,11 @@ class Guw::GuwUnitOfWorkGroupsController < ApplicationController
     authorize! :execute_estimation_plan, @project
 
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.find(params[:id])
-    @guw_unit_of_work_group.update_attributes(params[:guw_unit_of_work_group])
-    redirect_to main_app.dashboard_path(@project)
+    if @guw_unit_of_work_group.update_attributes(params[:guw_unit_of_work_group])
+      redirect_to main_app.dashboard_path(@project) and return
+    else
+      render :edit
+    end
   end
 
   def destroy
