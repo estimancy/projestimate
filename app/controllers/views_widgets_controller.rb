@@ -135,7 +135,7 @@ class ViewsWidgetsController < ApplicationController
       pfs = @views_widget.project_fields
       pfs.destroy_all
     else
-      ViewsWidget::update_field(@views_widget, params["field"], project, current_module_project)
+      ViewsWidget::update_field(@views_widget, params["field"], project, current_component)
     end
 
     respond_to do |format|
