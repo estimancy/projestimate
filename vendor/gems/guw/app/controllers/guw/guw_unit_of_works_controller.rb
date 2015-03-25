@@ -384,11 +384,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    @current_organization.fields.each do |field|
-      @module_project.views_widgets.each do |vw|
-        ViewsWidget::update_field(vw, field.id, @module_project.project, current_component)
-      end
-    end
+    #@current_organization.fields.each do |field|
+    #  @module_project.views_widgets.each do |vw|
+    #    ViewsWidget::update_field(vw, field.id, @module_project.project, current_component)
+    #  end
+    #end
 
     redirect_to main_app.dashboard_path(@project)
   end

@@ -20,12 +20,14 @@ class ViewsWidget < ActiveRecord::Base
   def self.update_field(view_widget, field_id, project, component)
     pf = ProjectField.where(field_id: field_id, project_id: project.id, views_widget_id: view_widget.id).first
 
+    @value = 0
+
     if view_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
       begin
-        @value = view_widget.estimation_value.string_data_probable[current_component.id][@views_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
+        @value = view_widget.estimation_value.string_data_probable[component.id][view_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
       rescue
         begin
-          @value = view_widget.estimation_value.string_data_probable[current_component.id]
+          @value = view_widget.estimation_value.string_data_probable[project.root_component.id]
         rescue
           @value = 0
         end
