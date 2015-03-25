@@ -55,7 +55,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_unit_of_work_id: @guw_unit_of_work.id,
           guw_attribute_id: gac.id)
     end
-    redirect_to main_app.dashboard_path(@project) and return
+    @guw_unit_of_work.save
+    redirect_to main_app.dashboard_path(@project)
   end
 
   def update
