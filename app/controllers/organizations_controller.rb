@@ -96,7 +96,6 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
   end
 
-
   def authorization
     @organization = Organization.find(params[:organization_id])
 
@@ -566,6 +565,47 @@ class OrganizationsController < ApplicationController
     @factors = Factor.order("factor_type")
   end
 
+  def import_user
+    sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
+    error_count = 0
+    file = params[:file]
+    sep = params[:separator]
+    encoding = params[:encoding]
+    CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
+      csv.each_with_index do |row, i|
+        begin
+          unless row.empty? or i == 0
+            password = SecureRandom.hex(8)
+
+            u = User.new(firstname: row[0],
+                          last_name: row[1],
+                          email: row[2],
+                          login_name: row[3],
+                          id_connexion: row[3],
+                          super_admin: false,
+                          password: password,
+                          password_confirmation: password,
+                          language_id: Language.first.id,
+                          initials: "#{row[0]}#{row[1]}",
+                          time_zone: "fr",
+                          object_per_page: 50,
+                          auth_type: "Application",
+                          number_precision: 2)
+
+            u.save(validate: false)
+
+            OrganizationsUsers.create(organization_id: @current_organization.id,
+                                      user_id: u.id)
+
+          end
+        rescue
+
+        end
+      end
+    end
+    redirect_to organization_users_path(@current_organization)
+  end
+
   def set_technology_size_type_abacus
     authorize! :edit_organizations, Organization
 
@@ -879,32 +919,32 @@ class OrganizationsController < ApplicationController
     authorize! :show_organizations, Orgnaization
   end
 
-  def export
-    authorize! :edit_organizations, Organization
-
-    @organization = Organization.find(params[:organization_id])
-
-    p = Axlsx::Package.new
-
-    wb = p.workbook
-
-    @organization.groups.each_with_index do |group|
-      wb.add_worksheet(:name => group.name) do |sheet|
-
-        group.users.each_with_index do |user|
-          sheet.add_row([user.name])
-        end
-      end
-
-      @organization.projects.each_with_index do |project|
-        project.users.each_with_index do |user|
-          sheet.add_row([user.name])
-        end
-      end
-
-    end
-
-    send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
-  end
+  #def export
+  #  authorize! :edit_organizations, Organization
+  #
+  #  @organization = Organization.find(params[:organization_id])
+  #
+  #  p = Axlsx::Package.new
+  #
+  #  wb = p.workbook
+  #
+  #  @organization.groups.each_with_index do |group|
+  #    wb.add_worksheet(:name => group.name) do |sheet|
+  #
+  #      group.users.each_with_index do |user|
+  #        sheet.add_row([user.name])
+  #      end
+  #    end
+  #
+  #    @organization.projects.each_with_index do |project|
+  #      project.users.each_with_index do |user|
+  #        sheet.add_row([user.name])
+  #      end
+  #    end
+  #
+  #  end
+  #
+  #  send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
+  #end
 
 end

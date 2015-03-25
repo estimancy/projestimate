@@ -11,6 +11,7 @@
         <%= f.input :view_id, as: :hidden, :input_html => { value: @view_id } %>
         <%= f.input :position_x, as: :hidden, :input_html => { value: @position_x } %>
         <%= f.input :position_y, as: :hidden, :input_html => { value: @position_y } %>
+        <%= hidden_field_tag 'current_module_project_id', @module_project.id %>
 
         <table>
           <!--<tr><td><%#= f.association :widget, label: I18n.t(:label_widget) %></td></tr>-->

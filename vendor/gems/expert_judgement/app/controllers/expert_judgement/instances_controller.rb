@@ -170,6 +170,7 @@ class ExpertJudgement::InstancesController < ApplicationController
         end
       end
     end
+    #session[:module_project_id] = current_module_project.nexts.first.id
 
     redirect_to main_app.dashboard_path(@project)
   end

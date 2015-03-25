@@ -90,13 +90,13 @@ class ViewsWidgetsController < ApplicationController
 
       # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
-    @module_project = ModuleProject.find(params[:views_widget][:module_project_id])
+    @module_project = ModuleProject.find(params[:current_module_project_id]) ###ModuleProject.find(params[:views_widget][:module_project_id])
     #get the current view
     current_view = View.find(params[:views_widget][:view_id])
     position_x = 1
     position_y = 1
 
-    # Get the max (width, height) of the view's widgets
+    # Get the max (width, height) of the view's widgets : then add the widget in last positions
     unless current_view.nil? || current_view.views_widgets.empty?
       current_view_widgets = current_view.views_widgets
       y_positions = current_view.views_widgets.map(&:position_y).map(&:to_i)
@@ -173,12 +173,15 @@ class ViewsWidgetsController < ApplicationController
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
+    project = @views_widget.estimation_value.module_project.project
 
     if params["field"].blank?
       pfs = @views_widget.project_fields
       pfs.destroy_all
     else
-      pf = ProjectField.where(field_id: params["field"]).first
+
+      pf = ProjectField.where(field_id: params["field"], project_id: project.id).first
+
       if @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
         begin
           @value = @views_widget.estimation_value.string_data_probable[current_component.id][@views_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
@@ -194,7 +197,7 @@ class ViewsWidgetsController < ApplicationController
       end
 
       if pf.nil?
-        ProjectField.create(project_id: @project.id,
+        ProjectField.create(project_id: project.id,
                             field_id: params["field"],
                             views_widget_id: @views_widget.id,
                             value: @value)
@@ -202,7 +205,7 @@ class ViewsWidgetsController < ApplicationController
         pf.value = @value
         pf.views_widget_id = @views_widget.id
         pf.field_id = params["field"].to_i
-        pf.project_id = @project.id
+        pf.project_id = project.id
         pf.save
       end
     end

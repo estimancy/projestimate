@@ -20,7 +20,7 @@
       <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')}, :disabled => true %>
       <table>
         <tr>
-          <td><%= f.input :alias, :input_html => {:class => 'input-large'}, :disabled => true %></td>
+          <td><%= f.input :product_name, label: I18n.t(:label_product_name), :input_html => {:class => 'input-large', :disabled => true, value: @project.root_component.nil? ? '' : @project.root_component.name } %></td>
           <td><%= f.input :version, :input_html => {:class => 'input-large'}, :disabled => true %></td>
         </tr>
       </table>
@@ -167,7 +167,6 @@
             </div>
           </div>
         <% end %>
-        <br>
       </div>
 
       <div id="accordion-security">
@@ -279,7 +278,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
 

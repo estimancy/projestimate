@@ -34,7 +34,11 @@
                           <% module_project_view_widgets.each do |view_widget| %>
                             <!-- Widgets are now showing the value of the widget's module project -->
                             <%# view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
-                            <% view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
+                            <% if module_project.pemodule.alias == Projestimate::Application::INITIALIZATION %>
+                                <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
+                            <% else %>
+                                <% view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
+                            <% end %>
 
                             <% value_to_show = view_widget_data[:value_to_show] %>
                             <% view_widget_height = view_widget_data[:height] ; view_widget_width = view_widget_data[:width] %>
@@ -97,11 +101,9 @@
                                     <!--Show the selected Ratio name-->
                                     <% if view_widget.show_wbs_activity_ratio %>
                                         <% wa_input = WbsActivityInput.where(wbs_activity_id: view_widget.module_project.wbs_activity, module_project_id: view_widget.module_project_id).first %>
-                                        <div class="row-fluid" style="margin-bottom: 10px;">
-                                            <span class="widget_name">
-                                              <%= "#{I18n.t(:ratio)}:" %>  <%= wa_input.nil? ? "-" : wa_input.wbs_activity %>
-                                            </span>
-                                        </div>
+                                        <span class="widget_name">
+                                          <%= "#{I18n.t(:ratio)}:" %>  <%= wa_input.nil? ? "-" : wa_input.wbs_activity_ratio %>
+                                        </span>
                                     <% end %>
 
                                     <% if view_widget.show_min_max && effort_per_phase_class.empty? %>
@@ -122,7 +124,7 @@
                                         </div>
                                     <% end %>
 
-                                    <% if !view_widget.project_fields.empty? %>
+                                    <% unless view_widget.project_fields.empty? %>
                                       <div class="fa fa-asterisk" style="position: absolute; bottom: 0; left: 0"></div>
                                     <% end %>
                                   </div>

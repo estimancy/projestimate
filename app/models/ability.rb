@@ -100,9 +100,13 @@ class Ability
         end
       end
 
-      @array_users =  Hash.new
-      @array_status_groups = Hash.new
-      @array_groups =  Hash.new
+      #@array_users = Hash.new {|h,k| h[k]=[]}
+      #@array_status_groups = Hash.new {|h,k| h[k]=[]}
+      #@array_groups = Hash.new {|h,k| h[k]=[]}
+
+      @array_users = Array.new
+      @array_status_groups = Array.new
+      @array_groups = Array.new
 
       #Specfic project security loading
       prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
@@ -110,8 +114,10 @@ class Ability
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
           unless prj_scrt.project_security_level.nil?
-            prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-              @array_users[permission.alias] = prj_scrt.project
+            prj_scrt.project.organization.estimation_statuses.each do |es|
+              prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
+                @array_users << [permission.id, prj_scrt.project.id, es.id]
+              end
             end
           end
         end
@@ -124,56 +130,35 @@ class Ability
           prj_scrts.each do |prj_scrt|
             # Get the project/estimation permissions
             unless prj_scrt.project_security_level.nil?
-              prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-                #if prj_scrt.project.is_model
-                  #For template/model, only the model's permissions will be taken in account
-                  #if prj_scrt.is_model_permission
-                  #  can permission.alias.to_sym, prj_scrt.project
-                  #end
-                #else
-                  @array_groups[permission.alias] = prj_scrt.project
-                #end
+              prj_scrt.project.organization.estimation_statuses.each do |es|
+                prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
+                  @array_groups << [permission.id, prj_scrt.project.id, es.id]
+                end
               end
             end
           end
         end
 
         grp.estimation_status_group_roles.each do |esgr|
-          esgr.project_security_level.permissions.select{|i| i.is_permission_project }.each do |permission|
+          esgr.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
             esgr.organization.projects.each do |project|
-              #if project.is_model
-                #For template/model, only the model's permissions will be taken in account
-                #if esgr.is_model_permission
-                #  can permission.alias.to_sym, project
-              #else
-                @array_status_groups[permission.alias] = [project, esgr.estimation_status_id, grp.id]
-              #end
-              #end
+              @array_status_groups << [permission.id, project.id, esgr.estimation_status.id]
             end
           end
         end
+      end
 
-        global = @array_users.keys + @array_groups.keys
-        status = @array_status_groups.keys
+      global = @array_users + @array_groups
+      status = @array_status_groups
 
-        (global & status).each do |permission|
+      [status, global].inject(:&).each do |a|
+        permission = Permission.find(a[0]).alias
+        project = Project.find(a[1])
+        status = EstimationStatus.find(a[2])
 
-          unless @array_users[permission].nil?
-            unless @array_users[permission].is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
-              can permission.to_sym, @array_users[permission]
-            end
-          end
-
-          unless @array_groups[permission].nil?
-            unless @array_groups[permission].is_model == true && (permission.start_with?("alter_") || permission.include?("widget"))
-              can permission.to_sym, @array_groups[permission]
-            end
-          end
-
-          unless @array_status_groups[permission][0].is_model == true
-            can permission.to_sym, @array_status_groups[permission][0] do |p|
-              (p.estimation_status_id == @array_status_groups[permission][1] && @array_status_groups[permission][2])
-            end
+        unless project.nil?
+          unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
+            can permission.to_sym, project, estimation_status_id: status.id
           end
         end
       end

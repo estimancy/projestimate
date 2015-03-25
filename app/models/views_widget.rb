@@ -10,7 +10,7 @@ class ViewsWidget < ActiveRecord::Base
 
   has_many :project_fields
 
-  validates :name, :module_project_id, presence: true
+  validates :name, :module_project_id, :estimation_value_id, presence: true
 
   amoeba do
     enable
