@@ -10,11 +10,15 @@ class ViewsWidget < ActiveRecord::Base
 
   has_many :project_fields
 
-  validates :name, :module_project_id, presence: true
+  validates :name, :module_project_id, :estimation_value_id, presence: true
 
   amoeba do
     enable
     include_association [:project_fields]
+  end
+
+  def to_s
+    name
   end
 
   def self.update_field(view_widget, organization, project, component)

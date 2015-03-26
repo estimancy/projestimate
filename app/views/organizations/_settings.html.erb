@@ -11,6 +11,7 @@
     <li><a href="#tabs-fields"><%= I18n.t(:fields) %></a></li>
     <li><a href="#tabs-size_unit"><%= I18n.t(:size_unit) %></a></li>
     <li><a href="#tabs-estimation-models"><%= I18n.t(:estimation_models) %></a></li>
+    <li><a href="#tabs-views"><%= I18n.t(:views) %></a></li>
   </ul>
 
   <div id="tabs-project-areas">
@@ -337,6 +338,18 @@
     <%# else %>
         <!--<div class="red_color"><%# I18n.t(:notice_cannot_view_estimation_models) %></div>-->
     <%# end %>
+  </div>
+
+  <div id="tabs-views">
+    <% if can? :show_views, View %>
+
+        <% if can? :manage, View %>
+            <%= link_to I18n.t('new_view'), new_organization_view_path(@organization), :class => 'btn btn-primary pull-right' %>
+        <% end %>
+
+        <%= render partial: "views/views_and_widgets" %>
+
+    <% end %>
   </div>
 
 </div>

@@ -88,9 +88,54 @@ class ViewsWidgetsController < ApplicationController
   def create
     authorize! :manage_estimation_widgets, @project
 
-    @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => 1, :position_y => 1, :width => 3, :height => 3))
       # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
+    @module_project = ModuleProject.find(params[:current_module_project_id]) ###ModuleProject.find(params[:views_widget][:module_project_id])
+    #get the current view
+    current_view = View.find(params[:views_widget][:view_id])
+    position_x = 1
+    position_y = 1
+
+    # Get the max (width, height) of the view's widgets : then add the widget in last positions
+    unless current_view.nil? || current_view.views_widgets.empty?
+      current_view_widgets = current_view.views_widgets
+      y_positions = current_view.views_widgets.map(&:position_y).map(&:to_i)
+      y_max = y_positions.max
+      widgets_on_ymax = current_view_widgets.where(position_y: y_max)
+      x_positions = widgets_on_ymax.map(&:position_x).map(&:to_i)
+      x_max = x_positions.max
+      view_widget_max_position = widgets_on_ymax.where(position_x: x_max).first
+
+      position_x = view_widget_max_position.position_x.to_i+view_widget_max_position.width.to_i+1
+      position_y = y_max ###view_widget_max_position.position_y.to_i+view_widget_max_position.height.to_i+1
+    end
+
+    #new widget with the default positions
+    @views_widget = ViewsWidget.new(params[:views_widget].merge(:position_x => position_x, :position_y => position_y, :width => 3, :height => 3))
+
+    # If new widget is added to a view, the view will be newly saved as a temporary view (if it's not a temporary view)
+    if !current_view.is_temporary_view
+      new_temporary_view = View.new(name: "#{current_view.name}_temp", description: current_view.description, pemodule_id: @module_project.pemodule_id, organization_id: current_view.organization_id, is_temporary_view: true, initial_view_id: current_view.id)
+      if new_temporary_view.save
+        #the new widget will be added to the temporary view
+        @views_widget.view_id = new_temporary_view.id
+
+        #Copy current view widgets to the new created view
+        current_view.views_widgets.each do |view_widget|
+          #widget_est_val = view_widget.estimation_value
+          #in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+          #estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
+          estimation_value_id = nil ###estimation_value.nil? ? nil : estimation_value.id
+          widget_copy = ViewsWidget.create(view_id: new_temporary_view.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+                                           show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                           width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+                                           position_x: view_widget.position_x, position_y: view_widget.position_y, from_initial_view: true)
+        end
+
+        #update module_project view
+        @module_project.update_attribute(:view_id, new_temporary_view.id)
+      end
+    end
 
     respond_to do |format|
       if @views_widget.save
@@ -105,7 +150,6 @@ class ViewsWidgetsController < ApplicationController
       else
         flash[:error] = "Erreur d'ajout de Widget"
         @position_x = 1; @position_y = 1
-        @module_project = ModuleProject.find(params[:views_widget][:module_project_id])
         @pbs_project_element_id = params[:views_widget][:pbs_project_element_id].nil? ? current_component.id : params[:views_widget][:pbs_project_element_id]
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
 

@@ -293,6 +293,7 @@ class ProjectsController < ApplicationController
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
     @project.creator_id = current_user.id
+    @project.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_by, username: current_user.name)} \r\n"
     @organization = Organization.find(params[:project][:organization_id])
 
     @project_areas = @organization.project_areas
@@ -870,7 +871,8 @@ class ProjectsController < ApplicationController
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
 
       #Select the default view for module_project
-      default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+      #default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
+      default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :description => "Default view for the #{@pemodule}. If no view is selected for module project, this view will be automatically selected.")
       my_module_project.view_id = default_view_for_widgets.id
 
       my_module_project.save
@@ -1374,6 +1376,7 @@ public
       new_prj.original_model_id = old_prj.id
 
       #Update some params with the form input data
+      new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_model_by, model_name: old_prj, username: current_user.name)} \r\n"
       new_prj.title = params['project']['title']
       new_prj.version = params['project']['version']
       new_prj.description = params['project']['description']
@@ -1445,7 +1448,7 @@ public
               unless new_view_widget_mp.nil?
                 new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
                 estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
-                widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+                widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
                                                  icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
                                                  width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
 
@@ -1758,8 +1761,187 @@ public
     @estimation_models = @organization.projects.where(:is_model => true)
   end
 
-  #Checkout the project
+  #Set the checkout version
+  def set_checkout_version
+    @project = Project.find(params[:project_id])
+  end
+
+  #Checkout the project : create a new version of the project
   def checkout
+    old_prj = Project.find(params[:project_id])
+
+    authorize! :commit_project, old_prj
+
+    #if !can_modify_estimation?(project)
+    if !(can_alter_estimation?(old_prj) && can?(:commit_project, old_prj))
+      redirect_to(organization_estimations_path(@current_organization), flash: {warning: I18n.t(:warning_checkout_unauthorized_action)}) and return
+    end
+
+    # If project is not childless, a new branch need to be created
+    # And user need have the "allow_to_create_branch" permission to create new branch
+    if old_prj.has_children? && (cannot? :allow_to_create_branch, old_prj)
+      redirect_to organization_estimations_path(@current_organization), :flash => {:warning => I18n.t('warning_not_allow_to_create_new_branch_of_project')} and return
+    end
+
+    begin
+      old_prj_copy_number = old_prj.copy_number
+      old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
+      #old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
+
+      new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
+      old_prj.copy_number = old_prj_copy_number
+
+      new_prj.title = old_prj.title
+      new_prj.alias = old_prj.alias
+      new_prj.description = params[:description]
+      #new_prj.state = 'preliminary'
+      new_prj.parent_id = old_prj.id
+
+      new_prj.version = params[:new_version]  #set_project_version(old_prj)
+      if params[:new_version].nil? || params[:new_version].empty?
+        new_prj.version = set_project_version(old_prj)
+      end
+
+      new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_version_from_to, from_version: old_prj.version, to_version: new_prj.version, current_user_name: current_user.name)}. \r\n"
+
+      if new_prj.save
+        old_prj.save #Original project copy number will be incremented to 1
+
+        #Managing the component tree : PBS
+        pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
+        #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
+
+        pe_wbs_product.name = old_prj_pe_wbs_product_name
+        #pe_wbs_activity.name = old_prj_pe_wbs_activity_name
+
+        pe_wbs_product.save
+        #pe_wbs_activity.save
+
+        # For PBS
+        new_prj_components = pe_wbs_product.pbs_project_elements
+        new_prj_components.each do |new_c|
+          unless new_c.is_root?
+            new_ancestor_ids_list = []
+            new_c.ancestor_ids.each do |ancestor_id|
+              ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
+              new_ancestor_ids_list.push(ancestor_id)
+            end
+            new_c.ancestry = new_ancestor_ids_list.join('/')
+            # For PBS-Project-Element Links with modules
+            #old_pbs = PbsProjectElement.find(new_c.copy_id)
+            #new_c.module_projects = old_pbs.module_projects
+            new_c.save
+          end
+        end
+
+        # For ModuleProject associations
+        old_prj.module_projects.group(:id).each do |old_mp|
+          new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
+
+          # ModuleProject Associations for the new project
+          old_mp.associated_module_projects.each do |associated_mp|
+            new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
+            new_mp.associated_module_projects << new_associated_mp
+          end
+
+          #Copy the views and widgets for the new project
+          new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+
+          #We have to copy all the selected view's widgets in a new view for the current module_project
+          if old_mp.view
+            old_mp_view_widgets = old_mp.view.views_widgets.all
+            old_mp_view_widgets.each do |view_widget|
+              new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
+              new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
+              widget_est_val = view_widget.estimation_value
+              unless widget_est_val.nil?
+                in_out = widget_est_val.in_out
+                widget_pe_attribute_id = widget_est_val.pe_attribute_id
+                unless new_view_widget_mp.nil?
+                  #new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+                  #estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
+                  widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+                                                   icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
+                                                   width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+
+
+                  pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+                  unless pf.nil?
+                    pf.views_widget_id = widget_copy.id
+                    pf.save
+                  end
+
+                end
+              end
+            end
+          end
+          #update the new module_project view
+          new_mp.update_attribute(:view_id, new_view.id)
+
+          #Update the Unit of works's groups
+          new_mp.guw_unit_of_work_groups.each do |guw_group|
+            new_pbs_project_element = new_prj_components.find_by_copy_id(guw_group.pbs_project_element_id)
+            new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+            guw_group.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+
+            # Update the group unit of works and attributes
+            guw_group.guw_unit_of_works.each do |guw_uow|
+              new_uow_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, guw_uow.module_project_id)
+              new_uow_mp_id = new_uow_mp.nil? ? nil : new_uow_mp.id
+
+              new_pbs = new_prj_components.find_by_copy_id(guw_uow.pbs_project_element_id)
+              new_pbs_id = new_pbs.nil? ? nil : new_pbs.id
+              guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id)
+            end
+          end
+
+          new_mp.uow_inputs.each do |uo|
+            new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+            new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+
+            uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+          end
+
+          ["input", "output"].each do |io|
+            new_mp.pemodule.pe_attributes.each do |attr|
+              old_prj.pbs_project_elements.each do |old_component|
+                new_prj_components.each do |new_component|
+                  ev = new_mp.estimation_values.where(pe_attribute_id: attr.id, in_out: io).first
+                  unless ev.nil?
+                    ev.string_data_low[new_component.id.to_i] = ev.string_data_low.delete old_component.id
+                    ev.string_data_most_likely[new_component.id.to_i] = ev.string_data_most_likely.delete old_component.id
+                    ev.string_data_high[new_component.id.to_i] = ev.string_data_high.delete old_component.id
+                    ev.string_data_probable[new_component.id.to_i] = ev.string_data_probable.delete old_component.id
+                    ev.save
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        flash[:success] = I18n.t(:notice_project_successful_checkout)
+        redirect_to (edit_project_path(new_prj, :anchor => "tabs-history")), :notice => I18n.t(:notice_project_successful_checkout) and return
+
+        #raise "#{RuntimeError}"
+      else
+        flash[:error] = I18n.t(:error_project_checkout_failed)
+        redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
+      end
+
+    rescue
+      flash[:error] = I18n.t(:error_project_checkout_failed)
+      redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
+      ###redirect_to(edit_project_path(old_prj, :anchor => 'tabs-history'), :flash => {:error => I18n.t(:error_project_checkout_failed)} ) and return
+    end
+
+    #else
+    #redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
+    #end  # END commit permission
+
+  end
+
+  def checkout_SAVE_AND_TO_REMOVE_AFTER
     old_prj = Project.find(params[:project_id])
 
     #if !can_modify_estimation?(project)

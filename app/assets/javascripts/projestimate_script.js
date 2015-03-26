@@ -27,7 +27,7 @@ $(document).ready(function() {
     // Update the jscolor library Dir to resolve bug on colors detection
     jscolor.dir = '/assets/';
 
-    // ============================ TEST ================================================
+    // ============================ GRIDSTER widgets management ================================================
 
     $(function(){ //DOM Ready
 

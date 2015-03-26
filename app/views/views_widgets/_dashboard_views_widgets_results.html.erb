@@ -12,12 +12,13 @@
 
           <div class='<%= "span#{span_size}" %>'> <!-- div for X position -->
             <div class="widget-box collapsible">  <!-- One widget-box by module -->
-              <div class="widget-title" title='<%= I18n.t(:used_view, value: module_project.view.nil? ? '-' : module_project.view.name) %>' style="background-color: <%= module_project.color.nil? ? "lightgrey" : "##{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
+              <div class="widget-title" title='<%= I18n.t(:used_view, value: module_project.view.nil? ? '-' : module_project.view.name) %>' style="background-color: <%= module_project.color.nil? ? "lightgrey" : "#{module_project.color}" %>; border-bottom: 1px solid <%="##{module_project.color}"%>;">
                 <div class="view_header_data">
                   <h5 class="view_title"><%= "#{module_project}" %></h5>
                   <div class="pull-right">
                     <% if can?(:alter_estimation_plan, @project) || can?(:manage_estimation_widgets, @project) %>
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
+                      <%= link_to "", edit_module_project_view_config_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog", title: I18n.t(:label_add_new_view_widget), remote: true %>
                     <% end %>
                   </div>
                 </div>
@@ -32,7 +33,12 @@
                           <% module_project_view_widgets =  module_project.view.views_widgets.order('position').all %>
                           <% module_project_view_widgets.each do |view_widget| %>
                             <!-- Widgets are now showing the value of the widget's module project -->
-                            <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
+                            <%# view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
+                            <% if module_project.pemodule.alias == Projestimate::Application::INITIALIZATION %>
+                                <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
+                            <% else %>
+                                <% view_widget_data = get_view_widget_data(module_project.id, view_widget.id) %>
+                            <% end %>
 
                             <% value_to_show = view_widget_data[:value_to_show] %>
                             <% view_widget_height = view_widget_data[:height] ; view_widget_width = view_widget_data[:width] %>
