@@ -130,7 +130,7 @@ class ModuleProjectsController < ApplicationController
           new_view_saved_as = View.create(name: view_name, description: view_description, pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
           unless @module_project.view.nil?
             @module_project.view.views_widgets.each do |view_widget|
-              widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+              widget_copy = ViewsWidget.create(view_id: new_view_saved_as.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
                                                show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                                width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
             end
