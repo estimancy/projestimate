@@ -17,6 +17,10 @@ class ViewsWidget < ActiveRecord::Base
     include_association [:project_fields]
   end
 
+  def to_s
+    name
+  end
+
   def self.update_field(view_widget, organization, project, component)
 
     organization.fields.each do |field|
