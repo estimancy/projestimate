@@ -13,7 +13,7 @@
     <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic pull-left", type: 'color', value: @module_project.color || '#D3D3D3'} %> <br>
 
     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
-      <div class="span-8"><%= "#{I18n.t(:current_view)} : #{@module_project.view}" %></div>
+      <div class="span-8"><%= "#{I18n.t(:current_view)} : " %> <%= @module_project.view.nil? ? "-" : @module_project.view %></div>
 
       <% is_default_view = @module_project.view.nil? ? false : @module_project.view.is_default_view  %>
       <div class="span-4"><%= check_box_tag "is_default_view", is_default_view, is_default_view, disabled: is_default_view %> <%= I18n.t(:define_as_default_view) %> </div>

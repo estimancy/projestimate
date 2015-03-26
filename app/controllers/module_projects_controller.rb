@@ -84,12 +84,17 @@ class ModuleProjectsController < ApplicationController
 
       # for the save button
       if params['save'] && !params['save'].nil?
-        if params['module_project']['view_id'] != @module_project.view_id
+        if (params['module_project']['view_id'] != @module_project.view_id) || (@module_project.view_id.nil? && params['module_project']['view_id'].nil?)
           module_project_name = @module_project.to_s
 
           #If the module_project view has changed, update with the new selected view
           if selected_view.nil?
-            @module_project.update_attributes(view_id: @module_project.view_id, color: params['module_project']['color'])
+            mp_view_id = @module_project.view_id
+            if mp_view_id.nil?
+              mp_view = new_view_saved_as = View.create(name: "#{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
+              mp_view_id = mp_view.id
+            end
+            @module_project.update_attributes(view_id: mp_view_id, color: params['module_project']['color'])
 
           elsif !selected_view.nil? && @module_project.view_id != selected_view.id
             @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
@@ -101,9 +106,9 @@ class ModuleProjectsController < ApplicationController
 
               selected_view.views_widgets.where(from_initial_view: [nil, false]).each do |view_widget|
                 widget_copy = ViewsWidget.create(view_id: initial_view.id, module_project_id: view_widget.module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
-                                                 show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
-                                                 width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
-                                                 position_x: view_widget.position_x, position_y: view_widget.position_y, from_initial_view: nil)
+                                   show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                   width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+                                   position_x: view_widget.position_x, position_y: view_widget.position_y, from_initial_view: nil)
               end
 
               #update module_project view
@@ -118,31 +123,44 @@ class ModuleProjectsController < ApplicationController
 
       #for the save_as button
       if params['save_as'] && !params['save_as'].nil?
-        view_name = params['view_name']
+        view_name = params['view_name'].nil? ? "#{@module_project} view" : params['view_name']
         view_description = params['view_description']
 
-        #If the selected view is a temporary view, this view will only be renamed
-        if selected_view.is_temporary_view
-          selected_view.update_attributes(name: view_name, description: view_description, is_temporary_view: false, initial_view_id: nil)
-          #update module_project view
-          @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
-
-        else
-          new_view_saved_as = View.new(name: view_name, description: view_description, pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
-          if new_view_saved_as.save
-            #Copy current view widgets to the new created view
-            selected_view.views_widgets.each do |view_widget|
-              #widget_est_val = view_widget.estimation_value
-              #in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
-              #estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
-              estimation_value_id = nil ###estimation_value.nil? ? nil : estimation_value.id
-              widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+        if selected_view.nil?
+          new_view_saved_as = View.create(name: view_name, description: view_description, pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
+          unless @module_project.view.nil?
+            @module_project.view.views_widgets.each do |view_widget|
+              widget_copy = ViewsWidget.create(view_id: new_view_saved_as.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
                                                show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                                width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
             end
+          end
+          @module_project.update_attributes(view_id: new_view_saved_as.id, color: params['module_project']['color'])
 
+        else
+          #If the selected view is a temporary view, this view will only be renamed
+          if selected_view.is_temporary_view
+            selected_view.update_attributes(name: view_name, description: view_description, is_temporary_view: false, initial_view_id: nil)
             #update module_project view
-            @module_project.update_attributes(view_id: new_view_saved_as.id, color: params['module_project']['color'])
+            @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
+
+          else
+            new_view_saved_as = View.new(name: view_name, description: view_description, pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
+            if new_view_saved_as.save
+              #Copy current view widgets to the new created view
+              selected_view.views_widgets.each do |view_widget|
+                #widget_est_val = view_widget.estimation_value
+                #in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+                #estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
+                estimation_value_id = nil ###estimation_value.nil? ? nil : estimation_value.id
+                widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+                                                 show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                                 width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+              end
+
+              #update module_project view
+              @module_project.update_attributes(view_id: new_view_saved_as.id, color: params['module_project']['color'])
+            end
           end
         end
       end
