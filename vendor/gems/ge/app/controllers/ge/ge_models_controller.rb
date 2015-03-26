@@ -136,9 +136,9 @@ class Ge::GeModelsController < ApplicationController
     end
 
     #@current_organization.fields.each do |field|
-    #  current_module_project.views_widgets.each do |vw|
-    #    ViewsWidget::update_field(vw, field.id, current_module_project.project, current_component)
-    #  end
+      current_module_project.views_widgets.each do |vw|
+        ViewsWidget::update_field(vw, @current_organization, current_module_project.project, current_component)
+      end
     #end
 
     redirect_to main_app.dashboard_path(@project)

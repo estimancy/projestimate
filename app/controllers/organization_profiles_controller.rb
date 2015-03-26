@@ -29,8 +29,7 @@ class OrganizationProfilesController < ApplicationController
     @organization = Organization.find_by_id(params['organization_profile']['organization_id'])
 
     if @organization_profile.save
-      falsh[:notice] = I18n.t(:notice_profile_successful_created)
-     redirect_to organization_setting_path(@organization, anchor: 'tabs-profile')
+      flash[:notice] = I18n.t(:notice_profile_successful_created)
      redirect_to redirect_apply(nil, new_organization_organization_profile_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-profile'))
     else
       flash[:error] = I18n.t(:error_profile_failed_created)
