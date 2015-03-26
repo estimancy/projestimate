@@ -1455,3 +1455,6 @@ fr:
   save_as_current_view: "Enregistrer sous la vue actuelle"
   view_name: "Nom de la vue"
   view_description: "Description de la vue"
+  current_version: "Version actuelle"
+  new_version: "Nouvelle version"
+  change_estimation_version_from_to: "Version changé de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}"

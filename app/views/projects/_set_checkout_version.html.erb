@@ -1,0 +1,30 @@
+<%= simple_form_for @project, :url => checkout_path(params[:project_id]) do |f| %>
+    <%= f.error_notification %>
+
+    <%= hidden_field_tag(:organization_id, params[:organization_id]) %>
+    <%= hidden_field_tag(:project_id, params[:project_id]) %>
+
+    <table>
+      <tr>
+        <td><%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xlarge'}, disabled: true %></td>
+        <td><%= f.input :version, label: I18n.t(:current_version), :input_html => {:class => 'input-large'}, disabled: true  %></td>
+      </tr>
+
+      <tr><td><label><%= I18n.t(:new_version) %></label></td></tr>
+      <tr><td><%= text_field_tag "new_version", "", :class => 'input-xlarge' %></td></tr>
+    </table>
+
+    <div>
+        <label style="margin-top: 10px"><%= I18n.t('description') %></label>
+        <%= text_area_tag "description", "", rows: 5, cols: 150, class: "input-xlarge" %>
+    </div>
+
+    <br>
+    <div class="actions-tabs">
+      <% if can? :create_project_from_template, Project %>
+          <%= f.submit I18n.t('save'), :id =>'checkout_project', :class => 'btn submit_project' %>
+          <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
+      <% end %>
+    </div>
+    </div>
+<% end %>

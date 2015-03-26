@@ -1730,3 +1730,6 @@ es:
   save_as_current_view: "Save as current view"
   view_name: "View name"
   view_description: "View description"
+  current_version: "Current version"
+  new_version: "New version"
+  change_estimation_version_from_to: "Version changed from \"%{from_version}\" to \"%{to_version}\" by %{current_user_name}"
