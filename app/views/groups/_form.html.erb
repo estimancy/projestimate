@@ -35,30 +35,30 @@
             </tr>
           </table>
           <% if is_master_instance?  && @organization.nil? %>
-              <table>
-                <tr>
-                  <td>
-                    <%= f.input :record_status_id, :as => :select, :label => I18n.t('record_status'), :required => (is_master_instance? ? true : false),
-                                :collection => @group.record_status_collection,
-                                :input_html => {:class => 'record_status'},
-                                :selected => (@group.is_defined_or_nil? ? @proposed_status.id : @group.record_status_id),
-                                :disabled => (true if @group.is_retired?) %>
-                  </td>
-                  <td>
-                    <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @group.is_custom?) %>
-                  </td>
-                </tr>
-              </table>
-              <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
+            <table>
+              <tr>
+                <td>
+                  <%= f.input :record_status_id, :as => :select, :label => I18n.t('record_status'), :required => (is_master_instance? ? true : false),
+                              :collection => @group.record_status_collection,
+                              :input_html => {:class => 'record_status'},
+                              :selected => (@group.is_defined_or_nil? ? @proposed_status.id : @group.record_status_id),
+                              :disabled => (true if @group.is_retired?) %>
+                </td>
+                <td>
+                  <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @group.is_custom?) %>
+                </td>
+              </tr>
+            </table>
+            <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
           <% end %>
         </div>
 
       <% if can? :manage, Group %>
-          <% if action_name == 'new' || action_name=='create' %>
-            <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-          <% end %>
-          <%= submit_tag I18n.t('save'), :class => 'btn' %>
-          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+        <% if action_name == 'new' || action_name=='create' %>
+          <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+        <% end %>
+        <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
       <% end %>
       <%= link_to I18n.t('back'), organization_authorization_path(@organization, anchor: "tabs-group"), :class => 'btn' %>
 
@@ -67,48 +67,53 @@
 
   <div id="tabs-2">
     <%= form_tag('/update_selected_users', :method => 'POST', :class => 'simple_form') do -%>
-        <b><%= I18n.t(:text_group_associated_users, value: @group) %></b>
-        <br/><br/>
+      <b><%= I18n.t(:text_group_associated_users, value: @group) %></b>
+      <br/><br/>
 
-        <div class="field_checkbox">
-          <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
-            <%= hidden_field_tag 'group_id', @group.id %>
-            <%= hidden_field_tag 'group[user_ids][]' %>
-              <thead>
-                <tr>
-                  <th><%= I18n.t(:first_name) %></th>
-                  <th><%= I18n.t(:last_name) %></th>
-                  <th><%= I18n.t(:login_name) %></th>
-                  <th class="filter-select"><%= I18n.t(:selected) %></th>
-                </tr>
-              </thead>
-            <tbody>
-              <% @users.each do |group_user| %>
-                <tr>
-                  <td><%= group_user.first_name %></td>
-                  <td><%= group_user.last_name %></td>
-                  <td><%= group_user.login_name %></td>
-                  <td class="align-center">
-                    <span class="hidden">
-                      <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>
-                    </span>
-                    <%= check_box_tag('group[user_ids][]', group_user.id, (@group.users.map(&:id).include? group_user.id), :id => nil, :class => "group_#{group_user.id}") %>
-                  </td>
-                </tr>
-              <% end %>
-            <%= render :partial => 'layouts/footer_table' %>
-            </tbody>
-          </table>
-        </div>
-
-        <% if can? :manage, Group %>
-            <% if action_name == 'new' || action_name=='create' %>
-                <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+      <div class="field_checkbox">
+        <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
+          <%= hidden_field_tag 'group_id', @group.id %>
+          <%= hidden_field_tag 'group[user_ids][]' %>
+            <thead>
+              <tr>
+                <th><%= I18n.t(:first_name) %></th>
+                <th><%= I18n.t(:last_name) %></th>
+                <th><%= I18n.t(:login_name) %></th>
+                <th class="filter-select"><%= I18n.t(:selected) %></th>
+              </tr>
+            </thead>
+          <tbody>
+            <% if current_user.super_admin == true %>
+              <% users = @users %>
+            <% else %>
+              <% users = (@organization.users + @organization.users_from_organization).uniq %>
             <% end %>
-            <%= submit_tag I18n.t('save'), :class => 'btn' %>
-            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+            <% users.each do |group_user| %>
+              <tr>
+                <td><%= group_user.first_name %></td>
+                <td><%= group_user.last_name %></td>
+                <td><%= group_user.login_name %></td>
+                <td class="align-center">
+                  <span class="hidden">
+                    <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>
+                  </span>
+                  <%= check_box_tag('group[user_ids][]', group_user.id, (@group.users.map(&:id).include? group_user.id), :id => nil, :class => "group_#{group_user.id}") %>
+                </td>
+              </tr>
+            <% end %>
+            <%= render :partial => 'layouts/footer_table' %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if can? :manage, Group %>
+        <% if action_name == 'new' || action_name=='create' %>
+          <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
         <% end %>
-        <%= link_to I18n.t('back'), organization_authorization_path(@organization, anchor: "tabs-group"), :class => 'btn' %>
+        <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+      <% end %>
+      <%= link_to I18n.t('back'), organization_authorization_path(@organization, anchor: "tabs-group"), :class => 'btn' %>
 
     <% end -%>
   </div>
