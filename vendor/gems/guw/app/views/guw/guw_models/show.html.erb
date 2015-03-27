@@ -137,7 +137,7 @@
 
         <% if @guw_model.one_level_model == false %>
           <h4>
-            <b>Seuils de complexité des attributs de <%= guw_type %> </b>
+            <b><%= I18n.t :label_complexity_attributes %><%= guw_type %> </b>
             <% if can? :manage_modules_instances, ModuleProject %>
               <%= link_to "Créer un seuil d'attribut", guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
             <% end %>
