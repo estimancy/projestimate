@@ -690,6 +690,52 @@ $(document).ready(function() {
 
     $(".ui-resizable-handle").css("background-image", 'none');
 
+
+    //Handler Action link_to event for project history tree view
+    $('.node_link_to').live('click', function(){
+        var counter = 0,
+            i = 0,
+            node_ids = new Array();
+        var get_function_url = "/show_project_history";
+
+        $('.infovis_project_history input:checked').each(function() {
+            // ... increase counter and update the nodes Array
+            counter++;
+            node_ids.push($(this).attr('value'));
+        });
+
+        if($(this).attr('id') === "find_use_projects_from_history"){
+            get_function_url = "/find_use_project";
+        }
+
+        // if there is no selected project
+        if(node_ids[0] == null)
+            return alert($('#select_at_least_one_project').val()) ;
+        // if set_checkout_version_path
+        else if ($(this).attr('id') === "set_checkout_version_path"){
+            return $.ajax({
+                url: "/set_checkout_version",
+                data: {
+                    project_id: node_ids[0]
+                }
+            })
+        }
+        else{
+            return $.ajax({
+                url: get_function_url,
+                data: {
+                    checked_node_ids: node_ids,
+                    counter:  counter,
+                    action_id: $(this).attr('id'),
+                    project_id: node_ids[0],
+                    project_ids: node_ids,
+                    current_showed_project_id: $('#current_showed_project_id').val()
+                }
+            })
+        }
+    });
+
+
 });
 
 

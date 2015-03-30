@@ -1444,6 +1444,7 @@ frsncf:
   views: "Vues"
   estimation_created_by: "Estimation créée par \"%{username}\" "
   estimation_created_from_model_by: "Estimation créée à partir du modèle \"%{model_name}\" par \"%{username}\". "
+  estimation_created_from_estimation_by: "Estimation created from the \"%{estimation_name}\" estimation by \"%{username}\" "
   associated_module: "Module associé"
   view_config: "configuration de la vue"
   save_as: "Enregistrer sous"
@@ -1456,4 +1457,4 @@ frsncf:
   view_description: "Description de la vue"
   current_version: "Version actuelle"
   new_version: "Nouvelle version"
-  change_estimation_version_from_to: "Version changé de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}"
+  change_estimation_version_from_to: "Version changée de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}"

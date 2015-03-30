@@ -326,6 +326,27 @@ class OrganizationsController < ApplicationController
       if new_organization.save
         organization_image.save #Original organization copy number will be incremented to 1
 
+        #Copy the organization estimation_statuses workflow and groups/roles
+        new_estimation_statuses = new_organization.estimation_statuses
+        new_estimation_statuses.each do |estimation_status|
+          copied_status = EstimationStatus.find(estimation_status.copy_id)
+
+          #Get the to_transitions for the Statuses Workflow
+          copied_status.to_transition_statuses.each do |to_transition|
+            new_to_transition = new_estimation_statuses.where(copy_id: to_transition.id).first
+            StatusTransition.create(from_transition_status_id: estimation_status.id, to_transition_status_id: new_to_transition.id )
+          end
+        end
+
+        #Get the estimation_statuses role / by group
+        new_organization.project_security_levels.each do |project_security_level|
+          project_security_level.estimation_status_group_roles.each do |group_role|
+            new_group = new_organization.groups.where(copy_id: group_role.group_id).first
+            estimation_status = new_organization.estimation_statuses.where(copy_id: group_role.estimation_status_id).first
+            group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
+          end
+        end
+
         #Then copy the image organization estimation models
         organization_image.projects.where(is_model: true).all.each do |est_model|
           new_template = execute_duplication(est_model.id)
@@ -341,7 +362,7 @@ class OrganizationsController < ApplicationController
         # Create a user in the Admin group of the new organization
         admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
         # Add the user to the created organization
-        admin_group = Organization.groups.where(name: '*USER').first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
+        admin_group = new_organization.groups.where(name: '*USER').first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
         admin_user.groups << admin_group
         admin_user.save
         #user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)

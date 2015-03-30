@@ -47,6 +47,14 @@ class ProjectSecurityLevel < ActiveRecord::Base
 
   validates :name, :presence => true
 
+  amoeba do
+    enable
+    include_association []
+    customize(lambda { |original_project_security_level, new_project_security_level|
+      new_project_security_level.copy_id = original_project_security_level.id
+    })
+  end
+
   def to_s
     name
   end

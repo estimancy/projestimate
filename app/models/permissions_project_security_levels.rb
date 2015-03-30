@@ -38,4 +38,6 @@ class PermissionsProjectSecurityLevels < ActiveRecord::Base
   attr_accessible  :project_security_level_id, :permission_id
   belongs_to :project_security_level
   belongs_to :permission
+
+  has_many :estimation_status_group_roles
 end

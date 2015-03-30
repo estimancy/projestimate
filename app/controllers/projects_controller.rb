@@ -1368,6 +1368,7 @@ public
     old_prj = Project.find(params[:project_id])
 
     new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
+    new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_estimation_by, estimation_name: old_prj, username: current_user.name)} \r\n"
     new_prj.ancestry = nil
     new_prj.is_model = false
 
@@ -2222,6 +2223,8 @@ public
             @string_url = checkout_path(:project_id => project_id)
           when "collapse_node_path"
             @string_url = collapse_project_version_path(:project_ids => params[:project_ids], :from_tree_history_view => true, :current_showed_project_id => params['current_showed_project_id'])
+          when "set_checkout_version_path"
+            @string_url = set_checkout_version_path(:project_id => project_id)
           else
             @string_url = session[:return_to]
         end
