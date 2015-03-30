@@ -69,12 +69,7 @@ class UowInput < ActiveRecord::Base
           #begin
             @ware = UowInput.find_by_id(row[0])
             unless @ware.nil?
-              #@ware.update_attribute('organization_id', row[1])
               @ware.update_attribute('name', row[2])
-              #@ware.update_attribute('technology_id', row[3])
-              #@ware.update_attribute('unit_of_work_id', row[4])
-              #@ware.update_attribute('complexity_id', row[5])
-              #@ware.update_attribute('size_unit_type_id', row[6])
               @ware.update_attribute('size_low', row[7])
               @ware.update_attribute('size_most_likely', row[8])
               @ware.update_attribute('size_high', row[9])
@@ -102,9 +97,6 @@ class UowInput < ActiveRecord::Base
               rescue
               end
             end
-          #rescue
-          #  error_count = error_count + 1
-          #end
         end
       end
     end

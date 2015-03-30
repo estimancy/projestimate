@@ -346,11 +346,11 @@ frsncf:
   acquisition_categories: "Catégories d'acquisitions"
   platform_categories: "Catégories de plates-formes"
   project_categories: "Catégories de projets"
-  project_areas: "Domaines"
+  project_areas: "Domaine"
   acquisition_category: "Catégorie d'acquisition"
   platform_category: "Catégorie de plate-forme"
   project_category: "Catégorie de projet"
-  project_area: "Domaines"
+  project_area: "Domaine"
 
   #Project areas
   edit_project_area: "Editer domaine \"%{value}\" ..."

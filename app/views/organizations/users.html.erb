@@ -58,7 +58,7 @@
           </tr>
         </thead>
         <tbody>
-        <% (@organization.users+@organization.users_from_organization).uniq.each do |user| %>
+        <% (@organization.users + @organization.users_from_organization).uniq.each do |user| %>
           <tr>
             <td><%= user.first_name %></td>
             <td><%= user.last_name %></td>
