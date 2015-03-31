@@ -1376,6 +1376,7 @@ it:
   views: "Views"
   estimation_created_by: "Estimate created by \"%{username}\" "
   estimation_created_from_model_by: "Estimate created from the \"%{model_name}\" model by \"%{username}\" "
+  estimation_created_from_estimation_by: "Estimation created from the \"%{estimation_name}\" estimation by \"%{username}\" "
   associated_module: "Associated module"
   view_config: "view configuration"
   save_as: "Save as"

@@ -2961,42 +2961,6 @@ $(function table_sorter_filter() {
     });
 
 
-    //Handler Action link_to event for project history tree view
-    $('.node_link_to').live('click', function(){
-        var counter = 0,
-            i = 0,
-            node_ids = new Array();
-        var get_function_url = "/show_project_history";
-
-        $('.infovis_project_history input:checked').each(function() {
-            // ... increase counter and update the nodes Array
-            counter++;
-            node_ids.push($(this).attr('value'));
-        });
-
-        if($(this).attr('id') === "find_use_projects_from_history"){
-            get_function_url = "/find_use_project";
-        }
-
-        // if there is no selected project
-        if(node_ids[0] == null)
-            return alert($('#select_at_least_one_project').val()) ;
-        else{
-            return $.ajax({
-                url: get_function_url,
-                data: {
-                    checked_node_ids: node_ids,
-                    counter:  counter,
-                    action_id: $(this).attr('id'),
-                    project_id: node_ids[0],
-                    project_ids: node_ids,
-                    current_showed_project_id: $('#current_showed_project_id').val()
-                }
-            })
-        }
-
-    });
-
 
     // update select and all input types in the tablesorter cache when the change event fires.
     // This method only works with jQuery 1.7+

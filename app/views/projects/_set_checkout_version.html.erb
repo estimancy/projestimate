@@ -4,6 +4,10 @@
     <%= hidden_field_tag(:organization_id, params[:organization_id]) %>
     <%= hidden_field_tag(:project_id, params[:project_id]) %>
 
+    <% if @project.has_children?  %>
+        <div style="color: red"><%= I18n.t(:confirm_new_branch_project_checkout) %></div> <br>
+    <% end %>
+
     <table>
       <tr>
         <td><%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xlarge'}, disabled: true %></td>

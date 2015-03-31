@@ -86,6 +86,9 @@ class Group < ActiveRecord::Base
   amoeba do
     enable
     include_association [:permissions]
+    customize(lambda { |original_group, new_group|
+      new_group.copy_id = original_group.id
+    })
   end
 
 end

@@ -49,11 +49,13 @@ class EstimationStatus < ActiveRecord::Base
 
   # Add the amoeba gem for the copy
   amoeba do
-    #enable
+    enable
     #exclude_field [:projects, :estimation_status_group_roles]
-    #include_field [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
-    include_association [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
-    propagate
+    #include_association [:estimation_status_group_roles, :to_transition_statuses, :from_transition_statuses]
+    include_association [:to_transition_statuses, :from_transition_statuses]
+    customize(lambda { |original_estimation_status, new_estimation_status|
+      new_estimation_status.copy_id = original_estimation_status.id
+    })
   end
 
   # Status alias validation
