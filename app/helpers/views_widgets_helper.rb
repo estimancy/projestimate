@@ -151,11 +151,11 @@ module ViewsWidgetsHelper
         #WIDGETS_TYPE = [["Simple text", "text"], ["Line chart", "line_chart"], ["Bar chart", "bar_chart"], ["Area chart", "area_chart"], ["Pie chart","pie_chart"], ["Timeline", "timeline"], ["Stacked bar chart", "stacked_bar_chart"] ]
         #According to the widget type, we will show simple text, charts, timeline, etc
         #get  rounded values before use
-        #user_precision = user_number_precision
-        #data_low = data_low.is_a?(Hash) ? data_low.update(data_low){|key,value| value.round(user_precision)} : data_low
-        #data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.update(data_most_likely){|key,value| value.round(user_precision)} : data_most_likely
-        #data_high = data_high.is_a?(Hash) ? data_high.update(data_high){|key,value| value.round(user_precision)} : data_high
-        #data_probable = data_probable.is_a?(Hash) ? data_probable.update(data_probable){|key,value| value.round(user_precision)} : data_probable
+        user_precision = user_number_precision
+        data_low = data_low.is_a?(Hash) ? data_low.update(data_low){|key,value| value.round(user_precision)} : data_low
+        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.update(data_most_likely){|key,value| value.round(user_precision)} : data_most_likely
+        data_high = data_high.is_a?(Hash) ? data_high.update(data_high){|key,value| value.round(user_precision)} : data_high
+        data_probable = data_probable.is_a?(Hash) ? data_probable.update(data_probable){|key,value| value.round(user_precision)} : data_probable
 
         chart_level_values = []
         chart_level_values << ["low", data_low]

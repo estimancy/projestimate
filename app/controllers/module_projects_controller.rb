@@ -90,7 +90,7 @@ class ModuleProjectsController < ApplicationController
           if selected_view.nil?
             mp_view_id = @module_project.view_id
             if mp_view_id.nil?
-              mp_view = new_view_saved_as = View.create(name: "#{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
+              mp_view = View.create(name: "#{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
               mp_view_id = mp_view.id
             end
             @module_project.update_attributes(view_id: mp_view_id, color: params['module_project']['color'])
@@ -152,7 +152,7 @@ class ModuleProjectsController < ApplicationController
                 #in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
                 #estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
                 estimation_value_id = nil ###estimation_value.nil? ? nil : estimation_value.id
-                widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+                widget_copy = ViewsWidget.create(view_id: new_view_saved_as.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
                                                  show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                                  width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
               end
