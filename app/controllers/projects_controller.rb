@@ -1794,7 +1794,6 @@ public
       new_prj.title = old_prj.title
       new_prj.alias = old_prj.alias
       new_prj.description = params[:description]
-      #new_prj.state = 'preliminary'
       new_prj.parent_id = old_prj.id
 
       new_prj.version = params[:new_version]  #set_project_version(old_prj)
@@ -2008,20 +2007,6 @@ public
               end
             end
 
-            # For WBS
-            #new_prj_wbs = pe_wbs_activity.wbs_project_elements
-            #new_prj_wbs.each do |new_wbs|
-            #  unless new_wbs.is_root?
-            #    new_ancestor_ids_list = []
-            #    new_wbs.ancestor_ids.each do |ancestor_id|
-            #      ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-            #      new_ancestor_ids_list.push(ancestor_id)
-            #    end
-            #    new_wbs.ancestry = new_ancestor_ids_list.join('/')
-            #    new_wbs.save
-            #  end
-            #end
-
             # For ModuleProject associations
             old_prj.module_projects.group(:id).each do |old_mp|
               new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
@@ -2073,7 +2058,6 @@ public
     #else
       #redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
     #end  # END commit permission
-
   end
 
 private
