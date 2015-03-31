@@ -67,7 +67,6 @@ class ModuleProjectsController < ApplicationController
     if params['is_default_view']
       #get the last default view
       last_default_view = @current_organization.views.where('pemodule_id = ? AND is_default_view = ?', @module_project.pemodule_id, true).first
-
       if last_default_view.nil? || last_default_view != @module_project.view
         unless last_default_view.nil?
           last_default_view.update_attribute(:is_default_view, false)

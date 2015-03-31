@@ -16,7 +16,7 @@
             <% end %>
 
             <% unless pmod.nil? %>
-              <div class="<%= select_pemodule %> module_project_min <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" style="background-color: <%= "##{pmod.color}" %>">
+              <div class="<%= select_pemodule %> module_project_min <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" style="background-color: <%= "#{pmod.color}" %>">
 
                 <%= link_to pmod, activate_module_project_path(pmod) %>
 
