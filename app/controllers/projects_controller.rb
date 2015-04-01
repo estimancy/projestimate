@@ -1433,17 +1433,13 @@ public
           new_mp.associated_module_projects << new_associated_mp
         end
 
-        # if the module_project
+        # if the module_project is nil
         if new_mp.view.nil?
-          default_view = @current_organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
+          default_view = @organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
           if default_view.nil?
             default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: @organization.id)
           end
           new_mp.update_attribute(:view_id, default_view.id)
-        #else
-        #  if new_mp.view.pemodule_id.nil?
-        #    new_mp.view.update_attribute(:pemodule_id, new_mp.pemodule_id)
-        #  end
         end
 
         ##Copy the views and widgets for the new project
