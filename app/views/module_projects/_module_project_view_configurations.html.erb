@@ -21,7 +21,7 @@
 
     <div style="margin-bottom: 10px;">
       <%= link_to "#{I18n.t(:change_current_view)} >>", "#", id: "show_table_module_view_list", remote: true %>
-      <%= link_to "#{I18n.t(:save_as_current_view)} >>", "#", id: "save_current_view_as", class:"pull-right", remote: true %>
+      <%= link_to "#{I18n.t(:save_as_another_view)} >>", "#", id: "save_current_view_as", class:"pull-right", remote: true %>
     </div>
 
     <div id="show_div_for_save_as">
@@ -58,7 +58,7 @@
     </div>
 
     <div style="margin-top: 30px;">
-        <%= f.submit I18n.t('save'), name: 'save', class: 'btn', id: 'save_view_button' %>
+        <%= f.submit I18n.t('label_save'), name: 'save', class: 'btn', id: 'save_view_button' %>
         <%= f.submit I18n.t('save_as'), name: 'save_as', class: 'btn', id: 'save_as_view_button' %>
         <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:close) %></button>
     </div>
