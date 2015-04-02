@@ -1370,7 +1370,12 @@ public
     new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
     new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_estimation_by, estimation_name: old_prj, username: current_user.name)} \r\n"
     new_prj.ancestry = nil
-    new_prj.is_model = false
+    if params[:action_name] == "duplication_model"
+      new_prj.is_model = true
+    else
+      new_prj.is_model = false
+    end
+
 
     #if creation from template
     if !params[:create_project_from_template].nil?

@@ -118,6 +118,7 @@ gem 'real_size', path: "vendor/gems/real_size"
 gem 'uow', :path => 'vendor/gems/uow'
 gem 'guw', :path => 'vendor/gems/guw'
 gem 'ge', :path => 'vendor/gems/ge'
+gem 'amoa', :path => 'vendor/gems/amoa'
 gem 'balancing_module', path: "vendor/gems/balancing_module"
 gem 'expert_judgement', path: "vendor/gems/expert_judgement"
 

@@ -8,7 +8,7 @@
 
     <td colspan=2 style="text-align:right;">
       <% if can? :manage_estimation_models, Project %>
-          <%= link_to I18n.t('new_estimation_model'), new_project_path(organization_id: @organization.id, is_model: true), :class => 'btn' %>
+        <%= link_to I18n.t('new_estimation_model'), new_project_path(organization_id: @organization.id, is_model: true), :class => 'btn' %>
       <% end %>
     </td>
   </tr>
@@ -35,9 +35,9 @@
           <tr>
             <td>
               <% if can_show_estimation?(project) %>
-                  <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
+                <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
               <% else %>
-                  <%= project.title %>
+                <%= project.title %>
               <% end %>
             </td>
             <td class="center"><%= project.version %></td>
@@ -49,7 +49,7 @@
             <td class="text_field_text_overflow"><%= project.platform_category %></td>
             <td style="min-width:130px;">
               <% if can? :create_project_from_template, Project %>
-                  <%#= link_to('Test', duplicate_path(project, action_name: "create_project_from_template"), :class => 'icon-repeat pull-left', :title => I18n.t('button_duplicate_model')) %>
+                  <%= link_to('', main_app.duplicate_path(project, organization_id: @organization, action_name: "duplication_model"), :class => 'icon-copy pull-left', :title => I18n.t('button_duplicate_project')) %>
                   <%= link_to('', change_new_estimation_data_path(template_id: project.id, organization_id: project.organization_id, action_name: "create_project_from_template"), :class => 'icon-repeat pull-left', :title => I18n.t('button_duplicate_model'), remote: true) %>
               <% end %>
 
