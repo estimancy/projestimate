@@ -78,6 +78,8 @@ module EffortBreakdown
       # Get the efforts hash for all Wbs_project_element effort
       efforts_man_month = get_effort
 
+      #@wbs_activity_ratio_element = WbsActivityRatioElement.where('wbs_activity_ratio_id = ?', @ratio.id).first
+      #@wbs_activity_ratio_profiles = @wbs_activity_ratio_element.wbs_activity_ratio_profiles.where(organzation)
       efforts_man_month.each do |key, value|
         cost[key]  = value.to_f * @project.organization.cost_per_hour.to_f
       end

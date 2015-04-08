@@ -130,6 +130,11 @@ public
     #Get the current organization
     @organization = Organization.find(params[:organization_id])
 
+    unless params[:groups].nil?
+      @user.group_ids = params[:groups].keys
+      @user.save
+    end
+
     # Get the Application authType
     application_auth_type = AuthMethod.where('name = ? AND record_status_id =?', 'Application', @defined_record_status.id).first
 
