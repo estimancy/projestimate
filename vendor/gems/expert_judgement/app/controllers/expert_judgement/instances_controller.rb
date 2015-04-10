@@ -65,7 +65,7 @@ class ExpertJudgement::InstancesController < ApplicationController
     @instance = ExpertJudgement::Instance.new(params[:instance])
     @instance.organization_id = params[:instance][:organization_id].to_i
     @instance.save
-    redirect_to main_app.organization_module_estimation_path(@instance.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@instance.organization_id, anchor: "expert")
   end
 
   def update
@@ -74,7 +74,7 @@ class ExpertJudgement::InstancesController < ApplicationController
     @instance = ExpertJudgement::Instance.find(params[:id])
     @instance.update_attributes(params[:instance])
 
-    redirect_to main_app.organization_module_estimation_path(@instance.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@instance.organization_id, anchor: "expert")
   end
 
   def destroy
@@ -88,7 +88,7 @@ class ExpertJudgement::InstancesController < ApplicationController
     end
 
     @instance.delete
-    redirect_to main_app.organization_module_estimation_path(@instance.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@instance.organization_id, anchor: "expert")
   end
 
   def save_efforts

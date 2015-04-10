@@ -352,6 +352,9 @@ en:
   platform_category: "Platform category"
   project_category: "Project category"
   project_area: "Project Area"
+  label_acquisition: "Acquisition"
+  label_platform: "Platform"
+  label_version: "Version"
 
   #Project areas
   edit_project_area: "Edit the \"%{value}\" project area ..."
@@ -1457,3 +1460,7 @@ en:
   current_version: "Current version"
   new_version: "New version"
   change_estimation_version_from_to: "Version changed from \"%{from_version}\" to \"%{to_version}\" by %{current_user_name}"
+  label_available_columns: "Available Columns"
+  label_selected_columns: "Selected Columns"
+  label_all_columns: "All Columns"
+  field_column_names: "Columns"

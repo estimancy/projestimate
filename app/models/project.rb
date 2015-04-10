@@ -39,10 +39,11 @@ class Project < ActiveRecord::Base
                   :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
                   :acquisition_category_id, :platform_category_id, :parent_id
 
-  attr_accessor :product_name, :project_organization_statuses, :new_status_comment
+  attr_accessor :product_name, :project_organization_statuses, :new_status_comment, :available_inline_columns
 
   include ActionView::Helpers
   include ActiveModel::Dirty
+  #require 'organization.rb'
 
   has_ancestry  # For the Ancestry gem
 
@@ -97,6 +98,39 @@ class Project < ActiveRecord::Base
     propagate
   end
 
+  # get the selectable/available inline columns
+  class_attribute :available_inline_columns
+  self.available_inline_columns =
+    [
+      QueryColumn.new(:product_name, :sortable => "#{Project.table_name}.product_name", :caption => I18n.t(:label_product_name)),
+      QueryColumn.new(:title, :sortable => "#{Project.table_name}.title", :caption => I18n.t(:label_project_name)),
+      QueryColumn.new(:version, :sortable => "#{Project.table_name}.version", :caption => I18n.t(:label_version)),
+      QueryColumn.new(:status_name, :sortable => "#{EstimationStatus.table_name}.name", :caption => I18n.t(:state)),
+      QueryColumn.new(:project_area, :sortable => "#{ProjectArea.table_name}.name", :caption => I18n.t(:project_area)),
+      QueryColumn.new(:project_category, :sortable => "#{ProjectCategory.table_name}.name", :caption => I18n.t(:category)),
+      QueryColumn.new(:acquisition_category, :sortable => "#{AcquisitionCategory.table_name}.name", :caption => I18n.t(:label_acquisition)),
+      QueryColumn.new(:platform_category, :sortable => "#{PlatformCategory.table_name}.name", :caption => I18n.t(:label_platform)),
+      QueryColumn.new(:description, :sortable => "#{Project.table_name}.description", :caption => I18n.t(:description)),
+      QueryColumn.new(:start_date, :sortable => "#{Project.table_name}.start_date", :caption => I18n.t(:start_date)),
+      QueryColumn.new(:creator, :sortable => "#{User.table_name}.first_name", :caption => I18n.t(:author)),
+      QueryColumn.new(:created_at, :sortable => "#{Project.table_name}.created_at", :caption => I18n.t(:created_at)),
+      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => I18n.t(:updated_at)),
+    ]
+
+  #class_attribute :selected_inline_columns
+  #self.selected_inline_columns = update_selected_inline_columns(Project)
+  #self.selected_inline_columns = self.available_inline_columns.select{ |column| column.name.to_s.in?(@current_organization.project_selected_columns)}
+
+
+  def self.selectable_inline_columns
+    [
+      [I18n.t(:label_product_name), "product_name"], [I18n.t(:label_project_name), "title"], [I18n.t(:label_version),"version"],
+      [I18n.t(:state), "estimation_status_id"], [ I18n.t(:project_area), "project_area_id"], [I18n.t(:category), "project_category_id"],
+      [I18n.t(:label_acquisition), "acquisition_category_id"], [I18n.t(:label_platform), "platform_category_id"], [I18n.t(:description), "description"],
+      [I18n.t(:start_date), "start_date"], [I18n.t(:author), "creator_id"], [I18n.t(:created_at), "created_at"], [I18n.t(:updated_at), "updated_at"]
+    ]
+  end
+
   #Get the project's WBS-Activity
   def project_wbs_activity
     project_wbs_activity = nil
@@ -115,6 +149,10 @@ class Project < ActiveRecord::Base
   #  Estimation status name
   def status_name
     self.estimation_status.nil? ? nil : self.estimation_status.name
+  end
+
+  def author
+    self.creator_id.nil? ? "" : self.creator
   end
 
   # The status background color for estimations list
@@ -236,12 +274,9 @@ class Project < ActiveRecord::Base
     end
   end
 
-
   # Method that execute the duplication core
   def self.execute_duplication_SAVE_NOT_WORKING(project_id, parameters, create_from_template = nil)
-
     #Project.transaction do
-
       begin
         old_prj = Project.find(project_id)
 

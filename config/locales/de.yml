@@ -348,6 +348,9 @@ de:
 #  platform_category: "Platform Kategorie"
 #  project_category: "Projektkategorie"
 #  project_area: "Projektbereich"
+  label_acquisition: "Acquisition"
+  label_platform: "Platform"
+  label_version: "Version"
 #
 #  #Project areas
 #  edit_project_area: "Bearbeiten Sie die \"%{value}\" Projektgebietproject..."
@@ -1401,4 +1404,5 @@ de:
   label_available_columns: "Available Columns"
   label_selected_columns: "Selected Columns"
   label_all_columns: "All Columns"
+  field_column_names: "Columns"
 

@@ -352,6 +352,9 @@ fr:
   platform_category: "Catégorie de plate-forme"
   project_category: "Catégorie de projet"
   project_area: "Secteur de projets"
+  label_acquisition: "Acquisition"
+  label_platform: "Plateforme"
+  label_version: "Vers."
 
   #Project areas
   edit_project_area: "Editer le secteur de projet \"%{value}\" ..."
@@ -1463,3 +1466,4 @@ fr:
   label_available_columns: "Colonnes disponibles"
   label_selected_columns: "Colonnes sélectionnées"
   label_all_columns: "Toutes les colonnes"
+  field_column_names: "Colonnes"

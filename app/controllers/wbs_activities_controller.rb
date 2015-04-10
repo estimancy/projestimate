@@ -116,7 +116,7 @@ class WbsActivitiesController < ApplicationController
 
     if @wbs_activity.update_attributes(params[:wbs_activity])
       #redirect_to redirect(wbs_activities_path), :notice => "#{I18n.t(:notice_wbs_activity_successful_updated)}"
-      redirect_to main_app.organization_module_estimation_path(@organization_id)
+      redirect_to main_app.organization_module_estimation_path(@organization_id, anchor: "activite")
     else
       render :edit
     end
@@ -135,7 +135,7 @@ class WbsActivitiesController < ApplicationController
     if @wbs_activity.save
       @wbs_activity_element = WbsActivityElement.new(:name => @wbs_activity.name, :wbs_activity_id => @wbs_activity.id, :description => 'Root Element', :is_root => true)
       @wbs_activity_element.save
-      redirect_to main_app.organization_module_estimation_path(@organization_id)
+      redirect_to main_app.organization_module_estimation_path(@organization_id, anchor: "activite")
     else
       render :new
     end
@@ -152,7 +152,7 @@ class WbsActivitiesController < ApplicationController
     @wbs_activity.destroy
 
     flash[:notice] = I18n.t(:notice_wbs_activity_successful_deleted)
-    redirect_to main_app.organization_module_estimation_path(@organization_id)
+    redirect_to main_app.organization_module_estimation_path(@organization_id, anchor: "activite")
   end
 
 

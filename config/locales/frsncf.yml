@@ -351,6 +351,9 @@ frsncf:
   platform_category: "Catégorie de plate-forme"
   project_category: "Catégorie de projet"
   project_area: "Domaine"
+  label_acquisition: "Acquisition"
+  label_platform: "Plateforme"
+  label_version: "Vers."
 
   #Project areas
   edit_project_area: "Editer domaine \"%{value}\" ..."
@@ -1459,3 +1462,7 @@ frsncf:
   current_version: "Version actuelle"
   new_version: "Nouvelle version"
   change_estimation_version_from_to: "Version changée de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}"
+  label_available_columns: "Colonnes disponibles"
+  label_selected_columns: "Colonnes sélectionnées"
+  label_all_columns: "Toutes les colonnes"
+  field_column_names: "Colonnes"

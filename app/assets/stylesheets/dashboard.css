@@ -795,6 +795,10 @@ textarea {
     line-height: 20px;
 }
 
+option{
+    border-bottom: 1px dotted #d7d7d7;
+}
+
 td.align-center{
     text-align:center;
 }

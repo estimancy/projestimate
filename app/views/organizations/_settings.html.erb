@@ -12,6 +12,7 @@
     <li><a href="#tabs-size_unit"><%= I18n.t(:size_unit) %></a></li>
     <li><a href="#tabs-estimation-models"><%= I18n.t(:estimation_models) %></a></li>
     <li><a href="#tabs-views"><%= I18n.t(:views) %></a></li>
+    <li><a href="#tabs-select-columns-list"><%= I18n.t(:select_columns_list) %></a></li>
   </ul>
 
   <div id="tabs-project-areas">
@@ -346,10 +347,14 @@
         <% if can? :manage, View %>
             <%= link_to I18n.t('new_view'), new_organization_view_path(@organization), :class => 'btn btn-primary pull-right' %>
         <% end %>
-
         <%= render partial: "views/views_and_widgets" %>
-
     <% end %>
+  </div>
+
+  <div id="tabs-select-columns-list" style="min-height: 50px;">
+    <b><%= I18n.t(:select_columns_list) %></b>
+    <br>
+    <%= render partial: "organizations/select_project_columns_to_display" %>
   </div>
 
 </div>

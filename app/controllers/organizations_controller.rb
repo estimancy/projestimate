@@ -2,7 +2,7 @@
 #############################################################################
 #
 # Estimancy, Open Source project estimation web application
-# Copyright (c) 2014 Estimancy (http://www.estimancy.com)
+# Copyright (c) 2014-2015 Estimancy (http://www.estimancy.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -746,6 +746,29 @@ class OrganizationsController < ApplicationController
     redirect_to redirect_apply(organization_module_estimation_path(@organization, :anchor => 'taille'), nil, '/organizationals_params')
   end
 
+  # Update the organization's projects available inline columns
+  def set_available_inline_columns
+    redirect_to organization_setting_path(@current_organization, :anchor => 'tabs-select-columns-list')
+  end
+
+  def update_available_inline_columns
+    puts "test"
+    # update selected column
+    #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
+    #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
+    selected_columns = params['selected_inline_columns']
+    query_classname = params['query_classname'].constantize
+    unless selected_columns.nil?
+      case params['query_classname']
+        when "Project"
+          @current_organization.project_selected_columns = selected_columns
+        when "Organization"
+          @current_organization.organization_selected_columns = selected_columns
+      end
+      @current_organization.save
+    end
+  end
+
   #def import_abacus
   #  authorize! :edit_organizations, Organization
   #  @organization = Organization.find(params[:id])
@@ -946,7 +969,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    authorize! :show_organizations, Orgnaization
+    authorize! :show_organizations, Organization
   end
 
   #def export
