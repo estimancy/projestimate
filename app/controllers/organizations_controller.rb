@@ -604,34 +604,34 @@ class OrganizationsController < ApplicationController
     encoding = params[:encoding]
     CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
       csv.each_with_index do |row, i|
-        begin
-          unless row.empty? or i == 0
-            password = SecureRandom.hex(8)
+        #begin
+        #unless row.empty? or i == 0
+        password = SecureRandom.hex(8)
 
-            u = User.new(firstname: row[0],
-                          last_name: row[1],
-                          email: row[2],
-                          login_name: row[3],
-                          id_connexion: row[3],
-                          super_admin: false,
-                          password: password,
-                          password_confirmation: password,
-                          language_id: Language.first.id,
-                          initials: "#{row[0]}#{row[1]}",
-                          time_zone: "fr",
-                          object_per_page: 50,
-                          auth_type: "Application",
-                          number_precision: 2)
+        u = User.new(first_name: row[0],
+                     last_name: row[1],
+                     email: row[2],
+                     login_name: row[3],
+                     id_connexion: row[3],
+                     super_admin: false,
+                      password: password,
+                      password_confirmation: password,
+                      language_id: Language.first.id,
+                      initials: "#{row[0].first}#{row[1].first}",
+                      time_zone: "fr",
+                      object_per_page: 50,
+                      auth_type: "Application",
+                      number_precision: 2)
 
-            u.save(validate: false)
+        u.save(validate: false)
 
-            OrganizationsUsers.create(organization_id: @current_organization.id,
-                                      user_id: u.id)
+        OrganizationsUsers.create(organization_id: @current_organization.id,
+                                    user_id: u.id)
 
-          end
-        rescue
-
-        end
+        #end
+        #rescue
+        #
+        #end
       end
     end
     redirect_to organization_users_path(@current_organization)

@@ -17,10 +17,10 @@
         <%= f.input :guw_type_id, as: :hidden, input_html: { value: params[:guw_type_id] } %>
 
         <%= f.input :name %>
-        <%= f.input :alias %>
+        <%# f.input :alias %>
         <% if @guw_model.one_level_model == false %>
-          <%= f.input :bottom_range %>
-          <%= f.input :top_range %>
+          <%= f.input :bottom_range, label: "Borne basse (comprises)" %>
+          <%= f.input :top_range, label: "Borne haute (non comprises)" %>
         <% end %>
       </div>
 

@@ -41,21 +41,21 @@ class Guw::GuwModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @guw_model = Guw::GuwModel.find(params[:id])
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def new
     authorize! :manage_modules_instances, ModuleProject
 
     @guw_model = Guw::GuwModel.new
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(params['organization_id']), @guw_model.organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
   end
 
   def edit
     authorize! :show_modules_instances, ModuleProject
 
     @guw_model = Guw::GuwModel.find(params[:id])
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def create
