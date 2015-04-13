@@ -21,10 +21,6 @@
           <% if can? :create_project_from_scratch, Project %>
               <%= link_to I18n.t('new_project'), new_project_path(organization_id: @organization.id), :class => 'btn' %>
           <% end %>
-
-          <% if can? :show_project, Project %>
-              <%= link_to "Générer un rapport à partir du tableau", "#!", :class => 'btn export' %>
-          <% end %>
         </td>
       </tr>
     </table>

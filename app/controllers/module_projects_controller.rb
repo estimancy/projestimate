@@ -83,7 +83,7 @@ class ModuleProjectsController < ApplicationController
 
       # for the save button
       if params['save'] && !params['save'].nil?
-        if (params['module_project']['view_id'] != @module_project.view_id) || (@module_project.view_id.nil? && params['module_project']['view_id'].nil?)
+        #if (params['module_project']['view_id'].to_i != @module_project.view_id) || (@module_project.view_id.nil? && params['module_project']['view_id'].nil?)
           module_project_name = @module_project.to_s
 
           #If the module_project view has changed, update with the new selected view
@@ -94,10 +94,6 @@ class ModuleProjectsController < ApplicationController
               mp_view_id = mp_view.id
             end
             @module_project.update_attributes(view_id: mp_view_id, color: params['module_project']['color'])
-
-          elsif !selected_view.nil? && @module_project.view_id != selected_view.id
-            @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
-
           else
             if selected_view.is_temporary_view
               #get the initial view of the current temporary view
@@ -115,9 +111,12 @@ class ModuleProjectsController < ApplicationController
 
               #Then delete the temporary view
               selected_view.destroy
+
+            else
+              @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
             end
           end
-        end
+        #end
       end
 
       #for the save_as button

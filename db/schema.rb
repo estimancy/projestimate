@@ -77,6 +77,67 @@ ActiveRecord::Schema.define(:version => 20150409125451) do
   add_index "admin_settings", ["reference_id"], :name => "index_admin_settings_on_parent_id"
   add_index "admin_settings", ["uuid"], :name => "index_admin_settings_on_uuid", :unique => true
 
+  create_table "amoa_amoa_applications", :force => true do |t|
+    t.string  "name"
+    t.integer "amoa_model_id"
+  end
+
+  create_table "amoa_amoa_context_types", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "amoa_amoa_contexts", :force => true do |t|
+    t.string  "name"
+    t.float   "weight"
+    t.integer "amoa_application_id"
+    t.integer "amoa_amoa_context_type_id"
+  end
+
+  create_table "amoa_amoa_criteria_services", :force => true do |t|
+    t.integer "amoa_amoa_criteria_id"
+    t.integer "amoa_amoa_service_id"
+    t.float   "weight"
+  end
+
+  create_table "amoa_amoa_criteria_unit_of_works", :force => true do |t|
+    t.integer "amoa_amoa_criteria_id"
+    t.integer "amoa_amoa_unit_of_work_id"
+    t.integer "quantity"
+  end
+
+  create_table "amoa_amoa_criterias", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "amoa_amoa_models", :force => true do |t|
+    t.string  "name"
+    t.float   "three_points_estimation"
+    t.integer "organization_id"
+  end
+
+  create_table "amoa_amoa_services", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "amoa_amoa_unit_of_works", :force => true do |t|
+    t.string  "name"
+    t.string  "description"
+    t.string  "tracability"
+    t.float   "result"
+    t.integer "amoa_amoa_service_id"
+  end
+
+  create_table "amoa_amoa_weightings", :force => true do |t|
+    t.string  "name"
+    t.float   "weight"
+    t.integer "amoa_amoa_service_id"
+  end
+
+  create_table "amoa_amoa_weightings_unit_of_works", :force => true do |t|
+    t.integer "amoa_amoa_weighting_id"
+    t.integer "amoa_amoa_unit_of_work_id"
+  end
+
   create_table "associated_module_projects", :id => false, :force => true do |t|
     t.integer "associated_module_project_id"
     t.integer "module_project_id"
