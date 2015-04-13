@@ -6,12 +6,13 @@
 
     <table id="profiles_per_activity" class="table table-bordered table-condensed table_effort_per_phase">
       <tr>
-        <th colspan="2"><%= I18n.t(:phases) %></th>
+        <th><%= I18n.t(:phases) %></th>
         <th colspan="<%= project_organization_profiles.length %>"><%= I18n.t(:profiles) %></th>
       </tr>
       <tr>
-        <th></th>
-        <th><%= I18n.t(:effort_per_phase) %></th>
+        <th>
+          <%# I18n.t(:effort_per_phase) %>
+        </th>
         <% if project_organization_profiles.length > 0 %>
           <% project_organization_profiles.each do |profile| %>
             <th><%= profile.name %></th>
@@ -37,13 +38,13 @@
                     <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
                     <tr>
                       <td><span style="float: left; margin-left:<%=wbs_activity_elt.depth%>em"> <%= wbs_activity_elt.name %> </span></td>
-                      <td style="text-align: right">
-                        <% begin %>
-                          <%= (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>
-                        <% rescue %>
-                          <%= (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)}" %>
-                        <% end %>
-                      </td>
+                      <!--<td style="text-align: right">-->
+                        <!--<%# begin %>-->
+                          <!--<%# (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>-->
+                        <!--<%# rescue %>-->
+                          <!--<%# (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)}" %>-->
+                        <!--<%# end %>-->
+                      <!--</td>-->
 
                       <% if project_organization_profiles.length > 0 %>
                         <% project_organization_profiles.each do |profile| %>
