@@ -9,7 +9,7 @@
   <li class="dropdown">
     <% begin %>
       <% if @project %>
-        <a href="<%= main_app.dashboard_path(@current_organization) %>" title="Estimation en cours">
+        <a href="<%= main_app.dashboard_path(@project) %>" title="Estimation en cours">
           <i class="fa fa-calculator fa-lg pull-left"></i>&nbsp;</b>
         </a>
       <% else %>
@@ -162,7 +162,7 @@
   <li class="divider-vertical"></li>
 
   <li>
-    <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'services' %>" >
+    <a href="<%= load_admin_setting('url_wiki') %>" title="<%= I18n.t 'wiki' %>" >
       <i class="fa fa-book fa-lg" ></i>
     </a>
   </li>

@@ -967,6 +967,38 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def execute_estimation
+    current_module_project.nexts.each do |mp|
+      mp.input_attributes.each do |attr|
+        mp_klass = "#{mp.pemodule.alias.camelcase.constantize}::#{mp.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
+        case mp.pemodule.alias
+          when "guw"
+            obj = mp_klass.send(:new, @project, current_module_project)
+            obj.send("get_#{attr.alias}")
+          when "ge"
+            obj = mp_klass.send(:new, @project, current_module_project)
+            obj.send("get_#{attr.alias}")
+          when "effort_breakdown"
+            obj = mp_klass.send(:new, current_component, mp, 12)
+            obj.send("get_#{attr.alias}")
+          when "expert_judgement"
+            obj = mp_klass.send(:new)
+          else
+            obj = mp_klass.send(:new)
+        end
+
+        ev = EstimationValue.where(module_project_id: mp.id,
+                                   pe_attribute_id: attr.id,
+                                   in_out: "input").first.string_data_low[current_component.id]
+
+        p mp.input_attributes.map(&:name)
+        p mp.output_attributes.map(&:name)
+        p "==="
+      end
+    end
+    redirect_to dashboard_path(@project)
+  end
+
   #Run estimation process
   def run_estimation(start_module_project = nil, pbs_project_element_id = nil, rest_of_module_projects = nil, set_attributes = nil)
     #@project = current_project
@@ -1370,7 +1402,12 @@ public
     new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
     new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_estimation_by, estimation_name: old_prj, username: current_user.name)} \r\n"
     new_prj.ancestry = nil
-    new_prj.is_model = false
+    if params[:action_name] == "duplication_model"
+      new_prj.is_model = true
+    else
+      new_prj.is_model = false
+    end
+
 
     #if creation from template
     if !params[:create_project_from_template].nil?
@@ -1803,7 +1840,6 @@ public
       new_prj.title = old_prj.title
       new_prj.alias = old_prj.alias
       new_prj.description = params[:description]
-      #new_prj.state = 'preliminary'
       new_prj.parent_id = old_prj.id
 
       new_prj.version = params[:new_version]  #set_project_version(old_prj)
@@ -2017,20 +2053,6 @@ public
               end
             end
 
-            # For WBS
-            #new_prj_wbs = pe_wbs_activity.wbs_project_elements
-            #new_prj_wbs.each do |new_wbs|
-            #  unless new_wbs.is_root?
-            #    new_ancestor_ids_list = []
-            #    new_wbs.ancestor_ids.each do |ancestor_id|
-            #      ancestor_id = WbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_wbs.pe_wbs_project_id, ancestor_id).id
-            #      new_ancestor_ids_list.push(ancestor_id)
-            #    end
-            #    new_wbs.ancestry = new_ancestor_ids_list.join('/')
-            #    new_wbs.save
-            #  end
-            #end
-
             # For ModuleProject associations
             old_prj.module_projects.group(:id).each do |old_mp|
               new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
@@ -2082,7 +2104,6 @@ public
     #else
       #redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
     #end  # END commit permission
-
   end
 
 private

@@ -46,19 +46,20 @@ module EffortBreakdown
 
     attr_accessor :pbs_project_element, :module_project, :input_effort, :project #module input/output parameters
 
-    def initialize(c, mp, e, r)
+    #def initialize(c, mp, e, r)
+    def initialize(*args)
       #puts "INPUT_DATA = #{module_input_data}"   for ex. : INPUT_DATA = {:effort=>"10", :pbs_project_element_id=>271, :module_project_id=>265}
-      @pbs_project_element = c
-      @module_project = mp
+      @pbs_project_element = args[0]
+      @module_project = args[1]
       @project = @module_project.project
-      @ratio = r
-      e.nil? ? @input_effort = nil : @input_effort = e
+      @ratio = args[3]
+      args[2].nil? ? @input_effort = nil : @input_effort = args[2]
     end
 
     # Getters for module outputs
 
     # Calculate each Wbs activity effort according to Ratio and Reference_Value and PBS effort
-    def get_effort
+    def get_effort(*args)
       # First build cache_depth
       WbsActivityElement.rebuild_depth_cache!
 
@@ -69,7 +70,7 @@ module EffortBreakdown
 
     # Calculate the Cost for each WBS-Project-Element/Phase
     # Cout Moyen
-    def get_cost(*arg)
+    def get_cost(*args)
       cost = Hash.new
       # Project pe_wbs_activity
       wbs_activity = @module_project.wbs_activity
@@ -78,10 +79,17 @@ module EffortBreakdown
       # Get the efforts hash for all Wbs_project_element effort
       efforts_man_month = get_effort
 
-      efforts_man_month.each do |key, value|
-        cost[key]  = value.to_f * @project.organization.cost_per_hour.to_f
+      @wbs_activity_ratio_elements = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio.id).all
+      efforts_man_month.keys.each do |key, value|
+        cph = 0
+        v = 0
+        @wbs_activity_ratio_elements.each do |element|
+          #cph = element.wbs_activity_ratio_profiles.map{|warp| warp.organization_profile.cost_per_hour * (warp.ratio_value / 100)}.compact.sum
+          element.wbs_activity_ratio_profiles.each do |warp|
+            cost[key] = warp.organization_profile.cost_per_hour * (warp.ratio_value / 100) * value.to_f
+          end
+        end
       end
-
       cost
     end
 
@@ -138,7 +146,6 @@ module EffortBreakdown
 
       # Global output efforts
       output_effort
-
     end
 
     # redefinition of the methods

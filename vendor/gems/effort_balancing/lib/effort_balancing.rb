@@ -42,7 +42,6 @@ module EffortBalancing
     def get_effort(*args)
       new_effort = Hash.new
       root_element_effort = 0.0
-
       @wbs_project_element_root.children.each do |node|
         # Sort node subtree by ancestry_depth
         sorted_node_elements = node.subtree.order('ancestry_depth desc')
@@ -58,9 +57,7 @@ module EffortBalancing
           end
         end
       end
-
       new_effort[@wbs_project_element_root.id] = compact_array_and_compute_node_value(@wbs_project_element_root, new_effort)
-
       new_effort
     end
 
@@ -72,6 +69,5 @@ module EffortBalancing
       end
       new_note
     end
-
   end
 end

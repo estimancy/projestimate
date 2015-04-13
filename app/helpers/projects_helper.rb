@@ -1142,5 +1142,4 @@ module ProjectsHelper
     "%.#{precision}f" % value
   end
 
-
 end

@@ -37,7 +37,14 @@
         </tr>
       </table>
 
-      <%= f.input :description, :label => "#{I18n.t 'description'}", :input_html => {:class => 'input-xxlarge', :rows => 5 } %>
+       <%= tinymce %>
+       <label>
+         <b>
+           Description
+         </b>
+       </label>
+       <%= simple_format(@project.description) %>
+       <%= f.input :description, :label => false, :input_html => {:class => 'input-large tinymce', :rows => 5, :cols => 10 } %>
 
       <table>
         <tr>

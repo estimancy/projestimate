@@ -7,16 +7,16 @@
 
   <table id="profiles_per_activity" class="table table-bordered table-condensed table_effort_per_phase">
     <tr>
-      <th colspan="2"><%= I18n.t(:phases) %></th>
+      <th><%= I18n.t(:phases) %></th>
       <th colspan="<%= project_organization_profiles.length %>"><%= I18n.t(:profiles) %></th>
     </tr>
     <tr>
       <th></th>
-      <th><%= I18n.t(:cost_per_phase) %></th>
+      <!--<th><%# I18n.t(:cost_per_phase) %></th>-->
       <% if project_organization_profiles.length > 0 %>
-          <% project_organization_profiles.each do |profile| %>
-              <th><%= profile.name %></th>
-          <% end %>
+        <% project_organization_profiles.each do |profile| %>
+          <th><%= profile.name %></th>
+        <% end %>
       <% else %>
           <th><%= I18n.t(:no_profiles_for_wbs_activity_organization) %></th>
       <% end %>
@@ -30,13 +30,13 @@
           <tr>
             <td><span style="float: left; margin-left:<%=wbs_project_elt.depth%>em"> <%= wbs_project_elt.name %> </span></td>
 
-            <td style="text-align: right">
-              <% begin %>
-                <%= (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)} #{@wbs_activity.cost_unit})" %>
-              <% rescue %>
-                <%= (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)}" %>
-              <% end %>
-            </td>
+            <!--<td style="text-align: right">-->
+              <%# begin %>
+                <%# (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)} #{@wbs_activity.cost_unit})" %>
+              <%# rescue %>
+                <%# (wbs_project_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)}" %>
+              <%# end %>
+            <!--</td>-->
 
             <% if project_organization_profiles.length > 0 %>
               <% project_organization_profiles.each do |profile| %>

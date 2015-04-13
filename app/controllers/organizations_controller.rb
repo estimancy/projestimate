@@ -144,6 +144,7 @@ class OrganizationsController < ApplicationController
     @size_units = SizeUnit.all
     @technologies = @organization.organization_technologies
     @size_unit_types = @organization.size_unit_types
+    @amoa_models = @organization.amoa_models
   end
 
   def users

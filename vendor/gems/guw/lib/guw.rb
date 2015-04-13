@@ -40,23 +40,42 @@ module Guw
   class Guw
     attr_accessor :retained_size, :project, :delay, :defects, :cost
 
-    def initialize(theorical_size, retained_size, cplx, project)
-      @theorical_size = theorical_size
-      @retained_size = retained_size
-      @cplx = cplx
-      @project = project
+    #def initialize(theorical_size, retained_size, cplx, project)
+    def initialize(*args)
+      #@theorical_size = theorical_size
+      #@retained_size = retained_size
+      #@cplx = cplx
+      @project = args[0]
+      @mp = args[1]
     end
 
-    def get_defects(size, pbs_project_element_id, module_project_id)
+    def get_defects(*args)
+      size = args[0]
       @defects = size*0.08*100
     end
 
-    def get_delay(size, pbs_project_element_id, module_project_id)
+    def get_delay(*args)
+      size = args[0]
       @delay = (2.5 * (size**0.32 )).to_f * @project.organization.number_hours_per_month.to_f
     end
 
-    def get_cost(size, pbs_project_element_id, module_project_id)
+    def get_cost(*args)
+      size = args[0]
       @cost = size * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
+    end
+
+    def get_retained_size(*args)
+      attr = PeAttribute.where(alias: "retained_size").first
+      EstimationValue.where(module_project_id: @mp.id,
+                            pe_attribute_id: attr.id,
+                            in_out: "input").first.string_data_probable[current_component.id]
+    end
+
+    def get_effort(*args)
+      attr = PeAttribute.where(alias: "effort").first
+      EstimationValue.where(module_project_id: @mp.id,
+                           pe_attribute_id: attr.id,
+                           in_out: "input").first.string_data_probable[current_component.id]
     end
   end
 end
