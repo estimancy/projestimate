@@ -1460,7 +1460,7 @@ en:
   view_description: "View description"
   current_version: "Current version"
   new_version: "New version"
-  change_estimation_version_from_to: "Version changed from \"%{from_version}\" to \"%{to_version}\" by %{current_user_name}"
+  change_estimation_version_from_to: "Version changed from \"%{from_version}\" to \"%{to_version}\" by %{current_user_name}\" "
   label_available_columns: "Available Columns"
   label_selected_columns: "Selected Columns"
   label_all_columns: "All Columns"

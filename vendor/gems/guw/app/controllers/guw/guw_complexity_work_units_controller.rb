@@ -75,6 +75,6 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
       end
     end
 
-    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name}")
+    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
   end
 end

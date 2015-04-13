@@ -60,7 +60,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
         end
       end
     end
-    redirect_to guw.guw_model_path(params[:guw_model_id], anchor: "tabs-#{@guw_type.name}")
+    redirect_to guw.guw_model_path(params[:guw_model_id], anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
   end
 
 end

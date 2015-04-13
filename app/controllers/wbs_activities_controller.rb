@@ -308,7 +308,7 @@ class WbsActivitiesController < ApplicationController
           probable_estimation_value = Hash.new
           probable_estimation_value = est_val.send('string_data_probable')
           probable_estimation_value[@pbs_project_element.id] = probable_value(@tmp_results, est_val)
-          #probable_estimation_value[@pbs_project_element.id] = @tmp_results[:most_likely]
+          #probable_estimation_value[@pbs_project_element.id] = est_val.send('string_data_most_likely')
 
           ####### Get the project referenced ratio #####
           # Get the wbs_project_element which contain the wbs_activity_ratio
