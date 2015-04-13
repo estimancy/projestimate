@@ -431,6 +431,9 @@ class OrganizationsController < ApplicationController
 
     @organization = Organization.new(params[:organization])
 
+    # Organization's projects selected columns
+    @organization.project_selected_columns = Project.default_selected_columns
+
     # Add current_user to the organization
     @organization.users << current_user
 

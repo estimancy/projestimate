@@ -1742,3 +1742,4 @@ es:
   label_selected_columns: "Colonnes sélectionnées"
   label_all_columns: "Toutes les colonnes"
   field_column_names: "Columns"
+  select_columns_list: "Select columns for list"

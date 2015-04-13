@@ -648,7 +648,7 @@ ActiveRecord::Schema.define(:version => 20150409125451) do
     t.integer  "limit1"
     t.integer  "limit2"
     t.integer  "limit3"
-    t.integer  "copy_number",                   :default => 0
+    t.integer  "copy_number",              :default => 0
     t.integer  "limit4"
     t.float    "limit1_coef"
     t.float    "limit2_coef"
@@ -660,7 +660,6 @@ ActiveRecord::Schema.define(:version => 20150409125451) do
     t.string   "limit4_unit"
     t.boolean  "is_image_organization"
     t.text     "project_selected_columns"
-    t.text     "organization_selected_columns"
   end
 
   create_table "organizations_users", :id => false, :force => true do |t|

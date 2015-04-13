@@ -1464,3 +1464,4 @@ en:
   label_selected_columns: "Selected Columns"
   label_all_columns: "All Columns"
   field_column_names: "Columns"
+  select_columns_list: "Select columns for list"

@@ -2,7 +2,7 @@
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
       <tr>
-        <!--<th class="text_left exportable"><%#= I18n.t(:label_project_name) %></th>-->
+        <th class="text_left exportable"><%= I18n.t(:label_project_name) %></th>
         <!--<th class="center exportable"><%#= I18n.t(:label_version) %></th>-->
         <!--<th class="text_left exportable"><%#= I18n.t(:label_product_name) %></th>-->
         <!--<th style="width: 50px" class="filter-select exportable"> <%#= I18n.t(:state) %></th>-->
@@ -27,6 +27,13 @@
       <% @projects.each do |project| %>
         <% if can_see_estimation?(project) %>
           <tr>
+            <td class="exportable">
+              <% if can_show_estimation?(project) %>
+                  <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
+              <% else %>
+                  <%= project.title %>
+              <% end %>
+            </td>
 
             <% selected_inline_columns.each do |column| %>
                 <%= column_content(column, project) %>

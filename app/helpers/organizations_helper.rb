@@ -64,30 +64,6 @@ module OrganizationsHelper
     end
   end
 
-  #<td class="exportable">
-  #<% if can_show_estimation?(project) %>
-  #<%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
-  #    <% else %>
-  #              <%= project.title %>
-  #<% end %>
-
-  #</td>
-  #<td class="center exportable"><%= project.version %></td>
-  #<td class="text_field_text_overflow exportable"><%= project.root_component %></td>
-  #<td class="exportable">
-  #<% if can_show_estimation?(project) %>
-  #<span class="badge" style="background-color: <%= project.status_background_color %>">
-  #<%= link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %>
-  #    </span>
-  #            <% else %>
-  #                <span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span>
-  #<% end %>
-  #</td>
-  #<td class="text_field_text_overflow exportable"><%= project.project_area %></td>
-  #<td class="text_field_text_overflow exportable"><%= project.project_category %></td>
-  #<td class="text_field_text_overflow exportable"><%= project.platform_category  %></td>
-  #<td class="text_field_text_overflow exportable"><%= project.acquisition_category %></td>
-
   def column_value(column, project, value)
     case column.name
       when :product_name
@@ -118,6 +94,5 @@ module OrganizationsHelper
         content_tag('td class="text_field_text_overflow exportable"', value)
     end
   end
-
 
 end
