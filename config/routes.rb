@@ -240,6 +240,8 @@ Projestimate::Application.routes.draw do
   match 'organizations/:organization_id/duplicate_organization' => 'organizations#duplicate_organization', :as => :duplicate_organization
   get 'new_organization_from_image' => 'organizations#new_organization_from_image', as: 'new_organization_from_image'
   post 'create_organization_from_image' => 'organizations#create_organization_from_image', as: 'create_organization_from_image'
+  get 'update_available_inline_columns' => 'organizations#update_available_inline_columns', as: 'update_available_inline_columns'
+  get 'set_available_inline_columns' => 'organizations#set_available_inline_columns', as: 'set_available_inline_columns'
 
   resources :subcontractors
 

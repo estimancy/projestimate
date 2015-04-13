@@ -321,7 +321,44 @@ class PemodulesController < ApplicationController
     redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
   end
 
+
   def find_use_pemodule
+    #TODO Authorize #saly
+    authorize! :manage_master_data, :all
+
+    pemodule_id = params[:pemodule_id].nil? ? params[:pemodule_instance_id] : params[:pemodule_id]
+
+    if params[:pemodule_id]
+      @pemodule = Pemodule.find(params[:pemodule_id])
+      @pemodule_title = @pemodule.title
+      @related_projects = ModuleProject.find_all_by_pemodule_id(@pemodule.id)
+
+    #elsif params[:guw_model_id]
+    #  @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    #  @pemodule_title = @guw_model.name
+    #  @organization = @guw_model.organization
+    #  @related_projects = ModuleProject.where(guw_model_id: params[:guw_model_id]).uniq
+    else
+      if !params[:instance_model_name].nil?
+        case params[:instance_model_name]
+          when "guw_model_id"
+            @instance_model = Guw::GuwModel.find(params[:instance_model_id])
+          when "ge_model_id"
+            @instance_model = Ge::GeModel.find(params[:instance_model_id])
+          when "wbs_activity_id"
+            @instance_model = WbsActivity.find(params[:instance_model_id])
+          when "expert_judgement_instance_id"
+            @instance_model = ExpertJudgement::Instance.find(params[:instance_model_id])
+        end
+
+        @pemodule_title = @instance_model.name
+        @organization = @instance_model.organization
+        @related_projects = ModuleProject.where("#{params[:instance_model_name]}" => params[:instance_model_id]).uniq
+      end
+    end
+  end
+
+  def find_use_pemodule_save
     #TODO Authorize #saly
     authorize! :manage_master_data, :all
 

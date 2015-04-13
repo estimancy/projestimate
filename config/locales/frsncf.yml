@@ -352,6 +352,9 @@ frsncf:
   platform_category: "Catégorie de plate-forme"
   project_category: "Catégorie de projet"
   project_area: "Domaine"
+  label_acquisition: "Acquisition"
+  label_platform: "Plateforme"
+  label_version: "Vers."
 
   #Project areas
   edit_project_area: "Editer domaine \"%{value}\" ..."
@@ -1460,4 +1463,12 @@ frsncf:
   current_version: "Version actuelle"
   new_version: "Nouvelle version"
   change_estimation_version_from_to: "Version changée de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}"
+<<<<<<< HEAD
   label_complexity_attributes: "Seuil de complexité des attribut de"
+=======
+  label_available_columns: "Colonnes disponibles"
+  label_selected_columns: "Colonnes sélectionnées"
+  label_all_columns: "Toutes les colonnes"
+  field_column_names: "Colonnes"
+  select_columns_list: "Sélectionner la liste des colonnes"
+>>>>>>> 57fc8d1e888d0a979fb91cc36b6c4fc42ed0f958

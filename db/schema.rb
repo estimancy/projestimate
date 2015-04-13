@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150401100303) do
+ActiveRecord::Schema.define(:version => 20150409125451) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -76,67 +76,6 @@ ActiveRecord::Schema.define(:version => 20150401100303) do
   add_index "admin_settings", ["record_status_id"], :name => "index_admin_settings_on_record_status_id"
   add_index "admin_settings", ["reference_id"], :name => "index_admin_settings_on_parent_id"
   add_index "admin_settings", ["uuid"], :name => "index_admin_settings_on_uuid", :unique => true
-
-  create_table "amoa_amoa_applications", :force => true do |t|
-    t.string  "name"
-    t.integer "amoa_model_id"
-  end
-
-  create_table "amoa_amoa_context_types", :force => true do |t|
-    t.string "name"
-  end
-
-  create_table "amoa_amoa_contexts", :force => true do |t|
-    t.string  "name"
-    t.float   "weight"
-    t.integer "amoa_application_id"
-    t.integer "amoa_amoa_context_type_id"
-  end
-
-  create_table "amoa_amoa_criteria_services", :force => true do |t|
-    t.integer "amoa_amoa_criteria_id"
-    t.integer "amoa_amoa_service_id"
-    t.float   "weight"
-  end
-
-  create_table "amoa_amoa_criteria_unit_of_works", :force => true do |t|
-    t.integer "amoa_amoa_criteria_id"
-    t.integer "amoa_amoa_unit_of_work_id"
-    t.integer "quantity"
-  end
-
-  create_table "amoa_amoa_criterias", :force => true do |t|
-    t.string "name"
-  end
-
-  create_table "amoa_amoa_models", :force => true do |t|
-    t.string  "name"
-    t.float   "three_points_estimation"
-    t.integer "organization_id"
-  end
-
-  create_table "amoa_amoa_services", :force => true do |t|
-    t.string "name"
-  end
-
-  create_table "amoa_amoa_unit_of_works", :force => true do |t|
-    t.string  "name"
-    t.string  "description"
-    t.string  "tracability"
-    t.float   "result"
-    t.integer "amoa_amoa_service_id"
-  end
-
-  create_table "amoa_amoa_weightings", :force => true do |t|
-    t.string  "name"
-    t.float   "weight"
-    t.integer "amoa_amoa_service_id"
-  end
-
-  create_table "amoa_amoa_weightings_unit_of_works", :force => true do |t|
-    t.integer "amoa_amoa_weighting_id"
-    t.integer "amoa_amoa_unit_of_work_id"
-  end
 
   create_table "associated_module_projects", :id => false, :force => true do |t|
     t.integer "associated_module_project_id"
@@ -709,7 +648,7 @@ ActiveRecord::Schema.define(:version => 20150401100303) do
     t.integer  "limit1"
     t.integer  "limit2"
     t.integer  "limit3"
-    t.integer  "copy_number",            :default => 0
+    t.integer  "copy_number",              :default => 0
     t.integer  "limit4"
     t.float    "limit1_coef"
     t.float    "limit2_coef"
@@ -720,6 +659,7 @@ ActiveRecord::Schema.define(:version => 20150401100303) do
     t.string   "limit3_unit"
     t.string   "limit4_unit"
     t.boolean  "is_image_organization"
+    t.text     "project_selected_columns"
   end
 
   create_table "organizations_users", :id => false, :force => true do |t|
@@ -865,18 +805,6 @@ ActiveRecord::Schema.define(:version => 20150401100303) do
     t.datetime "updated_at"
   end
 
-  create_table "plans", :force => true do |t|
-    t.string   "name"
-    t.string   "alias"
-    t.text     "description"
-    t.integer  "estimation_number"
-    t.integer  "organization_number"
-    t.integer  "user_number"
-    t.integer  "admin_number"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
   create_table "platform_categories", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -901,21 +829,6 @@ ActiveRecord::Schema.define(:version => 20150401100303) do
     t.integer  "project_area_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "profile_categories", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "organization_id"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
   end
 
   create_table "profiles", :force => true do |t|

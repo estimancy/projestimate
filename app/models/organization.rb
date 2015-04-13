@@ -34,12 +34,38 @@
 #
 #############################################################################
 
+class QueryColumn
+  attr_accessor :name, :caption, :association_name
+
+  def initialize(name, options={})
+    self.name = name
+    #self.association_name = association_name
+    self.caption = options[:caption]
+  end
+
+  def value(object)
+    object.send name
+  end
+
+  def value_object(object)
+    object.send name
+  end
+
+  def css_classes
+    name
+  end
+end
+
+
 #Organization of the User
 class Organization < ActiveRecord::Base
   attr_accessible :name, :description, :is_image_organization, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate,
                   :limit1, :limit2, :limit3, :limit4,
                   :limit1_coef, :limit2_coef, :limit3_coef, :limit4_coef,
                   :limit1_unit, :limit2_unit, :limit3_unit, :limit4_unit
+
+
+  serialize :project_selected_columns, Array
 
   #has_and_belongs_to_many :users
   #Groups created on local, will be attached to an organization
@@ -120,3 +146,5 @@ class Organization < ActiveRecord::Base
   end
 
 end
+
+

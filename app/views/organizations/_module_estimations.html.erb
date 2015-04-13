@@ -29,8 +29,9 @@
               <%= link_to i.name, guw.guw_model_path(i) %>
             </td>
             <td class="align-center">
-              <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
+              <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
               <% if can? :manage_modules_instances, ModuleProject %>
+                <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'guw_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
                 <%= link_to '', guw.guw_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE", confirm: I18n.t(:are_you_sure), :class => 'fa fa-trash', :title => I18n.t('delete') %>
               <% end %>
             </td>
@@ -99,8 +100,9 @@
                 <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id) %>
               </td>
               <td class="align-center">
-                <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
+                <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
                 <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'ge_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
                     <%= link_to '', ge.ge_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
                 <% end %>
               </td>
@@ -164,6 +166,7 @@
                 <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
                 <% if can? :manage_modules_instances, ModuleProject %>
                   <%= link_to('', "wbs_activities/#{wbs_activity.id}/duplicate_wbs_activity", :class => 'button_attribute_tooltip icon-copy', :title => 'Duplicate') %>
+                  <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'wbs_activity_id', :instance_model_id => wbs_activity.id}, :remote => true, :class => 'button_attribute_tooltip icon-map-marker', :title => I18n.t('button_find_use')) %>
                   <%= link_to '', wbs_activity, confirm: I18n.t(:are_you_sure), method: :delete, :class => 'button_attribute_tooltip icon-trash', :title => I18n.t(:delete) %>
                 <% end %>
               </td>
@@ -175,7 +178,7 @@
           <%= form_tag import_wbs_activities_path, :multipart => true, :class => 'simple_form' do %>
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h3 id="myModalLabel"><%= I18n.t(:import) %> WBS Activity</h3>
+              <h3 id="myModalLabel"><%= I18n.t(:import) %> <%= I18n.t(:wbs_activity) %></h3>
             </div>
             <div class="modal-body">
               <label><%= I18n.t(:file_csv) %></label>
@@ -236,8 +239,9 @@
                 <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id) %>
               </td>
               <td class="align-center">
-                <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
+                <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
                 <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'expert_judgement_instance_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
                     <%= link_to '', expert_judgement.instance_path(i),  confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
                 <% end %>
               </td>

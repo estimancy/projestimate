@@ -3,13 +3,19 @@
       <thead>
       <tr>
         <th class="text_left exportable"><%= I18n.t(:label_project_name) %></th>
-        <th class="center exportable">Vers.</th>
-        <th class="text_left exportable"><%= I18n.t(:label_product_name) %></th>
-        <th style="width: 50px" class="filter-select exportable"> <%= I18n.t(:state) %></th>
-        <th class="exportable"><%= I18n.t :project_areas %></th>
-        <th class="exportable">Catégorie</th>
-        <th class="exportable">Plateforme</th>
-        <th class="exportable">Acquisition</th>
+        <!--<th class="center exportable"><%#= I18n.t(:label_version) %></th>-->
+        <!--<th class="text_left exportable"><%#= I18n.t(:label_product_name) %></th>-->
+        <!--<th style="width: 50px" class="filter-select exportable"> <%#= I18n.t(:state) %></th>-->
+        <!--<th class="exportable"><%#= I18n.t(:project_areas) %></th>-->
+        <!--<th class="exportable"><%#= I18n.t(:category) %></th>-->
+        <!--<th class="exportable"><%#= I18n.t(:label_platform) %></th>-->
+        <!--<th class="exportable"><%#= I18n.t(:label_acquisition) %></th>-->
+
+        <% selected_inline_columns = update_selected_inline_columns(Project) %>
+        <% selected_inline_columns.each do |column| %>
+            <%= column_header(column) %>
+        <% end %>
+
         <% @organization.fields.each do |field| %>
           <th><%= field.name  %></th>
         <% end %>
@@ -23,26 +29,15 @@
           <tr>
             <td class="exportable">
               <% if can_show_estimation?(project) %>
-                <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
+                  <%= link_to(project.title, dashboard_path(project), :class => 'button_attribute_tooltip pull-left')  %>
               <% else %>
-                <%= project.title %>
+                  <%= project.title %>
               <% end %>
             </td>
-            <td class="center exportable"><%= project.version %></td>
-            <td class="text_field_text_overflow exportable"><%= project.root_component %></td>
-            <td class="exportable">
-              <% if can_show_estimation?(project) %>
-                <span class="badge" style="background-color: <%= project.status_background_color %>">
-                  <%= link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %>
-                </span>
-              <% else %>
-                  <span class="badge" style="background-color: <%= project.status_background_color %>"><%= project.status_name %></span>
-              <% end %>
-            </td>
-            <td class="text_field_text_overflow exportable"><%= project.project_area %></td>
-            <td class="text_field_text_overflow exportable"><%= project.project_category %></td>
-            <td class="text_field_text_overflow exportable"><%= project.platform_category  %></td>
-            <td class="text_field_text_overflow exportable"><%= project.acquisition_category %></td>
+
+            <% selected_inline_columns.each do |column| %>
+                <%= column_content(column, project) %>
+            <% end %>
 
             <% @organization.fields.each do |field| %>
               <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
@@ -52,7 +47,6 @@
             <% end %>
 
             <td style="min-width: 130px;">
-
               <% if can_alter_estimation?(project) && can?(:alter_estimation_status, project) %>
                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => project.id), :class => "fa fa-share pull-left", style: "color: black; margin-top:4px;", :title => "#{I18n.t(:button_commit_project)}" , :remote => true) %>
               <% end %>

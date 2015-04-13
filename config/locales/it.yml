@@ -346,6 +346,9 @@ it:
 #  platform_category: "piattaforma della categoria "
 #  project_category: "Progetto della categoria"
 #  project_area: "area di progetto"
+  label_acquisition: "Acquisition"
+  label_platform: "Platform"
+  label_version: "Version"
 #
 #  #Project areas
 #  edit_project_area: " Compili il \"%{value}\" progetto area ..."
@@ -1390,3 +1393,8 @@ it:
   current_version: "Current version"
   new_version: "New version"
   change_estimation_version_from_to: "Version changed from \"%{from_version}\" to \"%{to_version}\" by %{current_user_name}"
+  label_available_columns: "Colonnes disponibles"
+  label_selected_columns: "Colonnes sélectionnées"
+  label_all_columns: "Toutes les colonnes"
+  field_column_names: "Columns"
+  select_columns_list: "Select columns for list"
