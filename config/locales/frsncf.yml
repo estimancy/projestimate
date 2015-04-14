@@ -1468,4 +1468,4 @@ frsncf:
   label_selected_columns: "Colonnes sélectionnées"
   label_all_columns: "Toutes les colonnes"
   field_column_names: "Colonnes"
-  select_columns_list: "Sélectionner la liste des colonnes"
+  select_columns_list: "Liste des colonnes"
