@@ -80,7 +80,7 @@ module EffortBreakdown
       efforts_man_month = get_effort
 
       @wbs_activity_ratio_elements = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio.id).all
-      efforts_man_month.keys.each do |key, value|
+      efforts_man_month.each do |key, value|
         cph = 0
         v = 0
         @wbs_activity_ratio_elements.each do |element|
