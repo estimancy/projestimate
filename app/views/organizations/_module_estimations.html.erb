@@ -29,12 +29,12 @@
               <%= link_to i.name, guw.guw_model_path(i) %>
             </td>
             <td class="align-center">
+              <%= link_to '', guw.guw_model_duplicate_path(i, organization_id: @organization.id), :class => 'fa fa-copy', :title => I18n.t(:edit), method: "post" %>
               <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
               <% if can? :manage_modules_instances, ModuleProject %>
                 <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'guw_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
                 <%= link_to '', guw.guw_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE", confirm: I18n.t(:are_you_sure), :class => 'fa fa-trash', :title => I18n.t('delete') %>
               <% end %>
-              <%# link_to '', guw.duplicate_guw_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
             </td>
           </tr>
         <% end %>

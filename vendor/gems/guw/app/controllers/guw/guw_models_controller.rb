@@ -86,4 +86,11 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model.delete
     redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
+
+  def duplicate
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    test = @guw_model.amoeba_dup
+    test.save
+    p "test"
+  end
 end

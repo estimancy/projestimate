@@ -1,11 +1,11 @@
 module Guw
   class GuwModel < ActiveRecord::Base
 
-    has_many :guw_types
-    has_many :guw_unit_of_works
-    has_many :guw_attributes
-    has_many :guw_work_units
-    has_many :module_projects
+    has_many :guw_types, dependent: :destroy
+    has_many :guw_unit_of_works, dependent: :destroy
+    has_many :guw_attributes, dependent: :destroy
+    has_many :guw_work_units, dependent: :destroy
+    has_many :module_projects, dependent: :destroy
 
     belongs_to :organization
 
@@ -13,6 +13,11 @@ module Guw
 
     #Search fields
     scoped_search :on => [:name]
+
+    amoeba do
+      enable
+      include_association [:guw_types, :guw_attributes, :guw_work_units]
+    end
 
     def to_s(mp=nil)
       if mp.nil?
