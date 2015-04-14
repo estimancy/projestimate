@@ -394,7 +394,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
 
-    redirect_to main_app.dashboard_path(@project)
+    redirect_to main_app.dashboard_path(@project, anchor: "accordion")
   end
 
   def change_selected_state
