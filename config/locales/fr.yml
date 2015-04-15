@@ -1469,3 +1469,4 @@ fr:
   label_all_columns: "Toutes les colonnes"
   field_column_names: "Colonnes"
   select_columns_list: "Liste des colonnes"
+  label_date: "Date"
