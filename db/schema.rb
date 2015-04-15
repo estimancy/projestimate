@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150409125451) do
+ActiveRecord::Schema.define(:version => 20150413160122) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1289,6 +1289,7 @@ ActiveRecord::Schema.define(:version => 20150409125451) do
     t.boolean  "show_name"
     t.boolean  "show_wbs_activity_ratio"
     t.boolean  "from_initial_view"
+    t.boolean  "is_label_widget"
   end
 
   create_table "wbs_activities", :force => true do |t|

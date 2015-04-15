@@ -17,17 +17,21 @@
           <!--<tr><td><%#= f.association :widget, label: I18n.t(:label_widget) %></td></tr>-->
           <tr>
             <td><%= f.input :name, label: I18n.t(:name) %></td>
-            <td><label class="checkbox"></label>
+          </tr>
+          <tr>
+            <td>
+              <!--<label class="checkbox"></label>-->
               <%= f.input :show_name, label: I18n.t(:show_name) %>
             </td>
+              <td><%= f.input :is_label_widget, label: "S'agit-il d'une vignette de titre ?" %></td>
           </tr>
           <tr>
-            <td><%= f.association :pbs_project_element, label: I18n.t(:associate_pbs_element), collection: @project_pbs_project_elements, selected: @pbs_project_element_id, include_blank: false  %></td>
-            <td><%= f.association :module_project, label: "Modules", collection: @project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false %></td>
+            <td><%= f.association :pbs_project_element, label: I18n.t(:associate_pbs_element), collection: @project_pbs_project_elements, selected: @pbs_project_element_id, include_blank: false, input_html:{class: "inline_attr"}  %></td>
+            <td><%= f.association :module_project, label: "Modules", collection: @project.module_projects.map{|i| [i, i.id]}, selected: @module_project.id, include_blank: false, input_html:{class: "inline_attr"} %></td>
           </tr>
           <tr>
-            <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false %></td>
-            <td><%= f.input :estimation_value_id, collection: @module_project_attributes, as: :grouped_select, group_method: :last, group_label_method: :first, label: I18n.t(:associated_attribute), include_blank: false %></td>
+            <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false, input_html:{class: "inline_attr"} %></td>
+            <td><%= f.input :estimation_value_id, collection: @module_project_attributes, as: :grouped_select, group_method: :last, group_label_method: :first, label: I18n.t(:associated_attribute), input_html:{class: "inline_attr"}, include_blank: false %></td>
             <!--<td><%#= select_tag 'views_widget[estimation_value_id]', grouped_options_for_select({I18n.t(:inputs) => @module_project_attributes_input, I18n.t(:outputs) => @module_project_attributes_output}, :selected => @views_widget.estimation_value_id), :prompt => false %></td>-->
           </tr>
           <tr>
@@ -38,13 +42,13 @@
                 <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color'} %>
               <% end %>
             </td>
-            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon), input_html: {class: ''} %></td>
+            <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon) %></td>
             <td><div id="view_icon_class_image"></div></td>
           </tr>
           <tr>
             <td>
               <label class="checkbox"></label>
-              <%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max) %>
+              <%= f.input :show_min_max, as: :boolean, label: I18n.t(:show_min_max), input_html: {class: 'inline_attr'} %>
               <% if @module_project.wbs_activity %>
                 <%= f.input :show_wbs_activity_ratio, as: :boolean, label: I18n.t(:show_wbs_activity_ratio) %>
               <% end %>
@@ -118,5 +122,17 @@
         }
     });
 
+
+    //manage the label widget
+    $("#views_widget_is_label_widget").change(function(){
+        if($(this).is(':checked')){
+            //alert(1);
+            //$("#new_views_widget").closest("tr").find(":input.inline_attr").attr("disabled", 'disabled');
+            $("form#new_views_widget select.inline_attr, input:checkbox.inline_attr ").attr("disabled", 'disabled');
+        } else{
+            //alert(0);
+            $("form#new_views_widget select.inline_attr, input:checkbox.inline_attr ").removeAttr('disabled');
+        }
+    });
 
 </script>
