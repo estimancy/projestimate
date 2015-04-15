@@ -24,7 +24,7 @@
               </ul>
             </div>
         <% end %>
-        <div class="div_tabs_to_disable" data-enable_update="<%= enable_update_in_local? %>">
+        <div class="div_tabs_to_disable">
           <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
 
           <%= f.input :description, :label => I18n.t('description'), :input_html => {:class => 'input-xxlarge', :rows => 5} %>
@@ -34,7 +34,7 @@
               <td><%= f.input :for_project_security, :label => I18n.t('project_permissions'), :as => :boolean, :input_html => {:class => 'input-xxlarge'} %></td>
             </tr>
           </table>
-          <% if is_master_instance?  && @organization.nil? %>
+          <% if is_master_instance? && @organization.nil? %>
             <table>
               <tr>
                 <td>
