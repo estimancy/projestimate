@@ -34,28 +34,6 @@
 #
 #############################################################################
 
-class QueryColumn
-  attr_accessor :name, :caption, :association_name
-
-  def initialize(name, options={})
-    self.name = name
-    #self.association_name = association_name
-    self.caption = options[:caption]
-  end
-
-  def value(object)
-    object.send name
-  end
-
-  def value_object(object)
-    object.send name
-  end
-
-  def css_classes
-    name
-  end
-end
-
 class Project < ActiveRecord::Base
   attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
                   :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
@@ -124,19 +102,19 @@ class Project < ActiveRecord::Base
   class_attribute :available_inline_columns
   self.available_inline_columns =
     [
-      QueryColumn.new(:product_name, :sortable => "#{Project.table_name}.product_name", :caption => I18n.t(:label_product_name)),
+      QueryColumn.new(:product_name, :sortable => "#{Project.table_name}.product_name", :caption => "label_product_name"),
       #QueryColumn.new(:title, :sortable => "#{Project.table_name}.title", :caption => I18n.t(:label_project_name)),
-      QueryColumn.new(:version, :sortable => "#{Project.table_name}.version", :caption => I18n.t(:label_version)),
-      QueryColumn.new(:status_name, :sortable => "#{EstimationStatus.table_name}.name", :caption => I18n.t(:state)),
-      QueryColumn.new(:project_area, :sortable => "#{ProjectArea.table_name}.name", :caption => I18n.t(:project_area)),
-      QueryColumn.new(:project_category, :sortable => "#{ProjectCategory.table_name}.name", :caption => I18n.t(:category)),
-      QueryColumn.new(:acquisition_category, :sortable => "#{AcquisitionCategory.table_name}.name", :caption => I18n.t(:label_acquisition)),
-      QueryColumn.new(:platform_category, :sortable => "#{PlatformCategory.table_name}.name", :caption => I18n.t(:label_platform)),
-      QueryColumn.new(:description, :sortable => "#{Project.table_name}.description", :caption => I18n.t(:description)),
+      QueryColumn.new(:version, :sortable => "#{Project.table_name}.version", :caption => "label_version"),
+      QueryColumn.new(:status_name, :sortable => "#{EstimationStatus.table_name}.name", :caption => "state"),
+      QueryColumn.new(:project_area, :sortable => "#{ProjectArea.table_name}.name", :caption => "project_area"),
+      QueryColumn.new(:project_category, :sortable => "#{ProjectCategory.table_name}.name", :caption => "category"),
+      QueryColumn.new(:acquisition_category, :sortable => "#{AcquisitionCategory.table_name}.name", :caption => "label_acquisition"),
+      QueryColumn.new(:platform_category, :sortable => "#{PlatformCategory.table_name}.name", :caption => "label_platform"),
+      QueryColumn.new(:description, :sortable => "#{Project.table_name}.description", :caption => "description"),
       QueryColumn.new(:start_date, :sortable => "#{Project.table_name}.start_date", :caption => "Date"),
-      QueryColumn.new(:creator, :sortable => "#{User.table_name}.first_name", :caption => I18n.t(:author)),
-      QueryColumn.new(:created_at, :sortable => "#{Project.table_name}.created_at", :caption => I18n.t(:created_at)),
-      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => I18n.t(:updated_at)),
+      QueryColumn.new(:creator, :sortable => "#{User.table_name}.first_name", :caption => "author"),
+      QueryColumn.new(:created_at, :sortable => "#{Project.table_name}.created_at", :caption => "created_at"),
+      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at"),
     ]
 
   #class_attribute :selected_inline_columns
