@@ -49,7 +49,7 @@
   <hr>
 
   <div id="table_guw_model">
-    <div class="accordion" id="accordion2">
+    <div class="accordion" id="accordion">
 
       <% if @unit_of_work_groups.empty? %>
         <% if can? :execute_estimation_plan, @project %>
@@ -106,7 +106,7 @@
 
           <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
             <div class="accordion-inner">
-              <table class="table table-condensed table-striped">
+              <table class="table table-condensed table-striped table-responsive">
                 <tr>
                   <th class="text_left">S</th>
                   <th class="text_left">M</th>
@@ -218,10 +218,12 @@
                         <% if @guw_model.one_level_model == true %>
                           <%= select_tag "guw_complexity_id", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
                         <% else %>
-                          <% if guow.guw_complexity.nil? %>
-                            <%= link_to "------", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
-                          <% elsif guow.off_line == true %>
-                            <%= link_to "HS", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                          <% if guow.off_line == true %>
+                            <%= link_to "HSat", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                          <% elsif guow.off_line_uo == true %>
+                            <%= link_to "HSuo", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                          <% elsif guow.guw_complexity.nil? %>
+                            <%= link_to "-----", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
                           <% else %>
                             <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
                           <% end %>
@@ -326,7 +328,6 @@
               <%= link_to "RAZ", "#!", class: "btn btn-mini reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
             <% end %>
           </div>
-
       </div>
     </div>
   <% end %>

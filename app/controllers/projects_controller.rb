@@ -1633,8 +1633,7 @@ public
   end
 
   def default_work_element_type
-    wet = WorkElementType.find_by_alias('folder')
-    return wet
+    wet = @current_organization.work_element_types.first_or_create(name: "Default", alias: "default")
   end
 
   #Add/Import a WBS-Activity template from Library to Project

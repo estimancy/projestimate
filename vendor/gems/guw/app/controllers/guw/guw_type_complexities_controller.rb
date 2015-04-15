@@ -51,13 +51,13 @@ class Guw::GuwTypeComplexitiesController < ApplicationController
   def create
     @guw_type_complexity = Guw::GuwTypeComplexity.new(params[:guw_type_complexity])
     @guw_type_complexity.save
-    redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model)
+    redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model, anchor: "tabs-#{@guw_type_complexity.guw_type.name.gsub(" ", "-")}")
   end
 
   def update
     @guw_type_complexity = Guw::GuwTypeComplexity.find(params[:id])
     @guw_type_complexity.update_attributes(params[:guw_type_complexity])
-    redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model)
+    redirect_to guw.guw_model_path(@guw_type_complexity.guw_type.guw_model, anchor: "tabs-#{@guw_type_complexity.guw_type.name.gsub(" ", "-")}")
   end
 
   def destroy
@@ -65,7 +65,7 @@ class Guw::GuwTypeComplexitiesController < ApplicationController
     @guw_type_complexity.guw_attribute_complexities.delete_all
     guw_model_id = @guw_type_complexity.guw_type.guw_model.id
     @guw_type_complexity.delete
-    redirect_to guw.guw_model_path(guw_model_id)
+    redirect_to guw.guw_model_path(guw_model_id, anchor: "tabs-#{@guw_type_complexity.guw_type.name.gsub(" ", "-")}")
   end
 
 end

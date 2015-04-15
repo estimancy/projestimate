@@ -3,9 +3,9 @@
     <%= hidden_field_tag :project_id, @project.id %>
 
     <%= f.input :ancestry, :label => I18n.t('ancestry'), :as => :select, :collection => @components, :label => 'Parent', :selected => @parent.id unless @parent.nil? %>
-    <% if @pbs_project_element.link? %>
-      <%= f.input :project_link, :label => I18n.t('project_link'), :input_html => {:class => 'input-xlarge'}, :as => :select, :collection => Project.all.map { |i| [i.title, i.id] } %>
-    <% else %>
+    <%# if @pbs_project_element.link? %>
+      <%# f.input :project_link, :label => I18n.t('project_link'), :input_html => {:class => 'input-xlarge'}, :as => :select, :collection => Project.all.map { |i| [i.title, i.id] } %>
+    <%# else %>
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge'} %>
       <%= f.input :description, :label => I18n.t('requirements'), :input_html => {:class => 'input-xlarge', rows: "2"} %>
       <table>
@@ -25,7 +25,7 @@
           </script>
         </tr>
       </table>
-    <% end %>
+    <%# end %>
 
     <%# unless @pbs_project_element.is_root? %>
       <table>

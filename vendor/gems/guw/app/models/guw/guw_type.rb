@@ -10,6 +10,11 @@ module Guw
 
     validates_presence_of :name
 
+    amoeba do
+      enable
+      include_association [:guw_complexities]
+    end
+
     def to_s
       name
     end
