@@ -111,7 +111,7 @@ class Project < ActiveRecord::Base
       QueryColumn.new(:acquisition_category, :sortable => "#{AcquisitionCategory.table_name}.name", :caption => "label_acquisition"),
       QueryColumn.new(:platform_category, :sortable => "#{PlatformCategory.table_name}.name", :caption => "label_platform"),
       QueryColumn.new(:description, :sortable => "#{Project.table_name}.description", :caption => "description"),
-      QueryColumn.new(:start_date, :sortable => "#{Project.table_name}.start_date", :caption => "Date"),
+      QueryColumn.new(:start_date, :sortable => "#{Project.table_name}.start_date", :caption => "date"),
       QueryColumn.new(:creator, :sortable => "#{User.table_name}.first_name", :caption => "author"),
       QueryColumn.new(:created_at, :sortable => "#{Project.table_name}.created_at", :caption => "created_at"),
       QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at"),
