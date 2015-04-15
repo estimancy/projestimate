@@ -872,7 +872,7 @@ class ProjectsController < ApplicationController
 
       #Select the default view for module_project
       #default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
-      default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :description => "Default view for the #{@pemodule}. If no view is selected for module project, this view will be automatically selected.")
+      default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :name => "Default view for the #{@pemodule}.")
       my_module_project.view_id = default_view_for_widgets.id
 
       my_module_project.save
