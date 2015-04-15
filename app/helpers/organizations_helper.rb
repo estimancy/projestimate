@@ -87,7 +87,7 @@ module OrganizationsHelper
           end
         end
       when :description
-        content_tag('td', value, :class => "text_field_text_overflow exportable")
+        content_tag('td', ActionView::Base.full_sanitizer.sanitize(value), :class => "text_field_text_overflow exportable")
       when :start_date, :created_at, :updated_at
         content_tag('td class="center exportable"', I18n.l(value))
       else
