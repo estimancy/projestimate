@@ -33,25 +33,25 @@ module OrganizationsHelper
 
   def query_available_inline_columns_options(query)
     selected_inline_columns = update_selected_inline_columns(query)
-    (query.available_inline_columns - selected_inline_columns).collect {|column| [column.caption, column.name]}
+    (query.available_inline_columns - selected_inline_columns).collect {|column| [I18n.t(column.caption), column.name]}
   end
 
   def query_selected_inline_columns_options(query)
     selected_inline_columns = update_selected_inline_columns(query)
-    selected_inline_columns.collect {|column| [ column.caption, column.name]}
+    selected_inline_columns.collect {|column| [ I18n.t(column.caption), column.name]}
   end
 
   def column_header(column)
     #content_tag('th', h(column.caption))
     case column.name
       when :product_name, :title
-        content_tag('th class="text_left exportable"', h(column.caption))
+        content_tag('th class="text_left exportable"', I18n.t(column.caption))
       when :version
-        content_tag('th class="center exportable"', h(column.caption))
+        content_tag('th class="center exportable"', I18n.t(column.caption))
       when :status_name
-        content_tag('th style="width: 50px" class="filter-select exportable"', h(column.caption))
+        content_tag('th style="width: 50px" class="filter-select exportable"', I18n.t(column.caption))
       else
-        content_tag('th class="exportable"', h(column.caption))
+        content_tag('th class="exportable"', I18n.t(column.caption))
     end
   end
 

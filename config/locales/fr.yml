@@ -1416,8 +1416,8 @@ fr:
   label_request_create_organization: "Demande de création d'une organisation à partir d'organisation image"
   object_type: "Type d'objet"
   organization_permissions: "Permissions sur l'organisation"
-  estimations_permissions: "Permissions des estimations"
-  modules_permissions: "Permissions des modules"
+  estimations_permissions: "Permissions sur les estimations"
+  modules_permissions: "Permissions sur les modules"
   is_super_admin: "Est super administrator ?"
   text_help_super_admin: "Un utilisateur super administrateur a tous les droits sur toute l'application et sur toutes les organisations"
   create_organization_confirmation_instructions: "Bonjour %{firstname} %{lastname}, \n\n
