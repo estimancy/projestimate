@@ -515,7 +515,6 @@ module ViewsWidgetsHelper
           level_estimation_values = estimation_value.send("string_data_#{level}")
           pbs_estimation_values = level_estimation_values[pbs_project_element.id]
 
-        begin
           if wbs_activity_elt.is_root?
             begin
               if estimation_value.pe_attribute.alias == "cost"
@@ -534,20 +533,25 @@ module ViewsWidgetsHelper
 
           begin
             if estimation_value.pe_attribute.alias == "cost"
-              res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
+              if pbs_estimation_values.nil?
+                res << "-"
+              else
+                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
+              end
             else
               res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
             end
           rescue
             if estimation_value.pe_attribute.alias == "cost"
-              res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
+              if pbs_estimation_values.nil?
+                res << "-"
+              else
+                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
+              end
             else
               res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
             end
           end
-        rescue
-
-        end
 
         res << "</span>"
         res << "</td>"

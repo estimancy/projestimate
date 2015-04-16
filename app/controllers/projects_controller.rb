@@ -979,7 +979,7 @@ class ProjectsController < ApplicationController
             obj = mp_klass.send(:new, @project, current_module_project)
             obj.send("get_#{attr.alias}")
           when "effort_breakdown"
-            obj = mp_klass.send(:new, current_component, mp, 12)
+            obj = mp_klass.send(:new, current_component, mp, nil, WbsActivityRatio.first)
             obj.send("get_#{attr.alias}")
           when "expert_judgement"
             obj = mp_klass.send(:new)

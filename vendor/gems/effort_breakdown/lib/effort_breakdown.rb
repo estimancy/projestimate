@@ -44,7 +44,7 @@ module EffortBreakdown
   class EffortBreakdown
     include PemoduleEstimationMethods
 
-    attr_accessor :pbs_project_element, :module_project, :input_effort, :project #module input/output parameters
+    attr_accessor :pbs_project_element, :module_project, :input_effort, :project, :ratio #module input/output parameters
 
     #def initialize(c, mp, e, r)
     def initialize(*args)
