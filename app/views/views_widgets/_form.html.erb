@@ -23,7 +23,7 @@
               <!--<label class="checkbox"></label>-->
               <%= f.input :show_name, label: I18n.t(:show_name) %>
             </td>
-              <td><%= f.input :is_label_widget, label: "S'agit-il d'une vignette de titre ?" %></td>
+              <td><%= f.input :is_label_widget, label: "S'agit-il d'une vignette de titre ?", disabled: !@views_widget.new_record? %></td>
           </tr>
           <tr>
             <td><%= f.association :pbs_project_element, label: I18n.t(:associate_pbs_element), collection: @project_pbs_project_elements, selected: @pbs_project_element_id, include_blank: false, input_html:{class: "inline_attr"}  %></td>

@@ -88,7 +88,7 @@ class ViewsWidgetsController < ApplicationController
   def create
     authorize! :manage_estimation_widgets, @project
 
-      # Add the position_x and position_y to params
+    # Add the position_x and position_y to params
     @view_id = params[:views_widget][:view_id]
     @module_project = ModuleProject.find(params[:current_module_project_id]) ###ModuleProject.find(params[:views_widget][:module_project_id])
     #get the current view
@@ -125,7 +125,7 @@ class ViewsWidgetsController < ApplicationController
           #widget_est_val = view_widget.estimation_value
           #in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
           #estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
-          estimation_value_id = nil ###estimation_value.nil? ? nil : estimation_value.id
+          #estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
           widget_copy = ViewsWidget.create(view_id: new_temporary_view.id, module_project_id: @module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
                                            show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                            width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
@@ -242,9 +242,32 @@ class ViewsWidgetsController < ApplicationController
 
   def destroy
     @views_widget = ViewsWidget.find(params[:id])
-    #if can?(:alter_estimation_plan, @project) || ( can?(:manage_estimation_widgets, @project) { |widget| widget.project_fields.empty? } )
+    current_view = @views_widget.view
+    pemodule_id = current_view.pemodule_id
+
     if can?(:alter_estimation_plan, @project) || ( can?(:manage_estimation_widgets, @project) && @views_widget.project_fields.empty? )
       @views_widget.destroy
+
+      #Create temporary view
+      # If widget is deleted, the view will be newly saved as a temporary view (if it's not a temporary view)
+      if !current_view.is_temporary_view && !module_project.nil?
+        new_temporary_view = View.new(name: "#{current_view.name}_temp", description: current_view.description, pemodule_id: pemodule_id, organization_id: current_view.organization_id, is_temporary_view: true, initial_view_id: current_view.id)
+        if new_temporary_view.save
+          #the new widget will be added to the temporary view
+          @views_widget.view_id = new_temporary_view.id
+
+          #Copy current view widgets to the new created view
+          current_view.views_widgets.each do |view_widget|
+            widget_copy = ViewsWidget.create(view_id: new_temporary_view.id, module_project_id: view_widget.module_project_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+                                             show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                             width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+                                             position_x: view_widget.position_x, position_y: view_widget.position_y, from_initial_view: true)
+          end
+          #update module_project view
+          @module_project.update_attribute(:view_id, new_temporary_view.id)
+        end
+      end
+
     else
       flash[:warning] = I18n.t(:notice_cannot_delete_widgets)
     end

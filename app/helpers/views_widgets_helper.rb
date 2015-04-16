@@ -26,6 +26,7 @@ module ViewsWidgetsHelper
 
     # General data
     view_widget = ViewsWidget.find(view_widget_id)
+
     pbs_project_elt = current_component
     module_project = ModuleProject.find(module_project_id)
     project = module_project.project
