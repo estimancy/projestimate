@@ -2224,7 +2224,7 @@ public
           @projects = @projects #Project.all
       end
     end
-    @projects
+    @projects = @projects.reject{|i| i.is_model ==  true}
   end
 
   #Function that manage link_to from project history graphical view

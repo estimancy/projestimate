@@ -69,6 +69,7 @@ module Guw
       EstimationValue.where(module_project_id: @mp.id,
                             pe_attribute_id: attr.id,
                             in_out: "input").first.string_data_probable[current_component.id]
+      #12
     end
 
     def get_effort(*args)
@@ -76,6 +77,7 @@ module Guw
       EstimationValue.where(module_project_id: @mp.id,
                            pe_attribute_id: attr.id,
                            in_out: "input").first.string_data_probable[current_component.id]
+      #12
     end
   end
 end

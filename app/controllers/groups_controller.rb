@@ -170,21 +170,22 @@ protected
 
   def enable_update_in_local?
     #No authorize required since this method is protected and won't be call from route
-    if is_master_instance?
-      true
-    else
-      if params[:action] == 'new'
-        true
-      elsif params[:action] == 'edit'
-        @group = Group.find(params[:id])
-        if @group.is_local_record?
-          true
-        else
-          if params[:anchor] == 'tabs-1'
-            false
-          end
-        end
-      end
-    end
+    #if is_master_instance?
+    #  true
+    #else
+    #  if params[:action] == 'new'
+    #    true
+    #  elsif params[:action] == 'edit'
+    #    @group = Group.find(params[:id])
+    #    if @group.is_local_record?
+    #      true
+    #    else
+    #      if params[:anchor] == 'tabs-1'
+    #        false
+    #      end
+    #    end
+    #  end
+    #end
+    true
   end
 end

@@ -40,7 +40,7 @@
 class Group < ActiveRecord::Base
   attr_accessible :name, :description, :for_global_permission, :for_project_security, :organization_id
 
-  #include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
+  include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :projects
