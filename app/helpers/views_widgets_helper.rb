@@ -121,7 +121,7 @@ module ViewsWidgetsHelper
 
               data_low = wbs_data_low.nil? ? nil : wbs_data_low
               data_high = wbs_data_high.nil? ? nil : wbs_data_high
-              data_probable = wbs_data_probable.nil? ? nil : wbs_data_probable[wbs_activity_elt_root.id][:value]
+              data_probable = (wbs_data_probable.nil? || wbs_data_probable.empty?) ? nil : wbs_data_probable[wbs_activity_elt_root.id][:value]
             end
           end
         end
@@ -534,13 +534,21 @@ module ViewsWidgetsHelper
 
           begin
             if estimation_value.pe_attribute.alias == "cost"
-              res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
+              if pbs_estimation_values.nil?
+                res << "-"
+              else
+                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
+              end
             else
               res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
             end
           rescue
             if estimation_value.pe_attribute.alias == "cost"
-              res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
+              if pbs_estimation_values.nil?
+                res << "-"
+              else
+                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
+              end
             else
               res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
             end

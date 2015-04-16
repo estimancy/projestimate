@@ -9,12 +9,12 @@
   </ul>
 
   <div id="taille">
-    <b>Modèle d'Unité Oeuvre générique (2 niveaux)</b>
+    <b>Modèle d'Unité Oeuvre générique</b>
 
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
         <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
-      <% end %>Es
+      <% end %>
       <br>
 
       <table class="table table-bordered">
@@ -26,6 +26,7 @@
         <% @guw_models.each do |i| %>
           <tr>
             <td class="span5">
+
               <%= link_to i.name, guw.guw_model_path(i) %>
             </td>
             <td class="align-center">
@@ -43,7 +44,7 @@
       <br>
       <hr>
 
-      <b>Modèle d'Unité Oeuvre générique (2 niveaux)</b>
+      <b>Modèle AMOA</b>
 
       <% if can? :manage_modules_instances, ModuleProject %>
         <%= link_to "Nouveau modèle d'UO", amoa.new_amoa_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>

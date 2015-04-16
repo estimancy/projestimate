@@ -45,16 +45,18 @@ module Ge
 
     def get_effort(*args)
       attr = PeAttribute.where(alias: "effort").first
-      EstimationValue.where(module_project_id: @mp.id,
-                            pe_attribute_id: attr.id,
-                            in_out: "input").first.string_data_probable[current_component.id]
+      #EstimationValue.where(module_project_id: @mp.id,
+      #                      pe_attribute_id: attr.id).first.string_data_probable[current_component.id]
+      #
+      #ev.update_attribute(:"string_data_probable", { @mp.id => 69 } )
     end
 
     def get_retained_size(*args)
-      attr = PeAttribute.where(alias: "retained_size").first
-      EstimationValue.where(module_project_id: @mp.id,
-                            pe_attribute_id: attr.id,
-                            in_out: "input").first.string_data_probable[current_component.id]
+
+      #attr = PeAttribute.where(alias: "retained_size").first
+
+      #EstimationValue.where(module_project_id: @mp.id,
+      #                      pe_attribute_id: attr.id).first.string_data_probable[@mp.id]
     end
   end
 end
