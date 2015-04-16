@@ -19,8 +19,9 @@
     </table>
 
     <div>
-        <label style="margin-top: 10px"><%= I18n.t('description') %></label>
-        <%= text_area_tag "description", "", rows: 5, cols: 150, class: "input-xlarge" %>
+      <%= tinymce %>
+      <label style="margin-top: 10px"><b><%= I18n.t('description') %></b></label>
+      <%= text_area_tag "description", @project.description, rows: 5, cols: 150, class: "input-xlarge tinymce" %>
     </div>
 
     <br>
