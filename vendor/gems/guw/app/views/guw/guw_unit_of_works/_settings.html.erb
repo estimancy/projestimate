@@ -106,10 +106,10 @@
 
           <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
             <div class="accordion-inner">
-              <table class="table table-condensed table-striped table-responsive">
+              <table class="table">
                 <tr>
-                  <th class="text_left">S</th>
-                  <th class="text_left">M</th>
+                  <th class=""></th>
+                  <th class=""></th>
                   <th class="text_left"><%= I18n.t :name %></th>
                   <th class="text_left"><%= I18n.t :description %></th>
                   <th class="text_left"><%= I18n.t :work_unit_type %></th>
@@ -120,6 +120,7 @@
                   <th class="text_left"><%= I18n.t :results %></th>
                   <th class="text_left"><%= I18n.t :retained_result %></th>
                   <th class="text_left"><%= I18n.t :actions %></th>
+                  <th></th>
                 </tr>
 
                 <% uowg.guw_unit_of_works.order("display_order asc").each_with_index do |guow, i| %>
@@ -140,9 +141,9 @@
                       <% end %>
                     </td>
 
-                    <td class="text_field_text_overflow">
+                    <td>
                       <span class="pull-left">
-                        <%= guow.name %>
+                        <%= guow.name.truncate(25) %>
                       </span>
                     </td>
 
@@ -173,15 +174,15 @@
                       </div>
                     </td>
 
-                    <td class="span2">
+                    <td class="span2 pull-left">
                       <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "input-small", required: true, readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
-                    <td class="span2">
+                    <td class="span2 pull-left">
                       <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-small", required: true, readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
-                    <td class="span2">
+                    <td class="span2 pull-left">
                       <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]}, selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id), class: "input-small", required: true, readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 

@@ -113,6 +113,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @weight_pert = Array.new
 
       guw_unit_of_work.off_line = false
+      guw_unit_of_work.off_line_uo = false
 
       guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
 

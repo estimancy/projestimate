@@ -515,6 +515,7 @@ module ViewsWidgetsHelper
           level_estimation_values = estimation_value.send("string_data_#{level}")
           pbs_estimation_values = level_estimation_values[pbs_project_element.id]
 
+        begin
           if wbs_activity_elt.is_root?
             begin
               if estimation_value.pe_attribute.alias == "cost"
@@ -544,6 +545,9 @@ module ViewsWidgetsHelper
               res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
             end
           end
+        rescue
+
+        end
 
         res << "</span>"
         res << "</td>"
