@@ -9,8 +9,10 @@
       <% if can? :manage, User, :organization_id => @organization.id %>
         <%= link_to I18n.t('new_user'), new_organization_user_path(@organization), :class => 'btn pull-right' %>
 
-        <a href="#myWBSModal" role="button" class="btn pull-right" title="Import users from excel" data-toggle="modal">
-          Imports users from CSV
+        <%= link_to "Exporter les utilisateurs (CSV)", organization_export_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
+
+        <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import users from excel" data-toggle="modal">
+          Importer les utilisateurs (CSV)
         </a>
 
         <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

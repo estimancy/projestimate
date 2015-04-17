@@ -600,6 +600,17 @@ class OrganizationsController < ApplicationController
     @factors = Factor.order("factor_type")
   end
 
+  def export
+    @organization = Organization.find(params[:organization_id])
+    csv_string = CSV.generate(:col_sep => ",") do |csv|
+      csv << ['Prénom', 'Nom', 'Email', 'Login']
+      @organization.users.each do |user|
+        csv << [user.first_name, user.last_name, user.email, user.login_name]
+      end
+    end
+    send_data(csv_string.encode("utf-8"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
+  end
+
   def import_user
     sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
     error_count = 0
@@ -608,8 +619,6 @@ class OrganizationsController < ApplicationController
     encoding = params[:encoding]
     CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
       csv.each_with_index do |row, i|
-        #begin
-        #unless row.empty? or i == 0
         password = SecureRandom.hex(8)
 
         u = User.new(first_name: row[0],
@@ -631,11 +640,6 @@ class OrganizationsController < ApplicationController
 
         OrganizationsUsers.create(organization_id: @current_organization.id,
                                     user_id: u.id)
-
-        #end
-        #rescue
-        #
-        #end
       end
     end
     redirect_to organization_users_path(@current_organization)

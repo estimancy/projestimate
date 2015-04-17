@@ -231,6 +231,7 @@ Projestimate::Application.routes.draw do
     get "report" => 'organizations#report'
     post "generate_report" => 'organizations#generate_report'
     post "import_user" => 'organizations#import_user'
+    post "export" => 'organizations#export'
   end
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
