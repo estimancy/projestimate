@@ -105,7 +105,7 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name, :first_name
   validates :login_name, :presence => true, :uniqueness => {case_sensitive: false}
   #validates :email, :presence => true, :format => {:with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/i}, :uniqueness => {case_sensitive: false}
-  validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}, :uniqueness => {case_sensitive: false}
+  validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}#, :uniqueness => {case_sensitive: false}
   validates :number_precision, numericality: { only_integer: true, :allow_blank => true }
 
   #validates :password, :presence => {:on => :create}, :confirmation => true, :if => :auth_method_application?
