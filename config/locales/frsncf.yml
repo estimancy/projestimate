@@ -732,7 +732,7 @@ frsncf:
   select_module: "Sélectionnez un module dans la liste. Les modifications seront automatiquement sauvegardée."
   step: "Etape"
 
-  general_csv_separator: ';'
+  general_csv_separator: ','
   general_csv_decimal_separator: ','
   general_csv_encoding: ISO-8859-1
 

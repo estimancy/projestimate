@@ -608,57 +608,57 @@ class OrganizationsController < ApplicationController
         csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.map(&:name)
       end
     end
-    send_data(csv_string.encode("utf-8"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
+    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
   end
 
   def import_user
     sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
     error_count = 0
     file = params[:file]
-    sep = params[:separator]
     encoding = params[:encoding]
-    CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
-      csv.each_with_index do |row, i|
-        unless i == 0
-          password = SecureRandom.hex(8)
+    begin
+      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:ISO-8859-1") do |csv|
+        csv.each_with_index do |row, i|
+          unless i == 0
+            password = SecureRandom.hex(8)
 
-          user = User.where(first_name: row[0],
-                            last_name: row[1],
-                            email: row[2],
-                            login_name: row[3]).first
-          if user.nil?
+            user = User.where(login_name: row[3]).first
+            if user.nil?
 
-            u = User.new(first_name: row[0],
-                         last_name: row[1],
-                         email: row[2],
-                         login_name: row[3],
-                         id_connexion: row[3],
-                         super_admin: false,
-                         password: password,
-                         password_confirmation: password,
-                         language_id: params[:language_id].to_i,
-                         initials: "#{row[0].first}#{row[1].first}",
-                         time_zone: "Paris",
-                         object_per_page: 50,
-                         auth_type: "Application",
-                         number_precision: 2)
+              u = User.new(first_name: row[0],
+                           last_name: row[1],
+                           email: row[2],
+                           login_name: row[3],
+                           id_connexion: row[3],
+                           super_admin: false,
+                           password: password,
+                           password_confirmation: password,
+                           language_id: params[:language_id].to_i,
+                           initials: "#{row[0].first}#{row[1].first}",
+                           time_zone: "Paris",
+                           object_per_page: 50,
+                           auth_type: "Application",
+                           number_precision: 2)
 
-            u.save(validate: false)
+              u.save(validate: false)
 
-            OrganizationsUsers.create(organization_id: @current_organization.id,
-                                      user_id: u.id)
-            (row.size - 4).times do |i|
-              group = Group.where(name: row[4 + i], organization_id: @current_organization.id).first
-              begin
-                GroupsUsers.create(group_id: group.id,
-                                   user_id: u.id)
-              rescue
-                # nothing
+              OrganizationsUsers.create(organization_id: @current_organization.id,
+                                        user_id: u.id)
+              (row.size - 4).times do |i|
+                group = Group.where(name: row[4 + i], organization_id: @current_organization.id).first
+                begin
+                  GroupsUsers.create(group_id: group.id,
+                                     user_id: u.id)
+                rescue
+                  # nothing
+                end
               end
             end
           end
         end
       end
+    rescue
+      flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
     end
     redirect_to organization_users_path(@current_organization)
   end
