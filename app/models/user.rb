@@ -41,13 +41,15 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
+         :recoverable, :rememberable, :trackable,# :validatable,
          :confirmable, # account confirmation
          :omniauthable, :omniauth_providers => [:google_oauth2],
          :authentication_keys => [:id_connexion]
 
-  # Setup accessible (or protected) attributes for your model for Devise gem
-  #attr_accessible :email, :password, :password_confirmation, :remember_me
+  validates_presence_of    :password, :on => :create
+  validates_confirmation_of    :password, :on => :create
+  validates_length_of    :password, :within => Devise.password_length, :allow_blank => true
+  validates_format_of    :email,    :with  => Devise.email_regexp, :allow_blank => true, :if => :email_changed?
 
   audited # audit the users (users account)
 
@@ -105,7 +107,7 @@ class User < ActiveRecord::Base
   validates_presence_of :last_name, :first_name
   validates :login_name, :presence => true, :uniqueness => {case_sensitive: false}
   #validates :email, :presence => true, :format => {:with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/i}, :uniqueness => {case_sensitive: false}
-  validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}#, :uniqueness => {case_sensitive: false}
+  #validates :email, :presence => true, :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}#, :uniqueness => {case_sensitive: false}
   validates :number_precision, numericality: { only_integer: true, :allow_blank => true }
 
   #validates :password, :presence => {:on => :create}, :confirmation => true, :if => :auth_method_application?
