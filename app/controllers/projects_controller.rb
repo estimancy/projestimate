@@ -1389,29 +1389,29 @@ public
   def update_views_and_widgets(new_prj, old_mp, new_mp)
     #For initialization module level
     if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
-
-      ##Copy the views and widgets for the new project
+      #Copy the views and widgets for the new project
       new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
-      ##We have to copy all the selected view's widgets in a new view for the current module_project
+      #We have to copy all the selected view's widgets in a new view for the current module_project
       if old_mp.view
         old_mp_view_widgets = old_mp.view.views_widgets.all
-        old_mp_view_widgets.each do |view_widget|
-          new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
+        old_mp_view_widgets.each do |old_view_widget|
+          new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_view_widget.module_project_id)
           new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
-          widget_est_val = view_widget.estimation_value
+          widget_est_val = old_view_widget.estimation_value
           unless widget_est_val.nil?
             in_out = widget_est_val.in_out
             widget_pe_attribute_id = widget_est_val.pe_attribute_id
             unless new_view_widget_mp.nil?
               new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
               estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
-              widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
-                                               icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
-                                               width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
 
-              pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+              new_view_widget = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
+                                                   icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
+                                                   width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
+
+              pf = ProjectField.where(project_id: new_prj.id, views_widget_id: old_view_widget.id).first
               unless pf.nil?
-                pf.views_widget_id = widget_copy.id
+                pf.views_widget_id = new_view_widget.id
                 pf.save
               end
             end
@@ -1871,7 +1871,7 @@ public
       redirect_to organization_estimations_path(@current_organization), :flash => {:warning => I18n.t('warning_not_allow_to_create_new_branch_of_project')} and return
     end
 
-    begin
+    #begin
       old_prj_copy_number = old_prj.copy_number
       old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
       #old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
@@ -1939,23 +1939,24 @@ public
           ##We have to copy all the selected view's widgets in a new view for the current module_project
           #if old_mp.view
           #  old_mp_view_widgets = old_mp.view.views_widgets.all
-          #  old_mp_view_widgets.each do |view_widget|
-          #    new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
+          #  old_mp_view_widgets.each do |old_view_widget|
+          #    new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_view_widget.module_project_id)
           #    new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
-          #    widget_est_val = view_widget.estimation_value
+          #    widget_est_val = old_view_widget.estimation_value
           #    unless widget_est_val.nil?
           #      in_out = widget_est_val.in_out
           #      widget_pe_attribute_id = widget_est_val.pe_attribute_id
           #      unless new_view_widget_mp.nil?
           #        new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
           #        estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
-          #        widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
-          #                                         icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
-          #                                         width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
           #
-          #        pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+          #        new_view_widget = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
+          #                                             icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
+          #                                             width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
+          #
+          #        pf = ProjectField.where(project_id: new_prj.id, views_widget_id: old_view_widget.id).first
           #        unless pf.nil?
-          #          pf.views_widget_id = widget_copy.id
+          #          pf.views_widget_id = new_view_widget.id
           #          pf.save
           #        end
           #      end
@@ -2016,11 +2017,11 @@ public
         redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
       end
 
-    rescue
-      flash[:error] = I18n.t(:error_project_checkout_failed)
-      redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
+    #rescue
+    #  flash[:error] = I18n.t(:error_project_checkout_failed)
+      #redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
       ###redirect_to(edit_project_path(old_prj, :anchor => 'tabs-history'), :flash => {:error => I18n.t(:error_project_checkout_failed)} ) and return
-    end
+    #end
 
     #else
     #redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
