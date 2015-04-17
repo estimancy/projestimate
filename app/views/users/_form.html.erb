@@ -42,10 +42,13 @@
                   <tr>
                     <td colspan="2"><%= f.input :email, :label => I18n.t('email'), :input_html => {:class => 'input-xxlarge'} %></td>
                   </tr>
+
+                  Groupe de l'utilisateur : <%= @user.groups.join(",") %>
+
                   <% if current_user.super_admin? %>
-                      <tr>
-                        <td colspan="2"><%= f.input :super_admin, :label => I18n.t(:is_super_admin), hint: I18n.t(:text_help_super_admin), :input_html => {:class => 'input-xxlarge'} %></td>
-                      </tr>
+                    <tr>
+                      <td colspan="2"><%= f.input :super_admin, :label => I18n.t(:is_super_admin), hint: I18n.t(:text_help_super_admin), :input_html => {:class => 'input-xxlarge'} %></td>
+                    </tr>
                   <% end %>
                 </table>
               </div>
