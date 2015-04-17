@@ -600,6 +600,17 @@ class OrganizationsController < ApplicationController
     @factors = Factor.order("factor_type")
   end
 
+  def export
+    @organization = Organization.find(params[:organization_id])
+    csv_string = CSV.generate(:col_sep => ",") do |csv|
+      csv << ['Prénom', 'Nom', 'Email', 'Login', 'Groupes']
+      @organization.users.each do |user|
+        csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.map(&:name)
+      end
+    end
+    send_data(csv_string.encode("utf-8"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
+  end
+
   def import_user
     sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
     error_count = 0
@@ -608,34 +619,45 @@ class OrganizationsController < ApplicationController
     encoding = params[:encoding]
     CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
       csv.each_with_index do |row, i|
-        #begin
-        #unless row.empty? or i == 0
-        password = SecureRandom.hex(8)
+        unless i == 0
+          password = SecureRandom.hex(8)
 
-        u = User.new(first_name: row[0],
-                     last_name: row[1],
-                     email: row[2],
-                     login_name: row[3],
-                     id_connexion: row[3],
-                     super_admin: false,
-                      password: password,
-                      password_confirmation: password,
-                      language_id: Language.first.id,
-                      initials: "#{row[0].first}#{row[1].first}",
-                      time_zone: "fr",
-                      object_per_page: 50,
-                      auth_type: "Application",
-                      number_precision: 2)
+          user = User.where(first_name: row[0],
+                            last_name: row[1],
+                            email: row[2],
+                            login_name: row[3]).first
+          if user.nil?
 
-        u.save(validate: false)
+            u = User.new(first_name: row[0],
+                         last_name: row[1],
+                         email: row[2],
+                         login_name: row[3],
+                         id_connexion: row[3],
+                         super_admin: false,
+                         password: password,
+                         password_confirmation: password,
+                         language_id: params[:language_id].to_i,
+                         initials: "#{row[0].first}#{row[1].first}",
+                         time_zone: "Paris",
+                         object_per_page: 50,
+                         auth_type: "Application",
+                         number_precision: 2)
 
-        OrganizationsUsers.create(organization_id: @current_organization.id,
-                                    user_id: u.id)
+            u.save(validate: false)
 
-        #end
-        #rescue
-        #
-        #end
+            OrganizationsUsers.create(organization_id: @current_organization.id,
+                                      user_id: u.id)
+            (row.size - 4).times do |i|
+              group = Group.where(name: row[4 + i], organization_id: @current_organization.id).first
+              begin
+                GroupsUsers.create(group_id: group.id,
+                                   user_id: u.id)
+              rescue
+                # nothing
+              end
+            end
+          end
+        end
       end
     end
     redirect_to organization_users_path(@current_organization)
