@@ -169,35 +169,37 @@
         </table>
       </div>
 
-      <div id="tabs-groups">
-        <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
-          <thead>
-            <tr>
-              <th><%= I18n.t(:name) %></th>
-              <th><%= I18n.t(:description) %></th>
-              <th></th>
-              <th><%= I18n.t(:actions) %></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <% @current_organization.groups.each do |group| %>
+      <% if current_user.super_admin ==  true %>
+        <div id="tabs-groups">
+          <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+            <thead>
               <tr>
-                <td><%= group.name %></td>
-                <td><%= group.description %></td>
-                <% gu = GroupsUsers.where(group_id: group.id, user_id: current_user.id).first %>
-                <td class="center"><%= check_box_tag "groups[#{group.id}]", "accepted", !gu.nil? %></td>
-                <td class="center">
-                  <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
-                  <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-                </td>
-                </td>
+                <th><%= I18n.t(:name) %></th>
+                <th><%= I18n.t(:description) %></th>
+                <th></th>
+                <th><%= I18n.t(:actions) %></th>
               </tr>
-            <% end %>
-            <%= render :partial => 'layouts/footer_table' %>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              <% @current_organization.groups.each do |group| %>
+                <tr>
+                  <td><%= group.name %></td>
+                  <td><%= group.description %></td>
+                  <% gu = GroupsUsers.where(group_id: group.id, user_id: current_user.id).first %>
+                  <td class="center"><%= check_box_tag "groups[#{group.id}]", "accepted", !gu.nil? %></td>
+                  <td class="center">
+                    <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
+                    <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+                  </td>
+                  </td>
+                </tr>
+              <% end %>
+              <%= render :partial => 'layouts/footer_table' %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
 
       <div class="actions">
         <% if can? :manage, User %>

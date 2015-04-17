@@ -34,6 +34,9 @@
 
               <label><%= I18n.t(:encoding) %></label>
               <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
+
+              <label><%= I18n.t(:languages) %></label>
+              <%= select_tag :language_id, options_for_select(Language.all.map{|i| [i.name, i.id]}) %>
             </div>
             <div class="modal-footer">
               <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
