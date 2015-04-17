@@ -158,7 +158,7 @@ class OrganizationsController < ApplicationController
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
-    @projects = @organization.projects.where(is_model: false).all
+    @projects = @organization.projects.where(is_model: false).all.reject { |i| !i.is_childless? }
 
   end
 
