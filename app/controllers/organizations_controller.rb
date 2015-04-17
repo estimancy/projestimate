@@ -622,29 +622,40 @@ class OrganizationsController < ApplicationController
         unless i == 0
           password = SecureRandom.hex(8)
 
-          u = User.new( first_name: row[0],
-                        last_name: row[1],
-                        email: row[2],
-                        login_name: row[3],
-                        id_connexion: row[3],
-                        super_admin: false,
-                        password: password,
-                        password_confirmation: password,
-                        language_id: params[:language_id].to_i,
-                        initials: "#{row[0].first}#{row[1].first}",
-                        time_zone: "Paris",
-                        object_per_page: 50,
-                        auth_type: "Application",
-                        number_precision: 2)
+          user = User.where(first_name: row[0],
+                            last_name: row[1],
+                            email: row[2],
+                            login_name: row[3]).first
+          if user.nil?
 
-          u.save
+            u = User.new(first_name: row[0],
+                         last_name: row[1],
+                         email: row[2],
+                         login_name: row[3],
+                         id_connexion: row[3],
+                         super_admin: false,
+                         password: password,
+                         password_confirmation: password,
+                         language_id: params[:language_id].to_i,
+                         initials: "#{row[0].first}#{row[1].first}",
+                         time_zone: "Paris",
+                         object_per_page: 50,
+                         auth_type: "Application",
+                         number_precision: 2)
 
-          OrganizationsUsers.create(organization_id: @current_organization.id,
-                                    user_id: u.id)
-          (row.size - 4).times do |i|
-            group = Group.where(name: row[4 + i], organization_id: @current_organization.id).first
-            GroupsUsers.create(group_id: group.id,
-                               user_id: u.id)
+            u.save(validate: false)
+
+            OrganizationsUsers.create(organization_id: @current_organization.id,
+                                      user_id: u.id)
+            (row.size - 4).times do |i|
+              group = Group.where(name: row[4 + i], organization_id: @current_organization.id).first
+              begin
+                GroupsUsers.create(group_id: group.id,
+                                   user_id: u.id)
+              rescue
+                # nothing
+              end
+            end
           end
         end
       end
