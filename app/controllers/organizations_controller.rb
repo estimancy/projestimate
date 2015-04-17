@@ -612,11 +612,11 @@ class OrganizationsController < ApplicationController
   end
 
   def import_user
-    sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
+    sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
     error_count = 0
     file = params[:file]
     encoding = params[:encoding]
-    begin
+    #begin
       CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:ISO-8859-1") do |csv|
         csv.each_with_index do |row, i|
           unless i == 0
@@ -657,9 +657,9 @@ class OrganizationsController < ApplicationController
           end
         end
       end
-    rescue
-      flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
-    end
+    #rescue
+    #  flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
+    #end
     redirect_to organization_users_path(@current_organization)
   end
 
