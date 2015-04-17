@@ -62,13 +62,10 @@ module ViewsWidgetsHelper
         end
     end
     text_size = ((height+width)/2) * 0.006  # 0.015
-
     # get the fitText minFontSize and maxFontSize
     widget_data[:icon_font_size] = icon_font_size
     widget_data[:text_size] = text_size
-    # fitText parameters
     widget_data[:ft_maxFontSize_without_mm] = ft_maxFontSize_without_mm
-
     widget_data[:value_to_show] = view_widget.name
 
     widget_data

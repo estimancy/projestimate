@@ -177,7 +177,7 @@ class User < ActiveRecord::Base
   end
 
   # DEVISE : override the find_first_by_auth_conditions method, as we want to use both 'login_name' and 'email' for authentication
-  #withoyt case_sensitive = false
+  #without case_sensitive = false
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:id_connexion)
