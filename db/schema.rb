@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150414125342) do
+ActiveRecord::Schema.define(:version => 20150417104932) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1270,7 +1270,6 @@ ActiveRecord::Schema.define(:version => 20150414125342) do
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["login_name"], :name => "index_users_on_login_name", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
@@ -1317,6 +1316,7 @@ ActiveRecord::Schema.define(:version => 20150414125342) do
     t.boolean  "show_name"
     t.boolean  "show_wbs_activity_ratio"
     t.boolean  "from_initial_view"
+    t.boolean  "is_label_widget"
   end
 
   create_table "wbs_activities", :force => true do |t|

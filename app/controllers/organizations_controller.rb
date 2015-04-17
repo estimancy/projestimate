@@ -608,7 +608,7 @@ class OrganizationsController < ApplicationController
         csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.map(&:name)
       end
     end
-    send_data(csv_string.encode("utf-8"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
+    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
   end
 
   def import_user
@@ -617,7 +617,7 @@ class OrganizationsController < ApplicationController
     file = params[:file]
     encoding = params[:encoding]
     begin
-      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "#{encoding}:utf-8") do |csv|
+      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:ISO-8859-1") do |csv|
         csv.each_with_index do |row, i|
           unless i == 0
             password = SecureRandom.hex(8)
