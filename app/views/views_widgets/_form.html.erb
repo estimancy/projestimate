@@ -56,7 +56,7 @@
             <td>
               <label><%= I18n.t :fields %></label>
               <% selected = @views_widget.project_fields.first %>
-              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "None", disabled: !(@views_widget.widget_type == "text") %>
+              <%= select_tag "field", options_for_select(@project.organization.fields.map{|i| [i.name, i.id] }, selected: selected.nil? ? '' : selected.field.id), prompt: "None", disabled: (!(@views_widget.widget_type == "text")  || @views_widget.is_label_widget?) %>
             </td>
           </tr>
 

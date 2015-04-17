@@ -173,7 +173,7 @@ class ViewsWidgetsController < ApplicationController
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
-    project = @views_widget.estimation_value.module_project.project
+    project = @views_widget.estimation_value.module_project.project unless @views_widget.is_label_widget?
 
     if params["field"].blank?
       pfs = @views_widget.project_fields
@@ -218,8 +218,6 @@ class ViewsWidgetsController < ApplicationController
         @position_x = (@views_widget.position_x.nil? || @views_widget.position_x.downcase.eql?("nan")) ? 1 : @views_widget.position_x
         @position_y = (@views_widget.position_y.nil? || @views_widget.position_y.downcase.eql?("nan")) ? 1 : @views_widget.position_y
 
-        #@module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:views_widget][:module_project_id]) : @views_widget.module_project
-        #@pbs_project_element_id = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
         @module_project = ModuleProject.find(params[:views_widget][:module_project_id])
         @pbs_project_element_id = current_component.id
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
