@@ -227,7 +227,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       if @guw_model.one_level_model == true
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
-        guw_complexity_id = params[:guw_complexity_id].to_i
+        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
 
         guw_unit_of_work.guw_complexity_id = guw_complexity_id
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id

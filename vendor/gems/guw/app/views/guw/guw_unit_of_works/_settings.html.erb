@@ -218,7 +218,7 @@
                     <td>
                       <span class="pull-left">
                         <% if @guw_model.one_level_model == true %>
-                          <%= select_tag "guw_complexity_id", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
+                          <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
                         <% else %>
                           <% if guow.off_line == true %>
                             <%= link_to "HSat", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
@@ -352,7 +352,7 @@
 
     $('.guw_type').change(function(){
       $.ajax({
-        url: "<%# guw.change_cotation_path %>",
+        url: "<%= guw.change_cotation_path %>",
         data: "guw_type_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
       });
     });
