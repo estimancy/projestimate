@@ -1,16 +1,13 @@
+<div>
   <%= simple_form_for(@project) do |f| %>
-    <%= f.error_notification %>
+  <%= f.error_notification %>
 
-    <div class="tabs">
+  <div class="tabs">
     <ul>
       <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
       <li><a href="#tabs-2"><%= I18n.t(:wbs_product) %></a></li>
-      <!--<li><a href="#tabs-3"><%#= I18n.t(:wbs_activity) %></a></li>-->
       <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
       <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
-      <li><a href="#tabs-6"><%= I18n.t(:calendar) %> </a></li>
-      <li><a href="#tabs-7"><%= I18n.t(:resources) %> </a></li>
-      <li><a href="#tabs-8"><%= I18n.t(:analyse) %> </a></li>
       <li><a href="#tabs-history"><%= I18n.t(:label_project_history) %> </a></li>
     </ul>
 
@@ -281,19 +278,6 @@
       </div>
     </div>
 
-
-    <div id="tabs-6">
-      <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
-    </div>
-
-    <div id="tabs-7">
-      <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
-    </div>
-
-    <div id="tabs-8">
-      <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
-    </div>
-
     <div id="tabs-history">
       <%= hidden_field_tag "current_showed_project_id", @project.id %>
       <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
@@ -311,6 +295,7 @@
       });
     </script>
 
+  </div>
 </div>
 
 

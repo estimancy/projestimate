@@ -172,6 +172,7 @@ group :development do
   #gem 'orphan_records'
   # To use debugger
   #gem 'ruby-debug19', :require => 'ruby-debug'
+  gem 'meta_request'
 end
 
 group :test do

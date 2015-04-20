@@ -398,6 +398,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to main_app.dashboard_path(@project, anchor: "accordion")
   end
 
+  def change_cotation
+    @guw_type = Guw::GuwType.find(params[:guw_type_id])
+    @guw_complexities = @guw_type.guw_complexities
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+  end
+
   def change_selected_state
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     if @guw_unit_of_work.selected == false
