@@ -688,6 +688,13 @@ class ProjectsController < ApplicationController
     @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
     @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
+
+    project_root = @project.root
+    project_tree = project_root.subtree
+    arranged_projects = project_tree.arrange
+    array_json_tree = Project.json_tree(arranged_projects)
+    @projects_json_tree = Hash[*array_json_tree.flatten]
+    @projects_json_tree = @projects_json_tree.to_json
   end
 
   def destroy

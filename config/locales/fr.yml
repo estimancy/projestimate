@@ -595,7 +595,7 @@ fr:
   #sessions
   button_ask_account: "Demander un compte"
   send_request: "Envoyer"
-  login_name_or_email: "Email ou login"
+  login_name_or_email: "Login"
   button_forgotten_password: "Mot de passe oublié ?"
   open_url_id: "Identifiant OpenId"
   ldap_account_or_application_account: "Login ou courriel de l'utilisateur (ou Identifiant LDAP)"

@@ -11,6 +11,7 @@
       <li><a href="#tabs-6"><%= I18n.t(:calendar) %> </a></li>
       <li><a href="#tabs-7"><%= I18n.t(:resources) %> </a></li>
       <li><a href="#tabs-8"><%= I18n.t(:analyse) %> </a></li>
+      <li><a href="#tabs-history"><%= I18n.t(:label_project_history) %> </a></li>
     </ul>
 
     <div id="tabs-1">
@@ -293,15 +294,21 @@
       <div style="color:red"><i class="icon-ambulance pull-left"></i> Not yet implemented. I'm sure someone is working hard to solve this problem<br /> </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $('.component_tree ul li, .widget-content ul li').hover(
-                function () {
-                    $('.block_link').hide();
+    <div id="tabs-history">
+      <%= hidden_field_tag "current_showed_project_id", @project.id %>
+      <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
+      <%= render :partial => "show_project_tree_history", :object => [@projects_json_tree] %>
+    </div>
 
-                }
-            );
-        });
+    <script>
+      $(document).ready(function () {
+          $('.component_tree ul li, .widget-content ul li').hover(
+              function () {
+                  $('.block_link').hide();
+
+              }
+          );
+      });
     </script>
 
 </div>
