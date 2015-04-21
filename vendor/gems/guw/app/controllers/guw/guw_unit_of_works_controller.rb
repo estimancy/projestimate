@@ -227,7 +227,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       if @guw_model.one_level_model == true
         guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
-        guw_complexity_id = params[:guw_complexity_id].to_i
+        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
 
         guw_unit_of_work.guw_complexity_id = guw_complexity_id
         guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
@@ -396,6 +396,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion")
+  end
+
+  def change_cotation
+    @guw_type = Guw::GuwType.find(params[:guw_type_id])
+    @guw_complexities = @guw_type.guw_complexities
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
   end
 
   def change_selected_state

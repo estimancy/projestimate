@@ -75,4 +75,5 @@ Guw::Engine.routes.draw do
   post "guw_complexity_work_units/save_complexity_work_units"
 
   get "change_selected_state" => "guw_unit_of_works#change_selected_state", as: "change_selected_state"
+  get "change_cotation" => "guw_unit_of_works#change_cotation", as: "change_cotation"
 end

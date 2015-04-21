@@ -20,7 +20,7 @@ fr:
       unconfirmed: Vous devez confirmer votre compte par courriel.
     mailer:
       confirmation_instructions:
-        subject: Instructions de confirmation
+        subject: "[Estimancy - Gestion des estimations] - Confirmation"
       reset_password_instructions:
         subject: Instructions pour changer le mot de passe
       unlock_instructions:

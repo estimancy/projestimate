@@ -592,7 +592,7 @@ en-gb:
   #sessions
   button_ask_account: "Request an account"
   send_request: "Submit"
-  login_name_or_email: "Email or login name"
+  login_name_or_email: "Login"
   button_forgotten_password: "Lost password?"
   open_url_id: "Open Url Id"
   ldap_account_or_application_account: "User's login or email (or LDAP account id)."
@@ -1407,7 +1407,7 @@ en-gb:
   securities_for_generated_project: "Permissions for the generated estimation"
   update_password_first_connexion: "You must change your password during your first connection"
   update_email_login_password: "Update email / login / password"
-  text_your_password_message: "Your current password is: \"%{password}\". You must change it the first time you log into the application. "
+  text_your_password_message: "Votre compte: \"%{account}\" vient d'être crée avec le mot de passe suivant \"%{password}\". Vous devez le modifier lors de votre première connexion à l'application."
   you_have_no_right_to_continue: "You do not have the necessary rights to continue. \n Thank you to contact the administrator of the application."
   views: "Views"
   estimation_created_by: "Estimate created by \"%{username}\" "

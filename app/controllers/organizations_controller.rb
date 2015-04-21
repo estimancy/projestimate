@@ -51,8 +51,13 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    @projects = Project.where(is_model: false).where(conditions).all
-    #@projects = Project.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).all
+    #@projects = Project.where(is_model: false).where(conditions).all
+    if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
+      @projects = Project.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+    else
+      @projects = Project.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+    end
+
     @organization = Organization.find(params[:organization_id])
 
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
@@ -158,7 +163,7 @@ class OrganizationsController < ApplicationController
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
-    @projects = @organization.projects.where(is_model: false).all.reject { |i| !i.is_childless? }
+    @projects = @organization.projects.where(is_model: false).all
 
   end
 
@@ -674,11 +679,11 @@ class OrganizationsController < ApplicationController
   end
 
   def import_user
-    sep = "#{sep.blank? ? I18n.t(:general_csv_separator) : sep}"
+    sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
     error_count = 0
     file = params[:file]
     encoding = params[:encoding]
-    begin
+    #begin
       CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:ISO-8859-1") do |csv|
         csv.each_with_index do |row, i|
           unless i == 0
@@ -719,9 +724,9 @@ class OrganizationsController < ApplicationController
           end
         end
       end
-    rescue
-      flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
-    end
+    #rescue
+    #  flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
+    #end
     redirect_to organization_users_path(@current_organization)
   end
 

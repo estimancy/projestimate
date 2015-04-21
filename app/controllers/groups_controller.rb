@@ -158,8 +158,11 @@ class GroupsController < ApplicationController
   def destroy
     authorize! :manage, Group
 
-    @group = Group.find(params[:id])
+    group = Group.find(params[:id])
     @organization = @group.organization
+
+    GroupsUsers.delete_all(group_id: @group.id)
+
     @group.destroy
 
     flash[:notice] = I18n.t (:notice_group_successful_deleted)

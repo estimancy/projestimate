@@ -131,6 +131,7 @@
                       </span>
                       <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected" %>
                       <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
+                      <%= hidden_field_tag "", guow.id, class: "#{guow.id}" %>
                     </td>
 
                     <td>
@@ -175,7 +176,7 @@
                     </td>
 
                     <td class="span2 pull-left">
-                      <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "input-small", required: true, readonly: !can?(:execute_estimation_plan, @project) %>
+                      <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "guw_type input-small", guw: guow.id, required: true, readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
                     <td class="span2 pull-left">
@@ -217,7 +218,7 @@
                     <td>
                       <span class="pull-left">
                         <% if @guw_model.one_level_model == true %>
-                          <%= select_tag "guw_complexity_id", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
+                          <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
                         <% else %>
                           <% if guow.off_line == true %>
                             <%= link_to "HSat", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
@@ -346,6 +347,13 @@
       $.ajax({
         url: "<%= guw.change_selected_state_path %>",
         data: "guw_unit_of_work_id=" + this.value + "&guw_unit_of_work_group_id=" + $("." + this.value + "_group").val()
+      });
+    });
+
+    $('.guw_type').change(function(){
+      $.ajax({
+        url: "<%= guw.change_cotation_path %>",
+        data: "guw_type_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
       });
     });
   });

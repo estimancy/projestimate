@@ -72,8 +72,9 @@ Projestimate::Application.configure do
   config.action_controller.perform_caching = true
 
   #Default URL option
-  config.action_mailer.default_url_options = { host: 'localhost:3000'}
-  #config.action_mailer.smtp_settings = {:address => "localhost", :port => 1025}
   config.action_mailer.default :charset => "utf-8"
+
+  config.action_mailer.default_url_options = { host: "localhost:3000" }
+
 
 end

@@ -74,7 +74,7 @@ public
     @organization = Organization.find_by_id(params[:organization_id])
     @user = User.new
     @user.auth_type = AuthMethod.first.id
-    @generated_password = SecureRandom.hex(8)
+    @generated_password = SecureRandom.hex(4)
 
     @users = current_user.organizations
 

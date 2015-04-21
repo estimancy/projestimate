@@ -595,7 +595,7 @@ fr:
   #sessions
   button_ask_account: "Demander un compte"
   send_request: "Envoyer"
-  login_name_or_email: "Email ou login"
+  login_name_or_email: "Login"
   button_forgotten_password: "Mot de passe oublié ?"
   open_url_id: "Identifiant OpenId"
   ldap_account_or_application_account: "Login ou courriel de l'utilisateur (ou Identifiant LDAP)"
@@ -1444,7 +1444,7 @@ fr:
   securities_for_generated_project: "Autorisations de l'estimation créée à partir de ce modèle"
   update_password_first_connexion: "You must change your password during your first connection"
   update_email_login_password: "Modifier email / identifiant / mot de passe"
-  text_your_password_message: "Votre mot de passe actuel est : \"%{password}\". Vous devez le modifier lors de votre première connexion à l'application. "
+  text_your_password_message: "Votre compte: \"%{account}\" vient d'être crée avec le mot de passe suivant \"%{password}\" "
   you_have_no_right_to_continue: "Vous n'avez pas les droits nécessaires pour continuer. \n Merci de contacter l'administrateur de l'application."
   views: "Vues"
   estimation_created_by: "Estimation créée par \"%{username}\" "

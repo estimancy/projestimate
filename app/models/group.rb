@@ -55,7 +55,7 @@ class Group < ActiveRecord::Base
   belongs_to :organization
 
   has_many :groups_users, class_name: 'GroupsUsers'
-  has_many :users, through: :groups_users, :dependent => :destroy
+  has_many :users, through: :groups_users
 
   belongs_to :record_status
   #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
