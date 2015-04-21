@@ -51,8 +51,13 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    @projects = Project.where(is_model: false).where(conditions).all
-    #@projects = Project.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).all
+    #@projects = Project.where(is_model: false).where(conditions).all
+    if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
+      @projects = Project.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+    else
+      @projects = Project.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+    end
+
     @organization = Organization.find(params[:organization_id])
 
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
