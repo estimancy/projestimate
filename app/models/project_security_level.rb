@@ -40,16 +40,16 @@ class ProjectSecurityLevel < ActiveRecord::Base
 
   has_many :project_securities, dependent: :destroy
   has_and_belongs_to_many :permissions
-  belongs_to :organization
+  has_many :estimation_status_group_roles  #Estimations permissions on Group according to the estimation status
 
-  #Estimations permissions on Group according to the estimation status
-  has_many :estimation_status_group_roles
+  belongs_to :organization
 
   validates :name, :presence => true
 
   amoeba do
     enable
-    include_association []
+    #include_association []
+    exclude_association [:project_securities]
     customize(lambda { |original_project_security_level, new_project_security_level|
       new_project_security_level.copy_id = original_project_security_level.id
     })
