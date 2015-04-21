@@ -2094,23 +2094,24 @@ public
     if @counter.to_i > 0
       begin
         project_id = checked_node_ids.first
+        organization = Project.find(project_id).organization
         case action_id
           when "edit_node_path"
             @string_url = edit_project_path(:id => project_id)
           when "delete_node_path"
             @string_url = confirm_deletion_path(:project_id => project_id, :from_tree_history_view => true, :current_showed_project_id => params['current_showed_project_id'])
           when "activate_node_path"
-            @string_url = activate_project_path(:project_id => project_id, :from_tree_history_view => true, :current_showed_project_id => params['current_showed_project_id'])
+            @string_url = dashboard_path(:project_id => project_id)
           when "find_use_projects" #when "find_use_node_path"
             @string_url = find_use_project_path(:project_id => project_id)
           when "promote_node_path"
             @string_url = commit_path(:project_id => project_id, :from_tree_history_view => true, :current_showed_project_id => params['current_showed_project_id'])
           when "duplicate_node_path"
-            @string_url = "/projects/#{project_id}/duplicate"
+            @string_url = "/projects/#{project_id}/duplicate?organization_id=#{organization.id}"
           when "checkout_node_path"
             @string_url = checkout_path(:project_id => project_id)
-          when "collapse_node_path"
-            @string_url = collapse_project_version_path(:project_ids => params[:project_ids], :from_tree_history_view => true, :current_showed_project_id => params['current_showed_project_id'])
+          #when "collapse_node_path"
+            #@string_url = collapse_project_version_path(:project_ids => params[:project_ids], :from_tree_history_view => true, :current_showed_project_id => params['current_showed_project_id'])
           when "set_checkout_version_path"
             @string_url = set_checkout_version_path(:project_id => project_id)
           else
