@@ -43,20 +43,41 @@ module Ge
       @mp = args[1]
     end
 
-    def get_effort(*args)
-      attr = PeAttribute.where(alias: "effort").first
-      #EstimationValue.where(module_project_id: @mp.id,
-      #                      pe_attribute_id: attr.id).first.string_data_probable[current_component.id]
+    def set_effort(*args)
+      #attr = PeAttribute.where(alias: "effort").first
       #
-      #ev.update_attribute(:"string_data_probable", { @mp.id => 69 } )
+      #ev = EstimationValue.where(module_project_id: @mp.id,
+      #                           pe_attribute_id: attr.id).first
+      #
+      #unless ev.nil?
+      #  ev.update_attribute(:"string_data_low", { @mp.id => 69 } )
+      #  ev.update_attribute(:"string_data_most_likely", { @mp.id => 690 } )
+      #  ev.update_attribute(:"string_data_high", { @mp.id => 6900 } )
+      #  ev.update_attribute(:"string_data_probable", { @mp.id => 100 } )
+      #end
+    end
+
+    def set_retained_size(*args)
+      #attr = PeAttribute.where(alias: "retained_size").first
+      #
+      #ev = EstimationValue.where(module_project_id: @mp.id,
+      #                           pe_attribute_id: attr.id).first
+      #
+      #unless ev.nil?
+      #  ev.update_attribute(:"string_data_low", { @mp.id => 69 } )
+      #  ev.update_attribute(:"string_data_most_likely", { @mp.id => 690 } )
+      #  ev.update_attribute(:"string_data_high", { @mp.id => 6900 } )
+      #  ev.update_attribute(:"string_data_probable", { @mp.id => 100 } )
+      #end
+    end
+
+    def get_effort(*args)
+      #24
     end
 
     def get_retained_size(*args)
-
-      #attr = PeAttribute.where(alias: "retained_size").first
-
-      #EstimationValue.where(module_project_id: @mp.id,
-      #                      pe_attribute_id: attr.id).first.string_data_probable[@mp.id]
+      #12
     end
+
   end
 end
