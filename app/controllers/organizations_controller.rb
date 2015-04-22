@@ -167,27 +167,30 @@ class OrganizationsController < ApplicationController
 
   end
 
-  # Method that execute the duplication: duplicate estimation model for organization
-  def execute_duplication(project_id)
+  # New organization from image
+  def new_organization_from_image
+  end
 
-    begin
+
+  # Method that execute the duplication: duplicate estimation model for organization
+  def execute_duplication(project_id, new_organization_id)
+    #begin
       old_prj = Project.find(project_id)
-      @organization = old_prj.organization
+      new_organization = Organization.find(new_organization_id)
 
       new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
+      new_prj.organization_id = new_organization_id
+      new_prj.title = old_prj.title
+
       new_prj.ancestry = nil
-      new_prj.is_model = true
+      if old_prj.is_model
+        new_prj.is_model = true
+      else
+        new_prj.is_model = false
+      end
 
       if new_prj.save
         old_prj.save #Original project copy number will be incremented to 1
-
-        #Update the project securities for the current user who create the estimation from model
-        #if params[:action_name] == "create_project_from_template"
-
-        creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
-        unless creator_securities.nil?
-          creator_securities.update_attribute(:user_id, current_user.id)
-        end
 
         #Managing the component tree : PBS
         pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
@@ -204,6 +207,35 @@ class OrganizationsController < ApplicationController
           new_c.save
         end
 
+        #Update the project securities for the current user who create the estimation from model
+        #if params[:action_name] == "create_project_from_template"
+        if old_prj.is_model
+          creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
+          unless creator_securities.nil?
+            creator_securities.update_attribute(:user_id, current_user.id)
+          end
+        end
+        #Other project securities for groups
+        new_prj.project_securities.where('group_id IS NOT NULL').each do |project_security|
+          new_security_level = new_organization.project_security_levels.where(copy_id: project_security.project_security_level_id).first
+          new_group = new_organization.groups.where(copy_id: project_security.group_id).first
+          if new_security_level.nil? || new_group.nil?
+            project_security.destroy
+          else
+            project_security.update_attributes(project_security_level_id: new_security_level.id, group_id: new_group.id)
+          end
+        end
+
+        #Other project securities for users
+        new_prj.project_securities.where('user_id IS NOT NULL').each do |project_security|
+          new_security_level = new_organization.project_security_levels.where(copy_id: project_security.project_security_level_id).first
+          if new_security_level.nil?
+            project_security.destroy
+          else
+            project_security.update_attributes(project_security_level_id: new_security_level.id)
+          end
+        end
+
         # For ModuleProject associations
         old_prj.module_projects.group(:id).each do |old_mp|
           new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
@@ -216,17 +248,17 @@ class OrganizationsController < ApplicationController
 
           # if the module_project view is nil
           if new_mp.view.nil?
-            default_view = @organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
+            default_view = new_organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
             if default_view.nil?
-              default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: @organization.id)
+              default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: new_organization_id)
             end
             new_mp.update_attribute(:view_id, default_view.id)
           end
 
-          #Recreate view for modulproject on initialization level
-          if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
+          #Recreate view for all moduleproject as the projects are not is the same organization
+          ###if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
             #Copy the views and widgets for the new project
-            new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+            new_view = View.create(organization_id: new_organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
             ##We have to copy all the selected view's widgets in a new view for the current module_project
             if old_mp.view
               old_mp_view_widgets = old_mp.view.views_widgets.all
@@ -246,7 +278,9 @@ class OrganizationsController < ApplicationController
 
                     pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
                     unless pf.nil?
+                      new_field = new_organization.fields.where(copy_id: pf.field_id).first
                       pf.views_widget_id = widget_copy.id
+                      pf.field_id = new_field.nil? ? nil : new_field.id
                       pf.save
                     end
                   end
@@ -255,7 +289,7 @@ class OrganizationsController < ApplicationController
             end
             #update the new module_project view
             new_mp.update_attribute(:view_id, new_view.id)
-          end
+          ###end
 
           #Update the Unit of works's groups
           new_mp.guw_unit_of_work_groups.each do |guw_group|
@@ -303,40 +337,55 @@ class OrganizationsController < ApplicationController
         new_prj = nil
       end
 
-    rescue
-      new_prj = nil
-    end
+    #rescue
+      #new_prj = nil
+    #end
 
     new_prj
   end
 
-  # New organization from image
-  def new_organization_from_image
-  end
 
   #Create New organization from selected image organization
+  # Or duplicate current selected organization
   def create_organization_from_image
     authorize! :manage, Organization
 
-    #Create the organization from image organization
-    organization_image_id = params[:organization_image]
-    if organization_image_id.nil?
-      flash[:warning] = "Veuillez sélectionner une organisation image pour continuer"
-    else
-      organization_image = Organization.find(organization_image_id)
-      @organization_name = params[:organization_name]
-      @firstname = params[:firstname]
-      @lastname = params[:lastname]
-      @email = params[:email]
-      @login_name = params[:identifiant]
-      @password = params[:password]
-      if @password.empty?
-        @password = SecureRandom.hex(8)
-      end
-      change_password_required = params[:change_password_required]
+    case params[:action_name]
+      #Duplicate organization
+      when "copy_organization"
+        organization_image = Organization.find(params[:organization_id])
 
+      #Create the organization from image organization
+      when "new_organization_from_image"
+        organization_image_id = params[:organization_image]
+        if organization_image_id.nil?
+          flash[:warning] = "Veuillez sélectionner une organisation image pour continuer"
+        else
+          organization_image = Organization.find(organization_image_id)
+          @organization_name = params[:organization_name]
+          @firstname = params[:firstname]
+          @lastname = params[:lastname]
+          @email = params[:email]
+          @login_name = params[:identifiant]
+          @password = params[:password]
+          if @password.empty?
+            @password = SecureRandom.hex(8)
+          end
+          change_password_required = params[:change_password_required]
+        end
+      else
+        flash[:error] = "Aucune organization sélectionnée"
+        redirect_to :back and return
+    end
+
+    if organization_image.nil?
+      flash[:warning] = "Veuillez sélectionner une organisation pour continuer"
+    else
       new_organization = organization_image.amoeba_dup
-      new_organization.name = @organization_name
+
+      if params[:action_name] == "new_organization_from_image"
+        new_organization.name = @organization_name
+      end
       new_organization.is_image_organization = false
 
       if new_organization.save
@@ -350,7 +399,9 @@ class OrganizationsController < ApplicationController
           #Get the to_transitions for the Statuses Workflow
           copied_status.to_transition_statuses.each do |to_transition|
             new_to_transition = new_estimation_statuses.where(copy_id: to_transition.id).first
-            StatusTransition.create(from_transition_status_id: estimation_status.id, to_transition_status_id: new_to_transition.id )
+            unless new_to_transition.nil?
+              StatusTransition.create(from_transition_status_id: estimation_status.id, to_transition_status_id: new_to_transition.id)
+            end
           end
         end
 
@@ -359,30 +410,41 @@ class OrganizationsController < ApplicationController
           project_security_level.estimation_status_group_roles.each do |group_role|
             new_group = new_organization.groups.where(copy_id: group_role.group_id).first
             estimation_status = new_organization.estimation_statuses.where(copy_id: group_role.estimation_status_id).first
-            group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
+            unless estimation_status.nil?
+              group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
+            end
           end
         end
 
         #Then copy the image organization estimation models
-        organization_image.projects.where(is_model: true).all.each do |est_model|
-          new_template = execute_duplication(est_model.id)
+        if params[:action_name] == "new_organization_from_image"
+
+          # Create a user in the Admin group of the new organization
+          admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
+          # Add the user to the created organization
+          admin_group = new_organization.groups.where(name: '*USER').first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
+          admin_user.groups << admin_group
+          admin_user.save
+          #user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
+          #user_first_organization.save
+
+          organization_image_projects = organization_image.projects.where(is_model: true).all
+
+        elsif params[:action_name] == "copy_organization"
+
+          organization_image_projects = organization_image.projects.all
+        end
+        #organization_image.projects.where(is_model: true).all.each do |est_model|
+        organization_image_projects.each do |est_model|
+          new_template = execute_duplication(est_model.id, new_organization.id)
           unless new_template.nil?
-            new_template.is_model = true
+            new_template.is_model = est_model.is_model
             new_template.original_model_id = nil
             new_template.creator_id = current_user.id
-            new_template.organization = new_organization
+            new_template.organization_id = new_organization.id
             new_template.save
           end
         end
-
-        # Create a user in the Admin group of the new organization
-        admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
-        # Add the user to the created organization
-        admin_group = new_organization.groups.where(name: '*USER').first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
-        admin_user.groups << admin_group
-        admin_user.save
-        #user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
-        #user_first_organization.save
 
         flash[:notice] = I18n.t(:notice_organization_successful_created)
       else

@@ -24,9 +24,10 @@
                 </div>
               </div>
               <div class="widget-content" class="<%= "module_project_widget_#{module_project.id}" %>">
-                <div id="<%="view_widgets_container_#{module_project.id}"%>" class="gridster row-fluid"  style="width: 100%;">
+                <div id="<%="view_widgets_container_#{module_project.id}"%>" class="gridster row-fluid" style="width: 100%;">
                   <!--<div>-->
-                    <ul style="width: 100%; margin: 0">
+                    <!--<ul style="width: 100%; margin: 0">-->
+                    <ul style="max-width:100%; display:inline-block">
                       <% font_weight = "normal_font_weight" %>
                       <!-- Show all widgets on the current view -->
                       <% if module_project.view %>

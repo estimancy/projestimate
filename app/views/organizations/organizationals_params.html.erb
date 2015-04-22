@@ -7,7 +7,7 @@
     <% if can? :create_organizations, Organization %>
       <div style="float: right">
         <%= link_to I18n.t('new_organization'), new_organization_path, :class => 'btn' %>
-        <%= link_to I18n.t('new_organization_from_image'), new_organization_from_image_path, :class => 'btn' %>
+        <%= link_to I18n.t('new_organization_from_image'), new_organization_from_image_path(action_name: "new_organization_from_image"), :class => 'btn' %>
       </div>
     <% end %>
 
@@ -37,7 +37,8 @@
 
                   <% if can? :manage, Organization %>
                     <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
-                    <%= link_to('', "organizations/#{i.id}/duplicate_organization", :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization')) %>
+                    <!--The duplicate organization and the create from image organization are now using the same function -->
+                    <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"), :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization') %>
                     <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
                   <% end %>
               <% end %>

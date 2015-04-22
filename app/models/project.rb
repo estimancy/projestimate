@@ -70,10 +70,10 @@ class Project < ActiveRecord::Base
 
   serialize :included_wbs_activities, Array
 
-  validates :title, :presence => true, :uniqueness => {  :scope => :version, case_sensitive: false, :message => I18n.t(:error_validation_project) }
-  ###validates :alias, :presence => true, :uniqueness => { :scope => :organization_id, case_sensitive: false, :message => I18n.t(:error_validation_project) }
-  validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => :title, case_sensitive: false, :message => I18n.t(:error_validation_project) }
   validates_presence_of :organization_id, :estimation_status_id
+  validates :title, :presence => true, :uniqueness => {  :scope => [:version,:organization_id], case_sensitive: false, :message => I18n.t(:error_validation_project) }
+  ###validates :alias, :presence => true, :uniqueness => { :scope => :organization_id, case_sensitive: false, :message => I18n.t(:error_validation_project) }
+  validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => [:title, :organization_id], case_sensitive: false, :message => I18n.t(:error_validation_project) }
 
   #Search fields
   scoped_search :on => [:title, :alias, :description, :start_date, :created_at, :updated_at]
@@ -89,7 +89,7 @@ class Project < ActiveRecord::Base
       new_copy_number = original_project.copy_number.to_i+1
       new_project.title = "#{original_project.title}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.title}"
       new_project.alias = "#{original_project.alias}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.alias}"
-      new_project.version = '1.0'
+      #new_project.version = '1.0'
       new_project.description = " #{original_project.description} \n \n This project is a duplication of project \"#{original_project.title} (#{original_project.alias}) - #{original_project.version}\" "
       new_project.copy_number = 0
       original_project.copy_number = new_copy_number
