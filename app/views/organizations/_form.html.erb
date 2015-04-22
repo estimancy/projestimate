@@ -18,7 +18,7 @@
                   <div class="span7"><%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></div>
                   <div class="span5">
                     <label class="checkbox"></label>
-                    <%= f.input :is_image_organization, as: :boolean, :label => I18n.t('is_image_organization') %>
+                    <%= f.input :is_image_organization, as: :boolean, :label => I18n.t('is_image_organization'), disabled: !current_user.super_admin? %>
                   </div>
                 </div>
 

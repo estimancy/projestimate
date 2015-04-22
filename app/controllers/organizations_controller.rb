@@ -181,6 +181,8 @@ class OrganizationsController < ApplicationController
       new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
       new_prj.organization_id = new_organization_id
       new_prj.title = old_prj.title
+      new_prj.description = old_prj.description
+      new_prj.creator_id = old_prj.creator_id
 
       new_prj.ancestry = nil
       if old_prj.is_model
@@ -247,48 +249,53 @@ class OrganizationsController < ApplicationController
           end
 
           # if the module_project view is nil
-          if new_mp.view.nil?
-            default_view = new_organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
-            if default_view.nil?
-              default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: new_organization_id)
-            end
-            new_mp.update_attribute(:view_id, default_view.id)
-          end
+          #if new_mp.view.nil?
+          #  default_view = new_organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
+          #  if default_view.nil?
+          #    default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: new_organization_id)
+          #  end
+          #  new_mp.update_attribute(:view_id, default_view.id)
+          #end
 
           #Recreate view for all moduleproject as the projects are not is the same organization
-          ###if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
-            #Copy the views and widgets for the new project
-            new_view = View.create(organization_id: new_organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
-            ##We have to copy all the selected view's widgets in a new view for the current module_project
-            if old_mp.view
-              old_mp_view_widgets = old_mp.view.views_widgets.all
-              old_mp_view_widgets.each do |view_widget|
-                new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
-                new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
-                widget_est_val = view_widget.estimation_value
-                unless widget_est_val.nil?
-                  in_out = widget_est_val.in_out
-                  widget_pe_attribute_id = widget_est_val.pe_attribute_id
-                  unless new_view_widget_mp.nil?
-                    new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
-                    estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
-                    widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
-                                                     icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
-                                                     width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
+          #Copy the views and widgets for the new project
+          #mp_default_view =
+          #if old_mp.view.nil?
+          #
+          #else
+          #
+          #end
+          new_view = View.create(organization_id: new_organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+          # We have to copy all the selected view's widgets in a new view for the current module_project
+          if old_mp.view
+            old_mp_view_widgets = old_mp.view.views_widgets.all
+            old_mp_view_widgets.each do |view_widget|
+              new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
+              new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
+              widget_est_val = view_widget.estimation_value
+              unless widget_est_val.nil?
+                in_out = widget_est_val.in_out
+                widget_pe_attribute_id = widget_est_val.pe_attribute_id
+                unless new_view_widget_mp.nil?
+                  new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+                  estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
+                  widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+                                                   icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
+                                                   width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
 
-                    pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
-                    unless pf.nil?
-                      new_field = new_organization.fields.where(copy_id: pf.field_id).first
-                      pf.views_widget_id = widget_copy.id
-                      pf.field_id = new_field.nil? ? nil : new_field.id
-                      pf.save
-                    end
+                  pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+                  unless pf.nil?
+                    new_field = new_organization.fields.where(copy_id: pf.field_id).first
+                    pf.views_widget_id = widget_copy.id
+                    pf.field_id = new_field.nil? ? nil : new_field.id
+                    pf.save
                   end
                 end
               end
             end
-            #update the new module_project view
-            new_mp.update_attribute(:view_id, new_view.id)
+          end
+          #update the new module_project view
+          new_mp.update_attribute(:view_id, new_view.id)
           ###end
 
           #Update the Unit of works's groups
@@ -345,7 +352,7 @@ class OrganizationsController < ApplicationController
   end
 
 
-  #Create New organization from selected image organization
+  # Create New organization from selected image organization
   # Or duplicate current selected organization
   def create_organization_from_image
     authorize! :manage, Organization
@@ -385,6 +392,8 @@ class OrganizationsController < ApplicationController
 
       if params[:action_name] == "new_organization_from_image"
         new_organization.name = @organization_name
+      elsif params[:action_name] == "copy_organization"
+        new_organization.description << "\n \n Cette organisation est une copie de l'organisation #{organization_image.name}"
       end
       new_organization.is_image_organization = false
 
@@ -418,24 +427,28 @@ class OrganizationsController < ApplicationController
 
         #Then copy the image organization estimation models
         if params[:action_name] == "new_organization_from_image"
-
           # Create a user in the Admin group of the new organization
           admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
           # Add the user to the created organization
-          admin_group = new_organization.groups.where(name: '*USER').first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
-          admin_user.groups << admin_group
-          admin_user.save
-          #user_first_organization = OrganizationsUsers.new(organization_id: new_organization.id, user_id: admin_user.id)
-          #user_first_organization.save
-
-          organization_image_projects = organization_image.projects.where(is_model: true).all
+          admin_group = new_organization.groups.where(name: '*USER').first #first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
+          unless admin_group.nil?
+            admin_user.groups << admin_group
+            admin_user.save
+          end
 
         elsif params[:action_name] == "copy_organization"
-
-          organization_image_projects = organization_image.projects.all
+          # add users to groups
+          organization_image.groups.each do |group|
+            new_group = new_organization.groups.where(copy_id: group.id).first
+            unless new_group.nil?
+              new_group.users = group.users
+              new_group.save
+            end
+          end
         end
-        #organization_image.projects.where(is_model: true).all.each do |est_model|
-        organization_image_projects.each do |est_model|
+
+        # copy the organization's projects
+        organization_image.projects.all.each do |est_model|
           new_template = execute_duplication(est_model.id, new_organization.id)
           unless new_template.nil?
             new_template.is_model = est_model.is_model
@@ -657,10 +670,12 @@ class OrganizationsController < ApplicationController
 
     set_breadcrumbs "Organizations" => "/organizationals_params", "Liste des organizations" => ""
 
-    if can? :manage, :all
+    if current_user.super_admin?
       @organizations = Organization.all
+    elsif can?(:manage, :all)
+      @organizations = Organization.all.reject{|org| org.is_image_organization}
     else
-      @organizations = current_user.organizations
+      @organizations = current_user.organizations.all.reject{|org| org.is_image_organization}
     end
 
     @size_units = SizeUnit.all

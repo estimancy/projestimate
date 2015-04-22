@@ -15,6 +15,9 @@
       <thead>
         <tr>
           <th><%= I18n.t(:name) %></th>
+          <% if current_user.super_admin? %>
+            <th><%= I18n.t(:is_image_organization) %></th>
+          <% end %>
           <th><%= I18n.t(:description) %></th>
           <th class="action"><%= I18n.t(:actions) %></th>
         </tr>
@@ -23,12 +26,15 @@
         <% @organizations.each do |i| %>
           <tr>
             <td>
-              <% if can? :show_organizations, Organization %>
+              <% if can?(:show_organizations, Organization) && !i.is_image_organization %>
                 <%= link_to i.name, organization_estimations_path(i) %>
               <% else %>
                   <%= i.name %>
               <% end %>
             </td>
+            <% if current_user.super_admin? %>
+                <td class="center"><%= check_box_tag "is_image_organization", i.is_image_organization, i.is_image_organization, disabled: true %></td>
+            <% end %>
 
             <td><%= i.description %></td>
             <td class="center">
