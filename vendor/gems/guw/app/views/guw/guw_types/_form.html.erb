@@ -3,7 +3,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Unit of Work
+        <%= I18n.t :unit_of_work %>
       </a>
     </li>
   </ul>
@@ -15,7 +15,7 @@
       <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
 
       <div class="form-inputs">
-        <%= f.input :name %>
+        <%= f.input :name, label: "Type d'unité d'oeuvre" %>
         <%= tinymce %>
         <%= f.input :description, input_html: { class: 'tinymce', rows: 15, cols: 20 } %>
       </div>

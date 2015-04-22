@@ -975,35 +975,53 @@ class ProjectsController < ApplicationController
   end
 
   def execute_estimation
-    current_module_project.nexts.each do |mp|
-      mp.input_attributes.each do |attr|
-        mp_klass = "#{mp.pemodule.alias.camelcase.constantize}::#{mp.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
-        case mp.pemodule.alias
-          when "guw"
-            obj = mp_klass.send(:new, @project, current_module_project)
-            obj.send("get_#{attr.alias}")
-          when "ge"
-            obj = mp_klass.send(:new, @project, current_module_project)
-            obj.send("get_#{attr.alias}")
-          when "effort_breakdown"
-            obj = mp_klass.send(:new, current_component, mp, nil, WbsActivityRatio.first)
-            obj.send("get_#{attr.alias}")
-          when "expert_judgement"
-            obj = mp_klass.send(:new)
-          else
-            obj = mp_klass.send(:new)
-        end
 
-        ev = EstimationValue.where(module_project_id: mp.id,
-                                   pe_attribute_id: attr.id,
-                                   in_out: "input").first.string_data_low[current_component.id]
+    #pour chaque module
+      #recupérer les attribut d'entrée
+        #appeller set_attribut
+      #end
+    #end
 
-        p mp.input_attributes.map(&:name)
-        p mp.output_attributes.map(&:name)
-        p "==="
-      end
-    end
-    redirect_to dashboard_path(@project)
+    #current_module_project.nexts.each do |mp|
+    #  mp.pemodule.pe_attributes.each do |attr|
+    #
+    #    mp_klass = "#{mp.pemodule.alias.camelcase.constantize}::#{mp.pemodule.alias.camelcase.constantize}".gsub(' ', '').constantize
+    #
+    #    if ""
+    #
+    #    end
+    #    case mp.pemodule.alias
+    #      when "guw"
+    #        obj = mp_klass.send(:new, @project, current_module_project)
+    #        obj.send("get_#{attr.alias}")
+    #      when "ge"
+    #        obj = mp_klass.send(:new, @project, current_module_project)
+    #        obj.send("get_#{attr.alias}")
+    #
+    #        p "GE : #{attr.alias}"
+    #        p obj.send("get_#{attr.alias}")
+    #      when "effort_breakdown"
+    #        obj = mp_klass.send(:new, current_component, mp, nil, WbsActivityRatio.first)
+    #        obj.send("get_#{attr.alias}")
+    #
+    #        p "EB : #{attr.alias}"
+    #        p obj.send("get_#{attr.alias}")
+    #      when "expert_judgement"
+    #        obj = mp_klass.send(:new)
+    #      else
+    #        obj = mp_klass.send(:new)
+    #    end
+
+        #ev = EstimationValue.where(module_project_id: mp.id,
+        #                           pe_attribute_id: attr.id,
+        #                           in_out: "input").first.string_data_low[current_component.id]
+
+        #p mp.input_attributes.map(&:name)
+        #p mp.output_attributes.map(&:name)
+        #p "==="
+    #  end
+    #end
+    #redirect_to dashboard_path(@project)
   end
 
   #Run estimation process
