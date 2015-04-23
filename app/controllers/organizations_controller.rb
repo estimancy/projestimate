@@ -182,7 +182,7 @@ class OrganizationsController < ApplicationController
       new_prj.organization_id = new_organization_id
       new_prj.title = old_prj.title
       new_prj.description = old_prj.description
-      new_prj.creator_id = old_prj.creator_id
+      #new_prj.creator_id = old_prj.creator_id
 
       new_prj.ancestry = nil
       if old_prj.is_model
@@ -394,6 +394,7 @@ class OrganizationsController < ApplicationController
         new_organization.name = @organization_name
       elsif params[:action_name] == "copy_organization"
         new_organization.description << "\n \n Cette organisation est une copie de l'organisation #{organization_image.name}"
+        new_organization.description << "\n #{I18n.l(Time.now)} : #{I18n.t(:organization_copied_by, username: current_user.name)}"
       end
       new_organization.is_image_organization = false
 
@@ -453,8 +454,6 @@ class OrganizationsController < ApplicationController
           unless new_template.nil?
             new_template.is_model = est_model.is_model
             new_template.original_model_id = nil
-            new_template.creator_id = current_user.id
-            new_template.organization_id = new_organization.id
             new_template.save
           end
         end
@@ -647,7 +646,39 @@ class OrganizationsController < ApplicationController
     end
   end
 
+  def confirm_organization_deletion
+    @organization = Organization.find(params[:organization_id])
+    authorize! :manage, Organization
+  end
+
   def destroy
+    authorize! :manage, Organization
+
+    @organization = Organization.find(params[:id])
+
+    case params[:commit]
+      when I18n.t('delete')
+        if params[:yes_confirmation] == 'selected'
+          @organization.destroy
+          if session[:organization_id] == params[:id]
+            session[:organization_id] = nil
+          end
+          flash[:notice] = I18n.t(:notice_organization_successful_deleted)
+          redirect_to '/organizationals_params'
+
+        else
+          flash[:warning] = I18n.t('warning_need_organization_check_box_confirmation')
+          render :template => 'organizations/confirm_organization_deletion'
+        end
+
+      when I18n.t('cancel')
+        redirect_to '/organizationals_params'
+      else
+        render :template => 'projects/confirm_organization_deletion'
+    end
+  end
+
+  def destroy_save
     authorize! :manage, Organization
     @organization = Organization.find(params[:id])
 
@@ -664,6 +695,8 @@ class OrganizationsController < ApplicationController
 
     redirect_to '/organizationals_params'
   end
+
+
 
   def organizationals_params
     set_page_title 'Organizational Parameters'
@@ -1063,6 +1096,7 @@ class OrganizationsController < ApplicationController
 
 
   # Duplicate the organization
+  # Function de delete after => is replaced by the create_from_image fucntion
   def duplicate_organization
     authorize! :manage_master_data, :all
 

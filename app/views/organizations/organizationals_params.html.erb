@@ -45,7 +45,8 @@
                     <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
                     <!--The duplicate organization and the create from image organization are now using the same function -->
                     <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"), :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization') %>
-                    <%= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large ', :title => I18n.t('delete') %>
+                    <%#= link_to '', i, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon icon-trash icon-large', :title => I18n.t('delete') %>
+                    <%= (link_to('', confirm_organization_deletion_path(i.id), :class => 'icon icon-trash icon-large', :title => I18n.t('delete')) ) %>
                   <% end %>
               <% end %>
             </td>

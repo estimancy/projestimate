@@ -243,6 +243,7 @@ Projestimate::Application.routes.draw do
   match 'create_organization_from_image' => 'organizations#create_organization_from_image', as: 'create_organization_from_image'
   get 'update_available_inline_columns' => 'organizations#update_available_inline_columns', as: 'update_available_inline_columns'
   get 'set_available_inline_columns' => 'organizations#set_available_inline_columns', as: 'set_available_inline_columns'
+  match 'organizations/:organization_id/confirm_organization_deletion' => 'organizations#confirm_organization_deletion', :as => :confirm_organization_deletion
 
   resources :subcontractors
 
