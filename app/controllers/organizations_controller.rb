@@ -501,8 +501,10 @@ class OrganizationsController < ApplicationController
                   new_ancestor_ids_list = []
                   new_elt.ancestor_ids.each do |ancestor_id|
                     ancestor = WbsActivityElement.find_by_wbs_activity_id_and_copy_id(new_elt.wbs_activity_id, ancestor_id)
-                    ancestor_id = ancestor.id
-                    new_ancestor_ids_list.push(ancestor_id)
+                    unless ancestor.nil?
+                      ancestor_id = ancestor.id
+                      new_ancestor_ids_list.push(ancestor_id)
+                    end
                   end
                   new_elt.ancestry = new_ancestor_ids_list.join('/')
 
