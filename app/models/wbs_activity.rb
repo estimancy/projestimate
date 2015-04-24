@@ -56,7 +56,7 @@ class WbsActivity < ActiveRecord::Base
   has_many :pbs_project_elements
   has_many :module_projects
 
-  validates :organization_id, :presence => true
+  ###validates :organization_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :scope => :organization_id }
 
   #Enable the amoeba gem for deep copy/clone (dup with associations)
@@ -65,7 +65,8 @@ class WbsActivity < ActiveRecord::Base
     include_association [:wbs_activity_ratios]
 
     customize(lambda { |original_wbs_activity, new_wbs_activity|
-      new_wbs_activity.name = "Copy_#{ original_wbs_activity.copy_number.to_i+1} of #{original_wbs_activity.name}"
+      #new_wbs_activity.name = "Copy_#{ original_wbs_activity.copy_number.to_i+1} of #{original_wbs_activity.name}"
+      new_wbs_activity.copy_id = original_wbs_activity.id
       new_wbs_activity.copy_number = 0
       original_wbs_activity.copy_number = original_wbs_activity.copy_number.to_i+1
     })

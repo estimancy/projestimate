@@ -315,11 +315,22 @@ class OrganizationsController < ApplicationController
             end
           end
 
+          # UOW-INPUTS
           new_mp.uow_inputs.each do |uo|
             new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
             new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-
             uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+          end
+
+          #WBS-ACTIVITY-INPUTS
+          new_mp.wbs_activity_inputs.each do |activity_input|
+            new_wbs_activity = new_organization.wbs_activities.where(copy_id: activity_input.wbs_activity_id).first
+            unless new_wbs_activity.nil?
+              new_wbs_activity_ratio = new_wbs_activity.wbs_activity_ratios.where(copy_id: activity_input.wbs_activity_ratio_id).first
+              unless new_wbs_activity_ratio.nil?
+                activity_input.update_attributes(wbs_activity_id: new_wbs_activity.id, wbs_activity_ratio_id: new_wbs_activity_ratio.id)
+              end
+            end
           end
 
           ["input", "output"].each do |io|
@@ -393,7 +404,7 @@ class OrganizationsController < ApplicationController
       if params[:action_name] == "new_organization_from_image"
         new_organization.name = @organization_name
       elsif params[:action_name] == "copy_organization"
-        new_organization.description << "\n \n Cette organisation est une copie de l'organisation #{organization_image.name}"
+        new_organization.description << "\n \n Cette organisation est une copie de l'organisation #{organization_image.name}."
         new_organization.description << "\n #{I18n.l(Time.now)} : #{I18n.t(:organization_copied_by, username: current_user.name)}"
       end
       new_organization.is_image_organization = false
@@ -448,6 +459,72 @@ class OrganizationsController < ApplicationController
           end
         end
 
+
+        # Copy the WBS-Activities modules's Models instances
+        organization_image.wbs_activities.each do |old_wbs_activity|
+          new_wbs_activity = old_wbs_activity.amoeba_dup   #amoeba gem is configured in WbsActivity class model
+          new_wbs_activity.organization_id = new_organization.id
+
+          new_wbs_activity.transaction do
+            if new_wbs_activity.save
+              old_wbs_activity.save  #Original WbsActivity copy number will be incremented to 1
+
+              #we also have to save to wbs_activity_ratio
+              old_wbs_activity.wbs_activity_ratios.each do |ratio|
+                ratio.save
+              end
+
+              #get new WBS Ratio elements
+              new_wbs_activity_ratio_elts = []
+              new_wbs_activity.wbs_activity_ratios.each do |ratio|
+                ratio.wbs_activity_ratio_elements.each do |ratio_elt|
+                  new_wbs_activity_ratio_elts << ratio_elt
+
+                  #Update ratio elements profiles
+                  ratio_elt.wbs_activity_ratio_profiles.each do |activity_ratio_profile|
+                    new_organization_profile = new_organization.organization_profiles.where(copy_id: activity_ratio_profile.organization_profile_id).first
+                    unless new_organization_profile.nil?
+                      activity_ratio_profile.update_attribute(:organization_profile_id, new_organization_profile.id)
+                    end
+                  end
+                end
+              end
+
+              #Managing the component tree
+              old_wbs_activity_elements = old_wbs_activity.wbs_activity_elements.order('ancestry_depth asc')
+              old_wbs_activity_elements.each do |old_elt|
+                new_elt = old_elt.amoeba_dup
+                new_elt.wbs_activity_id = new_wbs_activity.id
+                new_elt.save#(:validate => false)
+
+                unless new_elt.is_root?
+                  new_ancestor_ids_list = []
+                  new_elt.ancestor_ids.each do |ancestor_id|
+                    ancestor = WbsActivityElement.find_by_wbs_activity_id_and_copy_id(new_elt.wbs_activity_id, ancestor_id)
+                    ancestor_id = ancestor.id
+                    new_ancestor_ids_list.push(ancestor_id)
+                  end
+                  new_elt.ancestry = new_ancestor_ids_list.join('/')
+
+                  corresponding_ratio_elts = new_wbs_activity_ratio_elts.select { |ratio_elt| ratio_elt.wbs_activity_element_id == new_elt.copy_id}.each do |ratio_elt|
+                    ratio_elt.update_attribute('wbs_activity_element_id', new_elt.id)
+                  end
+
+                  new_elt.save(:validate => false)
+                end
+              end
+            else
+              flash[:error] = "#{new_wbs_activity.errors.full_messages.to_sentence}"
+            end
+          end
+
+          # Update all the new organization module_project's guw_model with the current guw_model
+          wbs_activity_copy_id = old_wbs_activity.id
+          new_organization.module_projects.where(wbs_activity_id: wbs_activity_copy_id).update_all(wbs_activity_id: new_wbs_activity.id)
+        end
+
+
+
         # copy the organization's projects
         organization_image.projects.all.each do |est_model|
           new_template = execute_duplication(est_model.id, new_organization.id)
@@ -456,6 +533,71 @@ class OrganizationsController < ApplicationController
             new_template.original_model_id = nil
             new_template.save
           end
+        end
+
+
+        # Update the Expert Judgement modules's Models instances
+        new_organization.expert_judgement_instances.each do |expert_judgment|
+          # Update all the new organization module_project's guw_model with the current guw_model
+          expert_judgment_copy_id = expert_judgment.copy_id
+          new_organization.module_projects.where(expert_judgement_instance_id: expert_judgment_copy_id).update_all(expert_judgement_instance_id: expert_judgment.id)
+        end
+
+        # Update the modules's GE Models instances
+        new_organization.ge_models.each do |ge_model|
+          # Update all the new organization module_project's guw_model with the current guw_model
+          ge_copy_id = ge_model.copy_id
+          new_organization.module_projects.where(ge_model_id: ge_copy_id).update_all(ge_model_id: ge_model.id)
+        end
+
+        # Copy the modules's GUW Models instances
+        new_organization.guw_models.each do |guw_model|
+
+          # Update all the new organization module_project's guw_model with the current guw_model
+          copy_id = guw_model.copy_id
+          new_organization.module_projects.where(guw_model_id: copy_id).update_all(guw_model_id: guw_model.id)
+
+          guw_model.guw_types.each do |guw_type|
+
+            # Copy the complexities technologies
+            guw_type.guw_complexities.each do |guw_complexity|
+              # Copy the complexities technologie
+              guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
+                new_organization_technology = new_organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
+                unless new_organization_technology.nil?
+                  guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
+                end
+              end
+
+              # Copy the complexities units of works
+              guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
+                new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
+                unless new_guw_work_unit.nil?
+                  guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
+                end
+              end
+            end
+
+            # Copy the GUW-attribute-complexity
+            guw_type.guw_type_complexities.each do |guw_type_complexity|
+              guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
+                new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
+                unless new_guw_attribute.nil?
+                  guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
+                end
+              end
+            end
+          end
+
+          #guw_model.guw_attributes.each do |guw_attribute|
+          #  guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
+          #    new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
+          #    #new_guw_type_complexity =
+          #    unless new_guw_type.nil?
+          #      guw_attr_complexity.update_attributes(guw_type_id: new_guw_type.id)
+          #    end
+          #  end
+          #end
         end
 
         flash[:notice] = I18n.t(:notice_organization_successful_created)
@@ -655,26 +797,27 @@ class OrganizationsController < ApplicationController
     authorize! :manage, Organization
 
     @organization = Organization.find(params[:id])
+    @organization_id = @organization.id
 
     case params[:commit]
       when I18n.t('delete')
         if params[:yes_confirmation] == 'selected'
           @organization.destroy
           if session[:organization_id] == params[:id]
-            session[:organization_id] = nil
+            session[:organization_id] = current_user.organizations.first  #session[:organization_id] = nil
           end
           flash[:notice] = I18n.t(:notice_organization_successful_deleted)
-          redirect_to '/organizationals_params'
+          redirect_to '/organizationals_params' and return
 
         else
           flash[:warning] = I18n.t('warning_need_organization_check_box_confirmation')
-          render :template => 'organizations/confirm_organization_deletion'
+          render :template => 'organizations/confirm_organization_deletion', :locals => {:organization_id => @organization_id}
         end
 
       when I18n.t('cancel')
-        redirect_to '/organizationals_params'
+        redirect_to '/organizationals_params' and return
       else
-        render :template => 'projects/confirm_organization_deletion'
+        render :template => 'projects/confirm_organization_deletion', :locals => {:organization_id => @organization_id}
     end
   end
 

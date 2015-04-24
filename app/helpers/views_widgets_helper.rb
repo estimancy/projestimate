@@ -172,7 +172,12 @@ module ViewsWidgetsHelper
 
               data_low = wbs_data_low.nil? ? nil : wbs_data_low
               data_high = wbs_data_high.nil? ? nil : wbs_data_high
-              data_probable = (wbs_data_probable.nil? || wbs_data_probable.empty?) ? nil : wbs_data_probable[wbs_activity_elt_root.id][:value]
+              wbs_activity_elt_root_data_probable = wbs_data_probable[wbs_activity_elt_root.id]
+              if wbs_activity_elt_root_data_probable.nil? || wbs_activity_elt_root_data_probable.empty?
+                data_probable = nil
+              else
+                data_probable = (wbs_data_probable.nil? || wbs_data_probable.empty?) ? nil : wbs_activity_elt_root_data_probable[:value]
+              end
             end
           end
         end

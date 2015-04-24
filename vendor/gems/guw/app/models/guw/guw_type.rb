@@ -12,7 +12,14 @@ module Guw
 
     amoeba do
       enable
-      include_association [:guw_complexities]
+      #saly##include_association [:guw_complexities]
+      include_association [:guw_complexities, :guw_type_complexities]
+
+      customize(lambda { |original_guw_type, new_guw_type|
+        new_guw_type.copy_id = original_guw_type.id
+      })
+
+      propagate
     end
 
     def to_s

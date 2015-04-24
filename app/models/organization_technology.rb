@@ -55,6 +55,17 @@ class OrganizationTechnology < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
+  # Add the amoeba gem for the copy
+  amoeba do
+    enable
+    exclude_association [:unit_of_works, :pbs_project_elements, :inputs, :organization_uow_complexities ]
+
+    customize(lambda { |original_organization_technology, new_organization_technology|
+      new_organization_technology.copy_id = original_organization_technology.id
+    })
+  end
+
+
   default_scope { order('alias DESC') }
 
   #Search fields

@@ -1,9 +1,19 @@
 module Ge
   class GeModel < ActiveRecord::Base
-    validates_presence_of :name, :organization_id
+    validates_presence_of :name####, :organization_id
 
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy
+
+    amoeba do
+      enable
+      exclude_association [:module_projects]
+
+      customize(lambda { |original_ge_model, new_ge_model|
+        new_ge_model.copy_id = original_ge_model.id
+      })
+    end
+
 
     def to_s(mp=nil)
       if mp.nil?

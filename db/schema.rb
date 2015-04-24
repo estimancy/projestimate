@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150421091933) do
+ActiveRecord::Schema.define(:version => 20150423123045) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -341,6 +341,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.boolean "enabled_cost"
     t.boolean "enabled_effort"
     t.boolean "enabled_size"
+    t.integer "copy_id"
   end
 
   create_table "factor_translations", :force => true do |t|
@@ -392,6 +393,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.float   "standard_unit_coefficient"
     t.string  "size_unit"
     t.boolean "enabled_input"
+    t.integer "copy_id"
   end
 
   create_table "groups", :force => true do |t|
@@ -454,6 +456,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "guw_model_id"
+    t.integer  "copy_id"
   end
 
   create_table "guw_guw_complexities", :force => true do |t|
@@ -492,6 +495,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.boolean  "three_points_estimation"
     t.string   "retained_size_unit"
     t.boolean  "one_level_model"
+    t.integer  "copy_id"
   end
 
   create_table "guw_guw_type_complexities", :force => true do |t|
@@ -510,6 +514,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
     t.integer  "guw_model_id"
+    t.integer  "copy_id"
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
@@ -567,6 +572,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.integer  "guw_model_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.integer  "copy_id"
   end
 
   create_table "input_cocomos", :force => true do |t|
@@ -656,6 +662,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.float    "cost_per_hour"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "copy_id"
   end
 
   create_table "organization_technologies", :force => true do |t|
@@ -667,6 +674,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.string   "state",              :limit => 20
+    t.integer  "copy_id"
   end
 
   create_table "organization_technologies_unit_of_works", :id => false, :force => true do |t|
@@ -1308,6 +1316,7 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "copy_number",             :default => 0
+    t.integer  "copy_id"
     t.boolean  "three_points_estimation"
     t.string   "cost_unit"
     t.float    "cost_unit_coefficient"
@@ -1317,9 +1326,6 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
   end
 
   add_index "wbs_activities", ["owner_id"], :name => "index_wbs_activities_on_owner_id"
-  add_index "wbs_activities", ["record_status_id"], :name => "index_wbs_activities_on_record_status_id"
-  add_index "wbs_activities", ["reference_id"], :name => "index_wbs_activities_on_reference_id"
-  add_index "wbs_activities", ["uuid"], :name => "index_wbs_activities_on_uuid", :unique => true
 
   create_table "wbs_activity_elements", :force => true do |t|
     t.string   "uuid"
@@ -1344,9 +1350,6 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
 
   add_index "wbs_activity_elements", ["ancestry"], :name => "index_wbs_activity_elements_on_ancestry"
   add_index "wbs_activity_elements", ["owner_id"], :name => "index_wbs_activity_elements_on_owner_id"
-  add_index "wbs_activity_elements", ["record_status_id"], :name => "index_wbs_activity_elements_on_record_status_id"
-  add_index "wbs_activity_elements", ["reference_id"], :name => "index_wbs_activity_elements_on_reference_id"
-  add_index "wbs_activity_elements", ["uuid"], :name => "index_wbs_activity_elements_on_uuid", :unique => true
   add_index "wbs_activity_elements", ["wbs_activity_id"], :name => "index_wbs_activity_elements_on_wbs_activity_id"
 
   create_table "wbs_activity_inputs", :force => true do |t|
@@ -1375,9 +1378,6 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
   end
 
   add_index "wbs_activity_ratio_elements", ["owner_id"], :name => "index_wbs_activity_ratio_elements_on_owner_id"
-  add_index "wbs_activity_ratio_elements", ["record_status_id"], :name => "index_wbs_activity_ratio_elements_on_record_status_id"
-  add_index "wbs_activity_ratio_elements", ["reference_id"], :name => "index_wbs_activity_ratio_elements_on_reference_id"
-  add_index "wbs_activity_ratio_elements", ["uuid"], :name => "index_wbs_activity_ratio_elements_on_uuid", :unique => true
 
   create_table "wbs_activity_ratio_profiles", :force => true do |t|
     t.integer  "wbs_activity_ratio_element_id"
@@ -1401,12 +1401,10 @@ ActiveRecord::Schema.define(:version => 20150421091933) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "copy_number",      :default => 0
+    t.integer  "copy_id"
   end
 
   add_index "wbs_activity_ratios", ["owner_id"], :name => "index_wbs_activity_ratios_on_owner_id"
-  add_index "wbs_activity_ratios", ["record_status_id"], :name => "index_wbs_activity_ratios_on_record_status_id"
-  add_index "wbs_activity_ratios", ["reference_id"], :name => "index_wbs_activity_ratios_on_reference_id"
-  add_index "wbs_activity_ratios", ["uuid"], :name => "index_wbs_activity_ratios_on_uuid", :unique => true
 
   create_table "wbs_project_elements", :force => true do |t|
     t.integer  "pe_wbs_project_id"

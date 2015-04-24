@@ -7,6 +7,9 @@ module Guw
 
     amoeba do
       enable
+      customize(lambda { |original_guw_attribute, new_guw_attribute|
+        new_guw_attribute.copy_id = original_guw_attribute.id
+      })
     end
 
     def to_s

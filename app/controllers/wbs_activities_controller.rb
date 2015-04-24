@@ -164,6 +164,7 @@ class WbsActivitiesController < ApplicationController
     begin
       old_wbs_activity = WbsActivity.find(params[:wbs_activity_id])
       new_wbs_activity = old_wbs_activity.amoeba_dup   #amoeba gem is configured in WbsActivity class model
+      new_wbs_activity.name = "Copy_#{ old_wbs_activity.copy_number.to_i+1} of #{old_wbs_activity.name}"
 
       new_wbs_activity.transaction do
         if new_wbs_activity.save(:validate => false)
