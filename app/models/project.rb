@@ -87,6 +87,7 @@ class Project < ActiveRecord::Base
 
     customize(lambda { |original_project, new_project|
       new_copy_number = original_project.copy_number.to_i+1
+      new_project.copy_id = original_project.id
       new_project.title = "#{original_project.title}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.title}"
       new_project.alias = "#{original_project.alias}(#{new_copy_number})" ###"Copy_#{ original_project.copy_number.to_i+1} of #{original_project.alias}"
       #new_project.version = '1.0'
