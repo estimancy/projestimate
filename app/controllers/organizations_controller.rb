@@ -565,8 +565,6 @@ class OrganizationsController < ApplicationController
           new_organization.module_projects.where(wbs_activity_id: wbs_activity_copy_id).update_all(wbs_activity_id: new_wbs_activity.id)
         end
 
-
-
         # copy the organization's projects
         organization_image.projects.all.each do |est_model|
           new_template = execute_duplication(est_model.id, new_organization.id)
