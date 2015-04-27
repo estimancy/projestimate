@@ -47,8 +47,8 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
   belongs_to :wbs_activity
 
-  has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup"
-  has_many :guw_unit_of_works, :through => :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWork"
+  has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup", dependent: :destroy
+  has_many :guw_unit_of_works, :through => :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWork", dependent: :destroy
   has_many :uow_inputs, :dependent => :destroy
 
   has_many :estimation_values, :dependent => :destroy
