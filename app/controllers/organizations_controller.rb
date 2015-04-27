@@ -184,7 +184,6 @@ class OrganizationsController < ApplicationController
       new_prj.description = old_prj.description
       #new_prj.creator_id = old_prj.creator_id
 
-      new_prj.ancestry = nil
       if old_prj.is_model
         new_prj.is_model = true
       else
@@ -302,16 +301,55 @@ class OrganizationsController < ApplicationController
           new_mp.guw_unit_of_work_groups.each do |guw_group|
             new_pbs_project_element = new_prj_components.find_by_copy_id(guw_group.pbs_project_element_id)
             new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-            guw_group.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+
+            #technology
+            new_technology = new_organization.organization_technologies.where(copy_id: guw_group.organization_technology_id).first
+            new_technology_id = new_technology.nil? ? nil : new_technology.id
+
+            guw_group.update_attributes(pbs_project_element_id: new_pbs_project_element_id, organization_technology_id: new_technology_id)
 
             # Update the group unit of works and attributes
             guw_group.guw_unit_of_works.each do |guw_uow|
               new_uow_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, guw_uow.module_project_id)
               new_uow_mp_id = new_uow_mp.nil? ? nil : new_uow_mp.id
 
+              #PBS
               new_pbs = new_prj_components.find_by_copy_id(guw_uow.pbs_project_element_id)
               new_pbs_id = new_pbs.nil? ? nil : new_pbs.id
-              guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id)
+
+              # GuwModel
+              new_guw_model = new_organization.guw_models.where(copy_id: guw_uow.guw_model_id).first
+              new_guw_model_id = new_guw_model.nil? ? nil : new_guw_model.id
+
+              # guw_work_unit
+              if !new_guw_model.nil?
+                new_guw_work_unit = new_guw_model.guw_work_units.where(copy_id: guw_uow.guw_work_unit_id).first
+                new_guw_work_unit_id = new_guw_work_unit.nil? ? nil : new_guw_work_unit.id
+
+                #Type
+                new_guw_type = new_guw_model.guw_types.where(copy_id: guw_uow.guw_type_id).first
+                new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+
+                #Complexity
+                if !guw_uow.guw_complexity_id.nil? && !new_guw_type.nil?
+                  new_complexity = new_guw_type.guw_complexities.where(copy_id: guw_uow.guw_complexity_id).first
+                  new_complexity_id = new_complexity.nil? ? nil : new_complexity.id
+                end
+
+              else
+                new_guw_work_unit_id = nil
+                new_guw_type_id = nil
+                new_complexity_id = nil
+              end
+
+              #Technology
+              uow_new_technology = new_organization.organization_technologies.where(copy_id: guw_uow.organization_technology_id).first
+              uow_new_technology_id = uow_new_technology.nil? ? nil : uow_new_technology.id
+
+
+              guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id, guw_model_id: new_guw_model_id,
+                                        guw_type_id: new_guw_type_id, guw_work_unit_id: new_guw_work_unit_id, guw_complexity_id: new_complexity_id,
+                                        organization_technology_id: uow_new_technology_id)
             end
           end
 
@@ -529,6 +567,7 @@ class OrganizationsController < ApplicationController
 
         # copy the organization's projects
         organization_image.projects.all.each do |est_model|
+        ###est_model = organization_image.projects.where(id: 4).first
           new_template = execute_duplication(est_model.id, new_organization.id)
           unless new_template.nil?
             new_template.is_model = est_model.is_model
@@ -537,6 +576,21 @@ class OrganizationsController < ApplicationController
           end
         end
 
+        #update the project's ancestry
+        organization_image.projects.all.each do |project|
+          unless project.ancestry.nil?
+            new_ancestor_ids_list = []
+            project.ancestor_ids.each do |ancestor_id|
+              ancestor = organization_image.projects.where(copy_id: ancestor_id).first
+              unless ancestor.nil?
+                ancestor_id = ancestor.id
+                new_ancestor_ids_list.push(ancestor_id)
+              end
+            end
+            project.ancestry = new_ancestor_ids_list.join('/')
+            project.save
+          end
+        end
 
         # Update the Expert Judgement modules's Models instances
         new_organization.expert_judgement_instances.each do |expert_judgment|

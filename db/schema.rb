@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150423123045) do
+ActiveRecord::Schema.define(:version => 20150427093606) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -468,6 +468,7 @@ ActiveRecord::Schema.define(:version => 20150423123045) do
     t.integer  "guw_type_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.integer  "copy_id"
   end
 
   create_table "guw_guw_complexity_technologies", :force => true do |t|
@@ -1039,6 +1040,7 @@ ActiveRecord::Schema.define(:version => 20150423123045) do
     t.text     "level_of_detail"
     t.text     "scope"
     t.integer  "copy_number"
+    t.integer  "copy_id"
     t.text     "included_wbs_activities"
     t.boolean  "is_locked"
     t.datetime "created_at"
