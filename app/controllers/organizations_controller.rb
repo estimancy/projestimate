@@ -334,6 +334,8 @@ class OrganizationsController < ApplicationController
                 if !guw_uow.guw_complexity_id.nil? && !new_guw_type.nil?
                   new_complexity = new_guw_type.guw_complexities.where(copy_id: guw_uow.guw_complexity_id).first
                   new_complexity_id = new_complexity.nil? ? nil : new_complexity.id
+                else
+                  new_complexity_id = nil
                 end
 
               else
@@ -567,7 +569,6 @@ class OrganizationsController < ApplicationController
 
         # copy the organization's projects
         organization_image.projects.all.each do |est_model|
-        ###est_model = organization_image.projects.where(id: 4).first
           new_template = execute_duplication(est_model.id, new_organization.id)
           unless new_template.nil?
             new_template.is_model = est_model.is_model

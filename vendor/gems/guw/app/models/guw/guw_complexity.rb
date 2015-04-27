@@ -13,6 +13,9 @@ module Guw
 
     amoeba do
       enable
+      customize(lambda { |original_guw_complexity, new_guw_complexity|
+        new_guw_complexity.copy_id = original_guw_complexity.id
+      })
     end
 
   end
