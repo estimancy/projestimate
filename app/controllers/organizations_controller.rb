@@ -585,8 +585,8 @@ class OrganizationsController < ApplicationController
             project.ancestor_ids.each do |ancestor_id|
               ancestor = organization_image.projects.where(copy_id: ancestor_id).first
               unless ancestor.nil?
-                ancestor_id = ancestor.id
-                new_ancestor_ids_list.push(ancestor_id)
+                #ancestor_id = ancestor.id
+                new_ancestor_ids_list.push(ancestor.id)
               end
             end
             project.ancestry = new_ancestor_ids_list.join('/')
