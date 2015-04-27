@@ -182,7 +182,9 @@ class OrganizationsController < ApplicationController
       new_prj.organization_id = new_organization_id
       new_prj.title = old_prj.title
       new_prj.description = old_prj.description
-      #new_prj.creator_id = old_prj.creator_id
+      new_estimation_status = new_organization.estimation_statuses.where(copy_id: new_prj.estimation_status_id).first
+      new_estimation_status_id = new_estimation_status.nil? ? nil : new_estimation_status.id
+      new_prj.estimation_status_id = new_estimation_status_id
 
       if old_prj.is_model
         new_prj.is_model = true
