@@ -9,6 +9,15 @@ class OrganizationProfile < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :organization_id
   validates :cost_per_hour, :numericality => { :allow_blank => true }
 
+  # Add the amoeba gem for the copy
+  amoeba do
+    enable
+    exclude_association [:wbs_activity_ratio_profiles]
+    customize(lambda { |original_organization_profile, new_organization_profile|
+      new_organization_profile.copy_id = original_organization_profile.id
+    })
+  end
+
   #Search fields
   scoped_search :on => [:name, :description]
 end

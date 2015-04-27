@@ -140,9 +140,12 @@ class Ability
         end
 
         grp.estimation_status_group_roles.each do |esgr|
-          esgr.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-            esgr.organization.projects.each do |project|
-              @array_status_groups << [permission.id, project.id, esgr.estimation_status.id]
+          esgr_security_level = esgr.project_security_level
+          unless esgr_security_level.nil?
+            esgr_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
+              esgr.organization.projects.each do |project|
+                @array_status_groups << [permission.id, project.id, esgr.estimation_status.id]
+              end
             end
           end
         end

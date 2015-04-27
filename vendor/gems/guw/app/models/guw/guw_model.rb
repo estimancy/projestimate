@@ -9,7 +9,7 @@ module Guw
 
     belongs_to :organization
 
-    validates_presence_of :name, :organization_id
+    validates_presence_of :name####, :organization_id
 
     #Search fields
     scoped_search :on => [:name]
@@ -17,6 +17,10 @@ module Guw
     amoeba do
       enable
       include_association [:guw_types, :guw_attributes, :guw_work_units]
+
+      customize(lambda { |original_guw_model, new_guw_model|
+        new_guw_model.copy_id = original_guw_model.id
+      })
     end
 
     def to_s(mp=nil)
