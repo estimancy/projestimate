@@ -577,11 +577,11 @@ class OrganizationsController < ApplicationController
         end
 
         #update the project's ancestry
-        organization_image.projects.all.each do |project|
+        new_organization.projects.all.each do |project|
           unless project.ancestry.nil?
             new_ancestor_ids_list = []
             project.ancestor_ids.each do |ancestor_id|
-              ancestor = organization_image.projects.where(copy_id: ancestor_id).first
+              ancestor = new_organization.projects.where(copy_id: ancestor_id).first
               unless ancestor.nil?
                 #ancestor_id = ancestor.id
                 new_ancestor_ids_list.push(ancestor.id)
