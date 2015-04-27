@@ -287,8 +287,8 @@ class ApplicationController < ActionController::Base
         @current_organization = Organization.find(session[:organization_id])
       end
     rescue
-      session[:organization_id] = nil
-      @current_organization = nil
+      session[:organization_id] = current_user.organizations.first
+      @current_organization = Organization.find(session[:organization_id])
     end
   end
 
