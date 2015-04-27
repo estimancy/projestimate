@@ -138,8 +138,7 @@ class Organization < ActiveRecord::Base
                          :work_element_types, :attribute_organizations, :organization_technologies,
                          :organization_profiles, :unit_of_works, :size_unit_types, :technology_size_types,
                          :organization_uow_complexities, :fields, :groups, :project_security_levels,
-                         :estimation_statuses, :guw_models]
-                         #:estimation_statuses, :guw_models, :ge_models, :expert_judgement_instances]
+                         :estimation_statuses, :guw_models, :ge_models, :expert_judgement_instances]
 
     customize(lambda { |original_organization, new_organization|
       new_copy_number = original_organization.copy_number.to_i+1
