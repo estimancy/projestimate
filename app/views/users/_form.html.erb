@@ -24,6 +24,9 @@
             <div id="collapseOne" class="accordion-body in collapse">
               <div class="accordion-inner">
                 <%= hidden_field_tag 'organization_id', @current_organization.id %>
+
+                Groupe de l'utilisateur : <%= @user.groups.join(", ") %>
+
                 <table>
                   <tr>
                     <td><%= f.input :first_name, :label => I18n.t('first_name'), :input_html => {:autofocus => (controller.action_name == 'new'), :class => 'input-large'} %></td>
@@ -42,8 +45,6 @@
                   <tr>
                     <td colspan="2"><%= f.input :email, :label => I18n.t('email'), :input_html => {:class => 'input-xxlarge'} %></td>
                   </tr>
-
-                  Groupe de l'utilisateur : <%= @user.groups.join(",") %>
 
                   <% if current_user.super_admin? %>
                     <tr>
@@ -189,8 +190,10 @@
                 <tr>
                   <td><%= group.name %></td>
                   <td><%= group.description %></td>
-                  <% gu = GroupsUsers.where(group_id: group.id, user_id: current_user.id).first %>
-                  <td class="center"><%= check_box_tag "groups[#{group.id}]", "accepted", !gu.nil? %></td>
+                  <% unless @user.new_record? %>
+                    <% gu = GroupsUsers.where(group_id: group.id, user_id: @user.id).first %>
+                    <td class="center"><%= check_box_tag "groups[#{group.id}]", "accepted", !gu.nil? %></td>
+                  <% end %>
                   <td class="center">
                     <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
                     <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
