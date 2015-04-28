@@ -71,13 +71,16 @@ public
 
     set_page_title 'New user'
 
-    @organization = Organization.find_by_id(params[:organization_id])
+    @organization_id = params[:organization_id]
+    unless @organization_id.nil? || @organization_id.empty?
+      @organization = Organization.find_by_id(params[:organization_id])
+      @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
+    end
+
     @user = User.new
     @user.auth_type = AuthMethod.first.id
     @generated_password = SecureRandom.hex(4)
-    @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
     @organizations = current_user.organizations
-
   end
 
   def create
@@ -85,7 +88,12 @@ public
 
     set_page_title 'New user'
 
-    @organization = Organization.find(params[:organization_id])
+    @organization_id = params[:organization_id]
+    unless @organization_id.nil? || @organization_id.empty?
+      @organization = Organization.find_by_id(params[:organization_id])
+      @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
+      @user.groups << @user_group
+    end
 
     @user = User.new(params[:user])
     @user.auth_type = params[:user][:auth_type]
@@ -93,25 +101,28 @@ public
     @user.project_ids = params[:user][:project_ids]
     @user.organization_ids = params[:user][:organization_ids]
     @user.group_ids = params[:user][:group_ids]
-    @user.groups << @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
 
     if @user.save
-      #@organization = @current_organization  #@user.organization
-      user_first_organization = OrganizationsUsers.new(organization_id: @organization.id, user_id: @user.id)
-      user_first_organization.save
-
       flash[:notice] = I18n.t(:notice_account_successful_created)
-      redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
+      if @organization.nil?
+        redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path) and return
+      else
+        user_first_organization = OrganizationsUsers.new(organization_id: @organization.id, user_id: @user.id)
+        user_first_organization.save
+        redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization_id)) and return
+      end
+
     else
-      @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
-      render(:new)
+      render(:new, organization_id: @organization_id)
     end
   end
 
   def edit
     @user = User.find(params[:id])
-    @organization = Organization.find(params[:organization_id])
-    @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
+    @organization_id = params[:organization_id]
+    unless @organization_id.nil? || @organization_id.empty?
+      @organization = Organization.find(params[:organization_id])
+    end
 
     if current_user == @user
       set_page_title 'Edit your user account'
@@ -131,7 +142,10 @@ public
     set_page_title 'Edit user'
 
     #Get the current organization
-    @organization = Organization.find(params[:organization_id])
+    @organization_id = params[:organization_id]
+    unless @organization_id.nil? || @organization_id.empty?
+      @organization = Organization.find(params[:organization_id])
+    end
 
     #unless params[:groups].nil?
     #  @user.group_ids = params[:groups].keys
@@ -149,8 +163,11 @@ public
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
     #user's groups
-    @user.group_ids = params[:user][:group_ids]
-    @user.groups << @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
+    if @organization_id.nil? || @organization_id.empty?
+      @user.group_ids = @user.group_ids
+    else
+      @user.group_ids = params[:user][:group_ids]
+    end
 
     #validation conditions
     if params[:user][:password].blank?
@@ -172,11 +189,15 @@ public
       set_user_language
       flash[:notice] = I18n.t (:notice_account_successful_updated)
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
-      redirect_to redirect_apply(edit_user_path(@user, organization_id: @organization.id ), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
+      if @organization.nil?
+        redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path) and return
+      else
+        redirect_to redirect_apply(edit_user_path(@user, organization_id: @organization_id ), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization_id))
+      end
+
     else
       @user_current_password = params[:user][:current_password];  @user_password = params[:user][:password]; @user_password_confirmation = params[:user][:password_confirmation]
-      @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
-      render(:edit, organization_id: @organization.id)
+      render(:edit, organization_id: @organization_id)
     end
   end
 

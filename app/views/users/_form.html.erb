@@ -23,7 +23,7 @@
             </div>
             <div id="collapseOne" class="accordion-body in collapse">
               <div class="accordion-inner">
-                <%= hidden_field_tag 'organization_id', @organization.id %>
+                <%= hidden_field_tag 'organization_id', @organization_id %>
 
                 Groupe de l'utilisateur : <%= @user.groups.join(", ") %>
 
@@ -52,13 +52,15 @@
                     </tr>
                   <% end %>
 
-                  <tr><td>
-                    <% if @user.new_record? %>
-                        <%= f.association :groups, collection: @organization.groups, as: :check_boxes, :checked => [@user_group.id], disabled: [@user_group.id], prompt: I18n.t(:groups) %>
-                    <% else %>
-                        <%= f.association :groups, collection: @organization.groups, as: :check_boxes, disabled: [@user_group.id], prompt: I18n.t(:groups) %>
-                    <% end %>
-                  </td></tr>
+                  <% unless @organization_id.nil? || @organization_id.empty? %>
+                      <tr><td>
+                        <% if @user.new_record? %>
+                            <%= f.association :groups, collection: @organization.groups, as: :check_boxes, :checked => [@user_group.id], disabled: [@user_group.id], prompt: I18n.t(:groups) %>
+                        <% else %>
+                            <%= f.association :groups, collection: @organization.groups, as: :check_boxes, prompt: I18n.t(:groups) %>
+                        <% end %>
+                      </td></tr>
+                  <% end %>
                 </table>
               </div>
             </div>
