@@ -614,7 +614,7 @@ class OrganizationsController < ApplicationController
           new_organization.module_projects.where(ge_model_id: ge_copy_id).update_all(ge_model_id: ge_model.id)
         end
 
-        # Copy the modules's GUW Models instances
+        # Terminate the modules's GUW Models instances duplication
         new_organization.guw_models.each do |guw_model|
 
           # Update all the new organization module_project's guw_model with the current guw_model
