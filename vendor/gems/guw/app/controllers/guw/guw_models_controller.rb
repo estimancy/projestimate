@@ -89,8 +89,52 @@ class Guw::GuwModelsController < ApplicationController
 
   def duplicate
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    test = @guw_model.amoeba_dup
-    test.save
+    @guw_model.duplicate_model
     redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
+
+
+  def duplicate_save
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @organization = @guw_model.organization
+    guw_model = @guw_model.amoeba_dup
+
+    if guw_model.save
+
+      guw_model.guw_types.each do |guw_type|
+
+        # Copy the complexities technologies
+        guw_type.guw_complexities.each do |guw_complexity|
+          # Copy the complexities technologie
+          guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
+            new_organization_technology = @organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
+            unless new_organization_technology.nil?
+              guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
+            end
+          end
+
+          # Copy the complexities units of works
+          guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
+            new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
+            unless new_guw_work_unit.nil?
+              guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
+            end
+          end
+        end
+
+        # Copy the GUW-attribute-complexity
+        guw_type.guw_type_complexities.each do |guw_type_complexity|
+          guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
+            new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
+            unless new_guw_attribute.nil?
+              guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
+            end
+          end
+        end
+      end
+    end
+
+    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+  end
+
 end

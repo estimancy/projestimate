@@ -164,7 +164,6 @@ class OrganizationsController < ApplicationController
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
     @projects = @organization.projects.where(is_model: false).all
-
   end
 
   # New organization from image
@@ -572,13 +571,21 @@ class OrganizationsController < ApplicationController
           new_template = execute_duplication(est_model.id, new_organization.id)
           unless new_template.nil?
             new_template.is_model = est_model.is_model
-            new_template.original_model_id = nil
+            #new_template.original_model_id = nil
             new_template.save
           end
         end
 
         #update the project's ancestry
         new_organization.projects.all.each do |project|
+
+          unless project.original_model_id.nil?
+            new_original_model = new_organization.projects.where(copy_id: project.original_model_id).first
+            new_original_model_id = new_original_model.nil? ? nil : new_original_model.id
+            project.original_model_id = new_original_model_id
+            project.save
+          end
+
           unless project.ancestry.nil?
             new_ancestor_ids_list = []
             project.ancestor_ids.each do |ancestor_id|
