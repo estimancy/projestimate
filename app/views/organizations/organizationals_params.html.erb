@@ -29,7 +29,7 @@
               <% if can?(:show_organizations, Organization) && !i.is_image_organization %>
                 <%= link_to i.name, organization_estimations_path(i) %>
               <% else %>
-                  <%= i.name %>
+                <%= i.name %>
               <% end %>
             </td>
             <% if current_user.super_admin? %>
