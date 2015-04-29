@@ -568,6 +568,7 @@ class OrganizationsController < ApplicationController
 
         # copy the organization's projects
         organization_image.projects.all.each do |est_model|
+          #DuplicateWorker.perform(est_model.id, new_organization.id)
           new_template = execute_duplication(est_model.id, new_organization.id)
           unless new_template.nil?
             new_template.is_model = est_model.is_model

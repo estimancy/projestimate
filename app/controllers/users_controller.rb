@@ -70,6 +70,7 @@ public
     authorize! :manage, User
 
     set_page_title 'New user'
+    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @organization_id = params[:organization_id]
     unless @organization_id.nil? || @organization_id.empty?
@@ -88,7 +89,8 @@ public
 
     set_page_title 'New user'
 
-    @organization_id = params[:organization_id]
+    @organization = Organization.find(params[:organization_id])
+
     unless @organization_id.nil? || @organization_id.empty?
       @organization = Organization.find_by_id(params[:organization_id])
       @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
@@ -100,7 +102,11 @@ public
     @user.language_id = params[:user][:language_id]
     @user.project_ids = params[:user][:project_ids]
     @user.organization_ids = params[:user][:organization_ids]
-    @user.group_ids = params[:user][:group_ids]
+
+    unless params[:groups].nil?
+      @user.group_ids = params[:groups].keys
+      @user.save
+    end
 
     if @user.save
       flash[:notice] = I18n.t(:notice_account_successful_created)
@@ -118,11 +124,14 @@ public
   end
 
   def edit
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
+
     @user = User.find(params[:id])
-    @organization_id = params[:organization_id]
-    unless @organization_id.nil? || @organization_id.empty?
-      @organization = Organization.find(params[:organization_id])
-    end
+    #@organization = Organization.find(params[:organization_id])
+    #unless @organization_id.nil? || @organization_id.empty?
+    #  @organization = Organization.find(params[:organization_id])
+    #end
 
     if current_user == @user
       set_page_title 'Edit your user account'
@@ -147,10 +156,10 @@ public
       @organization = Organization.find(params[:organization_id])
     end
 
-    #unless params[:groups].nil?
-    #  @user.group_ids = params[:groups].keys
-    #  @user.save
-    #end
+    unless params[:groups].nil?
+      @user.group_ids = params[:groups].keys
+      @user.save
+    end
 
     # Get the Application authType
     application_auth_type = AuthMethod.where('name = ? AND record_status_id =?', 'Application', @defined_record_status.id).first
@@ -162,12 +171,6 @@ public
 
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
-    #user's groups
-    if @organization_id.nil? || @organization_id.empty?
-      @user.group_ids = @user.group_ids
-    else
-      @user.group_ids = params[:user][:group_ids]
-    end
 
     #validation conditions
     if params[:user][:password].blank?
