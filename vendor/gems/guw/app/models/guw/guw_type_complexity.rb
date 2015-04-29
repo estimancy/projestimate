@@ -7,9 +7,9 @@ module Guw
 
     amoeba do
       enable
-
+      exclude_association [:guw_attribute_complexities]
       customize(lambda { |original_guw_type_complexity, new_guw_type_complexity|
-        #new_guw_type_complexity.copy_id = original_guw_type_complexity.id
+        new_guw_type_complexity.copy_id = original_guw_type_complexity.id
       })
     end
 

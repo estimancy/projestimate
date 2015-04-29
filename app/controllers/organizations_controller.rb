@@ -349,7 +349,6 @@ class OrganizationsController < ApplicationController
               uow_new_technology = new_organization.organization_technologies.where(copy_id: guw_uow.organization_technology_id).first
               uow_new_technology_id = uow_new_technology.nil? ? nil : uow_new_technology.id
 
-
               guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id, guw_model_id: new_guw_model_id,
                                         guw_type_id: new_guw_type_id, guw_work_unit_id: new_guw_work_unit_id, guw_complexity_id: new_complexity_id,
                                         organization_technology_id: uow_new_technology_id)
@@ -643,26 +642,46 @@ class OrganizationsController < ApplicationController
               end
             end
 
-            # Copy the GUW-attribute-complexity
-            guw_type.guw_type_complexities.each do |guw_type_complexity|
-              guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
-                new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
-                unless new_guw_attribute.nil?
-                  guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
-                end
+            #Guw UnitOfWorkAttributes
+            guw_type.guw_unit_of_works.each do |guw_unit_of_work|
+              guw_unit_of_work.guw_unit_of_work_attributes.each do |guw_uow_attr|
+                new_guw_type = guw_model.guw_types.where(copy_id: guw_uow_attr.guw_type_id).first
+                new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+
+                new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_uow_attr.guw_attribute_id).first
+                new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
+
+                guw_uow_attr.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
+
               end
             end
+
+            # Copy the GUW-attribute-complexity
+            #guw_type.guw_type_complexities.each do |guw_type_complexity|
+            #  guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
+            #
+            #    new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
+            #    new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
+            #
+            #    new_guw_type = guw_model.guw_types.where(copy_id: guw_type_complexity.guw_type_id).first
+            #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+            #
+            #    guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
+            #  end
+            #end
           end
 
-          #guw_model.guw_attributes.each do |guw_attribute|
-          #  guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
-          #    new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
-          #    #new_guw_type_complexity =
-          #    unless new_guw_type.nil?
-          #      guw_attr_complexity.update_attributes(guw_type_id: new_guw_type.id)
-          #    end
-          #  end
-          #end
+          guw_model.guw_attributes.each do |guw_attribute|
+            guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
+              new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
+              new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+
+              new_guw_type_complexity = new_guw_type.guw_type_complexities.where(copy_id: guw_attr_complexity.guw_type_complexity_id).first
+              new_guw_type_complexity_id = new_guw_type_complexity.nil? ? nil : new_guw_type_complexity.id
+
+              guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_type_complexity_id: new_guw_type_complexity_id )
+            end
+          end
         end
 
         flash[:notice] = I18n.t(:notice_organization_successful_created)

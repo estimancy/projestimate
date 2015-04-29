@@ -66,7 +66,7 @@ module Guw
               guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
                 new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
                 unless new_guw_attribute.nil?
-                  guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
+                  guw_attr_complexity.update_attributes(guw_type_id: new_guw_attribute.guw_type_id, guw_attribute_id: new_guw_attribute.id)
                 end
               end
             end
