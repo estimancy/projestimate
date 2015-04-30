@@ -450,225 +450,228 @@ class OrganizationsController < ApplicationController
       end
       new_organization.is_image_organization = false
 
-      if new_organization.save
-        organization_image.save #Original organization copy number will be incremented to 1
+      #new_organization.transaction do
 
-        #Copy the organization estimation_statuses workflow and groups/roles
-        new_estimation_statuses = new_organization.estimation_statuses
-        new_estimation_statuses.each do |estimation_status|
-          copied_status = EstimationStatus.find(estimation_status.copy_id)
+        if new_organization.save
+          organization_image.save #Original organization copy number will be incremented to 1
 
-          #Get the to_transitions for the Statuses Workflow
-          copied_status.to_transition_statuses.each do |to_transition|
-            new_to_transition = new_estimation_statuses.where(copy_id: to_transition.id).first
-            unless new_to_transition.nil?
-              StatusTransition.create(from_transition_status_id: estimation_status.id, to_transition_status_id: new_to_transition.id)
-            end
-          end
-        end
+          #Copy the organization estimation_statuses workflow and groups/roles
+          new_estimation_statuses = new_organization.estimation_statuses
+          new_estimation_statuses.each do |estimation_status|
+            copied_status = EstimationStatus.find(estimation_status.copy_id)
 
-        #Get the estimation_statuses role / by group
-        new_organization.project_security_levels.each do |project_security_level|
-          project_security_level.estimation_status_group_roles.each do |group_role|
-            new_group = new_organization.groups.where(copy_id: group_role.group_id).first
-            estimation_status = new_organization.estimation_statuses.where(copy_id: group_role.estimation_status_id).first
-            unless estimation_status.nil?
-              group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
-            end
-          end
-        end
-
-        #Then copy the image organization estimation models
-        if params[:action_name] == "new_organization_from_image"
-          # Create a user in the Admin group of the new organization
-          admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
-          # Add the user to the created organization
-          admin_group = new_organization.groups.where(name: '*USER').first #first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
-          unless admin_group.nil?
-            admin_user.groups << admin_group
-            admin_user.save
-          end
-
-        elsif params[:action_name] == "copy_organization"
-          # add users to groups
-          organization_image.groups.each do |group|
-            new_group = new_organization.groups.where(copy_id: group.id).first
-            unless new_group.nil?
-              new_group.users = group.users
-              new_group.save
-            end
-          end
-        end
-
-
-        # Copy the WBS-Activities modules's Models instances
-        organization_image.wbs_activities.each do |old_wbs_activity|
-          new_wbs_activity = old_wbs_activity.amoeba_dup   #amoeba gem is configured in WbsActivity class model
-          new_wbs_activity.organization_id = new_organization.id
-
-          new_wbs_activity.transaction do
-            if new_wbs_activity.save
-              old_wbs_activity.save  #Original WbsActivity copy number will be incremented to 1
-
-              #we also have to save to wbs_activity_ratio
-              old_wbs_activity.wbs_activity_ratios.each do |ratio|
-                ratio.save
+            #Get the to_transitions for the Statuses Workflow
+            copied_status.to_transition_statuses.each do |to_transition|
+              new_to_transition = new_estimation_statuses.where(copy_id: to_transition.id).first
+              unless new_to_transition.nil?
+                StatusTransition.create(from_transition_status_id: estimation_status.id, to_transition_status_id: new_to_transition.id)
               end
+            end
+          end
 
-              #get new WBS Ratio elements
-              new_wbs_activity_ratio_elts = []
-              new_wbs_activity.wbs_activity_ratios.each do |ratio|
-                ratio.wbs_activity_ratio_elements.each do |ratio_elt|
-                  new_wbs_activity_ratio_elts << ratio_elt
+          #Get the estimation_statuses role / by group
+          new_organization.project_security_levels.each do |project_security_level|
+            project_security_level.estimation_status_group_roles.each do |group_role|
+              new_group = new_organization.groups.where(copy_id: group_role.group_id).first
+              estimation_status = new_organization.estimation_statuses.where(copy_id: group_role.estimation_status_id).first
+              unless estimation_status.nil?
+                group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
+              end
+            end
+          end
 
-                  #Update ratio elements profiles
-                  ratio_elt.wbs_activity_ratio_profiles.each do |activity_ratio_profile|
-                    new_organization_profile = new_organization.organization_profiles.where(copy_id: activity_ratio_profile.organization_profile_id).first
-                    unless new_organization_profile.nil?
-                      activity_ratio_profile.update_attribute(:organization_profile_id, new_organization_profile.id)
+          #Then copy the image organization estimation models
+          if params[:action_name] == "new_organization_from_image"
+            # Create a user in the Admin group of the new organization
+            admin_user = User.new(first_name: @firstname, last_name: @lastname, login_name: @login_name, email: @email, password: @password, password_confirmation: @password, super_admin: false)
+            # Add the user to the created organization
+            admin_group = new_organization.groups.where(name: '*USER').first #first_or_create(name: "*USER", organization_id: new_organization.id, description: "Groupe créé par défaut dans l'organisation pour la gestion des administrateurs")
+            unless admin_group.nil?
+              admin_user.groups << admin_group
+              admin_user.save
+            end
+
+          elsif params[:action_name] == "copy_organization"
+            # add users to groups
+            organization_image.groups.each do |group|
+              new_group = new_organization.groups.where(copy_id: group.id).first
+              unless new_group.nil?
+                new_group.users = group.users
+                new_group.save
+              end
+            end
+          end
+
+
+          # Copy the WBS-Activities modules's Models instances
+          organization_image.wbs_activities.each do |old_wbs_activity|
+            new_wbs_activity = old_wbs_activity.amoeba_dup   #amoeba gem is configured in WbsActivity class model
+            new_wbs_activity.organization_id = new_organization.id
+
+            new_wbs_activity.transaction do
+              if new_wbs_activity.save
+                old_wbs_activity.save  #Original WbsActivity copy number will be incremented to 1
+
+                #we also have to save to wbs_activity_ratio
+                old_wbs_activity.wbs_activity_ratios.each do |ratio|
+                  ratio.save
+                end
+
+                #get new WBS Ratio elements
+                new_wbs_activity_ratio_elts = []
+                new_wbs_activity.wbs_activity_ratios.each do |ratio|
+                  ratio.wbs_activity_ratio_elements.each do |ratio_elt|
+                    new_wbs_activity_ratio_elts << ratio_elt
+
+                    #Update ratio elements profiles
+                    ratio_elt.wbs_activity_ratio_profiles.each do |activity_ratio_profile|
+                      new_organization_profile = new_organization.organization_profiles.where(copy_id: activity_ratio_profile.organization_profile_id).first
+                      unless new_organization_profile.nil?
+                        activity_ratio_profile.update_attribute(:organization_profile_id, new_organization_profile.id)
+                      end
                     end
                   end
                 end
-              end
 
-              #Managing the component tree
-              old_wbs_activity_elements = old_wbs_activity.wbs_activity_elements.order('ancestry_depth asc')
-              old_wbs_activity_elements.each do |old_elt|
-                new_elt = old_elt.amoeba_dup
-                new_elt.wbs_activity_id = new_wbs_activity.id
-                new_elt.save#(:validate => false)
+                #Managing the component tree
+                old_wbs_activity_elements = old_wbs_activity.wbs_activity_elements.order('ancestry_depth asc')
+                old_wbs_activity_elements.each do |old_elt|
+                  new_elt = old_elt.amoeba_dup
+                  new_elt.wbs_activity_id = new_wbs_activity.id
+                  new_elt.save#(:validate => false)
 
-                unless new_elt.is_root?
-                  new_ancestor_ids_list = []
-                  new_elt.ancestor_ids.each do |ancestor_id|
-                    ancestor = WbsActivityElement.find_by_wbs_activity_id_and_copy_id(new_elt.wbs_activity_id, ancestor_id)
-                    unless ancestor.nil?
-                      ancestor_id = ancestor.id
-                      new_ancestor_ids_list.push(ancestor_id)
+                  unless new_elt.is_root?
+                    new_ancestor_ids_list = []
+                    new_elt.ancestor_ids.each do |ancestor_id|
+                      ancestor = WbsActivityElement.find_by_wbs_activity_id_and_copy_id(new_elt.wbs_activity_id, ancestor_id)
+                      unless ancestor.nil?
+                        ancestor_id = ancestor.id
+                        new_ancestor_ids_list.push(ancestor_id)
+                      end
                     end
+                    new_elt.ancestry = new_ancestor_ids_list.join('/')
+
+                    corresponding_ratio_elts = new_wbs_activity_ratio_elts.select { |ratio_elt| ratio_elt.wbs_activity_element_id == new_elt.copy_id}.each do |ratio_elt|
+                      ratio_elt.update_attribute('wbs_activity_element_id', new_elt.id)
+                    end
+
+                    new_elt.save(:validate => false)
                   end
-                  new_elt.ancestry = new_ancestor_ids_list.join('/')
+                end
+              else
+                flash[:error] = "#{new_wbs_activity.errors.full_messages.to_sentence}"
+              end
+            end
 
-                  corresponding_ratio_elts = new_wbs_activity_ratio_elts.select { |ratio_elt| ratio_elt.wbs_activity_element_id == new_elt.copy_id}.each do |ratio_elt|
-                    ratio_elt.update_attribute('wbs_activity_element_id', new_elt.id)
+            # Update all the new organization module_project's guw_model with the current guw_model
+            wbs_activity_copy_id = old_wbs_activity.id
+            new_organization.module_projects.where(wbs_activity_id: wbs_activity_copy_id).update_all(wbs_activity_id: new_wbs_activity.id)
+          end
+
+          # copy the organization's projects
+          organization_image.projects.all.each do |est_model|
+            #DuplicateWorker.perform(est_model.id, new_organization.id)
+            new_template = execute_duplication(est_model.id, new_organization.id)
+            unless new_template.nil?
+              new_template.is_model = est_model.is_model
+              #new_template.original_model_id = nil
+              new_template.save
+            end
+          end
+
+          #update the project's ancestry
+          new_organization.projects.all.each do |project|
+
+            unless project.original_model_id.nil?
+              new_original_model = new_organization.projects.where(copy_id: project.original_model_id).first
+              new_original_model_id = new_original_model.nil? ? nil : new_original_model.id
+              project.original_model_id = new_original_model_id
+              project.save
+            end
+
+            unless project.ancestry.nil?
+              new_ancestor_ids_list = []
+              project.ancestor_ids.each do |ancestor_id|
+                ancestor = new_organization.projects.where(copy_id: ancestor_id).first
+                unless ancestor.nil?
+                  #ancestor_id = ancestor.id
+                  new_ancestor_ids_list.push(ancestor.id)
+                end
+              end
+              project.ancestry = new_ancestor_ids_list.join('/')
+              project.save
+            end
+          end
+
+          # Update the Expert Judgement modules's Models instances
+          new_organization.expert_judgement_instances.each do |expert_judgment|
+            # Update all the new organization module_project's guw_model with the current guw_model
+            expert_judgment_copy_id = expert_judgment.copy_id
+            new_organization.module_projects.where(expert_judgement_instance_id: expert_judgment_copy_id).update_all(expert_judgement_instance_id: expert_judgment.id)
+          end
+
+          # Update the modules's GE Models instances
+          new_organization.ge_models.each do |ge_model|
+            # Update all the new organization module_project's guw_model with the current guw_model
+            ge_copy_id = ge_model.copy_id
+            new_organization.module_projects.where(ge_model_id: ge_copy_id).update_all(ge_model_id: ge_model.id)
+          end
+
+          # Terminate the modules's GUW Models instances duplication
+          new_organization.guw_models.each do |guw_model|
+
+            # Update all the new organization module_project's guw_model with the current guw_model
+            copy_id = guw_model.copy_id
+            new_organization.module_projects.where(guw_model_id: copy_id).update_all(guw_model_id: guw_model.id)
+
+            guw_model.guw_types.each do |guw_type|
+
+              # Copy the complexities technologies
+              guw_type.guw_complexities.each do |guw_complexity|
+                # Copy the complexities technologie
+                guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
+                  new_organization_technology = new_organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
+                  unless new_organization_technology.nil?
+                    guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
                   end
-
-                  new_elt.save(:validate => false)
                 end
-              end
-            else
-              flash[:error] = "#{new_wbs_activity.errors.full_messages.to_sentence}"
-            end
-          end
 
-          # Update all the new organization module_project's guw_model with the current guw_model
-          wbs_activity_copy_id = old_wbs_activity.id
-          new_organization.module_projects.where(wbs_activity_id: wbs_activity_copy_id).update_all(wbs_activity_id: new_wbs_activity.id)
-        end
-
-        # copy the organization's projects
-        organization_image.projects.all.each do |est_model|
-          #DuplicateWorker.perform(est_model.id, new_organization.id)
-          new_template = execute_duplication(est_model.id, new_organization.id)
-          unless new_template.nil?
-            new_template.is_model = est_model.is_model
-            #new_template.original_model_id = nil
-            new_template.save
-          end
-        end
-
-        #update the project's ancestry
-        new_organization.projects.all.each do |project|
-
-          unless project.original_model_id.nil?
-            new_original_model = new_organization.projects.where(copy_id: project.original_model_id).first
-            new_original_model_id = new_original_model.nil? ? nil : new_original_model.id
-            project.original_model_id = new_original_model_id
-            project.save
-          end
-
-          unless project.ancestry.nil?
-            new_ancestor_ids_list = []
-            project.ancestor_ids.each do |ancestor_id|
-              ancestor = new_organization.projects.where(copy_id: ancestor_id).first
-              unless ancestor.nil?
-                #ancestor_id = ancestor.id
-                new_ancestor_ids_list.push(ancestor.id)
-              end
-            end
-            project.ancestry = new_ancestor_ids_list.join('/')
-            project.save
-          end
-        end
-
-        # Update the Expert Judgement modules's Models instances
-        new_organization.expert_judgement_instances.each do |expert_judgment|
-          # Update all the new organization module_project's guw_model with the current guw_model
-          expert_judgment_copy_id = expert_judgment.copy_id
-          new_organization.module_projects.where(expert_judgement_instance_id: expert_judgment_copy_id).update_all(expert_judgement_instance_id: expert_judgment.id)
-        end
-
-        # Update the modules's GE Models instances
-        new_organization.ge_models.each do |ge_model|
-          # Update all the new organization module_project's guw_model with the current guw_model
-          ge_copy_id = ge_model.copy_id
-          new_organization.module_projects.where(ge_model_id: ge_copy_id).update_all(ge_model_id: ge_model.id)
-        end
-
-        # Terminate the modules's GUW Models instances duplication
-        new_organization.guw_models.each do |guw_model|
-
-          # Update all the new organization module_project's guw_model with the current guw_model
-          copy_id = guw_model.copy_id
-          new_organization.module_projects.where(guw_model_id: copy_id).update_all(guw_model_id: guw_model.id)
-
-          guw_model.guw_types.each do |guw_type|
-
-            # Copy the complexities technologies
-            guw_type.guw_complexities.each do |guw_complexity|
-              # Copy the complexities technologie
-              guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
-                new_organization_technology = new_organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
-                unless new_organization_technology.nil?
-                  guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
+                # Copy the complexities units of works
+                guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
+                  new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
+                  unless new_guw_work_unit.nil?
+                    guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
+                  end
                 end
               end
 
-              # Copy the complexities units of works
-              guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
-                new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
-                unless new_guw_work_unit.nil?
-                  guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
+              # Copy the GUW-attribute-complexity
+              guw_type.guw_type_complexities.each do |guw_type_complexity|
+                guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
+                  new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
+                  unless new_guw_attribute.nil?
+                    guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
+                  end
                 end
               end
             end
 
-            # Copy the GUW-attribute-complexity
-            guw_type.guw_type_complexities.each do |guw_type_complexity|
-              guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
-                new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
-                unless new_guw_attribute.nil?
-                  guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
-                end
-              end
-            end
+            #guw_model.guw_attributes.each do |guw_attribute|
+            #  guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
+            #    new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
+            #    #new_guw_type_complexity =
+            #    unless new_guw_type.nil?
+            #      guw_attr_complexity.update_attributes(guw_type_id: new_guw_type.id)
+            #    end
+            #  end
+            #end
           end
 
-          #guw_model.guw_attributes.each do |guw_attribute|
-          #  guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
-          #    new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
-          #    #new_guw_type_complexity =
-          #    unless new_guw_type.nil?
-          #      guw_attr_complexity.update_attributes(guw_type_id: new_guw_type.id)
-          #    end
-          #  end
-          #end
+          flash[:notice] = I18n.t(:notice_organization_successful_created)
+        else
+          flash[:error] = I18n.t('errors.messages.not_saved')
         end
-
-        flash[:notice] = I18n.t(:notice_organization_successful_created)
-      else
-        flash[:error] = I18n.t('errors.messages.not_saved')
-      end
+      #end
     end
     redirect_to :back
   end
