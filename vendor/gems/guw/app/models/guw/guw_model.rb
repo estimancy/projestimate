@@ -33,9 +33,9 @@ module Guw
 
     #Duplicate the GuwModel
     def duplicate_model
-      guw_model = self
+      last_guw_model = self
       organization = self.organization
-      guw_model = guw_model.amoeba_dup
+      guw_model = last_guw_model.amoeba_dup
 
       guw_model.transaction do
         if guw_model.save
@@ -84,8 +84,8 @@ module Guw
             end
           end
         end
+        #guw_model
       end
     end
-
   end
 end
