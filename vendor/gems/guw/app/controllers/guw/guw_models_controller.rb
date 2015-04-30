@@ -131,7 +131,7 @@ class Guw::GuwModelsController < ApplicationController
             uow.guw_work_unit,
             uow.organization_technology,
             uow.tracking,
-            uow.guw_complexity.name,
+            (uow.guw_complexity.nil? ? '' : uow.guw_complexity.name),
             uow.effort,
             uow.ajusted_effort
         ]
