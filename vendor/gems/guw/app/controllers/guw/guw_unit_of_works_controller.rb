@@ -474,9 +474,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   end
 
-  def create_notes
-  end
-
   private
   def reorder(group)
     group.guw_unit_of_works.order("display_order asc, updated_at asc").each_with_index do |u, i|

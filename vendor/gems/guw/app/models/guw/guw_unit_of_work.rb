@@ -8,6 +8,7 @@ module Guw
     belongs_to :guw_complexity
     belongs_to :guw_unit_of_work_group
     belongs_to :organization_technology
+    belongs_to :guw_work_unit
 
     has_many :guw_unit_of_work_attributes, dependent: :destroy
 

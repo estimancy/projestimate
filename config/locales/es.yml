@@ -1683,7 +1683,7 @@ es:
   notice_cannot_view_modules_instances: "You don't have the rights to view the modules instances"
   warning_no_modify_permission_on_project_status: "You don't have the rights to modify the estimation in its actual status"
 
-  is_image_organization: "Is an image organization ?"
+  is_image_organization: "Image organization"
   new_organization_from_image: "Create organization from image"
   coefficient: "Coefficient"
   label_organization_name: "Organization name"

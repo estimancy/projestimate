@@ -71,6 +71,18 @@ module Guw
               end
             end
           end
+
+          guw_model.guw_attributes.each do |guw_attribute|
+            guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
+              new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
+              new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+
+              new_guw_type_complexity = new_guw_type.guw_type_complexities.where(copy_id: guw_attr_complexity.guw_type_complexity_id).first
+              new_guw_type_complexity_id = new_guw_type_complexity.nil? ? nil : new_guw_type_complexity.id
+
+              guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_type_complexity_id: new_guw_type_complexity_id )
+            end
+          end
         end
         #guw_model
       end

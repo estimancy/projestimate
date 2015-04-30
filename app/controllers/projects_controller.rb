@@ -107,6 +107,10 @@ class ProjectsController < ApplicationController
       redirect_to(organization_estimations_path(@current_organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
     end
 
+    if @current_organization.is_image_organization == true
+      redirect_to(root_url, flash: { error: I18n.t(:zdzd)}) and return
+    end
+
     @user = current_user
     @pemodules ||= Pemodule.all
     @module_project = current_module_project

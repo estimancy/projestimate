@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150427093606) do
+ActiveRecord::Schema.define(:version => 20150429152730) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -506,6 +506,7 @@ ActiveRecord::Schema.define(:version => 20150427093606) do
     t.integer  "guw_type_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "copy_id"
   end
 
   create_table "guw_guw_types", :force => true do |t|
@@ -877,6 +878,18 @@ ActiveRecord::Schema.define(:version => 20150427093606) do
     t.datetime "updated_at"
   end
 
+  create_table "plans", :force => true do |t|
+    t.string   "name"
+    t.string   "alias"
+    t.text     "description"
+    t.integer  "estimation_number"
+    t.integer  "organization_number"
+    t.integer  "user_number"
+    t.integer  "admin_number"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "platform_categories", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -901,6 +914,21 @@ ActiveRecord::Schema.define(:version => 20150427093606) do
     t.integer  "project_area_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "profile_categories", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "organization_id"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "profiles", :force => true do |t|

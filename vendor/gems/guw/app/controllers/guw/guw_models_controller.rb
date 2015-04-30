@@ -101,48 +101,50 @@ class Guw::GuwModelsController < ApplicationController
     redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
   end
 
+  def export
+    @guw_model = current_module_project.guw_model
+    @component = current_component
+    @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
+                                                  pbs_project_element_id: @component.id,
+                                                  guw_model_id: @guw_model.id)
 
-  def duplicate_save
-    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @organization = @guw_model.organization
-    guw_model = @guw_model.amoeba_dup
+    csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
 
-    if guw_model.save
+      csv << [
+          "Nom",
+          "Description",
+          "Type d'UO",
+          "Opération",
+          "Technologie",
+          "Tracabilité",
+          "Cotation",
+          "Résultat",
+          "Retenu"
+      ] + @guw_model.guw_attributes.map(&:name)
 
-      guw_model.guw_types.each do |guw_type|
+      tmp = Array.new
+      @guw_unit_of_works.each do |uow|
+        tmp = [
+            uow.name,
+            uow.comments,
+            uow.guw_type,
+            uow.guw_work_unit,
+            uow.organization_technology,
+            uow.tracking,
+            uow.guw_complexity.name,
+            uow.effort,
+            uow.ajusted_effort
+        ]
 
-        # Copy the complexities technologies
-        guw_type.guw_complexities.each do |guw_complexity|
-          # Copy the complexities technologie
-          guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
-            new_organization_technology = @organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
-            unless new_organization_technology.nil?
-              guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
-            end
-          end
-
-          # Copy the complexities units of works
-          guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
-            new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
-            unless new_guw_work_unit.nil?
-              guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
-            end
-          end
+        @guw_model.guw_attributes.each do |guw_attribute|
+          uowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: uow.id, guw_attribute_id: guw_attribute.id).first
+          tmp = tmp + [ uowa.blank? ? '-' : uowa.most_likely ]
         end
 
-        # Copy the GUW-attribute-complexity
-        guw_type.guw_type_complexities.each do |guw_type_complexity|
-          guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
-            new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
-            unless new_guw_attribute.nil?
-              guw_attr_complexity.update_attributes(guw_type_id: guw_type_complexity.guw_type_id, guw_attribute_id: new_guw_attribute.id)
-            end
-          end
-        end
+        csv << tmp
       end
     end
-
-    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Export-UOs-#{Time.now}.csv")
   end
 
 end

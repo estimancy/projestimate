@@ -283,12 +283,12 @@ class ApplicationController < ActionController::Base
       elsif !session[:organization_id].nil?
         @current_organization = Organization.find(session[:organization_id])
       else
-        session[:organization_id] = current_user.organizations.first
+        session[:organization_id] = current_user.organizations.where(is_image_organization: false).first
         @current_organization = Organization.find(session[:organization_id])
       end
     rescue
       if user_signed_in?
-        session[:organization_id] = current_user.organizations.first
+        session[:organization_id] = current_user.organizations.where(is_image_organization: false).first
         @current_organization = Organization.find(session[:organization_id])
       else
         session[:organization_id] = nil
