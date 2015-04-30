@@ -39,6 +39,7 @@ class OrganizationsController < ApplicationController
   require 'rubygems'
   require 'securerandom'
   include ProjectsHelper
+  include OrganizationsHelper
 
   def generate_report
     conditions = Hash.new
@@ -75,19 +76,31 @@ class OrganizationsController < ApplicationController
 
       tmp = Array.new
       @projects.each do |project|
-        tmp = [
-            project.title,
-            project.version,
-            project.product_name,
-            ActionView::Base.full_sanitizer.sanitize(project.description),
-            project.start_date,
-            project.platform_category,
-            project.project_category,
-            project.acquisition_category,
-            project.project_area,
-            project.estimation_status,
-            project.creator
-        ]
+        if can_show_estimation?(project)
+          tmp = [
+              project.title,
+              project.version,
+              project.product_name,
+              ActionView::Base.full_sanitizer.sanitize(project.description),
+              project.start_date,
+              project.platform_category,
+              project.project_category,
+              project.acquisition_category,
+              project.project_area,
+              project.estimation_status,
+              project.creator
+          ]
+        elsif can_see_estimation?(project)
+          #TODO
+          tmp = update_selected_inline_columns(Project).map do |column|
+            if column.caption == "description"
+              ActionView::Base.full_sanitizer.sanitize(column.value_object(project))
+            else
+              column.value_object(project)
+            end
+          end
+        end
+
         @organization.fields.each do |field|
           pf = ProjectField.where(field_id: field.id, project_id: project.id).first
           tmp = tmp + [ pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) ]
