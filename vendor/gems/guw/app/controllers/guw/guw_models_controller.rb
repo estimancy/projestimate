@@ -125,15 +125,15 @@ class Guw::GuwModelsController < ApplicationController
       tmp = Array.new
       @guw_unit_of_works.each do |uow|
         tmp = [
-            uow.name,
-            uow.comments,
-            uow.guw_type,
-            uow.guw_work_unit,
-            uow.organization_technology,
-            uow.tracking,
-            (uow.guw_complexity.nil? ? '' : uow.guw_complexity.name),
-            uow.effort,
-            uow.ajusted_effort
+            "#{uow.name}",
+            "#{uow.comments}",
+            "#{uow.guw_type}",
+            "#{uow.guw_work_unit}",
+            "#{uow.organization_technology}",
+            "#{uow.tracking}",
+            (uow.guw_complexity.nil? ? '' : "#{uow.guw_complexity.name}"),
+            "#{uow.effort}",
+            "#{uow.ajusted_effort}"
         ]
 
         @guw_model.guw_attributes.each do |guw_attribute|
