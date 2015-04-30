@@ -159,6 +159,9 @@ public
     unless params[:groups].nil?
       @user.group_ids = params[:groups].keys
       @user.save
+    else
+      @user.group_ids = []
+      @user.save
     end
 
     # Get the Application authType

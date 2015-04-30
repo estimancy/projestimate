@@ -48,14 +48,13 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    #@projects = Project.where(is_model: false).where(conditions).all
-    if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
-      @projects = Project.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
-    else
-      @projects = Project.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
-    end
+    @organization = @current_organization
 
-    @organization = Organization.find(params[:organization_id])
+    if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
+      @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+    else
+      @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+    end
 
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
       if params[:with_header] == "checked"
@@ -1346,33 +1345,5 @@ class OrganizationsController < ApplicationController
   def show
     authorize! :show_organizations, Organization
   end
-
-  #def export
-  #  authorize! :edit_organizations, Organization
-  #
-  #  @organization = Organization.find(params[:organization_id])
-  #
-  #  p = Axlsx::Package.new
-  #
-  #  wb = p.workbook
-  #
-  #  @organization.groups.each_with_index do |group|
-  #    wb.add_worksheet(:name => group.name) do |sheet|
-  #
-  #      group.users.each_with_index do |user|
-  #        sheet.add_row([user.name])
-  #      end
-  #    end
-  #
-  #    @organization.projects.each_with_index do |project|
-  #      project.users.each_with_index do |user|
-  #        sheet.add_row([user.name])
-  #      end
-  #    end
-  #
-  #  end
-  #
-  #  send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
-  #end
 
 end
