@@ -65,7 +65,7 @@
     <div id="tabs-organization-permissions">
       <b><%= I18n.t(:organization_permissions) %></b>
 
-      <% if current_user.super_admin %>
+      <% if can? :show_organization_permissions, Permission %>
         <table class="table table-bordered table-condensed table-striped">
             <tr>
               <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
@@ -108,11 +108,12 @@
                 </tr>
               <% end %>
             <% end %>
-
         </table>
 
-        <%= submit_tag I18n.t('apply'), name: "organization_permissions", :class => 'btn' %>
-        <%= submit_tag I18n.t('cancel'), name: "organization_permissions", :class => 'btn'%>
+        <% if can? :manage_organization_permissions, Permission %>
+            <%= submit_tag I18n.t('apply'), name: "organization_permissions", :class => 'btn' %>
+            <%= submit_tag I18n.t('cancel'), name: "organization_permissions", :class => 'btn'%>
+        <% end %>
 
       <% else %>
         <div class="red_color"><%= I18n.t(:notice_cannot_view_organization_super_admin_permissions) %></div>
@@ -122,7 +123,7 @@
     <div id="tabs-global-permissions">
       <b><%= I18n.t(:global_permissions) %></b>
 
-      <% if can? :show_organization_permissions, Permission %>
+      <% if can? :show_global_permissions, Permission %>
           <table class="table table-bordered table-condensed table-striped">
             <tr>
               <th style="text-align:left;"><%= I18n.t(:groups_and_roles) %></th>
@@ -168,7 +169,7 @@
 
           </table>
 
-          <% if can? :manage_organization_permissions, Permission %>
+          <% if can? :manage_global_permissions, Permission %>
               <%= submit_tag I18n.t('apply'), name: "global_permissions", :class => 'btn' %>
               <%= submit_tag I18n.t('cancel'), name: "gloabal_permissions", :class => 'btn'%>
           <% end %>
