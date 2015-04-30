@@ -33,7 +33,9 @@
               <% end %>
             </td>
             <% if current_user.super_admin? %>
-                <td class="center"><%= check_box_tag "is_image_organization", i.is_image_organization, i.is_image_organization, disabled: true %></td>
+              <td class="center">
+                <%= i.is_image_organization ? I18n.t("simple_form.yes") : I18n.t("simple_form.no") %>
+              </td>
             <% end %>
 
             <td><%= i.description %></td>

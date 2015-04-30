@@ -112,7 +112,7 @@ class Guw::GuwModelsController < ApplicationController
           "Cotation",
           "Résultat",
           "Retenu"
-      ] + @organization.fields.map(&:name)
+      ] + @guw_model.guw_attributes.map(&:name)
 
       tmp = Array.new
       @guw_unit_of_works.each do |uow|
@@ -127,6 +127,11 @@ class Guw::GuwModelsController < ApplicationController
             uow.effort,
             uow.ajusted_effort
         ]
+
+        @guw_model.guw_attributes.each do |guw_attribute|
+          uowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: uow.id, guw_attribute_id: guw_attribute.id).first
+          tmp = tmp + [ uowa.blank? ? '-' : uowa.most_likely ]
+        end
 
         csv << tmp
       end
