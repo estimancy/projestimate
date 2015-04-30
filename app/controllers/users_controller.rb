@@ -89,8 +89,6 @@ public
 
     set_page_title 'New user'
 
-    @organization = Organization.find(params[:organization_id])
-
     unless @organization_id.nil? || @organization_id.empty?
       @organization = Organization.find_by_id(params[:organization_id])
       @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
