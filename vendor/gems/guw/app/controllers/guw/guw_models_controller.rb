@@ -127,13 +127,13 @@ class Guw::GuwModelsController < ApplicationController
         tmp = [
             "\"#{uow.name}\"",
             "\"#{uow.comments}\"",
-            "\"#{uow.guw_type}\"",
-            "\"#{uow.guw_work_unit}\"",
-            "\"#{uow.organization_technology}\"",
+            uow.guw_type,
+            uow.guw_work_unit,
+            uow.organization_technology,
             "\"#{uow.tracking}\"",
-            (uow.guw_complexity.nil? ? '' : "\"#{uow.guw_complexity.name}\""),
-            "\"#{uow.effort}\"",
-            "\"#{uow.ajusted_effort}\""
+            (uow.guw_complexity.nil? ? '' : uow.guw_complexity.name),
+            uow.effort,
+            uow.ajusted_effort
         ]
 
         @guw_model.guw_attributes.each do |guw_attribute|
@@ -143,7 +143,7 @@ class Guw::GuwModelsController < ApplicationController
 
         csv << tmp
       end
-    end
+    end.html_safe
     send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Export-UOs-#{Time.now}.csv")
   end
 
