@@ -128,10 +128,10 @@ public
     set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @user = User.find(params[:id])
-    #@organization = Organization.find(params[:organization_id])
-    #unless @organization_id.nil? || @organization_id.empty?
-    #  @organization = Organization.find(params[:organization_id])
-    #end
+
+    if params[:organization_id].present?
+      @organization = Organization.find(params[:organization_id])
+    end
 
     if current_user == @user
       set_page_title 'Edit your user account'
@@ -161,6 +161,14 @@ public
       @user.save
     else
       @user.group_ids = []
+      @user.save
+    end
+
+    unless params[:organizations].nil?
+      @user.organization_ids = params[:organizations].keys
+      @user.save
+    else
+      @user.organization_ids = []
       @user.save
     end
 

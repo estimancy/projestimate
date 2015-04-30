@@ -7,8 +7,11 @@
       <ul>
         <li><a href="#tabs-1"><%= t(:global) %></a></li>
         <li><a href="#tabs-5"><%= I18n.t(:settings) %></a></li>
-        <% if current_user.super_admin ==  true %>
+        <% unless @organization.nil? %>
           <li><a href="#tabs-groups"><%= I18n.t(:groups) %></a></li>
+        <% end %>
+        <% if current_user.super_admin ==  true %>
+          <li><a href="#tabs-organizations"><%= I18n.t(:organizations) %></a></li>
         <% end %>
       </ul>
 
@@ -179,31 +182,78 @@
         </table>
       </div>
 
-      <% if current_user.super_admin ==  true %>
+      <div id="tabs-5">
+        <table>
+          <tr>
+            <td><%= f.input :language_id, :label => I18n.t('label_language'), :as => :select, :collection => Language.defined_or_local.map { |i| [i.name, i.id] }.sort, include_blank: '(auto)', :selected => @user.language_id %></td>
+            <td><%= f.input :time_zone, :label => I18n.t('time_zone'), :input_html => {:class => 'input-xlarge'}, :as => :select, :collection => ActiveSupport::TimeZone.all.map { |i| [i.to_s, i.name] }, :include_blank => false, :selected => @user.time_zone || 'Paris' %></td>
+          </tr>
+          <tr>
+            <td><%= f.input :number_precision, :label => I18n.t(:number_precision), :input_html => {:class => 'input-large'} %></td>
+            <td><%= f.input :object_per_page, :label => I18n.t('object_per_page'), :input_html => {:class => 'input-small'}, :as => :select, :collection => [5, 10, 25, 50, 100], :include_blank => true, :selected => @user.object_per_page %></td>
+          </tr>
+          <!--
+          <%= I18n.t(:assistance) %></p>
+          <%= I18n.t(:notifications) %></p>
+          <%= I18n.t(:display_format) %></p>
+          <%= I18n.t(:decimal) %></p>
+          <%= I18n.t(:thousands) %></p>
+          <%= I18n.t(:first_day) %></p>
+          <p><%= I18n.t(:first_week) %></p>
+          <p><%= I18n.t(:export_preferences) %></p>
+          -->
+        </table>
+      </div>
+
+      <% unless @organization.nil? %>
         <div id="tabs-groups">
+          <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+            <thead>
+            <tr>
+              <th><%= I18n.t(:name) %></th>
+              <th><%= I18n.t(:description) %></th>
+              <th><%= I18n.t(:selected) %></th>
+              <th><%= I18n.t(:actions) %></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <% @current_organization.groups.each do |group| %>
+              <tr>
+                <td><%= group.name %></td>
+                <td><%= group.description %></td>
+                <% gu = GroupsUsers.where(group_id: group.id, user_id: @user.id).first %>
+                <td class="center"><%= check_box_tag "groups[#{group.id}]", "accepted", !gu.nil? %></td>
+                <td class="center">
+                  <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
+                  <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+                </td>
+                </td>
+              </tr>
+            <% end %>
+            <%= render :partial => 'layouts/footer_table' %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
+      <% if current_user.super_admin == true %>
+        <div id="tabs-organizations">
           <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
             <thead>
               <tr>
                 <th><%= I18n.t(:name) %></th>
-                <th><%= I18n.t(:description) %></th>
                 <th><%= I18n.t(:selected) %></th>
-                <th><%= I18n.t(:actions) %></th>
               </tr>
             </thead>
 
             <tbody>
-              <% @current_organization.groups.each do |group| %>
+              <% Organization.all.each do |organization| %>
                 <tr>
-                  <td><%= group.name %></td>
-                  <td><%= group.description %></td>
-                  <%# unless @user.new_record? %>
-                  <% gu = GroupsUsers.where(group_id: group.id, user_id: @user.id).first %>
-                  <td class="center"><%= check_box_tag "groups[#{group.id}]", "accepted", !gu.nil? %></td>
-                  <%# end %>
+                  <td><%= organization.name %></td>
+                  <% go = OrganizationsUsers.where(organization_id: organization.id, user_id: @user.id).first %>
                   <td class="center">
-                    <%= link_to '', edit_group_path(group, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit') %>
-                    <%= link_to '', group, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-                  </td>
+                    <%= check_box_tag "organizations[#{organization.id}]", "accepted", !go.nil? %>
                   </td>
                 </tr>
               <% end %>

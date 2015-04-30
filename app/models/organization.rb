@@ -70,12 +70,12 @@ class Organization < ActiveRecord::Base
   #has_and_belongs_to_many :users
   #Groups created on local, will be attached to an organization
   has_many :groups, :dependent => :destroy
-  has_many :users, through: :groups, uniq: true
+  #has_many :users, through: :groups, uniq: true
   ###has_and_belongs_to_many :users   ##to comment if not working
 
   #For user without group
   has_many :organizations_users, class_name: 'OrganizationsUsers', :dependent => :destroy
-  has_many :users_from_organization, through: :organizations_users, :source => :user, uniq: true
+  has_many :users, through: :organizations_users#, :source => :user, uniq: true
 
   has_many :fields, :dependent => :destroy
   has_many :wbs_activities, :dependent => :destroy

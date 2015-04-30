@@ -238,7 +238,7 @@
   <% end %>
 
 
-<div id="tabs-estimations-permissions">
+  <div id="tabs-estimations-permissions">
     <b><%= I18n.t(:estimations_permissions) %></b>
 
     <% if can? :show_estimations_permissions, Permission %>
@@ -299,6 +299,5 @@
     <% else %>
       <div class="red_color"><%= I18n.t(:notice_cannot_view_estimations_permissions) %></div>
     <% end %>
-</div>
-
+  </div>
 </div>
