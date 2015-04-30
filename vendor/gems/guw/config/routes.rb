@@ -69,6 +69,7 @@ Guw::Engine.routes.draw do
       post "guw_attribute_complexities/save_attributs_complexities"
     end
     post "duplicate"
+    post "export"
   end
 
   post "guw_unit_of_works/save_guw_unit_of_works"

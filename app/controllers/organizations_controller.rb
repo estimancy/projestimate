@@ -36,10 +36,7 @@
 
 class OrganizationsController < ApplicationController
   load_resource
-  #include Roo
-  #require 'axlsx'
   require 'rubygems'
-  #require 'roo'
   require 'securerandom'
   include ProjectsHelper
 
@@ -63,14 +60,17 @@ class OrganizationsController < ApplicationController
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
       if params[:with_header] == "checked"
         csv << [
-            "Nom du projet",
-            "Nom du produit",
-            "Date de début",
-            "Catégorie de platforme",
-            "Catégorie de projet",
-            "Catégorie d'acquisition",
-            "Secteur de projet",
-            "Status de l'estimation",
+            I18n.t(:project),
+            I18n.t(:label_project_version),
+            I18n.t(:label_product_name),
+            I18n.t(:description),
+            I18n.t(:start_date),
+            I18n.t(:platform_category),
+            I18n.t(:project_category),
+            I18n.t(:acquisition_category),
+            I18n.t(:project_area),
+            I18n.t(:state),
+            I18n.t(:creator),
         ] + @organization.fields.map(&:name)
       end
 
@@ -78,13 +78,16 @@ class OrganizationsController < ApplicationController
       @projects.each do |project|
         tmp = [
             project.title,
+            project.version,
             project.product_name,
+            ActionView::Base.full_sanitizer.sanitize(project.description),
             project.start_date,
             project.platform_category,
             project.project_category,
             project.acquisition_category,
             project.project_area,
-            project.estimation_status
+            project.estimation_status,
+            project.creator
         ]
         @organization.fields.each do |field|
           pf = ProjectField.where(field_id: field.id, project_id: project.id).first
@@ -160,6 +163,10 @@ class OrganizationsController < ApplicationController
 
   def estimations
     @organization = Organization.find(params[:organization_id])
+
+    if @organization.is_image_organization == true
+      redirect_to("/organizationals_params", flash: { error: "Vous ne pouvez pas accéder aux estimations d'une organization image"}) and return
+    end
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
@@ -922,8 +929,6 @@ class OrganizationsController < ApplicationController
 
     redirect_to '/organizationals_params'
   end
-
-
 
   def organizationals_params
     set_page_title 'Organizational Parameters'
