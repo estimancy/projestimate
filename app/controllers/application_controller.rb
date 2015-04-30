@@ -280,21 +280,21 @@ class ApplicationController < ActionController::Base
       if params[:organization_id].present?
         session[:organization_id] = params[:organization_id]
         @current_organization = Organization.find(session[:organization_id])
-      elsif !session[:organization_id].nil?
-        @current_organization = Organization.find(session[:organization_id])
       else
-        session[:organization_id] = current_user.organizations.where(is_image_organization: false).first
-        @current_organization = Organization.find(session[:organization_id])
+        @organization = current_user.organizations.where(is_image_organization: false).first
+        if @organization.nil?
+          session[:organization_id] = current_user.organizations.first.id
+          @current_organization = Organization.find(session[:organization_id])
+        else
+          session[:organization_id] = @organization.id
+          @current_organization = Organization.find(session[:organization_id])
+        end
       end
     rescue
-      if user_signed_in?
-        session[:organization_id] = current_user.organizations.where(is_image_organization: false).first
-        @current_organization = Organization.find(session[:organization_id])
-      else
-        session[:organization_id] = nil
-        @current_organization = nil
-      end
+      session[:organization_id] = nil
+      @current_organization = nil
     end
+
   end
 
   # Get the selected Pbs_Project_Element
