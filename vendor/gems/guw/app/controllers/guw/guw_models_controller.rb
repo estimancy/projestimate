@@ -120,7 +120,7 @@ class Guw::GuwModelsController < ApplicationController
             uow.name,
             uow.comments,
             uow.guw_type,
-            uow.work_unit,
+            uow.guw_work_unit,
             uow.organization_technology,
             uow.tracking,
             uow.guw_complexity.name,
