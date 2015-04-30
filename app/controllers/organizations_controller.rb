@@ -96,7 +96,7 @@ class OrganizationsController < ApplicationController
         csv << tmp
       end
     end
-    send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
+    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
   end
 
   def report
