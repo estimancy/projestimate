@@ -281,12 +281,12 @@ class ApplicationController < ActionController::Base
         session[:organization_id] = params[:organization_id]
         @current_organization = Organization.find(session[:organization_id])
       else
-        @organization = current_user.organizations.where(is_image_organization: false).first
-        if @organization.nil?
+        @current_organization = current_user.organizations.where(is_image_organization: false).first
+        if @current_organization.nil?
           session[:organization_id] = current_user.organizations.first.id
           @current_organization = Organization.find(session[:organization_id])
         else
-          session[:organization_id] = @organization.id
+          session[:organization_id] = @current_organization.id
           @current_organization = Organization.find(session[:organization_id])
         end
       end
