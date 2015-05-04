@@ -277,10 +277,18 @@ class ApplicationController < ActionController::Base
 
   def set_current_organization
     begin
+      #Si ya un parametre
       if params[:organization_id].present?
         session[:organization_id] = params[:organization_id]
         @current_organization = Organization.find(session[:organization_id])
+
+      #Sinon on prend, la sessions
+      elsif session[:organization_id].present?
+        @current_organization = Organization.find(session[:organization_id])
+
+      #Si ya pas de sessions
       else
+
         @current_organization = current_user.organizations.where(is_image_organization: false).first
         if @current_organization.nil?
           session[:organization_id] = current_user.organizations.first.id
