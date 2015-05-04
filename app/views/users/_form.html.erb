@@ -27,9 +27,6 @@
             <div id="collapseOne" class="accordion-body in collapse">
               <div class="accordion-inner">
                 <%= hidden_field_tag 'organization_id', @organization_id %>
-
-                Groupe de l'utilisateur : <%= @user.groups.join(", ") %>
-
                 <table>
                   <tr>
                     <td><%= f.input :first_name, :label => I18n.t('first_name'), :input_html => {:autofocus => (controller.action_name == 'new'), :class => 'input-large'} %></td>
@@ -209,15 +206,16 @@
         <div id="tabs-groups">
           <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
             <thead>
-            <tr>
-              <th><%= I18n.t(:name) %></th>
-              <th><%= I18n.t(:description) %></th>
-              <th><%= I18n.t(:selected) %></th>
-              <th><%= I18n.t(:actions) %></th>
-            </tr>
+              <tr>
+                <th><%= I18n.t(:name) %></th>
+                <th><%= I18n.t(:description) %></th>
+                <th><%= I18n.t(:selected) %></th>
+                <th><%= I18n.t(:actions) %></th>
+              </tr>
             </thead>
 
             <tbody>
+
             <% @current_organization.groups.each do |group| %>
               <tr>
                 <td><%= group.name %></td>
