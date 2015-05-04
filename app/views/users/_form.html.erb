@@ -10,7 +10,7 @@
         <% unless @organization.nil? %>
           <li><a href="#tabs-groups"><%= I18n.t(:groups) %></a></li>
         <% end %>
-        <% if current_user.super_admin ==  true %>
+        <% if current_user.super_admin ==  true and @organization.nil? %>
           <li><a href="#tabs-organizations"><%= I18n.t(:organizations) %></a></li>
         <% end %>
       </ul>
@@ -216,7 +216,7 @@
 
             <tbody>
 
-            <% @current_organization.groups.each do |group| %>
+            <% @organization.groups.each do |group| %>
               <tr>
                 <td><%= group.name %></td>
                 <td><%= group.description %></td>
@@ -235,7 +235,7 @@
         </div>
       <% end %>
 
-      <% if current_user.super_admin == true %>
+      <% if current_user.super_admin == true and @organization.nil? %>
         <div id="tabs-organizations">
           <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
             <thead>
@@ -269,7 +269,11 @@
           <%= submit_tag I18n.t('save'), :class => 'btn' %>
           <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
-        <%= link_to I18n.t('back'), organization_users_path(organization_id: @current_organization.id), :class => 'btn' %>
+        <% if @organization.nil? %>
+          <%= link_to I18n.t('back'), users_path, :class => 'btn' %>
+        <% else %>
+          <%= link_to I18n.t('back'), organization_users_path(organization_id: @organization.id), :class => 'btn' %>
+        <% end %>
       </div>
     </div>
   <% end %>

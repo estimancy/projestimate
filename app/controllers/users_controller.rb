@@ -201,8 +201,8 @@ public
       set_user_language
       flash[:notice] = I18n.t (:notice_account_successful_updated)
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
-      if @organization.nil?
-        redirect_to redirect_apply(edit_organization_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path) and return
+      if params[:organization_id].blank?
+        redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path) and return
       else
         redirect_to redirect_apply(edit_organization_user_path(@organization, @user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))
       end
