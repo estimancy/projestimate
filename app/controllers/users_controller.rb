@@ -148,26 +148,28 @@ public
 
     set_page_title 'Edit user'
 
-    #Get the current organization
-    @organization_id = params[:organization_id]
-    unless @organization_id.nil? || @organization_id.empty?
+    if params[:organization_id].present?
       @organization = Organization.find(params[:organization_id])
     end
 
-    unless params[:groups].nil?
-      @user.group_ids = params[:groups].keys
-      @user.save
+    if @organization.nil?
+      if params[:organizations].nil?
+        @user.organization_ids = []
+        @user.save
+      elsif current_user.super_admin == true
+        @user.organization_ids = params[:organizations].keys
+        @user.save
+      else
+        #hum?
+      end
     else
-      @user.group_ids = []
-      @user.save
-    end
-
-    unless params[:organizations].nil?
-      @user.organization_ids = params[:organizations].keys
-      @user.save
-    else
-      @user.organization_ids = []
-      @user.save
+      if params[:groups].nil?
+        @user.group_ids = []
+        @user.save
+      else
+        @user.group_ids = params[:groups].keys
+        @user.save
+      end
     end
 
     # Get the Application authType
@@ -201,7 +203,8 @@ public
       set_user_language
       flash[:notice] = I18n.t (:notice_account_successful_updated)
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
-      if params[:organization_id].blank?
+
+      if @organization.nil?
         redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path) and return
       else
         redirect_to redirect_apply(edit_organization_user_path(@organization, @user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization))

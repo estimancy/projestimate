@@ -106,6 +106,7 @@ class OrganizationsController < ApplicationController
           tmp = tmp + [ pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) ]
         end
 
+
         csv << tmp
       end
     end
