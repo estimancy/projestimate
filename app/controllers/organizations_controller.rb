@@ -186,6 +186,14 @@ class OrganizationsController < ApplicationController
     @projects = @organization.projects.where(is_model: false).all
   end
 
+  # Testing: to delete after Test
+  def new_organization_from_duplication
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
   # New organization from image
   def new_organization_from_image
   end

@@ -244,6 +244,7 @@ Projestimate::Application.routes.draw do
   get 'update_available_inline_columns' => 'organizations#update_available_inline_columns', as: 'update_available_inline_columns'
   get 'set_available_inline_columns' => 'organizations#set_available_inline_columns', as: 'set_available_inline_columns'
   match 'organizations/:organization_id/confirm_organization_deletion' => 'organizations#confirm_organization_deletion', :as => :confirm_organization_deletion
+  get 'new_organization_from_duplication' => 'organizations#new_organization_from_duplication', as: 'new_organization_from_duplication'
 
   resources :subcontractors
 
