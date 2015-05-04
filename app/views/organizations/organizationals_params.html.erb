@@ -26,10 +26,10 @@
         <% @organizations.each do |i| %>
           <tr>
             <td>
-              <% if can?(:show_organizations, Organization) && !i.is_image_organization %>
-                <%= link_to i.name, organization_estimations_path(i) %>
-              <% else %>
+              <% if i.is_image_organization %>
                 <%= i.name %>
+              <% else %>
+                <%= link_to i.name, organization_estimations_path(i) %>
               <% end %>
             </td>
             <% if current_user.super_admin? %>
