@@ -733,7 +733,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     #authorize! :edit_organizations, Organization
-    authorize! :edit_organizations, Organization
+    authorize! :show_organizations, Organization
 
     set_page_title 'Organizations'
     @organization = Organization.find(params[:id])
