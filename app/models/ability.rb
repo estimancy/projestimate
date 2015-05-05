@@ -39,7 +39,7 @@ class Ability
   include CanCan::Ability
 
   #Initialize Ability then load permissions
-  def initialize(user)
+  def initialize(user, organization)
 
     #Uncomment in order to authorize everybody to manage all the app
     if Rails.env == "test" || user.super_admin == true
@@ -81,10 +81,10 @@ class Ability
     alias_action :show_modules_instances, :to => :manage_modules_instances
 
     #Load user groups permissions
-    if user && !user.groups.empty?
+    if user && !user.groups.where(organization_id: organization.id).empty?
       permissions_array = []
 
-      user.groups.map do |grp|
+      user.groups.where(organization_id: organization.id).map do |grp|
         grp.permissions.map do |i|
           if i.object_associated.blank?
             permissions_array << [i.alias.to_sym, :all]

@@ -130,7 +130,6 @@ class Organization < ActiveRecord::Base
     name
   end
 
-
   # Add the amoeba gem for the copy
   amoeba do
     enable
