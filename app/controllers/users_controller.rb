@@ -164,11 +164,14 @@ public
       end
     else
       if params[:groups].nil?
-        @user.group_ids = []
-        @user.save
+        @organization.groups.each do |group|
+          GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+        end
       else
-        @user.group_ids = params[:groups].keys
-        @user.save
+        params[:groups].keys.each do |k|
+          GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{k}")
+          GroupsUsers.where(user_id: @user.id, group_id: k).first_or_create
+        end
       end
     end
 
