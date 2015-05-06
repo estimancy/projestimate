@@ -939,24 +939,6 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def destroy_save
-    authorize! :manage, Organization
-    @organization = Organization.find(params[:id])
-
-    # Before destroying, we should check if the organization is used by one or more projects/estimations before to be able to delete it.
-    if @organization.projects.empty? || @organization.projects.nil?
-      @organization.destroy
-      if session[:organization_id] == params[:id]
-        session[:organization_id] = nil
-      end
-      flash[:notice] = I18n.t(:notice_organization_successful_deleted)
-    else
-      flash[:warning] = I18n.t(:warning_organization_cannot_be_deleted, value: @organization.name)
-    end
-
-    redirect_to '/organizationals_params'
-  end
-
   def organizationals_params
     set_page_title 'Organizational Parameters'
 
@@ -1144,7 +1126,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(organization_module_estimation_path(@organization, :anchor => 'taille'), nil, '/organizationals_params')
+    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'taille'), nil, '/organizationals_params')
   end
 
   # Update the organization's projects available inline columns
