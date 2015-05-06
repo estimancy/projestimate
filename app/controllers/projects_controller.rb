@@ -108,7 +108,7 @@ class ProjectsController < ApplicationController
     end
 
     if @current_organization.is_image_organization == true
-      redirect_to(root_url, flash: { error: I18n.t(:zdzd)}) and return
+      redirect_to(root_url, flash: { error: "Vous ne pouvez pas accéder à une organization image"}) and return
     end
 
     @user = current_user

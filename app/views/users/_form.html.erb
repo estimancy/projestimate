@@ -181,29 +181,6 @@
         </table>
       </div>
 
-      <div id="tabs-5">
-        <table>
-          <tr>
-            <td><%= f.input :language_id, :label => I18n.t('label_language'), :as => :select, :collection => Language.defined_or_local.map { |i| [i.name, i.id] }.sort, include_blank: '(auto)', :selected => @user.language_id %></td>
-            <td><%= f.input :time_zone, :label => I18n.t('time_zone'), :input_html => {:class => 'input-xlarge'}, :as => :select, :collection => ActiveSupport::TimeZone.all.map { |i| [i.to_s, i.name] }, :include_blank => false, :selected => @user.time_zone || 'Paris' %></td>
-          </tr>
-          <tr>
-            <td><%= f.input :number_precision, :label => I18n.t(:number_precision), :input_html => {:class => 'input-large'} %></td>
-            <td><%= f.input :object_per_page, :label => I18n.t('object_per_page'), :input_html => {:class => 'input-small'}, :as => :select, :collection => [5, 10, 25, 50, 100], :include_blank => true, :selected => @user.object_per_page %></td>
-          </tr>
-          <!--
-          <%= I18n.t(:assistance) %></p>
-          <%= I18n.t(:notifications) %></p>
-          <%= I18n.t(:display_format) %></p>
-          <%= I18n.t(:decimal) %></p>
-          <%= I18n.t(:thousands) %></p>
-          <%= I18n.t(:first_day) %></p>
-          <p><%= I18n.t(:first_week) %></p>
-          <p><%= I18n.t(:export_preferences) %></p>
-          -->
-        </table>
-      </div>
-
       <% if params[:organization_id].present? %>
         <div id="tabs-groups">
           <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
