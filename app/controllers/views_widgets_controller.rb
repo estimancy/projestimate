@@ -242,13 +242,14 @@ class ViewsWidgetsController < ApplicationController
     @views_widget = ViewsWidget.find(params[:id])
     current_view = @views_widget.view
     pemodule_id = current_view.pemodule_id
+    @module_project = @views_widget.module_project
 
     if can?(:alter_estimation_plan, @project) || ( can?(:manage_estimation_widgets, @project) && @views_widget.project_fields.empty? )
       @views_widget.destroy
 
       #Create temporary view
       # If widget is deleted, the view will be newly saved as a temporary view (if it's not a temporary view)
-      if !current_view.is_temporary_view && !module_project.nil?
+      if !current_view.is_temporary_view && !@module_project.nil?
         new_temporary_view = View.new(name: "#{current_view.name}_temp", description: current_view.description, pemodule_id: pemodule_id, organization_id: current_view.organization_id, is_temporary_view: true, initial_view_id: current_view.id)
         if new_temporary_view.save
           #the new widget will be added to the temporary view
