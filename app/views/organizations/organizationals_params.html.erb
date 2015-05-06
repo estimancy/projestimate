@@ -41,15 +41,16 @@
             <td><%= i.description %></td>
             <td class="center">
               <% if can? :show_organizations, Organization %>
-                  <%#= link_to 'test', new_organization_from_duplication_path, {id: "testme", remote: true} %>
-                  <%#= link_to 'Test', new_organization_from_duplication_path,  {:remote => true, id: "testme", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+                  <%#= link_to 'Test', new_organization_from_duplication_path,  {:remote => true, class: "testme", 'data-organization_id' => i.id, 'data-action_name' => "copy_organization", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+                  <%#= link_to 'Hello', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"),  { class: "testme1", 'data-organization_id' => i.id, 'data-action_name' => "copy_organization", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
 
                   <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
 
                   <% if can? :manage, Organization %>
                     <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
                     <!--The duplicate organization and the create from image organization are now using the same function -->
-                    <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"), :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization') %>
+                    <%#= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"), :class => 'duplicate_organization icon icon-copy', :title => I18n.t('button_duplicate_organization') %>
+                    <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"),  { class: "icon icon-copy", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
                     <%= link_to('', confirm_organization_deletion_path(i.id), :class => 'icon icon-trash', :title => I18n.t('delete'))  %>
                   <% end %>
               <% end %>
@@ -62,11 +63,13 @@
   </div>
 
   <div id="display_animation_ajax_loader" style="display: none">
-    <p>Veuillez patienter, la copie de l'organisation est en cours.</p>
+    <p>Veuillez patienter, la copie de l'organisation est en cours...</p>
     <p><%= image_tag "green-animation-ajax-loader.gif", :id => "loading-indicator" %></p>
   </div>
 
-  <div id="modal-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+  <div id="modal-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <%= render partial: "display_animation_ajax_loader" %>
+  </div>
 </div>
 
 

@@ -191,14 +191,6 @@ class OrganizationsController < ApplicationController
     @projects = @organization.projects.where(is_model: false).all
   end
 
-  # Testing: to delete after Test
-  def new_organization_from_duplication
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
   # New organization from image
   def new_organization_from_image
   end
@@ -724,7 +716,12 @@ class OrganizationsController < ApplicationController
         flash[:error] = I18n.t('errors.messages.not_saved')
       end
     end
-    redirect_to :back
+
+    #redirect_to :back
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.js { render :js => "window.location.replace('/organizationals_params');"}
+    end
   end
 
   def new

@@ -143,6 +143,7 @@ class Organization < ActiveRecord::Base
       new_copy_number = original_organization.copy_number.to_i+1
       new_organization.name = "#{original_organization.name}(#{new_copy_number})" ###"Copy of '#{original_organization.name}' at #{Time.now}"
       original_organization.copy_number = new_copy_number
+      new_organization.copy_number = 0
     })
   end
 
