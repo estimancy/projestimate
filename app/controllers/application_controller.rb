@@ -94,6 +94,10 @@ class ApplicationController < ActionController::Base
   before_filter :update_activity_time
   before_filter :initialization_module
 
+  def current_ability
+    @current_ability ||= Ability.new(current_user, @current_organization)
+  end
+
   # Organization verification: user need to have at least one organization before continue
   def check_user_orgaization
     if current_user.organizations.empty?

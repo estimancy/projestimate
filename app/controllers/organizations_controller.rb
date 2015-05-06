@@ -42,6 +42,7 @@ class OrganizationsController < ApplicationController
   include OrganizationsHelper
 
   def generate_report
+
     conditions = Hash.new
     params[:report].each do |i|
       unless i.last.blank? or i.last.nil?
@@ -50,6 +51,7 @@ class OrganizationsController < ApplicationController
     end
 
     @organization = @current_organization
+    check_if_organization_is_image(@organization)
 
     if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
       @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
@@ -81,7 +83,7 @@ class OrganizationsController < ApplicationController
               project.title,
               project.version,
               project.product_name,
-              ActionView::Base.full_sanitizer.sanitize(project.description),
+              ActionView::Base.full_sanitizer.sanitize(project.description).html_safe,
               project.start_date,
               project.platform_category,
               project.project_category,
@@ -94,7 +96,7 @@ class OrganizationsController < ApplicationController
           #TODO
           tmp = update_selected_inline_columns(Project).map do |column|
             if column.caption == "description"
-              ActionView::Base.full_sanitizer.sanitize(column.value_object(project))
+              ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe
             else
               column.value_object(project)
             end
@@ -115,10 +117,12 @@ class OrganizationsController < ApplicationController
 
   def report
     @organization = Organization.find(params[:organization_id])
+    check_if_organization_is_image(@organization)
   end
 
   def authorization
     @organization = Organization.find(params[:organization_id])
+    check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
@@ -141,6 +145,7 @@ class OrganizationsController < ApplicationController
 
   def setting
     @organization = Organization.find(params[:organization_id])
+    check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
@@ -158,6 +163,8 @@ class OrganizationsController < ApplicationController
   def module_estimation
     @organization = Organization.find(params[:organization_id])
 
+    check_if_organization_is_image(@organization)
+
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
     @guw_models = @organization.guw_models
@@ -170,16 +177,14 @@ class OrganizationsController < ApplicationController
 
   def users
     @organization = Organization.find(params[:organization_id])
+    check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
   end
 
   def estimations
     @organization = Organization.find(params[:organization_id])
-
-    if @organization.is_image_organization == true
-      redirect_to("/organizationals_params", flash: { error: "Vous ne pouvez pas accéder aux estimations d'une organization image"}) and return
-    end
+    check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
 
@@ -197,7 +202,6 @@ class OrganizationsController < ApplicationController
   # New organization from image
   def new_organization_from_image
   end
-
 
   # Method that execute the duplication: duplicate estimation model for organization
   def execute_duplication(project_id, new_organization_id)
@@ -935,24 +939,6 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def destroy_save
-    authorize! :manage, Organization
-    @organization = Organization.find(params[:id])
-
-    # Before destroying, we should check if the organization is used by one or more projects/estimations before to be able to delete it.
-    if @organization.projects.empty? || @organization.projects.nil?
-      @organization.destroy
-      if session[:organization_id] == params[:id]
-        session[:organization_id] = nil
-      end
-      flash[:notice] = I18n.t(:notice_organization_successful_deleted)
-    else
-      flash[:warning] = I18n.t(:warning_organization_cannot_be_deleted, value: @organization.name)
-    end
-
-    redirect_to '/organizationals_params'
-  end
-
   def organizationals_params
     set_page_title 'Organizational Parameters'
 
@@ -1140,7 +1126,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to redirect_apply(organization_module_estimation_path(@organization, :anchor => 'taille'), nil, '/organizationals_params')
+    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'taille'), nil, '/organizationals_params')
   end
 
   # Update the organization's projects available inline columns
@@ -1369,5 +1355,13 @@ class OrganizationsController < ApplicationController
   def show
     authorize! :show_organizations, Organization
   end
+
+  private
+  def check_if_organization_is_image(organization)
+    if organization.is_image_organization == true
+      redirect_to("/organizationals_params", flash: { error: "Vous ne pouvez pas accéder aux estimations d'une organization image"}) and return
+    end
+  end
+
 
 end
