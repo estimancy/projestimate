@@ -183,9 +183,13 @@ public
           GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
         end
       else
-        params[:groups].keys.each do |k|
-          GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{k}")
-          GroupsUsers.where(user_id: @user.id, group_id: k).first_or_create
+
+        @organization.groups.each do |group|
+          GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+        end
+
+        params[:groups].keys.each do |group_id|
+          GroupsUsers.create(user_id: @user.id, group_id: group_id)
         end
       end
     end
