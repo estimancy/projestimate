@@ -337,7 +337,7 @@
     <%# if can? :show_estimation_models, Project %>
       <%= render partial: "projects/estimation_models", object: @estimation_models %>
     <%# else %>
-        <!--<div class="red_color"><%# I18n.t(:notice_cannot_view_estimation_models) %></div>-->
+        <!--<div class="red_color"><%#= I18n.t(:notice_cannot_view_estimation_models) %></div>-->
     <%# end %>
   </div>
 
@@ -349,7 +349,7 @@
         <% end %>
         <%= render partial: "views/views_and_widgets" %>
     <% else %>
-        <div class="red_color"><% I18n.t(:notice_cannot_view_views_and_widgets) %></div>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_views_and_widgets) %></div>
     <% end %>
   </div>
 
@@ -359,7 +359,7 @@
     <% if can? :show_projects_selected_columns, Organization %>
         <%= render partial: "organizations/select_project_columns_to_display" %>
     <% else %>
-        <div class="red_color"><% I18n.t(:notice_cannot_view_select_columns_list) %></div>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_selected_columns_list) %></div>
     <% end %>
   </div>
 

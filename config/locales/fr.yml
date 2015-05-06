@@ -1475,4 +1475,4 @@ fr:
   organization_copied_by: "copie effectuée par \"%{username}\" "
   label_definition: "Définition"
   notice_cannot_view_views_and_widgets: "Vous n'avez pas les autorisations nécessaires pour voir les vues des vignettes"
-  notice_cannot_view_select_columns_list: "Vous n'avez pas les autorisations nécessaires pour voir la liste des colonnes sélectionnées"
+  notice_cannot_view_selected_columns_list: "Vous n'avez pas les autorisations nécessaires pour voir la liste des colonnes sélectionnées"

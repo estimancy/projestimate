@@ -745,6 +745,7 @@ $(document).ready(function() {
         //write your animation code here
         $("#display_animation_ajax_loader").show();
         $.ajax({
+            //url: "/new_organization_from_duplication",
             url: "/new_organization_from_duplication",
             method: "GET",
             data: {
