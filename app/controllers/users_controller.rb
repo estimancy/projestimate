@@ -154,9 +154,24 @@ public
 
     if @organization.nil?
       if params[:organizations].nil?
+
+        @user.organizations.each do |organization|
+          organization.groups.each do |group|
+            GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.to_i}")
+          end
+        end
+
         @user.organization_ids = []
         @user.save
+
       elsif current_user.super_admin == true
+        organizations = @user.organization_ids - params[:organizations].keys.map(&:to_i)
+        organizations.each do |organization_id|
+          organization = Organization.find(organization_id)
+          organization.groups.each do |group|
+            GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+          end
+        end
         @user.organization_ids = params[:organizations].keys
         @user.save
       else
