@@ -1128,11 +1128,11 @@ class OrganizationsController < ApplicationController
 
   # Update the organization's projects available inline columns
   def set_available_inline_columns
+    authorize! :manage_projects_selected_columns, Organization
     redirect_to organization_setting_path(@current_organization, :anchor => 'tabs-select-columns-list')
   end
 
   def update_available_inline_columns
-    puts "test"
     # update selected column
     #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
     #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
