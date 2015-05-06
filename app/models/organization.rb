@@ -33,30 +33,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-
-class QueryColumn
-  attr_accessor :name, :caption, :association_name
-
-  def initialize(name, options={})
-    self.name = name
-    #self.association_name = association_name
-    self.caption = options[:caption]
-  end
-
-  def value(object)
-    object.send name
-  end
-
-  def value_object(object)
-    object.send name
-  end
-
-  def css_classes
-    name
-  end
-end
-
-
 #Organization of the User
 class Organization < ActiveRecord::Base
   attr_accessible :name, :description, :is_image_organization, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate,
