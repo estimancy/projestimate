@@ -41,6 +41,9 @@
             <td><%= i.description %></td>
             <td class="center">
               <% if can? :show_organizations, Organization %>
+                  <%#= link_to 'test', new_organization_from_duplication_path, {id: "testme", remote: true} %>
+                  <%#= link_to 'Test', new_organization_from_duplication_path,  {:remote => true, id: "testme", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+
                   <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
 
                   <% if can? :manage, Organization %>
@@ -57,6 +60,13 @@
       </tbody>
     </table>
   </div>
+
+  <div id="display_animation_ajax_loader" style="display: none">
+    <p>Veuillez patienter, la copie de l'organisation est en cours.</p>
+    <p><%= image_tag "green-animation-ajax-loader.gif", :id => "loading-indicator" %></p>
+  </div>
+
+  <div id="modal-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 </div>
 
 

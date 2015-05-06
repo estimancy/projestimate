@@ -348,13 +348,19 @@
             <%= link_to I18n.t('new_view'), new_organization_view_path(@organization), :class => 'btn btn-primary pull-right' %>
         <% end %>
         <%= render partial: "views/views_and_widgets" %>
+    <% else %>
+        <div class="red_color"><% I18n.t(:notice_cannot_view_views_and_widgets) %></div>
     <% end %>
   </div>
 
   <div id="tabs-select-columns-list" style="min-height: 50px;">
     <b><%= I18n.t(:select_columns_list) %></b>
     <br>
-    <%= render partial: "organizations/select_project_columns_to_display" %>
+    <% if can? :show_projects_selected_columns, Organization %>
+        <%= render partial: "organizations/select_project_columns_to_display" %>
+    <% else %>
+        <div class="red_color"><% I18n.t(:notice_cannot_view_select_columns_list) %></div>
+    <% end %>
   </div>
 
 </div>

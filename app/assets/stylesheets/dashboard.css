@@ -1041,3 +1041,7 @@ li > a > .fa{
 
 .from_model_text_area{ width: 450px; }
 
+#display_animation_ajax_loader{
+    text-align: center;
+}
+

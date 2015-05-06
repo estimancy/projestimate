@@ -34,7 +34,9 @@
     </table>
 
     <br>
-    <span><%= submit_tag I18n.t(:label_save), class: "btn" %></span>
+    <% if can? :manage_projects_selected_columns, Organization %>
+        <span><%= submit_tag I18n.t(:label_save), class: "btn" %></span>
+    <% end %>
 
     <%= javascript_tag do %>
         $(document).ready(function(){

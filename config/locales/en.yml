@@ -1471,3 +1471,5 @@ en:
   warning_need_organization_check_box_confirmation: "You need to confirm organization deletion with check-box"
   organization_copied_by: "copy made by \"%{username}\" "
   label_definition: "Definition"
+  notice_cannot_view_views_and_widgets: "You don't have the rights to show the widgets's views"
+  notice_cannot_view_select_columns_list: "You don't have the rights to view projects selected columns list"

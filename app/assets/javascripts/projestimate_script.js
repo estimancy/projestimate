@@ -29,14 +29,16 @@ $(document).ready(function() {
 
     // ============================ GRIDSTER widgets management ================================================
 
+    var gridster = [];
+    var iteration = -1;
     $(function(){ //DOM Ready
 
         $('[id^="view_widgets_container_"]').each(function(){
             var container_id = $(this).attr('id');
             var $widgets_container  = $('#'+container_id);
 
-            //$(".gridster ul").gridster({
-            $("#"+container_id+" > ul").gridster({
+            //$("#"+container_id+ " > ul").gridster({
+            gridster[++iteration] = $("#"+container_id+ " ul").gridster({
                 namespace: '#'+container_id,
                 widget_margins: [5, 5],
                 widget_base_dimensions: [60, 60],
@@ -105,7 +107,7 @@ $(document).ready(function() {
 
                     }
                 }
-            });
+            }).data('gridster');
         })
     });
 
@@ -735,6 +737,24 @@ $(document).ready(function() {
                 }
             })
         }
+    });
+
+
+    //Test
+    $("#testme").click(function(){
+        //write your animation code here
+        $("#display_animation_ajax_loader").show();
+        $.ajax({
+            url: "/new_organization_from_duplication",
+            method: "GET",
+            data: {
+                organization_id: 1
+            },
+            success: function(){
+                //stop animation
+                $("#display_animation_ajax_loader").hide();
+            }
+        })
     });
 
 });
