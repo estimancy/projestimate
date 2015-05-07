@@ -580,8 +580,9 @@ class ProjectsController < ApplicationController
 
       if @project.update_attributes(params[:project])
         begin
-          start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))     #start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
-          @project.start_date = date
+          #start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))
+          start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
+          @project.start_date = start_date
         rescue
           @project.start_date = Time.now.to_date
         end
