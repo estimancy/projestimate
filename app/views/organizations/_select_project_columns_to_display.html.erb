@@ -1,5 +1,5 @@
 <%= form_tag({ :controller => 'organizations', :action => 'set_available_inline_columns', :project_id => @project }, :method => :get, :id => 'query_form') do %>
-    <table class="query-columns">
+    <table id="query-columns">
       <tr>
         <td><%= I18n.t(:field_column_names) %></td>
         <td style="padding-left:0">
@@ -40,7 +40,7 @@
 
     <%= javascript_tag do %>
         $(document).ready(function(){
-            $('.query-columns').closest('form').submit(function(){
+            $('#query-columns').closest('form').submit(function(){
                 $('#selected_columns option').prop('selected', true);
 
                 //get the selected value in Array

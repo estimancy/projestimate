@@ -1134,8 +1134,6 @@ class OrganizationsController < ApplicationController
 
   def update_available_inline_columns
     # update selected column
-    #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
-    #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
     selected_columns = params['selected_inline_columns']
     query_classname = params['query_classname'].constantize
     unless selected_columns.nil?
@@ -1146,6 +1144,11 @@ class OrganizationsController < ApplicationController
           @current_organization.organization_selected_columns = selected_columns
       end
       @current_organization.save
+    end
+
+    respond_to do |format|
+      format.js
+      format.json { render json: selected_columns }
     end
   end
 
