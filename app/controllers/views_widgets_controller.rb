@@ -252,9 +252,6 @@ class ViewsWidgetsController < ApplicationController
       if !current_view.is_temporary_view && !@module_project.nil?
         new_temporary_view = View.new(name: "#{current_view.name}_temp", description: current_view.description, pemodule_id: pemodule_id, organization_id: current_view.organization_id, is_temporary_view: true, initial_view_id: current_view.id)
         if new_temporary_view.save
-          #the new widget will be added to the temporary view
-          @views_widget.view_id = new_temporary_view.id
-
           #Copy current view widgets to the new created view
           current_view.views_widgets.each do |view_widget|
             widget_copy = ViewsWidget.create(view_id: new_temporary_view.id, module_project_id: view_widget.module_project_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,

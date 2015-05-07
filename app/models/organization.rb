@@ -33,30 +33,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-
-class QueryColumn
-  attr_accessor :name, :caption, :association_name
-
-  def initialize(name, options={})
-    self.name = name
-    #self.association_name = association_name
-    self.caption = options[:caption]
-  end
-
-  def value(object)
-    object.send name
-  end
-
-  def value_object(object)
-    object.send name
-  end
-
-  def css_classes
-    name
-  end
-end
-
-
 #Organization of the User
 class Organization < ActiveRecord::Base
 
@@ -144,6 +120,7 @@ class Organization < ActiveRecord::Base
       new_copy_number = original_organization.copy_number.to_i+1
       new_organization.name = "#{original_organization.name}(#{new_copy_number})" ###"Copy of '#{original_organization.name}' at #{Time.now}"
       original_organization.copy_number = new_copy_number
+      new_organization.copy_number = 0
     })
   end
 

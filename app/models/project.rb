@@ -118,6 +118,9 @@ class Project < ActiveRecord::Base
       QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at"),
     ]
 
+  # Create QueryColumns for Custom fields
+
+
   #class_attribute :selected_inline_columns
   #self.selected_inline_columns = update_selected_inline_columns(Project)
   #self.selected_inline_columns = self.available_inline_columns.select{ |column| column.name.to_s.in?(@current_organization.project_selected_columns)}

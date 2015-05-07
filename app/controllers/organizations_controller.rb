@@ -191,14 +191,6 @@ class OrganizationsController < ApplicationController
     @projects = @organization.projects.where(is_model: false).all
   end
 
-  # Testing: to delete after Test
-  def new_organization_from_duplication
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
   # New organization from image
   def new_organization_from_image
   end
@@ -724,7 +716,12 @@ class OrganizationsController < ApplicationController
         flash[:error] = I18n.t('errors.messages.not_saved')
       end
     end
-    redirect_to :back
+
+    #redirect_to :back
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.js { render :js => "window.location.replace('/organizationals_params');"}
+    end
   end
 
   def new
@@ -1138,11 +1135,11 @@ class OrganizationsController < ApplicationController
 
   # Update the organization's projects available inline columns
   def set_available_inline_columns
+    authorize! :manage_projects_selected_columns, Organization
     redirect_to organization_setting_path(@current_organization, :anchor => 'tabs-select-columns-list')
   end
 
   def update_available_inline_columns
-    puts "test"
     # update selected column
     #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
     #Organization.update_attribute(:project_selected_columns, params[:selected_inline_columns])
