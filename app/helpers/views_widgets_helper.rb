@@ -375,9 +375,9 @@ module ViewsWidgetsHelper
     wai = WbsActivityInput.where(wbs_activity_id: wbs_activity, module_project_id: module_project.id).first
 
     begin
-      ratio_reference = wbs_activity.wbs_activity_ratios.first
-    rescue
       ratio_reference = wai.wbs_activity_ratio
+    rescue
+      ratio_reference = wbs_activity.wbs_activity_ratios.first
     end
 
     project_organization = module_project.project.organization

@@ -917,6 +917,13 @@ class OrganizationsController < ApplicationController
     case params[:commit]
       when I18n.t('delete')
         if params[:yes_confirmation] == 'selected'
+
+          OrganizationsUsers.delete_all("organization_id = #{@organization_id}")
+
+          @organization.groups.each do |group|
+            GroupsUsers.delete_all("group_id = #{group.id}")
+          end
+
           @organization.destroy
           if session[:organization_id] == params[:id]
             session[:organization_id] = current_user.organizations.first  #session[:organization_id] = nil

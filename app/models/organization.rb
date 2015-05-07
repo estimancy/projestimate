@@ -35,6 +35,7 @@
 #############################################################################
 #Organization of the User
 class Organization < ActiveRecord::Base
+
   attr_accessible :name, :description, :is_image_organization, :number_hours_per_day, :number_hours_per_month, :cost_per_hour, :currency_id, :inflation_rate,
                   :limit1, :limit2, :limit3, :limit4,
                   :limit1_coef, :limit2_coef, :limit3_coef, :limit4_coef,
@@ -50,8 +51,8 @@ class Organization < ActiveRecord::Base
   ###has_and_belongs_to_many :users   ##to comment if not working
 
   #For user without group
-  has_many :organizations_users, class_name: 'OrganizationsUsers', :dependent => :destroy
-  has_many :users, through: :organizations_users#, :source => :user, uniq: true
+  has_many :organizations_users, class_name: 'OrganizationsUsers'
+  has_many :users, through: :organizations_users
 
   has_many :fields, :dependent => :destroy
   has_many :wbs_activities, :dependent => :destroy
