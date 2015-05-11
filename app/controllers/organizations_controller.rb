@@ -82,7 +82,7 @@ class OrganizationsController < ApplicationController
           tmp = [
               project.title,
               project.version,
-              project.product_name,
+              project.root_component,
               ActionView::Base.full_sanitizer.sanitize(project.description).html_safe,
               project.start_date,
               project.platform_category,
@@ -97,6 +97,8 @@ class OrganizationsController < ApplicationController
           tmp = update_selected_inline_columns(Project).map do |column|
             if column.caption == "description"
               ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe
+            elsif column.caption == "product_name"
+              project.root_component
             else
               column.value_object(project)
             end
