@@ -87,6 +87,7 @@ module OrganizationsHelper
           end
         end
       when :description
+        # mettre un truncate sinon ca plante sous ie8
         content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).html_safe, :class => "text_field_text_overflow exportable")
       when :start_date, :created_at, :updated_at
         content_tag('td class="center exportable"', I18n.l(value))

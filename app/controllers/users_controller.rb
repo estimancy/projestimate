@@ -89,8 +89,11 @@ public
 
     set_page_title 'New user'
 
-    unless @organization_id.nil? || @organization_id.empty?
-      @organization = Organization.find_by_id(params[:organization_id])
+    if params[:organization_id].present?
+      @organization = Organization.find(params[:organization_id])
+    end
+
+    unless @organization.nil?
       @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
       @user.groups << @user_group
     end
@@ -99,7 +102,16 @@ public
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
     @user.project_ids = params[:user][:project_ids]
-    @user.organization_ids = params[:user][:organization_ids]
+
+    @user.save(validate: false)
+
+    unless @organization.nil?
+      OrganizationsUsers.create(user_id: @user.id, organization_id: @organization.id)
+    else
+      params[:organizations].keys.each do |organization_id|
+        OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
+      end
+    end
 
     unless params[:groups].nil?
       @user.group_ids = params[:groups].keys
@@ -109,15 +121,13 @@ public
     if @user.save
       flash[:notice] = I18n.t(:notice_account_successful_created)
       if @organization.nil?
-        redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), users_path) and return
+        redirect_to(redirect_apply(edit_user_path(@user), nil, users_path)) and return
       else
-        user_first_organization = OrganizationsUsers.new(organization_id: @organization.id, user_id: @user.id)
-        user_first_organization.save
-        redirect_to redirect_apply(edit_user_path(@user), new_user_path(:anchor => 'tabs-1'), organization_users_path(@organization_id)) and return
+        redirect_to redirect_apply(edit_organization_user_path(@organization, @user), nil, organization_users_path(@organization)) and return
       end
 
     else
-      render(:new, organization_id: @organization_id)
+      render(:new, organization_id: @organization.id)
     end
   end
 

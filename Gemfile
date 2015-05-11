@@ -184,12 +184,12 @@ group :test do
   # DRb server for testing frameworks
   gem 'spork'
   # command line tool to easily handle events on file system modifications
-  gem 'guard'
-  gem 'guard-bundler'
-  gem 'guard-rspec'
-  gem 'guard-spork'
-  gem 'guard-migrate'
-  gem 'guard-rake'
+  #gem 'guard'
+  #gem 'guard-bundler'
+  #gem 'guard-rspec'
+  #gem 'guard-spork'
+  #gem 'guard-migrate'
+  #gem 'guard-rake'
   #Coverage tool
   gem 'simplecov', :require => false, :group => :test
   # run some required services using foreman start, more on this at the end of the article
