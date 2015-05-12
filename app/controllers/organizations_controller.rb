@@ -966,8 +966,8 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
       csv << ['Prénom', 'Nom', 'Email', 'Login', 'Groupes']
-      @organization.users.each do |user|
-        csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.map(&:name)
+      @organization.users.take(3).each do |user|
+        csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.where(organization_id: @organization.id).map(&:name)
       end
     end
     send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
