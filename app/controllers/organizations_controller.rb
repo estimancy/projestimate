@@ -999,7 +999,7 @@ class OrganizationsController < ApplicationController
                            initials: "#{row[0].first}#{row[1].first}",
                            time_zone: "Paris",
                            object_per_page: 50,
-                           auth_type: "Application",
+                           auth_type: AuthMethod.first.id,
                            number_precision: 2)
 
               u.save(validate: false)
