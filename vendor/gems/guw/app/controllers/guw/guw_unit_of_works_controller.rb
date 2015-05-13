@@ -106,7 +106,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       #reorder to keep good order
       reorder guw_unit_of_work.guw_unit_of_work_group
 
-      @guw_type = Guw::GuwType.find(params[:guw_type]["#{guw_unit_of_work.id}"])
+      guw_type = Guw::GuwType.find(params[:guw_type]["#{guw_unit_of_work.id}"])
       @lows = Array.new
       @mls = Array.new
       @highs = Array.new
@@ -146,10 +146,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           end
         end
 
-        @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: @guw_type.id,
+        @guw_attribute_complexities = Guw::GuwAttributeComplexity.where(guw_type_id: guw_type.id,
                                                                         guw_attribute_id: guowa.guw_attribute_id).all
 
-        sum_range = guowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: @guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
+        sum_range = guowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
 
         unless sum_range.nil? || sum_range.blank? || sum_range == 0
           @guw_attribute_complexities.each do |guw_ac|
@@ -220,18 +220,20 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.result_high = @highs.sum
       end
 
+      guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+
       guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.guw_type_id = guw_type.id
+      guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+
       guw_unit_of_work.save
 
       if @guw_model.one_level_model == true
-        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
-        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
 
+        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
         guw_unit_of_work.guw_complexity_id = guw_complexity_id
-        guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
-        guw_unit_of_work.guw_type_id = @guw_type.id
 
         cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
                                                guw_work_unit_id: guw_work_unit.id).first
@@ -244,10 +246,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       else
         #Save if uo is simple/ml/high
         value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
-        if (value_pert < @guw_type.guw_complexities.map(&:bottom_range).min) or (value_pert >= @guw_type.guw_complexities.map(&:top_range).max)
+        if (value_pert < guw_type.guw_complexities.map(&:bottom_range).min) or (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
           guw_unit_of_work.off_line_uo = true
         else
-          @guw_type.guw_complexities.each do |guw_c|
+          guw_type.guw_complexities.each do |guw_c|
 
             if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
               guw_unit_of_work.guw_complexity_id = guw_c.id
@@ -400,6 +402,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def change_cotation
     @guw_type = Guw::GuwType.find(params[:guw_type_id])
+    @guw_model = @guw_type.guw_model
     @guw_complexities = @guw_type.guw_complexities
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
   end

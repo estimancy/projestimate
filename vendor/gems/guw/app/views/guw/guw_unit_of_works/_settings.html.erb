@@ -177,7 +177,12 @@
                     </td>
 
                     <td class="span2 pull-left">
-                      <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "guw_type input-small", guw: guow.id, required: true, readonly: !can?(:execute_estimation_plan, @project) %>
+                      <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
+                                                                                 selected: guow.guw_type_id),
+                                                                                 class: "guw_type input-small",
+                                                                                 guw: guow.id,
+                                                                                 required: true,
+                                                                                 readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
                     <td class="span2 pull-left">
@@ -261,59 +266,8 @@
                     <td>
                       <div class="modal fade" id="modal<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel<%= guow.id %>" aria-hidden="true" backdrop="static">
                         <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="myModalLabel<%= guow.id %>">
-                                <b>
-                                  <%= guow.guw_type %>
-                                </b> - Attributs de <%= guow %> </h4>
-                            </div>
-                            <div class="modal-body">
-                              <table class="table table-condensed table-striped">
-                                <tr>
-                                  <th><%= I18n.t :label_PeAttribute %></th>
-                                  <% if @guw_model.three_points_estimation == true %>
-                                    <th>L</th>
-                                  <% end %>
-                                  <th>M</th>
-                                  <% if @guw_model.three_points_estimation == true %>
-                                    <th>H</th>
-                                  <% end %>
-                                </tr>
-
-                                <% guow.guw_unit_of_work_attributes.reverse.each_with_index do |uowa, j| %>
-                                  <tr>
-                                    <% unless guow.guw_type.nil? %>
-                                      <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
-                                    <% end %>
-                                    <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
-                                      <td>
-                                        <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description, class: "attribute_tooltip pull-left" %>
-                                      </td>
-                                      <% if @guw_model.three_points_estimation == true %>
-                                        <td>
-                                          <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini", readonly: !can?(:execute_estimation_plan, @project) %>
-                                        </td>
-                                      <% end %>
-                                      <td>
-                                        <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini", readonly: !can?(:execute_estimation_plan, @project) %>
-                                      </td>
-                                      <% if @guw_model.three_points_estimation == true %>
-                                        <td>
-                                          <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini", readonly: !can?(:execute_estimation_plan, @project) %>
-                                        </td>
-                                      <% end %>
-                                    <% end %>
-                                  </tr>
-                                <% end %>
-                              </table>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer sans calculer</button>
-                              <% if can? :execute_estimation_plan, @project %>
-                                <button type="submit" class="btn btn-default">Calculer</button>
-                              <% end %>
-                            </div>
+                          <div class="modal-content" id="modal_attribute_<%= guow.id %>">
+                            <%= render 'guw/guw_unit_of_works/attributes_cotation', { :guow => guow } %>
                           </div>
                         </div>
                       </div>
