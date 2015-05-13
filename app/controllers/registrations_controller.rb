@@ -48,9 +48,9 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   #  #Display help login page
-    def help_login
-      #No authorize required since everyone can ask for help when logged in
-    end
+  def help_login
+    #No authorize required since everyone can ask for help when logged in
+  end
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)

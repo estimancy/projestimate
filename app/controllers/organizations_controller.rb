@@ -119,6 +119,7 @@ class OrganizationsController < ApplicationController
 
   def report
     @organization = Organization.find(params[:organization_id])
+    set_page_title "Rapport - #{@organization}"
     check_if_organization_is_image(@organization)
   end
 
@@ -127,6 +128,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Autorisations - #{@organization}"
 
     @groups = @organization.groups
 
@@ -150,6 +152,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Paramétrage - #{@organization}"
 
     @technologies = @organization.organization_technologies
     @fields = @organization.fields
@@ -168,6 +171,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Modules - #{@organization}"
 
     @guw_models = @organization.guw_models
     @wbs_activities = @organization.wbs_activities
@@ -182,6 +186,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Utilisateurs - #{@organization}"
   end
 
   def estimations
@@ -189,6 +194,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Estimations - #{@organization}"
 
     @projects = @organization.projects.where(is_model: false).all
   end
@@ -524,7 +530,6 @@ class OrganizationsController < ApplicationController
             end
           end
         end
-
 
         # Copy the WBS-Activities modules's Models instances
         organization_image.wbs_activities.each do |old_wbs_activity|

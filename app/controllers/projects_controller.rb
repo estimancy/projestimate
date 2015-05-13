@@ -111,6 +111,8 @@ class ProjectsController < ApplicationController
       redirect_to(root_url, flash: { error: "Vous ne pouvez pas accéder à une organization image"}) and return
     end
 
+    set_page_title "Estimation - #{@current_organization}"
+
     @user = current_user
     @pemodules ||= Pemodule.all
     @module_project = current_module_project
