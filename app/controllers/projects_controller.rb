@@ -1490,6 +1490,7 @@ public
       new_prj.description = params['project']['description']
       start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
       new_prj.start_date = start_date
+      new_prj.creator_id = current_user.id
 
       #Only the securities for the generated project will be taken in account
       new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }
