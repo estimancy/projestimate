@@ -76,15 +76,18 @@
         <tr>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "effort_low", convert(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization), class: "input-medium", readonly: true %>
+              <%# hidden_field_tag "effort_high", ev.send("string_data_most_likely")[component_id] %>
+              <%= text_field_tag "effort_low", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization, 5), class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
             </td>
           <% end %>
           <td>
-            <%= text_field_tag "effort_most_likely", convert(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization), class: "input-medium", readonly: true  %>
+            <%# hidden_field_tag "effort_most_likely", ev.send("string_data_most_likely")[component_id] %>
+            <%= text_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization, 5), class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
-              <%= text_field_tag "effort_high", convert(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization), class: "input-medium", readonly: true  %>
+              <%# hidden_field_tag "effort_high", ev.send("string_data_most_likely")[component_id] %>
+              <%= text_field_tag "effort_high", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization, 5), class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
             </td>
           <% end %>
         </tr>

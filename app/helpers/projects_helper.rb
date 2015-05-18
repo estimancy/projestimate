@@ -83,6 +83,7 @@ module ProjectsHelper
       end
   end
 
+  #Conversion en fonction des seuils et de la précision de l'utilisateur #> 12.12300 (si precision = 5)
   def convert(v, organization)
     unless v.class == Hash
       value = v.to_f
@@ -100,6 +101,51 @@ module ProjectsHelper
     else
       0
     end
+  end
+
+  #Conversion en fonction des seuils et de la précision en params #> 12.123 (si precision = 5) ou 12.12 si (si precision = 2)
+  def convert_with_specific_precision(v, organization, precision)
+    unless v.class == Hash
+      value = v.to_f
+      if value < organization.limit1.to_i
+        (value / organization.limit1_coef.to_f).round(precision)
+      elsif value < organization.limit2.to_i
+        (value / organization.limit2_coef.to_f).round(precision)
+      elsif value < organization.limit3.to_i
+        (value / organization.limit3_coef.to_f).round(precision)
+      elsif value < organization.limit4.to_i
+        (value / organization.limit4_coef.to_f).round(precision)
+      else
+        (value / organization.limit4_coef.to_f).round(precision)
+      end
+    else
+      0
+    end
+  end
+
+  #Conversion en fonction des seuils uniquement #> 12.123 (si precision = 5) ou 12.12 si (si precision = 2)
+  def convert_without_precision(v, organization)
+    unless v.class == Hash
+      value = v.to_f
+      if value < organization.limit1.to_i
+        value / organization.limit1_coef.to_f
+      elsif value < organization.limit2.to_i
+        value / organization.limit2_coef.to_f
+      elsif value < organization.limit3.to_i
+        value / organization.limit3_coef.to_f
+      elsif value < organization.limit4.to_i
+        value / organization.limit4_coef.to_f
+      else
+        value / organization.limit4_coef.to_f
+      end
+    else
+      0
+    end
+  end
+
+  #Conversion en fonction de la précision en params uniquement #> 12.12300 (si precision = 5) ou 12.12 si (si precision = 2)
+  def convert_with_precision(value, precision)
+    "%.#{precision}f" % value
   end
 
   def convert_label(v, organization)
@@ -1136,10 +1182,6 @@ module ProjectsHelper
     #authorization = can_do_action_on_estimation?(estimation, "delete_project")
     #authorization &&
     can?(:delete_project, estimation)
-  end
-
-  def convert_with_precision(value, precision)
-    "%.#{precision}f" % value
   end
 
 end
