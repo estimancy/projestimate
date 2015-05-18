@@ -63,7 +63,7 @@
 
         <% @unit_of_work_groups.each do |uowg| %>
           <div class="accordion-heading" style="padding:5px;">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>" id="accordion<%=uowg.id%>">
               <div class="">
                 <span style="font-weight: bold; font-size: 20px;">
                   <%= uowg.name %>
@@ -241,13 +241,13 @@
 
                     <td>
                       <span class="pull-left">
-                        <%= guow.effort %>
+                        <%= guow.effort.round(4) %>
                       </span>
                     </td>
 
                     <td>
                       <span class="pull-left">
-                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort.nil? ? '' : guow.ajusted_effort, class: "input-mini retained-#{uowg.id}", readonly: !can?(:execute_estimation_plan, @project) %>
+                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort.nil? ? '' : guow.ajusted_effort.round(4), class: "input-mini retained-#{uowg.id}", readonly: !can?(:execute_estimation_plan, @project) %>
                       </span>
                     </td>
 
