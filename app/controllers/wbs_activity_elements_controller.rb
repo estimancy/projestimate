@@ -140,7 +140,7 @@ class WbsActivityElementsController < ApplicationController
     #    #logical deletion  delete don't have to suppress records anymore on Defined record
     #    @wbs_activity_element.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
     #  else
-        @wbs_activity_element.destroy
+    @wbs_activity_element.destroy
     #  end
     #else
     #  if @wbs_activity_element.is_local_record? || @wbs_activity_element.is_retired?

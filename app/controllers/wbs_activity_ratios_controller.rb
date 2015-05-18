@@ -82,11 +82,11 @@ class WbsActivityRatiosController < ApplicationController
     @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
     @wbs_activity=@wbs_activity_ratio.wbs_activity
 
-    unless is_master_instance?
-      if @wbs_activity_ratio.is_local_record?
-        @wbs_activity_ratio.custom_value = 'Locally edited'
-      end
-    end
+    #unless is_master_instance?
+    #  if @wbs_activity_ratio.is_local_record?
+    #    @wbs_activity_ratio.custom_value = 'Locally edited'
+    #  end
+    #end
 
     if @wbs_activity_ratio.update_attributes(params[:wbs_activity_ratio])
       redirect_to redirect_apply(edit_wbs_activity_ratio_path(@wbs_activity_ratio,:activity_id=>@wbs_activity_ratio.wbs_activity_id), nil, edit_wbs_activity_path(@wbs_activity_ratio.wbs_activity, :anchor => 'tabs-3'))
@@ -142,7 +142,7 @@ class WbsActivityRatiosController < ApplicationController
     #  end
     #else
     #  if @wbs_activity_ratio.is_local_record? || @wbs_activity_ratio.is_retired?
-        @wbs_activity_ratio.destroy
+    @wbs_activity_ratio.destroy
     #  else
     #    flash[:warning] = I18n.t (:warning_master_record_cant_be_delete)
     #    redirect_to redirect(edit_organization_path(@wbs_activity_ratio.wbs_activity.organization_id))  and return

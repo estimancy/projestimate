@@ -403,6 +403,8 @@ class OrganizationsController < ApplicationController
                 activity_input.update_attributes(wbs_activity_id: new_wbs_activity.id, wbs_activity_ratio_id: new_wbs_activity_ratio.id)
               end
             end
+            new_mp.wbs_activity_id = new_wbs_activity.id
+            new_mp.save
           end
 
           ["input", "output"].each do |io|
