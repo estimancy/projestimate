@@ -95,7 +95,16 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def duplicate
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
-    @guw_unit_of_work.clone
+
+    @new_guw_unit_of_work = @guw_unit_of_work.dup
+    @new_guw_unit_of_work.save
+
+    @guw_unit_of_work.guw_unit_of_work_attributes.each do |guowa|
+      nguowa = guowa.dup
+      nguowa.guw_unit_of_work_id = @new_guw_unit_of_work.id
+      nguowa.save
+    end
+
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
@@ -298,13 +307,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       end
 
-      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum)
-      guw_unit_of_work.ajusted_effort = @weight_pert.sum
+      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
+      guw_unit_of_work.ajusted_effort = @weight_pert.sum.to_f.round(3)
 
       if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-        guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum)
+        guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
       elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
-        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"]
+        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
       end
 
       if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
