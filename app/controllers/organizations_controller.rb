@@ -986,7 +986,7 @@ class OrganizationsController < ApplicationController
     file = params[:file]
     encoding = params[:encoding]
     #begin
-      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:ISO-8859-1") do |csv|
+      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:utf-8") do |csv|
         csv.each_with_index do |row, i|
           unless i == 0
             password = SecureRandom.hex(8)
