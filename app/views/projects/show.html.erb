@@ -18,11 +18,23 @@
       <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')}, :disabled => true %>
       <table>
         <tr>
-          <td><%= f.input :product_name, label: I18n.t(:label_product_name), :disabled => !( can_alter_estimation?(@project) && can?(:alter_product_name, @project)), :input_html => {:class => 'input-large', value: (@project.root_component.nil? ? '' : @project.root_component.name) } %></td>
+          <td><%= f.input :product_name, label: I18n.t(:label_product_name), :disabled => true, :input_html => {:class => 'input-large', value: (@project.root_component.nil? ? '' : @project.root_component.name) } %></td>
           <td><%= f.input :version, :input_html => {:class => 'input-large'}, :disabled => true %></td>
         </tr>
       </table>
-      <%= f.input :description, :label => "#{I18n.t 'description'}", :disabled => !( can_alter_estimation?(@project) && can?(:alter_project_description, @project)) , :input_html => {:class => 'input-xxlarge', :rows => 5} %>
+
+      <%= tinymce %>
+      <label>
+        <b>
+          Description
+        </b>
+      </label>
+      <%= simple_format(@project.description) %>
+
+      <% if can_alter_estimation?(@project) && can?(:alter_project_description, @project) %>
+        <%= f.input :description, :label => false, :input_html => {:class => 'input-large tinymce', :rows => 5, :cols => 10 } %>
+      <% end %>
+
       <table>
         <tr>
           <td><%= f.input :estimation_status_id, label: "Estimation Status", as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
