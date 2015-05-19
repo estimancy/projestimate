@@ -45,6 +45,7 @@ Guw::Engine.routes.draw do
   resources :guw_unit_of_works do
     get "up"
     get "down"
+    post "duplicate"
   end
   resources :guw_unit_of_work_groups
 

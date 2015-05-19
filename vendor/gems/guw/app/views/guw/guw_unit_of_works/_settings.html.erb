@@ -254,6 +254,7 @@
                     <td>
                       <span class="pull-left">
                         <% if can? :execute_estimation_plan, @project %>
+                          <%# link_to "", guw.guw_unit_of_work_duplicate_path(@guw_model, position: guow.display_order), class: "fa fa-copy", method: "post" %>
                           <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
                           <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
                           <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>

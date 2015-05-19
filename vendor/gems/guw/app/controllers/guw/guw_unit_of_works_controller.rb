@@ -57,13 +57,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_unit_of_work_id: @guw_unit_of_work.id,
           guw_attribute_id: gac.id)
     end
-    redirect_to main_app.dashboard_path(@project)
+    redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
   def update
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
     if @guw_unit_of_work.update_attributes(params[:guw_unit_of_work])
-      redirect_to main_app.dashboard_path(@project) and return
+      redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}") and return
     else
       render :edit
     end
@@ -74,7 +74,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     group = @guw_unit_of_work.guw_unit_of_work_group
     @guw_unit_of_work.delete
     reorder group
-    redirect_to main_app.dashboard_path(@project)
+    redirect_to main_app.dashboard_path(@project, anchor: "accordion#{group.id}")
   end
 
   def up
@@ -94,9 +94,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def duplicate
-    #@guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
-    #@guw_unit_of_work.amoeba_dup
-
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    @guw_unit_of_work.clone
+    redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
   def save_guw_unit_of_works
