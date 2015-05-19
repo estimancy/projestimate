@@ -93,8 +93,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to :back
   end
 
-  def save_guw_unit_of_works
+  def duplicate
+    #@guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    #@guw_unit_of_work.amoeba_dup
 
+  end
+
+  def save_guw_unit_of_works
     @guw_model = current_module_project.guw_model
     @component = current_component
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,

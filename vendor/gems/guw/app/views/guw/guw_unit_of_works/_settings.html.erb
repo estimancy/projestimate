@@ -241,7 +241,7 @@
 
                     <td>
                       <span class="pull-left">
-                        <%= guow.effort.round(4) %>
+                        <%= guow.effort.nil? ? '-' : guow.effort.round(4) %>
                       </span>
                     </td>
 
