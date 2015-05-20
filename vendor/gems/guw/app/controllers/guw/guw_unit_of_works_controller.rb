@@ -338,8 +338,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       #Si pas de complexité, l'effort est nul
       if guw_unit_of_work.guw_complexity.nil?
         guw_unit_of_work.effort = nil
-        guw_unit_of_work.off_line_uo = nil
-        guw_unit_of_work.off_line = nil
       else
         guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
         guw_unit_of_work.ajusted_effort = @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3)
