@@ -36,6 +36,7 @@
 
 
 class Guw::GuwAttributesController < ApplicationController
+
   def index
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_attributes = @guw_model.guw_attributes.order("name ASC")

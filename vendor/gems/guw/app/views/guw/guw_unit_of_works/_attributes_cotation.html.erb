@@ -15,11 +15,13 @@
       <% end %>
       <th>M</th>
       <% if @guw_model.three_points_estimation == true %>
+
         <th>H</th>
       <% end %>
     </tr>
 
-    <% guow.guw_unit_of_work_attributes.reverse.each_with_index do |uowa, j| %>
+    <%# Guw::GuwUnitOfWorkAttribute.includes(:guw_attribute).where(guw_unit_of_work_id: guow.id).order('guw_guw_attributes.name asc').each do |uowa, j| %>
+    <% guow.guw_unit_of_work_attributes.includes(:guw_attribute).order('guw_guw_attributes.name asc').each_with_index do |uowa, j| %>
       <tr>
         <% unless guw_type.nil? %>
           <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
