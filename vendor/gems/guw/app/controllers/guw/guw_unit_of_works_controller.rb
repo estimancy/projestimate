@@ -336,19 +336,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
 
       #Si pas de complexité, l'effort est nul
-      unless guw_unit_of_work.guw_complexity.nil?
-        guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
-        guw_unit_of_work.ajusted_effort = @weight_pert.sum.to_f.round(3)
-
-        if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-          guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
-        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
-          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
-        end
-      else
+      if guw_unit_of_work.guw_complexity.nil?
         guw_unit_of_work.effort = nil
         guw_unit_of_work.off_line_uo = nil
         guw_unit_of_work.off_line = nil
+      else
+        guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
+        guw_unit_of_work.ajusted_effort = @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3)
+      end
+
+      if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+        guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
+      elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
       end
 
       if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
@@ -358,6 +358,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
       guw_unit_of_work.save
     end
+
     #we save the effort now in estimation values
     @module_project = current_module_project
     @module_project.guw_model_id = @guw_model.id
