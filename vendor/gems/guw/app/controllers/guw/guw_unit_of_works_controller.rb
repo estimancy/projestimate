@@ -57,6 +57,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_unit_of_work_id: @guw_unit_of_work.id,
           guw_attribute_id: gac.id)
     end
+
+    expire_fragment('guw_caching')
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
@@ -67,6 +69,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     else
       render :edit
     end
+    expire_fragment('guw_caching')
   end
 
   def destroy
@@ -74,6 +77,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     group = @guw_unit_of_work.guw_unit_of_work_group
     @guw_unit_of_work.delete
     reorder group
+    expire_fragment('guw_caching')
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{group.id}")
   end
 
@@ -82,6 +86,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.display_order = @guw_unit_of_work.display_order - 2
     @guw_unit_of_work.save
     reorder @guw_unit_of_work.guw_unit_of_work_group
+    expire_fragment('guw_caching')
     redirect_to :back
   end
 
@@ -90,7 +95,30 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.display_order = @guw_unit_of_work.display_order + 1
     @guw_unit_of_work.save
     reorder @guw_unit_of_work.guw_unit_of_work_group
+    expire_fragment('guw_caching')
     redirect_to :back
+  end
+
+  def load_trackings
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+  end
+
+  def save_trackings
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:trackings].keys.first)
+    @guw_unit_of_work.tracking = params[:trackings].values.first
+    @guw_unit_of_work.save
+    redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
+  end
+
+  def load_comments
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+  end
+
+  def save_comments
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:comments].keys.first)
+    @guw_unit_of_work.comments = params[:comments].values.first
+    @guw_unit_of_work.save
+    redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
   def duplicate
@@ -236,8 +264,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
 
-      guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
-      guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
+      #guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
+      #guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
@@ -411,6 +439,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
 
+    expire_fragment('guw_caching')
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_works.last.guw_unit_of_work_group.id}")
   end
 
@@ -419,6 +448,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_model = @guw_type.guw_model
     @guw_complexities = @guw_type.guw_complexities
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    expire_fragment('guw_caching')
   end
 
   def change_selected_state
@@ -489,6 +519,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                       module_project_id: current_module_project.id,
                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
 
+    expire_fragment('guw_caching')
   end
 
   private
