@@ -347,7 +347,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       else
         guw_unit_of_work.effort = nil
-        guw_unit_of_work.ajusted_effort = nil
         guw_unit_of_work.off_line_uo = nil
         guw_unit_of_work.off_line = nil
       end
