@@ -58,7 +58,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_attribute_id: gac.id)
     end
 
-    expire_fragment('guw_caching')
+
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
@@ -69,7 +69,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     else
       render :edit
     end
-    expire_fragment('guw_caching')
+
   end
 
   def destroy
@@ -77,7 +77,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     group = @guw_unit_of_work.guw_unit_of_work_group
     @guw_unit_of_work.delete
     reorder group
-    expire_fragment('guw_caching')
+
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{group.id}")
   end
 
@@ -86,7 +86,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.display_order = @guw_unit_of_work.display_order - 2
     @guw_unit_of_work.save
     reorder @guw_unit_of_work.guw_unit_of_work_group
-    expire_fragment('guw_caching')
+
     redirect_to :back
   end
 
@@ -95,7 +95,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.display_order = @guw_unit_of_work.display_order + 1
     @guw_unit_of_work.save
     reorder @guw_unit_of_work.guw_unit_of_work_group
-    expire_fragment('guw_caching')
+
     redirect_to :back
   end
 
@@ -181,8 +181,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           end
         else
           #Estimation 1 point
-          if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
-            low = most_likely = high = 0
+          if params["most_likely"]["#{guw_unit_of_work.id}"].nil? or params["most_likely"]["#{guw_unit_of_work.id}"].values.sum.blank?
+            low = most_likely = high = nil
           else
             low = most_likely = high = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
           end
@@ -241,21 +241,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guowa.save
       end
 
-      if @lows.sum == 0
+      if @lows.sum == 0 or @lows.empty?
         guw_unit_of_work.guw_complexity_id = nil
         guw_unit_of_work.result_low = nil
       else
         guw_unit_of_work.result_low = @lows.sum
       end
 
-      if @mls.sum == 0
+      if @mls.sum == 0 or @mls.empty?
         guw_unit_of_work.guw_complexity_id = nil
         guw_unit_of_work.result_most_likely = nil
       else
         guw_unit_of_work.result_most_likely = @mls.sum
       end
 
-      if @highs.sum == 0
+      if @highs.sum == 0 or @highs.empty?
         guw_unit_of_work.guw_complexity_id = nil
         guw_unit_of_work.result_high = nil
       else
@@ -335,13 +335,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       end
 
-      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
-      guw_unit_of_work.ajusted_effort = @weight_pert.sum.to_f.round(3)
+      #Si pas de complexité, l'effort est nul
+      unless guw_unit_of_work.guw_complexity.nil?
+        guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
+        guw_unit_of_work.ajusted_effort = @weight_pert.sum.to_f.round(3)
 
-      if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
-        guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
-      elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
-        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
+        if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+          guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
+        elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
+        end
+      else
+        guw_unit_of_work.effort = nil
+        guw_unit_of_work.ajusted_effort = nil
+        guw_unit_of_work.off_line_uo = nil
+        guw_unit_of_work.off_line = nil
       end
 
       if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
@@ -439,7 +447,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
 
-    expire_fragment('guw_caching')
+
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_works.last.guw_unit_of_work_group.id}")
   end
 
@@ -448,7 +456,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_model = @guw_type.guw_model
     @guw_complexities = @guw_type.guw_complexities
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
-    expire_fragment('guw_caching')
+
   end
 
   def change_selected_state
@@ -519,7 +527,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                       module_project_id: current_module_project.id,
                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
 
-    expire_fragment('guw_caching')
+
   end
 
   private
