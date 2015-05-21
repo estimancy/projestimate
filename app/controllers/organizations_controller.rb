@@ -83,7 +83,7 @@ class OrganizationsController < ApplicationController
               project.title,
               project.version,
               project.root_component,
-              ActionView::Base.full_sanitizer.sanitize(project.description).html_safe,
+              "#{ActionView::Base.full_sanitizer.sanitize(project.description).html_safe}",
               project.start_date,
               project.platform_category,
               project.project_category,
@@ -96,7 +96,7 @@ class OrganizationsController < ApplicationController
           #TODO
           tmp = update_selected_inline_columns(Project).map do |column|
             if column.caption == "description"
-              ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe
+              "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe}"
             elsif column.caption == "product_name"
               project.root_component
             else
@@ -114,7 +114,7 @@ class OrganizationsController < ApplicationController
         csv << tmp
       end
     end
-    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
+    send_data(csv_string.force_encoding("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
   end
 
   def report

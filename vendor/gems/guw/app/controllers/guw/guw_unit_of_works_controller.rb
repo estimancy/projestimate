@@ -39,6 +39,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
+    @guw_unit_of_work.guw_work_unit_id = @guw_model.guw_work_units.first.id
     @guw_unit_of_work.selected = true
 
     if params[:position].blank?
@@ -148,7 +149,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       #reorder to keep good order
       reorder guw_unit_of_work.guw_unit_of_work_group
 
-      guw_type = Guw::GuwType.find(params[:guw_type]["#{guw_unit_of_work.id}"])
+      begin
+        guw_type = Guw::GuwType.find(params[:guw_type]["#{guw_unit_of_work.id}"])
+      rescue
+        guw_type = guw_unit_of_work.guw_type
+      end
+
       @lows = Array.new
       @mls = Array.new
       @highs = Array.new
@@ -268,7 +274,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.result_high = @highs.sum
       end
 
-      guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+
+      begin
+        guw_work_unit = Guw::GuwWorkUnit.find(params[:work_unit]["#{guw_unit_of_work.id}"])
+      rescue
+        guw_work_unit = guw_unit_of_work.guw_work_unit
+      end
 
       #guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
       #guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
