@@ -111,6 +111,10 @@ class Guw::GuwModelsController < ApplicationController
     csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
 
       csv << [
+          "Estimation",
+          "Version",
+          "Groupe",
+          "Sélectionné",
           "Nom",
           "Description",
           "Type d'UO",
@@ -124,14 +128,29 @@ class Guw::GuwModelsController < ApplicationController
 
       tmp = Array.new
       @guw_unit_of_works.each do |uow|
+
+        if uow.off_line == true
+          cplx = "HSAT"
+        elsif uow.off_line_uo
+          cplx = "HSUO"
+        elsif uow.guw_complexity.nil?
+          cplx = "-"
+        else
+          cplx = uow.guw_complexity.name
+        end
+
         tmp = [
+            current_module_project.project.title,
+            current_module_project.project.version,
+            uow.guw_unit_of_work_group.name,
+            uow.selected == true ? 'Oui' : 'Non',
             "\"#{uow.name}\"",
             "\"#{uow.comments}\"",
             uow.guw_type,
             uow.guw_work_unit,
             uow.organization_technology,
             "\"#{uow.tracking}\"",
-            (uow.guw_complexity.nil? ? '' : uow.guw_complexity.name),
+            cplx,
             uow.effort,
             uow.ajusted_effort
         ]
@@ -144,7 +163,7 @@ class Guw::GuwModelsController < ApplicationController
         csv << tmp
       end
     end.html_safe
-    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Export-UOs-#{Time.now}.csv")
+    send_data(csv_string.force_encoding("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Export-UOs-#{Time.now}.csv")
   end
 
 end

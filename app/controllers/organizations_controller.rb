@@ -82,8 +82,8 @@ class OrganizationsController < ApplicationController
           tmp = [
               project.title,
               project.version,
-              project.product_name,
-              ActionView::Base.full_sanitizer.sanitize(project.description).html_safe,
+              project.root_component,
+              "#{ActionView::Base.full_sanitizer.sanitize(project.description).html_safe}",
               project.start_date,
               project.platform_category,
               project.project_category,
@@ -96,7 +96,9 @@ class OrganizationsController < ApplicationController
           #TODO
           tmp = update_selected_inline_columns(Project).map do |column|
             if column.caption == "description"
-              ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe
+              "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe}"
+            elsif column.caption == "product_name"
+              project.root_component
             else
               column.value_object(project)
             end
@@ -112,11 +114,12 @@ class OrganizationsController < ApplicationController
         csv << tmp
       end
     end
-    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
+    send_data(csv_string.force_encoding("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
   end
 
   def report
     @organization = Organization.find(params[:organization_id])
+    set_page_title "Rapport - #{@organization}"
     check_if_organization_is_image(@organization)
   end
 
@@ -125,6 +128,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Autorisations - #{@organization}"
 
     @groups = @organization.groups
 
@@ -148,6 +152,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Paramétrage - #{@organization}"
 
     @technologies = @organization.organization_technologies
     @fields = @organization.fields
@@ -166,6 +171,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Modules - #{@organization}"
 
     @guw_models = @organization.guw_models
     @wbs_activities = @organization.wbs_activities
@@ -180,6 +186,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Utilisateurs - #{@organization}"
   end
 
   def estimations
@@ -187,6 +194,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_page_title "Estimations - #{@organization}"
 
     @projects = @organization.projects.where(is_model: false).all
   end
@@ -395,6 +403,8 @@ class OrganizationsController < ApplicationController
                 activity_input.update_attributes(wbs_activity_id: new_wbs_activity.id, wbs_activity_ratio_id: new_wbs_activity_ratio.id)
               end
             end
+            new_mp.wbs_activity_id = new_wbs_activity.id
+            new_mp.save
           end
 
           ["input", "output"].each do |io|
@@ -977,8 +987,8 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
       csv << ['Prénom', 'Nom', 'Email', 'Login', 'Groupes']
-      @organization.users.each do |user|
-        csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.map(&:name)
+      @organization.users.take(3).each do |user|
+        csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.where(organization_id: @organization.id).map(&:name)
       end
     end
     send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
@@ -990,7 +1000,7 @@ class OrganizationsController < ApplicationController
     file = params[:file]
     encoding = params[:encoding]
     #begin
-      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:ISO-8859-1") do |csv|
+      CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:utf-8") do |csv|
         csv.each_with_index do |row, i|
           unless i == 0
             password = SecureRandom.hex(8)
@@ -1010,7 +1020,7 @@ class OrganizationsController < ApplicationController
                            initials: "#{row[0].first}#{row[1].first}",
                            time_zone: "Paris",
                            object_per_page: 50,
-                           auth_type: "Application",
+                           auth_type: AuthMethod.first.id,
                            number_precision: 2)
 
               u.save(validate: false)

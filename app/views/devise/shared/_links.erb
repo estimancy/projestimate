@@ -1,11 +1,5 @@
-<%= link_to I18n.t('button_need_help'), '/help_login', :remote => true %> <br/>
-
 <%- if controller_name != 'sessions' %>
   <%= link_to I18n.t(:connect_me), new_session_path(resource_name) %><br />
-<% end -%>
-
-<%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <%= link_to I18n.t('button_ask_account'), new_registration_path(resource_name) %><br />
 <% end -%>
 
 <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
@@ -20,13 +14,12 @@
   <%= link_to I18n.t('devise.confirmations.not_receive_unlock_instructions'), new_unlock_path(resource_name) %><br />
 <% end -%>
 
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <% if provider == :google_oauth2 %>
-        <%= link_to I18n.t(:sign_in_with_google), omniauth_authorize_path(resource_name, provider) %><br />
-    <% else %>
-        <%= link_to "#{I18n.t(:text_sign_in_with)} #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider) %><br />
-        <%#= link_to "Sign in with Google", user_omniauth_authorize_path(:google_oauth2) %>
-    <% end %>
-  <% end -%>
-<% end -%>
+<%# if devise_mapping.omniauthable? %>
+  <%# resource_class.omniauth_providers.each do |provider| %>
+    <%# if provider == :google_oauth2 %>
+        <%# link_to I18n.t(:sign_in_with_google), omniauth_authorize_path(resource_name, provider) %><br />
+    <%# else %>
+        <%# link_to "#{I18n.t(:text_sign_in_with)} #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider) %><br />
+    <%# end %>
+  <%# end -%>
+<%# end -%>

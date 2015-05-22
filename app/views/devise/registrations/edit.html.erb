@@ -1,6 +1,6 @@
 <h2><%= params[:action_to_do].eql?("update_password_first_connexion") ? I18n.t(:update_password_first_connexion) : I18n.t(:update_email_login_password) %></h2>
+<hr>
 
-<%#= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
 <%= simple_form_for(resource, as: resource_name, url: update_user_registration_path, html: { method: :put }) do |f| %>
   <%= f.error_notification %>
 

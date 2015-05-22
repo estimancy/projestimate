@@ -45,6 +45,9 @@ Guw::Engine.routes.draw do
   resources :guw_unit_of_works do
     get "up"
     get "down"
+    post "duplicate"
+    post "load_comments"
+    post "load_trackings"
   end
   resources :guw_unit_of_work_groups
 
@@ -77,4 +80,6 @@ Guw::Engine.routes.draw do
 
   get "change_selected_state" => "guw_unit_of_works#change_selected_state", as: "change_selected_state"
   get "change_cotation" => "guw_unit_of_works#change_cotation", as: "change_cotation"
+  post "save_comments" => "guw_unit_of_works#save_comments", as: "save_comments"
+  post "save_trackings" => "guw_unit_of_works#save_trackings", as: "save_trackings"
 end

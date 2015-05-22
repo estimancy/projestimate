@@ -421,11 +421,11 @@ class ApplicationController < ActionController::Base
 
   def set_locale_from_browser
     if  request.env['HTTP_ACCEPT_LANGUAGE'].nil?
-      I18n.locale= 'en'
+      I18n.locale= 'frsncf'
     else
       local_language=Language.find_by_locale(extract_locale_from_accept_language_header)
       if local_language.nil?
-        I18n.locale= 'en'
+        I18n.locale= 'frsncf'
       else
         I18n.locale = extract_locale_from_accept_language_header
       end
@@ -525,12 +525,12 @@ class ApplicationController < ActionController::Base
     # return the path based on resource
     if resource.password_changed
       # if user has no organization, this means that his has no group, so no right
-      if resource.organizations.size == 0
+      if resource.organizations.where(is_image_organization: false).size == 0
         flash[:warning] = I18n.t(:you_have_no_right_to_continue)
         sign_out(resource)
         new_session_path(:user)
-      elsif resource.organizations.size == 1
-        organization_estimations_path(resource.organizations.first)
+      elsif resource.organizations.where(is_image_organization: false).size == 1
+        organization_estimations_path(resource.organizations.where(is_image_organization: false).first)
       else
         root_path
       end

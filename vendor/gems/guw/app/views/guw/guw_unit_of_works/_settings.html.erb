@@ -1,3 +1,4 @@
+
 <%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path do %>
 
   <% @group_unit_of_works = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id) %>
@@ -6,7 +7,7 @@
     <% if can? :execute_estimation_plan, @project %>
       <%= link_to "Gérer les groupes", guw.guw_model_guw_unit_of_work_groups_path(@guw_model), class: "btn btn-mini" %>
     <% end %>
-      <%= link_to "Exporter", guw.guw_model_export_path(@guw_model), class: "btn btn-mini", method: "post" %>
+    <%= link_to "Exporter", guw.guw_model_export_path(@guw_model), class: "btn btn-mini", method: "post" %>
   </div>
 
   <div class="pull-right">
@@ -63,7 +64,7 @@
 
         <% @unit_of_work_groups.each do |uowg| %>
           <div class="accordion-heading" style="padding:5px;">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>" id="accordion<%=uowg.id%>">
               <div class="">
                 <span style="font-weight: bold; font-size: 20px;">
                   <%= uowg.name %>
@@ -151,33 +152,17 @@
 
                     <td style="max-width: 120px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                       <span class="pull-left" >
-                        <%= link_to guow.comments.nil? ? '' : guow.comments.truncate(25), "#", title: guow.comments, :"data-toggle" => "modal", :"data-target" => "#comments#{guow.id}", :"data-backdrop" => "static" %>
+                        <%= link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25), guw.guw_unit_of_work_load_comments_path(guow), title: guow.comments, method: "post", remote: true %>
                       </span>
-                      <div class="modal fade" id="comments<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="comments_label<%= guow.id %>" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="comments_label<%= guow.id %>">
-                                <b>
-                                  <%= guow.guw_type %>
-                                </b> - Attributs de <%= guow %> </h4>
-                            </div>
-                            <div class="modal-body">
-                              <%= text_area_tag "comments[#{guow.id}]", guow.comments, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
-                              <% if can? :execute_estimation_plan, @project %>
-                                <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
-                              <% end %>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </td>
 
                     <td class="span2 pull-left">
-                      <%= select_tag "guw_type[#{guow.id}]", options_for_select(@guw_model.guw_types.map{|i| [i.name, i.id]}, selected: guow.guw_type_id), class: "guw_type input-small", guw: guow.id, required: true, readonly: !can?(:execute_estimation_plan, @project) %>
+                      <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
+                                                                                 selected: guow.guw_type_id),
+                                                                                 class: "guw_type input-small",
+                                                                                 guw: guow.id,
+                                                                                 required: true,
+                                                                                 readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
                     <td class="span2 pull-left">
@@ -190,30 +175,8 @@
 
                     <td>
                       <span class="pull-left">
-                        <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '------' : guow.tracking.truncate(25), "#", title: guow.tracking, :"data-toggle" => "modal", :"data-target" => "#tracking#{guow.id}", :"data-backdrop" => "static" %>
+                        <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '------' : guow.tracking.truncate(25), guw.guw_unit_of_work_load_trackings_path(guow), title: guow.tracking, method: "post", remote: true %>
                       </span>
-                      <div class="modal fade" id="tracking<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="tracking_label<%= guow.id %>" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="tracking_label<%= guow.id %>">
-                                <b>
-                                  <%= guow.guw_type %>
-                                </b> - Attributs de <%= guow %> </h4>
-                              </h4>
-                            </div>
-                            <div class="modal-body">
-                              <%= text_area_tag "tracking[#{guow.id}]", guow.tracking, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
-                              <% if can? :execute_estimation_plan, @project %>
-                                <button type="submit" class="btn btn-default"><%= I18n.t(:save) %></button>
-                              <% end %>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </td>
 
                     <td>
@@ -236,19 +199,20 @@
 
                     <td>
                       <span class="pull-left">
-                        <%= guow.effort %>
+                        <%= guow.effort.nil? ? '-' : guow.effort.round(3) %>
                       </span>
                     </td>
 
                     <td>
                       <span class="pull-left">
-                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort.nil? ? '' : guow.ajusted_effort, class: "input-mini retained-#{uowg.id}", readonly: !can?(:execute_estimation_plan, @project) %>
+                        <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort.nil? ? '' : guow.ajusted_effort.round(3), class: "input-mini retained-#{uowg.id}", readonly: !can?(:execute_estimation_plan, @project) %>
                       </span>
                     </td>
 
                     <td>
                       <span class="pull-left">
                         <% if can? :execute_estimation_plan, @project %>
+                          <%# link_to "", guw.guw_unit_of_work_duplicate_path(guow), class: "fa fa-copy", method: "post" %>
                           <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
                           <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
                           <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
@@ -261,59 +225,8 @@
                     <td>
                       <div class="modal fade" id="modal<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel<%= guow.id %>" aria-hidden="true" backdrop="static">
                         <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="myModalLabel<%= guow.id %>">
-                                <b>
-                                  <%= guow.guw_type %>
-                                </b> - Attributs de <%= guow %> </h4>
-                            </div>
-                            <div class="modal-body">
-                              <table class="table table-condensed table-striped">
-                                <tr>
-                                  <th><%= I18n.t :label_PeAttribute %></th>
-                                  <% if @guw_model.three_points_estimation == true %>
-                                    <th>L</th>
-                                  <% end %>
-                                  <th>M</th>
-                                  <% if @guw_model.three_points_estimation == true %>
-                                    <th>H</th>
-                                  <% end %>
-                                </tr>
-
-                                <% guow.guw_unit_of_work_attributes.reverse.each_with_index do |uowa, j| %>
-                                  <tr>
-                                    <% unless guow.guw_type.nil? %>
-                                      <% sum_range = uowa.guw_attribute.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact %>
-                                    <% end %>
-                                    <% unless sum_range.nil? || sum_range.blank? || sum_range == 0 %>
-                                      <td>
-                                        <%= link_to uowa.guw_attribute.name, "#", title: uowa.guw_attribute.description, class: "attribute_tooltip pull-left" %>
-                                      </td>
-                                      <% if @guw_model.three_points_estimation == true %>
-                                        <td>
-                                          <%= text_field_tag "low[#{guow.id}][#{uowa.id}]", uowa.low, class: "input-mini", readonly: !can?(:execute_estimation_plan, @project) %>
-                                        </td>
-                                      <% end %>
-                                      <td>
-                                        <%= text_field_tag "most_likely[#{guow.id}][#{uowa.id}]", uowa.most_likely, class: "input-mini", readonly: !can?(:execute_estimation_plan, @project) %>
-                                      </td>
-                                      <% if @guw_model.three_points_estimation == true %>
-                                        <td>
-                                          <%= text_field_tag "high[#{guow.id}][#{uowa.id}]", uowa.high, class: "input-mini", readonly: !can?(:execute_estimation_plan, @project) %>
-                                        </td>
-                                      <% end %>
-                                    <% end %>
-                                  </tr>
-                                <% end %>
-                              </table>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer sans calculer</button>
-                              <% if can? :execute_estimation_plan, @project %>
-                                <button type="submit" class="btn btn-default">Calculer</button>
-                              <% end %>
-                            </div>
+                          <div class="modal-content" id="modal_attribute_<%= guow.id %>">
+                            <%= render 'guw/guw_unit_of_works/attributes_cotation', { :guow => guow } %>
                           </div>
                         </div>
                       </div>
@@ -335,6 +248,20 @@
     </div>
   <% end %>
 <% end %>
+
+<div class="modal fade" id="modal_comments" tabindex="-1" role="dialog" aria-labelledby="modal_comments_label" aria-hidden="true" backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content" id="modal_comments_content">
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal_trackings" tabindex="-1" role="dialog" aria-labelledby="modal_trackings_label" aria-hidden="true" backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content" id="modal_trackings_content">
+    </div>
+  </div>
+</div>
 
 <script>
   function raz(group){

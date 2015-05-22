@@ -18,7 +18,6 @@
       <%= f.input :email, required: true, :input_html => { :class => 'login_info span5'} %>
     <% end %>
     <%= f.input :language_id, :as => :collection_select, collection: Language.all.map{|i| [i.name, i.id] }.sort, :prompt => I18n.t('helpers.select.prompt'), :input_html => {:class => "login_info span5"} %>
-    <%# f.input :plan_id, :as => :collection_select, collection: Plan.all.map{|i| [i.name, i.id] }.sort, :prompt => I18n.t('helpers.select.prompt'), :input_html => {:class => "login_info span5"} %>
     <%= f.input :password, required: true, :input_html => { :class => 'login_info span5' } %>
     <%= f.input :password_confirmation, required: true, :input_html => { :class => 'login_info span5' } %>
   </div>
