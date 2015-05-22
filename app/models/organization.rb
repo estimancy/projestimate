@@ -107,6 +107,15 @@ class Organization < ActiveRecord::Base
     name
   end
 
+  ## Get the organization Custom fields for QueryColumn
+  #def custom_fields_query_columns
+  #  custom_fields = []
+  #  self.fields.each do |custom_field|
+  #    custom_fields << QueryColumn.new(custom_field.name.to_sym, :sortable => "#{Field.table_name}.name", :caption => "#{custom_field.name}", :field_id => custom_field.id)
+  #  end
+  #  custom_fields
+  #end
+
   # Add the amoeba gem for the copy
   amoeba do
     enable
@@ -123,6 +132,11 @@ class Organization < ActiveRecord::Base
       new_organization.copy_number = 0
     })
   end
+
+  #Override de destroy method, to use the Sidekiq Worker task
+  #def destroy
+  #  OrganizationDeleteWorker.perform_async(self.id)
+  #end
 
 end
 

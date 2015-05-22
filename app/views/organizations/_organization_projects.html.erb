@@ -33,11 +33,11 @@
             <% end %>
 
             <% @organization.fields.each do |field| %>
-              <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
               <td class="project_field_text_overflow exportable">
                 <% if field.coefficient.nil? %>
                   -
                 <% else %>
+                  <% pf = ProjectField.where(field_id: field.id, project_id: project.id).first %>
                   <%= pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) %>
                 <% end %>
               </td>

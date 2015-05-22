@@ -1413,3 +1413,4 @@ de:
   label_definition: "Definition"
   notice_cannot_view_views_and_widgets: "You don't have the rights to show the widgets's views"
   notice_cannot_view_selected_columns_list: "You don't have the rights to view projects selected columns list"
+  original_model: "Original model"

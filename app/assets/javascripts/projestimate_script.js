@@ -739,6 +739,11 @@ $(document).ready(function() {
         }
     });
 
+    //Test:  Duplicate organization with a gif animation image
+    $("#create_organization_from_image, #yes_delete_project").click(function(){
+        $("#display_animation_ajax_loader").show();
+    });
+
 });
 
 

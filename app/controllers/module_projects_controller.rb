@@ -90,17 +90,24 @@ class ModuleProjectsController < ApplicationController
           if selected_view.nil?
             mp_view_id = @module_project.view_id
             if mp_view_id.nil?
-              mp_view = View.create(name: "#{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
-              mp_view_id = mp_view.id
+              #find if there is a default view for the module
+              module_default_view = View.where(organization_id: @project.organization_id, pemodule_id: @module_project.pemodule_id, is_default_view: true).first
+              if module_default_view.nil?
+                mp_view = View.create(name: "#{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id, is_default_view: true)
+                mp_view_id = mp_view.id
+              else
+                mp_view_id = module_default_view.id
+              end
             end
             @module_project.update_attributes(view_id: mp_view_id, color: params['module_project']['color'])
+
           else
             if selected_view.is_temporary_view
               #get the initial view of the current temporary view
               initial_view = View.find(selected_view.initial_view_id)
 
               selected_view.views_widgets.where(from_initial_view: [nil, false]).each do |view_widget|
-                widget_copy = ViewsWidget.create(view_id: initial_view.id, module_project_id: view_widget.module_project.id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+                widget_copy = ViewsWidget.create(view_id: initial_view.id, module_project_id: view_widget.module_project_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
                                    show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                    width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
                                    position_x: view_widget.position_x, position_y: view_widget.position_y, from_initial_view: nil)

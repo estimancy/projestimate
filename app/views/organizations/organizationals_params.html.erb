@@ -47,7 +47,7 @@
                     <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
                     <!--The duplicate organization and the create from image organization are now using the same function -->
                     <%#= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"), :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization') %>
-                    <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"),  { class: "icon icon-copy", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+                    <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"),  { remote: true, class: "icon icon-copy", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
                     <%= link_to('', confirm_organization_deletion_path(i.id), :class => 'icon icon-trash', :title => I18n.t('delete'))  %>
                   <% end %>
               <% end %>
@@ -59,10 +59,10 @@
     </table>
   </div>
 
-  <div id="display_animation_ajax_loader" style="display: none">
-    <p>Veuillez patienter, la copie de l'organisation est en cours...</p>
-    <p><%= image_tag "green-animation-ajax-loader.gif", :id => "loading-indicator" %></p>
-  </div>
+  <!--<div id="display_animation_ajax_loader" style="display: none">-->
+    <!--<p>Veuillez patienter, la copie de l'organisation est en cours...</p>-->
+    <!--<p><%#= image_tag "green-animation-ajax-loader.gif", :id => "loading-indicator" %></p>-->
+  <!--</div>-->
 
   <div id="modal-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <%= render partial: "display_animation_ajax_loader" %>

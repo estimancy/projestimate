@@ -23,7 +23,14 @@ module OrganizationsHelper
 
   def update_selected_inline_columns(query)
     selected_columns = []
-    #selected_columns = query.available_inline_columns.select{ |column| column.name.to_s.in?(@current_organization.project_selected_columns)}
+    # Get the organization Custom fields for QueryColumn
+    @current_organization.fields.each do |custom_field|
+      custom_fields_query_columns = query.available_inline_columns.reject{ |column| column.field_id.nil? }
+      unless custom_fields_query_columns.map(&:field_id).include?(custom_field.id)
+        query.available_inline_columns << QueryColumn.new(custom_field.name.to_sym, :sortable => "#{Field.table_name}.name", :caption => "#{custom_field.name}", :field_id => custom_field.id)
+      end
+    end
+
     #selected_columns = query.available_inline_columns.select{ |column| column.name.to_s.in?(@current_organization.project_selected_columns)}
     @current_organization.project_selected_columns.each do |column_name|
       selected_columns << query.available_inline_columns.select{ |column| column.name.to_s == column_name}
@@ -32,13 +39,28 @@ module OrganizationsHelper
   end
 
   def query_available_inline_columns_options(query)
+
     selected_inline_columns = update_selected_inline_columns(query)
-    (query.available_inline_columns - selected_inline_columns).collect {|column| [I18n.t(column.caption), column.name]}
+    #(query.available_inline_columns - selected_inline_columns).collect {|column| [I18n.t(column.caption), column.name]}
+    (query.available_inline_columns - selected_inline_columns).collect do |column|
+      if column.field_id
+        [column.caption, column.name]
+      else
+        [I18n.t(column.caption), column.name]
+      end
+    end
   end
 
   def query_selected_inline_columns_options(query)
     selected_inline_columns = update_selected_inline_columns(query)
-    selected_inline_columns.collect {|column| [ I18n.t(column.caption), column.name]}
+    #selected_inline_columns.collect {|column| [ I18n.t(column.caption), column.name]}
+    selected_inline_columns.collect do |column|
+      if column.field_id
+        [ column.caption, column.name]
+      else
+        [ I18n.t(column.caption), column.name]
+      end
+    end
   end
 
   def column_header(column)
@@ -51,12 +73,21 @@ module OrganizationsHelper
       when :status_name
         content_tag('th style="width: 50px" class="filter-select exportable"', I18n.t(column.caption))
       else
-        content_tag('th class="exportable"', I18n.t(column.caption))
+        if column.field_id
+          content_tag('th class="project_field_text_overflow exportable"', column.caption)
+        else
+          content_tag('th class="exportable"', I18n.t(column.caption))
+        end
     end
   end
 
   def column_content(column, project)
-    value = column.value_object(project)
+    if column.field_id
+      value = column.project_field_value(project)
+    else
+      value = column.value_object(project)
+    end
+
     if value.is_a?(Array)
       value.collect {|v| column_value(column, project, v)}.compact.join(', ').html_safe
     else
@@ -91,7 +122,11 @@ module OrganizationsHelper
       when :start_date, :created_at, :updated_at
         content_tag('td class="center exportable"', I18n.l(value))
       else
-        content_tag('td class="text_field_text_overflow exportable"', value)
+        if column.field_id
+          content_tag('td class="project_field_text_overflow exportable"', value)
+        else
+          content_tag('td class="text_field_text_overflow exportable"', value)
+        end
     end
   end
 

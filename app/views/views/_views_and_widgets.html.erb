@@ -4,14 +4,16 @@
     <th><%= I18n.t(:name) %></th>
     <th><%= I18n.t(:description) %></th>
     <th><%= I18n.t(:associated_module) %></th>
+    <th><%= I18n.t(:default_view) %></th>
     <th><%= I18n.t(:widgets) %></th>
     <th><%= I18n.t(:actions) %></th>
   </tr>
   <% @organization.views.order('pemodule_id').each do |view| %>
-      <tr class="">
+      <tr>
         <td><%= view.name %></td>
         <td><%= view.description %></td>
         <td><%= view.pemodule %></td>
+        <td class="center"><%= view.is_default_view ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
         <td>
           <% view.views_widgets.each do |widget| %>
               <%= check_box_tag "view_widget_#{widget.id}", widget.id, true, disabled: true %>

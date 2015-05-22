@@ -11,3 +11,10 @@
   - [default, 5]
   - [seldom, 3]
 
+
+#To run Sidekiq in production
+#bundle exec sidekiq -d -L log/sidekiq.log -C config/sidekiq.yml -e production
+#-d, Daemonize process
+#-L, path to writable logfile
+#-C, path to YAML config file
+#-e, Application environment
