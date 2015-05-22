@@ -141,7 +141,6 @@ module Projestimate
     STAFFING = "staffing"
     COST = "cost"
 
-
     # Modules with Factors
     COCOMO_ADVANCED = "cocomo_advanced"
     COCOMO_INTERMEDIATE = "cocomo_advanced"

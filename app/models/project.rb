@@ -53,6 +53,7 @@ class Project < ActiveRecord::Base
   belongs_to :platform_category
   belongs_to :project_category
   belongs_to :creator, :class_name => 'User', :foreign_key => 'creator_id'
+  belongs_to :original_model, :class_name => 'Project', :foreign_key => 'original_model_id'
   belongs_to :estimation_status
 
   has_many :module_projects, :dependent => :destroy
@@ -115,11 +116,8 @@ class Project < ActiveRecord::Base
       QueryColumn.new(:start_date, :sortable => "#{Project.table_name}.start_date", :caption => "label_date"),
       QueryColumn.new(:creator, :sortable => "#{User.table_name}.first_name", :caption => "author"),
       QueryColumn.new(:created_at, :sortable => "#{Project.table_name}.created_at", :caption => "created_at"),
-      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at"),
+      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at")
     ]
-
-  # Create QueryColumns for Custom fields
-
 
   #class_attribute :selected_inline_columns
   #self.selected_inline_columns = update_selected_inline_columns(Project)

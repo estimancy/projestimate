@@ -31,6 +31,9 @@
           <td><%= f.input :product_name, label: I18n.t(:label_product_name), :input_html => {:class => 'input-large', value: @project.root_component.nil? ? '' : @project.root_component.name } %></td>
           <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
         </tr>
+        <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
+            <tr><td><%= f.input :original_model, label: I18n.t(:original_model), disabled: true %></td></tr>
+        <% end %>
       </table>
 
        <%= tinymce %>

@@ -51,10 +51,15 @@
 
        <br>
        <div class="row">
-         <div class="span2"><%= submit_tag I18n.t('apply'), :class => 'btn' %> </div>
+         <div class="span2"><%= submit_tag I18n.t('apply'), :id => 'create_organization_from_image', :class => 'btn' %> </div>
          <div class="span4"><%= link_to I18n.t('back'), organizationals_params_path, :class => 'btn' %> </div>
        </div>
      </div>
 
     <% end %>
+</div>
+
+<div id="display_animation_ajax_loader" style="display: none">
+    <p>Veuillez patienter, la création de la nouvelle organisation est en cours...</p>
+    <p><%= image_tag "green-animation-ajax-loader.gif", :id => "loading-indicator" %></p>
 </div>

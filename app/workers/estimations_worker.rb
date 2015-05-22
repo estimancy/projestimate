@@ -21,7 +21,7 @@
 # After each update of estimation value, this worker will be call to recompute estimation value for its parent component
 class EstimationsWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :often, :retry => true, :backtrace => true
+  ###sidekiq_options :queue => :often, :retry => true, :backtrace => true
 
   def perform(pbs_project_elt_id, estimation_value_id)
     #No authorize required since this method is private and won't be call from any route
@@ -67,6 +67,8 @@ class EstimationsWorker
       # Update the estimation value for all levels
       estimation_value.update_attributes(updated_estimation_value)
     end
+
+  rescue ActiveRecord::RecordNotFound
   end
 
 
