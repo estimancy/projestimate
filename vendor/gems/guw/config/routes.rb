@@ -48,6 +48,7 @@ Guw::Engine.routes.draw do
     post "duplicate"
     post "load_comments"
     post "load_trackings"
+    post "load_cotations"
   end
   resources :guw_unit_of_work_groups
 
