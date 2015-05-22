@@ -1176,10 +1176,10 @@ class OrganizationsController < ApplicationController
       @current_organization.save
     end
 
-    respond_to do |format|
-      format.js
-      format.json { render json: selected_columns }
-    end
+    #respond_to do |format|
+    #  format.js
+    #  format.json { render json: selected_columns }
+    #end
   end
 
   #def import_abacus
