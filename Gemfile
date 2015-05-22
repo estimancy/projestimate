@@ -204,7 +204,7 @@ gem 'jbuilder', '~> 1.2'
 gem 'remotipart', '~> 1.2'
 
 #TEST===============
-gem 'thinreports'
+#gem 'thinreports'
 
 local_gemfile = File.join(File.dirname(__FILE__), 'Gemfile.local')
 if File.exists?(local_gemfile)
