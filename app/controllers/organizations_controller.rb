@@ -93,7 +93,6 @@ class OrganizationsController < ApplicationController
               project.creator
           ]
         elsif can_see_estimation?(project)
-          #TODO
           tmp = update_selected_inline_columns(Project).map do |column|
             if column.caption == "description"
               "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe}"
@@ -977,7 +976,7 @@ class OrganizationsController < ApplicationController
         csv << [user.first_name, user.last_name, user.email, user.login_name] + user.groups.where(organization_id: @organization.id).map(&:name)
       end
     end
-    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename='modele_import_utilisateurs.csv'")
+    send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=modele_import_utilisateurs.csv")
   end
 
   def import_user

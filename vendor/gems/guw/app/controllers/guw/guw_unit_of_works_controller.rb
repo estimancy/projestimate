@@ -100,6 +100,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     redirect_to :back
   end
 
+  def load_cotations
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    @guw_model = @guw_unit_of_work.guw_model
+  end
+
   def load_trackings
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
   end

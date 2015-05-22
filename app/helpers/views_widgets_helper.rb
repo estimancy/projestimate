@@ -176,7 +176,11 @@ module ViewsWidgetsHelper
               if wbs_data_probable.nil?
                 wbs_activity_elt_root_data_probable = nil
               else
-                wbs_activity_elt_root_data_probable = wbs_data_probable[wbs_activity_elt_root.id]
+                begin
+                  wbs_activity_elt_root_data_probable = wbs_data_probable[wbs_activity_elt_root.id]
+                rescue
+                  wbs_activity_elt_root_data_probable = nil
+                end
               end
 
               if wbs_activity_elt_root_data_probable.nil? || wbs_activity_elt_root_data_probable.empty?
