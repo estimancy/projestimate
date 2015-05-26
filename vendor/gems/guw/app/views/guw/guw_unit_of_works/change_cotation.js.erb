@@ -1,2 +1,1 @@
-$("#guw_complexity_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_type[#{@guw_unit_of_work.id}]", options_for_select(@guw_complexities.map{|i| [i.name, i.id]}, selected: @guw_unit_of_work.guw_type_id), class: "guw_type input-small", guw: @guw_unit_of_work.id, required: true) %>")
-$("#modal_attribute_<%= @guw_unit_of_work.id %>").html("<%= j(render 'guw/guw_unit_of_works/attributes_cotation', { :guow => @guw_unit_of_work })%>")
+$(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to "-----", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true) %>")
