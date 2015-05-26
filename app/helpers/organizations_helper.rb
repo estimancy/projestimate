@@ -24,10 +24,12 @@ module OrganizationsHelper
   def update_selected_inline_columns(query)
     selected_columns = []
     # Get the organization Custom fields for QueryColumn
+    query.available_inline_columns = query.available_inline_columns.reject{ |column| !column.field_id.nil? }
+
     @current_organization.fields.each do |custom_field|
       custom_fields_query_columns = query.available_inline_columns.reject{ |column| column.field_id.nil? }
       unless custom_fields_query_columns.map(&:field_id).include?(custom_field.id)
-        query.available_inline_columns << QueryColumn.new(custom_field.name.to_sym, :sortable => "#{Field.table_name}.name", :caption => "#{custom_field.name}", :field_id => custom_field.id)
+        query.available_inline_columns << QueryColumn.new(custom_field.name.to_sym, :sortable => "#{Field.table_name}.name", :caption => "#{custom_field.name}", :field_id => custom_field.id, organization_id: @current_organization.id)
       end
     end
 
