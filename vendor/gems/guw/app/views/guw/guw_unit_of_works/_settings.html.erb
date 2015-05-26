@@ -1,4 +1,3 @@
-
 <%= form_tag guw.guw_unit_of_works_save_guw_unit_of_works_path do %>
 
   <% @group_unit_of_works = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id) %>
@@ -166,11 +165,21 @@
                     </td>
 
                     <td class="span2 pull-left">
-                      <%= select_tag "work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]}, selected: guow.guw_work_unit_id), class: "input-small", required: true, readonly: !can?(:execute_estimation_plan, @project) %>
+                      <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]},
+                                                                                     selected: guow.guw_work_unit_id),
+                                     class: "guw_work_unit input-small",
+                                     guw: guow.id,
+                                     required: true,
+                                     readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
                     <td class="span2 pull-left">
-                      <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]}, selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id), class: "input-small", required: true, readonly: !can?(:execute_estimation_plan, @project) %>
+                      <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]},
+                                                                                      selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
+                                     class: "guw_technology input-small",
+                                     guw: guow.id,
+                                     required: true,
+                                     readonly: !can?(:execute_estimation_plan, @project) %>
                     </td>
 
                     <td>
@@ -180,25 +189,25 @@
                     </td>
 
                     <td>
-                      <span class="pull-left">
+                      <span class="pull-left cotation_label_<%= guow.id %>">
                         <% if @guw_model.one_level_model == true %>
                           <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
                         <% else %>
                           <% if guow.off_line == true %>
-                            <%= link_to "HSat", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                            <%= link_to "HSat", guw.guw_unit_of_work_load_cotations_path(guow), class: "red_color", method: "post", remote: true %>
                           <% elsif guow.off_line_uo == true %>
-                            <%= link_to "HSuo", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}", class: "red_color" %>
+                            <%= link_to "HSuo", guw.guw_unit_of_work_load_cotations_path(guow), class: "red_color", method: "post", remote: true %>
                           <% elsif guow.guw_complexity.nil? %>
-                            <%= link_to "-----", "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+                            <%= link_to "-----", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true %>
                           <% else %>
-                            <%= link_to guow.guw_complexity.name, "#", :"data-toggle" => "modal", :"data-target" => "#modal#{guow.id}" %>
+                            <%= link_to guow.guw_complexity.name, guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true %>
                           <% end %>
                         <% end %>
                       </span>
                     </td>
 
                     <td>
-                      <span class="pull-left">
+                      <span class="pull-left effort_label<%= guow.id %>">
                         <%= guow.effort.nil? ? '-' : guow.effort.round(3) %>
                       </span>
                     </td>
@@ -212,7 +221,7 @@
                     <td>
                       <span class="pull-left">
                         <% if can? :execute_estimation_plan, @project %>
-                          <%# link_to "", guw.guw_unit_of_work_duplicate_path(guow), class: "fa fa-copy", method: "post" %>
+                          <%= link_to "", guw.guw_unit_of_work_duplicate_path(guow), class: "fa fa-copy", method: "post" %>
                           <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
                           <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
                           <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
@@ -220,16 +229,6 @@
                           <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", confirm: I18n.t('are_you_sure'), class: "fa fa-trash" %>
                         <% end %>
                       </span>
-                    </td>
-
-                    <td>
-                      <div class="modal fade" id="modal<%= guow.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel<%= guow.id %>" aria-hidden="true" backdrop="static">
-                        <div class="modal-dialog">
-                          <div class="modal-content" id="modal_attribute_<%= guow.id %>">
-                            <%= render 'guw/guw_unit_of_works/attributes_cotation', { :guow => guow } %>
-                          </div>
-                        </div>
-                      </div>
                     </td>
                   </tr>
                 <% end %>
@@ -244,7 +243,6 @@
               <%= link_to "RAZ", "#!", class: "btn btn-mini reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
             <% end %>
           </div>
-      </div>
     </div>
   <% end %>
 <% end %>
@@ -289,6 +287,20 @@
       $.ajax({
         url: "<%= guw.change_cotation_path %>",
         data: "guw_type_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
+      });
+    });
+
+    $('.guw_work_unit').change(function(){
+      $.ajax({
+        url: "<%= guw.change_operation_path %>",
+        data: "guw_work_unit_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
+      });
+    });
+
+    $('.guw_technology').change(function(){
+      $.ajax({
+        url: "<%= guw.change_technology_path %>",
+        data: "guw_technology_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
       });
     });
   });
