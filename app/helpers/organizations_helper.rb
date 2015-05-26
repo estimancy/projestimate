@@ -103,6 +103,8 @@ module OrganizationsHelper
         content_tag('td class="text_field_text_overflow exportable"', project.root_component)
       when :title
         content_tag('td class="exportable"', can_show_estimation?(project) ? link_to(value, dashboard_path(project), :class => 'button_attribute_tooltip pull-left') : value)
+      when :original_model
+        content_tag('td class="exportable"', can_show_estimation?(project.original_model) ? link_to(value, dashboard_path(project.original_model), :class => 'button_attribute_tooltip pull-left') : value)
       when :version
         content_tag('td class="center exportable"', value)
       when :status_name

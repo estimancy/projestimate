@@ -32,16 +32,21 @@
           <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
         </tr>
         <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
-            <tr><td><%= f.input :original_model, label: I18n.t(:original_model), disabled: true %></td></tr>
+            <tr><td>
+              <% if can_show_estimation?(@project.original_model) %>
+                <label><%= I18n.t(:original_model) %></label>
+                <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>
+              <% else %>
+                <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
+              <% end %>
+            </td></tr>
         <% end %>
       </table>
 
        <%= tinymce %>
-       <label>
-         <b>
-           Description
-         </b>
-       </label>
+
+       <label><b> Description </b> </label>
+
        <%= simple_format(@project.description) %>
        <%= f.input :description, :label => false, :input_html => {:class => 'input-large tinymce', :rows => 5, :cols => 10 } %>
 

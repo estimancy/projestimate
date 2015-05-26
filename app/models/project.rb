@@ -106,6 +106,7 @@ class Project < ActiveRecord::Base
     [
       QueryColumn.new(:title, :sortable => "#{Project.table_name}.title", :caption => "label_project_name"),
       QueryColumn.new(:product_name, :sortable => "#{Project.table_name}.product_name", :caption => "label_product_name"),
+      QueryColumn.new(:original_model, :sortable => "#{Project.table_name}.name", :caption => "original_model"),
       QueryColumn.new(:version, :sortable => "#{Project.table_name}.version", :caption => "label_version"),
       QueryColumn.new(:status_name, :sortable => "#{EstimationStatus.table_name}.name", :caption => "state"),
       QueryColumn.new(:project_area, :sortable => "#{ProjectArea.table_name}.name", :caption => "project_area"),
