@@ -1,12 +1,13 @@
 class QueryColumn
 
-  attr_accessor :name, :caption, :association_name, :field_id
+  attr_accessor :name, :caption, :association_name, :field_id, :organization_id
 
   def initialize(name, options={})
     self.name = name
     #self.association_name = association_name
     self.caption = options[:caption]
     self.field_id = options[:field_id]
+    self.organization_id = options[:organization_id]
   end
 
   def value(object)
