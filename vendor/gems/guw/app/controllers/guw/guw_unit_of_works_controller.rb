@@ -803,6 +803,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_type = Guw::GuwType.find(params[:guw_type_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     @guw_unit_of_work.guw_type_id = @guw_type.id
+    @guw_unit_of_work.effort = nil
+    @guw_unit_of_work.guw_complexity_id = nil
     @guw_unit_of_work.save
   end
 
@@ -810,6 +812,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:guw_work_unit_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
+    @guw_unit_of_work.effort = nil
+    @guw_unit_of_work.guw_complexity_id = nil
     @guw_unit_of_work.save
   end
 
@@ -817,6 +821,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     @organization_technology = OrganizationTechnology.find(params[:guw_technology_id])
     @guw_unit_of_work.organization_technology_id = @organization_technology.id
+    @guw_unit_of_work.effort = nil
+    @guw_unit_of_work.guw_complexity_id = nil
     @guw_unit_of_work.save
   end
 
