@@ -147,7 +147,7 @@ class OrganizationsController < ApplicationController
     tmp_filename = "#{@organization}-#{Time.now.strftime('%d-%m-%Y')}"
     filename = tmp_filename.gsub(" ", '-')
     workbook.write("#{Rails.root}/public/#{filename}.xlsx")
-    redirect_to "http://#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
+    redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
   end
 
   def generate_report_excel_from_file
@@ -256,7 +256,7 @@ class OrganizationsController < ApplicationController
     tmp_filename = "#{@organization}-#{Time.now.strftime('%d-%m-%Y')}"
     filename = tmp_filename.gsub(" ", '-')
     workbook.write("#{Rails.root}/public/#{filename}.xlsx")
-    redirect_to "http://#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
+    redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
 
   end
 
