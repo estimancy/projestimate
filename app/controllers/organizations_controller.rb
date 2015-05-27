@@ -144,9 +144,10 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    workbook.write("#{Rails.root}/public/#{@organization}-#{Time.now.strftime("%d-%m-%Y").gsub(" ", "-")}.xlsx")
-
-    redirect_to "http://#{SETTINGS['HOST_URL']}/#{@organization}-#{Time.now.strftime("%d-%m-%Y").gsub(" ", "-")}.xlsx"
+    tmp_filename = "#{@organization}-#{Time.now.strftime('%d-%m-%Y')}"
+    filename = tmp_filename.gsub(" ", '-')
+    workbook.write("#{Rails.root}/public/#{filename}.xlsx")
+    redirect_to "http://#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
   end
 
   def generate_report_excel_from_file
@@ -251,9 +252,11 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    workbook.write("#{Rails.root}/public/#{@organization}-#{Time.now.strftime("%d-%m-%Y").gsub(" ", "-")}.xlsx")
 
-    redirect_to "http://#{SETTINGS['HOST_URL']}/#{@organization}-#{Time.now.strftime("%d-%m-%Y").gsub(" ", "-")}.xlsx"
+    tmp_filename = "#{@organization}-#{Time.now.strftime('%d-%m-%Y')}"
+    filename = tmp_filename.gsub(" ", '-')
+    workbook.write("#{Rails.root}/public/#{filename}.xlsx")
+    redirect_to "http://#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
 
   end
 
