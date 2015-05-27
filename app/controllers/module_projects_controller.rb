@@ -107,10 +107,22 @@ class ModuleProjectsController < ApplicationController
               initial_view = View.find(selected_view.initial_view_id)
 
               selected_view.views_widgets.where(from_initial_view: [nil, false]).each do |view_widget|
-                widget_copy = ViewsWidget.create(view_id: initial_view.id, module_project_id: view_widget.module_project_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
+                widget_copy = ViewsWidget.new(view_id: initial_view.id, module_project_id: view_widget.module_project_id, estimation_value_id: view_widget.estimation_value_id, name: view_widget.name,
                                    show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
                                    width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
                                    position_x: view_widget.position_x, position_y: view_widget.position_y, from_initial_view: nil)
+
+                #=========================================
+                #Save and copy project_fields
+                if widget_copy.save
+                  #unless view_widget.project_fields.empty?
+                  #  pf = view_widget.project_fields.last
+                  #  pf.views_widget_id = views_widget.id
+                  #  pf.project_id = @project.id
+                  #  pf.save
+                  #end
+                end
+                #=========================================
               end
 
               #update module_project view
@@ -121,6 +133,7 @@ class ModuleProjectsController < ApplicationController
 
             else
               @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
+              #PS : Les champs personnalisés ne sont pas transférable
             end
           end
         #end
