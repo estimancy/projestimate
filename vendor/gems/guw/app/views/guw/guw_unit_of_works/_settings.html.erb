@@ -144,7 +144,7 @@
 
               <td>
                 <span class="pull-left">
-                  <%= guow.name.truncate(25) %>
+                  <%= link_to (guow.name.nil? || guow.name.blank?) ? '-' : guow.name.truncate(25), guw.guw_unit_of_work_load_name_path(guow), title: guow.name, method: "post", remote: true %>
                 </span>
               </td>
 
@@ -254,6 +254,7 @@
   }
 
   $(document).ready(function () {
+
     $('.selected').change(function(){
       $.ajax({
         url: "<%= guw.change_selected_state_path %>",
@@ -301,6 +302,13 @@
 <div class="modal fade" id="modal_trackings" tabindex="-1" role="dialog" aria-labelledby="modal_trackings_label" aria-hidden="true" backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content" id="modal_trackings_content">
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal_name" tabindex="-1" role="dialog" aria-labelledby="modal_name_label" aria-hidden="true" backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content" id="modal_name_content">
     </div>
   </div>
 </div>
