@@ -36,13 +36,94 @@
 
 class OrganizationsController < ApplicationController
   load_resource
-  require 'rubygems'
   require 'securerandom'
+  require 'rubyXL'
   include ProjectsHelper
   include OrganizationsHelper
 
-  def generate_report
+  #def generate_report
+  #
+  #  conditions = Hash.new
+  #  params[:report].each do |i|
+  #    unless i.last.blank? or i.last.nil?
+  #      conditions[i.first] = i.last
+  #    end
+  #  end
+  #
+  #  @organization = @current_organization
+  #  check_if_organization_is_image(@organization)
+  #
+  #  if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
+  #    @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+  #  else
+  #    @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+  #  end
+  #
+  #  workbook = RubyXL::Parser.parse("/Users/nicolasrenard/Estimancy/projestimate/indicateurs.xlsx")
+  #  worksheet = workbook[4]
+  #
+  #  tmp = Array.new
+  #
+  #  if params[:with_header] == "checked"
+  #    tmp << [
+  #        I18n.t(:project),
+  #        I18n.t(:label_project_version),
+  #        I18n.t(:label_product_name),
+  #        I18n.t(:description),
+  #        I18n.t(:start_date),
+  #        I18n.t(:platform_category),
+  #        I18n.t(:project_category),
+  #        I18n.t(:acquisition_category),
+  #        I18n.t(:project_area),
+  #        I18n.t(:state),
+  #        I18n.t(:creator),
+  #    ] + @organization.fields.map(&:name)
+  #  end
+  #
+  #  @projects.each do |project|
+  #    if can_show_estimation?(project)
+  #      tmp << [
+  #          project.title,
+  #          project.version,
+  #          project.root_component,
+  #          "#{ActionView::Base.full_sanitizer.sanitize(project.description).html_safe}",
+  #          project.start_date,
+  #          project.platform_category,
+  #          project.project_category,
+  #          project.acquisition_category,
+  #          project.project_area,
+  #          project.estimation_status,
+  #          project.creator
+  #      ]
+  #    elsif can_see_estimation?(project)
+  #      tmp << update_selected_inline_columns(Project).map do |column|
+  #        if column.caption == "description"
+  #          "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe}"
+  #        elsif column.caption == "product_name"
+  #          project.root_component
+  #        else
+  #          column.value_object(project)
+  #        end
+  #      end + @organization.fields.map(&:name)
+  #    end
+  #
+  #  end
+  #
+  #
+  #  tmp.each_with_index do |r, i|
+  #    tmp[i].each_with_index do |r, j|
+  #      begin
+  #        worksheet.add_cell(i, j, tmp[i][j].to_s)
+  #      rescue
+  #
+  #      end
+  #    end
+  #  end
+  #
+  #  workbook.write("/Users/nicolasrenard/Estimancy/projestimate/output.xlsx")
+  #end
 
+  def generate_report
     conditions = Hash.new
     params[:report].each do |i|
       unless i.last.blank? or i.last.nil?
@@ -83,7 +164,7 @@ class OrganizationsController < ApplicationController
               project.title,
               project.version,
               project.root_component,
-              "#{ActionView::Base.full_sanitizer.sanitize(project.description).html_safe}",
+              "#{Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(project.description)).text}",
               project.start_date,
               project.platform_category,
               project.project_category,
@@ -95,7 +176,7 @@ class OrganizationsController < ApplicationController
         elsif can_see_estimation?(project)
           tmp = update_selected_inline_columns(Project).map do |column|
             if column.caption == "description"
-              "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe}"
+              "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project))}"
             elsif column.caption == "product_name"
               project.root_component
             else
@@ -109,11 +190,11 @@ class OrganizationsController < ApplicationController
           tmp = tmp + [ pf.nil? ? '-' : convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision) ]
         end
 
-
         csv << tmp
       end
     end
-    send_data(csv_string.force_encoding("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Rapport-#{Time.now}.csv")
+
+    send_data(csv_string, :type => 'text/csv; header=present', :disposition => "attachment; filename=rapport.csv")
   end
 
   def report
