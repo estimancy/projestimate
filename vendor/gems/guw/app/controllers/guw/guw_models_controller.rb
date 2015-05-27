@@ -37,6 +37,8 @@
 
 class Guw::GuwModelsController < ApplicationController
 
+  require 'rubyXL'
+
   def show
     authorize! :show_modules_instances, ModuleProject
 
@@ -108,9 +110,12 @@ class Guw::GuwModelsController < ApplicationController
                                                   pbs_project_element_id: @component.id,
                                                   guw_model_id: @guw_model.id)
 
-    csv_string = CSV.generate(:col_sep => I18n.t(:general_csv_separator)) do |csv|
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook.worksheets[0]
 
-      csv << [
+    tmp = Array.new
+
+    tmp << [
           "Estimation",
           "Version",
           "Groupe",
@@ -126,8 +131,10 @@ class Guw::GuwModelsController < ApplicationController
           "Retenu"
       ] + @guw_model.guw_attributes.map(&:name)
 
-      tmp = Array.new
       @guw_unit_of_works.each do |uow|
+
+        array_uo = Array.new
+        array_value = Array.new
 
         if uow.off_line == true
           cplx = "HSAT"
@@ -139,17 +146,17 @@ class Guw::GuwModelsController < ApplicationController
           cplx = uow.guw_complexity.name
         end
 
-        tmp = [
+        array_uo << [
             current_module_project.project.title,
             current_module_project.project.version,
             uow.guw_unit_of_work_group.name,
             uow.selected == true ? 'Oui' : 'Non',
-            "\"#{uow.name}\"",
-            "\"#{uow.comments}\"",
+            uow.name,
+            uow.comments,
             uow.guw_type,
             uow.guw_work_unit,
             uow.organization_technology,
-            "\"#{uow.tracking}\"",
+            uow.tracking,
             cplx,
             uow.effort,
             uow.ajusted_effort
@@ -157,13 +164,26 @@ class Guw::GuwModelsController < ApplicationController
 
         @guw_model.guw_attributes.each do |guw_attribute|
           uowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: uow.id, guw_attribute_id: guw_attribute.id).first
-          tmp = tmp + [ uowa.blank? ? '-' : uowa.most_likely ]
+          if uowa.blank?
+            array_value << '-'
+          else
+            array_value << uowa.most_likely
+          end
         end
 
-        csv << tmp
+        tmp << (array_uo + array_value).flatten
       end
-    end.html_safe
-    send_data(csv_string.force_encoding("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=Export-UOs-#{Time.now}.csv")
+
+      tmp.each_with_index do |r, i|
+        tmp[i].each_with_index do |r, j|
+          worksheet.add_cell(i, j, tmp[i][j].to_s)
+        end
+      end
+
+    tmp_filename = "export-uo-#{Time.now.strftime('%d-%m-%Y')}"
+    filename = tmp_filename.gsub(" ", '-')
+    workbook.write("#{Rails.root}/public/#{filename}.xlsx")
+    redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
   end
 
 end

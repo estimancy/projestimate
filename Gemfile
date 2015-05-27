@@ -203,6 +203,10 @@ end
 gem 'jbuilder', '~> 1.2'
 gem 'remotipart', '~> 1.2'
 
+gem 'rubyXL'
+
+gem 'nokogiri'
+
 #TEST===============
 #gem 'thinreports'
 
