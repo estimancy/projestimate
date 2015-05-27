@@ -22,7 +22,7 @@ class QueryColumn
     field = Field.find(self.field_id)
     value = '-'
     unless field.coefficient.nil?
-      project_field = ProjectField.where(field_id: self.field_id, project_id: object.id).first
+      project_field = ProjectField.where(field_id: self.field_id, project_id: object.id).last
       #value = project_field.nil? ? '-' : convert_with_precision(project_field.value.to_f / field.coefficient.to_f, user_number_precision)
       value = project_field.nil? ? '-' : convert_with_precision(project_field.value.to_f / field.coefficient.to_f, 2)
     end

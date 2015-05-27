@@ -351,12 +351,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
 
     #Si pas de complexité, l'effort est nul
-    if guw_unit_of_work.guw_complexity.nil?
-      guw_unit_of_work.effort = nil
-    else
-      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? 0 : @weight_pert.sum).to_f.round(3)
-      #guw_unit_of_work.ajusted_effort = @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3)
-    end
+    #if guw_unit_of_work.guw_complexity.nil?
+    #  guw_unit_of_work.effort = nil
+    #else
+      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3)
+    #end
 
     if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
       guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
