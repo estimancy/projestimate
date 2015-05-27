@@ -41,89 +41,223 @@ class OrganizationsController < ApplicationController
   include ProjectsHelper
   include OrganizationsHelper
 
-  #def generate_report
-  #
-  #  conditions = Hash.new
-  #  params[:report].each do |i|
-  #    unless i.last.blank? or i.last.nil?
-  #      conditions[i.first] = i.last
-  #    end
-  #  end
-  #
-  #  @organization = @current_organization
-  #  check_if_organization_is_image(@organization)
-  #
-  #  if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
-  #    @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
-  #  else
-  #    @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
-  #  end
-  #
-  #  workbook = RubyXL::Parser.parse("/Users/nicolasrenard/Estimancy/projestimate/indicateurs.xlsx")
-  #  worksheet = workbook[4]
-  #
-  #  tmp = Array.new
-  #
-  #  if params[:with_header] == "checked"
-  #    tmp << [
-  #        I18n.t(:project),
-  #        I18n.t(:label_project_version),
-  #        I18n.t(:label_product_name),
-  #        I18n.t(:description),
-  #        I18n.t(:start_date),
-  #        I18n.t(:platform_category),
-  #        I18n.t(:project_category),
-  #        I18n.t(:acquisition_category),
-  #        I18n.t(:project_area),
-  #        I18n.t(:state),
-  #        I18n.t(:creator),
-  #    ] + @organization.fields.map(&:name)
-  #  end
-  #
-  #  @projects.each do |project|
-  #    if can_show_estimation?(project)
-  #      tmp << [
-  #          project.title,
-  #          project.version,
-  #          project.root_component,
-  #          "#{ActionView::Base.full_sanitizer.sanitize(project.description).html_safe}",
-  #          project.start_date,
-  #          project.platform_category,
-  #          project.project_category,
-  #          project.acquisition_category,
-  #          project.project_area,
-  #          project.estimation_status,
-  #          project.creator
-  #      ]
-  #    elsif can_see_estimation?(project)
-  #      tmp << update_selected_inline_columns(Project).map do |column|
-  #        if column.caption == "description"
-  #          "#{ActionView::Base.full_sanitizer.sanitize(column.value_object(project)).html_safe}"
-  #        elsif column.caption == "product_name"
-  #          project.root_component
-  #        else
-  #          column.value_object(project)
-  #        end
-  #      end + @organization.fields.map(&:name)
-  #    end
-  #
-  #  end
-  #
-  #
-  #  tmp.each_with_index do |r, i|
-  #    tmp[i].each_with_index do |r, j|
-  #      begin
-  #        worksheet.add_cell(i, j, tmp[i][j].to_s)
-  #      rescue
-  #
-  #      end
-  #    end
-  #  end
-  #
-  #  workbook.write("/Users/nicolasrenard/Estimancy/projestimate/output.xlsx")
-  #end
+  def generate_report_excel
+    conditions = Hash.new
+    params[:report].each do |i|
+      unless i.last.blank? or i.last.nil?
+        conditions[i.first] = i.last
+      end
+    end
 
-  def generate_report
+    @organization = @current_organization
+    check_if_organization_is_image(@organization)
+
+    if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
+      @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+    else
+      @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+    end
+
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook.worksheets[0]
+
+    tmp = Array.new
+
+    if params[:with_header] == "checked"
+      tmp << [
+          I18n.t(:project),
+          I18n.t(:label_project_version),
+          I18n.t(:label_product_name),
+          I18n.t(:description),
+          I18n.t(:start_date),
+          I18n.t(:platform_category),
+          I18n.t(:project_category),
+          I18n.t(:acquisition_category),
+          I18n.t(:project_area),
+          I18n.t(:state),
+          I18n.t(:creator),
+      ] + @organization.fields.map(&:name) + ["Mois"]
+    end
+
+    @projects.each do |project|
+      array_project = Array.new
+      array_value = Array.new
+      array_month = Array.new
+
+      if can_show_estimation?(project)
+        array_project << [
+            project.title,
+            project.version,
+            project.root_component,
+            "#{Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(project.description)).text}",
+            project.start_date,
+            project.platform_category,
+            project.project_category,
+            project.acquisition_category,
+            project.project_area,
+            project.estimation_status,
+            project.creator
+        ]
+
+        @organization.fields.each do |field|
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          if pf.nil?
+            array_value << '-'
+          else
+            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision)
+          end
+        end
+
+        array_month << project.start_date.strftime("%B")
+
+      elsif can_see_estimation?(project)
+
+        array_project = update_selected_inline_columns(Project).map do |column|
+                  if column.caption == "description"
+                    "#{ Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(column.value_object(project))).text } "
+                  elsif column.caption == "product_name"
+                    project.root_component
+                  else
+                    column.value_object(project)
+                  end
+                end
+
+        @organization.fields.each do |field|
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          if pf.nil?
+            array_value << '-'
+          else
+            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision)
+          end
+        end
+
+        array_month << project.start_date.strftime("%B")
+      end
+
+      tmp << (array_project + array_value + array_month).flatten
+
+    end
+
+    tmp.each_with_index do |r, i|
+      tmp[i].each_with_index do |r, j|
+        worksheet.add_cell(i, j, tmp[i][j].to_s)
+      end
+    end
+
+    workbook.write("#{Rails.root}/public/#{@organization}-#{Time.now.strftime("%d-%m-%Y")}.xlsx")
+
+    redirect_to "http://#{SETTINGS['HOST_URL']}/#{@organization}-#{Time.now.strftime("%d-%m-%Y")}.xlsx"
+  end
+
+  def generate_report_excel_from_file
+
+    conditions = Hash.new
+    params[:report].each do |i|
+      unless i.last.blank? or i.last.nil?
+        conditions[i.first] = i.last
+      end
+    end
+
+    @organization = @current_organization
+    check_if_organization_is_image(@organization)
+
+    if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
+      @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+    else
+      @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+    end
+
+    workbook = RubyXL::Parser.parse("#{Rails.root}/public/indicateurs.xlsx")
+    worksheet = workbook[4]
+
+    tmp = Array.new
+
+    if params[:with_header] == "checked"
+      tmp << [
+          I18n.t(:project),
+          I18n.t(:label_project_version),
+          I18n.t(:label_product_name),
+          I18n.t(:description),
+          I18n.t(:start_date),
+          I18n.t(:platform_category),
+          I18n.t(:project_category),
+          I18n.t(:acquisition_category),
+          I18n.t(:project_area),
+          I18n.t(:state),
+          I18n.t(:creator),
+      ] + @organization.fields.map(&:name) + ["Mois"]
+    end
+
+    @projects.each do |project|
+      array_project = Array.new
+      array_value = Array.new
+      array_month = Array.new
+
+      if can_show_estimation?(project)
+        array_project << [
+            project.title,
+            project.version,
+            project.root_component,
+            "#{Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(project.description)).text}",
+            project.start_date,
+            project.platform_category,
+            project.project_category,
+            project.acquisition_category,
+            project.project_area,
+            project.estimation_status,
+            project.creator
+        ]
+
+        @organization.fields.each do |field|
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          if pf.nil?
+            array_value << '-'
+          else
+            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision)
+          end
+        end
+
+      elsif can_see_estimation?(project)
+
+        array_project = update_selected_inline_columns(Project).map do |column|
+                            if column.caption == "description"
+                              "#{ Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(column.value_object(project))).text } "
+                            elsif column.caption == "product_name"
+                              project.root_component
+                            else
+                              column.value_object(project)
+                            end
+                          end
+
+        @organization.fields.each do |field|
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          if pf.nil?
+            array_value << '-'
+          else
+            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision)
+          end
+        end
+      end
+
+      array_month << project.start_date.strftime("%B")
+
+      tmp << (array_project + array_value + array_month).flatten
+
+    end
+
+    tmp.each_with_index do |r, i|
+      tmp[i].each_with_index do |r, j|
+        worksheet.add_cell(i, j, tmp[i][j].to_s)
+      end
+    end
+
+    workbook.write("#{Rails.root}/public/#{@organization}-#{Time.now.strftime("%d-%m-%Y")}.xlsx")
+
+    redirect_to "http://#{SETTINGS['HOST_URL']}/#{@organization}-#{Time.now.strftime("%d-%m-%Y")}.xlsx"
+
+  end
+
+  def generate_report_csv
     conditions = Hash.new
     params[:report].each do |i|
       unless i.last.blank? or i.last.nil?
