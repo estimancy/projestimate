@@ -59,6 +59,10 @@ class OrganizationsController < ApplicationController
       @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
     end
 
+    unless params[:product_name].blank?
+      @projects = @projects.select{|i| i.root_component.name == params[:product_name]}
+    end
+
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
     worksheet.sheet_name = 'Data'
