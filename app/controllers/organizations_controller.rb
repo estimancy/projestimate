@@ -103,7 +103,7 @@ class OrganizationsController < ApplicationController
         @organization.fields.each do |field|
           pf = ProjectField.where(field_id: field.id, project_id: project.id).first
           if pf.nil?
-            array_value << '-'
+            array_value << ''
           else
             array_value << (pf.value.to_f / field.coefficient.to_f).round(1)
           end
@@ -124,7 +124,7 @@ class OrganizationsController < ApplicationController
         @organization.fields.each do |field|
           pf = ProjectField.where(field_id: field.id, project_id: project.id).first
           if pf.nil?
-            array_value << '-'
+            array_value << ''
           else
             array_value << (pf.value.to_f / field.coefficient.to_f).round(1)
           end
