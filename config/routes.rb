@@ -169,7 +169,6 @@ Projestimate::Application.routes.draw do
   end
 
   match 'homes/update_install' => 'homes#update_install', :as => 'update_install'
-  #match 'homes/testme' => 'homes#testme', :as => 'testme'
 
   resources :record_statuses
 

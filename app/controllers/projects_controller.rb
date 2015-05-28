@@ -886,8 +886,8 @@ class ProjectsController < ApplicationController
 
       #Select the default view for module_project
       #default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
-      default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :name => "Default view for the #{@pemodule}.")
-      my_module_project.view_id = default_view_for_widgets.id
+      #default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :name => "Default view for the #{@pemodule}.")
+      #my_module_project.view_id = default_view_for_widgets.id
 
       my_module_project.save
 
@@ -1420,11 +1420,12 @@ public
   #Update new project/estimation views and widgets
   def update_views_and_widgets(new_prj, old_mp, new_mp)
     #For initialization module level
-    if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
-      #Copy the views and widgets for the new project
-      new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+    ###if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
       #We have to copy all the selected view's widgets in a new view for the current module_project
       if old_mp.view
+        #Copy the views and widgets for the new project
+        new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} :  #{old_mp.view.name}", description: "Please rename the view's name and description if needed.")
+
         old_mp_view_widgets = old_mp.view.views_widgets.all
         old_mp_view_widgets.each do |old_view_widget|
           new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_view_widget.module_project_id)
@@ -1437,14 +1438,17 @@ public
               new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
               estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
 
-              new_view_widget = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
+              new_view_widget = ViewsWidget.new(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
                                                    icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
                                                    width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
 
-              pf = ProjectField.where(project_id: new_prj.id, views_widget_id: old_view_widget.id).first
-              unless pf.nil?
-                pf.views_widget_id = new_view_widget.id
-                pf.save
+              if new_view_widget.save
+                #Update the copied project_fields
+                pf = ProjectField.where(project_id: new_prj.id, views_widget_id: old_view_widget.id).first
+                unless pf.nil?
+                  pf.views_widget_id = new_view_widget.id
+                  pf.save
+                end
               end
             end
           end
@@ -1452,7 +1456,7 @@ public
       end
       #update the new module_project view
       new_mp.update_attribute(:view_id, new_view.id)
-    end
+    ###end
   end
 
   #Duplicate an estimation/project
@@ -1542,16 +1546,10 @@ public
         end
 
         # if the module_project is nil
-        if new_mp.view.nil?
-          default_view = @organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
-          if default_view.nil?
-            default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: @organization.id)
-          end
-          new_mp.update_attribute(:view_id, default_view.id)
+        unless old_mp.view.nil?
+          #Update the new project/estimation views and widgets
+          update_views_and_widgets(new_prj, old_mp, new_mp)
         end
-
-        #Update the new project/estimation views and widgets
-        update_views_and_widgets(new_prj, old_mp, new_mp)
 
         #Update the Unit of works's groups
         new_mp.guw_unit_of_work_groups.each do |guw_group|
