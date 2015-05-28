@@ -74,10 +74,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def destroy
+    @guw_model = current_module_project.guw_model
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
     group = @guw_unit_of_work.guw_unit_of_work_group
     @guw_unit_of_work.delete
     reorder group
+    update_estimation_values
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{group.id}")
   end
@@ -370,89 +372,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
     guw_unit_of_work.save
 
-    #we save the effort now in estimation values
-    @module_project = current_module_project
-    @module_project.guw_model_id = @guw_model.id
-    @module_project.save
-
-    @module_project.pemodule.attribute_modules.each do |am|
-      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
-      @evs.each do |ev|
-        tmp_prbl = Array.new
-        ["low", "most_likely", "high"].each do |level|
-
-          retained_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                   pbs_project_element_id: current_component.id,
-                                                   guw_model_id: @guw_model.id,
-                                                   selected: true).map(&:ajusted_effort).compact.sum
-
-          theorical_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                    pbs_project_element_id: current_component.id,
-                                                    guw_model_id: @guw_model.id,
-                                                    selected: true).map(&:effort).compact.sum
-
-          number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                                 module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works}.flatten.size
-
-          selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                                   module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
-
-          offline_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size
-
-          flagged_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size
-
-
-          if am.pe_attribute.alias == "retained_size"
-            ev.send("string_data_#{level}")[current_component.id] = retained_size
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "theorical_size"
-            ev.send("string_data_#{level}")[current_component.id] = theorical_size
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          end
-
-          guw = Guw::Guw.new(theorical_size, retained_size, params["complexity_#{level}"], @project)
-
-          if am.pe_attribute.alias == "delay"
-            ev.send("string_data_#{level}")[@component.id] = guw.get_delay(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "cost"
-            ev.send("string_data_#{level}")[@component.id] = guw.get_cost(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "defects"
-            ev.send("string_data_#{level}")[@component.id] = guw.get_defects(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "number_of_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = number_of_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "offline_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = offline_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "flagged_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = flagged_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "selected_of_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = selected_of_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          end
-          ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
-        end
-
-        if ev.in_out == "output"
-          ev.update_attribute(:"string_data_probable", { @component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-        end
-      end
-    end
-
-    @module_project.nexts.each do |n|
-      ModuleProject::common_attributes(@module_project, n).each do |ca|
-        ["low", "most_likely", "high"].each do |level|
-          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { @component.id => nil } )
-          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { @component.id => nil } )
-        end
-      end
-    end
+    update_estimation_values
 
     @module_project.views_widgets.each do |vw|
       ViewsWidget::update_field(vw, @current_organization, @project, current_component)
@@ -520,94 +440,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.save
     end
 
-    #we save the effort now in estimation values
-    @module_project = current_module_project
-    @module_project.guw_model_id = @guw_model.id
-    @module_project.save
-
-    @module_project.pemodule.attribute_modules.each do |am|
-      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
-      @evs.each do |ev|
-        tmp_prbl = Array.new
-        ["low", "most_likely", "high"].each do |level|
-
-          retained_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                    pbs_project_element_id: current_component.id,
-                                                    guw_model_id: @guw_model.id,
-                                                    selected: true).map(&:ajusted_effort).compact.sum
-
-          theorical_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                      pbs_project_element_id: current_component.id,
-                                                      guw_model_id: @guw_model.id,
-                                                      selected: true).map(&:effort).compact.sum
-
-          number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                                 module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works}.flatten.size
-
-          selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                                   module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
-
-          offline_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size
-
-          flagged_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size
-
-
-          if am.pe_attribute.alias == "retained_size"
-            ev.send("string_data_#{level}")[current_component.id] = retained_size
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "theorical_size"
-            ev.send("string_data_#{level}")[current_component.id] = theorical_size
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          end
-
-          guw = Guw::Guw.new(theorical_size, retained_size, params["complexity_#{level}"], @project)
-
-          if am.pe_attribute.alias == "delay"
-            ev.send("string_data_#{level}")[@component.id] = guw.get_delay(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "cost"
-            ev.send("string_data_#{level}")[@component.id] = guw.get_cost(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "defects"
-            ev.send("string_data_#{level}")[@component.id] = guw.get_defects(retained_size, current_component, current_module_project)
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "number_of_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = number_of_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "offline_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = offline_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "flagged_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = flagged_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "selected_of_unit_of_work"
-            ev.send("string_data_#{level}")[@component.id] = selected_of_unit_of_work
-            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          end
-          ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
-        end
-
-        if ev.in_out == "output"
-          ev.update_attribute(:"string_data_probable", { @component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-        end
-      end
-    end
-
-    @module_project.nexts.each do |n|
-      ModuleProject::common_attributes(@module_project, n).each do |ca|
-        ["low", "most_likely", "high"].each do |level|
-          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { @component.id => nil } )
-          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { @component.id => nil } )
-        end
-      end
-    end
+    update_estimation_values
 
     @module_project.views_widgets.each do |vw|
       ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
-
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_works.last.guw_unit_of_work_group.id}")
   end
@@ -715,6 +552,92 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     group.guw_unit_of_works.order("display_order asc, updated_at asc").each_with_index do |u, i|
       u.display_order = i
       u.save
+    end
+  end
+
+  def update_estimation_values
+    #we save the effort now in estimation values
+    @module_project = current_module_project
+    @module_project.guw_model_id = @guw_model.id
+    @module_project.save
+
+    @module_project.pemodule.attribute_modules.each do |am|
+      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+      @evs.each do |ev|
+        tmp_prbl = Array.new
+        ["low", "most_likely", "high"].each do |level|
+
+          retained_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                                   pbs_project_element_id: current_component.id,
+                                                   guw_model_id: @guw_model.id,
+                                                   selected: true).map(&:ajusted_effort).compact.sum
+
+          theorical_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                                    pbs_project_element_id: current_component.id,
+                                                    guw_model_id: @guw_model.id,
+                                                    selected: true).map(&:effort).compact.sum
+
+          number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                                 module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works}.flatten.size
+
+          selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                                   module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
+
+          offline_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size
+
+          flagged_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size
+
+
+          if am.pe_attribute.alias == "retained_size"
+            ev.send("string_data_#{level}")[current_component.id] = retained_size
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "theorical_size"
+            ev.send("string_data_#{level}")[current_component.id] = theorical_size
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          end
+
+          guw = Guw::Guw.new(theorical_size, retained_size, params["complexity_#{level}"], @project)
+
+          if am.pe_attribute.alias == "delay"
+            ev.send("string_data_#{level}")[@component.id] = guw.get_delay(retained_size, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "cost"
+            ev.send("string_data_#{level}")[@component.id] = guw.get_cost(retained_size, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "defects"
+            ev.send("string_data_#{level}")[@component.id] = guw.get_defects(retained_size, current_component, current_module_project)
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "number_of_unit_of_work"
+            ev.send("string_data_#{level}")[@component.id] = number_of_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "offline_unit_of_work"
+            ev.send("string_data_#{level}")[@component.id] = offline_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "flagged_unit_of_work"
+            ev.send("string_data_#{level}")[@component.id] = flagged_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "selected_of_unit_of_work"
+            ev.send("string_data_#{level}")[@component.id] = selected_of_unit_of_work
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          end
+          ev.update_attribute(:"string_data_#{level}", ev.send("string_data_#{level}"))
+        end
+
+        if ev.in_out == "output"
+          ev.update_attribute(:"string_data_probable", { @component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        end
+      end
+    end
+
+    @module_project.nexts.each do |n|
+      ModuleProject::common_attributes(@module_project, n).each do |ca|
+        ["low", "most_likely", "high"].each do |level|
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { @component.id => nil } )
+          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { @component.id => nil } )
+        end
+      end
     end
   end
 

@@ -60,7 +60,7 @@
       <% end %>
     <% end %>
 
-    <% @unit_of_work_groups.each do |uowg| %>
+    <% @unit_of_work_groups.each_with_index do |uowg, j| %>
     <div class="accordion-heading" style="padding:5px;">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>" id="accordion<%=uowg.id%>">
         <div class="">
@@ -126,12 +126,12 @@
           <% uowg.guw_unit_of_works.order("display_order asc").each_with_index do |guow, i| %>
             <tr>
               <td>
-                <span class="label label-default">
-                  <%= guow.display_order %>
-                </span>
                 <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected" %>
                 <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
                 <%= hidden_field_tag "", guow.id, class: "#{guow.id}" %>
+                <span class="label label-default">
+                  <%= j %><%= guow.display_order %>
+                </span>
               </td>
 
               <td>

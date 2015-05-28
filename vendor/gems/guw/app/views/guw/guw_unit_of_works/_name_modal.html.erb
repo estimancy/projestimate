@@ -3,7 +3,7 @@
     <h4 class="modal-title" id="comments_label<%= @guw_unit_of_work.id %>">
       <b>
         <%= @guw_unit_of_work.guw_type %>
-      </b> - Attributs de <%= @guw_unit_of_work %> </h4>
+      </b> - Nom de <%= @guw_unit_of_work %> </h4>
   </div>
   <div class="modal-body">
     <%= text_area_tag "name[#{@guw_unit_of_work.id}]", @guw_unit_of_work.name, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>

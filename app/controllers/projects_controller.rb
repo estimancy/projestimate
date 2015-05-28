@@ -1842,6 +1842,8 @@ public
 
     @organization = Organization.find(params[:organization_id])
     @estimation_models = @organization.projects.where(:is_model => true)
+
+    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
   end
 
   #Set the checkout version
