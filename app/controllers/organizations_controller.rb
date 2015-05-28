@@ -105,7 +105,7 @@ class OrganizationsController < ApplicationController
           if pf.nil?
             array_value << '-'
           else
-            array_value << number_with_delimiter((pf.value.to_f / field.coefficient.to_f).round(1), delimiter: ',')
+            array_value << (pf.value.to_f / field.coefficient.to_f).round(1)
           end
         end
 
@@ -126,7 +126,7 @@ class OrganizationsController < ApplicationController
           if pf.nil?
             array_value << '-'
           else
-            array_value << number_with_delimiter((pf.value.to_f / field.coefficient.to_f).round(1), delimiter: ',')
+            array_value << (pf.value.to_f / field.coefficient.to_f).round(1)
           end
         end
 
