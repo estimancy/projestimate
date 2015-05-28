@@ -1,12 +1,12 @@
-<%= form_tag guw.save_comments_path, method: "post" do %>
+<%= form_tag guw.save_name_path, method: "post" do %>
   <div class="modal-header">
-    <h4 class="modal-title" id="comments_label<%= guow.id %>">
+    <h4 class="modal-title" id="comments_label<%= @guw_unit_of_work.id %>">
       <b>
-        <%= guow.guw_type %>
-      </b> - Description de <%= guow %> </h4>
+        <%= @guw_unit_of_work.guw_type %>
+      </b> - Nom de <%= @guw_unit_of_work %> </h4>
   </div>
   <div class="modal-body">
-    <%= text_area_tag "comments[#{guow.id}]", guow.comments, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>
+    <%= text_area_tag "name[#{@guw_unit_of_work.id}]", @guw_unit_of_work.name, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>
