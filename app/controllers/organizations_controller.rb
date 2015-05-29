@@ -101,7 +101,7 @@ class OrganizationsController < ApplicationController
         ]
 
         @organization.fields.each do |field|
-          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).last
           if pf.nil?
             array_value << ''
           else
@@ -122,7 +122,7 @@ class OrganizationsController < ApplicationController
                 end
 
         @organization.fields.each do |field|
-          pf = ProjectField.where(field_id: field.id, project_id: project.id).first
+          pf = ProjectField.where(field_id: field.id, project_id: project.id).last
           if pf.nil?
             array_value << ''
           else
