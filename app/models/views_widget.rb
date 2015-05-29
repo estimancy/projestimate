@@ -9,7 +9,7 @@ class ViewsWidget < ActiveRecord::Base
   belongs_to :pbs_project_element
   belongs_to :module_project
 
-  has_many :project_fields
+  has_many :project_fields, dependent: :delete_all
 
   validates :name, :module_project_id, :estimation_value_id, :presence => { :unless => :is_label_widget? } #presence: true
 

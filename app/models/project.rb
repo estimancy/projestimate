@@ -58,6 +58,7 @@ class Project < ActiveRecord::Base
 
   has_many :module_projects, :dependent => :destroy
   has_many :pemodules, :through => :module_projects
+  has_many :views, :through => :pemodules, dependent: :destroy
   has_many :project_securities, :dependent => :destroy
   has_many :project_fields, :dependent => :destroy
 
