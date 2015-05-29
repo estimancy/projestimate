@@ -35,9 +35,12 @@
     <%= image_tag '/assets/ajax-loader.gif', :id => 'spiner', :class => 'hide' %>
 
     <hr class="bs-docs-separator">
-    <h4> <%= I18n.t('label_environment') %> : </h4>
     <dl class="dl-horizontal">
-      <dt>Estimancy version</dt>
+      <h4>
+        <b>
+          Estimancy version
+        </b>
+      </h4>
       <dd><span class="label label-info"><%= projestimate_version %></span>
         (<%= link_to I18n.t('text_checking_new_release'), 'forge.estimancy.com/projects/pe/wiki/Download_and_ChangeLog' %>
         )
@@ -59,5 +62,18 @@
       <dt>Brower OS</dt>
       <dd><span class="label label-info"> <%= os %></span></dd>
     </dl>
+
+
+    <h4>
+      <b>
+        Changelog
+      </b>
+    </h4>
+    <p>
+
+    </p>
+    <%= simple_format(AdminSetting.where(key: "changelog").first.value) %>
+
+
   </div>
 </div>

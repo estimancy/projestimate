@@ -402,6 +402,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: @component.id,
                                                   guw_model_id: @guw_model.id)
+    @weight_pert = Array.new
 
     @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
 
@@ -424,7 +425,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
-      guw_unit_of_work.save
+      if @guw_model.one_level_model == true
+        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
+        guw_unit_of_work.guw_complexity_id = guw_complexity_id
+
+        cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
+                                               guw_work_unit_id: guw_work_unit.id).first
+
+        tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
+                                                   organization_technology_id: guw_unit_of_work.organization_technology_id).first
+
+        @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        guw_unit_of_work.effort = @weight_pert.sum
+      end
 
       if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
