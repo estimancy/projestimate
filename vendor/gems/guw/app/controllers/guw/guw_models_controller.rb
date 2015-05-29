@@ -176,7 +176,7 @@ class Guw::GuwModelsController < ApplicationController
 
       tmp.each_with_index do |r, i|
         tmp[i].each_with_index do |r, j|
-          worksheet.add_cell(i, j, tmp[i][j].to_s)
+          worksheet.add_cell(i, j, tmp[i][j])
         end
       end
 
