@@ -402,9 +402,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
                                                   pbs_project_element_id: @component.id,
                                                   guw_model_id: @guw_model.id)
-    @weight_pert = Array.new
 
     @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
+      @weight_pert = Array.new
+
 
       #reorder to keep good order
       reorder guw_unit_of_work.guw_unit_of_work_group
