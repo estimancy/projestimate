@@ -964,7 +964,7 @@ class OrganizationsController < ApplicationController
 
       #Add a default view for widgets
       view = View.create(:name => "Default view",
-                         :description => "Default widgets's default view. If no view is selected for module project, this view will be automatically selected.",
+                         :description => "Default view.",
                          :organization_id => @organization.id)
 
       redirect_to redirect_apply(edit_organization_path(@organization)), notice: "#{I18n.t(:notice_organization_successful_created)}"

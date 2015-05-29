@@ -39,21 +39,26 @@
 
 
     <div id="table_module_view_list">
-        <table class="table table-striped table-bordered table-condensed">
-          <tr>
-            <th><%= I18n.t(:selected_view) %></th>
-            <th><%= I18n.t(:name) %></th>
-            <th><%= I18n.t(:description) %></th>
-            <th><%= I18n.t(:widgets) %></th>
-          </tr>
-          <% @corresponding_views.each do |view| %>
-              <tr class="">
-                <td class="center"><%= f.radio_button :view_id, view.id, :checked => @module_project.view == view %></td>
-                <td><%= view.name %></td>
-                <td><%= view.description %></td>
-                <td><%= view.views_widgets.join('; ') %></td>
+        <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+          <thead>
+              <tr>
+                <th><%= I18n.t(:selected_view) %></th>
+                <th><%= I18n.t(:name) %></th>
+                <th><%= I18n.t(:description) %></th>
+                <th><%= I18n.t(:widgets) %></th>
               </tr>
-          <% end %>
+          </thead>
+          <tbody>
+              <% @corresponding_views.each do |view| %>
+                  <tr class="">
+                    <td class="center"><%= f.radio_button :view_id, view.id, :checked => @module_project.view == view %></td>
+                    <td><%= view.name %></td>
+                    <td><%= view.description %></td>
+                    <td><%= view.views_widgets.join('; ') %></td>
+                  </tr>
+              <% end %>
+          </tbody>
+          <tfoot><%= render :partial => 'layouts/footer_table' %></tfoot>
         </table>
     </div>
 

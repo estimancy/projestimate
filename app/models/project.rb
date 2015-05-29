@@ -343,7 +343,7 @@ class Project < ActiveRecord::Base
             end
 
             #Copy the views and widgets for the new project
-            new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
+            new_view = View.create(organization_id: new_prj.organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "")
 
             #We have to copy all the selected view's widgets in a new view for the current module_project
             if old_mp.view

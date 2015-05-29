@@ -1424,7 +1424,7 @@ public
       #We have to copy all the selected view's widgets in a new view for the current module_project
       if old_mp.view
         #Copy the views and widgets for the new project
-        new_view = View.create(organization_id: new_prj.organization_id, pemodule_id: new_mp.pemodule_id , name: "#{new_prj.to_s} :  #{old_mp.view.name}", description: "Please rename the view's name and description if needed.")
+        new_view = View.create(organization_id: new_prj.organization_id, pemodule_id: new_mp.pemodule_id , name: "#{new_prj.to_s} :  #{old_mp.view.name}", description: "")
 
         old_mp_view_widgets = old_mp.view.views_widgets.all
         old_mp_view_widgets.each do |old_view_widget|

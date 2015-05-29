@@ -1,14 +1,19 @@
 
-<table id="table_list_2" class="table table-striped table-bordered table-condensed">
-  <tr>
-    <th><%= I18n.t(:name) %></th>
-    <th><%= I18n.t(:description) %></th>
-    <th><%= I18n.t(:associated_module) %></th>
-    <th><%= I18n.t(:default_view) %></th>
-    <th><%= I18n.t(:widgets) %></th>
-    <th><%= I18n.t(:actions) %></th>
-  </tr>
-  <% @organization.views.order('pemodule_id').each do |view| %>
+<table id="table_list_20" class="table tablesorterPager table-striped table-bordered table-condensed">
+  <thead>
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:description) %></th>
+        <th><%= I18n.t(:associated_module) %></th>
+        <th><%= I18n.t(:default_view) %></th>
+        <th><%= I18n.t(:widgets) %></th>
+        <th><%= I18n.t(:is_used_view) %></th>
+        <th><%= I18n.t(:created_at) %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
+  </thead>
+  <tbody>
+    <% @organization.views.order('pemodule_id').each do |view| %>
       <tr>
         <td><%= view.name %></td>
         <td><%= view.description %></td>
@@ -20,6 +25,14 @@
               <%= widget.name %>
           <% end %>
         </td>
+        <td class="center">
+          <% if view.module_projects.empty? || view.module_projects.nil? %>
+              <%= check_box_tag "view_is_used_#{view.id}", view.id, false, disabled: true %>
+          <% else %>
+              <%= check_box_tag "view_is_used_#{view.id}", view.id, true, disabled: true %>
+          <% end %>
+        </td>
+        <td><%= I18n.l( view.created_at) %></td>
         <td class="align-center">
           <%= link_to "", edit_organization_view_path(view, organization_id: view.organization_id), :class => 'icon-pencil', :title => I18n.t('edit') %>
           <% if can? :manage, View %>
@@ -27,5 +40,8 @@
           <% end %>
         </td>
       </tr>
-  <% end %>
+    <% end %>
+    <!--<tfoot><%#= render :partial => 'layouts/footer_table' %></tfoot>-->
+  </tbody>
+
 </table>
