@@ -10,7 +10,8 @@
         <%= f.input :key, :label => I18n.t('key'), :input_html => {:disabled => (!is_master_instance? && !@admin_setting.new_record?), :autofocus => (controller.action_name == 'new')} %>
 
         <%#= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge', :rows => 5} unless (@admin_setting.key=='session_maximum_lifetime' || @admin_setting.key=='session_inactivity_timeout') || @admin_setting.key=='password_min_length' || @admin_setting.key == 'self-registration' || @admin_setting.key=='allow_feedback' %>
-        <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge', :rows => 5} unless (@admin_setting.key.in? %w(session_maximum_lifetime session_inactivity_timeout password_min_length self-registration allow_feedback audit_history_lifetime)) %>
+        <%= tinymce %>
+        <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'tinymce input-xxlarge', :rows => 5} unless (@admin_setting.key.in? %w(session_maximum_lifetime session_inactivity_timeout password_min_length self-registration allow_feedback audit_history_lifetime)) %>
 
         <%= f.input :value, :label => I18n.t('value'), :as => 'integer', :input_html => {:class => 'numeric integer optional', :type => 'number', :min => 0, :max => 40} if (@admin_setting.key=='password_min_length') %>
 
