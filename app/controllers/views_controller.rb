@@ -105,7 +105,7 @@ class ViewsController < ApplicationController
     end
 
     #After destroy, we need to assigned all this view module_project to the organization default view
-    view_module_projects.update_all(view_id: @organization_default_view)
+    ###view_module_projects.update_all(view_id: @organization_default_view)
 
     redirect_to organization_setting_path(@organization, :anchor => 'tabs-views')
   end

@@ -233,6 +233,7 @@ class ModuleProjectsController < ApplicationController
     position_x = @module_project.position_x
 
     #...finally, destroy object module_project
+    module_project_view = @module_project.view
     @module_project.destroy
 
     #Update column module_projects link with initialization module

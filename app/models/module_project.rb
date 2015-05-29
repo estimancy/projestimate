@@ -40,7 +40,7 @@ class ModuleProject < ActiveRecord::Base
 
   belongs_to :pemodule
   belongs_to :project, :touch => true
-  belongs_to :view    # the current selected view
+  belongs_to :view, dependent: :destroy    # the current selected view
 
   belongs_to :guw_model, class_name: "Guw::GuwModel"
   belongs_to :ge_model, class_name: "Ge::GeModel"

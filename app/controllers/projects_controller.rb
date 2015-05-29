@@ -353,7 +353,7 @@ class ProjectsController < ApplicationController
             # Create the project's Initialization module
             cap_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0, show_results_view: true)
             # Create the Initialization module view
-            cap_module_project.build_view(name: "#{cap_module_project.to_s} - Module project View", pemodule_id: cap_module_project.pemodule_id, organization_id: @project.organization_id)
+            ###cap_module_project.build_view(name: "#{cap_module_project.to_s} - Module project View", pemodule_id: cap_module_project.pemodule_id, organization_id: @project.organization_id)
 
             if cap_module_project.save!
               #Create the corresponding EstimationValues

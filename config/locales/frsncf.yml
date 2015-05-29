@@ -1455,7 +1455,7 @@ frsncf:
   current_view: "Vue actuelle"
   default_view: "Vue par défaut"
   define_as_default_view: "Definir comme vue par défaut"
-  change_current_view: "Changer de vue"
+  change_current_view: "Définir à partir d'une autre vue"
   save_as_another_view: "Enregistrer sous une autre vue"
   label_save: "Enregistrer"
   view_name: "Nom de la vue"
