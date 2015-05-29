@@ -91,19 +91,18 @@ class ViewsController < ApplicationController
   def destroy
     @view = View.find(params[:id])
     @organization = @view.organization
-    organization_id = @view.organization_id
-    view_pemodule = @view.pemodule
-    view_pemodule_id =  @view.pemodule_id.nil? ? nil : @view.pemodule_id
-    view_module_projects = @view.module_projects
+    #organization_id = @view.organization_id
+    #view_pemodule = @view.pemodule
+    #view_pemodule_id =  @view.pemodule_id.nil? ? nil : @view.pemodule_id
+    #view_module_projects = @view.module_projects
 
     @view.destroy
 
     # the organization default view
-    @organization_default_view = nil
-    unless view_pemodule_id.nil?
-      @organization_default_view = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  organization_id, view_pemodule_id, true).first_or_create(name: "#{view_pemodule} default view", organization_id: organization_id, pemodule_id: view_pemodule_id, is_default_view: true, :description => "Default view for the #{view_pemodule}. If no view is selected for module project, this view will be automatically selected.")
-    end
-
+    #@organization_default_view = nil
+    #unless view_pemodule_id.nil?
+    #  @organization_default_view = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  organization_id, view_pemodule_id, true).first_or_create(name: "#{view_pemodule} default view", organization_id: organization_id, pemodule_id: view_pemodule_id, is_default_view: true, :description => "Default view for the #{view_pemodule}. If no view is selected for module project, this view will be automatically selected.")
+    #end
     #After destroy, we need to assigned all this view module_project to the organization default view
     ###view_module_projects.update_all(view_id: @organization_default_view)
 
