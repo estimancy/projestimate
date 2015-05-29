@@ -386,26 +386,10 @@ class OrganizationsController < ApplicationController
             new_mp.associated_module_projects << new_associated_mp
           end
 
-          # if the module_project view is nil
-          #if new_mp.view.nil?
-          #  default_view = new_organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
-          #  if default_view.nil?
-          #    default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: new_organization_id)
-          #  end
-          #  new_mp.update_attribute(:view_id, default_view.id)
-          #end
-
-          #Recreate view for all moduleproject as the projects are not is the same organization
-          #Copy the views and widgets for the new project
-          #mp_default_view =
-          #if old_mp.view.nil?
-          #
-          #else
-          #
-          #end
-          new_view = View.create(organization_id: new_organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "Please rename the view's name and description if needed.")
-          # We have to copy all the selected view's widgets in a new view for the current module_project
-          if old_mp.view
+          unless old_mp.view.nil?
+            new_view = View.create(organization_id: new_organization_id, pemodule_id: new_mp.pemodule_id, name: "#{new_prj.to_s} : #{old_mp.view.name}", description: "Please rename the view's name and description if needed.")
+            # We have to copy all the selected view's widgets in a new view for the current module_project
+            #if old_mp.view
             old_mp_view_widgets = old_mp.view.views_widgets.all
             old_mp_view_widgets.each do |view_widget|
               new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, view_widget.module_project_id)
@@ -417,24 +401,26 @@ class OrganizationsController < ApplicationController
                 unless new_view_widget_mp.nil?
                   new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
                   estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
-                  widget_copy = ViewsWidget.create(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
+                  widget_copy = ViewsWidget.new(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: view_widget.name, show_name: view_widget.show_name,
                                                    icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max, widget_type: view_widget.widget_type,
                                                    width: view_widget.width, height: view_widget.height, position: view_widget.position, position_x: view_widget.position_x, position_y: view_widget.position_y)
 
-                  pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
-                  unless pf.nil?
-                    new_field = new_organization.fields.where(copy_id: pf.field_id).first
-                    pf.views_widget_id = widget_copy.id
-                    pf.field_id = new_field.nil? ? nil : new_field.id
-                    pf.save
+                  if widget_copy.save
+                    pf = ProjectField.where(project_id: new_prj.id, views_widget_id: view_widget.id).first
+                    unless pf.nil?
+                      new_field = new_organization.fields.where(copy_id: pf.field_id).first
+                      pf.views_widget_id = widget_copy.id
+                      pf.field_id = new_field.nil? ? nil : new_field.id
+                      pf.save
+                    end
                   end
                 end
               end
             end
+            #end
+            #update the new module_project view
+            new_mp.update_attribute(:view_id, new_view.id)
           end
-          #update the new module_project view
-          new_mp.update_attribute(:view_id, new_view.id)
-          ###end
 
           #Update the Unit of works's groups
           new_mp.guw_unit_of_work_groups.each do |guw_group|

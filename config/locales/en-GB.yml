@@ -1419,7 +1419,7 @@ en-gb:
   current_view: "Current view"
   default_view: "Default view"
   define_as_default_view: "Define as default view"
-  change_current_view: "Change view"
+  change_current_view: "Set from another view"
   save_as_another_view: "Save as another view"
   label_save: "Save"
   view_name: "View name"

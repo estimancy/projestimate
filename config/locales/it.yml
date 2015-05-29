@@ -1386,7 +1386,7 @@ it:
   current_view: "Current view"
   default_view: "Default view"
   define_as_default_view: "Define as default view"
-  change_current_view: "Change current view"
+  change_current_view: "Set from another view"
   save_as_current_view: "Save as current view"
   view_name: "View name"
   view_description: "View description"
