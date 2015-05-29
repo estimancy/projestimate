@@ -463,6 +463,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def change_cotation
+    @guw_model = current_module_project.guw_model
     @guw_type = Guw::GuwType.find(params[:guw_type_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     @guw_unit_of_work.guw_type_id = @guw_type.id
@@ -472,6 +473,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def change_operation
+    @guw_model = current_module_project.guw_model
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:guw_work_unit_id])
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
@@ -481,6 +483,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def change_technology
+    @guw_model = current_module_project.guw_model
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
     @organization_technology = OrganizationTechnology.find(params[:guw_technology_id])
     @guw_unit_of_work.organization_technology_id = @organization_technology.id

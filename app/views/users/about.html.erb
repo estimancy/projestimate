@@ -29,17 +29,14 @@
         <span class="label label-info"> <%= @latest_repo_update.nil? ? 'None' : I18n.l(@latest_repo_update) %>  </span>
       </dd>
     </dl>
-
-
-    <%= link_to I18n.t(:text_download_master_data), update_install_path(:latest_local_update => @latest_local_update, :latest_repo_update => @latest_repo_update), :class => 'btn', :disable_with => I18n.t(:text_please_wait), :disabled => is_master_instance?, :onclick => "$('#spiner').toggle();" %>
-    <%= image_tag '/assets/ajax-loader.gif', :id => 'spiner', :class => 'hide' %>
+    <%# link_to I18n.t(:text_download_master_data), update_install_path(:latest_local_update => @latest_local_update, :latest_repo_update => @latest_repo_update), :class => 'btn', :disable_with => I18n.t(:text_please_wait), :disabled => is_master_instance?, :onclick => "$('#spiner').toggle();" %>
+    <%# image_tag '/assets/ajax-loader.gif', :id => 'spiner', :class => 'hide' %>
 
     <hr class="bs-docs-separator">
     <dl class="dl-horizontal">
       <dt>Estimancy version</dt>
       <dd><span class="label label-info"><%= projestimate_version %></span>
-        (<%= link_to I18n.t('text_checking_new_release'), 'forge.estimancy.com/projects/pe/wiki/Download_and_ChangeLog' %>
-        )
+        (<%= link_to I18n.t('text_checking_new_release'), 'forge.estimancy.com/projects/pe/wiki/Download_and_ChangeLog' %>)
       </dd>
       <dt>Ruby version</dt>
       <dd><span class="label label-info"><%= ruby_version %> </span></dd>
