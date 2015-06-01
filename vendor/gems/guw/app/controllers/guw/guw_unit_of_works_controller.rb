@@ -246,8 +246,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     if @lows.empty?
       guw_unit_of_work.guw_complexity_id = nil
       guw_unit_of_work.result_low = nil
-      #guw_unit_of_work.off_line = nil
-      #guw_unit_of_work.off_line_uo = nil
     else
       guw_unit_of_work.result_low = @lows.sum
     end
@@ -255,8 +253,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     if @mls.empty?
       guw_unit_of_work.guw_complexity_id = nil
       guw_unit_of_work.result_most_likely = nil
-      #guw_unit_of_work.off_line = nil
-      #guw_unit_of_work.off_line_uo = nil
     else
       guw_unit_of_work.result_most_likely = @mls.sum
     end
@@ -264,8 +260,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     if @highs.empty?
       guw_unit_of_work.guw_complexity_id = nil
       guw_unit_of_work.result_high = nil
-      #guw_unit_of_work.off_line = nil
-      #guw_unit_of_work.off_line_uo = nil
     else
       guw_unit_of_work.result_high = @highs.sum
     end
@@ -276,13 +270,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_work_unit = guw_unit_of_work.guw_work_unit
     end
 
-    #guw_unit_of_work.tracking = params[:tracking]["#{guw_unit_of_work.id}"]
-    #guw_unit_of_work.comments = params[:comments]["#{guw_unit_of_work.id}"]
-    #guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
-    #guw_unit_of_work.organization_technology_id = guw_unit_of_work.organization_technology_id
     guw_unit_of_work.guw_type_id = guw_type.id
     guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
-
     guw_unit_of_work.save
 
     if @guw_model.one_level_model == true
@@ -352,17 +341,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    #Si pas de complexité, l'effort est nul
-    #if guw_unit_of_work.guw_complexity.nil?
-    #  guw_unit_of_work.effort = nil
-    #else
-      guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3)
-    #end
+    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3)
 
-    if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+    if params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
       guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
-    elsif params["ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
-      guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
+    elsif params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+      guw_unit_of_work.ajusted_effort = params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
     end
 
     if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
@@ -370,6 +354,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     else
       guw_unit_of_work.flagged = true
     end
+
     guw_unit_of_work.save
 
     update_estimation_values

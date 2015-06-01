@@ -3,3 +3,5 @@ $("#modal_cotation").modal({
   keyboard: false,
   backdrop: "static"
 });
+var my_value = $("#ajusted_effort_<%= @guw_unit_of_work.id %>").val()
+$("#hidden_ajusted_effort_<%= @guw_unit_of_work.id %>").val(my_value)
