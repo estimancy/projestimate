@@ -173,7 +173,7 @@
               </td>
 
               <td class="span2 pull-left">
-                <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]},
+,l                <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]},
                                                                                 selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
                                class: "guw_technology input-small",
                                guw: guow.id,
@@ -183,7 +183,10 @@
 
               <td>
                 <span class="pull-left">
-                  <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '------' : guow.tracking.truncate(25), guw.guw_unit_of_work_load_trackings_path(guow), title: guow.tracking, method: "post", remote: true %>
+                  <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '------' : guow.tracking.truncate(25), guw.guw_unit_of_work_load_trackings_path(guow),
+                              title: guow.tracking,
+                              method: "post",
+                              remote: true %>
                 </span>
               </td>
 

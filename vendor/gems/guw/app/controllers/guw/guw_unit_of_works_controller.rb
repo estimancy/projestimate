@@ -79,7 +79,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     group = @guw_unit_of_work.guw_unit_of_work_group
     @guw_unit_of_work.delete
     reorder group
+
     update_estimation_values
+    update_view_widgets_and_project_fields
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{group.id}")
   end
@@ -358,10 +360,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.save
 
     update_estimation_values
-
-    @module_project.views_widgets.each do |vw|
-      ViewsWidget::update_field(vw, @current_organization, @project, current_component)
-    end
+    update_view_widgets_and_project_fields
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{guw_unit_of_work.guw_unit_of_work_group.id}")
   end
@@ -440,10 +439,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
 
     update_estimation_values
-
-    @module_project.views_widgets.each do |vw|
-      ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
-    end
+    update_view_widgets_and_project_fields
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_works.last.guw_unit_of_work_group.id}")
   end
@@ -546,7 +542,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                       module_project_id: current_module_project.id,
                                                       guw_model_id: @guw_unit_of_work.guw_model.id).size
 
-
+    update_estimation_values
+    update_view_widgets_and_project_fields
   end
 
   private
@@ -559,6 +556,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def update_estimation_values
     #we save the effort now in estimation values
+    @guw_model = current_module_project.guw_model
     @module_project = current_module_project
     @module_project.guw_model_id = @guw_model.id
     @module_project.save
@@ -640,6 +638,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { @component.id => nil } )
         end
       end
+    end
+  end
+
+  def update_view_widgets_and_project_fields
+    @module_project.views_widgets.each do |vw|
+      ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
   end
 
