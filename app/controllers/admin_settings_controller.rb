@@ -41,6 +41,17 @@ class AdminSettingsController < ApplicationController
 
   helper_method :admin_setting_selected_status
 
+  def maintenances
+    @admin_setting = AdminSetting.where(key: "allow_authentication").first
+  end
+
+  def mass_mailing
+    @users = User.all
+    @message = params[:message]
+    UserMailer.maintenance(@users, @message).deliver
+    redirect_to root_url
+  end
+
   def index
     authorize! :manage_master_data, :all
 

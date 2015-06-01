@@ -173,7 +173,7 @@
               </td>
 
               <td class="span2 pull-left">
-,l                <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]},
+                <%= select_tag "guw_technology[#{guow.id}]", options_for_select(@project.organization.organization_technologies.map{|i| [i.name, i.id]},
                                                                                 selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
                                class: "guw_technology input-small",
                                guw: guow.id,

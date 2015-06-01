@@ -350,6 +350,9 @@ Projestimate::Application.routes.draw do
   resources :translations
   get 'load_translations' => 'translations#load_translations', :as => 'load_translations'
 
+  get 'maintenances' => 'admin_settings#maintenances', :as => 'maintenances'
+  post 'mass_mailing' => 'admin_settings#mass_mailing', :as => 'mass_mailing'
+
   post 'update_selected_attribute_organizations' => 'attribute_organizations#update_selected_attribute_organizations'
   post 'save_cocomo_basic' => 'cocomo_basics#save_cocomo_basic', :as => 'EstimationControllers/save_cocomo_basic'
 

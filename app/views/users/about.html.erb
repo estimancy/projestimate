@@ -56,7 +56,6 @@
       <dd><span class="label label-info"> <%= os %></span></dd>
     </dl>
 
-
     <h4>
       <b>
         Changelog
@@ -65,7 +64,11 @@
     <p>
 
     </p>
-    <%= simple_format(AdminSetting.where(key: "changelog").first.value) %>
+    <% begin %>
+      <%= simple_format(AdminSetting.where(key: "changelog").first.value) %>
+    <% rescue %>
+
+    <% end %>
 
 
   </div>

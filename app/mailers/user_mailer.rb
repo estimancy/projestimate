@@ -38,6 +38,12 @@ class UserMailer < ActionMailer::Base
   default :from => 'no-reply@projestimate.com'
   OLD_LOCALE = I18n.locale
 
+  def maintenance(users, message)
+    @message = message
+    #users.each do |user|
+    mail(:to => "renard760@gmail.com", :subject => "Message de maintenance")
+    #end
+  end
 
   #Send the new password
   def forgotten_password(user)
