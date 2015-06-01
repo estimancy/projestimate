@@ -11,9 +11,13 @@
   <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
   <!-- INCLUDE THIS (CHANGE jQUERY PATH) SPARKOM SUPPORT -->
-  <%# if AdminSetting.find_by_key(:online_support).value == "Oui" %>
-    <script type="text/javascript" src="http://www.spark-angels.com/panserver3/multiwidget/spk_multiwidget.js"></script>
-  <%# end %>
+
+  <% begin %>
+    <% if AdminSetting.find_by_key(:online_support).value == "1" %>
+      <script type="text/javascript" src="http://www.spark-angels.com/panserver3/multiwidget/spk_multiwidget.js"></script>
+    <% end %>
+  <% rescue %>
+  <% end %>
 
   <%= csrf_meta_tag %>
 </head>
