@@ -52,6 +52,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     reorder @guw_unit_of_work.guw_unit_of_work_group
 
+    @guw_unit_of_work.organization_technology_id = @guw_unit_of_work.guw_unit_of_work_group.organization_technology_id
+    @guw_unit_of_work.save
+
     @guw_model.guw_attributes.all.each do |gac|
       Guw::GuwUnitOfWorkAttribute.create(
           guw_type_id: @guw_type.id,

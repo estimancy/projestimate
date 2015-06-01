@@ -40,9 +40,9 @@ class UserMailer < ActionMailer::Base
 
   def maintenance(users, message)
     @message = message
-    #users.each do |user|
-    mail(:to => "renard760@gmail.com", :subject => "Message de maintenance")
-    #end
+    users.map(&:email).each do |email|
+      mail(:to => email, :subject => "Message de maintenance")
+    end
   end
 
   #Send the new password
