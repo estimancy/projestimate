@@ -9,7 +9,6 @@
 /.idea/
 /config/database.yml
 /config/sensitive_settings.yml
-/config/initializers/master_data.rb
 /db/schema.rb
 projestimate.iws
 Gemfile.local
