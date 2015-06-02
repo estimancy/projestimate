@@ -22,7 +22,7 @@
         <% end %>
       </tr>
 
-        <% unless estimation_pbs_probable_results.nil? %>
+        <% unless estimation_pbs_probable_results.nil? || ratio_reference.nil? %>
             <% referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles %>
 
             <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
