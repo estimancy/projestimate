@@ -49,7 +49,7 @@ class AdminSettingsController < ApplicationController
     @users = User.all
     @message = params[:message]
     UserMailer.maintenance(@users, @message).deliver
-    redirect_to root_url
+    redirect_to "/organizationals_params"
   end
 
   def index

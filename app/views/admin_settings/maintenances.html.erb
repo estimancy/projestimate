@@ -5,10 +5,10 @@
 
   <div id="tabs-2">
     <%= form_tag mass_mailing_path do %>
-      <%= text_area_tag "message", "", class: "tinymce" %>
+      <%= text_area_tag "message", "", class: "tinymce", rows: "20" %>
       <%= tinymce %>
       <br>
-      <%= submit_tag %>
+      <%= submit_tag "Envoyer à tous les utilisateurs de la base" %>
     <% end %>
   </div>
 </div>

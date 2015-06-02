@@ -1141,9 +1141,8 @@ class OrganizationsController < ApplicationController
   def set_technology_size_type_abacus
     authorize! :edit_organizations, Organization
 
-    @organization = Organization.find(params[:organization])
-    @technologies = @organization.organization_technologies
-    @size_unit_types = @organization.size_unit_types
+    @technologies = @current_organization.organization_technologies
+    @size_unit_types = @current_organization.size_unit_types
     @size_units = SizeUnit.all
 
     @technologies.each do |technology|
@@ -1155,13 +1154,13 @@ class OrganizationsController < ApplicationController
           value = params[:abacus]["#{size_unit.id}"]["#{technology.id}"]["#{sut.id}"].to_f
 
           unless value.nil?
-            t = TechnologySizeType.where( organization_id: @organization.id,
+            t = TechnologySizeType.where( organization_id: @current_organization.id,
                                           organization_technology_id: technology.id,
                                           size_unit_id: size_unit.id,
                                           size_unit_type_id: sut.id).first
 
             if t.nil?
-              TechnologySizeType.create(organization_id: @organization.id,
+              TechnologySizeType.create(organization_id: @current_organization.id,
                                         organization_technology_id: technology.id,
                                         size_unit_id: size_unit.id,
                                         size_unit_type_id: sut.id,
@@ -1174,14 +1173,13 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to edit_organization_path(@organization, :anchor => 'tabs-abacus-sut')
+    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'conversion'), nil, '/organizationals_params')
   end
 
   def set_technology_size_unit_abacus
     authorize! :edit_organizations, Organization
 
-    @organization = Organization.find(params[:organization])
-    @technologies = @organization.organization_technologies
+    @technologies = @current_organization.organization_technologies
     @size_units = SizeUnit.all
 
     @technologies.each do |technology|
@@ -1189,12 +1187,12 @@ class OrganizationsController < ApplicationController
         value = params[:technology_size_units_abacus]["#{size_unit.id}"]["#{technology.id}"].to_f
 
         unless value.nil?
-          t = TechnologySizeUnit.where( organization_id: @organization.id,
+          t = TechnologySizeUnit.where( organization_id: @current_organization.id,
                                         organization_technology_id: technology.id,
                                         size_unit_id: size_unit.id).first
 
           if t.nil?
-            TechnologySizeUnit.create(organization_id: @organization.id,
+            TechnologySizeUnit.create(organization_id: @current_organization.id,
                                       organization_technology_id: technology.id,
                                       size_unit_id: size_unit.id,
                                       value: value)
@@ -1205,7 +1203,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    redirect_to edit_organization_path(@organization, :anchor => 'tabs-abacus-tsu')
+    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'conversion'), nil, '/organizationals_params')
 
   end
 
