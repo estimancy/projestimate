@@ -83,6 +83,7 @@ class ApplicationController < ActionController::Base
   helper_method :user_number_precision
   helper_method :display_badge
 
+  before_filter :check_access
   before_filter :set_user_time_zone
   before_filter :set_user_language
   before_filter :set_return_to
@@ -94,12 +95,34 @@ class ApplicationController < ActionController::Base
   before_filter :update_activity_time
   before_filter :initialization_module
 
+  def check_access
+    begin
+      @online_support = AdminSetting.where(key: "online_support").first.value
+      @disable_access = AdminSetting.where(key: "disable_access").first.value
+      @offline_message = AdminSetting.where(key: "offline_message").first.value
+    rescue
+      @online_support = "1"
+      @disable_access = "1"
+      @offline_message = "L'application est actuellement hors-ligne"
+    end
+
+    if user_signed_in?
+      unless current_user.super_admin == true
+        if @disable_access == "1"
+          reset_session
+          redirect_to(root_path)
+        end
+      end
+    end
+
+  end
+
   def current_ability
     @current_ability ||= Ability.new(current_user, @current_organization)
   end
 
   # Organization verification: user need to have at least one organization before continue
-  def check_user_orgaization
+  def check_user_organization
     if current_user.organizations.empty?
       redirect_to(new_organization_path, flash: { warning: I18n.t(:user_need_at_least_one_organization)})
     end
@@ -147,37 +170,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
-
-  #before_filter :session_expiry
-  #before_filter :update_activity_time
-  #
-  #def session_expiry
-  #  if current_user()
-  #    unless load_admin_setting("session_inactivity_timeout")=="unset"
-  #      if session[:expires]
-  #        @time_left = (session[:expires] - Time.now).to_i
-  #        unless @time_left > 0
-  #          reset_session
-  #          flash[:error] = I18n.t('session_inactivity_timeout_expire')
-  #          redirect_to root_url
-  #        end
-  #      end
-  #    end
-  #  end
-  #end
-  #
-  #def update_activity_time
-  #  if current_user()
-  #    unless load_admin_setting("session_inactivity_timeout")=="unset"
-  #      if  load_admin_setting("session_inactivity_timeout")=="0.5"
-  #        session[:expires] = 30.seconds.from_now
-  #      else
-  #        session[:expires] = load_admin_setting("session_inactivity_timeout").to_f.minutes.from_now
-  #      end
-  #    end
-  #  end
-  #end
 
   def set_return_to
     #session[:return_to] = request.referer
