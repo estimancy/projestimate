@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
       @online_support = "1"
       @disable_access = "1"
       @offline_message = "L'application est actuellement hors-ligne"
-      @functional_version_number = AdminSetting.where(key: "functionnal_version_number").first.value
+      @functional_version_number = "1.9"
     end
 
     if user_signed_in?
