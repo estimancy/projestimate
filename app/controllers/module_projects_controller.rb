@@ -54,6 +54,7 @@ class ModuleProjectsController < ApplicationController
     set_page_title "Editing #{@module_project.pemodule.title}"
   end
 
+
   def update
     @module_project = ModuleProject.find(params[:id])
     @project = @module_project.project
@@ -168,17 +169,56 @@ class ModuleProjectsController < ApplicationController
         view_name = params['view_name'].nil? ? "#{@module_project} view" : params['view_name']
         view_description = params['view_description']
 
-        if selected_view.nil?
-          new_view_saved_as = View.create(name: view_name, description: view_description, pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
-          @module_project.update_attributes(view_id: new_view_saved_as.id, color: params['module_project']['color'])
-        else
-          selected_view.update_attributes(name: view_name, description: view_description)
-          #update module_project view name and description
-          @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
+        #Copy the selected view as new name, and all its widgets
+        new_view_saved_as = View.new(is_reference_view: true, name: view_name, description: view_description, pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id)
+
+        #================
+        if new_view_saved_as.save
+
+          #Then copy the widgets
+          selected_view.views_widgets.each do |view_widget|
+            widget_est_val = view_widget.estimation_value
+            in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+            estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
+            estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+            widget_copy = ViewsWidget.new(view_id: new_view_saved_as.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
+                                          show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                          width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+                                          position_x: view_widget.position_x, position_y: view_widget.position_y)
+            #Save and copy project_fields
+            if widget_copy.save
+              unless view_widget.project_fields.empty?
+                project_field = view_widget.project_fields.last
+
+                #Get project_field value
+                @value = 0
+                if widget_copy.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+                  begin
+                    @value = widget_copy.estimation_value.string_data_probable[current_component.id][widget_copy.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
+                  rescue
+                    begin
+                      @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+                    rescue
+                      @value = 0
+                    end
+                  end
+                else
+                  @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+                end
+
+                #create the new project_field
+                ProjectField.create(project_id: @project.id, field_id: project_field.field_id, views_widget_id: widget_copy.id, value: @value)
+              end
+            end
+          end
         end
+        #================
+
+        #Then update module_project view
+        ##@module_project.update_attributes(view_id: new_view_saved_as.id, color: params['module_project']['color'])
+
       end
     end
-
 
     @module_project.estimation_values.each_with_index do |est_val, j|
       corresponding_am = AttributeModule.where('pemodule_id =? and pe_attribute_id = ?', @module_project.pemodule.id, est_val.pe_attribute.id).first
@@ -197,6 +237,49 @@ class ModuleProjectsController < ApplicationController
 
     redirect_to redirect(dashboard_path(@project)), notice: "#{I18n.t (:notice_module_project_successful_updated)}"
   end
+
+
+  #Copie current view with all its widgets definition
+  def copy_view_widgets(module_project, selected_view, new_copied_view)
+
+    #Then copy the widgets
+    selected_view.views_widgets.each do |view_widget|
+      widget_est_val = view_widget.estimation_value
+      in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+      estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
+      estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+      widget_copy = ViewsWidget.new(view_id: new_copied_view.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
+                                    show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                    width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+                                    position_x: view_widget.position_x, position_y: view_widget.position_y)
+      #Save and copy project_fields
+      if widget_copy.save
+        unless view_widget.project_fields.empty?
+          project_field = view_widget.project_fields.last
+
+          #Get project_field value
+          @value = 0
+          if widget_copy.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+            begin
+              @value = widget_copy.estimation_value.string_data_probable[current_component.id][widget_copy.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
+            rescue
+              begin
+                @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+              rescue
+                @value = 0
+              end
+            end
+          else
+            @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+          end
+
+          #create the new project_field
+          ProjectField.create(project_id: @project.id, field_id: project_field.field_id, views_widget_id: widget_copy.id, value: @value)
+        end
+      end
+    end
+  end
+
 
   def module_projects_matrix
     @project = Project.find(params[:project_id])
@@ -233,7 +316,6 @@ class ModuleProjectsController < ApplicationController
     position_x = @module_project.position_x
 
     #...finally, destroy object module_project
-    module_project_view = @module_project.view
     @module_project.destroy
 
     #Update column module_projects link with initialization module
@@ -346,7 +428,11 @@ class ModuleProjectsController < ApplicationController
   #The module_project configuration view on dashboard
   def edit_module_project_view_config
     @module_project = ModuleProject.find(params[:module_project_id])
-    @corresponding_views = @current_organization.views.where(pemodule_id: @module_project.pemodule_id)
+    current_mp_view = @module_project.view
+    @corresponding_views = @current_organization.views.where(pemodule_id: @module_project.pemodule_id, is_reference_view: true).all
+    if current_mp_view && !@corresponding_views.include?(current_mp_view)
+      @corresponding_views << current_mp_view
+    end
   end
 
 end
