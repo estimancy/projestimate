@@ -48,7 +48,8 @@ class AdminSettingsController < ApplicationController
   def mass_mailing
     @users = User.all
     @message = params[:message]
-    UserMailer.maintenance(@users, @message).deliver
+    @objet = params[:objet]
+    UserMailer.maintenance(@users, @message, @objet).deliver
     redirect_to "/organizationals_params"
   end
 

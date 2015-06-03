@@ -37,10 +37,12 @@
 class UserMailer < ActionMailer::Base
   OLD_LOCALE = I18n.locale
 
-  def maintenance(users, message)
+  def maintenance(users, message, objet)
     @message = message
-    users.map(&:email).each do |email|
-      mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => "Message de maintenance Estimancy")
+    unless Rails.env == "development"
+      users.map(&:email).each do |email|
+        mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => objet)
+      end
     end
   end
 
