@@ -14,6 +14,7 @@
           <div id="collapseOne" class="accordion-body in collapse">
             <div class="accordion-inner">
               <%= simple_form_for(@organization) do |f| %>
+                <%= f.error_notification %>
                 <div class="row-fluid input-xxlarge">
                   <div class="span7"><%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xlarge', :autofocus => (controller.action_name == 'new')} %></div>
                   <div class="span5">

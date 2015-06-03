@@ -5,37 +5,24 @@
 
   <div id="tabs-1">
 
-    <h2><%= link_to 'Estimancy', 'http://forge.estimancy.com/', target:"_blank" %></h2>
+    <h2>Estimancy</h2>
 
-    <h4>Copyright © 2014 <%= link_to 'Estimancy', 'http://estimancy.com', target:"_blank" %></h4>
+    <p>Copyright © 2014 <%= link_to 'Estimancy', 'http://estimancy.com', target:"_blank" %></p>
 
     <p>
       <%= I18n.t('text_projestimate_open_source') %> <%= link_to 'GNU AGPL-v3', 'http://www.gnu.org/licenses/agpl-3.0.html', target:"_blank" %>
     </p>
 
     <p>
-      <%= I18n.t('text_projestimate_open_source_references') %> <%= link_to '(ProjEstimate dependencies)', 'dependencies.html', target:"_blank" %>
+      <%= I18n.t('text_projestimate_open_source_references') %> <%= link_to '(Estimancy dependencies)', 'dependencies.html', target:"_blank" %>
     </p>
-
-    <hr class="bs-docs-separator">
-
-    <dl class="dl-horizontal">
-      <dt style='width: 250px; padding: 0 15px; '><%= I18n.t(:text_latest_update) %> </dt>
-      <dd>
-        <span class="label label-info"><%= @latest_local_update.nil? ? 'None' : I18n.l(@latest_local_update) %> </span>
-      </dd>
-      <dt style='width: 250px;padding: 0 15px; '><%= I18n.t(:text_latest_masterData_repository_update) %></dt>
-      <dd>
-        <span class="label label-info"> <%= @latest_repo_update.nil? ? 'None' : I18n.l(@latest_repo_update) %>  </span>
-      </dd>
-    </dl>
-    <%# link_to I18n.t(:text_download_master_data), update_install_path(:latest_local_update => @latest_local_update, :latest_repo_update => @latest_repo_update), :class => 'btn', :disable_with => I18n.t(:text_please_wait), :disabled => is_master_instance?, :onclick => "$('#spiner').toggle();" %>
-    <%# image_tag '/assets/ajax-loader.gif', :id => 'spiner', :class => 'hide' %>
 
     <hr class="bs-docs-separator">
     <dl class="dl-horizontal">
       <dt>Estimancy version</dt>
       <dd><span class="label label-info"><%= projestimate_version %></span>
+      <dt>Mise à jour du</dt>
+      <dd><span class="label label-info"><%= update_date %></span>
       </dd>
       <dt>Ruby version</dt>
       <dd><span class="label label-info"><%= ruby_version %> </span></dd>
@@ -55,14 +42,8 @@
       <dd><span class="label label-info"> <%= os %></span></dd>
     </dl>
 
-    <h4>
-      <b>
-        Changelog
-      </b>
-    </h4>
-    <p>
+    <h2>Changelog</h2>
 
-    </p>
     <% begin %>
       <%= simple_format(AdminSetting.where(key: "changelog").first.value) %>
     <% rescue %>
