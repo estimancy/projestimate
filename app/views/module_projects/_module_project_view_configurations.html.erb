@@ -13,11 +13,13 @@
     <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic pull-left", type: 'color', value: @module_project.color || '#D3D3D3'} %> <br>
 
     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
-      <div class="span-8"><%= "#{I18n.t(:current_view)} : " %> <%= @module_project.view.nil? ? "-" : @module_project.view %></div>
-
-      <% is_default_view = @module_project.view.nil? ? false : @module_project.view.is_default_view  %>
-      <div class="span-4"><%= check_box_tag "is_default_view", is_default_view, is_default_view, disabled: is_default_view %> <%= I18n.t(:define_as_default_view) %> </div>
+      <!--<div class="span-8"><%#= "#{I18n.t(:current_view)} : " %> <%#= @module_project.view.nil? ? "-" : @module_project.view %></div>-->
+      <%# is_default_view = @module_project.view.nil? ? false : @module_project.view.is_default_view  %>
+      <div class="span-4"><%#= check_box_tag "is_default_view", is_default_view, is_default_view, disabled: is_default_view %> <%#= I18n.t(:define_as_default_view) %> </div>
     </div>
+
+    <div id="label_use_referenced_view" style="display: none"><h3><%= I18n.t(:change_current_view) %></h3></div>
+    <div id="label_reference_current_view" style="display: none"><h3><%= I18n.t(:save_as_another_view) %></h3></div>
 
     <div style="margin-bottom: 10px;">
       <%= link_to "#{I18n.t(:change_current_view)} >>", "#", id: "show_table_module_view_list", remote: true %>
@@ -27,11 +29,11 @@
     <div id="show_div_for_save_as">
        <table>
          <tr>
-         <td><label><%= I18n.t(:view_name) %></label></td>
-         <td> <%= text_field_tag "view_name", "" %></td>
-       </tr>
+           <td><label><%= I18n.t(:name) %></label></td>
+           <td> <%= text_field_tag "view_name", "" %></td>
+         </tr>
          <tr>
-           <td><%= I18n.t(:view_description) %></td>
+           <td><%= I18n.t(:description) %></td>
            <td><%= text_area_tag "view_description", "", rows: 5, class: "input-xxlarge" %></td>
          </tr>
        </table>
@@ -64,7 +66,8 @@
 
     <div style="margin-top: 30px;">
         <%= f.submit I18n.t('label_save'), name: 'save', class: 'btn', id: 'save_view_button' %>
-        <%= f.submit I18n.t('save_as'), name: 'save_as', class: 'btn', id: 'save_as_view_button' %>
+        <%= f.submit I18n.t('label_save'), name: 'save_as', class: 'btn', id: 'save_as_view_button' %>
+        <%#= f.submit I18n.t('save_as'), name: 'save_as', class: 'btn', id: 'save_as_view_button' %>
         <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:close) %></button>
     </div>
 <% end %>

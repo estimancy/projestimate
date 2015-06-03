@@ -23,21 +23,27 @@ $("#edit_component").modal({
 
 $("#table_module_view_list").hide();
 $("#show_div_for_save_as").hide();
-$("#save_as_view_button").attr('disabled', true);
+$("#save_as_view_button").hide(); //$("#save_as_view_button").attr('disabled', true);
 
 $("#show_table_module_view_list").click(function(){
     $("#table_module_view_list").show();
     $("#show_div_for_save_as").hide();
+    $("#save_current_view_as").hide(); //hide or not
     $("#save_view_button").attr('disabled', false);
-    $("#save_as_view_button").attr('disabled', true);
+    $("#save_as_view_button").hide(); //$("#save_as_view_button").attr('disabled', true);
+    $("#show_table_module_view_list").hide();
+    $("#label_use_referenced_view").show();
 });
 
 $("#save_current_view_as").click(function(){
     $("#show_div_for_save_as").show();
     $("#table_module_view_list").hide();
-    //$("#show_table_module_view_list").hide();
+    $("#show_table_module_view_list").hide();  //hide or not
     $("#save_as_view_button").attr('disabled', false);
-    $("#save_view_button").attr('disabled', true);
+    $("#save_view_button").hide();  //$("#save_view_button").attr('disabled', true);
+    $("#save_current_view_as").hide();
+    $("#label_reference_current_view").show();
+    $("#save_as_view_button").show();
 })
 
 $("#notifications").html("<%= j(render "layouts/notifications") %>");
