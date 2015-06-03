@@ -45,4 +45,5 @@ Projestimate::Application.initialize!
 #Encoding.default_external = Encoding::UTF_8
 
 COMMIT_VERSION = `git rev-list -n1 --abbrev-commit HEAD` unless defined? COMMIT_VERSION
+COMMIT_DATE = `git log -1 --format="%cd"`
 
