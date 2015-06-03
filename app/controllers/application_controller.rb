@@ -64,6 +64,7 @@ class ApplicationController < ActionController::Base
   helper_method :security
   helper_method :server_name
   helper_method :projestimate_version
+  helper_method :update_date
   helper_method :ruby_version
   helper_method :rails_version
   helper_method :environment
@@ -100,10 +101,12 @@ class ApplicationController < ActionController::Base
       @online_support = AdminSetting.where(key: "online_support").first.value
       @disable_access = AdminSetting.where(key: "disable_access").first.value
       @offline_message = AdminSetting.where(key: "offline_message").first.value
+      @functional_version_number = AdminSetting.where(key: "functionnal_version_number").first.value
     rescue
       @online_support = "1"
       @disable_access = "1"
       @offline_message = "L'application est actuellement hors-ligne"
+      @functional_version_number = "-"
     end
 
     if user_signed_in?
@@ -454,7 +457,11 @@ class ApplicationController < ActionController::Base
   end
 
   def projestimate_version
-    @projestimate_version="1.7+#{COMMIT_VERSION}"
+    @projestimate_version="#{@functional_version_number}"
+  end
+
+  def update_date
+    Time.parse(COMMIT_DATE).strftime("%d/%m/%Y à %H:%M")
   end
 
   def ruby_version
