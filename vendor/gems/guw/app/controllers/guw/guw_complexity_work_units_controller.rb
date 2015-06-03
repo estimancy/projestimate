@@ -58,23 +58,28 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
       end
     end
 
-    params[:coefficient].each do |i|
-      i.last.each do |j|
-        ot = OrganizationTechnology.find(j.first.to_i)
-        cplx = Guw::GuwComplexity.find(i.first.to_i)
+    unless params[:coefficient].nil?
+      params[:coefficient].each do |i|
+        i.last.each do |j|
+          ot = OrganizationTechnology.find(j.first.to_i)
+          cplx = Guw::GuwComplexity.find(i.first.to_i)
 
-        cwu = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
-                                           organization_technology_id: ot.id).first
+          cwu = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
+                                             organization_technology_id: ot.id).first
 
-        if cwu.nil?
-          Guw::GuwComplexityTechnology.create(guw_complexity_id: cplx.id, organization_technology_id: ot.id, coefficient: params[:coefficient]["#{cplx.id}"]["#{ot.id}"])
-        else
-          cwu.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
-          cwu.save
+          if cwu.nil?
+            Guw::GuwComplexityTechnology.create(guw_complexity_id: cplx.id, organization_technology_id: ot.id, coefficient: params[:coefficient]["#{cplx.id}"]["#{ot.id}"])
+          else
+            cwu.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
+            cwu.save
+          end
         end
       end
     end
-
-    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    if @guw_type.nil?
+      redirect_to :back
+    else
+      redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    end
   end
 end

@@ -35,13 +35,14 @@
 #############################################################################
 
 class UserMailer < ActionMailer::Base
-  default :from => 'no-reply@projestimate.com'
   OLD_LOCALE = I18n.locale
 
-  def maintenance(users, message)
+  def maintenance(users, message, objet)
     @message = message
-    users.map(&:email).each do |email|
-      mail(:to => email, :subject => "Message de maintenance")
+    unless Rails.env == "development"
+      users.map(&:email).each do |email|
+        mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => objet)
+      end
     end
   end
 
@@ -49,7 +50,7 @@ class UserMailer < ActionMailer::Base
   def forgotten_password(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_lost_password))
+    mail(:to => @user.email, :from => "Estimancy <no-reply@estimancy.com>", :subject => I18n.t(:mail_subject_lost_password))
   ensure
     reset_locale
   end
@@ -58,7 +59,7 @@ class UserMailer < ActionMailer::Base
   def new_password(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_new_password))
+    mail(:to => @user.email, :from => "Estimancy <no-reply@estimancy.com>", :subject => I18n.t(:mail_subject_new_password))
   ensure
     reset_locale
   end
@@ -66,7 +67,7 @@ class UserMailer < ActionMailer::Base
   #Send an account request
   def account_request(status)
     I18n.locale = 'en'
-    mail(:to => AdminSetting.find_by_key_and_record_status_id('notifications_email', status).value, :subject => I18n.t(:mail_subject_account_activation_request))
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => AdminSetting.find_by_key_and_record_status_id('notifications_email', status).value, :subject => I18n.t(:mail_subject_account_activation_request))
   ensure
     reset_locale
   end
@@ -75,7 +76,7 @@ class UserMailer < ActionMailer::Base
   def account_validate(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_account_activation))
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => @user.email, :subject => I18n.t(:mail_subject_account_activation))
   ensure
     reset_locale
   end
@@ -84,7 +85,7 @@ class UserMailer < ActionMailer::Base
   def account_validate_no_pw(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_account_activation))
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => @user.email, :subject => I18n.t(:mail_subject_account_activation))
   ensure
     reset_locale
   end
@@ -93,7 +94,7 @@ class UserMailer < ActionMailer::Base
   def account_suspended(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_account_suspended))
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => @user.email, :subject => I18n.t(:mail_subject_account_suspended))
   ensure
     reset_locale
   end
@@ -102,7 +103,7 @@ class UserMailer < ActionMailer::Base
   def account_validate_ldap(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_account_activation))
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => @user.email, :subject => I18n.t(:mail_subject_account_activation))
   ensure
     reset_locale
   end
@@ -111,7 +112,7 @@ class UserMailer < ActionMailer::Base
   def account_created(user)
     @user = user
     I18n.locale = user.locale
-    mail(:to => @user.email, :subject => I18n.t(:mail_subject_account_created))
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => @user.email, :subject => I18n.t(:mail_subject_account_created))
   ensure
     reset_locale
   end
@@ -121,9 +122,9 @@ class UserMailer < ActionMailer::Base
 
     @message = "Here a new Feedback from: #{user} \nType: #{type} \n\nMessage: \n\n#{feedback_message} \n\nInformation on environment\n - Latest repository update: #{latest_repo_update} \n - ProjEstimate version: #{projestimate_version} - Ruby version: #{ruby_version} \n - Rails version: #{rails_version} \n - Environment: #{environment} \n - Database adapter: #{database_adapter}\n - Hostname: #{server_name} \n - URL: #{root_url} \n - Browser: #{browser} #{version_browser} (#{platform}) \n - OS: #{os}"
     @defined_status=RecordStatus.find_by_name('Defined')
-    to=AdminSetting.find_by_key_and_record_status_id('feedback_email', status)
-    to=to.value
-    mail(:to => to, :subject => 'Feedback ('+type+') from '+ user)
+    to = AdminSetting.find_by_key_and_record_status_id('feedback_email', status)
+    to = to.value
+    mail(:from => "Estimancy <no-reply@estimancy.com>", :to => to, :subject => 'Feedback ('+type+') from '+ user)
 
   ensure
     reset_locale

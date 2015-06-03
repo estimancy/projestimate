@@ -11,7 +11,7 @@
 
         <%#= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'input-xxlarge', :rows => 5} unless (@admin_setting.key=='session_maximum_lifetime' || @admin_setting.key=='session_inactivity_timeout') || @admin_setting.key=='password_min_length' || @admin_setting.key == 'self-registration' || @admin_setting.key=='allow_feedback' %>
         <%= tinymce %>
-        <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'tinymce input-xxlarge', :rows => 5} unless (@admin_setting.key.in? %w(session_maximum_lifetime session_inactivity_timeout password_min_length self-registration allow_feedback audit_history_lifetime online_support allow_authentication)) %>
+        <%= f.input :value, :label => I18n.t('value'), :input_html => {:class => 'tinymce input-xxlarge', :rows => 5} unless (@admin_setting.key.in? %w(session_maximum_lifetime session_inactivity_timeout password_min_length self-registration allow_feedback audit_history_lifetime online_support disable_access)) %>
 
         <%= f.input :value, :label => I18n.t('value'), :as => 'integer', :input_html => {:class => 'numeric integer optional', :type => 'number', :min => 0, :max => 40} if (@admin_setting.key=='password_min_length') %>
 
@@ -25,7 +25,7 @@
 
         <%= f.input :value, :label => I18n.t('value')+" (True/False)", :as => 'boolean' if (@admin_setting.key=='online_support') %>
 
-      <%= f.input :value, :label => I18n.t('value')+" (True/False)", :as => 'boolean' if (@admin_setting.key=='allow_authentication') %>
+        <%= f.input :value, :label => I18n.t('value')+" (True/False)", :as => 'boolean' if (@admin_setting.key=='disable_access') %>
 
         <%= f.input :value, :label => I18n.t('value'), :collection => [[I18n.t(:label_disabled), 0]]+ [1, 2, 3, 4, 5, 6, 10].collect { |days| [I18n.t('datetime.distance_in_words.x_days', :count => days), I18n.t('datetime.distance_in_words.x_days', :count => days, :locale => :en)] } + [1, 2, 3].collect { |weeks| [I18n.t('datetime.distance_in_words.x_weeks', :count => weeks), I18n.t('datetime.distance_in_words.x_weeks', :count => weeks, :locale => :en)] } + [1, 2, 3, 6, 12].collect { |months| [I18n.t('datetime.distance_in_words.x_months', :count => months), I18n.t('datetime.distance_in_words.x_months', :count => months, :locale => :en)] } if (@admin_setting.key=='audit_history_lifetime') %>
 

@@ -113,13 +113,19 @@
 //        }
 //    });
 
-// May use different displays
-    $(document).ready(function() {
-        var multiWidget = new SpkMultiWidget(29508);
-        multiWidget.onWidgets(onWidgets);
-        multiWidget.onError(onSpkError);
-        multiWidget.start();
-    });
+    <% begin %>
+      <% if @online_support == "1" %>
+        // May use different displays
+        $(document).ready(function() {
+            var multiWidget = new SpkMultiWidget(29508);
+            multiWidget.onWidgets(onWidgets);
+            multiWidget.onError(onSpkError);
+            multiWidget.start();
+        });
+      <% end %>
+    <% rescue %>
+
+    <% end %>
 
     // May use different displays
     function widgetLaunchUrl(widgetId) {

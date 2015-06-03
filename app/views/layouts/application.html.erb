@@ -12,11 +12,9 @@
 
   <!-- INCLUDE THIS (CHANGE jQUERY PATH) SPARKOM SUPPORT -->
 
-  <% begin %>
-    <% if AdminSetting.find_by_key(:online_support).value == "1" %>
-      <script type="text/javascript" src="http://www.spark-angels.com/panserver3/multiwidget/spk_multiwidget.js"></script>
-    <% end %>
-  <% rescue %>
+
+  <% if @online_support == "1" %>
+    <script type="text/javascript" src="http://www.spark-angels.com/panserver3/multiwidget/spk_multiwidget.js"></script>
   <% end %>
 
   <%= csrf_meta_tag %>

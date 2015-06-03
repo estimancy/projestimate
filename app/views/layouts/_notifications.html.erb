@@ -31,4 +31,13 @@
       <%= flash[:alert] %>
     </div>
   <% end %>
+
+  <% unless user_signed_in? %>
+    <% if @disable_access == "1" %>
+      <div class='alert alert-warning pull-left' style="width: 60%">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <%= simple_format @offline_message %>
+      </div>
+    <% end %>
+  <% end %>
 </div>
