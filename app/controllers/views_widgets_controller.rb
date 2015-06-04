@@ -46,6 +46,7 @@ class ViewsWidgetsController < ApplicationController
     @view_id = params[:view_id]
     @position_x = 1; @position_y = 1
     @module_project = ModuleProject.find(params[:module_project_id])
+    @module_project_box = @module_project
     @pbs_project_element_id = current_component.id
     @project_pbs_project_elements = @module_project.project.pbs_project_elements#.reject{|i| i.is_root?}
 
@@ -71,6 +72,8 @@ class ViewsWidgetsController < ApplicationController
     @position_y = (@views_widget.position_y.nil? || @views_widget.position_y.downcase.eql?("nan")) ? 1 : @views_widget.position_y
 
     @module_project = @views_widget.module_project_id.nil? ? ModuleProject.find(params[:module_project_id]) : @views_widget.module_project
+    @module_project_box = ModuleProject.find(params[:module_project_id])
+
     ###@pbs_project_element_id = @views_widget.pbs_project_element_id.nil? ? current_component.id : @views_widget.pbs_project_element_id
     @pbs_project_element_id = current_component.id
     @project_pbs_project_elements = @module_project.project.pbs_project_elements#.reject{|i| i.is_root?}
@@ -90,6 +93,7 @@ class ViewsWidgetsController < ApplicationController
     authorize! :manage_estimation_widgets, @project
 
     @module_project = ModuleProject.find(params[:current_module_project_id]) ###ModuleProject.find(params[:views_widget][:module_project_id])
+    @module_project_box = @module_project
     @pemodule = @module_project.pemodule
 
     if @module_project.view.nil?
@@ -202,6 +206,8 @@ class ViewsWidgetsController < ApplicationController
         @position_y = (@views_widget.position_y.nil? || @views_widget.position_y.downcase.eql?("nan")) ? 1 : @views_widget.position_y
 
         @module_project = ModuleProject.find(params[:views_widget][:module_project_id])
+        @module_project_box = @module_project
+
         @pbs_project_element_id = current_component.id
         @project_pbs_project_elements = @project.pbs_project_elements#.reject{|i| i.is_root?}
 
