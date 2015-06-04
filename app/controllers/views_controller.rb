@@ -62,8 +62,14 @@ class ViewsController < ApplicationController
   def create
     @view = View.new(params[:view])
     @organization = Organization.find_by_id(params['view']['organization_id'])
+    last_default_view = @organization.views.where('pemodule_id = ? AND is_default_view = ?', @view.pemodule_id, true).first
 
     if @view.save
+
+      if @view.is_default_view && last_default_view
+        last_default_view.update_attribute(:is_default_view, false)
+      end
+
       flash[:notice] = I18n.t(:view_successfully_created)
       redirect_to redirect_apply(nil, new_view_path(params[:view]), organization_setting_path(@organization, :anchor => 'tabs-views'))
     else
@@ -76,8 +82,14 @@ class ViewsController < ApplicationController
   def update
     @view = View.find(params[:id])
     @organization = @view.organization
+    last_default_view = @organization.views.where('pemodule_id = ? AND is_default_view = ?', @view.pemodule_id, true).first
 
     if @view.update_attributes(params[:view])
+
+      if @view.is_default_view && last_default_view
+        last_default_view.update_attribute(:is_default_view, false)
+      end
+
       flash[:notice] = I18n.t(:view_successfully_updated)
       redirect_to redirect_apply(edit_organization_view_path(params[:view]), nil, organization_setting_path(@organization, :anchor => 'tabs-views'))
     else

@@ -884,13 +884,6 @@ class ProjectsController < ApplicationController
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
 
-      #Select the default view for module_project
-      #default_view_for_widgets = View.where("name = ? AND organization_id = ?", "Default view", @project.organization_id).first_or_create(name: "Default view", organization_id: @project.organization_id, :description => "Default view for widgets. If no view is selected for module project, this view will be automatically selected.")
-      #default_view_for_widgets = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first_or_create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, is_default_view: true, :name => "Default view for the #{@pemodule}.")
-      #my_module_project.view_id = default_view_for_widgets.id
-
-      my_module_project.save
-
       #si le module est un module generic on l'associe le module project
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
@@ -902,7 +895,6 @@ class ProjectsController < ApplicationController
         wai = WbsActivityInput.new(module_project_id: my_module_project.id,
                                 wbs_activity_id: wbs_id,
                                 wbs_activity_ratio_id: my_module_project.wbs_activity.wbs_activity_ratios.first )
-
         wai.save
       elsif @pemodule.alias == "expert_judgement"
         eji_id = params[:module_selected].split(',').first
@@ -949,6 +941,56 @@ class ProjectsController < ApplicationController
       unless @initialization_module.nil?
         my_module_project.update_attribute('associated_module_project_ids', @initialization_module_project.id) unless @initialization_module_project.nil?
       end
+
+      #======
+      #Select the default view for module_project
+      default_view = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first
+      #Then copy the default view widgets in the new created view
+      unless default_view.nil?
+        new_copied_view = View.new(name: "#{@project.title} - #{my_module_project} view", description: "", pemodule_id: my_module_project.pemodule_id, organization_id: @project.organization_id, initial_view_id: default_view.id)
+        if new_copied_view.save
+          #Then copy the widgets of the dafult view
+          default_view.views_widgets.each do |view_widget|
+            widget_est_val = view_widget.estimation_value
+            in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+            estimation_value = my_module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
+            estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+            widget_copy = ViewsWidget.new(view_id: new_copied_view.id, module_project_id: my_module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
+                                          show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+                                          width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+                                          position_x: view_widget.position_x, position_y: view_widget.position_y)
+            #Save and copy project_fields
+            if widget_copy.save
+              unless view_widget.project_fields.empty?
+                project_field = view_widget.project_fields.last
+
+                #Get project_field value
+                @value = 0
+                if widget_copy.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+                  begin
+                    @value = widget_copy.estimation_value.string_data_probable[current_component.id][widget_copy.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
+                  rescue
+                    begin
+                      @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+                    rescue
+                      @value = 0
+                    end
+                  end
+                else
+                  @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+                end
+
+                #create the new project_field
+                ProjectField.create(project_id: @project.id, field_id: project_field.field_id, views_widget_id: widget_copy.id, value: @value)
+              end
+            end
+          end
+
+          my_module_project.view_id = new_copied_view.id
+          my_module_project.save
+        end
+      end
+      #======
     end
   end
 
