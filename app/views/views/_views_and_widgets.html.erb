@@ -6,8 +6,7 @@
         <th><%= I18n.t(:description) %></th>
         <th><%= I18n.t(:associated_module) %></th>
         <th><%= I18n.t(:default_view) %></th>
-        <th><%= I18n.t(:widgets) %></th>
-        <th><%= I18n.t(:is_used_view) %></th>
+        <th><%= I18n.t(:displayed_data) %></th>
         <th><%= I18n.t(:created_at) %></th>
         <th class="action"><%= I18n.t(:actions) %></th>
       </tr>
@@ -21,15 +20,7 @@
         <td class="center"><%= view.is_default_view ? I18n.t('simple_form.yes') : I18n.t('simple_form.no') %></td>
         <td>
           <% view.views_widgets.each do |widget| %>
-              <%= check_box_tag "view_widget_#{widget.id}", widget.id, true, disabled: true %>
-              <%= widget.name %>
-          <% end %>
-        </td>
-        <td class="center">
-          <% if view.module_projects.empty? || view.module_projects.nil? %>
-              <%= check_box_tag "view_is_used_#{view.id}", view.id, false, disabled: true %>
-          <% else %>
-              <%= check_box_tag "view_is_used_#{view.id}", view.id, true, disabled: true %>
+              <%= widget.name %> <br>
           <% end %>
         </td>
         <td><%= I18n.l( view.created_at) %></td>

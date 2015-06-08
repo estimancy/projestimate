@@ -343,9 +343,9 @@
 
   <div id="tabs-views">
     <% if can? :show_views, View %>
-        <% if can? :manage, View %>
-            <%= link_to I18n.t('new_view'), new_organization_view_path(@organization), :class => 'btn btn-primary pull-right' %>
-        <% end %>
+        <!--<%# if can? :manage, View %>-->
+            <!--<%#= link_to I18n.t('new_view'), new_organization_view_path(@organization), :class => 'btn btn-primary pull-right' %>-->
+        <!--<%# end %>-->
         <%= render partial: "views/views_and_widgets" %>
     <% else %>
         <div class="red_color"><%= I18n.t(:notice_cannot_view_views_and_widgets) %></div>

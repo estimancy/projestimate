@@ -153,6 +153,7 @@ class ViewsWidgetsController < ApplicationController
           @views_widget_types = Projestimate::Application::GLOBAL_WIDGETS_TYPE
         end
 
+        format.html { render action: :new }
         format.js { render action: :new }
       end
     end

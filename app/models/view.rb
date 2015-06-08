@@ -8,7 +8,8 @@ class View < ActiveRecord::Base
   has_many :views_widgets, dependent: :destroy
   has_many :widgets, through: :views_widgets
 
-  validates :name, :organization_id, presence: true
+  validates :name, presence: true, uniqueness: { scope: [:organization_id, :pemodule_id] }
+  validates :organization_id, presence: true
 
   def to_s
     name
