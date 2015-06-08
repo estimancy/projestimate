@@ -1,6 +1,28 @@
+# encoding: UTF-8
+#############################################################################
+#
+# Estimancy, Open Source project estimation web application
+# Copyright (c) 2014 Estimancy (http://www.estimancy.com)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#############################################################################
+
 class ViewsWidget < ActiveRecord::Base
-  attr_accessible :color, :icon_class, :module_project_id, :name, :pbs_project_element_id, :estimation_value_id, :pe_attribute_id,:show_min_max, :view_id, :widget_id,
-                  :position, :position_x, :position_y, :width, :height, :widget_type, :show_name, :show_wbs_activity_ratio, :from_initial_view, :is_label_widget
+  attr_accessible :color, :icon_class, :module_project_id, :name, :pbs_project_element_id, :estimation_value_id, :pe_attribute_id,
+                  :show_min_max, :view_id, :widget_id, :position, :position_x, :position_y, :width, :height, :widget_type,
+                  :show_name, :show_wbs_activity_ratio, :from_initial_view, :is_label_widget
 
   belongs_to :view
   belongs_to :widget
