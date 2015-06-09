@@ -1,4 +1,6 @@
-<%= simple_form_for(@module_project) do |f| %>
+<%#= simple_form_for(@module_project) do |f| %>
+<%= simple_form_for @module_project, :url => update_module_project_view_config_path, remote: true do |f| %>
+
     <% if @module_project.errors.any? %>
         <div id="error_explanation" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
           <h2><%= pluralize(@module_project.errors.count, 'error') %> prohibited this module_project from being saved:</h2>
@@ -9,6 +11,10 @@
           </ul>
         </div>
     <% end %>
+
+    <div id="notifications"></div>
+
+    <%= hidden_field_tag :module_project_id, @module_project.id %>
 
     <%= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic pull-left", type: 'color', value: @module_project.color || '#D3D3D3'} %> <br>
 
@@ -38,7 +44,6 @@
          </tr>
        </table>
     </div>
-
 
     <div id="table_module_view_list">
         <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">

@@ -154,7 +154,7 @@ class ViewsWidgetsController < ApplicationController
         end
 
         format.html { render action: :new }
-        format.js { render action: :new }
+        format.js   { render action: :new }
       end
     end
   end

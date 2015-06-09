@@ -181,6 +181,7 @@ Projestimate::Application.routes.draw do
   get 'selected_balancing_attribute' => 'module_projects#selected_balancing_attribute', :as => 'selected_balancing_attribute'
   get 'show_module_project_results_view' => 'module_projects#show_module_project_results_view', :as => 'show_module_project_results_view'
   get 'edit_module_project_view_config' => 'module_projects#edit_module_project_view_config', as: 'edit_module_project_view_config'
+  match 'update_module_project_view_config' => 'module_projects#update_module_project_view_config', as: 'update_module_project_view_config'
 
   resources :languages
 
