@@ -930,7 +930,7 @@ class ProjectsController < ApplicationController
       default_view = View.where("organization_id = ? AND pemodule_id = ? AND is_default_view = ?",  @project.organization_id, @pemodule.id, true).first
       #Then copy the default view widgets in the new created view
       unless default_view.nil?
-        new_copied_view = View.new(name: "#{@project.title} - #{my_module_project} view", description: "", pemodule_id: my_module_project.pemodule_id, organization_id: @project.organization_id, initial_view_id: default_view.id)
+        new_copied_view = View.new(name: "#{@project} - #{my_module_project} view", description: "", pemodule_id: my_module_project.pemodule_id, organization_id: @project.organization_id, initial_view_id: default_view.id)
         if new_copied_view.save
           #Then copy the widgets of the dafult view
           default_view.views_widgets.each do |view_widget|

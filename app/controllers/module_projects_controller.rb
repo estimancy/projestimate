@@ -384,7 +384,7 @@ class ModuleProjectsController < ApplicationController
               @module_project.update_attributes(view_id: selected_view.id, color: params['module_project']['color'])
             else
               #want to use another view, so need to copy the view with all its widgets
-              new_copied_view = View.new(name: "#{@project.title} - #{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id, initial_view_id: selected_view.id)
+              new_copied_view = View.new(name: "#{@project} - #{@module_project} view", description: "", pemodule_id: @module_project.pemodule_id, organization_id: @project.organization_id, initial_view_id: selected_view.id)
               if new_copied_view.save
                 #Then copy the widgets
                 selected_view.views_widgets.each do |view_widget|
