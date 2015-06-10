@@ -27,7 +27,7 @@ FactoryGirl.define do
     sequence(:name) {|n| "Wet_#{n}"}
     sequence(:alias) {|n| "wet_alias#{n}"}
 
-    association :record_status, :factory => :proposed_status, strategy: :build
+    #association :record_status, :factory => :proposed_status, strategy: :build
 
     trait :wet_folder do
       sequence(:name) {|n| "Folder_#{n}"}

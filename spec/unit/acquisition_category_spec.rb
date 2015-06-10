@@ -40,21 +40,6 @@ describe AcquisitionCategory do
     @acquisition_category.should_not be_valid
   end
 
-  it "should be not valid without UUID" do
-    @acquisition_category.uuid = ""
-    @acquisition_category.should_not be_valid
-  end
-
-  it "should be not valid without record status" do
-    @acquisition_category.record_status = nil
-    @acquisition_category.should_not be_valid
-  end
-
-  it "should not be valid without custom_value when record_status='Custom'" do
-    @acquisition_category.record_status = @custom_status
-    @acquisition_category.should_not be_valid
-  end
-
   specify "should return :acquisition_category name" do
     @acquisition_category.to_s.should eql(@acquisition_category.name)
   end

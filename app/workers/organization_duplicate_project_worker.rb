@@ -137,7 +137,7 @@ class OrganizationDuplicateProjectWorker
         #
         #end
 
-        new_view = View.create(organization_id: new_organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "")
+        new_view = View.create(organization_id: new_organization_id, pemodule_id: new_mp.pemodule_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "")
         # We have to copy all the selected view's widgets in a new view for the current module_project
         if old_mp.view
           old_mp_view_widgets = old_mp.view.views_widgets.all
@@ -355,7 +355,7 @@ class OrganizationDuplicateProjectWorker
         if new_mp.view.nil?
           default_view = new_organization.views.where('pemodule_id = ? AND is_default_view = ?', new_mp.pemodule_id, true).first
           if default_view.nil?
-            default_view = View.create(name: "#{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: new_organization_id)
+            default_view = View.create(name: "#{new_prj.to_s} : #{new_mp} view", description: "", pemodule_id: new_mp.pemodule_id, organization_id: new_organization_id)
           end
           new_mp.update_attribute(:view_id, default_view.id)
         end
@@ -363,7 +363,7 @@ class OrganizationDuplicateProjectWorker
         #Recreate view for all moduleproject as the projects are not is the same organization
         ###if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
         #Copy the views and widgets for the new project
-        new_view = View.create(organization_id: new_organization_id, name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "")
+        new_view = View.create(organization_id: new_organization_id, pemodule_id: new_mp.pemodule_id,  name: "#{new_prj.to_s} : view for #{new_mp.to_s}", description: "")
         ##We have to copy all the selected view's widgets in a new view for the current module_project
         if old_mp.view
           old_mp_view_widgets = old_mp.view.views_widgets.all

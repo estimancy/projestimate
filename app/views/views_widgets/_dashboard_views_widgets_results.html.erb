@@ -18,9 +18,7 @@
                   <div class="pull-right">
                     <% if can?(:alter_estimation_plan, @project) || can?(:manage_estimation_widgets, @project) %>
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
-                      <% if module_project.pemodule.alias != Projestimate::Application::INITIALIZATION %>
-                        <%= link_to "", edit_module_project_view_config_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog", title: I18n.t(:label_add_new_view_widget), remote: true %>
-                      <% end %>
+                      <%= link_to "", edit_module_project_view_config_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog", title: I18n.t(:label_add_new_view_widget), remote: true %>
                     <% end %>
                   </div>
                 </div>

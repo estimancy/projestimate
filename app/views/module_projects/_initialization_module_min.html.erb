@@ -6,7 +6,9 @@
 <% unless pmod.nil? %>
   <tr>
     <td colspan="<%= @module_positions_x %>">
-      <div class="<%= select_pemodule %> module_project_min <%= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
+      <!--<div class="<%#= select_pemodule %> module_project_min <%#= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">-->
+      <div class="<%= select_pemodule %> module_project_min <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" style="background-color: <%= "#{pmod.color}" %>">
+
         <%= link_to pmod, activate_module_project_path(pmod) %>
 
         <% if pmod.show_results_view %>

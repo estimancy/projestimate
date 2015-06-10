@@ -21,13 +21,15 @@
     <div id="label_use_referenced_view" style="display: none"><h3><%= I18n.t(:change_current_view) %></h3></div>
     <div id="label_reference_current_view" style="display: none"><h3><%= I18n.t(:save_as_another_view) %></h3></div>
 
-    <div style="margin-bottom: 10px; margin-top: 20px;">
-      <%= link_to "#{I18n.t(:change_current_view)} >>", "#", id: "show_table_module_view_list", remote: true %>
-    </div>
+    <% if @module_project.pemodule.alias != Projestimate::Application::INITIALIZATION %>
+        <div style="margin-bottom: 10px; margin-top: 20px;">
+          <%= link_to "#{I18n.t(:change_current_view)} >>", "#", id: "show_table_module_view_list", remote: true %>
+        </div>
 
-    <div style="margin-bottom: 10px; margin-top: 20px;">
-      <%= link_to "#{I18n.t(:save_as_another_view)} >>", "#", id: "save_current_view_as", remote: true %>
-    </div>
+        <div style="margin-bottom: 10px; margin-top: 20px;">
+          <%= link_to "#{I18n.t(:save_as_another_view)} >>", "#", id: "save_current_view_as", remote: true %>
+        </div>
+    <% end %>
 
     <div id="show_div_for_save_as">
        <table>

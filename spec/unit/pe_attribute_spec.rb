@@ -28,13 +28,6 @@ describe PeAttribute do
     @custom_status = FactoryGirl.build(:custom_status)
   end
 
-  it 'should return attribute_update_at date' do
-    PeAttribute::attribute_updated_at.should be_an_instance_of Array
-    PeAttribute::attribute_updated_at.last.to_date.should eq @attribute.updated_at.to_date
-    PeAttribute::attribute_updated_at.should include(@attribute.updated_at.to_s)
-  end
-
-
   it 'should be return attribute type=integer' do
     @attribute.attr_type = "integer"
     @attribute.attribute_type.should eql("numeric")
@@ -121,9 +114,6 @@ describe PeAttribute do
     PeAttribute::type_values.should eql([["Integer", "integer" ] ,["Float", "float"], ["Date", "date" ], ["Text", "text" ], ["List", "list" ]])
   end
 
-  it 'should list an array' do
-    PeAttribute::attribute_list.should be_an_instance_of Array
-  end
 
   specify "should return :name + ' - ' + :description.truncate(20)" do
     @attribute.to_s.should eql(@attribute.name + ' - ' + @attribute.description.truncate(20) )

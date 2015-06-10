@@ -32,7 +32,7 @@ FactoryGirl.define do
     name { generate(:wbs_activity_name) }
     state "defined"
     description "Wbs-Activity"
-    association :record_status, :factory => :proposed_status, strategy: :build
+    #association :record_status, :factory => :proposed_status, strategy: :build
     association :organization, :factory => :organization
   end
 

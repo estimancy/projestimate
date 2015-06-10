@@ -36,18 +36,6 @@ describe WbsActivity do
     @wbs_activity.should_not be_valid
   end
 
-  it "should not be valid without uuid" do
-    @wbs_activity.uuid = ""
-    @wbs_activity.should_not be_valid
-  end
-
-  it "should not be valid without custom_value when record_status = Custom" do
-    @custom_status = FactoryGirl.build(:custom_status)
-    @wbs_activity.record_status = @custom_status
-    @wbs_activity.custom_value = ""
-    @wbs_activity.should_not be_valid
-  end
-
   describe "Duplicate wbs activity" do
     before do
       @wbs_activity_2 = @wbs_activity.amoeba_dup

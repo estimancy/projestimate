@@ -26,7 +26,7 @@ FactoryGirl.define do
     uuid
     sequence(:name) {|n| "Wbs-Activity #{n}"}
     description "TBD"
-    association :record_status, :factory => :proposed_to_save_status
+    #association :record_status, :factory => :proposed_to_save_status
     association :wbs_activity,  :factory => :wbs_activity
   end
 

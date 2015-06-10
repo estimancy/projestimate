@@ -41,16 +41,6 @@ describe PlatformCategory do
     @platform_category.should_not be_valid
   end
 
-  it "should not be valid without record_status" do
-    @platform_category.record_status = nil
-    @platform_category.should_not be_valid
-  end
-
-  it "should not be valid without custom_value when record_status='Custom'" do
-    @platform_category.record_status = @custom_status
-    @platform_category.should_not be_valid
-  end
-
   it "should return platform category name" do
     @platform_category.to_s.should eql(@platform_category.name)
   end

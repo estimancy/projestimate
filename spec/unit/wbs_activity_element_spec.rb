@@ -41,29 +41,29 @@ describe WbsActivityElement do
     @wbs_activity_element.should be_valid
   end
 
-  describe 'On master' do
-    it ' After Duplicate wbs activity element: record status should be proposed' do
-      MASTER_DATA=true
-      @wbs_activity_element2=@wbs_activity_element.amoeba_dup
-      if defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")
-        @wbs_activity_element2.record_status.name.should eql('Proposed')
-      else
-        @wbs_activity_element2.record_status.name.should eql('Local')
-      end
-    end
-  end
-
-  describe 'On local' do
-    it 'After Duplicate wbs activity element: record status should be local' do
-      MASTER_DATA=false
-      @wbs_activity_element2 = @wbs_activity_element.amoeba_dup
-      if defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")
-        @wbs_activity_element2.record_status.name.should eql('Proposed')
-      else
-        @wbs_activity_element2.record_status.name.should eql('Local')
-      end
-    end
-  end
+  #describe 'On master' do
+  #  it ' After Duplicate wbs activity element: record status should be proposed' do
+  #    MASTER_DATA=true
+  #    @wbs_activity_element2=@wbs_activity_element.amoeba_dup
+  #    if defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")
+  #      @wbs_activity_element2.record_status.name.should eql('Proposed')
+  #    else
+  #      @wbs_activity_element2.record_status.name.should eql('Local')
+  #    end
+  #  end
+  #end
+  #
+  #describe 'On local' do
+  #  it 'After Duplicate wbs activity element: record status should be local' do
+  #    MASTER_DATA=false
+  #    @wbs_activity_element2 = @wbs_activity_element.amoeba_dup
+  #    if defined?(MASTER_DATA) and MASTER_DATA and File.exists?("#{Rails.root}/config/initializers/master_data.rb")
+  #      @wbs_activity_element2.record_status.name.should eql('Proposed')
+  #    else
+  #      @wbs_activity_element2.record_status.name.should eql('Local')
+  #    end
+  #  end
+  #end
 
   describe 'import' do
     before :each do

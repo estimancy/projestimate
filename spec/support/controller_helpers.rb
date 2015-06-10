@@ -21,7 +21,18 @@
 
 module ControllerHelpers
 
-  def sign_in(user = "user")
+  def sign_in(user = double('user'))
+    if user.nil?
+      allow(request.env['warden']).to receive(:authenticate!).and_throw(:warden, {:scope => :user})
+      allow(controller).to receive(:current_user).and_return(nil)
+    else
+      allow(request.env['warden']).to receive(:authenticate!).and_return(user)
+      allow(controller).to receive(:current_user).and_return(user)
+    end
+  end
+
+
+  def sign_in_SAVE_LAST(user = "user")
     if user.nil?
       request.env['warden'].stub(:authenticate!).and_throw(:warden, {:scope => :user})
       allow(controller).to receive(:current_user) { nil }
