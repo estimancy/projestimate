@@ -55,7 +55,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     reorder @guw_unit_of_work.guw_unit_of_work_group
 
-    @guw_unit_of_work.organization_technology_id = @guw_unit_of_work.guw_unit_of_work_group.organization_technology_id
+    technology = @guw_unit_of_work.guw_unit_of_work_group.organization_technology
+    if technology.nil?
+      @guw_unit_of_work.organization_technology_id = @current_organization.organization_technologies.first.id
+    else
+      @guw_unit_of_work.organization_technology_id = @guw_unit_of_work.guw_unit_of_work_group.organization_technology_id
+    end
+
     @guw_unit_of_work.save
 
     @guw_model.guw_attributes.all.each do |gac|
