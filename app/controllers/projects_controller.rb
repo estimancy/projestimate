@@ -481,11 +481,21 @@ class ProjectsController < ApplicationController
 
     if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && (can?(:edit_project, @project) || can_alter_estimation?(@project))) # Have the write access to project
 
-      @project.application_id = params[:project][:application_id]
+      if @project.is_model == true
+        @project.applications.delete_all
+        @project.application_ids = params[:project][:application_ids]
+      else
+        @project.application_id = params[:project][:application_id]
+      end
+
       @project.save
 
       project_root = @project.root_component
-      project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
+      if @project.is_model == true
+        project_root_name = @project.title
+      else
+        project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
+      end
       project_root.update_attribute(:name, project_root_name)
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
@@ -1503,7 +1513,7 @@ public
 
       #Update some params with the form input data
       new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_model_by, model_name: old_prj, username: current_user.name)} \r\n"
-      new_prj.application_ids = params['project']['application_id']
+      new_prj.application_id = params['project']['application_id']
       new_prj.title = params['project']['title']
       new_prj.version = params['project']['version']
       new_prj.description = params['project']['description']

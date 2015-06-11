@@ -35,17 +35,18 @@ class ApplicationsController < ApplicationController
 
   def update
     @organization = Organization.find(params[:organization_id])
-    @application.update_attributes(params[:application])
-    if @project_area.update_attributes(params[:project_area])
-      flash[:notice] = I18n.t (:notice_project_area_successful_updated)
-      redirect_to redirect_apply(edit_organization_project_area_path(@organization, @project_area), nil, organization_setting_path(@organization, :anchor => 'tabs-project-areas') )
+    @application = Application.find(params[:id])
+    if @application.update_attributes(params[:application])
+      redirect_to redirect_apply(edit_organization_application_path(@organization, @application), nil, organization_setting_path(@organization, :anchor => 'tabs-applications') )
     else
       render action: 'edit'
     end  end
 
   def destroy
+    application_id = @application.id
+    @organization = Organization.find(params[:organization_id])
     @application.destroy
-    respond_with(@application)
+    redirect_to redirect_apply(edit_organization_application_path(@organization, application_id), nil, organization_setting_path(@organization, :anchor => 'tabs-applications') )
   end
 
   private

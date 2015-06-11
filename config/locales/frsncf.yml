@@ -874,6 +874,7 @@ frsncf:
   warning_session_bad_username: "Nous n'avons pas de compte utilisant ce nom de login ou ce courriel"
   application: "Application"
   applications: "Applications"
+  new_application: "Nouvelle application"
   notice_translation_successful_added: "Traduction ajoutée"
   notice_account_successful_created: "Votre compte a été créé avec succès"
   notice_account_successful_updated: "Votre compte a été mis à jour avec succès.."
@@ -1368,8 +1369,8 @@ frsncf:
   "label_Guw::GuwModel": "Modèle d'unité d'oeuvres génériques"
 
   cotation: "Cotation"
-  technology: "Technology"
-  tracability: "Tracability"
+  technology: "Technologie"
+  tracability: "Tracabilité"
   results: "Résultats"
   retained_result: "Retenu"
   actions: "Actions"
