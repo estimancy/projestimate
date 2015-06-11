@@ -24,14 +24,24 @@ class ApplicationsController < ApplicationController
 
   def create
     @application = Application.new(params[:application])
-    @application.save
-    respond_with(@application)
+    @organization = Organization.find(params[:organization_id])
+
+    if @application.save
+      redirect_to redirect_apply(nil, new_organization_application_path(@organization), organization_setting_path(@organization, :anchor => 'tabs-applications') )
+    else
+      render action: 'new'
+    end
   end
 
   def update
+    @organization = Organization.find(params[:organization_id])
     @application.update_attributes(params[:application])
-    respond_with(@application)
-  end
+    if @project_area.update_attributes(params[:project_area])
+      flash[:notice] = I18n.t (:notice_project_area_successful_updated)
+      redirect_to redirect_apply(edit_organization_project_area_path(@organization, @project_area), nil, organization_setting_path(@organization, :anchor => 'tabs-project-areas') )
+    else
+      render action: 'edit'
+    end  end
 
   def destroy
     @application.destroy

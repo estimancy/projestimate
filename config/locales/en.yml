@@ -874,6 +874,7 @@ en:
   error_account_ldap_association: "Your account is associated with the corporate directory/LDAP. Please contact your system administrator to know your ids."
   warning_session_bad_username: "We haven't any account using this login name or email"
   application: "Application"
+  applications: "Applications"
   notice_translation_successful_added: "Translation successfully Added."
   notice_account_successful_created: "The account was successfully created"
   notice_account_successful_updated: "The account was successfully updated."

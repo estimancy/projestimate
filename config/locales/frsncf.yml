@@ -873,6 +873,7 @@ frsncf:
   error_account_ldap_association: "Votre compte est associé à un annuaire d'entreprise LDAP. Contacter votre administrateur système pour connaître vos identifiants."
   warning_session_bad_username: "Nous n'avons pas de compte utilisant ce nom de login ou ce courriel"
   application: "Application"
+  applications: "Applications"
   notice_translation_successful_added: "Traduction ajoutée"
   notice_account_successful_created: "Votre compte a été créé avec succès"
   notice_account_successful_updated: "Votre compte a été mis à jour avec succès.."

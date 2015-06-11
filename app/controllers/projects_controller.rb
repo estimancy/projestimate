@@ -481,6 +481,9 @@ class ProjectsController < ApplicationController
 
     if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && (can?(:edit_project, @project) || can_alter_estimation?(@project))) # Have the write access to project
 
+      @project.application_id = params[:project][:application_id]
+      @project.save
+
       project_root = @project.root_component
       project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
       project_root.update_attribute(:name, project_root_name)

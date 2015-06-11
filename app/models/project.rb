@@ -22,7 +22,7 @@
 class Project < ActiveRecord::Base
   attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
                   :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
-                  :acquisition_category_id, :platform_category_id, :parent_id
+                  :acquisition_category_id, :platform_category_id, :parent_id, :application_id
 
   attr_accessor :project_organization_statuses, :new_status_comment, :available_inline_columns
 
