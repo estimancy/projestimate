@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150611075824) do
+ActiveRecord::Schema.define(:version => 20150611133544) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -136,6 +136,18 @@ ActiveRecord::Schema.define(:version => 20150611075824) do
   create_table "amoa_amoa_weightings_unit_of_works", :force => true do |t|
     t.integer "amoa_amoa_weighting_id"
     t.integer "amoa_amoa_unit_of_work_id"
+  end
+
+  create_table "applications", :force => true do |t|
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "applications_projects", :id => false, :force => true do |t|
+    t.integer "application_id"
+    t.integer "project_id"
   end
 
   create_table "associated_module_projects", :id => false, :force => true do |t|
@@ -1126,6 +1138,7 @@ ActiveRecord::Schema.define(:version => 20150611075824) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "status_comment"
+    t.integer  "application_id"
   end
 
   add_index "projects", ["ancestry"], :name => "index_projects_on_ancestry"

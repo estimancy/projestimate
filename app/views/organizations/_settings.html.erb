@@ -1,5 +1,6 @@
 <div class="tabs">
   <ul>
+    <li><a href="#tabs-applications"><%= I18n.t(:applications) %></a></li>
     <li><a href="#tabs-project-areas"><%= I18n.t(:project_areas) %></a></li>
     <li><a href="#tabs-project-categories"><%= I18n.t(:project_categories) %></a></li>
     <li><a href="#tabs-platform-categories"><%= I18n.t(:platform_categories) %></a></li>
@@ -14,6 +15,34 @@
     <li><a href="#tabs-views"><%= I18n.t(:views) %></a></li>
     <li><a href="#tabs-select-columns-list"><%= I18n.t(:select_columns_list) %></a></li>
   </ul>
+
+  <div id="tabs-applications">
+      <%= link_to I18n.t('new_application'), new_organization_application_path(@organization), :class => 'btn pull-right' %>
+
+      <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+        <thead>
+        <tr>
+          <th><%= I18n.t('name') %></th>
+          <th class="action"><%= I18n.t(:actions) %></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @organization.applications.each do |app| %>
+          <tr>
+            <td><%= app.name %></td>
+            <td class="center">
+              <%= link_to '', edit_organization_application_path(@organization, app), :class => 'icon-pencil' %>
+              <% if can? :manage, ProjectArea %>
+                <%= link_to '', organization_application_path(@organization, app), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        <%= render :partial => 'layouts/footer_table' %>
+        </tbody>
+      </table>
+  </div>
 
   <div id="tabs-project-areas">
     <% if can? :show_project_areas, ProjectArea %>

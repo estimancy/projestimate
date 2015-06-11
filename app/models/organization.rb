@@ -77,6 +77,8 @@ class Organization < ActiveRecord::Base
   # Results view
   has_many :views
 
+  has_many :applications
+
   belongs_to :currency
   #validates_presence_of :name
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}

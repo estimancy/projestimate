@@ -68,7 +68,7 @@ module OrganizationsHelper
   def column_header(column)
     #content_tag('th', h(column.caption))
     case column.name
-      when :product_name, :title
+      when :title
         content_tag('th class="text_left exportable"', I18n.t(column.caption))
       when :version
         content_tag('th class="center exportable"', I18n.t(column.caption))

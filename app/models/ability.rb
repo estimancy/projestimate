@@ -97,7 +97,7 @@ class Ability
       @array_groups = Array.new
 
       #Specfic project security loading
-      prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
+      prj_scrts = ProjectSecurity.includes(:project).find_all_by_user_id(user.id)
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
@@ -127,7 +127,7 @@ class Ability
           end
         end
 
-        grp.estimation_status_group_roles.each do |esgr|
+        grp.estimation_status_group_roles.includes(:estimation_status).each do |esgr|
           esgr_security_level = esgr.project_security_level
           unless esgr_security_level.nil?
             esgr_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
@@ -142,17 +142,17 @@ class Ability
       global = @array_users + @array_groups
       status = @array_status_groups
 
-      [status, global].inject(:&).each do |a|
-        permission = Permission.find(a[0]).alias
-        project = Project.find(a[1])
-        status = EstimationStatus.find(a[2])
-
-        unless project.nil?
-          unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
-            can permission.to_sym, project, estimation_status_id: status.id
-          end
-        end
-      end
+      #[status, global].inject(:&).each do |a|
+      #  permission = Permission.find(a[0]).alias
+      #  project = Project.find(a[1])
+      #  status = EstimationStatus.find(a[2])
+      #
+      #  unless project.nil?
+      #    unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
+      #      can permission.to_sym, project, estimation_status_id: status.id
+      #    end
+      #  end
+      #end
     end
   end
 end

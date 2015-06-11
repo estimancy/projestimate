@@ -7,7 +7,7 @@
     <table>
       <tr>
         <td>
-          <%= f.input :product_name, :label => I18n.t(:label_product_name), :input_html => {:class => 'input-large', value: @new_project.root_component.nil? ? '' : @new_project.root_component.name } %>
+          <%= f.input :application_id, as: :check_boxes, collection: @current_organization.applications, :label => I18n.t(:label_product_name), :input_html => {:class => 'input-large', value: @new_project.root_component.nil? ? '' : @new_project.root_component.name } %>
         </td>
         <td><%= f.input :version, :input_html => {:class => 'input-large'} %></td>
       </tr>

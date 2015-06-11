@@ -63,7 +63,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_attribute_id: gac.id)
     end
 
-
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
 
@@ -384,6 +383,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       nguowa.guw_unit_of_work_id = @new_guw_unit_of_work.id
       nguowa.save
     end
+
+    reorder @new_guw_unit_of_work.guw_unit_of_work_group
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
