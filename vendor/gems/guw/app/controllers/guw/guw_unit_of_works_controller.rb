@@ -42,7 +42,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
-    @guw_unit_of_work.guw_work_unit_id = @guw_model.guw_work_units.first.id
     @guw_unit_of_work.selected = true
 
     if params[:position].blank?
@@ -54,13 +53,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.save
 
     reorder @guw_unit_of_work.guw_unit_of_work_group
-
-    technology = @guw_unit_of_work.guw_unit_of_work_group.organization_technology
-    if technology.nil?
-      @guw_unit_of_work.organization_technology_id = @current_organization.organization_technologies.first.id
-    else
-      @guw_unit_of_work.organization_technology_id = @guw_unit_of_work.guw_unit_of_work_group.organization_technology_id
-    end
 
     @guw_unit_of_work.save
 
