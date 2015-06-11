@@ -12,13 +12,13 @@
       <%= f.input :name, :label => I18n.t('name'), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
 
       <div class="actions-tabs">
-          <% if action_name.in?(%w(new create)) %>
-            <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-            <%= submit_tag I18n.t('save'), :class => 'btn' %>
-          <% elsif action_name == 'edit' || action_name=='update' %>
-            <%= submit_tag I18n.t('save'), :class => 'btn' %>
-            <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-          <% end %>
+        <% if action_name.in?(%w(new create)) %>
+          <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+          <%= submit_tag I18n.t('save'), :class => 'btn' %>
+        <% elsif action_name == 'edit' || action_name=='update' %>
+          <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+        <% end %>
         <%= link_to I18n.t('back'), organization_setting_path(@organization, :anchor => 'tabs-applications'), :class => 'btn' %>
       </div>
     <% end %>

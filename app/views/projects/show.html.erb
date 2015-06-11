@@ -19,15 +19,21 @@
       <table>
         <tr>
 
-          <td><%= f.input :application_id, as: :select,
+          <td>
+            <% if can_alter_estimation?(@project) && can?(:alter_product_name, @project) %>
+              <%= f.input :application_id, as: :select,
                           collection: @current_organization.applications.map{|i| [i.name, i.id]},
                           label: I18n.t(:application),
                           input_html: {:class => 'input-large'},
                           selected: @project.application_id,
-                          :disabled => true %></td>
+                          :disabled => true %>
+            <% end %>
+          </td>
 
 
-          <td><%= f.input :version, :input_html => {:class => 'input-large'}, :disabled => true %></td>
+          <td>
+            <%= f.input :version, :input_html => {:class => 'input-large'}, :disabled => true %>
+          </td>
         </tr>
       </table>
 

@@ -28,11 +28,13 @@
           <% end %>
         </tr>
         <tr>
-          <td><%= f.input :application_id, as: :select,
+          <td>
+            <%= f.input :application_id, as: :select,
                           collection: @project.applications.map{|i| [i.name, i.id]},
                           label: I18n.t(:application),
                           input_html: {:class => 'input-large'},
-                          selected: @project.application_id %></td>
+                          selected: @project.application_id %>
+          </td>
 
           <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
         </tr>
