@@ -158,9 +158,7 @@ class Ability
 
       pp.each do |project|
         unless project.nil?
-          unless project.is_model == true
-            hash_project[project.id] = project
-          end
+          hash_project[project.id] = project
         end
       end
 
