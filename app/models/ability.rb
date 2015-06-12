@@ -142,17 +142,50 @@ class Ability
       global = @array_users + @array_groups
       status = @array_status_groups
 
-      [status, global].inject(:&).each do |a|
-        permission = Permission.find(a[0]).alias
-        project = Project.find(a[1])
-        status = EstimationStatus.find(a[2])
+      pe = Permission.where(id: [status, global].inject(:&).map{|i| i[0]}).all
+      pp = Project.where(id: [status, global].inject(:&).map{|i| i[1]}).all
+      ss = EstimationStatus.where(id: [status, global].inject(:&).map{|i| i[2]}).all
 
+      hash_permission = Hash.new
+      hash_project = Hash.new
+      hash_status = Hash.new
+
+      pe.each do |permission|
+        unless (permission.alias.start_with?("alter") || permission.alias.include?("widget"))
+          hash_permission[permission.id] = permission.alias.to_sym
+        end
+      end
+
+      pp.each do |project|
         unless project.nil?
-          unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
-            can permission.to_sym, project, estimation_status_id: status.id
+          unless project.is_model == true
+            hash_project[project.id] = project
           end
         end
       end
+
+      ss.each do |e|
+        hash_status[e.id] = e.id
+      end
+
+      [status, global].inject(:&).each_with_index do |a, i|
+        unless hash_project[a[1]].nil?
+          can hash_permission[a[0]], hash_project[a[1]], estimation_status_id: hash_status[a[2]]
+        end
+      end
+
+      #p "#{permission.alias} #{project} #{e}"
+      #[status, global].inject(:&).each_with_index do |a, i|
+      #  permission = Permission.find(a[0]).alias  permission_hash[a0]
+      #  project = Project.find(a[1])
+      #  status = EstimationStatus.find(a[2])
+      #
+      #  unless project.nil?
+      #    unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
+      #      can permission.to_sym, project, estimation_status_id: status.id
+      #    end
+      #  end
+      #end
     end
   end
 end
