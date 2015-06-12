@@ -99,42 +99,50 @@ module OrganizationsHelper
 
   def column_value(column, project, value)
     case column.name
-      when :product_name
-        content_tag('td class="text_field_text_overflow exportable"', project.root_component)
+      when :application
+        if value.blank?
+          content_tag('td', project.application_name)
+        else
+          if project.application.nil?
+            content_tag('td', '-')
+          else
+            content_tag('td', project.application.name)
+          end
+        end
       when :title
-        content_tag('td class="exportable"', can_show_estimation?(project) ? link_to(value, dashboard_path(project), :class => 'button_attribute_tooltip pull-left') : value)
+        content_tag('td', can_show_estimation?(project) ? link_to(value, dashboard_path(project), :class => 'button_attribute_tooltip pull-left') : value)
       when :original_model
         if project.original_model
-          content_tag('td class="exportable"', can_show_estimation?(project.original_model) ? link_to(value, dashboard_path(project.original_model), :class => 'button_attribute_tooltip pull-left') : value)
+          content_tag('td', can_show_estimation?(project.original_model) ? link_to(value, dashboard_path(project.original_model), :class => 'button_attribute_tooltip pull-left') : value)
         else
-          content_tag('td class="exportable"', value)
+          content_tag('td', value)
         end
       when :version
-        content_tag('td class="center exportable"', value)
+        content_tag('td class="center"', value)
       when :status_name
         if can_show_estimation?(project)
           #content_tag 'td class="exportable"', content_tag(:span, link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true),
                                        #class: "badge", style: {"background-color" => project.status_background_color})
-          content_tag(:td, class: "exportable") do
+          content_tag(:td) do
             content_tag(:span, link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true),
                         class: "badge", style: "background-color: #{project.status_background_color}").html_safe
           end
         else
           #content_tag('td class="exportable"', content_tag('span class="badge" style="background-color: #{project.status_background_color}', project.status_name))
-          content_tag(:td, class: "exportable") do
+          content_tag(:td) do
             content_tag(:span, project.status_name, class: "badge", style: "background-color: #{project.status_background_color}").html_safe
           end
         end
       when :description
         # mettre un truncate sinon ca plante sous ie8
-        content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).html_safe, :class => "text_field_text_overflow exportable")
+        content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).html_safe, :class => "text_field_text_overflow")
       when :start_date, :created_at, :updated_at
-        content_tag('td class="center exportable"', I18n.l(value))
+        content_tag('td', I18n.l(value))
       else
         if column.field_id
-          content_tag('td class="project_field_text_overflow exportable"', value)
+          content_tag('td', value)
         else
-          content_tag('td class="text_field_text_overflow exportable"', value)
+          content_tag('td', value)
         end
     end
   end
