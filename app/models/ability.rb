@@ -151,9 +151,7 @@ class Ability
       hash_status = Hash.new
 
       pe.each do |permission|
-        unless (permission.alias.start_with?("alter") || permission.alias.include?("widget"))
-          hash_permission[permission.id] = permission.alias.to_sym
-        end
+        hash_permission[permission.id] = permission.alias.to_sym
       end
 
       pp.each do |project|
