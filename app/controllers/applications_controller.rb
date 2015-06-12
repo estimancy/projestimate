@@ -3,26 +3,23 @@ class ApplicationsController < ApplicationController
 
   respond_to :html
 
-  def index
-    @applications = Application.all
-    respond_with(@applications)
-  end
-
-  def show
-    respond_with(@application)
-  end
-
   def new
+    authorize! :manage, Application
+
     @application = Application.new
     @organization = Organization.find(params[:organization_id])
     respond_with(@application)
   end
 
   def edit
+    authorize! :show_project_areas, Application
+
     @organization = Organization.find(params[:organization_id])
   end
 
   def create
+    authorize! :manage, Application
+
     @application = Application.new(params[:application])
     @organization = Organization.find(params[:organization_id])
 
@@ -34,6 +31,8 @@ class ApplicationsController < ApplicationController
   end
 
   def update
+    authorize! :manage, Application
+
     @organization = Organization.find(params[:organization_id])
     @application = Application.find(params[:id])
     if @application.update_attributes(params[:application])
@@ -43,6 +42,8 @@ class ApplicationsController < ApplicationController
     end  end
 
   def destroy
+    authorize! :manage, Application
+
     application_id = @application.id
     @organization = Organization.find(params[:organization_id])
     @application.destroy

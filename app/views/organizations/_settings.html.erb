@@ -17,7 +17,11 @@
   </ul>
 
   <div id="tabs-applications">
-      <%= link_to I18n.t('new_application'), new_organization_application_path(@organization), :class => 'btn pull-right' %>
+    <% if can? :show_applications, Application %>
+
+      <% if can? :manage, Application %>
+        <%= link_to I18n.t('new_application'), new_organization_application_path(@organization), :class => 'btn pull-right' %>
+      <% end %>
 
       <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
@@ -33,7 +37,7 @@
             <td><%= app.name %></td>
             <td class="center">
               <%= link_to '', edit_organization_application_path(@organization, app), :class => 'icon-pencil' %>
-              <% if can? :manage, ProjectArea %>
+              <% if can? :manage, Application %>
                 <%= link_to '', organization_application_path(@organization, app), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
               <% end %>
             </td>
@@ -42,6 +46,9 @@
         <%= render :partial => 'layouts/footer_table' %>
         </tbody>
       </table>
+    <% else %>
+      <div class="red_color"><%= I18n.t(:notice_cannot_view_applications) %></div>
+    <% end %>
   </div>
 
   <div id="tabs-project-areas">
