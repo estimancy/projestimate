@@ -142,17 +142,17 @@ class Ability
       global = @array_users + @array_groups
       status = @array_status_groups
 
-      #[status, global].inject(:&).each do |a|
-      #  permission = Permission.find(a[0]).alias
-      #  project = Project.find(a[1])
-      #  status = EstimationStatus.find(a[2])
-      #
-      #  unless project.nil?
-      #    unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
-      #      can permission.to_sym, project, estimation_status_id: status.id
-      #    end
-      #  end
-      #end
+      [status, global].inject(:&).each do |a|
+        permission = Permission.find(a[0]).alias
+        project = Project.find(a[1])
+        status = EstimationStatus.find(a[2])
+
+        unless project.nil?
+          unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
+            can permission.to_sym, project, estimation_status_id: status.id
+          end
+        end
+      end
     end
   end
 end
