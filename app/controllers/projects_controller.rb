@@ -278,11 +278,23 @@ class ProjectsController < ApplicationController
 
     set_page_title 'Create estimation'
 
-    @application = Application.find(params[:project][:application_id])
-    @product_name = @application.name
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
-    @project.application_id = @application.id
+
+    if @is_model == true
+      if params[:project][:application_ids].present?
+        @project.application_ids = params[:project][:application_ids]
+      else
+        @project.application_name = params[:project][:application_name]
+      end
+    else
+      if params[:project][:application_id].present?
+        @project.application_id = params[:project][:application_id]
+      else
+        @project.application_name = params[:project][:application_name]
+      end
+    end
+
     @project.creator_id = current_user.id
     @project.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_by, username: current_user.name)} \r\n"
     @organization = Organization.find(params[:project][:organization_id])
@@ -324,6 +336,11 @@ class ProjectsController < ApplicationController
           pe_wbs_project_product.save!
 
           ##New root Pbs-Project-Element
+          if @project.application.nil?
+            @product_name = @project.application_name
+          else
+            @product_name = @project.application.name
+          end
           pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{@product_name.blank? ? @project_title : @product_name}",
                                                                                   :is_root => true, :start_date => Time.now, :position => 0,
                                                                                   :work_element_type_id => default_work_element_type.id,
@@ -482,8 +499,12 @@ class ProjectsController < ApplicationController
     if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && (can?(:edit_project, @project) || can_alter_estimation?(@project))) # Have the write access to project
 
       if @project.is_model == true
-        @project.applications.delete_all
-        @project.application_ids = params[:project][:application_ids]
+        if params[:project][:application_ids].present?
+          @project.applications.delete_all
+          @project.application_ids = params[:project][:application_ids]
+        else
+          @project.application_name = params[:project][:application_name]
+        end
       else
         if params[:project][:application_id].present?
           @project.application_id = params[:project][:application_id]
@@ -1879,6 +1900,8 @@ public
   end
 
   def projects_from
+    set_page_title 'Create a project from template'
+
     authorize! :create_project_from_template, Project
 
     @organization = Organization.find(params[:organization_id])

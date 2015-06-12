@@ -72,7 +72,7 @@ class OrganizationsController < ApplicationController
         array_project << [
             project.title,
             project.version,
-            project.root_component,
+            (project.application.nil? ? project.application_name : project.application.name),
             "#{Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(project.description)).text}",
             project.start_date,
             project.original_model,
