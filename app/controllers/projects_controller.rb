@@ -485,7 +485,11 @@ class ProjectsController < ApplicationController
         @project.applications.delete_all
         @project.application_ids = params[:project][:application_ids]
       else
-        @project.application_id = params[:project][:application_id]
+        if params[:project][:application_id].present?
+          @project.application_id = params[:project][:application_id]
+        else
+          @project.application_name = params[:project][:application_name]
+        end
       end
 
       @project.save
@@ -494,7 +498,11 @@ class ProjectsController < ApplicationController
       if @project.is_model == true
         project_root_name = @project.title
       else
-        project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
+        if @project.application.nil?
+          project_root_name = "#{@project.application_name.blank? ? @project.title : @project.application_name}"
+        else
+          project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
+        end
       end
       project_root.update_attribute(:name, project_root_name)
 
@@ -1513,7 +1521,13 @@ public
 
       #Update some params with the form input data
       new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_model_by, model_name: old_prj, username: current_user.name)} \r\n"
-      new_prj.application_id = params['project']['application_id']
+
+      if params['project']['application_id'].present?
+        new_prj.application_id = params['project']['application_id']
+      else
+        new_prj.application_name = params['project']['application_name']
+      end
+
       new_prj.title = params['project']['title']
       new_prj.version = params['project']['version']
       new_prj.description = params['project']['description']
@@ -1546,6 +1560,11 @@ public
 
         if new_c.is_root == true
           if !params[:create_project_from_template].nil?
+            if new_prj.application.nil?
+              new_c.name = new_prj.application_name
+            else
+              new_c.name = new_prj.application.name
+            end
             new_c.save
           end
         end

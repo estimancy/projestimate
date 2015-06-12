@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150611133544) do
+ActiveRecord::Schema.define(:version => 20150612062142) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1139,6 +1139,7 @@ ActiveRecord::Schema.define(:version => 20150611133544) do
     t.datetime "updated_at"
     t.text     "status_comment"
     t.integer  "application_id"
+    t.string   "application_name"
   end
 
   add_index "projects", ["ancestry"], :name => "index_projects_on_ancestry"
