@@ -24,7 +24,7 @@ class ViewsWidget < ActiveRecord::Base
                   :show_min_max, :view_id, :widget_id, :position, :position_x, :position_y, :width, :height, :widget_type,
                   :show_name, :show_wbs_activity_ratio, :from_initial_view, :is_label_widget
 
-  after_create :update_widget_pe_attribute
+  #after_create :update_widget_pe_attribute
 
   belongs_to :view
   belongs_to :widget

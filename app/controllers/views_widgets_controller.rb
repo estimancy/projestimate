@@ -202,10 +202,10 @@ class ViewsWidgetsController < ApplicationController
       if @views_widget.update_attributes(params[:views_widget])
 
         #Update the widget's pe_attribute
-        widget_attribute_id = @views_widget.estimation_value.pe_attribute_id
-        if  widget_attribute_id != @views_widget.pe_attribute_id
-          @views_widget.update_attribute(:pe_attribute_id, widget_attribute_id)
-        end
+        #widget_attribute_id = @views_widget.estimation_value.pe_attribute_id
+        #if  widget_attribute_id != @views_widget.pe_attribute_id
+        #  @views_widget.update_attribute(:pe_attribute_id, widget_attribute_id)
+        #end
 
         format.js { render :js => "window.location.replace('#{dashboard_path(@project)}');"}
       else
