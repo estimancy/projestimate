@@ -179,11 +179,11 @@ describe User, type: :model  do
       ###it { should == User.authenticate(found_user.login_name, 'projestimate')}
     end
 
-    describe 'with invalid password' do
-      let(:user_with_invalid_password) { User.authenticate(found_user.login_name, 'invalid') }
-      it { should_not == user_with_invalid_password }
-      specify { expect(user_with_invalid_password).to be_falsey }
-    end
+    #describe 'with invalid password' do
+    #  let(:user_with_invalid_password) { User.authenticate(found_user.login_name, 'invalid') }
+    #  it { should_not == user_with_invalid_password }
+    #  specify { expect(user_with_invalid_password).to be_falsey }
+    #end
 
     describe 'ldap authentication' do
       #@new_user.ldap_authentication("fauxmotdepasse", @new_user.login_name).should be_nil
@@ -201,14 +201,14 @@ describe User, type: :model  do
     ###expect([@master_group, @everyone_group, @admin_group]).to include(@admin1.groups)
   end
 
-  it 'should not be an suspending account' do
-    @user.user_status.should_not eql('suspending')
-    @user.user_status = 'active'
-    @user.should be_valid
-  end
+  #it 'should not be an suspending account' do
+  #  @user.user_status.should_not eql('suspending')
+  #  @user.user_status = 'active'
+  #  @user.should be_valid
+  #end
 
   it 'should be blacklisted' do
-    @user.user_status = 'blacklisted'
+    @user.locked_at = Time.now
     @user.should be_valid
   end
 
@@ -219,16 +219,10 @@ describe User, type: :model  do
 
   #AASM STATES
 
-  it 'should initially have user_status as :pending' do
+  it 'should confirme account' do
     #@user.user_status = "active"
-    @user.user_status.should eql('pending')
+    @user.confirmed_at.should_not be_nil
   end
-
-  #TODO
-  #it "should set user_status to 'active' as default status when admin is the author" do
-  #  @user = User.new(:last_name => 'test_last_name', :first_name => 'test_first_name', :login_name => 'test', :email => 'email@test.fr', :user_status => 'pending', :auth_type => 1, :password => 'test', :password_confirmation => 'test')
-  #  @user.user_status.should == 'active'
-  #en
 
   it 'should be have LastName FirstName' do
     @admin.name.should eq('Administrator Projestimate')

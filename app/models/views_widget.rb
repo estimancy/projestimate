@@ -24,6 +24,8 @@ class ViewsWidget < ActiveRecord::Base
                   :show_min_max, :view_id, :widget_id, :position, :position_x, :position_y, :width, :height, :widget_type,
                   :show_name, :show_wbs_activity_ratio, :from_initial_view, :is_label_widget
 
+  after_create :update_widget_pe_attribute
+
   belongs_to :view
   belongs_to :widget
   belongs_to :estimation_value
@@ -39,6 +41,16 @@ class ViewsWidget < ActiveRecord::Base
     enable
     include_association [:project_fields]
   end
+
+
+  #Update the pe_attribute from estimation_value
+  def update_widget_pe_attribute
+    widget_estimation_value = EstimationValue.find(self.estimation_value_id)
+    if widget_estimation_value
+      self.update_attribute(:pe_attribute_id, widget_estimation_value.pe_attribute_id)
+    end
+  end
+
 
   def to_s
     name

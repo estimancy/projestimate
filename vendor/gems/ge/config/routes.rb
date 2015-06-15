@@ -24,6 +24,7 @@ Ge::Engine.routes.draw do
   resources :ge_models
   resources :ge_models do
     post "save_efforts"
+    post "duplicate"
   end
 
 end

@@ -31,9 +31,4 @@ describe ProjectSecurityLevel do
     @project_security_level.should be_valid
   end
 
-  it "should not be valid without custom_value when record_status='Custom'" do
-    @project_security_level.record_status = @custom_status
-    @project_security_level.should_not be_valid
-  end
-
 end

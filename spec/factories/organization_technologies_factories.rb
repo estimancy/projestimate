@@ -19,14 +19,14 @@
 #
 #############################################################################
 
-## User
-#
-#FactoryGirl.define do
-#
-#  factory :project_security_level, :class => :project_security_level do
-#    name "Read"
-#    uuid
-#    association :record_status, :factory => :proposed_status, strategy: :build
-#  end
-#
-#end
+# Read about factories at https://github.com/thoughtbot/factory_girl
+
+FactoryGirl.define do
+  factory :organization_technology do
+    organization_id 1
+    sequence(:name) {|n| "Technology_#{n}"}
+    sequence(:alias) {|n| "technology_#{n}"}
+    description "MyText"
+    productivity_ratio 1.0
+  end
+end

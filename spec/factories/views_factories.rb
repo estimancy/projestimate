@@ -26,5 +26,6 @@ FactoryGirl.define do
     name "2013-03-19 14:28:31"
     description "2013-03-19 14:28:31"
     association :organization, :factory => :organization, strategy: :build
+    association :pemodule, :factory => :pemodule, strategy: :build
   end
 end

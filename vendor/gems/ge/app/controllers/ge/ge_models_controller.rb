@@ -129,4 +129,21 @@ class Ge::GeModelsController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
+  #duplicate GeModel
+  def duplicate
+    @ge_model = Ge::GeModel.find(params[:ge_model_id])
+    new_ge_model = @ge_model.amoeba_dup
+
+    #Terminate the model duplication
+    new_ge_model.transaction do
+      if new_ge_model.save
+        flash[:notice] = "Modèle copié avec succès"
+      else
+        flash[:error] = "Erreur lors de la copie du modèle"
+      end
+    end
+
+    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+  end
+
 end

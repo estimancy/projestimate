@@ -44,7 +44,7 @@ describe WbsActivity do
     end
 
     it "should return copy name" do
-      @wbs_activity_2.name.should eql("Copy_#{@wbs_activity.copy_number.to_i} of #{@wbs_activity.name}")
+      @wbs_activity_2.name.should eql("#{@wbs_activity.name}")
     end
 
     it "Should return copy number = 0" do
