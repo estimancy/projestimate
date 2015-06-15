@@ -85,7 +85,7 @@ class Guw::GuwModelsController < ApplicationController
       end
     end
 
-    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
   end
 
   def export

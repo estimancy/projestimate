@@ -39,7 +39,6 @@ FactoryGirl.define do
   factory :new_project, :class => :project do |p|
     p.association :estimation_status, :factory => :estimation_status
     p.association :organization, :factory => :organization
-    p.association :estimation_status, :factory => :estimation_status
     p.start_date Time.now
     after :build do |proj|
       proj.title = FactoryGirl.generate(:project_title)

@@ -42,11 +42,6 @@ describe Group do
     @group.should_not be_valid
   end
 
-  it "should not be valid without uuid" do
-    @group.uuid = ""
-    @group.should_not be_valid
-  end
-
   it "should not be valid  when group name already exists" do
     group2 = @group.dup
     group2.name = @group.name

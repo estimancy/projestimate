@@ -536,6 +536,52 @@ class OrganizationsController < ApplicationController
             end
           end
 
+          #Copy the organization referenced views and widgets
+          #organization_image.views.referenced_views.each do |view|
+          #  #=====
+          #  new_copied_view = View.new(name: view.name, description: view.description, pemodule_id: view.pemodule_id, organization_id: new_organization.id, initial_view_id: view.id)
+          #  if new_copied_view.save
+          #    #Then copy the widgets
+          #    view.views_widgets.each do |view_widget|
+          #      widget_est_val = view_widget.estimation_value
+          #      in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
+          #      estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
+          #      estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
+          #      widget_copy = ViewsWidget.new(view_id: new_copied_view.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
+          #                                    show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
+          #                                    width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
+          #                                    position_x: view_widget.position_x, position_y: view_widget.position_y)
+          #      #Save and copy project_fields
+          #      if widget_copy.save
+          #        unless view_widget.project_fields.empty?
+          #          project_field = view_widget.project_fields.last
+          #
+          #          #Get project_field value
+          #          @value = 0
+          #          if widget_copy.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+          #            begin
+          #              @value = widget_copy.estimation_value.string_data_probable[current_component.id][widget_copy.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
+          #            rescue
+          #              begin
+          #                @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+          #              rescue
+          #                @value = 0
+          #              end
+          #            end
+          #          else
+          #            @value = widget_copy.estimation_value.string_data_probable[current_component.id]
+          #          end
+          #
+          #          #create the new project_field
+          #          ProjectField.create(project_id: @project.id, field_id: project_field.field_id, views_widget_id: widget_copy.id, value: @value)
+          #        end
+          #      end
+          #    end
+          #  end
+          #
+          #  #=====
+          #end
+
 
           # Copy the WBS-Activities modules's Models instances
           organization_image.wbs_activities.each do |old_wbs_activity|
@@ -657,70 +703,76 @@ class OrganizationsController < ApplicationController
             copy_id = guw_model.copy_id
             new_organization.module_projects.where(guw_model_id: copy_id).update_all(guw_model_id: guw_model.id)
 
-            guw_model.guw_types.each do |guw_type|
+            ###### Replace the code below
 
-              # Copy the complexities technologies
-              guw_type.guw_complexities.each do |guw_complexity|
-                # Copy the complexities technologie
-                guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
-                  new_organization_technology = new_organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
-                  unless new_organization_technology.nil?
-                    guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
-                  end
-                end
+            guw_model.terminate_guw_model_duplication
 
-                # Copy the complexities units of works
-                guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
-                  new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
-                  unless new_guw_work_unit.nil?
-                    guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
-                  end
-                end
-              end
+            ###### End
 
-              #Guw UnitOfWorkAttributes
-              guw_type.guw_unit_of_works.each do |guw_unit_of_work|
-                guw_unit_of_work.guw_unit_of_work_attributes.each do |guw_uow_attr|
-                  new_guw_type = guw_model.guw_types.where(copy_id: guw_uow_attr.guw_type_id).first
-                  new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+            #guw_model.guw_types.each do |guw_type|
+            #
+            #  # Copy the complexities technologies
+            #  guw_type.guw_complexities.each do |guw_complexity|
+            #    # Copy the complexities technologie
+            #    guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
+            #      new_organization_technology = new_organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
+            #      unless new_organization_technology.nil?
+            #        guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
+            #      end
+            #    end
+            #
+            #    # Copy the complexities units of works
+            #    guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
+            #      new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
+            #      unless new_guw_work_unit.nil?
+            #        guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
+            #      end
+            #    end
+            #  end
+            #
+            #  #Guw UnitOfWorkAttributes
+            #  guw_type.guw_unit_of_works.each do |guw_unit_of_work|
+            #    guw_unit_of_work.guw_unit_of_work_attributes.each do |guw_uow_attr|
+            #      new_guw_type = guw_model.guw_types.where(copy_id: guw_uow_attr.guw_type_id).first
+            #      new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+            #
+            #      new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_uow_attr.guw_attribute_id).first
+            #      new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
+            #
+            #      guw_uow_attr.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
+            #
+            #    end
+            #  end
+            #
+            #  # Copy the GUW-attribute-complexity
+            #  #guw_type.guw_type_complexities.each do |guw_type_complexity|
+            #  #  guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
+            #  #
+            #  #    new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
+            #  #    new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
+            #  #
+            #  #    new_guw_type = guw_model.guw_types.where(copy_id: guw_type_complexity.guw_type_id).first
+            #  #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+            #  #
+            #  #    guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
+            #  #  end
+            #  #end
+            #end
+            #
+            #guw_model.guw_attributes.each do |guw_attribute|
+            #  guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
+            #    new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
+            #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
+            #
+            #    unless new_guw_type.nil?
+            #      new_guw_type_complexity = new_guw_type.guw_type_complexities.where(copy_id: guw_attr_complexity.guw_type_complexity_id).first
+            #      new_guw_type_complexity_id = new_guw_type_complexity.nil? ? nil : new_guw_type_complexity.id
+            #
+            #      guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_type_complexity_id: new_guw_type_complexity_id )
+            #    end
+            #  end
+            #end
 
-                  new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_uow_attr.guw_attribute_id).first
-                  new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
-
-                  guw_uow_attr.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
-
-                end
-              end
-
-              # Copy the GUW-attribute-complexity
-              #guw_type.guw_type_complexities.each do |guw_type_complexity|
-              #  guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
-              #
-              #    new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
-              #    new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
-              #
-              #    new_guw_type = guw_model.guw_types.where(copy_id: guw_type_complexity.guw_type_id).first
-              #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
-              #
-              #    guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
-              #  end
-              #end
-            end
-
-            guw_model.guw_attributes.each do |guw_attribute|
-              guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
-                new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
-                new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
-
-                unless new_guw_type.nil?
-                  new_guw_type_complexity = new_guw_type.guw_type_complexities.where(copy_id: guw_attr_complexity.guw_type_complexity_id).first
-                  new_guw_type_complexity_id = new_guw_type_complexity.nil? ? nil : new_guw_type_complexity.id
-
-                  guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_type_complexity_id: new_guw_type_complexity_id )
-
-                end
-              end
-            end
           end
 
           flash[:notice] = I18n.t(:notice_organization_successful_created)

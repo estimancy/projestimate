@@ -137,11 +137,6 @@ describe ModuleProject do
     @mp5.previous.first.position_y.should eql(4)
   end
 
-
-  it "should be a One Activity-elements" do
-    expect(@mp1.is_All_Activity_Elements?).to be_falsey
-  end
-
   it 'should be an Array' do
     @mp1.links.should be_an_instance_of(Array)
   end

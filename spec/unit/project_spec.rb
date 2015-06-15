@@ -118,9 +118,12 @@ describe Project do
   end
 
   it 'should be the project root pbs_project_element' do
+    @work_element_type = FactoryGirl.create(:work_element_type, :wet_folder)
+    @organization_technology = FactoryGirl.create(:organization_technology)
+
     pe_wbs_project_1 = FactoryGirl.create(:wbs_1, :project_id => @project.id)
 
-    pbs_project_element = FactoryGirl.create(:pbs_project_element, :pbs_trait_folder, :is_root => true, :pe_wbs_project => pe_wbs_project_1)
+    pbs_project_element = FactoryGirl.create(:pbs_project_element, :pbs_trait_folder, :is_root => true, :pe_wbs_project => pe_wbs_project_1, :work_element_type => @work_element_type, :organization_technology => @organization_technology)
     #pbs_project_element.pe_wbs_project = pe_wbs_project_1
 
     #project.root_component.is_root?.should be_true

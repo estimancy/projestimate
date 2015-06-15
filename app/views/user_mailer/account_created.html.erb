@@ -7,8 +7,8 @@
      simple_format(I18n.t(:mail_body_account_information, :user => @user.login_name, :pwd => I18n.t(:mail_password_from_ldap)))
    end
 %>
-<% if !@user.active?
- simple_format(I18n.t(:mail_body_account_not_yet_activated))
+<%# if !@user.active?
+ #simple_format(I18n.t(:mail_body_account_not_yet_activated))
 end
 %>
 

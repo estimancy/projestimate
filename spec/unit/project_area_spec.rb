@@ -31,15 +31,6 @@ describe ProjectArea do
     @project_area.should be_valid
   end
 
-  it "should not be valid without record_status" do
-    @project_area.record_status = nil
-    @project_area.should_not be_valid
-  end
-
-  it "should not be valid without custom_value when record_status='Custom'" do
-    @project_area.record_status = @custom_status
-    @project_area.should_not be_valid
-  end
 
   it "should not be a string" do
     @project_area.name=1

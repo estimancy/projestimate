@@ -93,7 +93,6 @@ FactoryGirl.define do
     name 'Project1'
     description 'en'
     uuid
-    association :record_status, :factory => :proposed_status, strategy: :build
   end
 
   # Components

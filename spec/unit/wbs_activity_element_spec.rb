@@ -82,9 +82,9 @@ describe WbsActivityElement do
       # sometimes it is better to parse generated_csv (ie. when you testing other formats like json or xml
     end
 
-    it 'should rebuild wbs activity' do
-      expect(WbsActivityElement::rebuild([@wbs_activity_element,@wbs_activity_element2], @wbs_activity.id)).to be_truthy
-    end
+    #it 'should rebuild wbs activity' do
+    #  expect(WbsActivityElement::rebuild([@wbs_activity_element,@wbs_activity_element2], @wbs_activity.id)).to be_truthy
+    #end
   end
 
 end

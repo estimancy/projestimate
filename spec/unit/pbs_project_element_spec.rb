@@ -24,10 +24,12 @@ require "spec_helper"
 describe PbsProjectElement do
 
   before :each do
-    @work_element_type = FactoryGirl.build(:work_element_type, :wet_folder)
-    @folder = FactoryGirl.create(:pbs_folder)   # Pbs_project_element
-    @folder1 = FactoryGirl.create(:pbs_folder, :name => "Folder1", :work_element_type => @work_element_type)
-    @bad = FactoryGirl.create(:pbs_bad, :name => "bad_name")
+    @work_element_type = FactoryGirl.create(:work_element_type, :wet_folder)
+    @organization_technology = FactoryGirl.create(:organization_technology)
+
+    @folder = FactoryGirl.create(:pbs_folder, :work_element_type => @work_element_type, :organization_technology => @organization_technology)   # Pbs_project_element
+    @folder1 = FactoryGirl.create(:pbs_folder, :name => "Folder1", :work_element_type => @work_element_type, :organization_technology => @organization_technology)
+    @bad = FactoryGirl.create(:pbs_bad, :name => "bad_name", :work_element_type => @work_element_type, :organization_technology => @organization_technology)
   end
 
   it 'should be valid' do
