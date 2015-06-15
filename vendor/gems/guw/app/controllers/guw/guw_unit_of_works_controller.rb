@@ -42,7 +42,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.guw_model_id = @guw_model.id
     @guw_unit_of_work.module_project_id = current_module_project.id
     @guw_unit_of_work.pbs_project_element_id = current_component.id
-    @guw_unit_of_work.guw_work_unit_id = @guw_model.guw_work_units.first.id
     @guw_unit_of_work.selected = true
 
     if params[:position].blank?
@@ -55,13 +54,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     reorder @guw_unit_of_work.guw_unit_of_work_group
 
-    technology = @guw_unit_of_work.guw_unit_of_work_group.organization_technology
-    if technology.nil?
-      @guw_unit_of_work.organization_technology_id = @current_organization.organization_technologies.first.id
-    else
-      @guw_unit_of_work.organization_technology_id = @guw_unit_of_work.guw_unit_of_work_group.organization_technology_id
-    end
-
     @guw_unit_of_work.save
 
     @guw_model.guw_attributes.all.each do |gac|
@@ -70,7 +62,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           guw_unit_of_work_id: @guw_unit_of_work.id,
           guw_attribute_id: gac.id)
     end
-
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
@@ -392,6 +383,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       nguowa.guw_unit_of_work_id = @new_guw_unit_of_work.id
       nguowa.save
     end
+
+    reorder @new_guw_unit_of_work.guw_unit_of_work_group
 
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end

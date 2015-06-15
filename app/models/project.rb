@@ -22,15 +22,18 @@
 class Project < ActiveRecord::Base
   attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
                   :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
-                  :acquisition_category_id, :platform_category_id, :parent_id
+                  :acquisition_category_id, :platform_category_id, :parent_id, :application_id
 
-  attr_accessor :product_name, :project_organization_statuses, :new_status_comment, :available_inline_columns
+  attr_accessor :project_organization_statuses, :new_status_comment, :available_inline_columns
 
   include ActionView::Helpers
   include ActiveModel::Dirty
   #require 'organization.rb'
 
   has_ancestry  # For the Ancestry gem
+
+  belongs_to :application
+  has_and_belongs_to_many :applications
 
   belongs_to :organization
   belongs_to :project_area
@@ -90,7 +93,7 @@ class Project < ActiveRecord::Base
   self.available_inline_columns =
     [
       QueryColumn.new(:title, :sortable => "#{Project.table_name}.title", :caption => "label_project_name"),
-      QueryColumn.new(:product_name, :sortable => "#{Project.table_name}.product_name", :caption => "label_product_name"),
+      QueryColumn.new(:application, :sortable => "#{Application.table_name}.name", :caption => "application"),
       QueryColumn.new(:original_model, :sortable => "#{Project.table_name}.name", :caption => "original_model"),
       QueryColumn.new(:version, :sortable => "#{Project.table_name}.version", :caption => "label_version"),
       QueryColumn.new(:status_name, :sortable => "#{EstimationStatus.table_name}.name", :caption => "state"),
@@ -110,11 +113,11 @@ class Project < ActiveRecord::Base
   #self.selected_inline_columns = self.available_inline_columns.select{ |column| column.name.to_s.in?(@current_organization.project_selected_columns)}
 
   class_attribute :default_selected_columns
-  self.default_selected_columns = ["product_name", "version", "start_date", "status_name", "description"]
+  self.default_selected_columns = ["application", "version", "start_date", "status_name", "description"]
 
   def self.selectable_inline_columns
     [
-      [I18n.t(:label_product_name), "product_name"], [I18n.t(:label_project_name), "title"], [I18n.t(:label_version),"version"],
+      [I18n.t(:label_product_name), "application"], [I18n.t(:label_project_name), "title"], [I18n.t(:label_version),"version"],
       [I18n.t(:state), "estimation_status_id"], [ I18n.t(:project_area), "project_area_id"], [I18n.t(:category), "project_category_id"],
       [I18n.t(:label_acquisition), "acquisition_category_id"], [I18n.t(:label_platform), "platform_category_id"], [I18n.t(:description), "description"],
       [I18n.t(:start_date), "start_date"], [I18n.t(:author), "creator_id"], [I18n.t(:created_at), "created_at"], [I18n.t(:updated_at), "updated_at"]

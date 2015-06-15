@@ -278,9 +278,23 @@ class ProjectsController < ApplicationController
 
     set_page_title 'Create estimation'
 
-    @product_name = params[:project][:product_name]
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
+
+    if @is_model == true
+      if params[:project][:application_ids].present?
+        @project.application_ids = params[:project][:application_ids]
+      else
+        @project.application_name = params[:project][:application_name]
+      end
+    else
+      if params[:project][:application_id].present?
+        @project.application_id = params[:project][:application_id]
+      else
+        @project.application_name = params[:project][:application_name]
+      end
+    end
+
     @project.creator_id = current_user.id
     @project.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_by, username: current_user.name)} \r\n"
     @organization = Organization.find(params[:project][:organization_id])
@@ -322,6 +336,11 @@ class ProjectsController < ApplicationController
           pe_wbs_project_product.save!
 
           ##New root Pbs-Project-Element
+          if @project.application.nil?
+            @product_name = @project.application_name
+          else
+            @product_name = @project.application.name
+          end
           pbs_project_element = pe_wbs_project_product.pbs_project_elements.build(:name => "#{@product_name.blank? ? @project_title : @product_name}",
                                                                                   :is_root => true, :start_date => Time.now, :position => 0,
                                                                                   :work_element_type_id => default_work_element_type.id,
@@ -479,29 +498,38 @@ class ProjectsController < ApplicationController
 
     if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && (can?(:edit_project, @project) || can_alter_estimation?(@project))) # Have the write access to project
 
-      @product_name = params[:project][:product_name]
+      if @project.is_model == true
+        if params[:project][:application_ids].present?
+          @project.applications.delete_all
+          @project.application_ids = params[:project][:application_ids]
+        else
+          @project.application_name = params[:project][:application_name]
+        end
+      else
+        if params[:project][:application_id].present?
+          @project.application_id = params[:project][:application_id]
+        else
+          @project.application_name = params[:project][:application_name]
+        end
+      end
+
+      @project.save
+
       project_root = @project.root_component
-      project_root_name = "#{@product_name.blank? ? @project.title : @product_name}"
+      if @project.is_model == true
+        project_root_name = @project.title
+      else
+        if @project.application.nil?
+          project_root_name = "#{@project.application_name.blank? ? @project.title : @project.application_name}"
+        else
+          project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
+        end
+      end
       project_root.update_attribute(:name, project_root_name)
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
       @wbs_activity_elements = []
       @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
-
-      # we can update user securities levels on edit or on show with some restrictions
-      #if params['is_project_show_view'].nil? || (params['is_project_show_view'] =="true" && !params['user_security_levels'].nil?)
-      #  @project.organization.users.uniq.each do |u|
-      #    ps = ProjectSecurity.find_by_user_id_and_project_id(u.id, @project.id)
-      #    if ps
-      #      ps.project_security_level_id = params["user_securities_#{u.id}"]
-      #      ps.save
-      #    elsif !params["user_securities_#{u.id}"].blank?
-      #      new_ps = @project.project_securities.build #ProjectSecurity.new
-      #      new_ps.user_id = u.id
-      #      new_ps.project_security_level_id = params["user_securities_#{u.id}"]
-      #    end
-      #  end
-      #end
 
       # we can update group securities levels on edit or on show with some restrictions
       if params['is_project_show_view'].nil? || (params['is_project_show_view'] == "true" && !params['group_security_levels'].nil?)
@@ -1514,6 +1542,13 @@ public
 
       #Update some params with the form input data
       new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_model_by, model_name: old_prj, username: current_user.name)} \r\n"
+
+      if params['project']['application_id'].present?
+        new_prj.application_id = params['project']['application_id']
+      else
+        new_prj.application_name = params['project']['application_name']
+      end
+
       new_prj.title = params['project']['title']
       new_prj.version = params['project']['version']
       new_prj.description = params['project']['description']
@@ -1546,7 +1581,11 @@ public
 
         if new_c.is_root == true
           if !params[:create_project_from_template].nil?
-            new_c.name = params['project']['product_name']
+            if new_prj.application.nil?
+              new_c.name = new_prj.application_name
+            else
+              new_c.name = new_prj.application.name
+            end
             new_c.save
           end
         end
@@ -1861,6 +1900,8 @@ public
   end
 
   def projects_from
+    set_page_title 'Create a project from template'
+
     authorize! :create_project_from_template, Project
 
     @organization = Organization.find(params[:organization_id])
@@ -1893,7 +1934,8 @@ public
 
     begin
       old_prj_copy_number = old_prj.copy_number
-      old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
+
+      #old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
       #old_prj_pe_wbs_activity_name = old_prj.pe_wbs_projects.activities_wbs.first.name
 
       new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
@@ -1918,7 +1960,7 @@ public
         pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
         #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
-        pe_wbs_product.name = old_prj_pe_wbs_product_name
+        #pe_wbs_product.name = old_prj_pe_wbs_product_name
         #pe_wbs_activity.name = old_prj_pe_wbs_activity_name
 
         pe_wbs_product.save

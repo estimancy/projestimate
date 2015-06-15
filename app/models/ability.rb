@@ -97,7 +97,7 @@ class Ability
       @array_groups = Array.new
 
       #Specfic project security loading
-      prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
+      prj_scrts = ProjectSecurity.includes(:project).find_all_by_user_id(user.id)
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
@@ -127,7 +127,7 @@ class Ability
           end
         end
 
-        grp.estimation_status_group_roles.each do |esgr|
+        grp.estimation_status_group_roles.includes(:estimation_status).each do |esgr|
           esgr_security_level = esgr.project_security_level
           unless esgr_security_level.nil?
             esgr_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
@@ -142,17 +142,46 @@ class Ability
       global = @array_users + @array_groups
       status = @array_status_groups
 
-      [status, global].inject(:&).each do |a|
-        permission = Permission.find(a[0]).alias
-        project = Project.find(a[1])
-        status = EstimationStatus.find(a[2])
+      pe = Permission.where(id: [status, global].inject(:&).map{|i| i[0]}).all
+      pp = Project.where(id: [status, global].inject(:&).map{|i| i[1]}).all
+      ss = EstimationStatus.where(id: [status, global].inject(:&).map{|i| i[2]}).all
 
+      hash_permission = Hash.new
+      hash_project = Hash.new
+      hash_status = Hash.new
+
+      pe.each do |permission|
+        hash_permission[permission.id] = permission.alias.to_sym
+      end
+
+      pp.each do |project|
         unless project.nil?
-          unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
-            can permission.to_sym, project, estimation_status_id: status.id
-          end
+          hash_project[project.id] = project
         end
       end
+
+      ss.each do |e|
+        hash_status[e.id] = e.id
+      end
+
+      [status, global].inject(:&).each_with_index do |a, i|
+        unless hash_project[a[1]].nil?
+          can hash_permission[a[0]], hash_project[a[1]], estimation_status_id: hash_status[a[2]]
+        end
+      end
+
+      #p "#{permission.alias} #{project} #{e}"
+      #[status, global].inject(:&).each_with_index do |a, i|
+      #  permission = Permission.find(a[0]).alias  permission_hash[a0]
+      #  project = Project.find(a[1])
+      #  status = EstimationStatus.find(a[2])
+      #
+      #  unless project.nil?
+      #    unless project.is_model == true && (permission.start_with?("alter") || permission.include?("widget"))
+      #      can permission.to_sym, project, estimation_status_id: status.id
+      #    end
+      #  end
+      #end
     end
   end
 end

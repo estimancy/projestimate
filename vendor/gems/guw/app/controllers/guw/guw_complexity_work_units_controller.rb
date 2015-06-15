@@ -49,18 +49,20 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           ot = OrganizationTechnology.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
 
-          cwu = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
+          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
                                              organization_technology_id: ot.id).first
 
-          if cwu.nil?
+          if ct.nil?
             Guw::GuwComplexityTechnology.create(guw_complexity_id: cplx.id, organization_technology_id: ot.id, coefficient: params[:coefficient]["#{cplx.id}"]["#{ot.id}"])
           else
-            cwu.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
-            cwu.save
+            ct.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
+            ct.guw_type_id = @guw_type.id
+            ct.save
           end
         end
       end
     end
+
     if @guw_type.nil?
       redirect_to :back
     else

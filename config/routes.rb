@@ -23,9 +23,8 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :applications
   resources :fields
-
-
   resources :views_widgets
   get 'update_view_widget_positions' => 'views_widgets#update_view_widget_positions', :as => 'update_view_widget_positions'
   get 'update_view_widget_sizes' => 'views_widgets#update_view_widget_sizes', :as => 'update_view_widget_sizes'
@@ -195,6 +194,7 @@ Projestimate::Application.routes.draw do
   resources :currencies
 
   resources :organizations do
+    resources :applications
     resources :fields
     resources :wbs_activities
     resources :groups
