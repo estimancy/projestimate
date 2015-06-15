@@ -34,6 +34,7 @@ class Guw::GuwModelsController < ApplicationController
   def new
     authorize! :manage_modules_instances, ModuleProject
 
+    @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
   end
@@ -42,24 +43,35 @@ class Guw::GuwModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @guw_model = Guw::GuwModel.find(params[:id])
+    @organization = @guw_model.organization
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def create
     authorize! :manage_modules_instances, ModuleProject
 
+    @organization = Organization.find(params[:guw_model][:organization_id])
     @guw_model = Guw::GuwModel.new(params[:guw_model])
     @guw_model.organization_id = params[:guw_model][:organization_id].to_i
-    @guw_model.save
-    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+
+    if @guw_model.save
+      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+    else
+      render action: :new
+    end
   end
 
   def update
     authorize! :manage_modules_instances, ModuleProject
 
     @guw_model = Guw::GuwModel.find(params[:id])
-    @guw_model.update_attributes(params[:guw_model])
-    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+    @organization = @guw_model.organization
+
+    if @guw_model.update_attributes(params[:guw_model])
+      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+    else
+      render action: :edit
+    end
   end
 
   def destroy
@@ -78,9 +90,15 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     new_guw_model = @guw_model.amoeba_dup
 
+    new_copy_number = @guw_model.copy_number.to_i+1
+    new_guw_model.name = "#{@guw_model.name}(#{new_copy_number})"
+    new_guw_model.copy_number = 0
+    @guw_model.copy_number = new_copy_number
+
     #Terminate the model duplication
     new_guw_model.transaction do
       if new_guw_model.save
+        @guw_model.save
         new_guw_model.terminate_guw_model_duplication
       end
     end

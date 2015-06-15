@@ -32,6 +32,7 @@ class Ge::GeModelsController < ApplicationController
   def new
     authorize! :manage_modules_instances, ModuleProject
 
+    @organization = Organization.find(params[:organization_id])
     @ge_model = Ge::GeModel.new
   end
 
@@ -39,24 +40,37 @@ class Ge::GeModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @ge_model = Ge::GeModel.find(params[:id])
+    @organization = @ge_model.organization
+
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
   end
 
   def create
     authorize! :manage_modules_instances, ModuleProject
 
+    @organization = Organization.find(params[:ge_model][:organization_id])
+
     @ge_model = Ge::GeModel.new(params[:ge_model])
     @ge_model.organization_id = params[:ge_model][:organization_id].to_i
-    @ge_model.save
-    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+    if @ge_model.save
+      redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+    else
+      render action: :new
+    end
+
   end
 
   def update
     authorize! :manage_modules_instances, ModuleProject
 
     @ge_model = Ge::GeModel.find(params[:id])
-    @ge_model.update_attributes(params[:ge_model])
-    redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+    @organization = @ge_model.organization
+
+    if @ge_model.update_attributes(params[:ge_model])
+      redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+    else
+      render action: :edit
+    end
   end
 
   def destroy
@@ -134,9 +148,16 @@ class Ge::GeModelsController < ApplicationController
     @ge_model = Ge::GeModel.find(params[:ge_model_id])
     new_ge_model = @ge_model.amoeba_dup
 
+
+    new_copy_number = @ge_model.copy_number.to_i+1
+    new_ge_model.name = "#{@ge_model.name}(#{new_copy_number})"
+    new_ge_model.copy_number = 0
+    @ge_model.copy_number = new_copy_number
+
     #Terminate the model duplication
     new_ge_model.transaction do
       if new_ge_model.save
+        @ge_model.save
         flash[:notice] = "Modèle copié avec succès"
       else
         flash[:error] = "Erreur lors de la copie du modèle"

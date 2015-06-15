@@ -21,7 +21,8 @@
 
 module Ge
   class GeModel < ActiveRecord::Base
-    validates_presence_of :name####, :organization_id
+    #validates_presence_of :name####, :organization_id
+    validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy

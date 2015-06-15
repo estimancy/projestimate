@@ -149,7 +149,8 @@ class WbsActivitiesController < ApplicationController
     begin
       old_wbs_activity = WbsActivity.find(params[:wbs_activity_id])
       new_wbs_activity = old_wbs_activity.amoeba_dup   #amoeba gem is configured in WbsActivity class model
-      new_wbs_activity.name = "Copy_#{ old_wbs_activity.copy_number.to_i+1} of #{old_wbs_activity.name}"
+      #new_wbs_activity.name = "Copy_#{ old_wbs_activity.copy_number.to_i+1} of #{old_wbs_activity.name}"
+      new_wbs_activity.name = "#{old_wbs_activity.name}(#{ old_wbs_activity.copy_number.to_i+1})"
 
       new_wbs_activity.transaction do
         if new_wbs_activity.save(:validate => false)
@@ -197,14 +198,16 @@ class WbsActivitiesController < ApplicationController
         end
       end
 
-      redirect_to('/wbs_activities', :notice  =>  "#{I18n.t(:notice_wbs_activity_successful_duplicated)}") and return
+      #redirect_to('/wbs_activities', :notice  =>  "#{I18n.t(:notice_wbs_activity_successful_duplicated)}") and return
+      redirect_to main_app.organization_module_estimation_path(new_wbs_activity.organization_id, anchor: "activite") and return
 
     rescue ActiveRecord::RecordNotSaved => e
       flash[:error] = "#{new_wbs_activity.errors.full_messages.to_sentence}"
 
     rescue
       flash[:error] = I18n.t(:error_wbs_activity_failed_duplicate) + "#{new_wbs_activity.errors.full_messages.to_sentence.to_s}"
-      redirect_to '/wbs_activities'
+      #redirect_to '/wbs_activities'
+      redirect_to main_app.organization_module_estimation_path(new_wbs_activity.organization_id, anchor: "activite")
     end
   end
 
