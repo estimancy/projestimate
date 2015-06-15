@@ -112,7 +112,7 @@ class Ability
       end
 
       user.groups.each do |grp|
-        prj_scrts = ProjectSecurity.find_all_by_group_id(grp.id)
+        prj_scrts = ProjectSecurity.includes(:project_security_level).find_all_by_group_id(grp.id)
         unless prj_scrts.empty?
           specific_permissions_array = []
           prj_scrts.each do |prj_scrt|
