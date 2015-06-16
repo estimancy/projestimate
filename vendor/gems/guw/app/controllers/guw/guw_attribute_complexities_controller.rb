@@ -21,6 +21,7 @@
 
 
 class Guw::GuwAttributeComplexitiesController < ApplicationController
+
   def save_attributs_complexities
 
     unless params["bottom"].nil?
@@ -42,6 +43,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
           else
             gac.bottom_range = params["bottom"]["#{a.id}"][type_complexity.first]
             gac.top_range = params["top"]["#{a.id}"][type_complexity.first]
+            #gac.value = params["coefficient"]["#{a.id}"][type_complexity.first]
             gac.save
           end
         end
@@ -53,6 +55,5 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
     else
       redirect_to guw.guw_model_path(params[:guw_model_id], anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
     end
-
   end
 end

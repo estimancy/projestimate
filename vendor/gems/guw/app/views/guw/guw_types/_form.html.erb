@@ -18,6 +18,7 @@
         <%= f.input :name, label: "Type d'unité d'oeuvre" %>
         <%= tinymce %>
         <%= f.input :description, input_html: { class: 'tinymce', rows: 15, cols: 20 } %>
+        <%= f.input :disable_ajusted_effort, label: "Désactiver le retenu" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

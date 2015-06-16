@@ -47,7 +47,7 @@
           </b>
 
           <% if can? :manage_modules_instances, ModuleProject %>
-            <%= link_to "Créer un seuil de type d'UO", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+            <%= link_to "Créer un seuil de type d'UO", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right button_margin_right" %>
           <% end %>
         </h4>
 
@@ -172,7 +172,7 @@
                 <th></th>
                 <% guw_type.guw_type_complexities.each do |type_complexity| %>
                   <th>
-                    [ &nbsp; ; &nbsp; [
+                    [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; poids
                   </th>
                 <% end %>
               </tr>
@@ -187,6 +187,7 @@
                       <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
                       <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
                       <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini" %>
+                      <%# text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.value, class: "input-mini" %>
                     </td>
                   <% end %>
                 </tr>
@@ -197,7 +198,7 @@
               <% if can? :manage_modules_instances, ModuleProject %>
                 <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
               <% end %>
-              <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right' %>
+              <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right button_margin_right' %>
             <% end %>
 
             <br>
