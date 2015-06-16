@@ -434,10 +434,14 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.effort = @weight_pert.sum
       end
 
-      if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+      if guw_unit_of_work.guw_type.disable_ajusted_effort == true or !guw_unit_of_work.guw_type.disable_ajusted_effort.nil?
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
       else
-        guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
+        if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
+          guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
+        else
+          guw_unit_of_work.ajusted_effort = params["ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
+        end
       end
 
       if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
