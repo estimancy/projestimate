@@ -70,6 +70,7 @@ module Guw
             unless new_organization_technology.nil?
               guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
             end
+            guw_complexity_technology.update_attribute(:guw_type_id, guw_type.id)
           end
 
           # Copy the complexities units of works
