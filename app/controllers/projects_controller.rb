@@ -516,15 +516,15 @@ class ProjectsController < ApplicationController
       @project.save
 
       project_root = @project.root_component
-      if @project.is_model == true
-        project_root_name = @project.title
+      #if @project.is_model == true
+      #  project_root_name = @project.title
+      #else
+      if @project.application.nil?
+        project_root_name = "#{@project.application_name.blank? ? @project.title : @project.application_name}"
       else
-        if @project.application.nil?
-          project_root_name = "#{@project.application_name.blank? ? @project.title : @project.application_name}"
-        else
-          project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
-        end
+        project_root_name = "#{@project.application.name.blank? ? @project.title : @project.application.name}"
       end
+      #end
       project_root.update_attribute(:name, project_root_name)
 
       @pe_wbs_project_product = @project.pe_wbs_projects.products_wbs.first
