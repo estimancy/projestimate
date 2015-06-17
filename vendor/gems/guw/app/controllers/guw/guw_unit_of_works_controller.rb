@@ -434,7 +434,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.effort = @weight_pert.sum
       end
 
-      if guw_unit_of_work.guw_type.disable_ajusted_effort == true or !guw_unit_of_work.guw_type.disable_ajusted_effort.nil?
+      if guw_unit_of_work.guw_type.disable_ajusted_effort == true
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
       else
         if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
