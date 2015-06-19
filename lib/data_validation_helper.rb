@@ -58,7 +58,7 @@ module DataValidationHelper
         if @record.save
           flash[:notice] = I18n.t(:notice_master_data_successful_validated)
         else
-          flash[:error] = I18n.l(error_master_data_failed_validate, value => @record.errors.full_messages.to_sentence)
+          flash[:error] = I18n.t(:error_master_data_failed_validate, :value => @record.errors.full_messages.to_sentence)
         end
       else
         temp_parent_uuid = parent_record.uuid
@@ -81,7 +81,7 @@ module DataValidationHelper
           if @record.save
             flash[:notice] = I18n.t(:notice_master_data_successful_validated)
           else
-           flash[:error] = I18n.l(error_master_data_failed_validate, value => @record.errors.full_messages.to_sentence)
+           flash[:error] = I18n.t(:error_master_data_failed_validate, :value => @record.errors.full_messages.to_sentence)
           end
         end
       end

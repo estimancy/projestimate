@@ -1477,38 +1477,40 @@ public
       #We have to copy all the selected view's widgets in a new view for the current module_project
       if old_mp.view
         #Copy the views and widgets for the new project
-        new_view = View.create(organization_id: new_prj.organization_id, pemodule_id: new_mp.pemodule_id , name: "#{new_prj} :  #{old_mp.view.name}", description: "")
+        new_view = View.new(organization_id: new_prj.organization_id, pemodule_id: new_mp.pemodule_id , name: "#{new_prj} :  #{new_mp}", description: "")
 
-        old_mp_view_widgets = old_mp.view.views_widgets.all
-        old_mp_view_widgets.each do |old_view_widget|
-          new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_view_widget.module_project_id)
-          new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
-          widget_est_val = old_view_widget.estimation_value
-          unless widget_est_val.nil?
-            in_out = widget_est_val.in_out
-            widget_pe_attribute_id = widget_est_val.pe_attribute_id
-            unless new_view_widget_mp.nil?
-              new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
-              estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
+        if new_view.save
+          old_mp_view_widgets = old_mp.view.views_widgets.all
+          old_mp_view_widgets.each do |old_view_widget|
+            new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_view_widget.module_project_id)
+            new_view_widget_mp_id = new_view_widget_mp.nil? ? nil : new_view_widget_mp.id
+            widget_est_val = old_view_widget.estimation_value
+            unless widget_est_val.nil?
+              in_out = widget_est_val.in_out
+              widget_pe_attribute_id = widget_est_val.pe_attribute_id
+              unless new_view_widget_mp.nil?
+                new_estimation_value = new_view_widget_mp.estimation_values.where('pe_attribute_id = ? AND in_out=?', widget_pe_attribute_id, in_out).last
+                estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
 
-              new_view_widget = ViewsWidget.new(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
-                                                   icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
-                                                   width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
+                new_view_widget = ViewsWidget.new(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
+                                                     icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
+                                                     width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
 
-              if new_view_widget.save
-                #Update the copied project_fields
-                pf = ProjectField.where(project_id: new_prj.id, views_widget_id: old_view_widget.id).first
-                unless pf.nil?
-                  pf.views_widget_id = new_view_widget.id
-                  pf.save
+                if new_view_widget.save
+                  #Update the copied project_fields
+                  pf = ProjectField.where(project_id: new_prj.id, views_widget_id: old_view_widget.id).first
+                  unless pf.nil?
+                    pf.views_widget_id = new_view_widget.id
+                    pf.save
+                  end
                 end
               end
             end
           end
+          #update the new module_project view
+          new_mp.update_attribute(:view_id, new_view.id)
         end
       end
-      #update the new module_project view
-      new_mp.update_attribute(:view_id, new_view.id)
     ###end
   end
 
@@ -1953,100 +1955,115 @@ public
 
       new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_version_from_to, from_version: old_prj.version, to_version: new_prj.version, current_user_name: current_user.name)}. \r\n"
 
-      if new_prj.save
-        old_prj.save #Original project copy number will be incremented to 1
+      new_prj.transaction do
+        if new_prj.save
+          old_prj.save #Original project copy number will be incremented to 1
 
-        #Managing the component tree : PBS
-        pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
-        #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
+          #Managing the component tree : PBS
+          pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
+          #pe_wbs_activity = new_prj.pe_wbs_projects.activities_wbs.first
 
-        #pe_wbs_product.name = old_prj_pe_wbs_product_name
-        #pe_wbs_activity.name = old_prj_pe_wbs_activity_name
+          #pe_wbs_product.name = old_prj_pe_wbs_product_name
+          #pe_wbs_activity.name = old_prj_pe_wbs_activity_name
 
-        pe_wbs_product.save
-        #pe_wbs_activity.save
+          pe_wbs_product.save
+          #pe_wbs_activity.save
 
-        # For PBS
-        new_prj_components = pe_wbs_product.pbs_project_elements
-        new_prj_components.each do |new_c|
-          unless new_c.is_root?
-            new_ancestor_ids_list = []
-            new_c.ancestor_ids.each do |ancestor_id|
-              ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
-              new_ancestor_ids_list.push(ancestor_id)
-            end
-            new_c.ancestry = new_ancestor_ids_list.join('/')
-            # For PBS-Project-Element Links with modules
-            #old_pbs = PbsProjectElement.find(new_c.copy_id)
-            #new_c.module_projects = old_pbs.module_projects
-            new_c.save
-          end
-        end
-
-        # For ModuleProject associations
-        old_prj.module_projects.group(:id).each do |old_mp|
-          new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
-
-          # ModuleProject Associations for the new project
-          old_mp.associated_module_projects.each do |associated_mp|
-            new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
-            new_mp.associated_module_projects << new_associated_mp
-          end
-
-          #For initialization module level
-          update_views_and_widgets(new_prj, old_mp, new_mp)
-
-          #Update the Unit of works's groups
-          new_mp.guw_unit_of_work_groups.each do |guw_group|
-            new_pbs_project_element = new_prj_components.find_by_copy_id(guw_group.pbs_project_element_id)
-            new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-            guw_group.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
-
-            # Update the group unit of works and attributes
-            guw_group.guw_unit_of_works.each do |guw_uow|
-              new_uow_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, guw_uow.module_project_id)
-              new_uow_mp_id = new_uow_mp.nil? ? nil : new_uow_mp.id
-
-              new_pbs = new_prj_components.find_by_copy_id(guw_uow.pbs_project_element_id)
-              new_pbs_id = new_pbs.nil? ? nil : new_pbs.id
-              guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id)
+          # For PBS
+          new_prj_components = pe_wbs_product.pbs_project_elements
+          new_prj_components.each do |new_c|
+            unless new_c.is_root?
+              new_ancestor_ids_list = []
+              new_c.ancestor_ids.each do |ancestor_id|
+                ancestor_id = PbsProjectElement.find_by_pe_wbs_project_id_and_copy_id(new_c.pe_wbs_project_id, ancestor_id).id
+                new_ancestor_ids_list.push(ancestor_id)
+              end
+              new_c.ancestry = new_ancestor_ids_list.join('/')
+              # For PBS-Project-Element Links with modules
+              #old_pbs = PbsProjectElement.find(new_c.copy_id)
+              #new_c.module_projects = old_pbs.module_projects
+              new_c.save
             end
           end
 
-          new_mp.uow_inputs.each do |uo|
-            new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
-            new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+          # For ModuleProject associations
+          old_prj.module_projects.group(:id).each do |old_mp|
+            new_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_mp.id)
 
-            uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
-          end
+            # ModuleProject Associations for the new project
+            old_mp.associated_module_projects.each do |associated_mp|
+              new_associated_mp = ModuleProject.where('project_id = ? AND copy_id = ?', new_prj.id, associated_mp.id).first
+              new_mp.associated_module_projects << new_associated_mp
+            end
 
-          ["input", "output"].each do |io|
-            new_mp.pemodule.pe_attributes.each do |attr|
-              old_prj.pbs_project_elements.each do |old_component|
-                new_prj_components.each do |new_component|
-                  ev = new_mp.estimation_values.where(pe_attribute_id: attr.id, in_out: io).first
-                  unless ev.nil?
-                    ev.string_data_low[new_component.id.to_i] = ev.string_data_low.delete old_component.id
-                    ev.string_data_most_likely[new_component.id.to_i] = ev.string_data_most_likely.delete old_component.id
-                    ev.string_data_high[new_component.id.to_i] = ev.string_data_high.delete old_component.id
-                    ev.string_data_probable[new_component.id.to_i] = ev.string_data_probable.delete old_component.id
-                    ev.save
+            #For initialization module level
+            update_views_and_widgets(new_prj, old_mp, new_mp)
+
+            #Update the Unit of works's groups
+            new_mp.guw_unit_of_work_groups.each do |guw_group|
+              new_pbs_project_element = new_prj_components.find_by_copy_id(guw_group.pbs_project_element_id)
+              new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+              guw_group.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+
+              # Update the group unit of works and attributes
+              guw_group.guw_unit_of_works.each do |guw_uow|
+                new_uow_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, guw_uow.module_project_id)
+                new_uow_mp_id = new_uow_mp.nil? ? nil : new_uow_mp.id
+
+                new_pbs = new_prj_components.find_by_copy_id(guw_uow.pbs_project_element_id)
+                new_pbs_id = new_pbs.nil? ? nil : new_pbs.id
+                guw_uow.update_attributes(module_project_id: new_uow_mp_id, pbs_project_element_id: new_pbs_id)
+              end
+            end
+
+            new_mp.uow_inputs.each do |uo|
+              new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+              new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+
+              uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+            end
+
+            ["input", "output"].each do |io|
+              new_mp.pemodule.pe_attributes.each do |attr|
+                old_prj.pbs_project_elements.each do |old_component|
+                  new_prj_components.each do |new_component|
+                    ev = new_mp.estimation_values.where(pe_attribute_id: attr.id, in_out: io).first
+                    unless ev.nil?
+                      ev.string_data_low[new_component.id.to_i] = ev.string_data_low.delete old_component.id
+                      ev.string_data_most_likely[new_component.id.to_i] = ev.string_data_most_likely.delete old_component.id
+                      ev.string_data_high[new_component.id.to_i] = ev.string_data_high.delete old_component.id
+                      ev.string_data_probable[new_component.id.to_i] = ev.string_data_probable.delete old_component.id
+                      ev.save
+                    end
                   end
                 end
               end
             end
           end
+
+          #Archive project last versions
+          if params['archive_last_project_version'] == "yes"
+            #get last versions of the projects
+            project_ancestors = new_prj.ancestors
+            unless project_ancestors.empty? || project_ancestors.nil?
+              #Get the archive status of the project's organization
+              archive_status = new_prj.organization.estimation_statuses.where(is_archive_status: true).first
+              if archive_status
+                project_ancestors.each do |ancestor|
+                  ancestor.update_attribute(:estimation_status_id, archive_status.id)
+                end
+              end
+            end
+          end
+
+          flash[:success] = I18n.t(:notice_project_successful_checkout)
+          redirect_to (edit_project_path(new_prj, :anchor => "tabs-history")), :notice => I18n.t(:notice_project_successful_checkout) and return
+
+        else
+          flash[:error] = I18n.t(:error_project_checkout_failed)
+          redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
         end
-
-        flash[:success] = I18n.t(:notice_project_successful_checkout)
-        redirect_to (edit_project_path(new_prj, :anchor => "tabs-history")), :notice => I18n.t(:notice_project_successful_checkout) and return
-
-        #raise "#{RuntimeError}"
-      else
-        flash[:error] = I18n.t(:error_project_checkout_failed)
-        redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
       end
-
     rescue
       flash[:error] = I18n.t(:error_project_checkout_failed)
       redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
