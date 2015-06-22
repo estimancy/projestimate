@@ -509,12 +509,12 @@ class ApplicationController < ActionController::Base
     # return the path based on resource
     if resource.password_changed
       # if user has no organization, this means that his has no group, so no right
-      if resource.organizations.where(is_image_organization: false).size == 0
+      if resource.organizations.where(is_image_organization: [false, nil]).size == 0
         flash[:warning] = I18n.t(:you_have_no_right_to_continue)
         sign_out(resource)
         new_session_path(:user)
-      elsif resource.organizations.where(is_image_organization: false).size == 1
-        organization_estimations_path(resource.organizations.where(is_image_organization: false).first)
+      elsif resource.organizations.where(is_image_organization: [false, nil]).size == 1
+        organization_estimations_path(resource.organizations.where(is_image_organization: [false, nil]).first)
       else
         root_path
       end
