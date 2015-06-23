@@ -358,7 +358,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
             @weight_pert << compute_probable_value(uo_weight_low, uo_weight_ml, uo_weight_high)[:value]
           end
-        #end
+        end
       end
     end
 
