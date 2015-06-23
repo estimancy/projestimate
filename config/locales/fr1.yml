@@ -1,4 +1,4 @@
-frsncf:
+fr1:
   time:
     formats:
       default: ! "%d/%m/%Y %H:%M"

@@ -300,6 +300,17 @@ def load_data!
     AdminSetting.create(:key => 'password_min_length', :value => '4', :record_status_id => rsid)
     AdminSetting.create(:key => 'url_wiki', :value => 'http://forge.estimancy.com/projects/pe/wiki', :record_status_id => rsid)
     AdminSetting.create(:key => 'url_service', :value => 'http://forge.estimancy.com/projects/pe/wiki/Community_Services', :record_status_id => rsid)
+    #Technical parameters :
+    # @online_support = AdminSetting.where(key: "online_support").first.value
+    #@disable_access = AdminSetting.where(key: "disable_access").first.value
+    #@offline_message = AdminSetting.where(key: "offline_message").first.value
+    #@functional_version_number = AdminSetting.where(key: "functionnal_version_number").first.value
+
+    AdminSetting.create(:key => 'online_support', :value => 1, :record_status_id => rsid)
+    AdminSetting.create(:key => 'disable_access', :value => 0, :record_status_id => rsid)
+    AdminSetting.create(:key => 'offline_message', :value => "<p>L'application est en cours de&nbsp;maintenance&nbsp;.......</p> <p>Merci de votre compr&eacute;hension</p> s", :record_status_id => rsid)
+    AdminSetting.create(:key => 'functionnal_version_number', :value => '1.9', :record_status_id => rsid)
+
     as = AdminSetting.new(:key => 'custom_status_to_consider', :value => nil, :record_status_id => rsid, :uuid => UUIDTools::UUID.random_create.to_s)
     as.save(:validate => false)
 
@@ -307,34 +318,20 @@ def load_data!
     authmethod = AuthMethod.new(:name => 'Application', :server_name => 'Not necessary', :port => 0, :base_dn => 'Not necessary', :certificate => 'false', :record_status_id => rsid)
     authmethod.save(validate: false)
 
-    puts '   - Super Admin'
-      #Create first user
-    user = User.new(:first_name => 'Administrator',
-                    :last_name => 'Estimancy',
-                    :login_name => 'admin',
-                    :initials => 'ad',
-                    :email => 'youremail@yourcompany.net',
-                    :auth_type => AuthMethod.first.id,
-                    :language_id => Language.first.id,
-                    :time_zone => 'GMT')
-
-    user.password = user.password_confirmation = 'projestimate'
-    user.super_admin = true
-    user.skip_confirmation!
-    user.save
-
-    puts ' Creating organizations & unit of work model'
+    puts ' Creating organizations+groups & unit of work model'
     7.times do |i|
       organization = Organization.create(name: Faker::Company.name,
-                                        description: Faker::Company.catch_phrase,
-                                        number_hours_per_day: 8,
-                                        number_hours_per_month: 160,
-                                        cost_per_hour: 100,
-                                        currency_id: Currency.first.id,
-                                        inflation_rate: 10,
-                                        limit1: 10,
-                                        limit2: 100,
-                                        limit3: 1000)
+                                         description: Faker::Company.catch_phrase,
+                                         number_hours_per_day: 8,
+                                         number_hours_per_month: 160,
+                                         cost_per_hour: 100,
+                                         currency_id: Currency.first.id,
+                                         inflation_rate: 10,
+                                         limit1: 10,
+                                         limit2: 100,
+                                         limit3: 1000,
+                                         project_selected_columns: ['title'])
+
 
       5.times do
         guw_model = Guw::GuwModel.create(name: Faker::Lorem.word,
@@ -346,11 +343,10 @@ def load_data!
                               guw_model_id: guw_model.id)
         end
       end
-
     end
 
     Organization.all.each do |organization|
-      g = Group.create(:name => 'Adminstration')
+      g = Group.create(:name => 'Administration')
       organization.groups << g
       organization.save
 
@@ -365,6 +361,27 @@ def load_data!
         end
       end
     end
+
+
+    puts '   - Super Admin'
+      #Create first user
+    user = User.new(:first_name => 'Administrator',
+                    :last_name => 'Estimancy',
+                    :login_name => 'admin',
+                    :initials => 'ad',
+                    :email => 'youremail@yourcompany.net',
+                    :auth_type => AuthMethod.first.id,
+                    :language_id => Language.first.id,
+                    :time_zone => 'GMT')
+
+    user.password = user.password_confirmation = 'projestimate'
+    user.super_admin = true
+    # Affect user to the first organization
+    user.organizations << Organization.first
+    user.groups << user.organizations.first.groups.where(name: 'Administration').first  #Group.all.sample(1)
+    user.skip_confirmation!
+    user.save
+
 
   puts '   - User'
     10.times do |i|
@@ -417,11 +434,10 @@ def load_data!
       PbsProjectElement.create(:is_root => true, start_date: Time.now, :pe_wbs_project_id => pe_wbs_project.id, :work_element_type_id => wet.id, :position => 0, :name => 'Root folder')
 
       #pbs_project_element = PbsProjectElement.first
-      PeWbsProject.create(:project_id => project.id, :name => "#{project.title} WBS-Activity", :wbs_type => 'Activity')
-      pe_wbs_project = PeWbsProject.last
-
+      #PeWbsProject.create(:project_id => project.id, :name => "#{project.title} WBS-Activity", :wbs_type => 'Activity')
+      #pe_wbs_project = PeWbsProject.last
       #Create root pbs_project_element
-      WbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :description => 'WBS-Activity Root Element', :name => "Root Element - #{project.title} WBS-Activity)")
+      #WbsProjectElement.create(:is_root => true, :pe_wbs_project_id => pe_wbs_project.id, :description => 'WBS-Activity Root Element', :name => "Root Element - #{project.title} WBS-Activity)")
       #wbs_project_element = wbsProjectElement.first
 
       project.save
@@ -460,10 +476,10 @@ def load_data!
       end
 
       1.times do
-        mp = ModuleProject.create(pemodule_id: Pemodule.all.sample.id,
-                                   project_id: project.id,
-                                   position_x: 1,
-                                   position_Y: 1)
+        mp = ModuleProject.create(project_id: project.id,
+                                  pemodule_id: Pemodule.all.sample.id,
+                                  position_x: 1,
+                                  position_y: 1)
 
         if mp.pemodule == "guw"
           mp.guw_model_id = project.organization.guw_models.sample.id
