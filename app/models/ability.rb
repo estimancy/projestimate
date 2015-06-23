@@ -38,6 +38,8 @@ class Ability
 
     #cannot :update, [Language, PeAttribute, Currency, AdminSetting, AuthMethod, Permission], :record_status => {:name => 'Retired'}
 
+    # Add Action Aliases, for example:  alias_action :edit, :to => :update
+
     #For organization and estimations permissions
     alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
     alias_action :manage_estimations_permissions, :show_organization_permissions, :to => :manage_organization_permissions
@@ -45,7 +47,6 @@ class Ability
     # For projects selected columns
     alias_action :show_projects_selected_columns, :to => :manage_projects_selected_columns
 
-    # Add Action Aliases, for example:  alias_action :edit, :to => :update
     # Notice the edit action is aliased to update. This means if the user is able to update a record he also has permission to edit it.
     alias_action [:show_groups, Group], :to => [:manage, Group]
 
@@ -59,11 +60,6 @@ class Ability
     alias_action :alter_project_areas, :alter_acquisition_categories, :alter_platform_categories, :alter_project_categories, :to => :edit_project
     alias_action :execute_estimation_plan, :manage_estimation_widgets, :alter_estimation_status, :alter_project_status_comment, :commit_project, :to => :alter_estimation_plan
     alias_action :alter_estimation_plan, :manage_project_security, :to => :edit_project
-
-
-    #When user can create a project template, he also can create a project from scratch
-    #alias_action :create_project_from_scratch, :create_project_from_template, :show_estimation_models, :to => :manage_estimation_models
-    alias_action :edit_project, :to => :manage_estimation_models
 
     #For instance modules
     alias_action :show_modules_instances, :to => :manage_modules_instances
@@ -84,9 +80,18 @@ class Ability
 
       for perm in permissions_array
         unless perm[0].nil? or perm[1].nil?
-          can perm[0], perm[1]
+          if perm[0] == :manage_estimation_models
+            can perm[0], perm[1], :is_model => true
+          else
+            can perm[0], perm[1]
+          end
+          #p "#{perm[0]}, #{perm[1]}"
         end
       end
+
+      #For "manage_estimation_models", only models will be taken in account
+      #When user can create a project template, he also can edit the model
+      alias_action :edit_project, :is_model => true, :to => :manage_estimation_models
 
       #@array_users = Hash.new {|h,k| h[k]=[]}
       #@array_status_groups = Hash.new {|h,k| h[k]=[]}
@@ -97,7 +102,7 @@ class Ability
       @array_groups = Array.new
 
       #Specfic project security loading
-      prj_scrts = ProjectSecurity.includes(:project).find_all_by_user_id(user.id)
+      prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
@@ -111,8 +116,8 @@ class Ability
         end
       end
 
-      user.groups.each do |grp|
-        prj_scrts = ProjectSecurity.includes(:project_security_level).find_all_by_group_id(grp.id)
+      user.groups.where(organization_id: organization.id).each do |grp|
+        prj_scrts = ProjectSecurity.find_all_by_group_id(grp.id)
         unless prj_scrts.empty?
           specific_permissions_array = []
           prj_scrts.each do |prj_scrt|
@@ -127,7 +132,7 @@ class Ability
           end
         end
 
-        grp.estimation_status_group_roles.includes(:estimation_status).each do |esgr|
+        grp.estimation_status_group_roles.each do |esgr|
           esgr_security_level = esgr.project_security_level
           unless esgr_security_level.nil?
             esgr_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
@@ -167,6 +172,7 @@ class Ability
       [status, global].inject(:&).each_with_index do |a, i|
         unless hash_project[a[1]].nil?
           can hash_permission[a[0]], hash_project[a[1]], estimation_status_id: hash_status[a[2]]
+          #p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, estimation_status_id: #{hash_status[a[2]]} => #{organization}"
         end
       end
 
