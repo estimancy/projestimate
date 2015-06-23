@@ -85,6 +85,7 @@ class Ability
       for perm in permissions_array
         unless perm[0].nil? or perm[1].nil?
           can perm[0], perm[1]
+          p "#{perm[0]}, #{perm[1]}"
         end
       end
 
@@ -97,7 +98,7 @@ class Ability
       @array_groups = Array.new
 
       #Specfic project security loading
-      prj_scrts = ProjectSecurity.includes(:project).find_all_by_user_id(user.id)
+      prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
@@ -111,8 +112,8 @@ class Ability
         end
       end
 
-      user.groups.each do |grp|
-        prj_scrts = ProjectSecurity.includes(:project_security_level).find_all_by_group_id(grp.id)
+      user.groups.where(organization_id: organization.id).each do |grp|
+        prj_scrts = ProjectSecurity.find_all_by_group_id(grp.id)
         unless prj_scrts.empty?
           specific_permissions_array = []
           prj_scrts.each do |prj_scrt|
@@ -127,7 +128,7 @@ class Ability
           end
         end
 
-        grp.estimation_status_group_roles.includes(:estimation_status).each do |esgr|
+        grp.estimation_status_group_roles.each do |esgr|
           esgr_security_level = esgr.project_security_level
           unless esgr_security_level.nil?
             esgr_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
@@ -167,6 +168,7 @@ class Ability
       [status, global].inject(:&).each_with_index do |a, i|
         unless hash_project[a[1]].nil?
           can hash_permission[a[0]], hash_project[a[1]], estimation_status_id: hash_status[a[2]]
+          #p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, estimation_status_id: #{hash_status[a[2]]} => #{organization}"
         end
       end
 

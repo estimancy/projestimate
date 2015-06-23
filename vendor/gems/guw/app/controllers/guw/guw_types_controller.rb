@@ -30,6 +30,7 @@ class Guw::GuwTypesController < ApplicationController
 
   def edit
     @guw_type = Guw::GuwType.find(params[:id])
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
   end
 
@@ -44,6 +45,17 @@ class Guw::GuwTypesController < ApplicationController
   def update
     @guw_type = Guw::GuwType.find(params[:id])
     @guw_type.update_attributes(params[:guw_type])
+
+    @guw_type.guw_type_complexities.each do |tc|
+      params["guw_attribute"].each do |guw_attribute|
+        Guw::GuwAttributeComplexity.create(bottom_range: nil,
+                                           top_range: nil,
+                                           guw_type_id: @guw_type.id,
+                                           guw_attribute_id: guw_attribute.to_i,
+                                           guw_type_complexity_id: tc.id)
+      end
+    end
+
     redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
   end
 

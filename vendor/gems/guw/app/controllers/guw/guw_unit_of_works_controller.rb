@@ -68,12 +68,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def update
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
-    if params[:guw_unit_of_work][:organization_id].present?
-      if @guw_unit_of_work.update_attributes(params[:guw_unit_of_work])
-        redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}") and return
-      else
-        render :edit
-      end
+    if @guw_unit_of_work.update_attributes(params[:guw_unit_of_work])
+      redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}") and return
+    else
+      render :edit
     end
   end
 
@@ -212,7 +210,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               if (low >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (low < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
                 unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                   if (low >= guw_ac.bottom_range) and (low < guw_ac.top_range)
-                    @lows << guw_ac.guw_type_complexity.value
+                    if guw_ac.enable_value == true
+                      @lows << guw_ac.value * low
+                    else
+                      @lows << guw_ac.value
+                    end
                   end
                 end
               else
@@ -224,8 +226,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           unless most_likely.nil?
             if (most_likely >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-                if (most_likely >= guw_ac.bottom_range) and (most_likely < guw_ac.top_range)
-                  @mls << guw_ac.guw_type_complexity.value
+                if guw_ac.enable_value == true
+                  @mls << guw_ac.value * most_likely
+                else
+                  @mls << guw_ac.value
                 end
               end
             else
@@ -237,7 +241,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             if (high >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                 if (high >= guw_ac.bottom_range) and (high < guw_ac.top_range)
-                  @highs << guw_ac.guw_type_complexity.value
+                  if guw_ac.enable_value == true
+                    @highs << guw_ac.value * high
+                  else
+                    @highs << guw_ac.value
+                  end
                 end
               end
             else
@@ -305,6 +313,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
         if (value_pert < guw_type.guw_complexities.map(&:bottom_range).min) or (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
           guw_unit_of_work.off_line_uo = true
+          #new_guw_unit_of_work = guw_unit_of_work.dup
+          #new_guw_unit_of_work.name = guw_unit_of_work.name.to_s + " TC"
+          #new_guw_unit_of_work.save
         else
           guw_type.guw_complexities.each do |guw_c|
 
@@ -659,6 +670,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @module_project.views_widgets.each do |vw|
       ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
+  end
+
+  private
+  def check_range
+
   end
 
 end

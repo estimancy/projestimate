@@ -15,11 +15,17 @@
   <div class="modal-body">
     <table class="table table-condensed table-striped">
       <tr>
-        <th><%= I18n.t :label_PeAttribute %></th>
+        <th>
+          <%= I18n.t :label_PeAttribute %>
+        </th>
         <% if @guw_model.three_points_estimation == true %>
           <th>L</th>
         <% end %>
-        <th>M</th>
+        <% if @guw_model.three_points_estimation == true %>
+          <th>M</th>
+        <% else %>
+          <th></th>
+        <% end %>
         <% if @guw_model.three_points_estimation == true %>
           <th>H</th>
         <% end %>
@@ -55,7 +61,9 @@
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal" >Fermer sans calculer</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" >
+      Fermer sans calculer
+    </button>
     <% if can? :execute_estimation_plan, @project %>
       <button type="submit" class="btn btn-default">Calculer</button>
     <% end %>
