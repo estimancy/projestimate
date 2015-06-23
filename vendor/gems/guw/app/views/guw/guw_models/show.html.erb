@@ -60,7 +60,7 @@
                   <%= guw_cplx.name %> -
                   <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %>
                   <% if can? :manage_modules_instances, ModuleProject %>
-                      - <%= link_to I18n.t(:delete), guw_cplx, method: :delete %>
+                      - <%= link_to I18n.t(:delete), guw_cplx, method: :delete, confirm: "Êtes vous sure ?" %>
                   <% end %>
                 </th>
               <% end %>
@@ -147,47 +147,46 @@
           <%= form_tag guw_model_guw_type_guw_attribute_complexities_save_attributs_complexities_path(@guw_model, guw_type.id), method: "POST" do %>
             <table class="table table-bordered">
               <tr>
-                <th></th>
+                <th>
+                  Seuils de complexité
+                </th>
                 <% guw_type.guw_type_complexities.each do |type_complexity| %>
-                  <th>
+                  <th colspan="2">
                     <%= type_complexity.name %> -
                     <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %>
                     <% if can? :manage_modules_instances, ModuleProject %>
-                        <%= link_to "  - #{I18n.t(:delete)}", type_complexity, method: :delete %>
+                        <%= link_to "  - #{I18n.t(:delete)}", type_complexity, method: :delete, confirm: "Êtes vous sure ?" %>
                     <% end %>
                   </th>
                 <% end %>
               </tr>
 
               <tr>
-                <th></th>
+                <th>Attributs</th>
                 <% guw_type.guw_type_complexities.each do |type_complexity| %>
+                  <th>Prod.</th>
                   <th>
-                    <%= I18n.t :weight %> : <%= type_complexity.value.to_i %>
-                  </th>
-                <% end %>
-              </tr>
-
-              <tr>
-                <th></th>
-                <% guw_type.guw_type_complexities.each do |type_complexity| %>
-                  <th>
-                    [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; poids
+                    [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; <%= I18n.t :weight %>
                   </th>
                 <% end %>
               </tr>
 
               <% @guw_model.guw_attributes.order("name ASC").each do |guw_attribute| %>
                 <tr>
-                  <td>
+                  <td class="align-center">
                     <%= link_to guw_attribute, guw.edit_guw_model_guw_attribute_path(@guw_model, guw_attribute) %>
                   </td>
                   <% guw_type.guw_type_complexities.each do |type_complexity| %>
+
+                    <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
+
+                    <td class="span1 align-center">
+                      <%= check_box_tag "enable[#{guw_attribute.id}][#{type_complexity.id}]", "enable", ac.enable_value, class: "input-mini" %>
+                    </td>
                     <td class="align-center">
-                      <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
                       <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
                       <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini" %>
-                      <%# text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.value, class: "input-mini" %>
+                      <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.value, class: "input-mini" %>
                     </td>
                   <% end %>
                 </tr>
