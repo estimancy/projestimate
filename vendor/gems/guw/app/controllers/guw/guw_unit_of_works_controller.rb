@@ -313,9 +313,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
         if (value_pert < guw_type.guw_complexities.map(&:bottom_range).min) or (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
           guw_unit_of_work.off_line_uo = true
-          #new_guw_unit_of_work = guw_unit_of_work.dup
-          #new_guw_unit_of_work.name = guw_unit_of_work.name.to_s + " TC"
-          #new_guw_unit_of_work.save
+          guw_unit_of_work.guw_complexity_id = guw_type.guw_complexities.last.id
+          new_guw_unit_of_work = guw_unit_of_work.dup
+          new_guw_unit_of_work.name = guw_unit_of_work.name.to_s + " TC"
+          new_guw_unit_of_work.save
         else
           guw_type.guw_complexities.each do |guw_c|
 
