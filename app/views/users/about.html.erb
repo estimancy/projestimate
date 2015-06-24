@@ -43,13 +43,7 @@
     </dl>
 
     <h2>Changelog</h2>
-
-    <% begin %>
-      <%= simple_format(AdminSetting.where(key: "changelog").first.value) %>
-    <% rescue %>
-
-    <% end %>
-
+    <%= link_to "Voir le changelog sur le wiki", "http://forge.estimancy.com/projects/pe/wiki/Changelog", target: "_blank" %>
 
   </div>
 </div>
