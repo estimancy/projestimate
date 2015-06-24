@@ -18,7 +18,7 @@
           <th><%= profile.name %></th>
         <% end %>
       <% else %>
-          <th><%= I18n.t(:no_profiles_for_wbs_activity_organization) %></th>
+        <th><%= I18n.t(:no_profiles_for_wbs_activity_organization) %></th>
       <% end %>
     </tr>
 
@@ -48,7 +48,7 @@
                     <% end %>
                       <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} #{@wbs_activity.cost_unit}" %>
                     <% rescue %>
-                      <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} " %>
+                      <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} €" %>
                   <% end %>
                 </td>
               <% end %>

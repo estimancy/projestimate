@@ -69,7 +69,7 @@ module EffortBreakdown
         @wbs_activity_ratio_elements.each do |element|
           #cph = element.wbs_activity_ratio_profiles.map{|warp| warp.organization_profile.cost_per_hour * (warp.ratio_value / 100)}.compact.sum
           element.wbs_activity_ratio_profiles.each do |warp|
-            cost[key] = warp.organization_profile.cost_per_hour.to_f * (warp.ratio_value / 100) * value.to_f
+            cost[key] = warp.organization_profile.cost_per_hour.to_f * value.to_f
           end
         end
       end

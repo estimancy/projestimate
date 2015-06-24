@@ -603,7 +603,7 @@ module ViewsWidgetsHelper
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
+                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)} €"
               end
             else
               res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
@@ -613,7 +613,7 @@ module ViewsWidgetsHelper
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
+                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) } €"
               end
             else
               res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
