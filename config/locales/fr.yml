@@ -117,7 +117,7 @@ fr:
       minute: "Minute"
       second: "Seconde"
       week:   "Semaine"
-      
+
   time:
     formats:
       default: ! "%d/%m/%Y %H:%M"
@@ -237,7 +237,7 @@ fr:
         limit3: "Affichage de l'effort en mois à partir de"
     errors:
       <<: *errors
-      
+
   #  Menu
   projects: "Projets"
   label_menu_projects: "Projets"
@@ -460,7 +460,7 @@ fr:
   new_module_project: "Créer un nouveau module de projet"
   related_attributes: "Attributs associés"
   module_ratio_settings: "Paramètrage Ratio"
-  module_links_settings: "Liens entre Modules"  
+  module_links_settings: "Liens entre Modules"
   mandatory: "Obligatoire"
   links_to: "Liens vers"
   current_link: "Liens courant"
@@ -677,7 +677,7 @@ fr:
   sum_of_ratio_values: "Somme des valeurs des ratios :"
   one_activity_element: "Un activité-élément"
   all_activity_elements: "Tous les activité-éléments"
-  set_of_activity_elements: "Un ensemble d'activité-éléments" 
+  set_of_activity_elements: "Un ensemble d'activité-éléments"
   new_activities: "Nouvelle activité"
   general: "Général"
   file_csv: "Fichier (csv seulement)"
@@ -1466,6 +1466,7 @@ fr:
   current_version: "Version actuelle"
   new_version: "Nouvelle version"
   change_estimation_version_from_to: "Version changée de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}\". "
+  label_complexity_attributes: "Seuil de complexité des attributs de"
   label_available_columns: "Colonnes disponibles"
   label_selected_columns: "Colonnes sélectionnées"
   label_all_columns: "Toutes les colonnes"
@@ -1481,3 +1482,9 @@ fr:
   original_model: "Modèle d'origine"
   is_used_view: "Vue utilisée ?"
   displayed_data: "Données affichées"
+  is_archive_status: "Statut d'archive ou fin de workflow"
+  archive_status: "Statut d'archive"
+  only_one_archive_status_possible: "Il n'est pas possible de définir plus d'un statut d'archive dans une même organisation"
+  dont_archive_last_project_versions: "Ne pas archiver les versions précédentes de ce projet ?"
+  archive_last_project_versions: "Archiver la(les) version(s) précédente(s) ?"
+  last_project_versions_will_be_archived: "Lorsqu'on crée une nouvelle version d'une estimation, les anciennes versions de cette estimation seront automatiquement archivées si vous cochez cette case"

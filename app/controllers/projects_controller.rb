@@ -1470,15 +1470,15 @@ public
     @result_hash
   end
 
-  #Update new project/estimation views and widgets
   def update_views_and_widgets(new_prj, old_mp, new_mp)
     #For initialization module level
     ###if old_mp.pemodule.alias == Projestimate::Application::INITIALIZATION
-      #We have to copy all the selected view's widgets in a new view for the current module_project
-      if old_mp.view
-        #Copy the views and widgets for the new project
-        new_view = View.create(organization_id: new_prj.organization_id, pemodule_id: new_mp.pemodule_id , name: "#{new_prj} :  #{old_mp.view.name}", description: "")
+    #We have to copy all the selected view's widgets in a new view for the current module_project
+    if old_mp.view
+      #Copy the views and widgets for the new project
+      new_view = View.new(organization_id: new_prj.organization_id, pemodule_id: new_mp.pemodule_id , name: "#{new_prj} :  #{new_mp}", description: "")
 
+      if new_view.save
         old_mp_view_widgets = old_mp.view.views_widgets.all
         old_mp_view_widgets.each do |old_view_widget|
           new_view_widget_mp = ModuleProject.find_by_project_id_and_copy_id(new_prj.id, old_view_widget.module_project_id)
@@ -1492,8 +1492,8 @@ public
               estimation_value_id = new_estimation_value.nil? ? nil : new_estimation_value.id
 
               new_view_widget = ViewsWidget.new(view_id: new_view.id, module_project_id: new_view_widget_mp_id, estimation_value_id: estimation_value_id, name: old_view_widget.name, show_name: old_view_widget.show_name,
-                                                   icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
-                                                   width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
+                                                icon_class: old_view_widget.icon_class, color: old_view_widget.color, show_min_max: old_view_widget.show_min_max, widget_type: old_view_widget.widget_type,
+                                                width: old_view_widget.width, height: old_view_widget.height, position: old_view_widget.position, position_x: old_view_widget.position_x, position_y: old_view_widget.position_y)
 
               if new_view_widget.save
                 #Update the copied project_fields
@@ -1506,9 +1506,10 @@ public
             end
           end
         end
+        #update the new module_project view
+        new_mp.update_attribute(:view_id, new_view.id)
       end
-      #update the new module_project view
-      new_mp.update_attribute(:view_id, new_view.id)
+    end
     ###end
   end
 
@@ -1932,7 +1933,7 @@ public
       redirect_to organization_estimations_path(@current_organization), :flash => {:warning => I18n.t('warning_not_allow_to_create_new_branch_of_project')} and return
     end
 
-    begin
+    #begin
       old_prj_copy_number = old_prj.copy_number
 
       #old_prj_pe_wbs_product_name = old_prj.pe_wbs_projects.products_wbs.first.name
@@ -2047,11 +2048,11 @@ public
         redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
       end
 
-    rescue
-      flash[:error] = I18n.t(:error_project_checkout_failed)
-      redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
+    #rescue
+    #  flash[:error] = I18n.t(:error_project_checkout_failed)
+    #  redirect_to organization_estimations_path(@current_organization), :flash => {:error => I18n.t(:error_project_checkout_failed)} and return
       ##redirect_to(edit_project_path(old_prj, :anchor => 'tabs-history'), :flash => {:error => I18n.t(:error_project_checkout_failed)} ) and return
-    end
+    #end
 
     #else
     #redirect_to "#{session[:return_to]}", :flash => {:warning => I18n.t('warning_project_cannot_be_checkout')}
