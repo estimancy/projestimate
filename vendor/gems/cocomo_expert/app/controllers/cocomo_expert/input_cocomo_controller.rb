@@ -39,21 +39,23 @@ class CocomoExpert::InputCocomoController < ApplicationController
   end
 
   def cocomo_save
-    params['factors'].each do |factor|
-      cmplx = OrganizationUowComplexity.find(factor[1])
+    if params['factors']
+      params['factors'].each do |factor|
+        cmplx = OrganizationUowComplexity.find(factor[1])
 
-      old_cocomos = InputCocomo.where(factor_id: factor[0].to_i,
-                                      pbs_project_element_id: current_component.id,
-                                      project_id: @project.id,
-                                      module_project_id: current_module_project.id).delete_all
+        old_cocomos = InputCocomo.where(factor_id: factor[0].to_i,
+                                        pbs_project_element_id: current_component.id,
+                                        project_id: @project.id,
+                                        module_project_id: current_module_project.id).delete_all
 
-      InputCocomo.create(factor_id: factor[0].to_i,
-                         organization_uow_complexity_id: cmplx.id,
-                         pbs_project_element_id: current_component.id,
-                         project_id: @project.id,
-                         module_project_id: current_module_project.id,
-                         coefficient: cmplx.value)
+        InputCocomo.create(factor_id: factor[0].to_i,
+                           organization_uow_complexity_id: cmplx.id,
+                           pbs_project_element_id: current_component.id,
+                           project_id: @project.id,
+                           module_project_id: current_module_project.id,
+                           coefficient: cmplx.value)
 
+      end
     end
 
     current_module_project.pemodule.attribute_modules.each do |am|

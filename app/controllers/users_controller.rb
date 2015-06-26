@@ -74,27 +74,25 @@ public
 
     set_page_title 'New user'
 
-    if params[:organization_id].present?
-      @organization = Organization.find(params[:organization_id])
-    end
-
-    unless @organization.nil?
-      @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
-      @user.groups << @user_group
-    end
-
     @user = User.new(params[:user])
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
     @user.project_ids = params[:user][:project_ids]
 
-    @user.save(validate: false)
+    if params[:organization_id].present?
+      @organization = Organization.find(params[:organization_id])
+      if @organization
+        @organization_id = @organization.id
+        OrganizationsUsers.create(user_id: @user.id, organization_id: @organization.id)
 
-    unless @organization.nil?
-      OrganizationsUsers.create(user_id: @user.id, organization_id: @organization.id)
-    else
-      params[:organizations].keys.each do |organization_id|
-        OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
+        @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
+        @user.groups << @user_group
+      else
+        if params[:organizations]
+          params[:organizations].keys.each do |organization_id|
+            OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
+          end
+        end
       end
     end
 
@@ -102,6 +100,23 @@ public
       @user.group_ids = params[:groups].keys
       @user.save
     end
+
+    #Code commented is To delete afeter testing
+    #unless @organization.nil?
+    #  @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
+    #  @user.groups << @user_group
+    #end
+
+    #unless @organization.nil?
+    #  OrganizationsUsers.create(user_id: @user.id, organization_id: @organization.id)
+    #else
+    #  if params[:organizations]
+    #    params[:organizations].keys.each do |organization_id|
+    #      OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
+    #    end
+    #  end
+    #end
+    #@user.save#(validate: false)
 
     if @user.save
       flash[:notice] = I18n.t(:notice_account_successful_created)
@@ -112,7 +127,7 @@ public
       end
 
     else
-      render(:new, organization_id: @organization.id)
+      render(:new, organization_id: @organization_id)
     end
   end
 

@@ -31,9 +31,9 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:google_oauth2],
          :authentication_keys => [:id_connexion]
 
-  validates_presence_of    :password, :on => :create
-  validates_confirmation_of    :password, :on => :create
-  validates_length_of    :password, :within => Devise.password_length, :allow_blank => true
+  validates_presence_of :password, :on => :create
+  validates_confirmation_of :password, :on => :create
+  validates_length_of :password, :within => Devise.password_length, :allow_blank => true
   validates_format_of :email, :with  => Devise.email_regexp, :allow_blank => true, :if => :email_changed?
 
   audited # audit the users (users account)
