@@ -23,9 +23,14 @@
 
         <%= f.input :name, label: "Nom de l'unité d'oeuvre", input_html: { class: "input-xxlarge" } %>
         <%= f.input :comments, input_html: { rows: "5" }, label: "Description", input_html: { class: "input-xxlarge" }  %>
-        <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types, label: "Type d'UO", include_blank: false, input_html: { class: "input-xxlarge" }  %>
+        <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types.map{|i| [i.name, i.id]}, label: "Type d'UO", include_blank: false, input_html: { class: "input-xxlarge" }  %>
         <%= f.input :guw_work_unit_id, as: :select, collection: @guw_model.guw_work_units, label: "Opération", include_blank: false, input_html: { class: "input-xxlarge" }  %>
-        <%= f.input :organization_technology_id, as: :select, collection: @project.organization.organization_technologies.map{|i| [i.name, i.id]}, label: "Technologie", include_blank: false, input_html: { class: "input-xxlarge" }  %>
+        <%= f.input :organization_technology_id,
+                    as: :select,
+                    collection: @guw_model.guw_types.first.guw_complexity_technologies.select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.map{|i| [i.name, i.id]},
+                    label: "Technologie",
+                    include_blank: false,
+                    input_html: { class: "input-xxlarge" } %>
         <%= f.input :guw_unit_of_work_group_id, as: :select, collection: current_module_project.guw_unit_of_work_groups, label: "Groupe d'UO", selected: params[:g], input_html: { class: "input-xxlarge" }  %>
       </div>
 
@@ -33,3 +38,14 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $('#guw_unit_of_work_guw_type_id').change(function(){
+      $.ajax({
+        url: "<%= guw.change_technology_form_path %>",
+        data: "&guw_type_id=" + this.value
+      });
+    });
+  });
+</script>

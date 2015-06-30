@@ -1,0 +1,4 @@
+$("#guw_unit_of_work_organization_technology_id").html("<%= j( select_tag "guw_technology", options_for_select(@technologies.map{|i| [i.name, i.id]},
+               selected: nil),
+               class: "guw_technology input-small",
+               required: true) %>")
