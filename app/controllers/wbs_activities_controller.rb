@@ -339,11 +339,27 @@ class WbsActivitiesController < ApplicationController
                   # Get current profile ratio value for the referenced ratio
                   corresponding_ratio_profile_value = corresponding_ratio_profile.nil? ? nil : corresponding_ratio_profile.ratio_value
                   estimation_value_profile = nil
+                  tmp = Hash.new
                   unless corresponding_ratio_profile_value.nil?
-                    estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
 
-                    #the update the parent's value
-                    parent_profile_est_value["#{wbs_activity_element.parent_id}"] = parent_profile_est_value["#{wbs_activity_element.parent_id}"].to_f + estimation_value_profile
+                    if est_val.pe_attribute.alias == "cost"
+                      eb = EffortBreakdown::EffortBreakdown.new(current_component, current_module_project, params[:values]["most_likely"] * effort_unit_coefficient, @ratio_reference)
+                      efforts_man_month = eb.get_effort
+                      res = Hash.new
+                      efforts_man_month.each do |key, value|
+                        tmp = Hash.new
+                        WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: key).first.wbs_activity_ratio_profiles.each do |warp|
+                          tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * (efforts_man_month[key].to_f * 8) * (warp.ratio_value / 100)
+                        end
+                        res[key] = tmp
+                      end
+                      estimation_value_profile = res
+
+                    else
+                      estimation_value_profile = (hash_value[:value].to_f * corresponding_ratio_profile_value.to_f) / 100
+                      #the update the parent's value
+                      parent_profile_est_value["#{wbs_activity_element.parent_id}"] = parent_profile_est_value["#{wbs_activity_element.parent_id}"].to_f + estimation_value_profile
+                    end
                   end
 
                   current_probable_profiles["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => estimation_value_profile} }

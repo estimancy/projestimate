@@ -442,7 +442,7 @@ class ApplicationController < ActionController::Base
   end
 
   def projestimate_version
-    @projestimate_version="#{@functional_version_number}"
+    @projestimate_version = VERSION
   end
 
   def update_date
