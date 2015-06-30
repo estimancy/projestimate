@@ -307,6 +307,7 @@ def load_data!
     #@functional_version_number = AdminSetting.where(key: "functionnal_version_number").first.value
 
     AdminSetting.create(:key => 'online_support', :value => 1, :record_status_id => rsid)
+    AdminSetting.create(:key => 'allow_feedback', :value => 1, :record_status_id => rsid)
     AdminSetting.create(:key => 'disable_access', :value => 0, :record_status_id => rsid)
     AdminSetting.create(:key => 'offline_message', :value => "<p>L'application est en cours de&nbsp;maintenance&nbsp;.......</p> <p>Merci de votre compr&eacute;hension</p> s", :record_status_id => rsid)
     AdminSetting.create(:key => 'functionnal_version_number', :value => '1.9', :record_status_id => rsid)

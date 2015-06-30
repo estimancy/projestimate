@@ -59,7 +59,7 @@ Projestimate::Application.configure do
   #Default URL option
   config.action_mailer.default :charset => "utf-8"
 
-  config.action_mailer.default_url_options = { host: "localhost:3000" }
+  config.action_mailer.default_url_options = { host: APP_CONFIG['HOST_URL'] }
 
 
 end

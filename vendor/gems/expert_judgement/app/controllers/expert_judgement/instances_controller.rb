@@ -163,4 +163,9 @@ class ExpertJudgement::InstancesController < ApplicationController
     redirect_to main_app.dashboard_path(@project)
   end
 
+
+  def duplicate_expert_judgment
+
+  end
+
 end

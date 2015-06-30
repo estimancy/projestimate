@@ -25,5 +25,6 @@ ExpertJudgement::Engine.routes.draw do
 
   resources :instances do
     post "save_efforts"
+    post "duplicate_expert_judgment"
   end
 end

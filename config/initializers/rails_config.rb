@@ -22,6 +22,8 @@
 #This load the file that contain the rails protected parameters
 
 SETTINGS = YAML.load(IO.read(Rails.root.join("config", "sensitive_settings.yml")))
+#ENV.update YAML.load_file('config/sensitive_settings.yml')[Rails.env] rescue {}
+#ENV.update YAML.load(IO.read(Rails.root.join("config", "sensitive_settings.yml")))[Rails.env] rescue {}
 
 #You need to set the following parameters wih your own values in your "config/sensitive_settings.yml" file that you have to create locally
 
