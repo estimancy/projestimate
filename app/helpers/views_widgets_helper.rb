@@ -499,7 +499,11 @@ module ViewsWidgetsHelper
             chart_data << ["#{wbs_activity_elt.name}", 0]
           else
             wbs_value = level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value]
-            chart_data << ["#{wbs_activity_elt.name}", wbs_value.round(user_number_precision)]
+            if estimation_value.pe_attribute.alias == "effort"
+              chart_data << ["#{wbs_activity_elt.name}", convert(wbs_value, @current_organization)]
+            else
+              chart_data << ["#{wbs_activity_elt.name}", wbs_value.round(user_number_precision)]
+            end
           end
         end
       end
