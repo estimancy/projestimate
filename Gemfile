@@ -209,6 +209,8 @@ gem 'remotipart', '~> 1.2'
 gem 'rubyXL'
 gem 'nokogiri'
 
+gem 'rubocop', require: false
+
 #TEST===============
 #gem 'thinreports'
 
