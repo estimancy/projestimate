@@ -332,7 +332,7 @@ class WbsActivitiesController < ApplicationController
 
               # Wbs_project_element root element doesn't have a wbs_activity_element
               #if !wbs_activity_elt_id.nil? ||
-                  wbs_activity_ratio_elt = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: wbs_activity_elt_id).first
+                wbs_activity_ratio_elt = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: wbs_activity_elt_id).first
                 unless wbs_activity_ratio_elt.nil?
                   # get the wbs_activity_ratio_profile
                   corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
@@ -352,7 +352,15 @@ class WbsActivitiesController < ApplicationController
                           tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * (efforts_man_month[key].to_f * 8) * (warp.ratio_value / 100)
                         end
                         res[key] = tmp
+
+                        if WbsActivityElement.find(key).root?
+                          res[key] = tmp.values.sum
+                        else
+                          res[key] = tmp
+                        end
+
                       end
+
                       estimation_value_profile = res
 
                     else

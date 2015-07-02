@@ -73,7 +73,11 @@ module EffortBreakdown
         end
 
         cost.each do |k, v|
-          res[key] = cost[k].sum
+          if WbsActivityElement.find(key).root?
+            res[key] = cost.values.sum.sum
+          else
+            res[key] = cost[k].sum
+          end
         end
       end
 
