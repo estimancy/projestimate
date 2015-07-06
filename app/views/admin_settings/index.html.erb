@@ -17,7 +17,6 @@
       <tr>
         <th><%= I18n.t(:key) %></th>
         <th><%= I18n.t(:value) %></th>
-        <th class="filter-select"><%= I18n.t(:record_status) %></th>
         <th class="action"><%= I18n.t(:actions) %></th>
       </tr>
       </thead>
@@ -25,25 +24,10 @@
       <% @admin_settings.each do |admin_setting| %>
           <tr>
             <td><%= admin_setting.key %></td>
-            <td><%= admin_setting.customize_admin_setting_value %></td>
-
-            <td><%= admin_setting.record_status.name unless admin_setting.record_status.nil? %> <%= admin_setting.show_custom_value %></td>
-
+            <td><%= admin_setting.value %></td>
             <td class="center">
               <%= link_to '', edit_admin_setting_path(admin_setting), :class => 'icon-pencil', :title => I18n.t('edit') %>
-
-              <% if is_master_instance? || admin_setting.is_local_record? %>
-                  <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-              <% end %>
-              <% if is_master_instance? && !admin_setting.is_local_record? %>
-                  <% if admin_setting.is_retired? && (can? :manage_master_data, :all) %>
-                      <%= link_to(' ', "admin_settings/#{admin_setting.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-                  <% else %>
-                      <% if (!admin_setting.is_defined? && (can? :manage_master_data, :all)) %>
-                          <%= link_to(' ', "admin_settings/#{admin_setting.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                      <% end %>
-                  <% end %>
-              <% end %>
+              <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
             </td>
           </tr>
       <% end %>

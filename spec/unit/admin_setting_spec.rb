@@ -49,7 +49,6 @@ describe AdminSetting do
     @admin_setting.should_not be_valid
   end
 
-
   it "should not be valid without custom_value when record_status='Custom'" do
     @admin_setting.record_status = @custom_status
     @admin_setting.should_not be_valid

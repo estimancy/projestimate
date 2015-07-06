@@ -59,6 +59,7 @@ FactoryGirl.define do
     login_name
     email
     initials
+    super_admin true
     #time_zone  "GMT"
     association :auth_method, :factory => :auth_method
     association :language, :factory => :en_language, strategy: :build

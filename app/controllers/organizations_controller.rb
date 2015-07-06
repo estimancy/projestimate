@@ -894,12 +894,6 @@ class OrganizationsController < ApplicationController
         end
       end
 
-      #A la sauvegarde, on copies des technologies
-      Technology.all.each do |technology|
-        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name, description: technology.description, organization_id: @organization.id)
-        ot.save(validate: false)
-      end
-
       # Add MasterData Profiles to Organization
       Profile.all.each do |profile|
         op = OrganizationProfile.new(organization_id: @organization.id, name: profile.name, description: profile.description, cost_per_hour: profile.cost_per_hour)
