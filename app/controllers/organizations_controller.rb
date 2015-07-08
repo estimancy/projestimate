@@ -93,12 +93,12 @@ class OrganizationsController < ApplicationController
       elsif can_see_estimation?(project)
 
         array_project = update_selected_inline_columns(Project).map do |column|
-                  if column.caption == "description"
-                    "#{ Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(column.value_object(project))).text } "
-                  else
-                    column.value_object(project)
-                  end
-                end
+                          if column.caption == "description"
+                            "#{ Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(column.value_object(project))).text } "
+                          else
+                            column.value_object(project)
+                          end
+                        end
 
         @organization.fields.each do |field|
           pf = ProjectField.where(field_id: field.id, project_id: project.id).last
