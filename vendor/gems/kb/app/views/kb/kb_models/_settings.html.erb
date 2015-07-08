@@ -1,0 +1,136 @@
+<h3>
+  <strong>
+    <%= @kb_model %>
+  </strong>
+  <hr>
+</h3>
+
+<%= form_tag kb.kb_model_save_efforts_path(@kb_model) do %>
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="row-fluid">
+
+        <div class="span3">
+          <h5>
+            <strong>
+              Equation
+            </strong>
+          </h5>
+          <p>
+            <%= @kb_model.formula %>
+          </p>
+
+          <hr>
+
+          <h5>
+            <strong>
+              Taille
+            </strong>
+          </h5>
+          <% size_attr = PeAttribute.find_by_alias("retained_size") %>
+          <% size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                                      :module_project_id => current_module_project.previous.first.id,
+                                                      :in_out => "output").first %>
+
+          <% size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                                     :module_project_id => current_module_project.id,
+                                                     :in_out => "input").first %>
+          <%= text_field_tag "size", Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id), class: "string required input-xlarge" %>
+
+          <hr>
+
+          <h5>
+            <strong>
+              Effort
+            </strong>
+          </h5>
+
+          <% effort_attr = PeAttribute.find_by_alias("effort") %>
+          <% effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
+                                                :module_project_id => current_module_project.id,
+                                                :in_out => "output").first %>
+          <%= effort_current_ev.send("string_data_probable")[current_component.id] %>
+
+          <hr>
+
+          <h5>
+            <strong>
+              Filtres
+            </strong>
+          </h5>
+          <p>
+            <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each do |key| %>
+              <div class="input string required project_title">
+                <label class="string required control-label">
+                  <%= key %>
+                </label>
+                <%= select_tag "filters[#{key}]", options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq), class: "string required input-xlarge" %>
+              </div>
+            <% end %>
+          </p>
+        </div>
+        <div class="span9">
+          <div id="scatter_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+          <hr>
+
+          <% if can? :execute_estimation_plan, @project %>
+            <button type="submit" class="btn btn-default btn-mini pull-right">
+              Mettre à jour
+            </button>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $(function () {
+    $('#scatter_chart').highcharts({
+      title: {
+        text: "<%= @kb_model.name %>"
+      },
+      xAxis: {
+        title: {
+          enabled: true,
+          text: 'Taille'
+        }
+      },
+      yAxis: {
+        title: {
+          text: 'Effort'
+        }
+      },
+      legend: {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 1,
+        y: 1,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+      },
+      series: [{
+        name: 'Distribution Taille / Effort',
+        type: 'scatter',
+        color: 'rgba(223, 83, 83, 1)',
+        data: <%= @kb_model.values %>
+      },{
+        name: 'Courbe de régression linéaire',
+        type: 'scatter',
+        color: 'rgba(100, 100, 100, 1)',
+        data: <%= @kb_model.regression %>
+      },{
+        name: 'Courbe de régression linéaire + 80%',
+        type: 'scatter',
+        color: 'rgba(83, 223, 83, 1)',
+        data: <%= @kb_model.regression.map{|i, j| [i, j * 2,84809528986015]} %>
+      },{
+        name: 'Courbe de régression linéaire - 80%',
+        type: 'scatter',
+        color: 'rgba(83, 223, 255, 1)',
+        data: <%= @kb_model.regression.map{|i, j| [i, j / 2,84809528986015]} %>
+      }]
+    });
+  });
+</script>
