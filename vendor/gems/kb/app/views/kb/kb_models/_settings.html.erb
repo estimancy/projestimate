@@ -35,7 +35,10 @@
           <% size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
                                                      :module_project_id => current_module_project.id,
                                                      :in_out => "input").first %>
-          <%= text_field_tag "size", Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id), class: "string required input-xlarge" %>
+
+          <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id) %>
+          <%= text_field_tag "size", @size,
+                             class: "string required input-xlarge", readonly: !@kb_model.enabled_input %>
 
           <hr>
 
@@ -49,7 +52,8 @@
           <% effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
                                                 :module_project_id => current_module_project.id,
                                                 :in_out => "output").first %>
-          <%= effort_current_ev.send("string_data_probable")[current_component.id] %>
+          <% @effort = effort_current_ev.send("string_data_probable")[current_component.id] %>
+          <%= @effort %>
 
           <hr>
 
@@ -117,19 +121,24 @@
         data: <%= @kb_model.values %>
       },{
         name: 'Courbe de régression linéaire',
-        type: 'scatter',
-        color: 'rgba(100, 100, 100, 1)',
-        data: <%= @kb_model.regression %>
+        type: 'line',
+        color: 'rgba(200, 200, 200, 1)',
+        data: <%= [@kb_model.regression.min, @kb_model.regression.max] %>
       },{
         name: 'Courbe de régression linéaire + 80%',
-        type: 'scatter',
+        type: 'line',
         color: 'rgba(83, 223, 83, 1)',
-        data: <%= @kb_model.regression.map{|i, j| [i, j * 2,84809528986015]} %>
+        data: <%= [@kb_model.regression.map{|i, j| [i, j * 2.84809528986015]}.min, @kb_model.regression.map{|i, j| [i, j * 2.84809528986015]}.max] %>
       },{
         name: 'Courbe de régression linéaire - 80%',
-        type: 'scatter',
+        type: 'line',
         color: 'rgba(83, 223, 255, 1)',
-        data: <%= @kb_model.regression.map{|i, j| [i, j / 2,84809528986015]} %>
+        data: <%= [@kb_model.regression.map{|i, j| [i, j / 2.84809528986015]}.min, @kb_model.regression.map{|i, j| [i, j / 2.84809528986015]}.max] %>
+      },{
+        name: 'Taille calculé',
+        type: 'scatter',
+        color: 'rgba(0, 0, 0, 1)',
+        data: <%= [[@size, @effort]] %>
       }]
     });
   });

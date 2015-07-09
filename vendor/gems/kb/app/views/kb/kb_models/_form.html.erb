@@ -5,6 +5,11 @@
         Base de connaissance
       </a>
     </li>
+    <li>
+      <a href="#tabs-2">
+        Données
+      </a>
+    </li>
   </ul>
 
   <div id="tabs-1">
@@ -25,22 +30,43 @@
       <% end %>
       <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "effort"), class: "btn" %>
     <% end %>
+  </div>
 
-    <% unless controller.action_name == "new" %>
-      <hr>
+  <div id="tabs-2">
+    <div class="row-fluid">
+      <div class="span4">
+        <% unless controller.action_name == "new" %>
+          <%= form_tag kb.kb_model_import_path(@kb_model.id), :multipart => true, method: "post", :class => 'simple_form' do %>
 
-      <%= form_tag kb.kb_model_import_path(@kb_model.id), :multipart => true, method: "post", :class => 'simple_form' do %>
+            <div class="form-inputs">
+              <label>Importer une base de connaissance </label>
+              <%= file_field_tag :file %>
 
-        <div class="form-inputs">
-          <label>Importer une base de connaissance </label>
-          <%= file_field_tag :file %>
+              <%= hidden_field_tag :kb_model_id, @kb_model.id %>
+            </div>
 
-          <%= hidden_field_tag :kb_model_id, @kb_model.id %>
-        </div>
+            <hr>
+            <%= submit_tag 'Import', :class => 'btn btn-primary' %>
 
-        <%= submit_tag 'Import', :class => 'btn btn-primary btn-mini' %>
-
-      <% end %>
-    <% end %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="span8">
+        <table class="table table-bordered">
+          <tr>
+            <th>Taille</th>
+            <th>Effort</th>
+            <th>Attributs</th>
+          </tr>
+          <% @kb_model.kb_datas.each do |kb_data| %>
+            <tr>
+              <td><%= kb_data.size %></td>
+              <td><%= kb_data.effort %></td>
+              <td><%= kb_data.custom_attributes %></td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

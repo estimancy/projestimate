@@ -79,7 +79,7 @@ class Kb::KbModelsController < ApplicationController
     @kb_model = Kb::KbModel.new(params[:kb_model])
     @kb_model.organization_id = params[:kb_model][:organization_id].to_i
     if @kb_model.save
-      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
+      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
     else
       render action: :new
     end
