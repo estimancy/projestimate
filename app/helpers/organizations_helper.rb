@@ -69,16 +69,16 @@ module OrganizationsHelper
     #content_tag('th', h(column.caption))
     case column.name
       when :title
-        content_tag('th class="text_left exportable"', I18n.t(column.caption))
+        content_tag('th class="text_left"', I18n.t(column.caption))
       when :version
-        content_tag('th class="center exportable"', I18n.t(column.caption))
+        content_tag('th class="center"', I18n.t(column.caption))
       when :status_name
-        content_tag('th style="width: 50px" class="filter-select exportable"', I18n.t(column.caption))
+        content_tag('th id="toto" style="width: 50px"', I18n.t(column.caption))
       else
         if column.field_id
-          content_tag('th class="project_field_text_overflow exportable"', column.caption)
+          content_tag('th class="project_field_text_overflow"', column.caption)
         else
-          content_tag('th class="exportable"', I18n.t(column.caption))
+          content_tag('th', I18n.t(column.caption))
         end
     end
   end
@@ -121,8 +121,6 @@ module OrganizationsHelper
         content_tag("td class='center'", value)
       when :status_name
         if can_show_estimation?(project)
-          #content_tag 'td class="exportable"', content_tag(:span, link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true),
-          #class: "badge", style: {"background-color" => project.status_background_color})
           content_tag("td class='center'") do
             content_tag(:span, link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true),
                         class: "badge", style: "background-color: #{project.status_background_color}").html_safe

@@ -135,6 +135,7 @@ gem "audited-activerecord", "~> 3.0"
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
+gem 'devise_saml_authenticatable'
 
 ## Cron job gem management
 gem 'whenever', :require => false
