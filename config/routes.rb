@@ -109,7 +109,6 @@ Projestimate::Application.routes.draw do
   mount Guw::Engine, :at => '/guw'
   mount Ge::Engine, :at => '/ge'
   mount Kb::Engine, :at => '/kb'
-  mount Amoa::Engine, :at => '/amoa'
   mount Staffing::Engine, :at => '/staffing'
   mount Uow::Engine, :at => '/uow'
   mount CocomoExpert::Engine, :at => '/cocomo_expert'

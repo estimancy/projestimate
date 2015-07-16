@@ -1,0 +1,13 @@
+
+
+<div class="span2"><h4><b>Paramètres courbe de Rayleigh (%) : </b></h4></div>
+<div class="row-fluid">
+    <div class="span2"><h4><b>Entrées : </b></h4></div>
+    <div class="span2"><%= f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>
+    <div class="span2"><%= f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>
+</div>
+
+
+<!-- Affichage de la courbe de Staffing avec Rayleigh -->
+<div id="staffing_rayleigh_chart">
+</div>
