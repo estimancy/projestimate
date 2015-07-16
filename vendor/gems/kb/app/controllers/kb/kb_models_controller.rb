@@ -48,27 +48,32 @@ class Kb::KbModelsController < ApplicationController
   end
 
   def import
-    file = Roo::Spreadsheet.open(params[:file].path, extension: :xls)
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
 
-    ((file.first_row + 1)..file.last_row).each do |line|
-      attr_one   = file.cell(line, 'A')
-      attr_two   = file.cell(line, 'B')
+    unless params[:file].nil?
+      file = Roo::Spreadsheet.open(params[:file].path, extension: :xls)
 
-      h = Hash.new
-      h[file.cell(1, 'C').to_sym] = file.cell(line, 'C')
-      h[file.cell(1, 'D').to_sym] = file.cell(line, 'D')
-      h[file.cell(1, 'E').to_sym] = file.cell(line, 'E')
-      h[file.cell(1, 'F').to_sym] = file.cell(line, 'F')
+      Kb::KbData.delete_all("kb_model_id = #{@kb_model.id}")
 
-      Kb::KbData.create(size: attr_one,
-                        effort: attr_two,
-                        unit: "UF",
-                        custom_attributes: h,
-                        kb_model_id: @kb_model.id)
+      ((file.first_row + 1)..file.last_row).each do |line|
+        attr_one   = file.cell(line, 'A')
+        attr_two   = file.cell(line, 'B')
+
+        h = Hash.new
+        h[file.cell(1, 'C').to_sym] = file.cell(line, 'C')
+        h[file.cell(1, 'D').to_sym] = file.cell(line, 'D')
+        h[file.cell(1, 'E').to_sym] = file.cell(line, 'E')
+        h[file.cell(1, 'F').to_sym] = file.cell(line, 'F')
+
+        Kb::KbData.create(size: attr_one,
+                          effort: attr_two,
+                          unit: "UF",
+                          custom_attributes: h,
+                          kb_model_id: @kb_model.id)
+      end
     end
 
-    redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+    redirect_to kb.edit_kb_model_path(@kb_model)
   end
 
   def create
