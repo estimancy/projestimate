@@ -19,10 +19,8 @@
 ########################################################################
 
 class AdminSettingsController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
-  load_resource
 
-  before_filter :get_record_statuses
+  load_resource
 
   helper_method :admin_setting_selected_status
 
@@ -54,28 +52,14 @@ class AdminSettingsController < ApplicationController
 
   def edit
     authorize! :manage_master_data, :all
-
     set_page_title 'Parameters'
     @admin_setting = AdminSetting.find(params[:id])
-
-    if is_master_instance?
-      unless @admin_setting.child_reference.nil?
-        if @admin_setting.child_reference.is_proposed_or_custom?
-          flash[:warning] = I18n.t (:warning_administration_setting_cant_be_edited)
-          redirect_to admin_settings_path
-        end
-      end
-    end
   end
 
   def create
     authorize! :manage_master_data, :all
 
     @admin_setting = AdminSetting.new(params[:admin_setting])
-
-    unless is_master_instance?
-      @admin_setting.record_status = @local_status
-    end
 
     if @admin_setting.save
       flash[:notice] = I18n.t (:notice_administration_setting_successful_created)
@@ -85,22 +69,10 @@ class AdminSettingsController < ApplicationController
     end
   end
 
-
   def update
     authorize! :manage_master_data, :all
 
-    @admin_setting = nil
-    current_admin_setting = AdminSetting.find(params[:id])
-    if current_admin_setting.is_defined? && is_master_instance?
-      @admin_setting = current_admin_setting.amoeba_dup
-      @admin_setting.owner_id = current_user.id
-    else
-      @admin_setting = current_admin_setting
-    end
-
-    unless is_master_instance?
-      @admin_setting.custom_value = 'Locally edited'
-    end
+    @admin_setting = AdminSetting.find(params[:id])
 
     if @admin_setting.update_attributes(params[:admin_setting])
       flash[:notice] = I18n.t (:notice_administration_setting_successful_updated)
@@ -115,56 +87,9 @@ class AdminSettingsController < ApplicationController
     authorize! :manage_master_data, :all
 
     @admin_setting = AdminSetting.find(params[:id])
-
-    if is_master_instance?
-      if @admin_setting.is_defined? || @admin_setting.is_custom?
-        #logical deletion: delete don't have to suppress records anymore on defined record
-        @admin_setting.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-        flash[:notice] = I18n.t (:notice_administration_setting_successful_deleted)
-      else
-        @admin_setting.destroy
-        flash[:notice] = I18n.t (:notice_administration_setting_successful_deleted)
-      end
-      #if in local instance
-    else
-      if @admin_setting.is_local_record?
-        @admin_setting.destroy
-        flash[:notice] = I18n.t (:notice_administration_setting_successful_deleted)
-      else
-        flash[:warning] = I18n.t (:warning_masterdata_record_cant_delete)
-      end
-    end
+    @admin_setting.destroy
 
     redirect_to admin_settings_path
-  end
-
-protected
-
-  def admin_setting_selected_status
-    begin
-      #No authorize required since this method is protected and won't be call from any route
-      selected = nil
-      @admin_setting = AdminSetting.find(params[:id])  unless params[:id].nil?
-
-      if is_master_instance?
-        if @admin_setting.record_status.nil?  || @admin_setting.is_defined?
-          selected = @proposed_status
-        else
-          selected = @admin_setting.record_status
-        end
-      else
-        if  @admin_setting.record_status.nil? || @admin_setting.is_local_record?
-          selected = @local_status
-        else
-          selected = @admin_setting.record_status
-        end
-      end
-
-      selected
-
-    rescue
-      nil
-    end
   end
 
 end

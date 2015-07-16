@@ -105,7 +105,6 @@ group :ic do
   gem 'newrelic_rpm'
   gem 'coveralls', require: false
   gem "codeclimate-test-reporter", group: :test, require: nil
-  #gem 'gemnasium'
   gem 'inch'
 end
 
@@ -113,6 +112,7 @@ end
 gem 'rubyzip', '~> 0.9'
 gem 'axlsx'
 gem 'roo'
+gem 'google_drive'
 
 # Including
 gem 'cocomo_advanced', path: "vendor/gems/cocomo_advanced"
@@ -121,7 +121,7 @@ gem 'real_size', path: "vendor/gems/real_size"
 gem 'uow', :path => 'vendor/gems/uow'
 gem 'guw', :path => 'vendor/gems/guw'
 gem 'ge', :path => 'vendor/gems/ge'
-gem 'amoa', :path => 'vendor/gems/amoa'
+gem 'kb', :path => 'vendor/gems/kb'
 gem 'balancing_module', path: "vendor/gems/balancing_module"
 gem 'expert_judgement', path: "vendor/gems/expert_judgement"
 gem 'staffing', path: "vendor/gems/staffing"
@@ -136,6 +136,7 @@ gem "audited-activerecord", "~> 3.0"
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
+gem 'devise_saml_authenticatable'
 
 ## Cron job gem management
 gem 'whenever', :require => false
@@ -155,6 +156,7 @@ gem 'slim'
 
 # For chart generation
 gem 'chartkick'
+gem "highcharts-rails", "~> 3.0.0"
 gem 'groupdate'
 
 #Faker
@@ -209,6 +211,8 @@ gem 'remotipart', '~> 1.2'
 
 gem 'rubyXL'
 gem 'nokogiri'
+
+#gem 'rubocop', require: false
 
 #TEST===============
 #gem 'thinreports'

@@ -21,50 +21,9 @@
 
 # Special table
 class AdminSetting < ActiveRecord::Base
-  attr_accessible :key, :value, :record_status_id, :custom_value, :change_comment
+  attr_accessible :key, :value
 
-  include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
-
-  belongs_to :record_status
-  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
-
-  validates :record_status, :presence => true
-  validates :value, :presence => true, :unless => :is_custom_value_to_consider?
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :key, :presence => true, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
-  validates :custom_value, :presence => true, :if => :is_custom?
-
-  def is_custom_value_to_consider?
-    self.key == 'custom_status_to_consider'
-  end
-
-
-  # function that show the admin_setting value according to the admin_setting key
-  def customize_admin_setting_value
-    case key
-      when 'session_maximum_lifetime'
-        I18n.t('datetime.distance_in_words.x_days', :count => value.to_i)
-      when 'session_inactivity_timeout'
-        if value.to_i==30
-          I18n.t('datetime.distance_in_words.x_minutes', :count => (value.to_i))
-        else
-          I18n.t('datetime.distance_in_words.x_hours', :count => value.to_i)
-        end
-      when 'allow_feedback'
-        value == '1' ? true : false
-      when 'audit_history_lifetime'
-        setting_value = value.split(' ')
-        audit_value = setting_value.first
-        if setting_value.first == 0
-          I18n.t(:label_disabled)
-        else
-          I18n.t("datetime.distance_in_words.x_#{setting_value.last.to_s.pluralize}", :count => audit_value.to_i)
-        end
-        # for others keys
-      else
-        value
-    end
-
-  end
+  validates :value, :presence => true
+  validates :key, :presence => true
 
 end

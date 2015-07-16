@@ -1,0 +1,244 @@
+<h3>
+  <strong>
+    <%= @kb_model %>
+  </strong>
+  <hr>
+</h3>
+
+<%= form_tag kb.kb_model_save_efforts_path(@kb_model), remote: true, method: "post" do %>
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="row-fluid">
+
+        <div class="span3">
+          <h5>
+            <strong>
+              Equation
+            </strong>
+          </h5>
+          <p>
+            <%= @kb_model.formula %>
+          </p>
+
+          <hr>
+
+          <h5>
+            <strong>
+              Taille
+            </strong>
+          </h5>
+          <% size_attr = PeAttribute.find_by_alias("retained_size") %>
+          <% size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                                      :module_project_id => current_module_project.previous.first.id,
+                                                      :in_out => "output").first %>
+
+          <% size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                                     :module_project_id => current_module_project.id,
+                                                     :in_out => "input").first %>
+
+          <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id) %>
+          <%= text_field_tag "size", @size,
+                             class: "string required input-xlarge",
+                             readonly: !@kb_model.enabled_input %>
+
+          <hr>
+
+          <h5>
+            <strong>
+              Effort
+            </strong>
+          </h5>
+          <% effort_attr = PeAttribute.find_by_alias("effort") %>
+          <% effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
+                                                       :module_project_id => current_module_project.id,
+                                                       :in_out => "output").first %>
+          <% @effort = effort_current_ev.send("string_data_probable")[current_component.id] %>
+          <span id="effort">
+            <%= text_field_tag "size", @effort.round(2),
+                               class: "string required input-xlarge" %>
+          </span>
+
+          <hr>
+
+          <h5>
+            <strong>
+              Filtres
+            </strong>
+          </h5>
+          <p>
+            <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each do |key| %>
+              <div class="input string required project_title">
+                <label class="string required control-label">
+                  <%= key %>
+                </label>
+                <%= select_tag "filters[#{key}]",
+                               options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq, selected: @filters.nil? ? nil : @filters[key]),
+                               class: "string required input-xlarge filters",
+                               prompt: "Indifférent" %>
+              </div>
+            <% end %>
+          </p>
+        </div>
+        <div class="span9">
+          <div id="scatter_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+          <hr>
+
+          <% if can? :execute_estimation_plan, @project %>
+            <button type="submit" class="btn btn-default btn-mini pull-right">
+              Mettre à jour
+            </button>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $(function () {
+    $('#scatter_chart').highcharts({
+      title: {
+        text: "<%= @kb_model.name %>"
+      },
+      xAxis: {
+        title: {
+          enabled: true,
+          text: 'Taille'
+        }
+      },
+      yAxis: {
+        title: {
+          text: 'Effort'
+        }
+      },
+      series: [{
+        name: 'Distribution Taille / Effort',
+        type: 'scatter',
+        color: 'rgba(223, 83, 83, 1)',
+        data: <%= @kb_model.values %>
+      },{
+        name: 'Courbe de régression linéaire',
+        type: 'line',
+        color: 'rgba(200, 200, 200, 1)',
+        data: <%= [@kb_model.regression.min, @kb_model.regression.max] %>
+      },{
+        name: 'Courbe de régression linéaire + 80%',
+        type: 'line',
+        color: 'rgba(83, 223, 83, 1)',
+        data: <%= [@kb_model.regression.map{|i, j| [i, j * 2.84809528986015]}.min, @kb_model.regression.map{|i, j| [i, j * 2.84809528986015]}.max] %>
+      },{
+        name: 'Courbe de régression linéaire - 80%',
+        type: 'line',
+        color: 'rgba(83, 223, 255, 1)',
+        data: <%= [@kb_model.regression.map{|i, j| [i, j / 2.84809528986015]}.min, @kb_model.regression.map{|i, j| [i, j / 2.84809528986015]}.max] %>
+      },{
+        name: 'Taille calculé',
+        type: 'scatter',
+        color: 'rgba(0, 0, 0, 1)',
+        data: <%= [[@size, @effort]] %>
+      }]
+    });
+  });
+
+
+  /**
+   * Sand-Signika theme for Highcharts JS
+   * @author Torstein Honsi
+   */
+
+// Load the fonts
+  Highcharts.createElement('link', {
+    href: '//fonts.googleapis.com/css?family=Signika:400,700',
+    rel: 'stylesheet',
+    type: 'text/css'
+  }, null, document.getElementsByTagName('head')[0]);
+
+  // Add the background image to the container
+  Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
+    proceed.call(this);
+    this.container.style.background = 'url(http://www.highcharts.com/samples/graphics/sand.png)';
+  });
+
+  Highcharts.theme = {
+    colors: ["#f45b5b", "#8085e9", "#8d4654", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee", "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+    chart: {
+      backgroundColor: null
+    },
+    title: {
+      style: {
+        color: 'black',
+        fontSize: '13px',
+        fontWeight: 'bold'
+      }
+    },
+    subtitle: {
+      style: {
+        color: 'black'
+      }
+    },
+    tooltip: {
+      borderWidth: 0
+    },
+    legend: {
+      itemStyle: {
+        fontWeight: 'bold',
+        fontSize: '13px'
+      }
+    },
+    xAxis: {
+      labels: {
+        style: {
+          color: '#6e6e70'
+        }
+      }
+    },
+    yAxis: {
+      labels: {
+        style: {
+          color: '#6e6e70'
+        }
+      }
+    },
+    plotOptions: {
+      series: {
+        shadow: true
+      },
+      candlestick: {
+        lineColor: '#404048'
+      },
+      map: {
+        shadow: false
+      }
+    },
+
+    // Highstock specific
+    navigator: {
+      xAxis: {
+        gridLineColor: '#D0D0D8'
+      }
+    },
+    rangeSelector: {
+      buttonTheme: {
+        fill: 'white',
+        stroke: '#C0C0C8',
+        'stroke-width': 1,
+        states: {
+          select: {
+            fill: '#D0D0D8'
+          }
+        }
+      }
+    },
+    scrollbar: {
+      trackBorderColor: '#C0C0C8'
+    },
+
+    // General
+    background2: '#E0E0E8'
+
+  };
+
+  // Apply the theme
+  Highcharts.setOptions(Highcharts.theme);
+</script>

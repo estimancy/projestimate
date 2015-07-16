@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :application do
-    name "MyString"
-organization_id 1
+    name "My Application"
+    association :organization, :factory => :organization, strategy: :build
   end
 
 end

@@ -11,5 +11,6 @@
 //= require tinymce-jquery
 //= require tinymce
 //= require jit
+//= require highcharts
 //= require_self
 //= require_tree .

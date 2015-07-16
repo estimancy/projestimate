@@ -1,0 +1,53 @@
+$('#scatter_chart').highcharts({
+  title: {
+    text: "<%= @kb_model.name %>"
+  },
+  xAxis: {
+    title: {
+      enabled: true,
+      text: 'Taille'
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Effort'
+    }
+  },
+  legend: {
+    layout: 'vertical',
+    align: 'left',
+    verticalAlign: 'top',
+    x: 1,
+    y: 1,
+    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+  },
+  series: [{
+    name: 'Distribution Taille / Effort',
+    type: 'scatter',
+    color: 'rgba(223, 83, 83, 1)',
+    data: <%= @kb_model.values %>
+  },{
+    name: 'Courbe de régression linéaire',
+    type: 'line',
+    color: 'rgba(200, 200, 200, 1)',
+    data: <%= [@kb_model.regression.min, @kb_model.regression.max] %>
+  },{
+    name: 'Courbe de régression linéaire + 80%',
+    type: 'line',
+    color: 'rgba(83, 223, 83, 1)',
+    data: <%= [@kb_model.regression.map{|i, j| [i, j * 2.84809528986015]}.min, @kb_model.regression.map{|i, j| [i, j * 2.84809528986015]}.max] %>
+  },{
+    name: 'Courbe de régression linéaire - 80%',
+    type: 'line',
+    color: 'rgba(83, 223, 255, 1)',
+    data: <%= [@kb_model.regression.map{|i, j| [i, j / 2.84809528986015]}.min, @kb_model.regression.map{|i, j| [i, j / 2.84809528986015]}.max] %>
+  },{
+    name: 'Taille calculé',
+    type: 'scatter',
+    color: 'rgba(0, 0, 0, 1)',
+    data: <%= [[@size, @effort]] %>
+  }]
+});
+
+$("#effort").html("<%= @effort %>")
+

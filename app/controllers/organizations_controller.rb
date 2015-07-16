@@ -189,7 +189,6 @@ class OrganizationsController < ApplicationController
     @size_units = SizeUnit.all
     @technologies = @organization.organization_technologies
     @size_unit_types = @organization.size_unit_types
-    @amoa_models = @organization.amoa_models
   end
 
   def users
@@ -892,12 +891,6 @@ class OrganizationsController < ApplicationController
             SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id, value: i[3])
           end
         end
-      end
-
-      #A la sauvegarde, on copies des technologies
-      Technology.all.each do |technology|
-        ot = OrganizationTechnology.new(name: technology.name, alias: technology.name, description: technology.description, organization_id: @organization.id)
-        ot.save(validate: false)
       end
 
       # Add MasterData Profiles to Organization

@@ -2,7 +2,9 @@
 
   <ul>
     <li><a href="#tabs-1"><%= @group.new_record? ? I18n.t('new_group') : "#{I18n.t(:edit_group, value: @group)}" %></a></li>
-    <li><a href="#tabs-2"><%= I18n.t('users') %></a></li>
+    <% unless controller.action_name == "new" %>
+      <li><a href="#tabs-2"><%= I18n.t('users') %></a></li>
+    <% end %>
   </ul>
 
   <div id="tabs-1">
@@ -65,53 +67,54 @@
     <% end -%>
   </div>
 
-  <div id="tabs-2">
-    <%= form_tag('/update_selected_users', :method => 'POST', :class => 'simple_form') do -%>
-      <b><%= I18n.t(:text_group_associated_users, value: @group) %></b>
-      <br/><br/>
+  <% unless controller.action_name == "new" %>
+    <div id="tabs-2">
+      <%= form_tag('/update_selected_users', :method => 'POST', :class => 'simple_form') do -%>
+        <b><%= I18n.t(:text_group_associated_users, value: @group) %></b>
+        <br/><br/>
 
-      <div class="field_checkbox">
-        <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
-          <%= hidden_field_tag 'group_id', @group.id %>
-          <%= hidden_field_tag 'group[user_ids][]' %>
-            <thead>
-              <tr>
-                <th><%= I18n.t(:first_name) %></th>
-                <th><%= I18n.t(:last_name) %></th>
-                <th><%= I18n.t(:login_name) %></th>
-                <th class="filter-select"><%= I18n.t(:selected) %></th>
-              </tr>
-            </thead>
-          <tbody>
-            <% @organization.users.each do |group_user| %>
-              <tr>
-                <td><%= group_user.first_name %></td>
-                <td><%= group_user.last_name %></td>
-                <td><%= group_user.login_name %></td>
-                <td class="align-center">
-                  <span class="hidden">
-                    <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>
-                  </span>
-                  <%= check_box_tag('group[user_ids][]', group_user.id, (@group.users.map(&:id).include? group_user.id), :id => nil, :class => "group_#{group_user.id}") %>
-                </td>
-              </tr>
-            <% end %>
-            <%= render :partial => 'layouts/footer_table' %>
-          </tbody>
-        </table>
-      </div>
+        <div class="field_checkbox">
+          <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
+            <%= hidden_field_tag 'group_id', @group.id %>
+            <%= hidden_field_tag 'group[user_ids][]' %>
+              <thead>
+                <tr>
+                  <th><%= I18n.t(:first_name) %></th>
+                  <th><%= I18n.t(:last_name) %></th>
+                  <th><%= I18n.t(:login_name) %></th>
+                  <th class="filter-select"><%= I18n.t(:selected) %></th>
+                </tr>
+              </thead>
+            <tbody>
+              <% @organization.users.each do |group_user| %>
+                <tr>
+                  <td><%= group_user.first_name %></td>
+                  <td><%= group_user.last_name %></td>
+                  <td><%= group_user.login_name %></td>
+                  <td class="align-center">
+                    <span class="hidden">
+                      <%= @group.users.map(&:id).include?(group_user.id).to_s.humanize %>
+                    </span>
+                    <%= check_box_tag('group[user_ids][]', group_user.id, (@group.users.map(&:id).include? group_user.id), :id => nil, :class => "group_#{group_user.id}") %>
+                  </td>
+                </tr>
+              <% end %>
+              <%= render :partial => 'layouts/footer_table' %>
+            </tbody>
+          </table>
+        </div>
 
-      <% if can? :manage, Group %>
-        <% if action_name == 'new' || action_name=='create' %>
-          <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+        <% if can? :manage, Group %>
+          <% if action_name == 'new' || action_name=='create' %>
+            <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+          <% end %>
+          <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <%= submit_tag I18n.t('apply'), :class => 'btn' %>
         <% end %>
-        <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-      <% end %>
-      <%= link_to I18n.t('back'), organization_authorization_path(@organization, anchor: "tabs-group"), :class => 'btn' %>
-
-    <% end -%>
-  </div>
+        <%= link_to I18n.t('back'), organization_authorization_path(@organization, anchor: "tabs-group"), :class => 'btn' %>
+      <% end -%>
+    </div>
+  <% end %>
 </div>
 
 

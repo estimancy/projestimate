@@ -36,7 +36,11 @@ class QueryColumn
   end
 
   def value_object(object)
-    object.send name
+    begin
+      object.send(name)
+    rescue
+      ''
+    end
   end
 
   def project_field_value(object)

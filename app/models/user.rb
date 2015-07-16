@@ -25,7 +25,7 @@ require 'net/ldap'
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, #:saml_authenticatable, :trackable,
          :recoverable, :rememberable, :trackable,# :validatable,
          :confirmable, # account confirmation
          :omniauthable, :omniauth_providers => [:google_oauth2],

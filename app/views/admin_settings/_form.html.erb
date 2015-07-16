@@ -30,31 +30,16 @@
 
         <%= f.input :value, :label => I18n.t('value'), :collection => [[I18n.t(:label_disabled), 0]]+ [1, 2, 3, 4, 5, 6, 10].collect { |days| [I18n.t('datetime.distance_in_words.x_days', :count => days), I18n.t('datetime.distance_in_words.x_days', :count => days, :locale => :en)] } + [1, 2, 3].collect { |weeks| [I18n.t('datetime.distance_in_words.x_weeks', :count => weeks), I18n.t('datetime.distance_in_words.x_weeks', :count => weeks, :locale => :en)] } + [1, 2, 3, 6, 12].collect { |months| [I18n.t('datetime.distance_in_words.x_months', :count => months), I18n.t('datetime.distance_in_words.x_months', :count => months, :locale => :en)] } if (@admin_setting.key=='audit_history_lifetime') %>
 
-        <table>
-          <tr>
-            <td>
-              <%= f.association :record_status, :label => I18n.t('record_status'),
-                                :collection => (is_master_instance? ? @admin_setting.record_status_collection : RecordStatus.all),
-                                :input_html => {:class => 'record_status'},
-                                :selected => (admin_setting_selected_status.nil? ? nil : admin_setting_selected_status.id),
-                                :disabled => (@admin_setting.is_retired? || !is_master_instance?) %>
-            </td>
-            <td>
-              <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @admin_setting.is_custom?) %>
-            </td>
-          </tr>
-        </table>
-        <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2, :disabled => (!is_master_instance? && @admin_setting)} %>
 
         <div class="actions-tabs">
-              <% if action_name == 'new' || action_name=="create" %>
-                  <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
-                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
-              <% elsif action_name == 'edit' || action_name=="update" %>
-                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                  <%= submit_tag I18n.t('apply'), :class => 'btn' %>
-              <% end %>
-              <%= link_to I18n.t('back'), admin_settings_path, :class => 'btn' %>
+          <% if action_name == 'new' || action_name=="create" %>
+              <%= submit_tag I18n.t('save_and_create'), :class => 'btn' %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+          <% elsif action_name == 'edit' || action_name=="update" %>
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+              <%= submit_tag I18n.t('apply'), :class => 'btn' %>
+          <% end %>
+          <%= link_to I18n.t('back'), admin_settings_path, :class => 'btn' %>
         </div>
     <% end %>
   </div>

@@ -1,0 +1,80 @@
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Base de connaissance
+      </a>
+    </li>
+    <li>
+      <a href="#tabs-2">
+        Données
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <%= simple_form_for(@kb_model) do |f| %>
+
+      <%= f.error_notification %>
+
+      <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
+        <%= f.input :enabled_input, label: 'Activer la taille' %>
+      </div>
+
+      <% if can? :manage_modules_instances, ModuleProject %>
+         <%= f.button :submit, I18n.t('save') %>
+      <% end %>
+      <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "effort"), class: "btn" %>
+    <% end %>
+  </div>
+
+  <div id="tabs-2">
+    <div class="row-fluid">
+      <div class="span4">
+        <% unless controller.action_name == "new" %>
+          <%= form_tag kb.kb_model_import_path(@kb_model.id), :multipart => true, method: "post", :class => 'simple_form' do %>
+
+            <div class="form-inputs">
+              <label>Importer une base de connaissance </label>
+              <%= file_field_tag :file %>
+
+              <%= hidden_field_tag :kb_model_id, @kb_model.id %>
+            </div>
+
+            <hr>
+            <%= submit_tag 'Import', :class => 'btn btn-primary' %>
+
+          <% end %>
+        <% end %>
+      </div>
+      <div class="span8">
+        <table class="table table-bordered">
+          <tr>
+            <th>Taille</th>
+            <th>Effort</th>
+            <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
+              <th>
+                <%= k.humanize %>
+              </th>
+            <% end %>
+          </tr>
+          <% @kb_model.kb_datas.each do |kb_data| %>
+            <tr>
+              <td><%= kb_data.size %></td>
+              <td><%= kb_data.effort %></td>
+                <% kb_data.custom_attributes.values.each do |v| %>
+                  <td>
+                    <%= v %>
+                  </td>
+                <% end %>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

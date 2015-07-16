@@ -54,26 +54,30 @@ module EffortBreakdown
     # Calculate the Cost for each WBS-Project-Element/Phase
     # Cout Moyen
     def get_cost(*args)
-      cost = Hash.new
-      # Project pe_wbs_activity
-      wbs_activity = @module_project.wbs_activity
-      # Get the wbs_activity_element which contain the wbs_activity_ratio
-      wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
-      # Get the efforts hash for all Wbs_project_element effort
-      efforts_man_month = get_effort
+      cost = Hash.new {|h,k| h[k]=[]}
+      res = Hash.new
 
-      @wbs_activity_ratio_elements = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio.id).all
+      wbs_activity = @module_project.wbs_activity
+
+      wbs_activity_root = wbs_activity.wbs_activity_elements.first.root
+
+      efforts_man_month = get_effort
       efforts_man_month.each do |key, value|
-        cph = 0
-        v = 0
-        @wbs_activity_ratio_elements.each do |element|
-          #cph = element.wbs_activity_ratio_profiles.map{|warp| warp.organization_profile.cost_per_hour * (warp.ratio_value / 100)}.compact.sum
-          element.wbs_activity_ratio_profiles.each do |warp|
-            cost[key] = warp.organization_profile.cost_per_hour.to_f * (warp.ratio_value / 100) * value.to_f
-          end
+        tmp = Hash.new
+        WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio.id, wbs_activity_element_id: key).first.wbs_activity_ratio_profiles.each do |warp|
+          tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * efforts_man_month[key].to_f * warp.ratio_value / 100
+        end
+
+        tmp.each do |k, v|
+          cost[key] << tmp[k]
+        end
+
+        cost.each do |k, v|
+          res[key] = cost[k].sum
         end
       end
-      cost
+
+      res
     end
 
     # Calculate the WBS-Activity effort according to the selected value as ratio

@@ -1,15 +1,8 @@
-<div class="alert alert-info">
-  <span>
-    <i class="icon icon-info"></i>
-    For each size's types, configure nominal effort by technology/unit of work/complexity
-  </span>
-</div>
-
 <%= form_tag '/set_technology_uow_synthesis', :method => 'POST', :class => 'simple_form' do %>
 
   <%= hidden_field_tag "organization", params[:id] %>
 
-    <table class="table table-striped table-bordered table-condensed permissions">
+    <table class="table table-bordered permissions">
       <tr>
         <th>Technology</th>
         <th>Unit of Work</th>

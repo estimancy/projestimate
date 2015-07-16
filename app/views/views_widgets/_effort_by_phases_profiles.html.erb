@@ -64,9 +64,9 @@
                           <% end %>
                           <td style="text-align: right">
                             <% begin %>
-                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>
+                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>
                             <% rescue %>
-                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)}" %>
+                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision)}" %>
                             <% end %>
                           </td>
                         <% end %>

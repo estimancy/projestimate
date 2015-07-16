@@ -499,7 +499,11 @@ module ViewsWidgetsHelper
             chart_data << ["#{wbs_activity_elt.name}", 0]
           else
             wbs_value = level_estimation_values[pbs_project_element.id][wbs_activity_elt.id][:value]
-            chart_data << ["#{wbs_activity_elt.name}", wbs_value.round(user_number_precision)]
+            if estimation_value.pe_attribute.alias == "effort"
+              chart_data << ["#{wbs_activity_elt.name}", convert(wbs_value, @current_organization)]
+            else
+              chart_data << ["#{wbs_activity_elt.name}", wbs_value.round(user_number_precision)]
+            end
           end
         end
       end
@@ -603,7 +607,7 @@ module ViewsWidgetsHelper
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)}"
+                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], 2)} €"
               end
             else
               res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), 2)} #{@wbs_unit}"
@@ -613,7 +617,7 @@ module ViewsWidgetsHelper
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) }"
+                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) } €"
               end
             else
               res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?

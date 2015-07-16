@@ -147,12 +147,10 @@ class ProjectsController < ApplicationController
                                                        pbs_project_element_id: current_component.id).first_or_create!
       end
 
+    elsif @module_project.pemodule.alias == "kb"
+      @kb_model = current_module_project.kb_model
     elsif @module_project.pemodule.alias == "ge"
-      #if current_module_project.ge_model.nil?
-      #  @ge_model = Ge::GeModel.first
-      #else
-        @ge_model = current_module_project.ge_model
-      #end
+      @ge_model = current_module_project.ge_model
     elsif @module_project.pemodule.alias == "guw"
 
       #if current_module_project.guw_model.nil?
@@ -453,6 +451,7 @@ class ProjectsController < ApplicationController
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
     @guw_module = Pemodule.where(alias: "guw").first
+    @kb_module = Pemodule.where(alias: "kb").first
     @ge_module = Pemodule.where(alias: "ge").first
     @staffing_module = Pemodule.where(alias: "staffing").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
@@ -913,6 +912,8 @@ class ProjectsController < ApplicationController
       #si le module est un module generic on l'associe le module project
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
+      elsif @pemodule.alias == "kb"
+        my_module_project.kb_model_id = params[:module_selected].split(',').first.to_i
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "staffing"
