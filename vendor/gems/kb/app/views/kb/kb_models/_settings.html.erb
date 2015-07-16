@@ -11,16 +11,34 @@
       <div class="row-fluid">
 
         <div class="span3">
+          <p>
+            <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each do |key| %>
+              <div class="input string required project_title">
+                <label class="string required control-label">
+                  <strong>
+                    <%= key %>
+                  </strong>
+                </label>
+                <%= select_tag "filters[#{key}]",
+                               options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq, selected: @filters.nil? ? nil : @filters[key]),
+                               class: "string required input-xlarge filters",
+                               prompt: "Indifférent" %>
+              </div>
+            <% end %>
+          </p>
+
+          <hr>
+
           <h5>
             <strong>
               Equation
             </strong>
           </h5>
           <p>
-            <%= @kb_model.formula %>
+            <span id="formula">
+              <%= @formula %>
+            </span>
           </p>
-
-          <hr>
 
           <h5>
             <strong>
@@ -41,8 +59,6 @@
                              class: "string required input-xlarge",
                              readonly: !@kb_model.enabled_input %>
 
-          <hr>
-
           <h5>
             <strong>
               Effort
@@ -54,30 +70,9 @@
                                                        :in_out => "output").first %>
           <% @effort = effort_current_ev.send("string_data_probable")[current_component.id] %>
           <span id="effort">
-            <%= text_field_tag "size", @effort.round(2),
+            <%= text_field_tag "effort", @effort.round(2),
                                class: "string required input-xlarge" %>
           </span>
-
-          <hr>
-
-          <h5>
-            <strong>
-              Filtres
-            </strong>
-          </h5>
-          <p>
-            <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each do |key| %>
-              <div class="input string required project_title">
-                <label class="string required control-label">
-                  <%= key %>
-                </label>
-                <%= select_tag "filters[#{key}]",
-                               options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq, selected: @filters.nil? ? nil : @filters[key]),
-                               class: "string required input-xlarge filters",
-                               prompt: "Indifférent" %>
-              </div>
-            <% end %>
-          </p>
         </div>
         <div class="span9">
           <div id="scatter_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

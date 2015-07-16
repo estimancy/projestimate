@@ -145,8 +145,11 @@ class Kb::KbModelsController < ApplicationController
       end
     end
 
-    results.each do |kb_data|
+    if results.blank?
+      results = @kb_model.kb_datas
+    end
 
+    results.each do |kb_data|
       s = Math.log10(kb_data.size.to_f)
       s2 = s * s
 
@@ -180,14 +183,14 @@ class Kb::KbModelsController < ApplicationController
     @regression = Array.new
 
     results.map do |kb_data|
-      @values << [kb_data.size, kb_data.effort]
+      @values << [kb_data.size.round(2), kb_data.effort.round(2)]
     end
 
     results.map(&:size).each do |i|
-      @regression << [i, coef_10 * i ** pente]
+      @regression << [i, (coef_10 * i ** pente).round(2)]
     end
 
-    @kb_model.formula = "#{coef_10} X ^ #{pente}"
+    @formula = "#{coef_10} X ^ #{pente}"
     @kb_model.values = @values
     @kb_model.regression = @regression
 
