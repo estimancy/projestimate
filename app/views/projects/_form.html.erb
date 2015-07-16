@@ -162,6 +162,7 @@
               <%= select_tag 'select_module', grouped_options_for_select({"Modules d'estimation génériques" => @modules_selected,
                                                                           "Modules de Jugement d'Expert" => @ej_modules,
                                                                           "Modules Activités / Profils" => @wbs_instances,
+                                                                          "Module d'Équipes : durée et taille des équipes" => @staffing_modules,
                                                                           "Module d'Unité d'Oeuvres Génériques" => @guw_modules,
                                                                           "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
               <script>

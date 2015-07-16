@@ -209,7 +209,38 @@
   </div>
 
   <div id="team">
-    Pas de module
+    <b>Module d'Equipe</b>
+
+    <% if can? :show_modules_instances, ModuleProject %>
+        <% if can? :manage_modules_instances, ModuleProject %>
+            <%= link_to "Nouvelle instance de module d'équipe", staffing.new_staffing_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+        <% end %>
+
+        <table class="table table-bordered">
+          <tr>
+            <th><%= I18n.t(:name) %></th>
+            <th class="action"><%= I18n.t(:actions) %></th>
+          </tr>
+
+          <% @organization.staffing_models.each do |i| %>
+              <tr>
+                <td class="span5">
+                  <%= link_to i.name, staffing.edit_staffing_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="align-center">
+                  <%= link_to '', staffing.edit_staffing_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
+                  <%= link_to '', staffing.staffing_model_duplicate_path(i, organization_id: @organization.id), :class => 'fa fa-copy', :title => I18n.t(:duplicate_module), method: "post" %>
+                  <% if can? :manage_modules_instances, ModuleProject %>
+                      <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'staffing_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
+                      <%= link_to '', staffing.staffing_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                  <% end %>
+                </td>
+              </tr>
+          <% end %>
+        </table>
+    <% else %>
+        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
+    <% end %>
   </div>
 
   <div id="conversion">

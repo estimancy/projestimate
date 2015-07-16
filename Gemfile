@@ -124,6 +124,7 @@ gem 'ge', :path => 'vendor/gems/ge'
 gem 'amoa', :path => 'vendor/gems/amoa'
 gem 'balancing_module', path: "vendor/gems/balancing_module"
 gem 'expert_judgement', path: "vendor/gems/expert_judgement"
+gem 'staffing', path: "vendor/gems/staffing"
 
 # This gem provides the JavaScript InfoVis Toolkit for your rails application.
 gem "jit-rails", "~> 0.0.2"
