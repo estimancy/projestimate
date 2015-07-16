@@ -30,12 +30,14 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :guw_model, class_name: "Guw::GuwModel"
   belongs_to :ge_model, class_name: "Ge::GeModel"
   belongs_to :kb_model, class_name: "Kb::KbModel"
+  belongs_to :staffing_model, class_name: "Staffing::StaffingModel"
   belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
   belongs_to :wbs_activity
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup", dependent: :destroy
   has_many :guw_unit_of_works, :through => :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWork", dependent: :destroy
   has_many :uow_inputs, :dependent => :destroy
+  has_many :staffing_custom_data, class_name: "Staffing::StaffingCustomDatum", dependent: :destroy
 
   has_many :estimation_values, :dependent => :destroy
   has_many :input_cocomos
@@ -157,6 +159,8 @@ class ModuleProject < ActiveRecord::Base
       self.kb_model.nil? ? 'Undefined model': self.kb_model.to_s(self)
     elsif self.pemodule.alias == "guw"
       self.guw_model.nil? ? 'Undefined model': self.guw_model.to_s(self)
+    elsif self.pemodule.alias == "staffing"
+      self.staffing_model.nil? ? 'Undefined model': self.staffing_model.to_s(self)
     elsif self.pemodule.alias == "effort_breakdown"
       self.wbs_activity.nil? ? 'Undefined model': self.wbs_activity.to_s(self)
     elsif self.pemodule.alias == "expert_judgement"

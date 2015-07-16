@@ -1,0 +1,37 @@
+<h1>Listing staffing_models</h1>
+
+<table>
+  <tr>
+    <th>Organization</th>
+    <th>Name</th>
+    <th>Coefficient</th>
+    <th>Coef n</th>
+    <th>Three points estimation</th>
+    <th>Enabled input</th>
+    <th>Copy</th>
+    <th>Copy number</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @staffing_models.each do |staffing_model| %>
+  <tr>
+    <td><%= staffing_model.organization_id %></td>
+    <td><%= staffing_model.name %></td>
+    <td><%= staffing_model.coefficient %></td>
+    <td><%= staffing_model.coef_n %></td>
+    <td><%= staffing_model.three_points_estimation %></td>
+    <td><%= staffing_model.enabled_input %></td>
+    <td><%= staffing_model.copy_id %></td>
+    <td><%= staffing_model.copy_number %></td>
+    <td><%= link_to 'Show', staffing_model %></td>
+    <td><%= link_to 'Edit', edit_staffing_model_path(staffing_model) %></td>
+    <td><%= link_to 'Destroy', staffing_model, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Staffing model', new_staffing_model_path %>

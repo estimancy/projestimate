@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Method:</b>
+  <%= @staffing_custom_datum.method %>
+</p>
+
+<p>
+  <b>Staffing constraint:</b>
+  <%= @staffing_custom_datum.staffing_constraint %>
+</p>
+
+<p>
+  <b>Period unit:</b>
+  <%= @staffing_custom_datum.period_unit %>
+</p>
+
+<p>
+  <b>Max staffing:</b>
+  <%= @staffing_custom_datum.max_staffing %>
+</p>
+
+<p>
+  <b>Max duration:</b>
+  <%= @staffing_custom_datum.max_duration %>
+</p>
+
+<p>
+  <b>Staffing coordinates:</b>
+  <%= @staffing_custom_datum.staffing_coordinates %>
+</p>
+
+<p>
+  <b>Coef a:</b>
+  <%= @staffing_custom_datum.coef_a %>
+</p>
+
+<p>
+  <b>Coef b:</b>
+  <%= @staffing_custom_datum.coef_b %>
+</p>
+
+<p>
+  <b>Coef a prime:</b>
+  <%= @staffing_custom_datum.coef_a_prime %>
+</p>
+
+<p>
+  <b>Coef b prime:</b>
+  <%= @staffing_custom_datum.coef_b_prime %>
+</p>
+
+
+<%= link_to 'Edit', edit_staffing_custom_datum_path(@staffing_custom_datum) %> |
+<%= link_to 'Back', staffing_custom_data_path %>

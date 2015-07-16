@@ -1,0 +1,93 @@
+<h3>
+  Calcul de la Durée et de la taille des équipes
+</h3>
+<div class="alert alert-dismissable">
+  <div class="row-fluid">
+    <div class="span6" style="border-right-style: solid; border-right: thick double">
+      Le module d'équipe permet de calculer la durée et la taille des équipes du projet. Nous proposons 2 méthodes: <br>
+      <b>
+        - Approche linéaire (trapèze) <br>
+        - Courbe de Rayleigh
+      </b>
+    </div>
+
+    <div class="span6">
+      Si nous ne disposons pas de la durée, nous proposons de la calculer à l'aide de la formule de <b>McDonnell</b>: <br>
+      Durée = <b>coef. * K^n</b>     ( K = <b>Effort</b> en hommes/semaines ou hommes/mois )<br>
+      On a : <b>coef</b> = <%= @staffing_model.mc_donell_coef %> et <b>n</b> = <%= @staffing_model.puissance_n %>; Par défaut coef=6 et n = 1/3
+    </div>
+  </div>
+</div>
+
+<%#= form_tag 'staffing/staffing_custom_data/save_staffing_custom_data', method: 'POST', class: 'simple_form' do -%>
+<%#= form_tag staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), class: 'simple_form' do -%>
+<%#= simple_form_for @staffing_custom_data, url: staffing.edit_staffing_custom_datum_path(@staffing_custom_data), method: :post do |f| -%>
+<%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| -%>
+     <div class="row-fluid">
+       <div class="span2"><h4><b>Paramètres globaux : </b></h4></div>
+       <div class="span2"><%= f.input :staffing_method, as: :select, collection: [['Méthode de Trapèze', 'trapeze'], ['Méthode de Rayleigh', 'rayleigh']], label: 'Méthode de staffing', include_blank: false, :input_html => { :class => 'input-medium'} %></div>
+       <div class="span2"><%= f.input :period_unit, as: :select, collection: [['Semaines', 'weeks'], ['Mois', 'months']], label: 'Échelle de temps', include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
+       <div class="span2"><%= f.input :global_effort_type, as: :select, collection: [['Effort Probable', 'probable'], ['Effort Min', 'minimum'], ['Effort Max', 'maximum']], label: "Prendre min/max/probable", include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
+       <!--<div class="span2"><%#= f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>-->
+       <!--<div class="span2"><%#= f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>-->
+       <!--<div class="span2"><%#= f.input :max_staffing, label: "Max staffing", :input_html => { :class => 'input-medium'} %></div>-->
+     </div>
+
+
+    <!-- Si method Trapeze -->
+    <div id="staffing_trapeze_parameters" style="display: none">
+      <%= render :partial => 'staffing/staffing_custom_data/staffing_trapeze_method', object: @staffing_custom_data , :locals => { :f => f } %>
+    </div>
+
+    <!-- Si method Rayleigh : on peut imposer des contraintes -->
+    <div id="staffing_rayleigh_parameters" style="display: none">
+      <%= render :partial => 'staffing/staffing_custom_data/staffing_rayleigh_method', object: @staffing_custom_data , :locals => { :f => f } %>
+    </div>
+
+
+    <% if can? :execute_estimation_plan, @project %>
+      <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
+    <% end %>
+
+<% end %>
+
+
+
+<br>
+
+
+<div id="staffing_rayleigh">
+
+</div>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var staffing_method = $('#staffing_custom_datum_staffing_method').val();
+
+        if(staffing_method == "rayleigh"){
+            $("#staffing_trapeze_parameters").hide();
+            $("#staffing_rayleigh_parameters").show();
+        }
+        else{
+            $("#staffing_rayleigh_parameters").hide();
+            $("#staffing_trapeze_parameters").show();
+        }
+
+
+        $("#staffing_custom_datum_staffing_method").change(function(){
+            if(this.value == "rayleigh"){
+                $("#staffing_trapeze_parameters").hide();
+                $("#staffing_rayleigh_parameters").show();
+            }
+            else{
+                $("#staffing_rayleigh_parameters").hide();
+                $("#staffing_trapeze_parameters").show();
+            }
+        })
+    });
+
+</script>

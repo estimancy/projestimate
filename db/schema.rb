@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150706070825) do
+ActiveRecord::Schema.define(:version => 20150707151041) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -324,36 +324,6 @@ ActiveRecord::Schema.define(:version => 20150706070825) do
 
   add_index "estimation_values", ["links"], :name => "index_attribute_projects_on_links"
 
-  create_table "event_types", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.string   "icon_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-  end
-
-  add_index "event_types", ["record_status_id"], :name => "index_event_types_on_record_status_id"
-  add_index "event_types", ["reference_id"], :name => "index_event_types_on_parent_id"
-  add_index "event_types", ["uuid"], :name => "index_event_types_on_uuid", :unique => true
-
-  create_table "events", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.integer  "event_type_id"
-    t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "expert_judgement_instance_estimates", :force => true do |t|
     t.integer "pbs_project_element_id"
     t.integer "module_project_id"
@@ -637,44 +607,6 @@ ActiveRecord::Schema.define(:version => 20150706070825) do
     t.text     "notes"
   end
 
-  create_table "kb_kb_datas", :force => true do |t|
-    t.string  "name"
-    t.float   "size"
-    t.float   "effort"
-    t.string  "unit"
-    t.text    "custom_attributes"
-    t.integer "kb_model_id"
-  end
-
-  create_table "kb_kb_models", :force => true do |t|
-    t.string  "name"
-    t.boolean "three_points_estimation"
-    t.boolean "enabled_input"
-    t.string  "formula"
-    t.text    "values"
-    t.text    "regression"
-    t.integer "organization_id"
-    t.integer "module_project_id"
-  end
-
-  create_table "labor_categories", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-  end
-
-  add_index "labor_categories", ["record_status_id"], :name => "index_labor_categories_on_record_status_id"
-  add_index "labor_categories", ["reference_id"], :name => "index_labor_categories_on_parent_id"
-  add_index "labor_categories", ["uuid"], :name => "index_labor_categories_on_uuid", :unique => true
-
   create_table "labor_categories_project_areas", :id => false, :force => true do |t|
     t.integer  "labor_category_id"
     t.integer  "project_area_id"
@@ -735,28 +667,13 @@ ActiveRecord::Schema.define(:version => 20150706070825) do
     t.integer  "ge_model_id"
     t.integer  "expert_judgement_instance_id"
     t.integer  "wbs_activity_id"
-    t.integer  "kb_model_id"
+    t.integer  "staffing_model_id"
   end
 
   create_table "module_projects_pbs_project_elements", :id => false, :force => true do |t|
     t.integer "module_project_id"
     t.integer "pbs_project_element_id"
     t.integer "copy_id"
-  end
-
-  create_table "organization_labor_categories", :force => true do |t|
-    t.integer  "organization_id"
-    t.integer  "labor_category_id"
-    t.string   "level"
-    t.string   "name"
-    t.text     "description"
-    t.float    "cost_per_hour"
-    t.integer  "base_year"
-    t.integer  "currency_id"
-    t.float    "hour_per_day"
-    t.integer  "days_per_year"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "organization_profiles", :force => true do |t|
@@ -1006,21 +923,6 @@ ActiveRecord::Schema.define(:version => 20150706070825) do
     t.datetime "updated_at"
   end
 
-  create_table "profile_categories", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "organization_id"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
   create_table "profiles", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -1245,6 +1147,54 @@ ActiveRecord::Schema.define(:version => 20150706070825) do
     t.text     "change_comment"
     t.integer  "reference_id"
     t.string   "reference_uuid"
+  end
+
+  create_table "staffing_staffing_custom_data", :force => true do |t|
+    t.integer  "staffing_model_id"
+    t.integer  "module_project_id"
+    t.integer  "pbs_project_element_id"
+    t.string   "staffing_method"
+    t.string   "period_unit"
+    t.string   "global_effort_type"
+    t.float    "global_effort_value"
+    t.string   "staffing_constraint"
+    t.float    "duration"
+    t.float    "max_staffing"
+    t.float    "t_max_staffing"
+    t.float    "mc_donell_coef"
+    t.float    "puissance_n"
+    t.text     "trapeze_default_values"
+    t.text     "trapeze_parameter_values"
+    t.float    "form_coef"
+    t.float    "difficulty_coef"
+    t.float    "coef_a"
+    t.float    "coef_b"
+    t.float    "coef_a_prime"
+    t.float    "coef_b_prime"
+    t.float    "calculated_effort"
+    t.float    "theoretical_staffing"
+    t.float    "calculated_staffing"
+    t.text     "chart_theoretical_coordinates"
+    t.text     "chart_actual_coordinates"
+    t.integer  "copy_id"
+    t.integer  "copy_number"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "staffing_staffing_models", :force => true do |t|
+    t.integer  "organization_id"
+    t.string   "name"
+    t.text     "description"
+    t.float    "mc_donell_coef"
+    t.float    "puissance_n"
+    t.text     "trapeze_default_values"
+    t.boolean  "three_points_estimation"
+    t.boolean  "enabled_input"
+    t.integer  "copy_id"
+    t.integer  "copy_number"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "status_transitions", :force => true do |t|

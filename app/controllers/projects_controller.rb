@@ -160,6 +160,17 @@ class ProjectsController < ApplicationController
       #end
       @unit_of_work_groups = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all
 
+    elsif @module_project.pemodule.alias == "staffing"
+      @staffing_model = current_module_project.staffing_model
+      trapeze_default_values = @staffing_model.trapeze_default_values
+      @staffing_custom_data = Staffing::StaffingCustomDatum.where(staffing_model_id: @staffing_model.id, module_project_id: @module_project.id, pbs_project_element_id: current_component.id).first
+      if @staffing_custom_data.nil?
+        @staffing_custom_data = Staffing::StaffingCustomDatum.create(staffing_model_id: @staffing_model.id, module_project_id: @module_project.id, pbs_project_element_id: current_component.id,
+                                staffing_method: 'trapeze', period_unit: 'week', global_effort_type: 'probable', mc_donell_coef: 6, puissance_n: 0.33,
+                                trapeze_default_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] },
+                                trapeze_parameter_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] } )
+      end
+
     elsif @module_project.pemodule.alias == "uow"
       @pbs = current_component
 
@@ -442,16 +453,18 @@ class ProjectsController < ApplicationController
     @guw_module = Pemodule.where(alias: "guw").first
     @kb_module = Pemodule.where(alias: "kb").first
     @ge_module = Pemodule.where(alias: "ge").first
+    @staffing_module = Pemodule.where(alias: "staffing").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
     @ebd_module = Pemodule.where(alias: "effort_breakdown").first
 
-    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @guw_modules = @guw_module.nil? ? [] : @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @ge_models = @ge_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
     @kb_models = @project.organization.kb_models.map{|i| [i, "#{i.id},#{@kb_module.id}"] }
-    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
-    @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
-    @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
+    @staffing_modules = @staffing_module.nil? ? [] : @project.organization.staffing_models.map{|i| [i, "#{i.id},#{@staffing_module.id}"] }
+    @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
+    @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title,i.id]}
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title,i.id]}
 
     project_root = @project.root
     project_tree = project_root.subtree
@@ -697,15 +710,17 @@ class ProjectsController < ApplicationController
 
     @guw_module = Pemodule.where(alias: "guw").first
     @ge_module = Pemodule.where(alias: "ge").first
+    @staffing_module = Pemodule.where(alias: "staffing").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
     @ebd_module = Pemodule.where(alias: "effort_breakdown").first
 
-    @guw_modules = @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
-    @ge_models = @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
-    @ej_modules = @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
-    @wbs_instances = @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
+    @guw_modules = @guw_module.nil? ? [] : @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+    @ge_models = @ge_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @staffing_modules = @staffing_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@staffing_module.id}"] }
+    @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
+    @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
 
     project_root = @project.root
     project_tree = project_root.subtree
@@ -902,6 +917,9 @@ class ProjectsController < ApplicationController
         my_module_project.kb_model_id = params[:module_selected].split(',').first.to_i
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
+      elsif @pemodule.alias == "staffing"
+        my_module_project.staffing_model_id = params[:module_selected].split(',').first
+
       elsif @pemodule.alias == "effort_breakdown"
         wbs_id = params[:module_selected].split(',').first.to_i
         my_module_project.wbs_activity_id = wbs_id
@@ -914,7 +932,14 @@ class ProjectsController < ApplicationController
         my_module_project.expert_judgement_instance_id = eji_id.to_i
       end
 
-      my_module_project.save
+      if my_module_project.save
+
+        if @pemodule.alias == "staffing"
+          #Then create an staffing_custom_data object for current module_project
+          staffing_custom_data = Staffing::StaffingCustomDatum.create(staffing_model_id: my_module_project.staffing_model_id, module_project_id: my_module_project.id, pbs_project_element_id: @pbs_project_element.id,
+                                                                      staffing_method: 'trapeze', period_unit: 'week', global_effort_type: 'probable', mc_donell_coef: 6, puissance_n: 0.33)
+        end
+      end
 
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
       @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.max

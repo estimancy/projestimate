@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Organization:</b>
+  <%= @staffing_model.organization_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @staffing_model.name %>
+</p>
+
+<p>
+  <b>Coefficient:</b>
+  <%= @staffing_model.coefficient %>
+</p>
+
+<p>
+  <b>Coeff n:</b>
+  <%= @staffing_model.coef_n %>
+</p>
+
+<p>
+  <b>Three points estimation:</b>
+  <%= @staffing_model.three_points_estimation %>
+</p>
+
+<p>
+  <b>Enabled input:</b>
+  <%= @staffing_model.enabled_input %>
+</p>
+
+<p>
+  <b>Copy:</b>
+  <%= @staffing_model.copy_id %>
+</p>
+
+<p>
+  <b>Copy number:</b>
+  <%= @staffing_model.copy_number %>
+</p>
+
+
+<%= link_to 'Edit', edit_staffing_model_path(@staffing_model) %> |
+<%= link_to 'Back', staffing_models_path %>

@@ -64,6 +64,7 @@ class Organization < ActiveRecord::Base
   has_many :ge_models, class_name: "Ge::GeModel", dependent: :destroy
   has_many :kb_models, class_name: "Kb::KbModel", dependent: :destroy
   has_many :expert_judgement_instances, class_name: "ExpertJudgement::Instance", dependent: :destroy
+  has_many :staffing_models, class_name: "Staffing::StaffingModel", dependent: :destroy
 
   has_many :project_areas, dependent: :destroy
   has_many :project_categories, dependent: :destroy
