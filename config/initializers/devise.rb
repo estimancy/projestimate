@@ -313,11 +313,11 @@ Devise.setup do |config|
   config.saml_configure do |settings|
     settings.assertion_consumer_service_url     = "http://dev.estimancy.com/users/sign_in"
     settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-    settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+    settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
     settings.issuer                             = "dev.estimancy.com"
     settings.authn_context                      = ""
     settings.idp_slo_target_url                 = "https://idp-dev.sncf.fr:443/openam/IDPSloRedirect/metaAlias/IDP/DEFAUT"
-    settings.idp_sso_target_url                 = "https://idp-dev.sncf.fr/"
+    settings.idp_sso_target_url                 = "https://idp-dev.sncf.fr:443/openam/SSORedirect/metaAlias/IDP/DEFAUT"
     settings.idp_cert                           = <<-CERT.chomp
 -----BEGIN CERTIFICATE-----
 MIIDFDCCAfygAwIBAgIEVLPsKDANBgkqhkiG9w0BAQ0FADBMMQswCQYDVQQGEwJGUjENMAsGA1UE CgwEU05DRjENMAsGA1UECwwERFNJVDEfMB0GA1UEAwwWaWRwLXNpZ25hdHVyZS0yMDE0LWRldjAe Fw0xNTAxMTIxNTQ2NThaFw0yNTAxMTIxNTQ2NThaMEwxCzAJBgNVBAYTAkZSMQ0wCwYDVQQKDART TkNGMQ0wCwYDVQQLDAREU0lUMR8wHQYDVQQDDBZpZHAtc2lnbmF0dXJlLTIwMTQtZGV2MIIBIjAN BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArV7qnTenVeZwYP4m0ji5xbsFvqNRTW8+i0Ys98oB VKlWJpEXdPUQMBi4TdjHPUBRmueW74v1v8Uw+1NeE8WvI0bStvH7P2zxeP5bdL6onVNIZUdb1L1l kBjlYQP30TtsRZuJ2d+vmf3BKEvtd3V47A8gSuAJO9q8dT+Rby7ZOMWw/ZU/dJTIGplhgpJlQMXi 3wLZyHU+oi7V5PmRE0ZYEn0LLXtQXQj1bYW+5AjU6TykXQVqISqImGiONpnKQYkOgZ56vXR9nU+/ ZSmyc/VTBTnA0Xwj/aWfOokaFqft0LhH1gykhq9IIgHaxo55SqRm4lymxx13Hpe1lA3BlWzWVQID AQABMA0GCSqGSIb3DQEBDQUAA4IBAQCisxQCBp26pa52WPq5l0srOO6kfq0oNi/6IWKlQQF0p8MV gsH+ITyHd59h5b5JXXUirL+FzpTHiabLVcSkA2rG+jfuqCGTMtXZiANUEkmlNa8NAmDHwOPe19fL SFl7duFE5BacS4IYf6zPFkpMNBMBJdQlud+chuiKpdYQanSN2Vr+ZEUQlYddkUFZUGIKpw3LpwRP dSdxoqNyHr4u+j5yOXWzaRtZpaw7zMPNT+YAB6shmpVSsbwJ1xRE34t1hj3UV/44XnnvXWCqUjsp yUje5NYfEh8ehf5Ysv6kToXM9fTyKWJhx+ip/lnSIzNe1bFjGXesSmYGtapu6htcLF2m
