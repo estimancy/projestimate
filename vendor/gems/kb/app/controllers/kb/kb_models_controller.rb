@@ -60,10 +60,9 @@ class Kb::KbModelsController < ApplicationController
         attr_two   = file.cell(line, 'B')
 
         h = Hash.new
-        h[file.cell(1, 'C').to_sym] = file.cell(line, 'C')
-        h[file.cell(1, 'D').to_sym] = file.cell(line, 'D')
-        h[file.cell(1, 'E').to_sym] = file.cell(line, 'E')
-        h[file.cell(1, 'F').to_sym] = file.cell(line, 'F')
+        ('A'..'ZZ').each do |letter|
+          h[file.cell(1, letter.to_s).to_sym] = file.cell(line, letter.to_s)
+        end
 
         Kb::KbData.create(size: attr_one,
                           effort: attr_two,
