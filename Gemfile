@@ -64,10 +64,7 @@ gem 'ancestry'
 
 gem 'aescrypt'
 
-# Optional gem for LDAP authentication
-#group :ldap do
 gem 'net-ldap', '~> 0.3.1'
-#end
 
 #Pagination library for Rails 3
 gem 'will_paginate'
