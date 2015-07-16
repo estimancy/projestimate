@@ -119,16 +119,23 @@ class Kb::KbModelsController < ApplicationController
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
 
-    conditions = Hash.new
+    results = Array.new
     e_array = Array.new
     e_array2 = Array.new
     s_array = Array.new
     s_array2 = Array.new
     es_array = Array.new
 
-    params["filters"].each{ |i, j| conditions[i.to_sym] = j }
+    @filters = params["filters"]
 
-    results = @kb_model.kb_datas.where(custom_attributes: "#{conditions.to_yaml}").all
+    @kb_model.kb_datas.each do |i|
+      params["filters"].each do |f|
+        if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
+          results << i
+        end
+      end
+    end
+
     results.each do |kb_data|
 
       s = Math.log10(kb_data.size.to_f)
@@ -226,7 +233,20 @@ class Kb::KbModelsController < ApplicationController
       ViewsWidget::update_field(vw, @current_organization, current_module_project.project, current_component)
     end
 
-    redirect_to main_app.dashboard_path(@project)
+    size_attr = PeAttribute.find_by_alias("retained_size")
+    size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                             :module_project_id => current_module_project.previous.first.id,
+                                             :in_out => "output").first
+    size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                            :module_project_id => current_module_project.id,
+                                            :in_out => "input").first
+    effort_attr = PeAttribute.find_by_alias("effort")
+    effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
+                                              :module_project_id => current_module_project.id,
+                                              :in_out => "output").first
+
+    @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id)
+    @effort = effort_current_ev.send("string_data_probable")[current_component.id]
   end
 
 

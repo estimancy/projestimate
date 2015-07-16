@@ -56,13 +56,21 @@
           <tr>
             <th>Taille</th>
             <th>Effort</th>
-            <th>Attributs</th>
+            <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
+              <th>
+                <%= k.humanize %>
+              </th>
+            <% end %>
           </tr>
           <% @kb_model.kb_datas.each do |kb_data| %>
             <tr>
               <td><%= kb_data.size %></td>
               <td><%= kb_data.effort %></td>
-              <td><%= kb_data.custom_attributes %></td>
+                <% kb_data.custom_attributes.values.each do |v| %>
+                  <td>
+                    <%= v %>
+                  </td>
+                <% end %>
             </tr>
           <% end %>
         </table>
