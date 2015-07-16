@@ -60,8 +60,13 @@ class Kb::KbModelsController < ApplicationController
         attr_two   = file.cell(line, 'B')
 
         h = Hash.new
-        ('A'..'ZZ').each do |letter|
-          h[file.cell(1, letter.to_s).to_sym] = file.cell(line, letter.to_s)
+        ('C'..'ZZ').each_with_index do |letter, i|
+          if i < file.last_column
+            begin
+              h[file.cell(1, letter.to_s).to_sym] = file.cell(line, letter.to_s)
+            rescue
+            end
+          end
         end
 
         Kb::KbData.create(size: attr_one,
