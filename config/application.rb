@@ -177,3 +177,5 @@ module Projestimate
                                       "pie_chart_cost_per_phase", "stacked_bar_chart_effort_per_phases_profiles",  "stacked_bar_chart_cost_per_phases_profiles" ]
   end
 end
+
+APP_CONFIG = YAML.load(IO.read(Rails.root.join("config", "sensitive_settings.yml")))
