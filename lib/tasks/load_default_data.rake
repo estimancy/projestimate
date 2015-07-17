@@ -67,7 +67,6 @@ end
 
 private
 def load_data!
-  #begin
   puts 'Creating Master Parameters ...'
 
   #RecordStatus
@@ -87,13 +86,6 @@ def load_data!
 
   #Find correct record status id
   rsid = RecordStatus.find_by_name('Defined').id
-
-    puts 'Create project security level...'
-    #Default project Security Level
-    project_security_level = ['FullControl', 'Define', 'Modify', 'Comment', 'ReadOnly']
-    project_security_level.each do |i|
-      ProjectSecurityLevel.create(:name => i, :record_status_id => rsid)
-    end
 
     puts 'Create global permissions...'
     #Default permissions
