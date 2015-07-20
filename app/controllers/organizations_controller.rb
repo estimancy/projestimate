@@ -485,7 +485,7 @@ class OrganizationsController < ApplicationController
 
       new_organization.transaction do
 
-        if new_organization.save
+        if new_organization.save(validate: false)
 
           organization_image.save #Original organization copy number will be incremented to 1
 
@@ -535,53 +535,6 @@ class OrganizationsController < ApplicationController
               end
             end
           end
-
-          #Copy the organization referenced views and widgets
-          #organization_image.views.referenced_views.each do |view|
-          #  #=====
-          #  new_copied_view = View.new(name: view.name, description: view.description, pemodule_id: view.pemodule_id, organization_id: new_organization.id, initial_view_id: view.id)
-          #  if new_copied_view.save
-          #    #Then copy the widgets
-          #    view.views_widgets.each do |view_widget|
-          #      widget_est_val = view_widget.estimation_value
-          #      in_out = widget_est_val.nil? ? "output" : widget_est_val.in_out
-          #      estimation_value = @module_project.estimation_values.where('pe_attribute_id = ? AND in_out=?', view_widget.estimation_value.pe_attribute_id, in_out).last
-          #      estimation_value_id = estimation_value.nil? ? nil : estimation_value.id
-          #      widget_copy = ViewsWidget.new(view_id: new_copied_view.id, module_project_id: @module_project.id, estimation_value_id: estimation_value_id, name: view_widget.name,
-          #                                    show_name: view_widget.show_name, icon_class: view_widget.icon_class, color: view_widget.color, show_min_max: view_widget.show_min_max,
-          #                                    width: view_widget.width, height: view_widget.height, widget_type: view_widget.widget_type, position: view_widget.position,
-          #                                    position_x: view_widget.position_x, position_y: view_widget.position_y)
-          #      #Save and copy project_fields
-          #      if widget_copy.save
-          #        unless view_widget.project_fields.empty?
-          #          project_field = view_widget.project_fields.last
-          #
-          #          #Get project_field value
-          #          @value = 0
-          #          if widget_copy.estimation_value.module_project.pemodule.alias == "effort_breakdown"
-          #            begin
-          #              @value = widget_copy.estimation_value.string_data_probable[current_component.id][widget_copy.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
-          #            rescue
-          #              begin
-          #                @value = widget_copy.estimation_value.string_data_probable[current_component.id]
-          #              rescue
-          #                @value = 0
-          #              end
-          #            end
-          #          else
-          #            @value = widget_copy.estimation_value.string_data_probable[current_component.id]
-          #          end
-          #
-          #          #create the new project_field
-          #          ProjectField.create(project_id: @project.id, field_id: project_field.field_id, views_widget_id: widget_copy.id, value: @value)
-          #        end
-          #      end
-          #    end
-          #  end
-          #
-          #  #=====
-          #end
-
 
           # Copy the WBS-Activities modules's Models instances
           organization_image.wbs_activities.each do |old_wbs_activity|
@@ -650,12 +603,12 @@ class OrganizationsController < ApplicationController
 
           # copy the organization's projects
           organization_image.projects.all.each do |project|
-            OrganizationDuplicateProjectWorker.perform_async(project.id, new_organization.id, current_user.id)
-            #new_template = execute_duplication(est_model.id, new_organization.id)
-            #unless new_template.nil?
-            #  new_template.is_model = est_model.is_model
-            #  new_template.save
-            #end
+            #OrganizationDuplicateProjectWorker.perform_async(project.id, new_organization.id, current_user.id)
+            new_template = project.execute_duplication(project.id, new_organization.id, current_user.id)
+            unless new_template.nil?
+              new_template.is_model = project.is_model
+              new_template.save
+            end
           end
 
           #update the project's ancestry
