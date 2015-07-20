@@ -93,8 +93,10 @@ public
     unless @organization.nil?
       OrganizationsUsers.create(user_id: @user.id, organization_id: @organization.id)
     else
-      params[:organizations].keys.each do |organization_id|
-        OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
+      unless params[:organizations].nil?
+        params[:organizations].keys.each do |organization_id|
+          OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
+        end
       end
     end
 
@@ -106,9 +108,9 @@ public
     if @user.save
       flash[:notice] = I18n.t(:notice_account_successful_created)
       if @organization.nil?
-        redirect_to(redirect_apply(edit_user_path(@user), nil, users_path)) and return
+        redirect_to(redirect_apply(edit_user_path(@user), users_path, users_path)) and return
       else
-        redirect_to redirect_apply(edit_organization_user_path(@organization, @user), nil, organization_users_path(@organization)) and return
+        redirect_to redirect_apply(edit_organization_user_path(@organization, @user), organization_users_path(@organization), organization_users_path(@organization)) and return
       end
 
     else

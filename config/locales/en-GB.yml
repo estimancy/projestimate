@@ -1443,3 +1443,4 @@ en-gb:
   original_model: "Original model"
   is_used_view: "View used ?"
   displayed_data: "Displayed data"
+  notice_cannot_view_applications: "Vous n'avez pas accès aux applications"

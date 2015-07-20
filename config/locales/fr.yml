@@ -1488,3 +1488,4 @@ fr:
   dont_archive_last_project_versions: "Ne pas archiver les versions précédentes de ce projet ?"
   archive_last_project_versions: "Archiver la(les) version(s) précédente(s) ?"
   last_project_versions_will_be_archived: "Lorsqu'on crée une nouvelle version d'une estimation, les anciennes versions de cette estimation seront automatiquement archivées si vous cochez cette case"
+  notice_cannot_view_applications: "Vous n'avez pas accès aux applications"
