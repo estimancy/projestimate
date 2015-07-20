@@ -28,6 +28,7 @@
         <%= f.input :organization_technology_id,
                     as: :select,
                     collection: @guw_model.guw_types.first.guw_complexity_technologies.select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.map{|i| [i.name, i.id]},
+                    selected: Guw::GuwUnitOfWorkGroup.find(params[:g]).organization_technology.id,
                     label: "Technologie",
                     include_blank: false,
                     input_html: { class: "input-xxlarge" } %>
