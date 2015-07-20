@@ -303,27 +303,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  #def ldap_authentication(password, login)
-  #  ldap_cn = Net::LDAP.new(:host => self.auth_method.server_name,
-  #                          :base => self.auth_method.base_dn,
-  #                          :port => self.auth_method.port.to_i,
-  #                          :encryption => self.auth_method.encryption2 ,
-  #                          :auth => {
-  #                              :method => :simple,
-  #                              :username => "#{self.auth_method.user_name_attribute.to_s}=#{self.login_name.to_s},#{self.auth_method.base_dn}",
-  #                              :password => password
-  #                          })
-  #  if ldap_cn.bind
-  #    if self.active?
-  #      self
-  #    else
-  #      nil
-  #    end
-  #  else
-  #    nil
-  #  end
-  #end
-
   #Override
   def to_s
     self.name
