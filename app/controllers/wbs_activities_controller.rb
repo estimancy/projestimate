@@ -379,13 +379,12 @@ class WbsActivitiesController < ApplicationController
             end
 
             #Need to calculate the parents effort by profile : addition of its children values
-            wbs_activity_elements.each do |wbs_activity_element_id|
-              begin
-                probable_estimation_value[@pbs_project_element.id][wbs_activity_element_id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_activity_element_id}"]} }
-              rescue
-
-              end
-            end
+            #wbs_activity_elements.each do |wbs_activity_element_id|
+              #begin
+              #  probable_estimation_value[@pbs_project_element.id][wbs_activity_element_id.id]["profiles"]["profile_id_#{profile.id}"] = { "ratio_id_#{@ratio_reference.id}" => {:value => parent_profile_est_value["#{wbs_activity_element_id}"]} }
+              #rescue
+              #end
+            #end
           end
 
           @results['string_data_probable'] = probable_estimation_value

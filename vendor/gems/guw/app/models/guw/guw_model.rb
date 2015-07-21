@@ -95,20 +95,6 @@ module Guw
 
           end
         end
-
-        # Copy the GUW-attribute-complexity
-        #guw_type.guw_type_complexities.each do |guw_type_complexity|
-        #  guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
-        #
-        #    new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
-        #    new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
-        #
-        #    new_guw_type = guw_model.guw_types.where(copy_id: guw_type_complexity.guw_type_id).first
-        #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
-        #
-        #    guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
-        #  end
-        #end
       end
 
       guw_model.guw_attributes.each do |guw_attribute|

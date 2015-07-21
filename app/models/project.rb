@@ -269,10 +269,8 @@ class Project < ActiveRecord::Base
 
   # Method that execute the duplication: duplicate estimation model for organization
   def execute_duplication(project_id, new_organization_id, user_id)
-
     user = User.find(user_id)
 
-    #begin
     old_prj = Project.find(project_id)
     new_organization = Organization.find(new_organization_id)
 

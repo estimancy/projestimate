@@ -398,10 +398,10 @@ module ViewsWidgetsHelper
       # Reject all RatioProfile with nil ratio_value
       wbs_activity_ratio_profiles = ratio_profiles_with_nil_ratio.flatten.reject{|i| i.ratio_value.nil? }
     end
-    wbs_activity_ratio_profiles.each do |ratio_profile|
-      project_organization_profiles << ratio_profile.organization_profile
-    end
-    project_organization_profiles = project_organization_profiles.uniq
+    #wbs_activity_ratio_profiles.each do |ratio_profile|
+    #  project_organization_profiles << ratio_profile.organization_profile
+    #end
+    project_organization_profiles = @current_organization.organization_profiles
 
     case view_widget.widget_type
 
