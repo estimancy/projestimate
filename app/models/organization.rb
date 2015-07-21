@@ -62,7 +62,6 @@ class Organization < ActiveRecord::Base
   #Guw Model
   has_many :guw_models, class_name: "Guw::GuwModel", dependent: :destroy
   has_many :ge_models, class_name: "Ge::GeModel", dependent: :destroy
-  has_many :amoa_models, class_name: "Amoa::AmoaModel", dependent: :destroy
   has_many :expert_judgement_instances, class_name: "ExpertJudgement::Instance", dependent: :destroy
 
   has_many :project_areas, dependent: :destroy

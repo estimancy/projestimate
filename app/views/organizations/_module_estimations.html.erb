@@ -44,37 +44,6 @@
       <br>
       <hr>
 
-      <b>Modèle AMOA</b>
-
-      <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to "Nouveau modèle d'UO", amoa.new_amoa_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
-      <% end %>
-      <br>
-
-      <table class="table table-bordered">
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th class="action"><%= I18n.t(:actions) %></th>
-        </tr>
-
-        <% @amoa_models.each do |i| %>
-          <tr>
-            <td class="span5">
-              <%= link_to i.name, amoa.amoa_model_path(i) %>
-            </td>
-            <td class="align-center">
-              <%= link_to '', amoa.edit_amoa_model_path(i, organization_id: @organization.id), :class => 'fa fa-pencil' %>
-              <% if can? :manage_modules_instances, ModuleProject %>
-                <%= link_to '', amoa.amoa_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE", confirm: I18n.t(:are_you_sure), :class => 'fa fa-trash', :title => I18n.t('delete') %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
-
-      <br>
-      <hr>
-
       <b>Modèle d'Unité d'Oeuvre par groupe (1 niveau)</b>
       <%= render :partial => 'organizations/technology_uow_synthesis' %>
     <% else %>

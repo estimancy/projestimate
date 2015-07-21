@@ -154,7 +154,7 @@ public
 
         @user.organizations.each do |organization|
           organization.groups.each do |group|
-            GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.to_i}")
+            GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
           end
         end
 

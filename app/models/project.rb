@@ -311,11 +311,14 @@ class Project < ActiveRecord::Base
       #Update the project securities for the current user who create the estimation from model
       #if params[:action_name] == "create_project_from_template"
       if old_prj.is_model
-        creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
-        unless creator_securities.nil?
-          creator_securities.update_attribute(:user_id, user.id)
+        unless old_prj.creator.nil?
+          creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
+          unless creator_securities.nil?
+            creator_securities.update_attribute(:user_id, user.id)
+          end
         end
       end
+
       #Other project securities for groups
       new_prj.project_securities.where('group_id IS NOT NULL').each do |project_security|
         new_security_level = new_organization.project_security_levels.where(copy_id: project_security.project_security_level_id).first
