@@ -4,7 +4,6 @@
     <li><a href="#effort" data-toggle="tab">Effort </a></li>
     <li><a href="#activite" data-toggle="tab">Activité </a></li>
     <li><a href="#team" data-toggle="tab">Equipes</a></li>
-    <li><a href="#conversion" data-toggle="tab">Conversion</a></li>
     <li><a href="#expert" data-toggle="tab">Jugement d'Expert</a></li>
   </ul>
 
@@ -154,19 +153,19 @@
   </div>
 
   <div id="team">
-    Pas de module
+    <b>Pas de module</b>
   </div>
 
-  <div id="conversion">
-    <% if can? :show_modules_instances, ModuleProject %>
+  <!--<div id="conversion">-->
+    <%# if can? :show_modules_instances, ModuleProject %>
 
-      <%= render :partial => 'organizations/technology_size_type_abacus' %>
-      <%= render :partial => 'organizations/technology_size_unit_abacus' %>
+      <%# render :partial => 'organizations/technology_size_type_abacus' %>
+      <%# render :partial => 'organizations/technology_size_unit_abacus' %>
 
-    <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
-    <% end %>
-  </div>
+    <%# else %>
+        <!--<div class="red_color"><%# I18n.t(:notice_cannot_view_modules_instances) %></div>-->
+    <%# end %>
+  <!--</div>-->
 
   <div id="expert">
     <b>Expert Judgment</b>
