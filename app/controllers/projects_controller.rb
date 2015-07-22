@@ -305,7 +305,10 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    full_control_security_level = ProjectSecurityLevel.where(name: '*FULL', organization_id: @organization.id).first
+    full_control_security_level = ProjectSecurityLevel.where(name: '*FULL',
+                                                             organization_id: @organization.id).first_or_create(name: '*FULL',
+                                                                                                                organization_id: @organization.id,
+                                                                                                                description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
     manage_project_permission = Permission.where(alias: "manage",
                                                  object_associated: "Project",
                                                  record_status_id: @defined_record_status).first_or_create(alias: "manage",
