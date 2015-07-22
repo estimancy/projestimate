@@ -75,8 +75,8 @@ class ApplicationController < ActionController::Base
   before_filter :set_return_to
   before_filter :previous_page
   before_filter :set_breadcrumbs
-  before_filter :set_current_project
   before_filter :set_current_organization
+  before_filter :set_current_project
   ###before_filter :session_expiration
   before_filter :update_activity_time
   before_filter :initialization_module
@@ -252,7 +252,11 @@ class ApplicationController < ActionController::Base
           session[:project_id] = @project.id
         end
       else
-        @project = current_user.organizations.first.projects.first
+        if @current_organization.nil?
+          @project = current_user.organizations.first.projects.first
+        else
+          @project = @current_organization.projects.where(is_model: false).all.first
+        end
       end
     rescue
       @project = nil

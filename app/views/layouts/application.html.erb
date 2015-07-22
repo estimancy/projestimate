@@ -31,10 +31,10 @@
             <% if @project %>
               <%= link_to(image_tag("/assets/Logo 200x75.png"), main_app.dashboard_path(@project)) %>
             <% else %>
-              <%= link_to(image_tag("/assets/Logo 200x75.png"), main_app.organization_estimations_path(@organization)) %>
+              <%= link_to(image_tag("/assets/Logo 200x75.png"), "#") %>
             <% end %>
           <% rescue %>
-            <%= link_to(image_tag("/assets/Logo 200x75.png"), main_app.projects_path) %>
+            <%= link_to(image_tag("/assets/Logo 200x75.png"), main_app.root_url) %>
           <% end %>
         </div>
 
