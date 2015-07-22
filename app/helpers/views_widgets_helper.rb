@@ -617,7 +617,11 @@ module ViewsWidgetsHelper
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) } €"
+                begin
+                  res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], 2) } €"
+                rescue
+                  res << "-"
+                end
               end
             else
               res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
