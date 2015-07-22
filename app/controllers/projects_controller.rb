@@ -305,18 +305,24 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    full_control_security_level = ProjectSecurityLevel.where(name: 'FullControl', organization_id: @organization.id).first_or_create(name: 'FullControl', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
-    manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
-    # Add the "manage project" authorization to the "FullControl" security level
+    full_control_security_level = ProjectSecurityLevel.where(name: '*FULL', organization_id: @organization.id).first
+    manage_project_permission = Permission.where(alias: "manage",
+                                                 object_associated: "Project",
+                                                 record_status_id: @defined_record_status).first_or_create(alias: "manage",
+                                                                                                           object_associated: "Project",
+                                                                                                           record_status_id: @defined_record_status,
+                                                                                                           name: "Manage Projet",
+                                                                                                           uuid: UUIDTools::UUID.random_create.to_s)
     if manage_project_permission
       if !manage_project_permission.in?(full_control_security_level.permission_ids)
         full_control_security_level.update_attribute('permission_ids', manage_project_permission.id)
       end
     end
 
-    current_user_ps = @project.project_securities.build
-    current_user_ps.user = current_user
-    current_user_ps.project_security_level = full_control_security_level
+    #current_user_ps = @project.project_securities.build
+    #current_user_ps.user = current_user
+    #current_user_ps.project_security_level = full_control_security_level
+    #current_user_ps.save
 
     @project.is_locked = false
 
@@ -329,6 +335,11 @@ class ProjectsController < ApplicationController
         @project.add_to_transaction
 
         if @project.save
+
+          ProjectSecurity.create(user_id: current_user.id,
+                                 project_id: @project.id,
+                                 project_security_level_id: full_control_security_level.id,
+                                 is_model_permission: false)
 
           #New default Pe-Wbs-Project
           pe_wbs_project_product = @project.pe_wbs_projects.build(:name => "#{@project.title}", :wbs_type => 'Product')
