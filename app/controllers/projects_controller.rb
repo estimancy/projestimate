@@ -512,18 +512,20 @@ class ProjectsController < ApplicationController
 
     if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && (can?(:edit_project, @project) || can_alter_estimation?(@project))) # Have the write access to project
 
-      if @project.is_model == true
-        if params[:project][:application_ids].present?
-          @project.applications.delete_all
-          @project.application_ids = params[:project][:application_ids]
+      if params[:project].present?
+        if @project.is_model == true
+          if params[:project][:application_ids].present?
+            @project.applications.delete_all
+            @project.application_ids = params[:project][:application_ids]
+          else
+            @project.application_name = params[:project][:application_name]
+          end
         else
-          @project.application_name = params[:project][:application_name]
-        end
-      else
-        if params[:project][:application_id].present?
-          @project.application_id = params[:project][:application_id]
-        else
-          @project.application_name = params[:project][:application_name]
+          if params[:project][:application_id].present?
+            @project.application_id = params[:project][:application_id]
+          else
+            @project.application_name = params[:project][:application_name]
+          end
         end
       end
 
@@ -596,78 +598,80 @@ class ProjectsController < ApplicationController
       project_organization = @project.organization
 
       # Before saving project, update the project comment when the status has changed
-      if params[:project][:estimation_status_id]
-        new_status_id = params[:project][:estimation_status_id].to_i
-        if @project.estimation_status_id != new_status_id
-          new_comments = auto_update_status_comment(params[:id], new_status_id)
-          new_comments << "#{@project.status_comment} \r\n"
-          @project.status_comment = new_comments
+      if params[:project].present?
+        if params[:project][:estimation_status_id]
+          new_status_id = params[:project][:estimation_status_id].to_i
+          if @project.estimation_status_id != new_status_id
+            new_comments = auto_update_status_comment(params[:id], new_status_id)
+            new_comments << "#{@project.status_comment} \r\n"
+            @project.status_comment = new_comments
+          end
+        end
+
+        if @project.update_attributes(params[:project])
+          begin
+            #start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))
+            start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
+            @project.start_date = start_date
+          rescue
+            @project.start_date = Time.now.to_date
+          end
+
+          # Initialization Module
+          unless @initialization_module.nil?
+            # Get the project initialization module_project or create if it doesn't exist
+            cap_module_project = @project.module_projects.find_by_pemodule_id(@initialization_module.id)
+            if cap_module_project.nil?
+              cap_module_project = @project.module_projects.create(:pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0)
+            end
+
+            # Create the project initialization module estimation_values if project organization has changed and not nil
+            if project_organization.nil? && !@project.organization.nil?
+
+              #Create the corresponding EstimationValues
+              unless @project.organization.attribute_organizations.nil?
+                @project.organization.attribute_organizations.each do |am|
+                  ['input', 'output'].each do |in_out|
+                    mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id, :module_project_id => cap_module_project.id, :in_out => in_out,
+                                                 :is_mandatory => am.is_mandatory, :description => am.pe_attribute.description, :display_order => nil,
+                                                 :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
+                                                 :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
+                                                 :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
+                  end
+                end
+              end
+              # When project organization exists
+            elsif !project_organization.nil?
+
+              # project's organization is deleted and none one is selected
+              if @project.organization.nil?
+                cap_module_project.estimation_values.delete_all
+              end
+
+              # Project's organization has changed
+              if !@project.organization.nil? && project_organization != @project.organization
+                # Delete all last estimation values for this organization on this project
+                cap_module_project.estimation_values.delete_all
+
+                # Create estimation_values for the new selected organization
+                @project.organization.attribute_organizations.each do |am|
+                  ['input', 'output'].each do |in_out|
+                    mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id,
+                                                 :module_project_id => cap_module_project.id,
+                                                 :in_out => in_out, :is_mandatory => am.is_mandatory,
+                                                 :description => am.pe_attribute.description, :display_order => nil,
+                                                 :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
+                                                 :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
+                                                 :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
+                  end
+                end
+              end
+            end
+          end
         end
       end
 
-      if @project.update_attributes(params[:project])
-        begin
-          #start_date = Date.strptime(params[:project][:start_date], I18n.t('%m/%d/%Y'))
-          start_date = Date.strptime(params[:project][:start_date], I18n.t('date.formats.default'))
-          @project.start_date = start_date
-        rescue
-          @project.start_date = Time.now.to_date
-        end
-
-        # Initialization Module
-        unless @initialization_module.nil?
-          # Get the project initialization module_project or create if it doesn't exist
-          cap_module_project = @project.module_projects.find_by_pemodule_id(@initialization_module.id)
-          if cap_module_project.nil?
-            cap_module_project = @project.module_projects.create(:pemodule_id => @initialization_module.id, :position_x => 0, :position_y => 0)
-          end
-
-          # Create the project initialization module estimation_values if project organization has changed and not nil
-          if project_organization.nil? && !@project.organization.nil?
-
-            #Create the corresponding EstimationValues
-            unless @project.organization.attribute_organizations.nil?
-              @project.organization.attribute_organizations.each do |am|
-                ['input', 'output'].each do |in_out|
-                  mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id, :module_project_id => cap_module_project.id, :in_out => in_out,
-                                               :is_mandatory => am.is_mandatory, :description => am.pe_attribute.description, :display_order => nil,
-                                               :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
-                                               :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
-                                               :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
-                end
-              end
-            end
-            # When project organization exists
-          elsif !project_organization.nil?
-
-            # project's organization is deleted and none one is selected
-            if @project.organization.nil?
-              cap_module_project.estimation_values.delete_all
-            end
-
-            # Project's organization has changed
-            if !@project.organization.nil? && project_organization != @project.organization
-              # Delete all last estimation values for this organization on this project
-              cap_module_project.estimation_values.delete_all
-
-              # Create estimation_values for the new selected organization
-              @project.organization.attribute_organizations.each do |am|
-                ['input', 'output'].each do |in_out|
-                  mpa = EstimationValue.create(:pe_attribute_id => am.pe_attribute.id,
-                                               :module_project_id => cap_module_project.id,
-                                               :in_out => in_out, :is_mandatory => am.is_mandatory,
-                                               :description => am.pe_attribute.description, :display_order => nil,
-                                               :string_data_low => {:pe_attribute_name => am.pe_attribute.name, :default_low => ''},
-                                               :string_data_most_likely => {:pe_attribute_name => am.pe_attribute.name, :default_most_likely => ''},
-                                               :string_data_high => {:pe_attribute_name => am.pe_attribute.name, :default_high => ''})
-                end
-              end
-            end
-          end
-        end
-
-        @project.save
-
+      if @project.save
         flash[:notice] = I18n.t(:notice_project_successful_updated)
         if @project.is_model
           redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_setting_path(@project.organization, anchor: "tabs-estimation-models")) and return
@@ -677,6 +681,7 @@ class ProjectsController < ApplicationController
       else
         render :action => 'edit'
       end
+
     end
   end
 

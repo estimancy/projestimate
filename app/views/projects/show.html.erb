@@ -72,8 +72,9 @@
           <% end %>
         </tr>
         <tr>
+
           <td>
-            <%= f.input :start_date, :as => :string, :disabled => !( can_alter_estimation?(@project) && can?(:alter_start_date, @project)), :input_html => { :class => 'date-picker', :value => (@project.start_date.nil? ? '' : I18n.l(@project.start_date))} %>
+            <%= f.input :start_date, :as => :string, :disabled => !(can_alter_estimation?(@project) && can?(:alter_start_date, @project)), :input_html => { :class => 'date-picker', :value => (@project.start_date.nil? ? '' : I18n.l(@project.start_date))} %>
           </td>
 
           <script>
@@ -98,8 +99,8 @@
 
       <div class="actions-tabs">
         <% if can_alter_estimation?(@project) %>
-            <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
-            <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+          <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
+          <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
         <% end %>
         <% if @project.is_model %>
             <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
