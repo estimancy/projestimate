@@ -23,25 +23,9 @@
 
       <%= f.input :object_associated, :label => I18n.t('label_associated_object'), :input_html => {:class => 'input-xxlarge'}, :as => :select, :collection => ActiveRecord::Base.connection.tables.map{|t| t.classify }.compact.reject{|j| j == 'SchemaMigration' } %>
 
-      <table>
-          <tr>
-            <td>
-                <%= f.association :record_status, :label => I18n.t('record_status'),
-                    :collection => @permission.record_status_collection,
-                    :input_html => {:class => 'record_status'},
-                    :selected => (@permission.is_defined_or_nil? ? @proposed_status.id : @permission.record_status_id),
-                    :disabled => (true if @permission.is_retired?) %><br />
-            </td>
-            <td>
-                <%= f.input :custom_value, :label => I18n.t('custom_value'), :input_html => {:class => 'custom_value'}, :disabled => (true unless @permission.is_custom?) %><br />
-            </td>
-          </tr>
-      </table>
-      <%= f.input :change_comment, :label => I18n.t('change_comment'), :input_html => {:class => 'input-xxlarge', :rows => 2} %>
-      <div class="actions">
-        <%= submit_tag I18n.t('save'), :class => 'btn' %>
-        <%= link_to I18n.t('back'), permissions_path, :class => 'btn' %>
-      </div>
+      <%= submit_tag I18n.t('save'), :class => 'btn' %>
+      <%= link_to I18n.t('back'), permissions_path, :class => 'btn' %>
+
   <% end %>
 </div>
 </div>

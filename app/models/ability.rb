@@ -36,33 +36,16 @@ class Ability
       can :manage_master_data, :all
     end
 
-    #cannot :update, [Language, PeAttribute, Currency, AdminSetting, AuthMethod, Permission], :record_status => {:name => 'Retired'}
-
-    # Add Action Aliases, for example:  alias_action :edit, :to => :update
-
-    #For organization and estimations permissions
+    alias_action [:show_groups, Group], :to => [:manage, Group]
     alias_action :show_estimations_permissions, :to => :manage_estimations_permissions
     alias_action :manage_estimations_permissions, :show_organization_permissions, :to => :manage_organization_permissions
-
-    # For projects selected columns
-    alias_action :show_projects_selected_columns, :to => :manage_projects_selected_columns
-
-    # Notice the edit action is aliased to update. This means if the user is able to update a record he also has permission to edit it.
-    alias_action [:show_groups, Group], :to => [:manage, Group]
-
-    #For organization
     alias_action :show_organizations, :to => :edit_organizations
     alias_action :edit_organizations, :to => :create_organizations
-
-    # For estimation: when we can edit a project, we can also see and show it
-    #alias_action :execute_estimation_plan, :manage_estimation_widgets, :alter_estimation_status, :alter_project_status_comment, :commit_project, :to => :alter_estimation_plan
-    alias_action :see_project, :to => :show_project
-    alias_action :show_project, :to => :edit_project
-    alias_action :alter_project_areas, :alter_acquisition_categories, :alter_platform_categories, :alter_project_categories, :to => :edit_project
-    alias_action :alter_estimation_plan, :manage_project_security, :to => :edit_project
-
-    #For instance modules
     alias_action :show_modules_instances, :to => :manage_modules_instances
+    alias_action :show_projects_selected_columns, :to => :manage_projects_selected_columns
+    alias_action :see_project, :to => :show_project
+    alias_action :alter_estimation_name, :alter_project_description, :alter_project_areas, :alter_acquisition_categories, :alter_platform_categories, :alter_project_categories,
+                 :alter_estimation_plan, :manage_project_security, :show_project, :to => :edit_project
 
     #Load user groups permissions
     if user && !user.groups.where(organization_id: organization.id).empty?
