@@ -646,15 +646,20 @@ ActiveRecord::Schema.define(:version => 20150707151041) do
     t.integer "kb_model_id"
   end
 
-  create_table "kb_kb_models", :force => true do |t|
-    t.string  "name"
-    t.boolean "three_points_estimation"
-    t.boolean "enabled_input"
+  create_table "kb_kb_inputs", :force => true do |t|
     t.string  "formula"
     t.text    "values"
     t.text    "regression"
     t.integer "organization_id"
     t.integer "module_project_id"
+    t.integer "kb_model_id"
+  end
+
+  create_table "kb_kb_models", :force => true do |t|
+    t.string  "name"
+    t.boolean "three_points_estimation"
+    t.boolean "enabled_input"
+    t.integer "organization_id"
   end
 
   create_table "labor_categories", :force => true do |t|
@@ -735,8 +740,8 @@ ActiveRecord::Schema.define(:version => 20150707151041) do
     t.integer  "ge_model_id"
     t.integer  "expert_judgement_instance_id"
     t.integer  "wbs_activity_id"
-    t.integer  "kb_model_id"
     t.integer  "staffing_model_id"
+    t.integer  "kb_model_id"
   end
 
   create_table "module_projects_pbs_project_elements", :id => false, :force => true do |t|

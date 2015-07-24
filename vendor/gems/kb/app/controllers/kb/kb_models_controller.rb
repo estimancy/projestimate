@@ -42,9 +42,9 @@ class Kb::KbModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
-    @organization = @kb_model.organization
+    @current_organization
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@current_organization), @current_organization => ""
   end
 
   def import
@@ -99,10 +99,9 @@ class Kb::KbModelsController < ApplicationController
     authorize! :manage_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
-    @organization = @kb_model.organization
 
     if @kb_model.update_attributes(params[:kb_model])
-      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+      redirect_to main_app.organization_module_estimation_path(@current_organization, anchor: "kb")
     else
       render action: :edit
     end
@@ -122,11 +121,11 @@ class Kb::KbModelsController < ApplicationController
     redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
   end
 
-
   def save_efforts
     authorize! :execute_estimation_plan, @project
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
+    @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first
 
     results = Array.new
     e_array = Array.new
@@ -191,10 +190,11 @@ class Kb::KbModelsController < ApplicationController
     end
 
     @formula = "#{coef_10} X ^ #{pente}"
-    @kb_model.values = @values
-    @kb_model.regression = @regression
+    @kb_input.values = @values
+    @kb_input.regression = @regression
 
     @kb_model.save
+    @kb_input.save
 
 
     current_module_project.pemodule.attribute_modules.each do |am|
@@ -260,6 +260,5 @@ class Kb::KbModelsController < ApplicationController
     @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id)
     @effort = effort_current_ev.send("string_data_probable")[current_component.id]
   end
-
 
 end

@@ -26,6 +26,5 @@ Kb::Engine.routes.draw do
     post "save_efforts"
     post "import"
   end
-  resources :kb_datas
 
 end

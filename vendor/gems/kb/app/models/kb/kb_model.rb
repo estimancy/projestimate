@@ -23,12 +23,10 @@ module Kb
   class KbModel < ActiveRecord::Base
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
-    belongs_to :organization
     has_many :module_projects, :dependent => :destroy
-    has_many :kb_datas, :dependent => :destroy
 
-    serialize :values, Array
-    serialize :regression, Array
+    has_many :kb_datas, :dependent => :destroy
+    has_many :kb_inputs, :dependent => :destroy
 
     amoeba do
       enable

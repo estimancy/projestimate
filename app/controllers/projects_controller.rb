@@ -149,6 +149,7 @@ class ProjectsController < ApplicationController
 
     elsif @module_project.pemodule.alias == "kb"
       @kb_model = current_module_project.kb_model
+      @kb_input = Kb::KbInput.where(module_project_id: current_module_project.id).first
     elsif @module_project.pemodule.alias == "ge"
       @ge_model = current_module_project.ge_model
     elsif @module_project.pemodule.alias == "guw"
@@ -909,12 +910,17 @@ class ProjectsController < ApplicationController
 
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
       my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
+      my_module_project.save
 
       #si le module est un module generic on l'associe le module project
       if @pemodule.alias == "guw"
         my_module_project.guw_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "kb"
-        my_module_project.kb_model_id = params[:module_selected].split(',').first.to_i
+        kb_model_id = params[:module_selected].split(',').first.to_i
+        my_module_project.kb_model_id = kb_model_id
+        Kb::KbInput.create( organization_id: @current_organization.id,
+                            module_project_id: my_module_project.id,
+                            kb_model_id: kb_model_id)
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "staffing"
