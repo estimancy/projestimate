@@ -47,7 +47,7 @@
     <tr>
       <td>Théorique</td>
       <% theoretical_coordinates.each do |(coord,value)| %>
-          <% rounded_value = value.round(2) %>
+          <% rounded_value = value.round(1) %>
           <% staffing_theorique += rounded_value %>
           <td><%= rounded_value %></td>
       <% end %>
@@ -56,7 +56,7 @@
     <tr>
       <td>Actuel</td>
       <% actual_coordinates.each do |(coord,value)| %>
-          <% rounded_value = value.round(2) %>
+          <% rounded_value = value.round(1) %>
           <% staffing_actuel += rounded_value %>
           <td><%= rounded_value %></td>
       <% end %>
