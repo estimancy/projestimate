@@ -126,13 +126,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
   end
 
-  def save_trackings
-    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:trackings].keys.first)
-    @guw_unit_of_work.tracking = params[:trackings].values.first
-    @guw_unit_of_work.save
-    redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
-  end
-
   def load_comments
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
   end
@@ -140,6 +133,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   def save_comments
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:comments].keys.first)
     @guw_unit_of_work.comments = params[:comments].values.first
+    @guw_unit_of_work.tracking = params[:trackings].values.first
     @guw_unit_of_work.save
     redirect_to main_app.dashboard_path(@project, anchor: "accordion#{@guw_unit_of_work.guw_unit_of_work_group.id}")
   end
@@ -198,20 +192,20 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
     guw_unit_of_work.save
 
-    if @guw_model.one_level_model == true
-
-      guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
-      guw_unit_of_work.guw_complexity_id = guw_complexity_id
-
-      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-                                             guw_work_unit_id: guw_work_unit.id).first
-
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
-                                                 organization_technology_id: guw_unit_of_work.organization_technology_id).first
-
-      @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-      guw_unit_of_work.save
-    else
+    #if @guw_model.one_level_model == true
+    #
+    #  guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
+    #  guw_unit_of_work.guw_complexity_id = guw_complexity_id
+    #
+    #  cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
+    #                                         guw_work_unit_id: guw_work_unit.id).first
+    #
+    #  tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
+    #                                             organization_technology_id: guw_unit_of_work.organization_technology_id).first
+    #
+    #  @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+    #  guw_unit_of_work.save
+    #else
       if guw_unit_of_work.result_low.nil? or guw_unit_of_work.result_most_likely.nil? or guw_unit_of_work.result_high.nil?
         guw_unit_of_work.off_line_uo = nil
       else
@@ -230,9 +224,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           end
         end
       end
-    end
+    #end
 
-    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3)
+    guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
+    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
 
     if params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
       guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
@@ -300,20 +295,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+      guw_unit_of_work.quantity = params["quantity"]["#{guw_unit_of_work.id}"].to_f
 
-      if @guw_model.one_level_model == true
-        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
-        guw_unit_of_work.guw_complexity_id = guw_complexity_id
+      guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
+      guw_unit_of_work.guw_complexity_id = guw_complexity_id
 
-        cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-                                               guw_work_unit_id: guw_work_unit.id).first
+      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
+                                             guw_work_unit_id: guw_work_unit.id).first
 
-        tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
-                                                   organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
+                                                 organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-        @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-        guw_unit_of_work.effort = @weight_pert.sum
-      end
+      @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+      guw_unit_of_work.effort = @weight_pert.sum * params["quantity"]["#{guw_unit_of_work.id}"].to_f
 
       if guw_unit_of_work.guw_type.disable_ajusted_effort == true
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
@@ -330,6 +324,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       else
         guw_unit_of_work.flagged = true
       end
+
+      guw_unit_of_work.off_line_uo = false
       guw_unit_of_work.save
     end
 
@@ -546,6 +542,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   end
 
   def calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
+
     if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
       guw_unit_of_work.guw_complexity_id = guw_c.id
     end

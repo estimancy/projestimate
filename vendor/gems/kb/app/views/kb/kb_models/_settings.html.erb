@@ -96,42 +96,62 @@
 <script>
   $(function () {
     $('#scatter_chart').highcharts({
+      chart: {
+        zoomType: 'x'
+      },
       title: {
         text: "<%= @kb_model.name %>"
       },
       xAxis: {
         title: {
           enabled: true,
-          text: 'Taille'
+          text: 'Taille',
+          min: 0
         }
       },
       yAxis: {
         title: {
-          text: 'Effort'
+          text: 'Effort',
+          min: 0
         }
       },
       series: [{
         name: 'Distribution Taille / Effort',
+        marker: {
+          radius: 2
+        },
         type: 'scatter',
         color: 'rgba(223, 83, 83, 1)',
         data: <%= @kb_input.values %>
       },{
         name: 'Courbe de régression linéaire',
-        type: 'line',
+        marker: {
+          radius: 2
+        },
+        type: 'scatter',
         color: 'rgba(200, 200, 200, 1)',
         data: <%= [@kb_input.regression.min, @kb_input.regression.max] %>
       },{
         name: 'Courbe de régression linéaire + 80%',
-        type: 'line',
+        marker: {
+          radius: 2
+        },
+        type: 'scatter',
         color: 'rgba(83, 223, 83, 1)',
-        data: <%= [@kb_input.regression.map{|i, j| [i, j * 2.84809528986015]}.min, @kb_input.regression.map{|i, j| [i, j * 2.84809528986015]}.max] %>
+        data: <%= @kb_input.regression.map{|i, j| [i, j * 2.8]} %>
       },{
         name: 'Courbe de régression linéaire - 80%',
-        type: 'line',
+        marker: {
+          radius: 2
+        },
+        type: 'scatter',
         color: 'rgba(83, 223, 255, 1)',
-        data: <%= [@kb_input.regression.map{|i, j| [i, j / 2.84809528986015]}.min, @kb_input.regression.map{|i, j| [i, j / 2.84809528986015]}.max] %>
+        data: <%= @kb_input.regression.map{|i, j| [i, j / 2.8]} %>
       },{
         name: 'Taille calculé',
+        marker: {
+          radius: 2
+        },
         type: 'scatter',
         color: 'rgba(0, 0, 0, 1)',
         data: <%= [[@size, @effort]] %>

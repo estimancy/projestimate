@@ -4,45 +4,56 @@
 
   <div class="pull-left">
     <% if can? :execute_estimation_plan, @project %>
-      <%= link_to "Gérer les groupes", guw.guw_model_guw_unit_of_work_groups_path(@guw_model), class: "btn btn-mini" %>
+      <%= link_to "Gérer les groupes", guw.guw_model_guw_unit_of_work_groups_path(@guw_model), class: "btn btn-mini input-small" %>
     <% end %>
-    <%= link_to "Exporter", guw.guw_model_export_path(@guw_model), class: "btn btn-mini", method: "post" %>
+    <%= link_to "Exporter", guw.guw_model_export_path(@guw_model), class: "btn btn-mini input-small", method: "post" %>
   </div>
 
   <div class="pull-right">
-    <b>
-      <div class="label label-info pull-right">
-        Total <%= @guw_model.retained_size_unit %> retenu :
-        <span class="ajusted_effort">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
-        </span>
-      </div>
-
-      <br>
 
       <div class="pull-left">
-        Total <%= @guw_model.retained_size_unit %> calculés :
-        <span class="label label-info theorical_effort">
-            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
+        <span class="label label-success">
+        Total <%= @guw_model.retained_size_unit %> retenu :
+          <span class="label label-success ajusted_effort">
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
+          </span>
         </span>
-        &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. :
-        <span class="label label-info number_of_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works }.flatten.size %>
+
+        <span class="label label-info">
+          Total <%= @guw_model.retained_size_unit %> calculés :
+          <span class="label label-info theorical_effort">
+              <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
+          </span>
         </span>
-        &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. modifiés
-        <span class="label label-info modified_of_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size %>
+
+        <span class="label label-info">
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. :
+          <span class="label label-info number_of_unit_of_work">
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works }.flatten.size %>
+          </span>
         </span>
-        &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. sélectionnés :
-        <span class="label label-info selected_of_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size %>
+
+        <span class="label label-info">
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. modifiés
+          <span class="label label-info modified_of_unit_of_work">
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size %>
+          </span>
         </span>
-        &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.C. :
-        <span class="label label-info off_line_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size %>
+
+        <span class="label label-info">
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. sélectionnés :
+          <span class="label label-info selected_of_unit_of_work">
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size %>
+          </span>
+        </span>
+
+        <span class="label label-info">
+          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.C. :
+          <span class="label label-info off_line_unit_of_work">
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size %>
+          </span>
         </span>
       </div>
-    </b>
   </div>
 
   <br>
@@ -51,16 +62,16 @@
 
   <div class="accordion" id="accordion">
 
-    <% if @unit_of_work_groups.empty? %>
-      <% if can? :execute_estimation_plan, @project %>
-        <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
-        <% unless @unit_of_work_groups.empty? %>
-          <%= link_to I18n.t(:new_unit_of_work), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
-        <% end %>
+  <% if @unit_of_work_groups.empty? %>
+    <% if can? :execute_estimation_plan, @project %>
+      <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
+      <% unless @unit_of_work_groups.empty? %>
+        <%= link_to I18n.t(:new_unit_of_work), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
       <% end %>
     <% end %>
+  <% end %>
 
-    <% @unit_of_work_groups.each_with_index do |uowg, j| %>
+  <% @unit_of_work_groups.each_with_index do |uowg, j| %>
     <div class="accordion-heading" style="padding:5px;">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>" id="accordion<%=uowg.id%>">
         <div class="">
@@ -68,33 +79,43 @@
             <%= uowg.name %>
           </span>
           <span class="pull-right">
-            <span>
+            <span class="label label-success">
               Total <%= @guw_model.retained_size_unit %> retenu :
               <span class="<%= uowg.id %>_ajusted">
                 <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum %>
               </span>
+            </span>
 
-              - Total <%= @guw_model.retained_size_unit %> calculés :
+            <span class="label label-info">
+              Total <%= @guw_model.retained_size_unit %> calculés :
               <span class="<%= uowg.id %>_theorical">
                 <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>
               </span>
+            </span>
 
-              - Nombre d'U.O. :
+            <span class="label label-info">
+              Nombre d'U.O. :
               <span class="<%= uowg.id %>_number">
                 <%= uowg.guw_unit_of_works.size %>
               </span>
+            </span>
 
-              - Nombre d'U.O. modifiés :
+            <span class="label label-info">
+              Nombre d'U.O. modifiés :
               <span class="<%= uowg.id %>_flagged">
                 <%= uowg.guw_unit_of_works.where(flagged: true).size %>
               </span>
+            </span>
 
-              - Nombre d'U.O. sélectionnés :
+            <span class="label label-info">
+              Nombre d'U.O. sélectionnés :
               <span class="<%= uowg.id %>_selected">
                 <%= uowg.guw_unit_of_works.where(selected: true).size %>
               </span>
+            </span>
 
-              - Nombre d'U.O. H.C. :
+            <span class="label label-info">
+              Nombre d'U.O. H.C. :
               <span class="<%= uowg.id %>_off_line">
                 <%= uowg.guw_unit_of_works.where(off_line: true).size %>
               </span>
@@ -106,40 +127,39 @@
 
     <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
       <div class="accordion-inner">
-        <table class="table">
+        <table class="table table-striped">
           <tr>
             <th class=""></th>
             <th class=""></th>
-            <th class="text_left"><%= I18n.t :name %></th>
-            <th class="text_left"><%= I18n.t :description %></th>
-            <th class="text_left"><%= I18n.t :work_unit_type %></th>
-            <th class="text_left">Opération</th>
-            <th class="text_left"><%= I18n.t :technology %></th>
-            <th class="text_left"><%= I18n.t :tracability %></th>
-            <th class="text_left"><%= I18n.t :cotation %></th>
-            <th class="text_left"><%= I18n.t :results %></th>
-            <th class="text_left"><%= I18n.t :retained_result %></th>
-            <th class="text_left"><%= I18n.t :actions %></th>
-            <th></th>
+            <th class=""></th>
+            <th class=""><%= I18n.t :name %></th>
+            <th class=""><%= I18n.t :description %></th>
+            <th class=""><%= I18n.t :type %></th>
+            <th class=""><%= "Acquisition" %></th>
+            <th class=""><%= I18n.t :technology %></th>
+            <th class=""><%= I18n.t :quantity %></th>
+            <th class=""><%= I18n.t :complexity %></th>
+            <th class=""><%= I18n.t :criteria %></th>
+            <th class=""><%= I18n.t :results %></th>
+            <th class=""><%= I18n.t :retained_result %></th>
+            <th class=""><%= I18n.t :actions %></th>
           </tr>
 
           <% uowg.guw_unit_of_works.order("display_order asc").each_with_index do |guow, i| %>
             <tr>
+
+              <td style="border-left: 3px solid <%= (guow.flagged == true) ? 'red' : 'green' %>"></td>
+
               <td>
                 <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected", disabled: !can?(:execute_estimation_plan, @project) %>
                 <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
                 <%= hidden_field_tag "", guow.id, class: "#{guow.id}" %>
-                <span class="label label-default">
-                  <%= j %><%= guow.display_order %>
-                </span>
               </td>
 
               <td>
-                <% if guow.flagged == true %>
-                  <span class="fa fa-star red_color"></span>
-                <% else %>
-                  <span class="fa fa-star icon-green"></span>
-                <% end %>
+                <span class="badge badge-default">
+                  <%= j %><%= guow.display_order %>
+                </span>
               </td>
 
               <td>
@@ -148,19 +168,21 @@
                 </span>
               </td>
 
-              <td style="max-width: 120px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+              <td style="max-width: 100px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                 <span class="pull-left" >
-                  <%= link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25), guw.guw_unit_of_work_load_comments_path(guow), title: guow.comments, method: "post", remote: true %>
+                  <%= link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25),
+                              guw.guw_unit_of_work_load_comments_path(guow),
+                              title: "#{guow.comments}\n#{guow.tracking}", method: "post", remote: true %>
                 </span>
               </td>
 
               <td class="span2 pull-left">
                 <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
                                                                            selected: guow.guw_type_id),
-                                                                           class: "guw_type input-small",
-                                                                           guw: guow.id,
-                                                                           required: true,
-                                                                           readonly: !can?(:execute_estimation_plan, @project) %>
+                               class: "guw_type input-small",
+                               guw: guow.id,
+                               required: true,
+                               readonly: !can?(:execute_estimation_plan, @project) %>
               </td>
 
               <td class="span2 pull-left">
@@ -185,36 +207,31 @@
                 </span>
               </td>
 
-              <td>
-                <span class="pull-left">
-                  <%= link_to (guow.tracking.nil? || guow.tracking.blank?) ? '------' : guow.tracking.truncate(25), guw.guw_unit_of_work_load_trackings_path(guow),
-                              title: guow.tracking,
-                              method: "post",
-                              remote: true %>
-                </span>
+              <td class="span2 pull-left">
+                <%= text_field_tag "quantity[#{guow.id}]", guow.quantity, class: "input-mini" %>
               </td>
 
               <td>
                 <span class="pull-left cotation_label_<%= guow.id %>">
-                  <% if @guw_model.one_level_model == true %>
-                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small" %>
+                  <% if guow.off_line == true %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT" %>
+                  <% elsif guow.off_line_uo == true %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSUO" %>
+                  <% elsif guow.guw_complexity.nil? %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true %>
                   <% else %>
-                    <% if guow.off_line == true %>
-                      <%= link_to "HSat", guw.guw_unit_of_work_load_cotations_path(guow), class: "red_color", method: "post", remote: true %>
-                    <% elsif guow.off_line_uo == true %>
-                      <%= link_to "HSuo", guw.guw_unit_of_work_load_cotations_path(guow), class: "red_color", method: "post", remote: true %>
-                    <% elsif guow.guw_complexity.nil? %>
-                      <%= link_to "-----", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true %>
-                    <% else %>
-                      <%= link_to guow.guw_complexity.name, guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true %>
-                    <% end %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true %>
                   <% end %>
                 </span>
               </td>
 
               <td>
-                <span class="pull-left effort_label<%= guow.id %>">
-                  <%= guow.effort.nil? ? '-' : guow.effort.round(3) %>
+                <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears" %>
+              </td>
+
+              <td>
+                <span class="pull-left effort_label_<%= guow.id %>">
+                  <%= text_field_tag "effort[#{guow.id}]", guow.effort.nil? ? '' : guow.effort.round(3), class: "input-mini effort-#{uowg.id}", disabled: true %>
                 </span>
               </td>
 
@@ -253,12 +270,12 @@
         </table>
       </div>
       <% if can? :execute_estimation_plan, @project %>
-        <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
+        <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini input-medium pull-left button_margin_right" %>
         <% unless @unit_of_work_groups.empty? %>
-          <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini pull-left button_margin_right" %>
+          <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini input-medium pull-left button_margin_right" %>
         <% end %>
-        <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
-        <%= link_to "RAZ", "#!", class: "btn btn-mini reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
+        <button type="submit" class="btn btn-default btn-mini input-small pull-right"><%= I18n.t(:save) %></button>
+        <%= link_to "RAZ", "#!", class: "btn btn-mini input-small reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
       <% end %>
     </div>
   <% end %>
