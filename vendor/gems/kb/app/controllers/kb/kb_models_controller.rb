@@ -42,33 +42,42 @@ class Kb::KbModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
-    @organization = @kb_model.organization
+    @current_organization
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
+    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@current_organization), @current_organization => ""
   end
 
   def import
-    file = Roo::Spreadsheet.open(params[:file].path, extension: :xls)
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
 
-    ((file.first_row + 1)..file.last_row).each do |line|
-      attr_one   = file.cell(line, 'A')
-      attr_two   = file.cell(line, 'B')
+    unless params[:file].nil?
+      file = Roo::Spreadsheet.open(params[:file].path, extension: :xls)
 
-      h = Hash.new
-      h[file.cell(1, 'C').to_sym] = file.cell(line, 'C')
-      h[file.cell(1, 'D').to_sym] = file.cell(line, 'D')
-      h[file.cell(1, 'E').to_sym] = file.cell(line, 'E')
-      h[file.cell(1, 'F').to_sym] = file.cell(line, 'F')
+      Kb::KbData.delete_all("kb_model_id = #{@kb_model.id}")
 
-      Kb::KbData.create(size: attr_one,
-                        effort: attr_two,
-                        unit: "UF",
-                        custom_attributes: h,
-                        kb_model_id: @kb_model.id)
+      ((file.first_row + 1)..file.last_row).each do |line|
+        attr_one   = file.cell(line, 'A')
+        attr_two   = file.cell(line, 'B')
+
+        h = Hash.new
+        ('C'..'ZZ').each_with_index do |letter, i|
+          if i < file.last_column
+            begin
+              h[file.cell(1, letter.to_s).to_sym] = file.cell(line, letter.to_s)
+            rescue
+            end
+          end
+        end
+
+        Kb::KbData.create(size: attr_one,
+                          effort: attr_two,
+                          unit: "UF",
+                          custom_attributes: h,
+                          kb_model_id: @kb_model.id)
+      end
     end
 
-    redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+    redirect_to kb.edit_kb_model_path(@kb_model)
   end
 
   def create
@@ -90,10 +99,9 @@ class Kb::KbModelsController < ApplicationController
     authorize! :manage_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
-    @organization = @kb_model.organization
 
     if @kb_model.update_attributes(params[:kb_model])
-      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+      redirect_to main_app.organization_module_estimation_path(@current_organization, anchor: "kb")
     else
       render action: :edit
     end
@@ -113,11 +121,11 @@ class Kb::KbModelsController < ApplicationController
     redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
   end
 
-
   def save_efforts
     authorize! :execute_estimation_plan, @project
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
+    @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first
 
     results = Array.new
     e_array = Array.new
@@ -136,8 +144,11 @@ class Kb::KbModelsController < ApplicationController
       end
     end
 
-    results.each do |kb_data|
+    if results.blank?
+      results = @kb_model.kb_datas
+    end
 
+    results.each do |kb_data|
       s = Math.log10(kb_data.size.to_f)
       s2 = s * s
 
@@ -171,18 +182,19 @@ class Kb::KbModelsController < ApplicationController
     @regression = Array.new
 
     results.map do |kb_data|
-      @values << [kb_data.size, kb_data.effort]
+      @values << [kb_data.size.round(2), kb_data.effort.round(2)]
     end
 
     results.map(&:size).each do |i|
-      @regression << [i, coef_10 * i ** pente]
+      @regression << [i, (coef_10 * i ** pente).round(2)]
     end
 
-    @kb_model.formula = "#{coef_10} X ^ #{pente}"
-    @kb_model.values = @values
-    @kb_model.regression = @regression
+    @formula = "#{coef_10} X ^ #{pente}"
+    @kb_input.values = @values
+    @kb_input.regression = @regression
 
     @kb_model.save
+    @kb_input.save
 
 
     current_module_project.pemodule.attribute_modules.each do |am|
@@ -248,6 +260,5 @@ class Kb::KbModelsController < ApplicationController
     @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id)
     @effort = effort_current_ev.send("string_data_probable")[current_component.id]
   end
-
 
 end

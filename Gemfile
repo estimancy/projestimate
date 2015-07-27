@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.16'
+gem 'rails', '3.2.21'
 gem 'jquery-rails', '~> 2.0.2'
 gem 'i18n', '~> 0.6.0'
 gem 'builder', '3.0.0'
@@ -64,10 +64,7 @@ gem 'ancestry'
 
 gem 'aescrypt'
 
-# Optional gem for LDAP authentication
-#group :ldap do
 gem 'net-ldap', '~> 0.3.1'
-#end
 
 #Pagination library for Rails 3
 gem 'will_paginate'

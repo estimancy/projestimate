@@ -20,9 +20,25 @@
 #############################################################################
 
 module Kb
-  class KbData < ActiveRecord::Base
+  class KbInput < ActiveRecord::Base
+    belongs_to :organization
+    has_many :module_projects, :dependent => :destroy
     belongs_to :kb_model
-    serialize :custom_attributes, Hash
+
+    serialize :values, Array
+    serialize :regression, Array
+
+    #def self.display_size(p, c, level, component_id)
+    #  if c.send("string_data_#{level}")[component_id].nil?
+    #    begin
+    #      p.send("string_data_#{level}")[component_id]
+    #    rescue
+    #      nil
+    #    end
+    #  else
+    #    c.send("string_data_#{level}")[component_id]
+    #  end
+    #end
 
   end
 end

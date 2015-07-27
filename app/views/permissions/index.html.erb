@@ -15,44 +15,32 @@
 
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th><%= I18n.t(:alias) %></th>
-          <th class="filter-select"><%= I18n.t(:object_type) %></th>
-          <th class="filter-select"><%= I18n.t(:category) %></th>
-          <th class="filter-select"><%= I18n.t(:is_permission_project) %></th>
-          <th class="filter-select"><%= I18n.t(:is_permission_master) %></th>
-          <th class="filter-select"><%= I18n.t('label_associated_object') %></th>
-          <th class="filter-select"><%= I18n.t(:record_status) %></th>
-          <th class="action"><%= I18n.t(:actions) %></th>
-        </tr>
+      <tr>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:alias) %></th>
+        <th class="filter-select"><%= I18n.t(:object_type) %></th>
+        <th class="filter-select"><%= I18n.t(:category) %></th>
+        <th class="filter-select"><%= I18n.t(:is_permission_project) %></th>
+        <th class="filter-select"><%= I18n.t(:is_permission_master) %></th>
+        <th class="filter-select"><%= I18n.t('label_associated_object') %></th>
+        <th class="action"><%= I18n.t(:actions) %></th>
+      </tr>
       </thead>
 
       <% @permissions.each do |perm| %>
-          <tr>
-            <td><span class = "attribute_tooltip" title ='<%= perm.description%>' ><%= perm.name %></span></td>
-            <td><%= perm.alias %></td>
-            <td><%= perm.object_type %></td>
-            <td><%= perm.category %></td>
-            <td><%= perm.is_permission_project %></td>
-            <td><%= perm.is_master_permission %></td>
-            <td><%= perm.object_associated.blank? ? 'All' : perm.object_associated %></td>
-            <td><%= perm.record_status.name unless perm.record_status.nil? %><%= perm.show_custom_value %></td>
-            <td class="center">
-              <%= link_to '', edit_permission_path(perm), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to '', perm, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-              <%# if is_master_instance? && !perm.is_local_record? %>
-              <% if !perm.is_local_record? %>
-                <% if perm.is_retired? %>
-                  <%= link_to('', "permissions/#{perm.id}/restore_change", confirm: I18n.t('restoring'),:class => 'icon-undo', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-                <% else %>
-                  <% unless perm.is_defined? %>
-                    <%= link_to('', "permissions/#{perm.id}/validate_change", confirm: I18n.t('validation'),:class => 'icon-ok', :style => 'color:green', :title => I18n.t('validation')) %>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </td>
-          </tr>
+        <tr>
+          <td><span class = "attribute_tooltip" title ='<%= perm.description%>' ><%= perm.name %></span></td>
+          <td><%= perm.alias %></td>
+          <td><%= perm.object_type %></td>
+          <td><%= perm.category %></td>
+          <td><%= perm.is_permission_project %></td>
+          <td><%= perm.is_master_permission %></td>
+          <td><%= perm.object_associated.blank? ? 'All' : perm.object_associated %></td>
+          <td class="center">
+            <%= link_to '', edit_permission_path(perm), :class => 'icon-pencil', :title => I18n.t('edit') %>
+            <%= link_to '', perm, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+          </td>
+        </tr>
       <% end %>
 
       <%= render :partial => 'layouts/footer_table' %>

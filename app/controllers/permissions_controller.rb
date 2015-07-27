@@ -20,10 +20,8 @@
 #############################################################################
 
 class PermissionsController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
-  load_resource
 
-  before_filter :get_record_statuses
+  load_resource
 
   def index
     authorize! :manage_master_data, :all
@@ -32,7 +30,7 @@ class PermissionsController < ApplicationController
     @permissions = Permission.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
     end
   end
 
@@ -48,13 +46,6 @@ class PermissionsController < ApplicationController
 
     set_page_title 'Permissions'
     @permission = Permission.find(params[:id])
-
-    unless @permission.child_reference.nil?
-      if @permission.child_reference.is_proposed_or_custom?
-        flash[:warning] = I18n.t (:warning_permission_cant_be_edit)
-        redirect_to permissions_path
-      end
-    end
   end
 
   def create
@@ -76,14 +67,7 @@ class PermissionsController < ApplicationController
   def update
     authorize! :manage_master_data, :all
 
-    @permission = nil
-    current_permission = Permission.find(params[:id])
-    if current_permission.is_defined?
-      @permission = current_permission.amoeba_dup
-      @permission.owner_id = current_user.id
-    else
-      @permission = current_permission
-    end
+    @permission = Permission.find(params[:id])
 
     if @permission.update_attributes(params[:permission])
       @permission.alias = @permission.alias.underscore.gsub(' ', '_')
@@ -96,14 +80,8 @@ class PermissionsController < ApplicationController
 
   def destroy
     authorize! :manage_master_data, :all
-
     @permission = Permission.find(params[:id])
-    if @permission.is_defined? || @permission.is_custom?
-      @permission.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @permission.destroy
-    end
-
+    @permission.destroy
     redirect_to permissions_path, notice: "#{I18n.t (:notice_permission_successful_deleted)}"
   end
 
@@ -115,7 +93,7 @@ class PermissionsController < ApplicationController
       flash[:notice] = I18n.t(:notice_permission_successful_cancelled)
     else
       @groups = @current_organization.groups
-      @permissions = Permission.defined
+      @permissions = Permission.all
 
       @groups.each do |group|
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
@@ -141,7 +119,7 @@ class PermissionsController < ApplicationController
       redirect_to organization_authorization_path(@organization, :anchor => "tabs-estimations-permissions"), :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
     else
       @project_security_levels = @organization.project_security_levels
-      @permissions = Permission.defined
+      @permissions = Permission.all
 
       @project_security_levels.each do |psl|
         if params[:permissions].nil?
