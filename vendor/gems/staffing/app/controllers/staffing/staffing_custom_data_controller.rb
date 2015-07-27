@@ -129,12 +129,12 @@
       if @staffing_custom_data.update_attributes(params[:staffing_custom_datum])
 
         effort = @staffing_custom_data.global_effort_value
-        duration = @staffing_custom_data.duration
 
         case @staffing_custom_data.staffing_method
 
           #================================= TRAPEZE / LINEAIRE  ===================================
           when 'trapeze'
+            duration = @staffing_custom_data.duration
             trapeze_parameter_values = @staffing_custom_data.trapeze_parameter_values
 
             # Calcul des vraies valeurs de (x0, x1, x2, x3) en % de la durée D ; et  (y0, y3) en % de M
@@ -204,16 +204,74 @@
             @staffing_custom_data.chart_theoretical_coordinates = staffing_values
             @staffing_custom_data.chart_actual_coordinates = staffing_values
 
-            @staffing_custom_data.save
+            #@staffing_custom_data.save
 
 
           #================================= RAYLEIGH  ==============================================
 
           when 'rayleigh'
+            max_staffing = @staffing_custom_data.max_staffing
+            mc_donell_duration = @staffing_model.mc_donell_coef * (effort**@staffing_model.puissance_n)
 
+            staffing_constraint = @staffing_custom_data.staffing_constraint
+
+            # Contrainte de Staffing Max
+            if staffing_constraint == "max_staffing_constraint"
+              # coefficient de forme : a
+              form_coef = (max_staffing*max_staffing) * (Math.exp(1) / (2*effort*effort))
+              @staffing_custom_data.form_coef = form_coef
+
+              # coefficient de difficulté
+              difficulty_coef = 2*effort*form_coef
+              @staffing_custom_data.difficulty_coef = difficulty_coef
+
+              # numero de la semaine au Pic de Staffing
+              t_max_staffing = Math.sqrt(1/(2*form_coef))
+              @staffing_custom_data.t_max_staffing = t_max_staffing
+
+              # Duree en semaines : Tfin = duration
+              duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
+              @staffing_custom_data.duration = duration
+
+              # Contrainte de Durée
+            elsif staffing_constraint == "duration_constraint"
+
+              duration = @staffing_custom_data.duration
+
+              # coefficient de forme : a
+              form_coef = -Math.log(1-0.97) / (duration*duration)
+              @staffing_custom_data.form_coef = form_coef
+
+              # coefficient de difficulté
+              difficulty_coef = 2*effort*form_coef
+              @staffing_custom_data.difficulty_coef = difficulty_coef
+
+              # numero de la semaine au Pic de Staffing
+              t_max_staffing = Math.sqrt(1/(2*form_coef))
+              @staffing_custom_data.t_max_staffing = t_max_staffing
+
+              # MAx Staffing
+              max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+              @staffing_custom_data.max_staffing = max_staffing
+            end
+
+            # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
+            # Creation du jeu de donnees pour le tracer la courbe
+            staffing_values = []
+            for t in 0..duration
+              # E(t) = 2 * K * a * t * e(-a*t*t)
+              t_staffing = 2 * effort * form_coef * t * Math.exp(-form_coef*t*t)
+              staffing_values << ["#{t}", t_staffing]
+            end
+
+            @staffing_custom_data.chart_theoretical_coordinates = staffing_values
+            @staffing_custom_data.chart_actual_coordinates = staffing_values
           else
 
         end
+
+        # save staffing values and parameters
+        @staffing_custom_data.save
 
       end
 
