@@ -51,19 +51,19 @@
           Pour simplifier ; nous définissons x0, x1, x2, x3 en <b>pourcentage</b> de la <b>durée D</b> du projet, et y0 et y3 en <b>pourcentage de M</b>, le staffing maximum, qui, lui, sera calculé en directe. <br>
 
           <div class="row-fluid">
-            <div class="span3"><%= f.input :x0, label: "x0", input_html: { value: @staffing_model.x0 || 0 } %></div>
-            <div class="span3"><%= f.input :y0, label: "y0", input_html: { value: 20 } %></div>
+            <div class="span3"><%= f.input :x0, label: "x0", input_html: { value: @staffing_model.trapeze_default_values['x0'] || 0 } %></div>
+            <div class="span3"><%= f.input :y0, label: "y0", input_html: { value: @staffing_model.trapeze_default_values['y0'] || 20 } %></div>
           </div>
 
           <div class="row-fluid">
-            <div class="span3"> <%= f.input :x1, label: "x1", input_html: { value: 20 } %></div>
-            <div class="span3"> <%= f.input :x2, label: "x2", input_html: { value: 80 } %></div>
+            <div class="span3"> <%= f.input :x1, label: "x1", input_html: { value: @staffing_model.trapeze_default_values['x1'] || 20 } %></div>
+            <div class="span3"> <%= f.input :x2, label: "x2", input_html: { value: @staffing_model.trapeze_default_values['x2'] || 80 } %></div>
           </div>
 
 
           <div class="row-fluid">
-            <div class="span3"><%= f.input :x3, label: "x3", input_html: { value: 100 } %></div>
-            <div class="span3"><%= f.input :y3, label: "y3", input_html: { value: 20 } %></div>
+            <div class="span3"><%= f.input :x3, label: "x3", input_html: { value: @staffing_model.trapeze_default_values['x3'] || 100 } %></div>
+            <div class="span3"><%= f.input :y3, label: "y3", input_html: { value: @staffing_model.trapeze_default_values['y3'] || 20 } %></div>
           </div>
 
         </div>

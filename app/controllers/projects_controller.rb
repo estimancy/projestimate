@@ -926,6 +926,7 @@ class ProjectsController < ApplicationController
       elsif @pemodule.alias == "staffing"
         staffing_model_id = params[:module_selected].split(',').first.to_i
         my_module_project.staffing_model_id = staffing_model_id
+        staffing_model = Staffing::StaffingModel.find(staffing_model_id)
         #Then create an staffing_custom_data object for current module_project
         staffing_custom_data = Staffing::StaffingCustomDatum.create(staffing_model_id: staffing_model_id,
                                                                     module_project_id: my_module_project.id,
@@ -935,7 +936,8 @@ class ProjectsController < ApplicationController
                                                                     global_effort_type: 'probable',
                                                                     mc_donell_coef: 6,
                                                                     puissance_n: 0.33,
-                                                                    duration: 12)
+                                                                    duration: 12,
+                                                                    trapeze_parameter_values: staffing_model.trapeze_default_values)
 
       elsif @pemodule.alias == "effort_breakdown"
         wbs_id = params[:module_selected].split(',').first.to_i
