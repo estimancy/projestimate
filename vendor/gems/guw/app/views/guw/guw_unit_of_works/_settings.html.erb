@@ -19,9 +19,9 @@
           </span>
         </span>
 
-        <span class="label label-info">
+        <span class="label label-success">
           Total <%= @guw_model.retained_size_unit %> calculés :
-          <span class="label label-info theorical_effort">
+          <span class="label label-success theorical_effort">
               <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
           </span>
         </span>
@@ -86,7 +86,7 @@
               </span>
             </span>
 
-            <span class="label label-info">
+            <span class="label label-success">
               Total <%= @guw_model.retained_size_unit %> calculés :
               <span class="<%= uowg.id %>_theorical">
                 <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>

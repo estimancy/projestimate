@@ -28,8 +28,8 @@
        <div class="span2"><%= f.input :staffing_method, as: :select, collection: [['Méthode de Trapèze', 'trapeze'], ['Méthode de Rayleigh', 'rayleigh']], label: 'Méthode de staffing', include_blank: false, :input_html => { :class => 'input-medium'} %></div>
        <div class="span2"><%= f.input :period_unit, as: :select, collection: [['Semaines', 'weeks'], ['Mois', 'months']], label: 'Échelle de temps', include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
        <div class="span2"><%= f.input :global_effort_type, as: :select, collection: [['Effort Probable', 'probable'], ['Effort Min', 'minimum'], ['Effort Max', 'maximum']], label: "Prendre min/max/probable", include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
-       <!--<div class="span2"><%#= f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>-->
-       <!--<div class="span2"><%#= f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>-->
+       <div class="span2"><%= f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>
+       <div class="span2"><%= f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>
        <!--<div class="span2"><%#= f.input :max_staffing, label: "Max staffing", :input_html => { :class => 'input-medium'} %></div>-->
      </div>
 

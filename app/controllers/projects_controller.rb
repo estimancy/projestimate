@@ -924,7 +924,18 @@ class ProjectsController < ApplicationController
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "staffing"
-        my_module_project.staffing_model_id = params[:module_selected].split(',').first
+        staffing_model_id = params[:module_selected].split(',').first.to_i
+        my_module_project.staffing_model_id = staffing_model_id
+        #Then create an staffing_custom_data object for current module_project
+        staffing_custom_data = Staffing::StaffingCustomDatum.create(staffing_model_id: staffing_model_id,
+                                                                    module_project_id: my_module_project.id,
+                                                                    pbs_project_element_id: @pbs_project_element.id,
+                                                                    staffing_method: 'trapeze',
+                                                                    period_unit: 'week',
+                                                                    global_effort_type: 'probable',
+                                                                    mc_donell_coef: 6,
+                                                                    puissance_n: 0.33,
+                                                                    duration: 12)
 
       elsif @pemodule.alias == "effort_breakdown"
         wbs_id = params[:module_selected].split(',').first.to_i
@@ -938,14 +949,8 @@ class ProjectsController < ApplicationController
         my_module_project.expert_judgement_instance_id = eji_id.to_i
       end
 
-      if my_module_project.save
+      my_module_project.save
 
-        if @pemodule.alias == "staffing"
-          #Then create an staffing_custom_data object for current module_project
-          staffing_custom_data = Staffing::StaffingCustomDatum.create(staffing_model_id: my_module_project.staffing_model_id, module_project_id: my_module_project.id, pbs_project_element_id: @pbs_project_element.id,
-                                                                      staffing_method: 'trapeze', period_unit: 'week', global_effort_type: 'probable', mc_donell_coef: 6, puissance_n: 0.33)
-        end
-      end
 
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
       @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.max
