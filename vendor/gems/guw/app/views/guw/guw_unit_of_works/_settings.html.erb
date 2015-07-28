@@ -131,7 +131,7 @@
           <tr>
             <th class=""></th>
             <th class=""></th>
-            <th class=""></th>
+            <th class="">#</th>
             <th class=""><%= I18n.t :name %></th>
             <th class=""><%= I18n.t :description %></th>
             <th class=""><%= I18n.t :type %></th>
@@ -163,20 +163,20 @@
               </td>
 
               <td>
-                <span class="pull-left">
+                <span class="">
                   <%= link_to (guow.name.nil? || guow.name.blank?) ? '-' : guow.name.truncate(25), guw.guw_unit_of_work_load_name_path(guow), title: guow.name, method: "post", remote: true %>
                 </span>
               </td>
 
               <td style="max-width: 100px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                <span class="pull-left" >
+                <span class="" >
                   <%= link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25),
                               guw.guw_unit_of_work_load_comments_path(guow),
                               title: "#{guow.comments}\n#{guow.tracking}", method: "post", remote: true %>
                 </span>
               </td>
 
-              <td class="span2 pull-left">
+              <td class="span2 ">
                 <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
                                                                            selected: guow.guw_type_id),
                                class: "guw_type input-small",
@@ -185,7 +185,7 @@
                                readonly: !can?(:execute_estimation_plan, @project) %>
               </td>
 
-              <td class="span2 pull-left">
+              <td class="span2 ">
                 <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.map{|i| [i.name, i.id]},
                                                                                selected: guow.guw_work_unit_id),
                                class: "guw_work_unit input-small",
@@ -194,7 +194,7 @@
                                readonly: !can?(:execute_estimation_plan, @project) %>
               </td>
 
-              <td class="span2 pull-left">
+              <td class="span2 ">
                 <span class="technology_<%= guow.id %>" >
                   <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
 
@@ -207,12 +207,12 @@
                 </span>
               </td>
 
-              <td class="span2 pull-left">
+              <td class="span2 ">
                 <%= text_field_tag "quantity[#{guow.id}]", guow.quantity, class: "input-mini" %>
               </td>
 
               <td>
-                <span class="pull-left cotation_label_<%= guow.id %>">
+                <span class=" cotation_label_<%= guow.id %>">
                   <% if guow.off_line == true %>
                     <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT" %>
                   <% elsif guow.off_line_uo == true %>
@@ -226,27 +226,29 @@
               </td>
 
               <td>
-                <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears" %>
+                <span class="text-center effort_label_<%= guow.id %>">
+                  <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears" %>
+                </span>
               </td>
 
               <td>
-                <span class="pull-left effort_label_<%= guow.id %>">
+                <span class=" effort_label_<%= guow.id %>">
                   <%= text_field_tag "effort[#{guow.id}]", guow.effort.nil? ? '' : guow.effort.round(3), class: "input-mini effort-#{uowg.id}", disabled: true %>
                 </span>
               </td>
 
               <td>
                 <% if guow.guw_type.disable_ajusted_effort.nil? %>
-                  <span class="pull-left ajusted_effort_<%= guow.id %>">
+                  <span class=" ajusted_effort_<%= guow.id %>">
                     <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort.nil? ? '' : guow.ajusted_effort.round(3), class: "input-mini retained-#{uowg.id}", readonly: !can?(:execute_estimation_plan, @project) %>
                   </span>
                 <% else %>
                   <% if guow.guw_type.disable_ajusted_effort == true %>
-                    <span class="pull-left ajusted_effort_<%= guow.id %>">
+                    <span class=" ajusted_effort_<%= guow.id %>">
                       -
                     </span>
                   <% else %>
-                    <span class="pull-left ajusted_effort_<%= guow.id %>">
+                    <span class=" ajusted_effort_<%= guow.id %>">
                       <%= text_field_tag "ajusted_effort[#{guow.id}]", guow.ajusted_effort.nil? ? '' : guow.ajusted_effort.round(3), class: "input-mini retained-#{uowg.id}", readonly: !can?(:execute_estimation_plan, @project) %>
                     </span>
                   <% end %>
@@ -254,7 +256,7 @@
               </td>
 
               <td>
-                <span class="pull-left">
+                <span class="">
                   <% if can? :execute_estimation_plan, @project %>
                     <%= link_to "", guw.guw_unit_of_work_duplicate_path(guow), class: "fa fa-copy", method: "post" %>
                     <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
