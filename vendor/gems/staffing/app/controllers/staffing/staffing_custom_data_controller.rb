@@ -152,7 +152,7 @@
             y3 = trapeze_parameter_values[:y3].to_f / 100
 
             # Calcul du Max staffing M = 2 * (E/D) * (1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
-            max_staffing = 2 * (effort/duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+            max_staffing = 2 * (effort / duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
             @staffing_custom_data.max_staffing = max_staffing
 
             x0D = x0 * duration

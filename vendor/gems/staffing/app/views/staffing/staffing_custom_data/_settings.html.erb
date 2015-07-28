@@ -19,17 +19,15 @@
   </div>
 </div>
 
-<%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| -%>
+<%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| %>
      <div class="row-fluid">
        <div class="span2"><h4><b>Paramètres globaux : </b></h4></div>
        <div class="span2"><%= f.input :staffing_method, as: :select, collection: [['Méthode de Trapèze', 'trapeze'], ['Méthode de Rayleigh', 'rayleigh']], label: 'Méthode de staffing', include_blank: false, :input_html => { :class => 'input-medium'} %></div>
        <div class="span2"><%= f.input :period_unit, as: :select, collection: [['Semaines', 'weeks'], ['Mois', 'months']], label: 'Échelle de temps', include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
        <div class="span2"><%= f.input :global_effort_type, as: :select, collection: [['Effort Probable', 'probable'], ['Effort Min', 'minimum'], ['Effort Max', 'maximum']], label: "Prendre min/max/probable", include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
-       <!--<div class="span2"><%# f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>-->
-       <!--<div class="span2"><%# f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>-->
-       <!--<div class="span2"><%#= f.input :max_staffing, label: "Max staffing", :input_html => { :class => 'input-medium'} %></div>-->
+       <div class="span2"><%= f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>
+       <div class="span2"><%= f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>
      </div>
-
 
     <!-- Si method Trapeze -->
     <div id="staffing_trapeze_parameters" style="display: none">
@@ -49,9 +47,7 @@
 <% end %>
 
 <script>
-
     $(document).ready(function () {
-
         var staffing_method = $('#staffing_custom_datum_staffing_method').val();
 
         if(staffing_method == "rayleigh"){
