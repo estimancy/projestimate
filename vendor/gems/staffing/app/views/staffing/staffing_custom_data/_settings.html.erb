@@ -19,14 +19,23 @@
   </div>
 </div>
 
+<%
+   previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
+   attribute = PeAttribute.find_by_alias("effort")
+   effort = EstimationValue.where(:pe_attribute_id => attribute.id,
+                                       :module_project_id => current_module_project.previous.first,
+                                       :in_out => "output").first.string_data_probable[current_component.id][previous_activity_root.id][:value] / @staffing_model.standard_unit_coefficient
+
+%>
+
 <%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| %>
      <div class="row-fluid">
        <div class="span2"><h4><b>Paramètres globaux : </b></h4></div>
        <div class="span2"><%= f.input :staffing_method, as: :select, collection: [['Méthode de Trapèze', 'trapeze'], ['Méthode de Rayleigh', 'rayleigh']], label: 'Méthode de staffing', include_blank: false, :input_html => { :class => 'input-medium'} %></div>
-       <div class="span2"><%= f.input :period_unit, as: :select, collection: [['Semaines', 'weeks'], ['Mois', 'months']], label: 'Échelle de temps', include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
-       <div class="span2"><%= f.input :global_effort_type, as: :select, collection: [['Effort Probable', 'probable'], ['Effort Min', 'minimum'], ['Effort Max', 'maximum']], label: "Prendre min/max/probable", include_blank: false, :input_html => { :class => 'input-medium'}  %></div>
-       <div class="span2"><%= f.input :global_effort_value, label: "Effort", :input_html => { :class => 'input-medium' } %></div>
-       <div class="span2"><%= f.input :duration, label: "Durée (semaines)", :input_html => { :class => 'input-medium'} %></div>
+       <!--<div class="span2"><%# f.input :global_effort_type, as: :select, collection: [['Effort Probable', 'probable'], ['Effort Min', 'minimum'], ['Effort Max', 'maximum']], label: "Prendre min/max/probable", include_blank: false, :input_html => { :class => 'input-medium'}  %></div>-->
+       <div class="span2"><%= f.input :global_effort_value, label: "Effort (#{@staffing_model.effort_unit})", :input_html => { :class => 'input-medium', value: effort.round(1) } %></div>
+       <div class="span2"><%= f.input :duration, label: "Durée", :input_html => { :class => 'input-medium'} %></div>
+       <!--<div class="span2"><%# f.input :period_unit, as: :select, collection: [['Jours', 'days'], ['Semaines', 'weeks'], ['Mois', 'months']], label: 'Échelle de temps', include_blank: false, :input_html => { :class => 'input-medium'}  %></div>-->
      </div>
 
     <!-- Si method Trapeze -->

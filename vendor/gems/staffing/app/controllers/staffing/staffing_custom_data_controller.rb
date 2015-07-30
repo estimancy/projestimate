@@ -134,6 +134,7 @@
 
       if @staffing_custom_data.update_attributes(params[:staffing_custom_datum])
 
+        #TODO : convertir effort, relier effort module précédent. Choisir l'échelle de temps
         effort = @staffing_custom_data.global_effort_value
 
         case @staffing_custom_data.staffing_method

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150727144901) do
+ActiveRecord::Schema.define(:version => 20150730062705) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1298,8 +1298,10 @@ ActiveRecord::Schema.define(:version => 20150727144901) do
     t.boolean  "enabled_input"
     t.integer  "copy_id"
     t.integer  "copy_number"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.float    "standard_unit_coefficient"
+    t.string   "effort_unit"
   end
 
   create_table "status_transitions", :force => true do |t|
