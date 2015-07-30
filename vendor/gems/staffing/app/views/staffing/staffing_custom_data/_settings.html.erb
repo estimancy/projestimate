@@ -72,18 +72,19 @@
   </div>
 
     <!-- Si method Trapeze -->
-    <div id="staffing_trapeze_parameters" style="display: none">
+    <div id="staffing_trapeze_parameters">
       <%= render :partial => 'staffing/staffing_custom_data/staffing_trapeze_method', object: @staffing_custom_data , :locals => { :f => f } %>
     </div>
 
     <!-- Si method Rayleigh : on peut imposer des contraintes -->
-    <div id="staffing_rayleigh_parameters" style="display: none">
+    <div id="staffing_rayleigh_parameters">
       <%= render :partial => 'staffing/staffing_custom_data/staffing_rayleigh_method', object: @staffing_custom_data , :locals => { :f => f } %>
     </div>
 
+    <hr>
 
     <% if can? :execute_estimation_plan, @project %>
-      <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:save) %></button>
+      <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:update) %></button>
     <% end %>
 
 <% end %>

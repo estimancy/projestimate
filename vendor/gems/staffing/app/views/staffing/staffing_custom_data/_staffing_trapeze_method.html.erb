@@ -60,7 +60,7 @@
         <tr>
           <td>Théorique</td>
           <% theoretical_coordinates.each do |(coord,value)| %>
-            <% rounded_value = value.round(1) %>
+            <% rounded_value = value.nil? ? 0 : value.round %>
             <% staffing_theorique += rounded_value %>
             <td><%= rounded_value %></td>
           <% end %>
@@ -69,9 +69,9 @@
         <tr>
           <td>Actuel</td>
           <% actual_coordinates.each do |(coord,value)| %>
-            <% rounded_value = value.round(1) %>
+            <% rounded_value = value.nil? ? 0 : value.round %>
             <% staffing_actuel += rounded_value %>
-            <td><%= rounded_value %></td>
+            <td><%= text_field_tag "actuals[#{coord}]", rounded_value, class: "input-mini" %></td>
           <% end %>
         </tr>
       </table>
@@ -119,12 +119,12 @@
       },
       series: [{
         name: 'Staffing théorique',
-        data: <%= @staffing_custom_data.chart_theoretical_coordinates.map{|i| i.last.round(1)} %>
+        data: <%= @staffing_custom_data.chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
 
       },
         {
           name: 'Staffing actuel',
-          data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
+          data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
 
         }]
     });
