@@ -937,7 +937,6 @@ class ProjectsController < ApplicationController
                                                                     global_effort_type: 'probable',
                                                                     mc_donell_coef: 6,
                                                                     puissance_n: 0.33,
-                                                                    duration: 12,
                                                                     trapeze_parameter_values: staffing_model.trapeze_default_values)
 
       elsif @pemodule.alias == "effort_breakdown"
