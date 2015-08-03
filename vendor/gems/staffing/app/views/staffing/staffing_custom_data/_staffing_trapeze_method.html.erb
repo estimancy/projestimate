@@ -1,6 +1,3 @@
-<!-- Les valeurs en entrée -->
-
-
 <!-- Si Trapèze/Linéaire : paramètres du trapèze -->
 <% trapeze_parameters = @staffing_custom_data.trapeze_parameter_values %>
 <div class="row-fluid">
@@ -20,6 +17,18 @@
     <div class="span1"><%= ff.input :x3, label: "x3", :input_html => { value: trapeze_parameters[:x3], :class => 'input-mini'} %></div>
     <div class="span1"><%= ff.input :y3, label: "y3", :input_html => { value: trapeze_parameters[:y3], :class => 'input-mini'} %></div>
   <% end %>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <h4>
+      <b>Paramètre de Rayleigh </b>
+    </h4>
+  </div>
+  <div class="row-fluid">
+    <div class="span2"><%= f.input :staffing_constraint, as: :select, collection: [['Contrainte de staffing max', 'max_staffing_constraint'], ['Contrainte de durée', 'duration_constraint']], label: 'Contrainte imposée', include_blank: false, :input_html => { :class => 'input-medium'} %></div>
+    <div class="span2"><%= f.input :max_staffing, label: "Max staffing", :input_html => { :class => 'input-medium'} %></div>
+  </div>
 </div>
 
 <h4>
@@ -43,7 +52,8 @@
 <div class="row-fluid">
   <div class="span12">
 
-    <% theoretical_coordinates = @staffing_custom_data.chart_theoretical_coordinates %>
+    <% trapeze_theoretical_coordinates = @staffing_custom_data.trapeze_chart_theoretical_coordinates %>
+    <% rayleigh_theoretical_coordinates = @staffing_custom_data.rayleigh_chart_theoretical_coordinates %>
     <% actual_coordinates = @staffing_custom_data.chart_actual_coordinates %>
     <% staffing_theorique = 0 %>
     <% staffing_actuel = 0 %>
@@ -58,8 +68,17 @@
         </tr>
 
         <tr>
-          <td>Théorique</td>
-          <% theoretical_coordinates.each do |(coord,value)| %>
+          <td>Trapèze théorique</td>
+          <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
+            <% rounded_value = value.nil? ? 0 : value.round %>
+            <% staffing_theorique += rounded_value %>
+            <td><%= rounded_value %></td>
+          <% end %>
+        </tr>
+
+        <tr>
+          <td>Rayleigh théorique</td>
+          <% rayleigh_theoretical_coordinates.each do |(coord,value)| %>
             <% rounded_value = value.nil? ? 0 : value.round %>
             <% staffing_theorique += rounded_value %>
             <td><%= rounded_value %></td>
@@ -118,15 +137,20 @@
         }
       },
       series: [{
-        name: 'Staffing théorique',
-        data: <%= @staffing_custom_data.chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
+        name: 'Trapèze théorique',
+        data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
 
       },
-        {
-          name: 'Staffing actuel',
-          data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
+      {
+        name: 'Rayleigh théorique',
+        data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
 
-        }]
+      },
+      {
+        name: 'Courbe actualisé',
+        data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
+
+      }]
     });
   });
 </script>

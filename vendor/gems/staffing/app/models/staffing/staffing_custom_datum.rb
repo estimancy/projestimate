@@ -7,7 +7,9 @@ module Staffing
 
     serialize :trapeze_default_values, Hash
     serialize :trapeze_parameter_values, Hash
-    serialize :chart_theoretical_coordinates, Array
+
+    serialize :trapeze_chart_theoretical_coordinates, Array
+    serialize :rayleigh_chart_theoretical_coordinates, Array
     serialize :chart_actual_coordinates, Array
 
 

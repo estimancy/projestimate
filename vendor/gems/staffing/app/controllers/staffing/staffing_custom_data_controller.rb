@@ -133,172 +133,144 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       effort = @staffing_custom_data.global_effort_value
 
-      case @staffing_custom_data.staffing_method
+      @duration = @staffing_custom_data.duration
+      trapeze_parameter_values = @staffing_custom_data.trapeze_parameter_values
 
-        #================================= TRAPEZE / LINEAIRE  ===================================
-        when 'trapeze'
-          duration = @staffing_custom_data.duration
-          trapeze_parameter_values = @staffing_custom_data.trapeze_parameter_values
+      # Calcul des vraies valeurs de (x0, x1, x2, x3) en % de la durée D ; et  (y0, y3) en % de M
+      x0 = trapeze_parameter_values[:x0].to_f / 100
+      x1 = trapeze_parameter_values[:x1].to_f / 100
+      x2 = trapeze_parameter_values[:x2].to_f / 100
+      x3 = trapeze_parameter_values[:x3].to_f / 100
+      y0 = trapeze_parameter_values[:y0].to_f / 100
+      y3 = trapeze_parameter_values[:y3].to_f / 100
 
-          # Calcul des vraies valeurs de (x0, x1, x2, x3) en % de la durée D ; et  (y0, y3) en % de M
-          x0 = trapeze_parameter_values[:x0].to_f / 100
-          x1 = trapeze_parameter_values[:x1].to_f / 100
-          x2 = trapeze_parameter_values[:x2].to_f / 100
-          x3 = trapeze_parameter_values[:x3].to_f / 100
-          y0 = trapeze_parameter_values[:y0].to_f / 100
-          y3 = trapeze_parameter_values[:y3].to_f / 100
+      # Calcul du Max staffing M = 2 * (E/D) * (1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+      max_staffing = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+      @staffing_custom_data.max_staffing = max_staffing
 
-          # Calcul du Max staffing M = 2 * (E/D) * (1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
-          max_staffing = 2 * (effort / duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
-          @staffing_custom_data.max_staffing = max_staffing
+      x0D = x0 * @duration
+      x1D = x1 * @duration
+      x2D = x2 * @duration
+      x3D = x3 * @duration
 
-          x0D = x0 * duration
-          x1D = x1 * duration
-          x2D = x2 * duration
-          x3D = x3 * duration
+      # Calcul de a, b, a', b' avec
+      # a = M(1 - y0) / D(x1 - x2)
+      coef_a = (max_staffing*(1-y0)) / (@duration*(x1-x0))
+      @staffing_custom_data.coef_a = coef_a
 
-          # Calcul de a, b, a', b' avec
-          # a = M(1 - y0) / D(x1 - x2)
-          coef_a = (max_staffing*(1-y0)) / (duration*(x1-x0))
-          @staffing_custom_data.coef_a = coef_a
+      # b = M(x1y0 - x0) / (x1 - x0)
+      coef_b = (max_staffing * ((x1*y0) - x0)) / (x1-x0)
+      @staffing_custom_data.coef_b = coef_b
 
-          # b = M(x1y0 - x0) / (x1 - x0)
-          coef_b = (max_staffing * ((x1*y0) - x0)) / (x1-x0)
-          @staffing_custom_data.coef_b = coef_b
+      # a' = M(1 - y3) / D(x2 - x3)
+      coef_a_prime = (max_staffing*(1-y3)) / (@duration*(x2-x3))
+      @staffing_custom_data.coef_a_prime = coef_a_prime
 
-          # a' = M(1 - y3) / D(x2 - x3)
-          coef_a_prime = (max_staffing*(1-y3)) / (duration*(x2-x3))
-          @staffing_custom_data.coef_a_prime = coef_a_prime
+      # b' = M(x2y3 - x3) / D(x2 - x3)
+      coef_b_prime = (max_staffing * ((x2*y3) - x3)) / (x2-x3)
+      @staffing_custom_data.coef_b_prime = coef_b_prime
 
-          # b' = M(x2y3 - x3) / D(x2 - x3)
-          coef_b_prime = (max_staffing * ((x2*y3) - x3)) / (x2-x3)
-          @staffing_custom_data.coef_b_prime = coef_b_prime
+      # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
+      # Creation du jeu de donnees pour le tracer la courbe
+      trapeze_theorical_staffing_values = []
+      actual_staffing_values = []
 
-          # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
-          # Creation du jeu de donnees pour le tracer la courbe
-          theorical_staffing_values = []
-          actual_staffing_values = []
+      for t in 0..@duration
+        case t
+          #intervalle_1 = x(semaine) compris dans [0 ; x0*D]     =>  f(x) = 0
+          when 0..x0D
+            t_staffing = 0
 
-          for t in 0..duration
-            case t
-              #intervalle_1 = x(semaine) compris dans [0 ; x0*D]     =>  f(x) = 0
-              when 0..x0D
-                t_staffing = 0
+          #intervalle_2 = x(semaine) compris dans ]x0*D ; x1*D]  =>   f(x) = ax+b
+          when x0D..x1D
+            t_staffing = (coef_a * t) + coef_b
 
-              #intervalle_2 = x(semaine) compris dans ]x0*D ; x1*D]  =>   f(x) = ax+b
-              when x0D..x1D
-                t_staffing = (coef_a * t) + coef_b
+          #intervalle_3 = x(semaine) compris dans ]x1*D ; x2*D]  =>   f(x) = M
+          when x1D..x2D
+            t_staffing = max_staffing
 
-              #intervalle_3 = x(semaine) compris dans ]x1*D ; x2*D]  =>   f(x) = M
-              when x1D..x2D
-                t_staffing = max_staffing
+          #intervalle_4 = x(semaine) compris dans ]x2*D ; x3*D]   =>  f(x) = a'x+b'
+          when x2D..x3D
+            t_staffing = (coef_a_prime * t) + coef_b_prime
 
-              #intervalle_4 = x(semaine) compris dans ]x2*D ; x3*D]   =>  f(x) = a'x+b'
-              when x2D..x3D
-                t_staffing = (coef_a_prime * t) + coef_b_prime
-
-              #intervalle_5 = x(semaine) compris dans ]x3*D ; infini[  => f(x) = 0
-              else
-                t_staffing = 0
-            end
-
-            theorical_staffing_values << ["#{t}", t_staffing]
-
-            if params[:actuals].present?
-              actual_staffing_values << params[:actuals].to_a.map{|i| [i.first.to_f, i.last.to_f]}
-            else
-              actual_staffing_values << ["#{t}", t_staffing]
-            end
-          end
-
-          @staffing_custom_data.chart_theoretical_coordinates = theorical_staffing_values
-          if params[:actuals].present?
-            @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
+          #intervalle_5 = x(semaine) compris dans ]x3*D ; infini[  => f(x) = 0
           else
-            @staffing_custom_data.chart_actual_coordinates = theorical_staffing_values
-          end
+            t_staffing = 0
+        end
 
-          #@staffing_custom_data.save
-
-
-        #================================= RAYLEIGH  ==============================================
-
-        when 'rayleigh'
-          max_staffing = @staffing_custom_data.max_staffing
-          mc_donell_duration = @staffing_model.mc_donell_coef * (effort**@staffing_model.puissance_n)
-
-          staffing_constraint = @staffing_custom_data.staffing_constraint
-
-          # Contrainte de Staffing Max
-          if staffing_constraint == "max_staffing_constraint"
-            # coefficient de forme : a
-            form_coef = (max_staffing*max_staffing) * (Math.exp(1) / (2*effort*effort))
-            @staffing_custom_data.form_coef = form_coef
-
-            # coefficient de difficulté
-            difficulty_coef = 2*effort*form_coef
-            @staffing_custom_data.difficulty_coef = difficulty_coef
-
-            # numero de la semaine au Pic de Staffing
-            t_max_staffing = Math.sqrt(1/(2*form_coef))
-            @staffing_custom_data.t_max_staffing = t_max_staffing
-
-            # Duree en semaines : Tfin = duration
-            duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
-            @staffing_custom_data.duration = duration
-
-            # Contrainte de Durée
-          elsif staffing_constraint == "duration_constraint"
-
-            duration = @staffing_custom_data.duration
-
-            # coefficient de forme : a
-            form_coef = -Math.log(1-0.97) / (duration*duration)
-            @staffing_custom_data.form_coef = form_coef
-
-            # coefficient de difficulté
-            difficulty_coef = 2*effort*form_coef
-            @staffing_custom_data.difficulty_coef = difficulty_coef
-
-            # numero de la semaine au Pic de Staffing
-            t_max_staffing = Math.sqrt(1/(2*form_coef))
-            @staffing_custom_data.t_max_staffing = t_max_staffing
-
-            # MAx Staffing
-            max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
-            @staffing_custom_data.max_staffing = max_staffing
-          end
-
-          # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
-          # Creation du jeu de donnees pour le tracer la courbe
-          theorical_staffing_values = []
-          actual_staffing_values = []
-          for t in 0..duration
-            # E(t) = 2 * K * a * t * e(-a*t*t)
-            t_staffing = 2 * effort * form_coef * t * Math.exp(-form_coef*t*t)
-            theorical_staffing_values << ["#{t}", t_staffing]
-            #if params[:actuals].present?
-            #  actual_staffing_values << params[:actuals].to_a.map{|i| [i.first.to_f, i.last.to_f]}
-            #else
-            #  actual_staffing_values << ["#{t}", t_staffing]
-            #end
-          end
-
-          @staffing_custom_data.chart_theoretical_coordinates = theorical_staffing_values
-
-          #if params[:actuals].present?
-          #  @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
-          #else
-          #  @staffing_custom_data.chart_actual_coordinates = theorical_staffing_values
-          #end
-        else
-
+        trapeze_theorical_staffing_values << ["#{t}", t_staffing]
       end
 
-      # save staffing values and parameters
+      @staffing_custom_data.trapeze_chart_theoretical_coordinates = trapeze_theorical_staffing_values
       @staffing_custom_data.save
 
+      max_staffing = @staffing_custom_data.max_staffing
+      mc_donell_duration = @staffing_model.mc_donell_coef * (effort**@staffing_model.puissance_n)
+      staffing_constraint = @staffing_custom_data.staffing_constraint
+
+      # Contrainte de Staffing Max
+      if staffing_constraint == "max_staffing_constraint"
+        # coefficient de forme : a
+        form_coef = (max_staffing*max_staffing) * (Math.exp(1) / (2*effort*effort))
+        @staffing_custom_data.form_coef = form_coef
+
+        # coefficient de difficulté
+        difficulty_coef = 2*effort*form_coef
+        @staffing_custom_data.difficulty_coef = difficulty_coef
+
+        # numero de la semaine au Pic de Staffing
+        t_max_staffing = Math.sqrt(1/(2*form_coef))
+        @staffing_custom_data.t_max_staffing = t_max_staffing
+
+        # Duree en semaines : Tfin = duration
+        true_duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
+        @staffing_custom_data.duration = true_duration
+
+        # Contrainte de Durée
+      elsif staffing_constraint == "duration_constraint"
+
+        # coefficient de forme : a
+        form_coef = -Math.log(1-0.97) / (@duration * @duration)
+        @staffing_custom_data.form_coef = form_coef
+
+        # coefficient de difficulté
+        difficulty_coef = 2*effort*form_coef
+        @staffing_custom_data.difficulty_coef = difficulty_coef
+
+        # numero de la semaine au Pic de Staffing
+        t_max_staffing = Math.sqrt(1/(2*form_coef))
+        @staffing_custom_data.t_max_staffing = t_max_staffing
+
+        # MAx Staffing
+        max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+        @staffing_custom_data.max_staffing = max_staffing
+      end
+
+      # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
+      rayleigh_chart_theoretical_coordinates = []
+      rayleigh_chart_actual_coordinates = []
+
+      for t in 0..@duration
+        # E(t) = 2 * K * a * t * e(-a*t*t)
+        t_staffing = 2 * effort * form_coef * t * Math.exp(-form_coef*t*t)
+        rayleigh_chart_theoretical_coordinates << ["#{t}", t_staffing]
+        if params[:actuals].present?
+          actual_staffing_values << params[:actuals].to_a.map{|i| [i.first.to_f, i.last.to_f]}
+        else
+          actual_staffing_values << ["#{t}", t_staffing]
+        end
+      end
+
+      @staffing_custom_data.rayleigh_chart_theoretical_coordinates = rayleigh_chart_theoretical_coordinates
+
+      if params[:actuals].present?
+        @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
+      else
+        @staffing_custom_data.chart_actual_coordinates = rayleigh_chart_theoretical_coordinates
+      end
     end
+
+    @staffing_custom_data.save
 
     update_staffing_estimation_values
 

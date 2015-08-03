@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150730062705) do
+ActiveRecord::Schema.define(:version => 20150731124743) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1279,12 +1279,13 @@ ActiveRecord::Schema.define(:version => 20150730062705) do
     t.float    "calculated_effort"
     t.float    "theoretical_staffing"
     t.float    "calculated_staffing"
-    t.text     "chart_theoretical_coordinates"
-    t.text     "chart_actual_coordinates"
     t.integer  "copy_id"
     t.integer  "copy_number"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.text     "trapeze_chart_theoretical_coordinates"
+    t.text     "rayleigh_chart_theoretical_coordinates"
+    t.text     "chart_actual_coordinates"
   end
 
   create_table "staffing_staffing_models", :force => true do |t|
