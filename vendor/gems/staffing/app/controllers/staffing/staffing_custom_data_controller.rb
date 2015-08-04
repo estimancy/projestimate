@@ -266,11 +266,22 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       @staffing_custom_data.rayleigh_chart_theoretical_coordinates = rayleigh_chart_theoretical_coordinates
 
-      if params[:actuals].present?
-        @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
-      else
-        @staffing_custom_data.chart_actual_coordinates = rayleigh_chart_theoretical_coordinates
-      end
+      #if params[:actuals].present?
+      #  @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
+      #else
+        if params["actuals_based_on"] == "rayleigh"
+          @staffing_custom_data.chart_actual_coordinates = rayleigh_chart_theoretical_coordinates
+          @staffing_custom_data.actuals_based_on = "rayleigh"
+        elsif params["actuals_based_on"] == "custom"
+          if params[:actuals].present?
+            @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
+            @staffing_custom_data.actuals_based_on = "custom"
+          end
+        elsif params["actuals_based_on"] == "trapeze"
+          @staffing_custom_data.chart_actual_coordinates = trapeze_theorical_staffing_values
+          @staffing_custom_data.actuals_based_on = "trapeze"
+        end
+      #end
     end
 
     @staffing_custom_data.save

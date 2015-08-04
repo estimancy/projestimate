@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150804075748) do
+ActiveRecord::Schema.define(:version => 20150804085917) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1287,6 +1287,7 @@ ActiveRecord::Schema.define(:version => 20150804075748) do
     t.text     "rayleigh_chart_theoretical_coordinates"
     t.text     "chart_actual_coordinates"
     t.float    "rayleigh_duration"
+    t.string   "actuals_based_on"
   end
 
   create_table "staffing_staffing_models", :force => true do |t|

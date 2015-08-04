@@ -41,6 +41,30 @@
 %>
 
 <%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| %>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <h4>
+        <b>Basé la courbe actualisé sur </b>
+      </h4>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span1">
+      <%= label_tag "Custom" %>
+      <%= radio_button_tag "actuals_based_on", "custom", @staffing_custom_data.actuals_based_on == "custom"  %>
+    </div>
+    <div class="span1">
+      <%= label_tag "Rayleigh" %>
+      <%= radio_button_tag "actuals_based_on", "rayleigh", @staffing_custom_data.actuals_based_on == "rayleigh" %>
+    </div>
+    <div class="span1">
+      <%= label_tag "Trapèze" %>
+      <%= radio_button_tag "actuals_based_on", "trapeze", @staffing_custom_data.actuals_based_on == "trapeze" %>
+    </div>
+  </div>
+
   <div class="row-fluid">
 
     <div class="row-fluid">
@@ -65,15 +89,15 @@
     </div>
   </div>
 
-    <!-- Si method Trapeze -->
-    <div id="staffing_trapeze_parameters">
-      <%= render :partial => 'staffing/staffing_custom_data/staffing_trapeze_method', object: @staffing_custom_data , :locals => { :f => f } %>
-    </div>
+  <!-- Si method Trapeze -->
+  <div id="staffing_trapeze_parameters">
+    <%= render :partial => 'staffing/staffing_custom_data/staffing_trapeze_method', object: @staffing_custom_data , :locals => { :f => f } %>
+  </div>
 
-    <hr>
+  <hr>
 
-    <% if can? :execute_estimation_plan, @project %>
-      <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:update) %></button>
-    <% end %>
+  <% if can? :execute_estimation_plan, @project %>
+    <button type="submit" class="btn btn-default btn-mini pull-right"><%= I18n.t(:update) %></button>
+  <% end %>
 
 <% end %>
