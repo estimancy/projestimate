@@ -27,7 +27,8 @@
   </div>
   <div class="row-fluid">
     <div class="span2"><%= f.input :staffing_constraint, as: :select, collection: [['Contrainte de staffing max', 'max_staffing_constraint'], ['Contrainte de durée', 'duration_constraint']], label: 'Contrainte imposée', include_blank: false, :input_html => { :class => 'input-medium'} %></div>
-    <div class="span2"><%= f.input :max_staffing, label: "Max staffing", :input_html => { :class => 'input-medium'} %></div>
+    <div class="span2"><%= f.input :max_staffing, label: "Staffing", :input_html => { :class => 'input-medium'} %></div>
+    <div class="span2"><%= f.input :rayleigh_duration, label: "Durée", :input_html => { :class => 'input-medium'} %></div>
   </div>
 </div>
 

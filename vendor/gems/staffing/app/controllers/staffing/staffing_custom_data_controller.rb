@@ -133,7 +133,11 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       effort = @staffing_custom_data.global_effort_value
 
-      @duration = @staffing_custom_data.duration
+      duration = @staffing_custom_data.duration
+      rayleigh_duration_duration = @staffing_custom_data.rayleigh_duration
+
+      @duration = [duration, rayleigh_duration_duration].max
+
       trapeze_parameter_values = @staffing_custom_data.trapeze_parameter_values
 
       # Calcul des vraies valeurs de (x0, x1, x2, x3) en % de la durée D ; et  (y0, y3) en % de M
@@ -205,7 +209,6 @@ class Staffing::StaffingCustomDataController < ApplicationController
       @staffing_custom_data.save
 
       max_staffing = @staffing_custom_data.max_staffing
-      mc_donell_duration = @staffing_model.mc_donell_coef * (effort**@staffing_model.puissance_n)
       staffing_constraint = @staffing_custom_data.staffing_constraint
 
       # Contrainte de Staffing Max
@@ -224,7 +227,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
         # Duree en semaines : Tfin = duration
         true_duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
-        @staffing_custom_data.duration = true_duration
+        @staffing_custom_data.rayleigh_duration = true_duration
 
         # Contrainte de Durée
       elsif staffing_constraint == "duration_constraint"
