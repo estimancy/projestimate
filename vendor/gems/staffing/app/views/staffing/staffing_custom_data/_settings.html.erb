@@ -43,16 +43,24 @@
 <%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| %>
 
   <div class="row-fluid">
-    <div class="span12">
+    <div class="span2">
       <h4>
-        <b>Basé la courbe actualisé sur </b>
+        <b>Attributs d'entrées </b>
+      </h4>
+    </div>
+    <div class="span4">
+      <h4>
+        <b>Courbe actualisé initiliasé par </b>
       </h4>
     </div>
   </div>
 
   <div class="row-fluid">
+    <div class="span2">
+      <%= f.input :global_effort_value, label: "Effort (#{@staffing_model.effort_unit})", :input_html => { :class => 'input-medium', value: effort.nil? ? '' : effort.round(1) } %>
+    </div>
     <div class="span1">
-      <%= label_tag "Custom" %>
+      <%= label_tag "Personnalisé" %>
       <%= radio_button_tag "actuals_based_on", "custom", @staffing_custom_data.actuals_based_on == "custom"  %>
     </div>
     <div class="span1">
@@ -62,30 +70,6 @@
     <div class="span1">
       <%= label_tag "Trapèze" %>
       <%= radio_button_tag "actuals_based_on", "trapeze", @staffing_custom_data.actuals_based_on == "trapeze" %>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-
-    <div class="row-fluid">
-      <div class="span12">
-        <h4>
-          <b>Attributs d'entrées </b>
-        </h4>
-      </div>
-    </div>
-
-    <div class="row-fluid">
-      <div class="span2">
-        <%= f.input :global_effort_value, label: "Effort (#{@staffing_model.effort_unit})", :input_html => { :class => 'input-medium', value: effort.nil? ? '' : effort.round(1) } %>
-      </div>
-      <div class="span2">
-        <% if @staffing_custom_data.duration.nil? %>
-          <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium', value: (@staffing_model.mc_donell_coef * effort.to_i ** @staffing_model.puissance_n).round(0) } %>
-        <% else %>
-          <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium'} %>
-        <% end %>
-      </div>
     </div>
   </div>
 
