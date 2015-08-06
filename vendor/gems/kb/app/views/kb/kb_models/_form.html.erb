@@ -53,27 +53,34 @@
       </div>
       <div class="span8">
         <% unless @kb_model.kb_datas.empty? %>
-          <table class="table table-bordered">
-            <tr>
-              <th>Taille</th>
-              <th>Effort</th>
-              <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
-                <th>
-                  <%= k %>
-                </th>
-              <% end %>
-            </tr>
-            <% @kb_model.kb_datas.each do |kb_data| %>
+          <table class="table table-bordered tablesorterPager">
+            <thead>
               <tr>
-                <td><%= kb_data.size %></td>
-                <td><%= kb_data.effort %></td>
-                  <% kb_data.custom_attributes.values.each do |v| %>
-                    <td>
-                      <%= v %>
-                    </td>
-                  <% end %>
+                <th>Taille</th>
+                <th>Effort</th>
+                <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
+                  <th>
+                    <%= k %>
+                  </th>
+                <% end %>
               </tr>
-            <% end %>
+            </thead>
+            <tbody>
+              <% @kb_model.kb_datas.each do |kb_data| %>
+                <tr>
+                  <td><%= kb_data.size %></td>
+                  <td><%= kb_data.effort %></td>
+                    <% kb_data.custom_attributes.values.each do |v| %>
+                      <td>
+                        <%= v %>
+                      </td>
+                    <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+
+            <%= render :partial => 'layouts/footer_table' %>
+
           </table>
         <% end %>
       </div>
