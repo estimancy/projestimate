@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150804085917) do
+ActiveRecord::Schema.define(:version => 20150806074208) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -564,7 +564,9 @@ ActiveRecord::Schema.define(:version => 20150804085917) do
     t.datetime "updated_at",                 :null => false
     t.integer  "guw_model_id"
     t.integer  "copy_id"
-    t.boolean  "disable_ajusted_effort"
+    t.boolean  "allow_quantity"
+    t.boolean  "allow_retained"
+    t.boolean  "allow_complexity"
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|

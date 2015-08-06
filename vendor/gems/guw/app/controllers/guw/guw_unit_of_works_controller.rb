@@ -192,20 +192,20 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
     guw_unit_of_work.save
 
-    #if @guw_model.one_level_model == true
-    #
-    #  guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
-    #  guw_unit_of_work.guw_complexity_id = guw_complexity_id
-    #
-    #  cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-    #                                         guw_work_unit_id: guw_work_unit.id).first
-    #
-    #  tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
-    #                                             organization_technology_id: guw_unit_of_work.organization_technology_id).first
-    #
-    #  @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-    #  guw_unit_of_work.save
-    #else
+    if @guw_model.one_level_model == true
+
+      guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
+      guw_unit_of_work.guw_complexity_id = guw_complexity_id
+
+      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
+                                             guw_work_unit_id: guw_work_unit.id).first
+
+      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
+                                                 organization_technology_id: guw_unit_of_work.organization_technology_id).first
+
+      @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+      guw_unit_of_work.save
+    else
       if guw_unit_of_work.result_low.nil? or guw_unit_of_work.result_most_likely.nil? or guw_unit_of_work.result_high.nil?
         guw_unit_of_work.off_line_uo = nil
       else
@@ -224,7 +224,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           end
         end
       end
-    #end
+    end
 
     guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
     guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
@@ -309,7 +309,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
       guw_unit_of_work.effort = @weight_pert.sum * params["quantity"]["#{guw_unit_of_work.id}"].to_f
 
-      if guw_unit_of_work.guw_type.disable_ajusted_effort == true
+      if guw_unit_of_work.guw_type.allow_retained == false
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
       else
         if params["ajusted_effort"]["#{guw_unit_of_work.id}"].blank?

@@ -24,9 +24,13 @@
    attribute = PeAttribute.find_by_alias("effort")
    unless previous_activity.nil?
      previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
-     ev = EstimationValue.where(:pe_attribute_id => attribute.id,
-                                         :module_project_id => current_module_project.previous.first,
-                                         :in_out => "output").first.string_data_probable[current_component.id][previous_activity_root.id][:value]
+     begin
+       ev = EstimationValue.where(:pe_attribute_id => attribute.id,
+                                           :module_project_id => current_module_project.previous.first,
+                                           :in_out => "output").first.string_data_probable[current_component.id][previous_activity_root.id][:value]
+     rescue
+       ev = nil
+     end
    else
      ev = EstimationValue.where(:pe_attribute_id => attribute.id,
                                     :module_project_id => current_module_project.id,

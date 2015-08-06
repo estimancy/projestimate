@@ -18,7 +18,9 @@
         <%= f.input :name, label: "Type d'unité d'oeuvre" %>
         <%= tinymce %>
         <%= f.input :description, input_html: { class: 'tinymce', rows: 15, cols: 20 } %>
-        <%= f.input :disable_ajusted_effort, label: "Désactiver le retenu" %>
+        <%= f.input :allow_retained, label: "Activer le retenu" %>
+        <%= f.input :allow_quantity, label: "Activer la quantité" %>
+        <%= f.input :allow_complexity, label: "Activer la complexité" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
