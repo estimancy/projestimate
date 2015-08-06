@@ -38,7 +38,7 @@
           </h5>
           <p>
             <span id="formula">
-              <%= @formula %>
+              <%= @kb_input.formula %>
             </span>
           </p>
 
@@ -118,7 +118,7 @@
       series: [{
         name: 'Distribution Taille / Effort',
         marker: {
-          radius: 2
+          radius: 3
         },
         type: 'scatter',
         color: 'rgba(223, 83, 83, 1)',
@@ -126,31 +126,32 @@
       },{
         name: 'Courbe de régression linéaire',
         marker: {
-          radius: 2
+          radius: 0
         },
-        type: 'scatter',
+        type: 'line',
         color: 'rgba(200, 200, 200, 1)',
-        data: <%= [@kb_input.regression.min, @kb_input.regression.max] %>
+        data: <%= @kb_input.regression.map{|i, j| [i, j] }.sort %>
+
       },{
         name: 'Courbe de régression linéaire + 80%',
         marker: {
-          radius: 2
+          radius: 0
         },
-        type: 'scatter',
+        type: 'line',
         color: 'rgba(83, 223, 83, 1)',
-        data: <%= @kb_input.regression.map{|i, j| [i, j * 2.8]} %>
+        data: <%= @kb_input.regression.map{|i, j| [i, j * 2.8] }.sort %>
       },{
         name: 'Courbe de régression linéaire - 80%',
         marker: {
-          radius: 2
+          radius: 0
         },
-        type: 'scatter',
+        type: 'line',
         color: 'rgba(83, 223, 255, 1)',
-        data: <%= @kb_input.regression.map{|i, j| [i, j / 2.8]} %>
+        data: <%= @kb_input.regression.map{|i, j| [i, j / 2.8] }.sort %>
       },{
         name: 'Taille calculé',
         marker: {
-          radius: 2
+          radius: 5
         },
         type: 'scatter',
         color: 'rgba(0, 0, 0, 1)',
