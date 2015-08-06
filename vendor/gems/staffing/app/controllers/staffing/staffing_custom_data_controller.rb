@@ -132,12 +132,12 @@ class Staffing::StaffingCustomDataController < ApplicationController
     if @staffing_custom_data.update_attributes(params[:staffing_custom_datum])
 
       effort = @staffing_custom_data.global_effort_value
+      trapeze_duration = @staffing_custom_data.duration.to_i
+      rayleigh_duration = @staffing_custom_data.rayleigh_duration.to_i
 
-      duration = @staffing_custom_data.duration
-      rayleigh_duration_duration = @staffing_custom_data.rayleigh_duration
+      @duration = [trapeze_duration, rayleigh_duration].max
 
-      @duration = [duration, rayleigh_duration_duration].max
-
+      #TRAPEZE
       trapeze_parameter_values = @staffing_custom_data.trapeze_parameter_values
 
       # Calcul des vraies valeurs de (x0, x1, x2, x3) en % de la durée D ; et  (y0, y3) en % de M
@@ -149,29 +149,29 @@ class Staffing::StaffingCustomDataController < ApplicationController
       y3 = trapeze_parameter_values[:y3].to_f / 100
 
       # Calcul du Max staffing M = 2 * (E/D) * (1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
-      max_staffing = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
-      @staffing_custom_data.max_staffing = max_staffing
+      calculated_staffing = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+      @staffing_custom_data.calculated_staffing = calculated_staffing
 
-      x0D = x0 * @duration
-      x1D = x1 * @duration
-      x2D = x2 * @duration
-      x3D = x3 * @duration
+      x0D = x0 * trapeze_duration
+      x1D = x1 * trapeze_duration
+      x2D = x2 * trapeze_duration
+      x3D = x3 * trapeze_duration
 
       # Calcul de a, b, a', b' avec
       # a = M(1 - y0) / D(x1 - x2)
-      coef_a = (max_staffing*(1-y0)) / (@duration*(x1-x0))
+      coef_a = (calculated_staffing*(1-y0)) / (trapeze_duration*(x1-x0))
       @staffing_custom_data.coef_a = coef_a
 
       # b = M(x1y0 - x0) / (x1 - x0)
-      coef_b = (max_staffing * ((x1*y0) - x0)) / (x1-x0)
+      coef_b = (calculated_staffing * ((x1*y0) - x0)) / (x1-x0)
       @staffing_custom_data.coef_b = coef_b
 
       # a' = M(1 - y3) / D(x2 - x3)
-      coef_a_prime = (max_staffing*(1-y3)) / (@duration*(x2-x3))
+      coef_a_prime = (calculated_staffing*(1-y3)) / (trapeze_duration*(x2-x3))
       @staffing_custom_data.coef_a_prime = coef_a_prime
 
       # b' = M(x2y3 - x3) / D(x2 - x3)
-      coef_b_prime = (max_staffing * ((x2*y3) - x3)) / (x2-x3)
+      coef_b_prime = (calculated_staffing * ((x2*y3) - x3)) / (x2-x3)
       @staffing_custom_data.coef_b_prime = coef_b_prime
 
       # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
@@ -179,7 +179,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
       trapeze_theorical_staffing_values = []
       actual_staffing_values = []
 
-      for t in 0..@duration
+      for t in 0..trapeze_duration
         case t
           #intervalle_1 = x(semaine) compris dans [0 ; x0*D]     =>  f(x) = 0
           when 0..x0D
@@ -191,7 +191,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
           #intervalle_3 = x(semaine) compris dans ]x1*D ; x2*D]  =>   f(x) = M
           when x1D..x2D
-            t_staffing = max_staffing
+            t_staffing = calculated_staffing
 
           #intervalle_4 = x(semaine) compris dans ]x2*D ; x3*D]   =>  f(x) = a'x+b'
           when x2D..x3D
@@ -208,6 +208,9 @@ class Staffing::StaffingCustomDataController < ApplicationController
       @staffing_custom_data.trapeze_chart_theoretical_coordinates = trapeze_theorical_staffing_values
       @staffing_custom_data.save
 
+
+
+      #RAYLEIGH
       max_staffing = @staffing_custom_data.max_staffing
       staffing_constraint = @staffing_custom_data.staffing_constraint
 
@@ -233,7 +236,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
       elsif staffing_constraint == "duration_constraint"
 
         # coefficient de forme : a
-        form_coef = -Math.log(1-0.97) / (@duration * @duration)
+        form_coef = -Math.log(1-0.97) / (rayleigh_duration * rayleigh_duration)
         @staffing_custom_data.form_coef = form_coef
 
         # coefficient de difficulté
@@ -253,7 +256,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
       rayleigh_chart_theoretical_coordinates = []
       rayleigh_chart_actual_coordinates = []
 
-      for t in 0..@duration
+      for t in 0..rayleigh_duration
         # E(t) = 2 * K * a * t * e(-a*t*t)
         t_staffing = 2 * effort * form_coef * t * Math.exp(-form_coef*t*t)
         rayleigh_chart_theoretical_coordinates << ["#{t}", t_staffing]

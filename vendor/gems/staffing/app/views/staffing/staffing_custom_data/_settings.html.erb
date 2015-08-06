@@ -158,7 +158,7 @@
           <table class="table table-striped table-bordered table-condensed">
             <tr>
               <th>Période</th>
-              <% for t in 0..[@staffing_custom_data.duration, @staffing_custom_data.rayleigh_duration].max %>
+              <% for t in 0..[@staffing_custom_data.duration.to_f, @staffing_custom_data.rayleigh_duration.to_f].max %>
                 <th><%= "P#{t}" %></th>
               <% end %>
             </tr>
@@ -166,7 +166,7 @@
             <tr>
               <td>Trapèze théorique</td>
               <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
-                <% rounded_value = value.nil? ? 0 : value.round %>
+                <% rounded_value = value.nil? ? 0 : value.round(1) %>
                 <% staffing_theorique += rounded_value %>
                 <td><%= rounded_value %></td>
               <% end %>
@@ -175,7 +175,7 @@
             <tr>
               <td>Rayleigh théorique</td>
               <% rayleigh_theoretical_coordinates.each do |(coord,value)| %>
-                <% rounded_value = value.nil? ? 0 : value.round %>
+                <% rounded_value = value.nil? ? 0 : value.round(1) %>
                 <% staffing_theorique += rounded_value %>
                 <td><%= rounded_value %></td>
               <% end %>
@@ -184,7 +184,7 @@
             <tr>
               <td>Actuel</td>
               <% actual_coordinates.each do |(coord,value)| %>
-                <% rounded_value = value.nil? ? 0 : value.round %>
+                <% rounded_value = value.nil? ? 0 : value.round(1) %>
                 <% staffing_actuel += rounded_value %>
                 <td><%= text_field_tag "actuals[#{coord}]", rounded_value, class: "input-mini" %></td>
               <% end %>
@@ -200,7 +200,7 @@
       <div class="span1">
     <span class="badge badge-important">
       <b>
-        Max. <%= @staffing_custom_data.max_staffing.to_i.round(1) %>
+        Max. <%= @staffing_custom_data.calculated_staffing.to_i.round(1) %>
       </b>
     </span>
       </div>
