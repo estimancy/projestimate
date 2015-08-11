@@ -295,7 +295,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
-      guw_unit_of_work.quantity = params["quantity"]["#{guw_unit_of_work.id}"].to_f
+      if params["quantity"].present?
+        guw_unit_of_work.quantity = params["quantity"]["#{guw_unit_of_work.id}"].to_f
+      else
+        guw_unit_of_work.quantity = 1
+      end
 
       guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
       guw_unit_of_work.guw_complexity_id = guw_complexity_id
@@ -307,7 +311,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
       @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-      guw_unit_of_work.effort = @weight_pert.sum * params["quantity"]["#{guw_unit_of_work.id}"].to_f
+      guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity
 
       if guw_unit_of_work.guw_type.allow_retained == false
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort

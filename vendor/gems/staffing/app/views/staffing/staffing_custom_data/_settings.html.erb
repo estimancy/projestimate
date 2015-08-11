@@ -268,7 +268,6 @@
             title: {
               text: 'Répartition des ressources en fonction du temps'
             },
-
             xAxis: {
               min: 0,
               title: {
@@ -290,6 +289,11 @@
             series: [{
               name: 'Trapèze théorique',
               data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
+//              events: {
+//                legendItemClick: function () {
+//                  document.cookie = 'trapeze=1; expires=Mon, 1 Mar 2019 00:00:00 UTC; path=/'
+//                }
+//              }
 
             },
               {

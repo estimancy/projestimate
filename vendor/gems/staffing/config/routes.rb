@@ -26,11 +26,11 @@ Staffing::Engine.routes.draw do
     post 'save_staffing_custom_data'
   end
 
+  post 'save_legend' => "staffing_custom_data#save_legend", as: "save_legend"
 
   resources :staffing_models do
     post 'duplicate'
   end
-
 
   get "staffing_models/index"
 

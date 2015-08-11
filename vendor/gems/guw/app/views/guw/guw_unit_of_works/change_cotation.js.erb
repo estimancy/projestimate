@@ -1,17 +1,5 @@
 <% unless @guw_model.one_level_model == true %>
-  <% if @guw_unit_of_work.off_line == true %>
-    $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to "HSat", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), class: "red_color", method: "post", remote: true) %>")
-  <% elsif @guw_unit_of_work.off_line_uo == true %>
-    $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to "HSuo", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), class: "red_color", method: "post", remote: true) %>")
-  <% elsif @guw_unit_of_work.guw_complexity.nil? %>
-    $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to "-----", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true) %>")
-  <% else %>
-    $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to @guw_unit_of_work.guw_complexity.name, guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true) %>")
-  <% end %>
-  $(".effort_label<%= @guw_unit_of_work.id %>").html("<%= @guw_unit_of_work.effort.nil? ? '-' : @guw_unit_of_work.effort.round(3) %>")
-<% else %>
-  $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_complexity_#{@guw_unit_of_work.id}", options_for_select(@guw_unit_of_work.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: @guw_unit_of_work.guw_complexity_id), class: "input-small") %>")
-  $(".effort_label<%= @guw_unit_of_work.id %>").html("<%= @guw_unit_of_work.effort.nil? ? '-' : @guw_unit_of_work.effort.round(3) %>")
+    $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= select_tag "guw_complexity_#{@guw_unit_of_work.id}", options_for_select(@guw_unit_of_work.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "", readonly: !@guw_unit_of_work.guw_type.allow_complexity %>")
 <% end %>
 
 <% results = Guw::GuwComplexityTechnology.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
