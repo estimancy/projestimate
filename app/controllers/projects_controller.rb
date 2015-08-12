@@ -149,7 +149,7 @@ class ProjectsController < ApplicationController
 
     elsif @module_project.pemodule.alias == "kb"
       @kb_model = current_module_project.kb_model
-      @kb_input = Kb::KbInput.where(module_project_id: current_module_project.id).first
+      @kb_input = Kb::KbInput.where(module_project_id: current_module_project.id).first_or_create
     elsif @module_project.pemodule.alias == "ge"
       @ge_model = current_module_project.ge_model
     elsif @module_project.pemodule.alias == "guw"

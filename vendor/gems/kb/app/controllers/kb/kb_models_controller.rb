@@ -125,7 +125,7 @@ class Kb::KbModelsController < ApplicationController
     authorize! :execute_estimation_plan, @project
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
-    @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first
+    @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first_or_create
 
     results = Array.new
     e_array = Array.new

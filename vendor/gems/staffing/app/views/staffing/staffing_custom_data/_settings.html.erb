@@ -49,25 +49,22 @@
   <div class="row-fluid">
     <div class="span12">
       <div class="row-fluid">
-        <div class="span2">
+        <div class="span3">
           <h4>
             <b>Attributs d'entrées </b>
           </h4>
           <%= f.input :global_effort_value, label: "Effort (#{@staffing_model.effort_unit})", :input_html => { :class => 'input-medium', value: effort.nil? ? '' : effort.round(1) } %>
+          <%= f.input :staffing_constraint, as: :select, collection: [['Contrainte de staffing max', 'max_staffing_constraint'], ['Contrainte de durée', 'duration_constraint']], label: 'Contrainte imposée', include_blank: false, :input_html => { :class => 'input-medium'} %>
+          <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium'} %>
+          <%= f.input :max_staffing, label: "Staffing", :input_html => { :class => 'input-medium'} %>
         </div>
 
-        <div class="span5">
+        <div class="span6">
           <% trapeze_parameters = @staffing_custom_data.trapeze_parameter_values %>
 
           <h4>
             <b>Paramètres du Trapèze </b>
           </h4>
-
-          <% if @staffing_custom_data.duration.nil? %>
-            <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium', value: (@staffing_model.mc_donell_coef * effort.to_i ** @staffing_model.puissance_n).round(0) } %>
-          <% else %>
-            <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium'} %>
-          <% end %>
 
             <%= f.simple_fields_for :trapeze_parameter_values do |ff| %>
             <div class="row-fluid">
@@ -91,22 +88,10 @@
 
         </div>
 
-        <div class="span5">
+        <div class="span3">
           <h4>
             <b>Paramètre de Rayleigh </b>
           </h4>
-
-          <div class="row-fluid">
-            <div class="span4">
-              <%= f.input :staffing_constraint, as: :select, collection: [['Contrainte de staffing max', 'max_staffing_constraint'], ['Contrainte de durée', 'duration_constraint']], label: 'Contrainte imposée', include_blank: false, :input_html => { :class => 'input-medium'} %>
-            </div>
-            <div class="span4">
-              <%= f.input :max_staffing, label: "Staffing", :input_html => { :class => 'input-medium'} %>
-            </div>
-            <div class="span4">
-              <%= f.input :rayleigh_duration, label: "Durée", :input_html => { :class => 'input-medium'} %>
-            </div>
-          </div>
 
           <% if can? :execute_estimation_plan, @project %>
             <button name="actuals_based_on[rayleigh]" type="submit" class="btn btn-success btn-mini pull-right">
@@ -289,12 +274,6 @@
             series: [{
               name: 'Trapèze théorique',
               data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
-//              events: {
-//                legendItemClick: function () {
-//                  document.cookie = 'trapeze=1; expires=Mon, 1 Mar 2019 00:00:00 UTC; path=/'
-//                }
-//              }
-
             },
               {
                 name: 'Rayleigh théorique',

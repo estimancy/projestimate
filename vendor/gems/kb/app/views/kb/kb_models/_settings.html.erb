@@ -9,7 +9,6 @@
   <div class="row-fluid">
     <div class="span12">
       <div class="row-fluid">
-
         <div class="span3">
           <% unless @kb_model.kb_datas.empty? %>
             <p>
@@ -23,6 +22,7 @@
                   <%= select_tag "filters[#{key}]",
                                  options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
                                                     selected: @filters.nil? ? @kb_input.filters[key] : @filters[key]),
+
                                  class: "string required input-xlarge filters",
                                  prompt: "Indifférent" %>
                 </div>
