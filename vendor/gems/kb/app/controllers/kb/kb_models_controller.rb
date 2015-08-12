@@ -192,6 +192,7 @@ class Kb::KbModelsController < ApplicationController
     @formula = "#{coef_10} X ^ #{pente}"
     @kb_input.values = @values
     @kb_input.regression = @regression
+    @kb_input.formula = @formula
 
     @kb_model.save
     @kb_input.save
