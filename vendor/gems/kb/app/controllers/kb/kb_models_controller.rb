@@ -135,6 +135,7 @@ class Kb::KbModelsController < ApplicationController
     es_array = Array.new
 
     @filters = params["filters"]
+    @kb_input.filters = params["filters"]
 
     @kb_model.kb_datas.each do |i|
       params["filters"].each do |f|

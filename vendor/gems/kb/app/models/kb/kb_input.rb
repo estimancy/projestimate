@@ -25,6 +25,7 @@ module Kb
     has_many :module_projects, :dependent => :destroy
     belongs_to :kb_model
 
+    serialize :filters, Hash
     serialize :values, Array
     serialize :regression, Array
 

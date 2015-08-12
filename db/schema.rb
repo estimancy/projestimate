@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150806074208) do
+ActiveRecord::Schema.define(:version => 20150812101629) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -656,6 +656,7 @@ ActiveRecord::Schema.define(:version => 20150806074208) do
     t.integer "organization_id"
     t.integer "module_project_id"
     t.integer "kb_model_id"
+    t.text    "filters"
   end
 
   create_table "kb_kb_models", :force => true do |t|
