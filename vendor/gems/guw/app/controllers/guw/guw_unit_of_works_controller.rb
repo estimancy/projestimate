@@ -311,7 +311,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
       @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-      guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity
+      guw_unit_of_work.effort = @weight_pert.sum * params["quantity"]["#{guw_unit_of_work.id}"].to_f
 
       if guw_unit_of_work.guw_type.allow_retained == false
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
