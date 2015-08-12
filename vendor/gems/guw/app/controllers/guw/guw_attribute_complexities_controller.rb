@@ -46,6 +46,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
             gac.bottom_range = params["bottom"]["#{a.id}"][type_complexity.first]
             gac.top_range = params["top"]["#{a.id}"][type_complexity.first]
             gac.value = params["coefficient"]["#{a.id}"][type_complexity.first]
+
             if params["enable"].nil?
               gac.enable_value = false
             else
@@ -55,6 +56,7 @@ class Guw::GuwAttributeComplexitiesController < ApplicationController
                 gac.enable_value = true
               end
             end
+
             gac.save
           end
         end

@@ -207,7 +207,7 @@
                 </span>
               </td>
 
-              <td class="span2 ">
+              <td class="span2 quantity_label_<%= guow.id %>">
                 <% if guow.guw_type.allow_quantity == true %>
                   <%= text_field_tag "quantity[#{guow.id}]", guow.quantity, class: "input-mini" %>
                 <% else %>
