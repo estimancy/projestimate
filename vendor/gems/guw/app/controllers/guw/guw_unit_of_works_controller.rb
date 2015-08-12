@@ -226,8 +226,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
-    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
+    guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].nil? ? 1 : params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
+    guw_unit_of_work.save
+
+    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * guw_unit_of_work.quantity
 
     if params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
       guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
