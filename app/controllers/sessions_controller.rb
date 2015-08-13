@@ -23,7 +23,14 @@ class SessionsController < Devise::SessionsController
   #end
 
   def create
+    p auth_options
+    p "="
     self.resource = warden.authenticate!(auth_options)
+
+    p resource_name
+
+    p "="
+    p resource
     set_flash_message(:notice, :signed_in) if is_flashing_format?
     sign_in(resource_name, resource)
     yield resource if block_given?
