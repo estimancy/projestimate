@@ -57,7 +57,6 @@ class ApplicationController < ActionController::Base
   helper_method :is_master_instance? #Identify if we are on Master or Local instance
   helper_method :send_feedback
   helper_method :allow_feedback?
-  ###helper_method :current_user
   helper_method :current_component
   helper_method :current_module_project
   helper_method :current_balancing_attribute
