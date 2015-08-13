@@ -299,7 +299,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :saml_authenticatable
   #Create user if the user does not exist. (Default is false)
-  config.saml_create_user = false
+  config.saml_create_user = true
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
