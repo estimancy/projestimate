@@ -147,9 +147,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
       if constraint == "max_staffing_constraint"
         @staffing = @staffing_custom_data.max_staffing
 
-        form_coef = (@staffing*@staffing) * (Math.exp(1) / (2*effort*effort))
-
-        @duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
+        @duration = 2 * (effort / @staffing) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
 
         @staffing_custom_data.duration = @duration
 
@@ -233,10 +231,6 @@ class Staffing::StaffingCustomDataController < ApplicationController
         # numero de la semaine au Pic de Staffing
         t_max_staffing = Math.sqrt(1/(2*form_coef))
         @staffing_custom_data.t_max_staffing = t_max_staffing
-
-        # Duree en semaines : Tfin = duration
-        #true_duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
-        #@staffing_custom_data.duration = true_duration
 
         # Contrainte de Durée
       elsif constraint == "duration_constraint"
