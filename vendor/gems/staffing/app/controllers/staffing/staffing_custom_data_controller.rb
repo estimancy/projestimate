@@ -145,12 +145,18 @@ class Staffing::StaffingCustomDataController < ApplicationController
       y3 = trapeze_parameter_values[:y3].to_f / 100
 
       if constraint == "max_staffing_constraint"
-        @duration = @staffing_model.mc_donell_coef * (effort ** @staffing_model.puissance_n)
         @staffing = @staffing_custom_data.max_staffing
 
+        form_coef = (@staffing*@staffing) * (Math.exp(1) / (2*effort*effort))
+
+        @duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
+
         @staffing_custom_data.duration = @duration
+
       elsif constraint == "duration_constraint"
+
         @duration = @staffing_custom_data.duration
+
         @staffing = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
 
         @staffing_custom_data.max_staffing = @staffing
@@ -229,8 +235,8 @@ class Staffing::StaffingCustomDataController < ApplicationController
         @staffing_custom_data.t_max_staffing = t_max_staffing
 
         # Duree en semaines : Tfin = duration
-        true_duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
-        @staffing_custom_data.duration = true_duration
+        #true_duration = Math.sqrt((-Math.log(1-0.97)) / form_coef)
+        #@staffing_custom_data.duration = true_duration
 
         # Contrainte de Durée
       elsif constraint == "duration_constraint"
@@ -248,8 +254,8 @@ class Staffing::StaffingCustomDataController < ApplicationController
         @staffing_custom_data.t_max_staffing = t_max_staffing
 
         # MAx Staffing
-        max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
-        @staffing_custom_data.max_staffing = @staffing
+        #max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+        #@staffing_custom_data.max_staffing = @staffing
       end
 
       # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
