@@ -14,8 +14,6 @@
   <%= link_to I18n.t('devise.confirmations.not_receive_unlock_instructions'), new_unlock_path(resource_name) %><br />
 <% end -%>
 
-<%= link_to "Se connecter via SAML", @action %>
-<br>
 <%= link_to "Sign in with SAML", user_omniauth_authorize_path(:saml) %>
 
 <%# if devise_mapping.omniauthable? %>
