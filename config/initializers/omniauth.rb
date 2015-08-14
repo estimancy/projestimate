@@ -7,7 +7,7 @@ CERTIFICATE
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :saml,
-           :assertion_consumer_service_url     => "http://dev.estimancy.com/users/sign_in",
+           :assertion_consumer_service_url     => "http://dev.estimancy.com/users/auth/saml/callback",
            :issuer                             => "dev.estimancy.com",
            :idp_sso_target_url                 => "https://idp-dev.sncf.fr/openam/SSORedirect/metaAlias/IDP/DEFAUT",
            :idp_sso_target_url_runtime_params  => {:original_request_param => :mapped_idp_param},
@@ -16,5 +16,3 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            #:idp_cert_fingerprint_validator     => lambda { |fingerprint| fingerprint },
            :name_identifier_format             => "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
 end
-
-OmniAuth.config.logger = Rails.logger
