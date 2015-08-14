@@ -1,6 +1,9 @@
 #encoding: utf-8
 class SessionsController < Devise::SessionsController
   def new
+
+    #OneLogin::RubySaml::Logging.logger = Logger.new(File.open('/var/log/ruby-saml.log', 'w')
+
     unless params["SAMLResponse"].nil?
 
       response = OneLogin::RubySaml::Response.new(params["SAMLResponse"])
@@ -13,7 +16,12 @@ class SessionsController < Devise::SessionsController
 
       logger.info "==="
       logger.info response.sessionindex
-      logger.info Devise.saml_session_index_key
+      logger.info response.nameid
+      logger.info response.attributes
+      logger.info response.inspect
+
+      #session[:userid] = response.nameid
+      #session[:attributes] = response.attributes
 
       @user = User.find_for_saml_oauth(request.env["omniauth.auth"], current_user)
       if @user.persisted?
