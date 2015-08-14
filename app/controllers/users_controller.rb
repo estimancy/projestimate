@@ -74,10 +74,16 @@ public
 
     set_page_title 'New user'
 
+    auth_type = AuthMethod.find(params[:user][:auth_type])
+
     @user = User.new(params[:user])
     @user.auth_type = params[:user][:auth_type]
     @user.language_id = params[:user][:language_id]
     @user.project_ids = params[:user][:project_ids]
+
+    if auth_type.name == "SAML"
+      @user.skip_confirmation!
+    end
 
     if params[:organization_id].present?
       @organization = Organization.find(params[:organization_id])
@@ -101,23 +107,6 @@ public
       @user.save
     end
 
-    #Code commented is To delete afeter testing
-    #unless @organization.nil?
-    #  @user_group = @organization.groups.where(name: '*USER').first_or_create(organization_id: @organization.id, name: "*USER")
-    #  @user.groups << @user_group
-    #end
-
-    #unless @organization.nil?
-    #  OrganizationsUsers.create(user_id: @user.id, organization_id: @organization.id)
-    #else
-    #  if params[:organizations]
-    #    params[:organizations].keys.each do |organization_id|
-    #      OrganizationsUsers.create(user_id: @user.id, organization_id: organization_id)
-    #    end
-    #  end
-    #end
-    #@user.save#(validate: false)
-
     if @user.save
       flash[:notice] = I18n.t(:notice_account_successful_created)
       if @organization.nil?
@@ -129,6 +118,7 @@ public
     else
       render(:new, organization_id: @organization_id)
     end
+
   end
 
   def edit

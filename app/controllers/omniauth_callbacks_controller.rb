@@ -28,7 +28,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     else
       session["devise.user_attributes"] = @user.attributes
       flash[:warning] = I18n.t(:text_almost_done_provide_password_to_finish, kind: "Google")
-      redirect_to new_user_registration_url
+      redirect_to root_url
     end
   end
 end

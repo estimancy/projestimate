@@ -507,7 +507,7 @@ class ApplicationController < ActionController::Base
   # So user will be redirect to the "edit_user_registration_path"
   def after_sign_in_path_for(resource)
     # return the path based on resource
-    if resource.password_changed
+    if (resource.password_changed && resource.auth_type == "Application") || resource.auth_type == "SAML"
       # if user has no organization, this means that his has no group, so no right
       if resource.organizations.where(is_image_organization: [false, nil]).size == 0
         flash[:warning] = I18n.t(:you_have_no_right_to_continue)

@@ -75,7 +75,7 @@ Projestimate::Application.routes.draw do
     get "cancel_user_registration", :to => "devise/registrations#cancel"
     post "user_registration",       :to => "registrations#create"
     put "user_registration",        :to => "registrations#update", as: :update_user_registration
-    get "new_user_registration",    :to => "registrations#new"
+    #get "new_user_registration",    :to => "registrations#new"
     get "edit_user_registration",   :to => "devise/registrations#edit"
     get "help_login" => "registrations", :as => 'help_login'
   end
