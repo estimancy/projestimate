@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,# :saml_authenticatable, :trackable,
          :recoverable, :rememberable,
          :confirmable, # account confirmation
-         :omniauthable, :omniauth_providers => [:google_oauth2],
+         :omniauthable, :omniauth_providers => [:google_oauth2, :saml],
          :authentication_keys => [:id_connexion]
 
   validates_presence_of :password, :on => :create

@@ -273,6 +273,7 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   ###config.omniauth :google_oauth2, "504921486051.apps.googleusercontent.com", "AIzaSyDBsz9qmhKS8oalbkJwTqKsBi8yKAnfwmw", { access_type: "offline", approval_prompt: "Acceptez-vous de vous connecter à ProjEstimate via votre compte Google" }
   config.omniauth :google_oauth2, "504921486051-vb2gi8tfaff5hqgnnosamjto3sv5gabp.apps.googleusercontent.com", "wLnNbhyZGrdkcjnxWe95SRr7", { access_type: "offline", approval_prompt: I18n.t(:text_ask_connect_to_estimancy_via_google) }
+  config.omniauth :saml, idp_cert_fingerprint: 'fingerprint', idp_sso_target_url: 'https://idp-dev.sncf.fr/openam/SSOPOST/metaAlias/IDP/DEFAUT'
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
@@ -299,45 +300,45 @@ Devise.setup do |config|
 
   # ==> Configuration for :saml_authenticatable
   #Create user if the user does not exist. (Default is false)
-  config.saml_create_user = false
-
-  # Set the default user key. The user will be looked up by this key. Make
-  # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = :email
-
-  # You can set this value to use Subject or SAML assertation as info to which email will be compared
-  # If you don't set it then email will be extracted from SAML assertation attributes
-  config.saml_use_subject = true
-
-  if Rails.env == "development"
-    config.saml_configure do |settings|
-      settings.assertion_consumer_service_url     = "http://localhost:3001/users/sign_in"
-      settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-      settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
-      settings.issuer                             = "dev.estimancy.com"
-      settings.authn_context                      = ""
-      settings.idp_slo_target_url                 = "https://idp-dev.sncf.fr/openam/UI/Logout?realm=IDP&module=RID"
-      settings.idp_sso_target_url                 = "https://idp-dev.sncf.fr/openam/UI/Login?realm=IDP&module=RID"
-      settings.idp_cert                           = <<-CERT.chomp
-      -----BEGIN CERTIFICATE-----
-      MIIDFDCCAfygAwIBAgIEVLPsKDANBgkqhkiG9w0BAQ0FADBMMQswCQYDVQQGEwJGUjENMAsGA1UE CgwEU05DRjENMAsGA1UECwwERFNJVDEfMB0GA1UEAwwWaWRwLXNpZ25hdHVyZS0yMDE0LWRldjAe Fw0xNTAxMTIxNTQ2NThaFw0yNTAxMTIxNTQ2NThaMEwxCzAJBgNVBAYTAkZSMQ0wCwYDVQQKDART TkNGMQ0wCwYDVQQLDAREU0lUMR8wHQYDVQQDDBZpZHAtc2lnbmF0dXJlLTIwMTQtZGV2MIIBIjAN BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArV7qnTenVeZwYP4m0ji5xbsFvqNRTW8+i0Ys98oB VKlWJpEXdPUQMBi4TdjHPUBRmueW74v1v8Uw+1NeE8WvI0bStvH7P2zxeP5bdL6onVNIZUdb1L1l kBjlYQP30TtsRZuJ2d+vmf3BKEvtd3V47A8gSuAJO9q8dT+Rby7ZOMWw/ZU/dJTIGplhgpJlQMXi 3wLZyHU+oi7V5PmRE0ZYEn0LLXtQXQj1bYW+5AjU6TykXQVqISqImGiONpnKQYkOgZ56vXR9nU+/ ZSmyc/VTBTnA0Xwj/aWfOokaFqft0LhH1gykhq9IIgHaxo55SqRm4lymxx13Hpe1lA3BlWzWVQID AQABMA0GCSqGSIb3DQEBDQUAA4IBAQCisxQCBp26pa52WPq5l0srOO6kfq0oNi/6IWKlQQF0p8MV gsH+ITyHd59h5b5JXXUirL+FzpTHiabLVcSkA2rG+jfuqCGTMtXZiANUEkmlNa8NAmDHwOPe19fL SFl7duFE5BacS4IYf6zPFkpMNBMBJdQlud+chuiKpdYQanSN2Vr+ZEUQlYddkUFZUGIKpw3LpwRP dSdxoqNyHr4u+j5yOXWzaRtZpaw7zMPNT+YAB6shmpVSsbwJ1xRE34t1hj3UV/44XnnvXWCqUjsp yUje5NYfEh8ehf5Ysv6kToXM9fTyKWJhx+ip/lnSIzNe1bFjGXesSmYGtapu6htcLF2m
-      -----END CERTIFICATE-----
-      CERT
-    end
-  else
-    config.saml_configure do |settings|
-      settings.assertion_consumer_service_url     = "http://dev.estimancy.com/users/sign_in"
-      settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-      settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
-      settings.issuer                             = "dev.estimancy.com"
-      settings.authn_context                      = ""
-      settings.idp_slo_target_url                 = "https://idp-dev.sncf.fr:443/openam/IDPSloRedirect/metaAlias/IDP/DEFAUT"
-      settings.idp_sso_target_url                 = "https://idp-dev.sncf.fr:443/openam/SSORedirect/metaAlias/IDP/DEFAUT"
-      settings.idp_cert                           = <<-CERT.chomp
-      -----BEGIN CERTIFICATE-----
-      MIIDFDCCAfygAwIBAgIEVLPsKDANBgkqhkiG9w0BAQ0FADBMMQswCQYDVQQGEwJGUjENMAsGA1UE CgwEU05DRjENMAsGA1UECwwERFNJVDEfMB0GA1UEAwwWaWRwLXNpZ25hdHVyZS0yMDE0LWRldjAe Fw0xNTAxMTIxNTQ2NThaFw0yNTAxMTIxNTQ2NThaMEwxCzAJBgNVBAYTAkZSMQ0wCwYDVQQKDART TkNGMQ0wCwYDVQQLDAREU0lUMR8wHQYDVQQDDBZpZHAtc2lnbmF0dXJlLTIwMTQtZGV2MIIBIjAN BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArV7qnTenVeZwYP4m0ji5xbsFvqNRTW8+i0Ys98oB VKlWJpEXdPUQMBi4TdjHPUBRmueW74v1v8Uw+1NeE8WvI0bStvH7P2zxeP5bdL6onVNIZUdb1L1l kBjlYQP30TtsRZuJ2d+vmf3BKEvtd3V47A8gSuAJO9q8dT+Rby7ZOMWw/ZU/dJTIGplhgpJlQMXi 3wLZyHU+oi7V5PmRE0ZYEn0LLXtQXQj1bYW+5AjU6TykXQVqISqImGiONpnKQYkOgZ56vXR9nU+/ ZSmyc/VTBTnA0Xwj/aWfOokaFqft0LhH1gykhq9IIgHaxo55SqRm4lymxx13Hpe1lA3BlWzWVQID AQABMA0GCSqGSIb3DQEBDQUAA4IBAQCisxQCBp26pa52WPq5l0srOO6kfq0oNi/6IWKlQQF0p8MV gsH+ITyHd59h5b5JXXUirL+FzpTHiabLVcSkA2rG+jfuqCGTMtXZiANUEkmlNa8NAmDHwOPe19fL SFl7duFE5BacS4IYf6zPFkpMNBMBJdQlud+chuiKpdYQanSN2Vr+ZEUQlYddkUFZUGIKpw3LpwRP dSdxoqNyHr4u+j5yOXWzaRtZpaw7zMPNT+YAB6shmpVSsbwJ1xRE34t1hj3UV/44XnnvXWCqUjsp yUje5NYfEh8ehf5Ysv6kToXM9fTyKWJhx+ip/lnSIzNe1bFjGXesSmYGtapu6htcLF2m
-      -----END CERTIFICATE-----
-      CERT
-    end
-  end
+  #config.saml_create_user = false
+  #
+  ## Set the default user key. The user will be looked up by this key. Make
+  ## sure that the Authentication Response includes the attribute.
+  #config.saml_default_user_key = :email
+  #
+  ## You can set this value to use Subject or SAML assertation as info to which email will be compared
+  ## If you don't set it then email will be extracted from SAML assertation attributes
+  #config.saml_use_subject = true
+  #
+  #if Rails.env == "development"
+  #  config.saml_configure do |settings|
+  #    settings.assertion_consumer_service_url     = "http://localhost:3001/users/sign_in"
+  #    settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+  #    settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+  #    settings.issuer                             = "dev.estimancy.com"
+  #    settings.authn_context                      = ""
+  #    settings.idp_slo_target_url                 = "https://idp-dev.sncf.fr/openam/UI/Logout?realm=IDP&module=RID"
+  #    settings.idp_sso_target_url                 = "https://idp-dev.sncf.fr/openam/UI/Login?realm=IDP&module=RID"
+  #    settings.idp_cert                           = <<-CERT.chomp
+  #    -----BEGIN CERTIFICATE-----
+  #    MIIDFDCCAfygAwIBAgIEVLPsKDANBgkqhkiG9w0BAQ0FADBMMQswCQYDVQQGEwJGUjENMAsGA1UE CgwEU05DRjENMAsGA1UECwwERFNJVDEfMB0GA1UEAwwWaWRwLXNpZ25hdHVyZS0yMDE0LWRldjAe Fw0xNTAxMTIxNTQ2NThaFw0yNTAxMTIxNTQ2NThaMEwxCzAJBgNVBAYTAkZSMQ0wCwYDVQQKDART TkNGMQ0wCwYDVQQLDAREU0lUMR8wHQYDVQQDDBZpZHAtc2lnbmF0dXJlLTIwMTQtZGV2MIIBIjAN BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArV7qnTenVeZwYP4m0ji5xbsFvqNRTW8+i0Ys98oB VKlWJpEXdPUQMBi4TdjHPUBRmueW74v1v8Uw+1NeE8WvI0bStvH7P2zxeP5bdL6onVNIZUdb1L1l kBjlYQP30TtsRZuJ2d+vmf3BKEvtd3V47A8gSuAJO9q8dT+Rby7ZOMWw/ZU/dJTIGplhgpJlQMXi 3wLZyHU+oi7V5PmRE0ZYEn0LLXtQXQj1bYW+5AjU6TykXQVqISqImGiONpnKQYkOgZ56vXR9nU+/ ZSmyc/VTBTnA0Xwj/aWfOokaFqft0LhH1gykhq9IIgHaxo55SqRm4lymxx13Hpe1lA3BlWzWVQID AQABMA0GCSqGSIb3DQEBDQUAA4IBAQCisxQCBp26pa52WPq5l0srOO6kfq0oNi/6IWKlQQF0p8MV gsH+ITyHd59h5b5JXXUirL+FzpTHiabLVcSkA2rG+jfuqCGTMtXZiANUEkmlNa8NAmDHwOPe19fL SFl7duFE5BacS4IYf6zPFkpMNBMBJdQlud+chuiKpdYQanSN2Vr+ZEUQlYddkUFZUGIKpw3LpwRP dSdxoqNyHr4u+j5yOXWzaRtZpaw7zMPNT+YAB6shmpVSsbwJ1xRE34t1hj3UV/44XnnvXWCqUjsp yUje5NYfEh8ehf5Ysv6kToXM9fTyKWJhx+ip/lnSIzNe1bFjGXesSmYGtapu6htcLF2m
+  #    -----END CERTIFICATE-----
+  #    CERT
+  #  end
+  #else
+  #  config.saml_configure do |settings|
+  #    settings.assertion_consumer_service_url     = "http://dev.estimancy.com/users/sign_in"
+  #    settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+  #    settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+  #    settings.issuer                             = "dev.estimancy.com"
+  #    settings.authn_context                      = ""
+  #    settings.idp_slo_target_url                 = "https://idp-dev.sncf.fr:443/openam/IDPSloRedirect/metaAlias/IDP/DEFAUT"
+  #    settings.idp_sso_target_url                 = "https://idp-dev.sncf.fr/openam/SSORedirect/metaAlias/IDP/DEFAUT"
+  #    settings.idp_cert                           = <<-CERT.chomp
+  #    -----BEGIN CERTIFICATE-----
+  #    MIIDFDCCAfygAwIBAgIEVLPsKDANBgkqhkiG9w0BAQ0FADBMMQswCQYDVQQGEwJGUjENMAsGA1UE CgwEU05DRjENMAsGA1UECwwERFNJVDEfMB0GA1UEAwwWaWRwLXNpZ25hdHVyZS0yMDE0LWRldjAe Fw0xNTAxMTIxNTQ2NThaFw0yNTAxMTIxNTQ2NThaMEwxCzAJBgNVBAYTAkZSMQ0wCwYDVQQKDART TkNGMQ0wCwYDVQQLDAREU0lUMR8wHQYDVQQDDBZpZHAtc2lnbmF0dXJlLTIwMTQtZGV2MIIBIjAN BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArV7qnTenVeZwYP4m0ji5xbsFvqNRTW8+i0Ys98oB VKlWJpEXdPUQMBi4TdjHPUBRmueW74v1v8Uw+1NeE8WvI0bStvH7P2zxeP5bdL6onVNIZUdb1L1l kBjlYQP30TtsRZuJ2d+vmf3BKEvtd3V47A8gSuAJO9q8dT+Rby7ZOMWw/ZU/dJTIGplhgpJlQMXi 3wLZyHU+oi7V5PmRE0ZYEn0LLXtQXQj1bYW+5AjU6TykXQVqISqImGiONpnKQYkOgZ56vXR9nU+/ ZSmyc/VTBTnA0Xwj/aWfOokaFqft0LhH1gykhq9IIgHaxo55SqRm4lymxx13Hpe1lA3BlWzWVQID AQABMA0GCSqGSIb3DQEBDQUAA4IBAQCisxQCBp26pa52WPq5l0srOO6kfq0oNi/6IWKlQQF0p8MV gsH+ITyHd59h5b5JXXUirL+FzpTHiabLVcSkA2rG+jfuqCGTMtXZiANUEkmlNa8NAmDHwOPe19fL SFl7duFE5BacS4IYf6zPFkpMNBMBJdQlud+chuiKpdYQanSN2Vr+ZEUQlYddkUFZUGIKpw3LpwRP dSdxoqNyHr4u+j5yOXWzaRtZpaw7zMPNT+YAB6shmpVSsbwJ1xRE34t1hj3UV/44XnnvXWCqUjsp yUje5NYfEh8ehf5Ysv6kToXM9fTyKWJhx+ip/lnSIzNe1bFjGXesSmYGtapu6htcLF2m
+  #    -----END CERTIFICATE-----
+  #    CERT
+  #  end
+  #end
 end
