@@ -197,7 +197,13 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_saml_oauth(auth, signed_in_resource=nil)
-    return User.first
+    u = User.first
+
+    logger.info auth
+    logger.info auth.info
+    logger.info auth.info.email
+    logger.info auth.uid
+
     #if user = User.find_by_email(auth.info.email)
     #  user.provider = auth.provider
     #  user.uid = auth.uid
@@ -214,6 +220,7 @@ class User < ActiveRecord::Base
     #    user.password = Devise.friendly_token[0,20]
     #  end
     #end
+    return u
   end
 
   ####====================================== END AUTHENTICATION METHODS ============================================================
