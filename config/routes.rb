@@ -67,7 +67,7 @@ Projestimate::Application.routes.draw do
   #  get "help_login" => "registrations", :as => 'help_login'
   #end
   #==========
-  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks" }, :skip => [:registrations]
+  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}, :skip => [:registrations]
   devise_scope :user do
     #get "metadata",   :to => "sessions#metadata"
     get "sign_in",   :to => "devise/sessions#new"

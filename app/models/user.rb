@@ -196,6 +196,26 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.find_for_saml_oauth(auth, signed_in_resource=nil)
+    return User.first
+    #if user = User.find_by_email(auth.info.email)
+    #  user.provider = auth.provider
+    #  user.uid = auth.uid
+    #  user
+    #else
+    #  where(auth.slice(:provider, :uid)).first_or_create do |user|
+    #    user.provider = auth.provider
+    #    user.uid = auth.uid
+    #    user.login_name = auth.info.name
+    #    user.first_name = auth.info.first_name
+    #    user.last_name = auth.info.last_name
+    #    user.email = auth.info.email
+    #    user.avatar = auth.info.image
+    #    user.password = Devise.friendly_token[0,20]
+    #  end
+    #end
+  end
+
   ####====================================== END AUTHENTICATION METHODS ============================================================
 
   #return groups using for global permissions
