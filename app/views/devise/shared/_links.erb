@@ -15,6 +15,8 @@
 <% end -%>
 
 <%= link_to "Se connecter via SAML", @action %>
+<br>
+<%= link_to "Sign in with SAML", user_omniauth_authorize_path(:saml) %>
 
 <%# if devise_mapping.omniauthable? %>
   <%# resource_class.omniauth_providers.each do |provider| %>
