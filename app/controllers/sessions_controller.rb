@@ -14,8 +14,8 @@ class SessionsController < Devise::SessionsController
         session["devise.saml_data"] = request.env["omniauth.auth"]
         redirect_to new_user_registration_url
       end
-      # session[:important_data] = params.merge(request.env["omniauth.auth"])
-      @important_data = params.merge(request.env["omniauth.auth"])
+      session[:important_data] = params.merge(request.env["omniauth.auth"])
+      #@important_data = params.merge(request.env["omniauth.auth"])
     else
       super
     end
