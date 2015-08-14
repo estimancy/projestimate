@@ -5,10 +5,15 @@ class SessionsController < Devise::SessionsController
 
       response = OneLogin::RubySaml::Response.new(params["SAMLResponse"])
       logger.info response
+      logger.info response.is_valid?
 
       if response.is_valid?
-        logger.info "Réponse semble valide"
+        logger.info "Réponse valide"
       end
+
+      logger.info "==="
+      logger.info response.sessionindex
+      logger.info Devise.saml_session_index_key
 
       @user = User.find_for_saml_oauth(request.env["omniauth.auth"], current_user)
       if @user.persisted?
