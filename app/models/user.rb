@@ -196,7 +196,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.find_for_saml_oauth(attributes, signed_in_resource=nil)
+  def self.find_for_saml_oauth(attributes)
     if user = User.find_by_login_name(attributes["cn"])
       user.provider = "SAML"
       #user.uid = auth.uid
