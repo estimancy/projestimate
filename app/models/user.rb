@@ -198,12 +198,6 @@ class User < ActiveRecord::Base
 
   def self.find_for_saml_oauth(auth, signed_in_resource=nil)
     u = User.first
-
-    logger.info auth
-    logger.info auth.info
-    logger.info auth.info.email
-    logger.info auth.uid
-
     #if user = User.find_by_email(auth.info.email)
     #  user.provider = auth.provider
     #  user.uid = auth.uid

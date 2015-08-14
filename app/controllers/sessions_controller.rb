@@ -1,11 +1,15 @@
 #encoding: utf-8
 class SessionsController < Devise::SessionsController
   def new
-    logger.info request
-    logger.info "="
-    logger.info request.env["omniauth.auth"]
-
     unless params["SAMLResponse"].nil?
+
+      response = OneLogin::RubySaml::Response.new(params["SAMLResponse"])
+      logger.info response
+
+      if response.is_valid?
+        logger.info "Réponse semble valide"
+      end
+
       @user = User.find_for_saml_oauth(request.env["omniauth.auth"], current_user)
       if @user.persisted?
         sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
