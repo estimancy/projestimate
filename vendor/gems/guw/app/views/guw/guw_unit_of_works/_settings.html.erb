@@ -231,8 +231,8 @@
 
               <td>
                 <% unless @guw_model.one_level_model == true %>
-                  <span class="text-center effort_label_<%= guow.id %>">
-                    <% counting = guow.guw_unit_of_work_attributes.map(&:most_likely).compact %>
+                  <span class="text-center criteria_label_<%= guow.id %>">
+                    <% counting = guow.guw_unit_of_work_attributes.where(guw_type_id: guow.guw_type_id).map(&:most_likely).compact %>
                     <% if counting.empty? %>
                       <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: red" %>
                     <% else %>
@@ -260,7 +260,7 @@
                     <%= link_to "", guw.guw_unit_of_work_duplicate_path(guow), class: "fa fa-copy", method: "post" %>
                     <%= link_to "", guw.guw_unit_of_work_up_path(guow), class: "fa fa-arrow-up" %>
                     <%= link_to "", guw.guw_unit_of_work_down_path(guow), class: "fa fa-arrow-down" %>
-                    <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, position: guow.display_order), class: "fa fa-plus" %>
+                    <%= link_to "", guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg, position: guow.display_order), class: "fa fa-plus" %>
                     <%= link_to "", guw.edit_guw_model_guw_unit_of_work_path(@guw_model, guow, g: uowg), class: "fa fa-pencil" %>
                     <%= link_to "", guw.guw_unit_of_work_path(guow), method: "delete", confirm: I18n.t('are_you_sure'), class: "fa fa-trash" %>
                   <% end %>

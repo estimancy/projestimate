@@ -18,3 +18,10 @@ $(".technology_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_technol
                readonly: (!@guw_unit_of_work.guw_type.allow_complexity && !can?(:execute_estimation_plan, @project))) %>")
 
 $(".ajusted_effort_<%= @guw_unit_of_work.id %>").html("<%= j(text_field_tag "ajusted_effort[#{@guw_unit_of_work.id}]", @guw_unit_of_work.ajusted_effort.nil? ? '' : @guw_unit_of_work.ajusted_effort.round(3), class: "input-mini retained-#{@guw_unit_of_work.guw_unit_of_work_group.id}", readonly: !((@guw_unit_of_work.guw_type.allow_retained == true) && can?(:execute_estimation_plan, @project))) %>")
+
+<% counting = @guw_unit_of_work.guw_unit_of_work_attributes.where(guw_type_id: @guw_unit_of_work.guw_type_id).map(&:most_likely).compact %>
+<% if counting.empty? %>
+  $(".criteria_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to("", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true, class: "fa fa-gears", style: "color: red")) %>")
+<% else %>
+  $(".criteria_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to("", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true, class: "fa fa-gears", style: "color: green")) %>")
+<% end %>
