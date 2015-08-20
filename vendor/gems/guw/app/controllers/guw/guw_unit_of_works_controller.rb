@@ -192,7 +192,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
     guw_unit_of_work.save
 
-    if @guw_model.one_level_model == true
+    if guw_unit_of_work.guw_type.allow_criteria == true
 
       guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
       guw_unit_of_work.guw_complexity_id = guw_complexity_id

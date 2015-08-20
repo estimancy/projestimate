@@ -4,9 +4,7 @@
     <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
   <% end %>
   <%= link_to "Gérer les types d'acquisitons", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <% if @guw_model.one_level_model == false %>
-    <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <% end %>
+  <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
 </h4>
 
 <div class="tabs">
@@ -31,24 +29,27 @@
 
   <% if @guw_model.guw_types.empty? %>
     <div id="tabs-default">
-      <p> <%= I18n.t :no_uo_type %> </p>
+      <p>
+        <%= I18n.t :no_uo_type %>
+      </p>
     </div>
   <% else %>
     <% @guw_model.guw_types.each do |guw_type| %>
 
       <div id="tabs-<%= guw_type.name.gsub(" ", "-") %>">
 
-        <%= simple_format(guw_type.description) %>
         <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+        <% if can? :manage_modules_instances, ModuleProject %>
+          <%= link_to "Créer un seuil de type d'UO", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right button_margin_right" %>
+        <% end %>
+
+        <%= simple_format(guw_type.description) %>
 
         <h4>
           <b>
             Seuils de complexité de <%= guw_type %>
           </b>
 
-          <% if can? :manage_modules_instances, ModuleProject %>
-            <%= link_to "Créer un seuil de type d'UO", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right button_margin_right" %>
-          <% end %>
         </h4>
 
         <%= form_tag guw_complexity_work_units_save_complexity_work_units_path do %>

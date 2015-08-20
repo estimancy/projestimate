@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150812101629) do
+ActiveRecord::Schema.define(:version => 20150820075124) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -567,6 +567,7 @@ ActiveRecord::Schema.define(:version => 20150812101629) do
     t.boolean  "allow_quantity"
     t.boolean  "allow_retained"
     t.boolean  "allow_complexity"
+    t.boolean  "allow_criteria"
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|

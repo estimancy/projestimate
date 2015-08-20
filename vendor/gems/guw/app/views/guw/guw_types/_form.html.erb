@@ -21,6 +21,7 @@
         <%= f.input :allow_retained, label: "Activer le retenu" %>
         <%= f.input :allow_quantity, label: "Activer la quantité" %>
         <%= f.input :allow_complexity, label: "Activer la complexité" %>
+        <%= f.input :allow_criteria, label: "Activer le dénombrement" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

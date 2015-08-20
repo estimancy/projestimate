@@ -230,7 +230,7 @@
               </td>
 
               <td>
-                <% unless @guw_model.one_level_model == true %>
+                <% if guow.guw_type.allow_criteria == true %>
                   <span class="text-center criteria_label_<%= guow.id %>">
                     <% counting = guow.guw_unit_of_work_attributes.where(guw_type_id: guow.guw_type_id).map(&:most_likely).compact %>
                     <% if counting.empty? %>
