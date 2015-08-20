@@ -192,7 +192,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
     guw_unit_of_work.save
 
-    if guw_unit_of_work.guw_type.allow_criteria == true
+    if guw_unit_of_work.guw_type.allow_complexity == true && guw_unit_of_work.guw_type.allow_criteria == false
 
       guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
       guw_unit_of_work.guw_complexity_id = guw_complexity_id
@@ -303,19 +303,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.quantity = 1
       end
 
-      guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
-      guw_unit_of_work.guw_complexity_id = guw_complexity_id
+      if guw_unit_of_work.guw_type.allow_complexity == true
+        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
+        guw_unit_of_work.guw_complexity_id = guw_complexity_id
 
-      guw_unit_of_work.save
+        guw_unit_of_work.save
 
-      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
+        cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
                                              guw_work_unit_id: guw_work_unit.id).first
 
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
+        tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-      @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
-      guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity
+        @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity
+      end
 
       if guw_unit_of_work.guw_type.allow_retained == false
         guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
@@ -333,7 +335,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.flagged = true
       end
 
-      guw_unit_of_work.off_line_uo = false
+      #if guw_unit_of_work.guw_type.allow_complexity == true
+      #  guw_unit_of_work.off_line_uo = false
+      #end
+
       guw_unit_of_work.save
     end
 

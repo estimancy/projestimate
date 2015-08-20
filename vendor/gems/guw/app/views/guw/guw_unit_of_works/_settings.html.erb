@@ -218,13 +218,13 @@
               <td>
                 <span class=" cotation_label_<%= guow.id %>">
                   <% if guow.off_line == true %>
-                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT", readonly: !guow.guw_type.allow_complexity %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT", disabled: !guow.guw_type.allow_complexity %>
                   <% elsif guow.off_line_uo == true %>
-                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSUO", readonly: !guow.guw_type.allow_complexity %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSUO", disabled: !guow.guw_type.allow_complexity %>
                   <% elsif guow.guw_complexity.nil? %>
-                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true, readonly: !guow.guw_type.allow_complexity %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true, disabled: !guow.guw_type.allow_complexity %>
                   <% else %>
-                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true, readonly: !guow.guw_type.allow_complexity %>
+                    <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true, disabled: !guow.guw_type.allow_complexity %>
                   <% end %>
                 </span>
               </td>

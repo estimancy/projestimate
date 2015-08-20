@@ -1466,6 +1466,7 @@ fr:
   current_version: "Version actuelle"
   new_version: "Nouvelle version"
   change_estimation_version_from_to: "Version changée de \"%{from_version}\" à \"%{to_version}\" par %{current_user_name}\". "
+  label_complexity_attributes: "Seuil de complexité des attributs de"
   label_available_columns: "Colonnes disponibles"
   label_selected_columns: "Colonnes sélectionnées"
   label_all_columns: "Toutes les colonnes"
