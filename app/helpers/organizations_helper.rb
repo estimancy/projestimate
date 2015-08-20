@@ -129,7 +129,7 @@ module OrganizationsHelper
           end
         else
           #content_tag('td class="exportable"', content_tag('span class="badge" style="background-color: #{project.status_background_color}', project.status_name))
-          content_tag(:td) do
+          content_tag("td class='center'") do
             content_tag(:span, project.status_name, class: "badge", style: "background-color: #{project.status_background_color}").html_safe
           end
         end

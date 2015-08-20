@@ -111,7 +111,9 @@ class OrganizationsController < ApplicationController
 
       end
 
-      tmp << (array_project + array_value).flatten
+      unless (array_project + array_value).empty?
+        tmp << (array_project + array_value).flatten
+      end
 
     end
 
