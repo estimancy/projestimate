@@ -25,7 +25,7 @@ require 'net/ldap'
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,# :saml_authenticatable, :trackable,
+  devise :database_authenticatable, :registerable, :timeoutable,# :saml_authenticatable, :trackable,
          :recoverable, :rememberable,
          :confirmable, # account confirmation
          :omniauthable, :omniauth_providers => [:google_oauth2, :saml],
@@ -168,7 +168,6 @@ class User < ActiveRecord::Base
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:id_connexion)
-      #where(conditions).where(conditions).where(["login_name = :value OR lower(email) = lower(:value)", { :value => login }]).first
       where(conditions).where(conditions).where(["login_name = :value", { :value => login }]).first
     else
       where(conditions).first
@@ -199,7 +198,6 @@ class User < ActiveRecord::Base
   def self.find_for_saml_oauth(attributes)
     if user = User.find_by_login_name(attributes["cn"])
       user.provider = "SAML"
-      #user.uid = auth.uid
       user
     else
     #  where(auth.slice(:provider, :uid)).first_or_create do |user|

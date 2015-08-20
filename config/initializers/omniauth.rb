@@ -5,6 +5,7 @@ MIIDFDCCAfygAwIBAgIEVLPsKDANBgkqhkiG9w0BAQ0FADBMMQswCQYDVQQGEwJGUjENMAsGA1UE Cgw
 CERTIFICATE
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :saml,
            :assertion_consumer_service_url     => "http://dev.estimancy.com/users/sign_in",

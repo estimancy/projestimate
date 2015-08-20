@@ -232,7 +232,12 @@
               <td>
                 <% unless @guw_model.one_level_model == true %>
                   <span class="text-center effort_label_<%= guow.id %>">
-                    <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears" %>
+                    <% counting = guow.guw_unit_of_work_attributes.map(&:most_likely).compact %>
+                    <% if counting.empty? %>
+                      <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: red" %>
+                    <% else %>
+                      <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: green" %>
+                    <% end %>
                   </span>
                 <% end %>
               </td>
