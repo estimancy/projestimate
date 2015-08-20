@@ -226,16 +226,29 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].nil? ? 1 : params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
+    guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].blank? ? 1 : params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
     guw_unit_of_work.save
 
     guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * guw_unit_of_work.quantity
+
+    if guw_unit_of_work.guw_type.allow_retained == false
+      guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
+      guw_unit_of_work.save
+    end
 
     if params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"].blank?
       guw_unit_of_work.ajusted_effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
     elsif params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
       guw_unit_of_work.ajusted_effort = params["hidden_ajusted_effort"]["#{guw_unit_of_work.id}"].to_f.round(3)
     end
+
+    guw_unit_of_work.save
+
+    if guw_unit_of_work.guw_type.allow_retained == false
+      guw_unit_of_work.ajusted_effort = guw_unit_of_work.effort
+    end
+
+    guw_unit_of_work.save
 
     if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
       guw_unit_of_work.flagged = false
@@ -294,7 +307,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_work_unit = guw_unit_of_work.guw_work_unit
       end
 
-      guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"]
+      guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"].to_i
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
       if params["quantity"].present?
@@ -517,12 +530,14 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
 
         unless most_likely.nil?
-          if (most_likely >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (high < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
+          if (most_likely >= @guw_attribute_complexities.map(&:bottom_range).compact.min.to_i) and (most_likely < @guw_attribute_complexities.map(&:top_range).compact.max.to_i)
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
-              if guw_ac.enable_value == true
-                @mls << guw_ac.value * most_likely
-              else
-                @mls << guw_ac.value
+              if (most_likely >= guw_ac.bottom_range) and (most_likely < guw_ac.top_range)
+                if guw_ac.enable_value == true
+                  @mls << guw_ac.value * most_likely
+                else
+                  @mls << guw_ac.value
+                end
               end
             end
           else

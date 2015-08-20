@@ -1,5 +1,5 @@
-<% unless @guw_model.one_level_model == true %>
-    $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_complexity_#{@guw_unit_of_work.id}", options_for_select(@guw_unit_of_work.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "", readonly: !@guw_unit_of_work.guw_type.allow_complexity) %>")
+<% unless @guw_unit_of_work.guw_type.allow_complexity == true %>
+  $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_complexity_#{@guw_unit_of_work.id}", options_for_select(@guw_unit_of_work.guw_type.guw_complexities.map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "", readonly: !@guw_unit_of_work.guw_type.allow_complexity) %>")
 <% end %>
 
 <% if @guw_unit_of_work.guw_type.allow_quantity == true %>

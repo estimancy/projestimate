@@ -67,16 +67,14 @@
               <% end %>
             </tr>
 
-            <% if @guw_model.one_level_model == false %>
-              <tr>
-                <td>Seuils</td>
-                <% guw_type.guw_complexities.each do |guw_cplx| %>
-                  <td class="align-center">
-                    [ <%= guw_cplx.bottom_range %> ; <%= guw_cplx.top_range %> [
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
+            <tr>
+              <td>Seuils</td>
+              <% guw_type.guw_complexities.each do |guw_cplx| %>
+                <td class="align-center">
+                  [ <%= guw_cplx.bottom_range %> ; <%= guw_cplx.top_range %> [
+                </td>
+              <% end %>
+            </tr>
 
             <tr>
               <td colspan="<%= guw_type.guw_complexities.size + 1 %>">
