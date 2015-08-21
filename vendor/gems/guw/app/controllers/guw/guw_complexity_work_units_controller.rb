@@ -55,14 +55,10 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           end
           cplx.save
 
-          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id, organization_technology_id: ot.id).first
-          if ct.nil?
-            Guw::GuwComplexityTechnology.create(guw_complexity_id: cplx.id, organization_technology_id: ot.id, coefficient: params[:coefficient]["#{cplx.id}"]["#{ot.id}"])
-          else
-            ct.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
-            ct.guw_type_id = @guw_type.id
-            ct.save
-          end
+          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id, organization_technology_id: ot.id).first_or_create
+          ct.coefficient = params[:coefficient]["#{cplx.id}"]["#{ot.id}"]
+          ct.guw_type_id = @guw_type.id
+          ct.save
 
         end
       end
