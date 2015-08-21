@@ -5,6 +5,7 @@
   <%= hidden_field_tag "guw_work_unit_id", guow.guw_work_unit_id %>
   <%= hidden_field_tag "hidden_ajusted_effort[#{guow.id}]", "" %>
   <%= hidden_field_tag "hidden_quantity[#{guow.id}]", guow.quantity %>
+  <%= hidden_field_tag "hidden_technology[#{guow.id}]", guow.organization_technology %>
 
   <div class="modal-header">
     <h4 class="modal-title" id="myModalLabel<%= guow.id %>">
