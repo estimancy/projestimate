@@ -57,7 +57,7 @@
             <tr>
               <th></th>
               <% guw_type.guw_complexities.each do |guw_cplx| %>
-                <th>
+                <th colspan="2">
                   <%= guw_cplx.name %> -
                   <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %>
                   <% if can? :manage_modules_instances, ModuleProject %>
@@ -68,18 +68,31 @@
             </tr>
 
             <tr>
+              <th></th>
+              <% guw_type.guw_complexities.each do |guw_cplx| %>
+                <th>Prod.</th>
+                <th>
+                  [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; <%= I18n.t :weight %>
+                </th>
+              <% end %>
+            </tr>
+
+            <tr>
               <td>Seuils</td>
               <% guw_type.guw_complexities.each do |guw_cplx| %>
                 <td class="align-center">
-                  [ <%= guw_cplx.bottom_range %> ; <%= guw_cplx.top_range %> [
+                  <%= check_box_tag "enable_value[#{guw_type.id}][#{guw_cplx.id}]", "enable", guw_cplx.enable_value, class: "input-xmini" %>
+                </td>
+                <td class="align-center">
+                  [ <%= guw_cplx.bottom_range %> ; <%= guw_cplx.top_range %> [ ; <%= guw_cplx.weight %>
                 </td>
               <% end %>
             </tr>
 
             <tr>
-              <td colspan="<%= guw_type.guw_complexities.size + 1 %>">
+              <td colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
                 <b>
-                  Poids
+                  Coefficient d'acquisiton
                 </b>
               </td>
             </tr>
@@ -91,7 +104,7 @@
                 </td>
 
                 <% guw_type.guw_complexities.each do |guw_cplx| %>
-                  <td class="align-center">
+                  <td colspan="2" class="align-center">
                     <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
                                                               guw_work_unit_id: work_unit.id).first %>
                     <%= text_field_tag "value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
@@ -102,7 +115,7 @@
             <% end %>
 
             <tr>
-              <td colspan="<%= guw_type.guw_complexities.size + 1 %>">
+              <td colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
                 <b>
                   <%= I18n.t :technology %>
                 </b>
@@ -118,7 +131,7 @@
                 <% guw_type.guw_complexities.each do |guw_cplx| %>
                   <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
                                                                 organization_technology_id: technology.id).first %>
-                  <td class="align-center">
+                  <td colspan="2" class="align-center">
                     <%= text_field_tag "coefficient[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
                   </td>
                 <% end %>

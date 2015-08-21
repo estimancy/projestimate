@@ -49,6 +49,13 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           ot = OrganizationTechnology.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
 
+          if params['enable_value'].present?
+            cplx.enable_value = params['enable_value']["#{cplx.guw_type.id}"]["#{cplx.id}"].nil? ? false : true
+          else
+            cplx.enable_value = false
+          end
+          cplx.save
+
           ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
                                              organization_technology_id: ot.id).first
 

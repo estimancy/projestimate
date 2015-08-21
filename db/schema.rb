@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150820075124) do
+ActiveRecord::Schema.define(:version => 20150821072852) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -514,6 +514,7 @@ ActiveRecord::Schema.define(:version => 20150820075124) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "copy_id"
+    t.boolean  "enable_value"
   end
 
   create_table "guw_guw_complexity_technologies", :force => true do |t|
@@ -1283,13 +1284,13 @@ ActiveRecord::Schema.define(:version => 20150820075124) do
     t.float    "calculated_effort"
     t.float    "theoretical_staffing"
     t.float    "calculated_staffing"
+    t.text     "chart_actual_coordinates"
     t.integer  "copy_id"
     t.integer  "copy_number"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
     t.text     "trapeze_chart_theoretical_coordinates"
     t.text     "rayleigh_chart_theoretical_coordinates"
-    t.text     "chart_actual_coordinates"
     t.float    "rayleigh_duration"
     t.string   "actuals_based_on"
   end

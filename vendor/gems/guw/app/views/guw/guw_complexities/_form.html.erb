@@ -19,6 +19,8 @@
         <%= f.input :name %>
         <%= f.input :bottom_range, label: "Borne basse (comprises)" %>
         <%= f.input :top_range, label: "Borne haute (non comprises)" %>
+        <%= f.input :enable_value, label: "Produit ?" %>
+        <%= f.input :weight, label: "Poids" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
