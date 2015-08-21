@@ -26,7 +26,7 @@
 
       <% if can? :manage_modules_instances, ModuleProject %>
         <%= f.button :submit, I18n.t('save') %>
-        <%= link_to "Supprimer", @guw_type, method: :delete, class: "btn pull-right" %>
+        <%= link_to "Supprimer", @guw_type, method: :delete, confirm: "Etes vous sure de vouloir supprimer ce type d'UO ?", class: "btn btn-danger pull-right" %>
       <% end %>
       <%= link_to I18n.t(:back), :back, class: "btn" %>
     <% end %>
