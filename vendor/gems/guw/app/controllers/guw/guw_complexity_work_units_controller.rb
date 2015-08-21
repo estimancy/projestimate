@@ -30,15 +30,14 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           cplx = Guw::GuwComplexity.find(i.first.to_i)
           @guw_type = cplx.guw_type
 
-          cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id,
-                                                 guw_work_unit_id: wu.id).first
-
+          cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id).first
           if cwu.nil?
             Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id, value: params[:value]["#{cplx.id}"]["#{wu.id}"])
           else
             cwu.value = params[:value]["#{cplx.id}"]["#{wu.id}"]
             cwu.save
           end
+
         end
       end
     end
@@ -56,9 +55,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           end
           cplx.save
 
-          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id,
-                                             organization_technology_id: ot.id).first
-
+          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id, organization_technology_id: ot.id).first
           if ct.nil?
             Guw::GuwComplexityTechnology.create(guw_complexity_id: cplx.id, organization_technology_id: ot.id, coefficient: params[:coefficient]["#{cplx.id}"]["#{ot.id}"])
           else
@@ -66,6 +63,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
             ct.guw_type_id = @guw_type.id
             ct.save
           end
+
         end
       end
     end

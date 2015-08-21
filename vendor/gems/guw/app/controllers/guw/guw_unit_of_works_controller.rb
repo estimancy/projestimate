@@ -203,7 +203,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-      @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+      @weight_pert << cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_unit_of_work.guw_complexity.weight.to_f
       guw_unit_of_work.save
     else
       if guw_unit_of_work.result_low.nil? or guw_unit_of_work.result_most_likely.nil? or guw_unit_of_work.result_high.nil?
@@ -323,12 +323,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.save
 
         cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-                                             guw_work_unit_id: guw_work_unit.id).first
+                                              guw_work_unit_id: guw_work_unit.id).first
 
         tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-        @weight_pert << (cwu.nil? ? 1 : cwu.value) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_unit_of_work.guw_complexity.weight
         guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity
       end
 
