@@ -110,7 +110,7 @@ class OrganizationsController < ApplicationController
         end
 
       end
-
+  
       unless (array_project + array_value).empty?
         tmp << (array_project + array_value).flatten
       end
