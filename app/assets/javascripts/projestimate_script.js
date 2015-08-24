@@ -19,6 +19,10 @@
 
 $(document).ready(function() {
 
+    $(".modal").draggable({
+        handle: ".modal-header"
+    });
+
     // Modal bug
     $('.modal-backdrop').remove();
     $(".modal").hide();
@@ -983,4 +987,5 @@ jQuery.fn.submitWithAjax = function () {
         return false;
     });
 };
+
 
