@@ -21,6 +21,7 @@
         <%= f.input :top_range, label: "Borne haute (non comprises)" %>
         <%= f.input :enable_value, label: "Produit ?" %>
         <%= f.input :weight, label: "Poids" %>
+        <%= f.input :display_order, label: "Ordre d'affichage" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

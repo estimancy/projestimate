@@ -56,7 +56,7 @@
           <table class="table table-bordered">
             <tr>
               <th></th>
-              <% guw_type.guw_complexities.each do |guw_cplx| %>
+              <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
                 <th colspan="2">
                   <%= guw_cplx.name %> -
                   <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %>
@@ -69,7 +69,7 @@
 
             <tr>
               <th></th>
-              <% guw_type.guw_complexities.each do |guw_cplx| %>
+              <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
                 <th>Prod.</th>
                 <th>
                   [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; <%= I18n.t :weight %>
@@ -79,7 +79,7 @@
 
             <tr>
               <td>Seuils</td>
-              <% guw_type.guw_complexities.each do |guw_cplx| %>
+              <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
                 <td class="align-center">
                   <%= check_box_tag "enable_value[#{guw_type.id}][#{guw_cplx.id}]", "enable", guw_cplx.enable_value, class: "input-xmini" %>
                 </td>
@@ -97,13 +97,13 @@
               </td>
             </tr>
 
-            <% @guw_model.guw_work_units.each do |work_unit| %>
+            <% @guw_model.guw_work_units.order("display_order ASC").each do |work_unit| %>
               <tr>
                 <td>
                   <%= work_unit.name %>
                 </td>
 
-                <% guw_type.guw_complexities.each do |guw_cplx| %>
+                <% guw_type.guw_complexities.order("display_order ASC").each do |guw_cplx| %>
                   <td colspan="2" class="align-center">
                     <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
                                                               guw_work_unit_id: work_unit.id).first %>
@@ -128,7 +128,7 @@
                   <%= technology.name %>
                 </td>
 
-                <% guw_type.guw_complexities.each do |guw_cplx| %>
+                <% guw_type.guw_complexities.order("display_order ASC").each do |guw_cplx| %>
                   <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
                                                                 organization_technology_id: technology.id).first %>
                   <td colspan="2" class="align-center">
@@ -161,7 +161,7 @@
               <th>
                 Seuils de complexité
               </th>
-              <% guw_type.guw_type_complexities.each do |type_complexity| %>
+              <% guw_type.guw_type_complexities.order("display_order DESC").each do |type_complexity| %>
                 <th colspan="2">
                   <%= type_complexity.name %> -
                   <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %>
@@ -174,7 +174,7 @@
 
             <tr>
               <th>Attributs</th>
-              <% guw_type.guw_type_complexities.each do |type_complexity| %>
+              <% guw_type.guw_type_complexities.order("display_order ASC").each do |type_complexity| %>
                 <th>Prod.</th>
                 <th>
                   [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; <%= I18n.t :weight %>
@@ -187,7 +187,7 @@
                 <td class="align-center">
                   <%= link_to guw_attribute, guw.edit_guw_model_guw_attribute_path(@guw_model, guw_attribute) %>
                 </td>
-                <% guw_type.guw_type_complexities.each do |type_complexity| %>
+                <% guw_type.guw_type_complexities.order("display_order ASC").each do |type_complexity| %>
 
                   <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
 

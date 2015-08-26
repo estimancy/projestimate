@@ -12,13 +12,15 @@
       <tr>
         <th>Name</th>
         <th>Value</th>
+        <th>Ordre d'affichage</th>
         <th>Actions</th>
       </tr>
 
-      <% @guw_work_units.each do |guw_work_unit| %>
+      <% @guw_work_units.order("display_order ASC").each do |guw_work_unit| %>
         <tr>
           <td class="align-center"><%= link_to guw_work_unit.name, edit_guw_model_guw_work_unit_path(@guw_model, guw_work_unit) %></td>
           <td class="align-center"><%= guw_work_unit.value %></td>
+          <td class="align-center"><%= guw_work_unit.display_order %></td>
           <td class="align-center">
             <%= link_to "", guw.edit_guw_model_guw_work_unit_path(@guw_model, guw_work_unit), class: "fa fa-pencil" %>
             <% if can? :manage_modules_instances, ModuleProject %>

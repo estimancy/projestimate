@@ -392,21 +392,6 @@ $(document).ready(function() {
   // Pre-visualize the selected Wbs-Activity
     preview_selected_wbs_activity();
 
-    //ADD selected WBS-Activity to Project
-    $("#form_select_and_add_wbs_activity").live("ajax:complete", function(event,xhr,status){
-        $('#wbs_activity_element').val('');
-        $.ajax({
-            url:"/refresh_wbs_project_elements",
-            method: 'GET',
-            data: {
-                elt_id: $('#wbs_activity_element').val(),
-                project_id: $('#project_id').val(),
-                is_project_show_view: $('#is_project_show_view').val()
-            }
-        });
-        return false;
-    });
-
     //Allow to copy value from one field to another
     $('.copyLib').css('cursor', 'pointer');
 
@@ -703,7 +688,7 @@ $(document).ready(function() {
 
 
     //Handler Action link_to event for project history tree view
-    $('.node_link_to').live('click', function(){
+    $('.node_link_to').on('click', 'a', function(){
         var counter = 0,
             i = 0,
             node_ids = new Array();

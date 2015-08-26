@@ -19,6 +19,7 @@
         <%= f.input :name, label: "Nom du seuil" %>
         <%= f.input :description, input_html: { rows: "5"} %>
         <%= f.input :value, label: "Valeur par défaut" %>
+        <%= f.input :display_order, label: "Ordre d'affichage" %>
       </div>
 
       <%= f.button :submit, I18n.t('save') %>

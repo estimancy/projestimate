@@ -17,6 +17,7 @@
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :value %>
+        <%= f.input :display_order, label: "Ordre d'affichage" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

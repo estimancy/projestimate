@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150821072852) do
+ActiveRecord::Schema.define(:version => 20150826071618) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -511,10 +511,11 @@ ActiveRecord::Schema.define(:version => 20150821072852) do
     t.integer  "bottom_range"
     t.integer  "top_range"
     t.integer  "guw_type_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "copy_id"
     t.boolean  "enable_value"
+    t.integer  "display_order"
   end
 
   create_table "guw_guw_complexity_technologies", :force => true do |t|
@@ -552,9 +553,10 @@ ActiveRecord::Schema.define(:version => 20150821072852) do
     t.text     "description"
     t.float    "value"
     t.integer  "guw_type_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "copy_id"
+    t.integer  "display_order"
   end
 
   create_table "guw_guw_types", :force => true do |t|
@@ -625,9 +627,10 @@ ActiveRecord::Schema.define(:version => 20150821072852) do
     t.string   "name"
     t.float    "value"
     t.integer  "guw_model_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "copy_id"
+    t.integer  "display_order"
   end
 
   create_table "input_cocomos", :force => true do |t|

@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.21'
-gem 'jquery-rails', '~> 2.0.2'
+gem 'jquery-rails'
 gem 'i18n', '~> 0.6.0'
 gem 'builder', '3.0.0'
 
