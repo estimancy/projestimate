@@ -93,7 +93,7 @@ class PermissionsController < ApplicationController
       flash[:notice] = I18n.t(:notice_permission_successful_cancelled)
     else
       @groups = @current_organization.groups
-      @permissions = Permission.defined
+      @permissions = Permission.all
 
       @groups.each do |group|
         group.update_attribute('permission_ids', params[:permissions][group.id.to_s])
@@ -119,7 +119,7 @@ class PermissionsController < ApplicationController
       redirect_to organization_authorization_path(@organization, :anchor => "tabs-estimations-permissions"), :notice => "#{I18n.t (:notice_permission_successful_cancelled)}"
     else
       @project_security_levels = @organization.project_security_levels
-      @permissions = Permission.defined
+      @permissions = Permission.all
 
       @project_security_levels.each do |psl|
         if params[:permissions].nil?
