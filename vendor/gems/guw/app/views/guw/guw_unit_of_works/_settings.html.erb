@@ -15,14 +15,14 @@
         <span class="label label-success">
         Total <%= @guw_model.retained_size_unit %> retenu :
           <span class="label label-success ajusted_effort">
-            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum.to_f.round(3) %>
           </span>
         </span>
 
         <span class="label label-success">
           Total <%= @guw_model.retained_size_unit %> calculés :
           <span class="label label-success theorical_effort">
-              <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
+              <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum.to_f.round(3) %>
           </span>
         </span>
 
@@ -82,14 +82,14 @@
             <span class="label label-success">
               Total <%= @guw_model.retained_size_unit %> retenu :
               <span class="<%= uowg.id %>_ajusted">
-                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum %>
+                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum.to_f.round(3) %>
               </span>
             </span>
 
             <span class="label label-success">
               Total <%= @guw_model.retained_size_unit %> calculés :
               <span class="<%= uowg.id %>_theorical">
-                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>
+                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum.to_f.round(3) %>
               </span>
             </span>
 
@@ -179,7 +179,7 @@
               <td class="span2 ">
                 <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
                                                                            selected: guow.guw_type_id),
-                               class: "guw_type input-small",
+                               class: "guw_type input-xsmall",
                                guw: guow.id,
                                required: true,
                                readonly: !can?(:execute_estimation_plan, @project) %>
@@ -188,7 +188,7 @@
               <td class="span2 ">
                 <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.order("display_order ASC").map{|i| [i.name, i.id]},
                                                                                selected: guow.guw_work_unit_id),
-                               class: "guw_work_unit input-small",
+                               class: "guw_work_unit input-xsmall",
                                guw: guow.id,
                                required: true,
                                readonly: !can?(:execute_estimation_plan, @project) %>
@@ -200,7 +200,7 @@
 
                   <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                                   selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
-                                 class: "guw_technology input-small",
+                                 class: "guw_technology input-xsmall",
                                  guw: guow.id,
                                  required: true,
                                  readonly: !can?(:execute_estimation_plan, @project) %>

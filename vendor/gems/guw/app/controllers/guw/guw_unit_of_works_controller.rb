@@ -590,7 +590,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_low = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       else
-        uo_weight_low = guw_unit_of_work.result_low.to_i * cwu.value * guw_c.weight.to_f * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        uo_weight_low = guw_unit_of_work.result_low.to_i * cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       end
     end
 
@@ -600,7 +600,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_ml = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       else
-        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * cwu.value * guw_c.weight.to_f * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * cwu.value  * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       end
     end
 
@@ -610,7 +610,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_high = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       else
-        uo_weight_high = guw_unit_of_work.result_high.to_i * cwu.value * guw_c.weight.to_f * (tcplx.nil? ? 0 : tcplx.coefficient.to_f)
+        uo_weight_high = guw_unit_of_work.result_high.to_i * cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       end
     end
 

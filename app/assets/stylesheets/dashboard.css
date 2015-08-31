@@ -202,7 +202,7 @@ div.actions-tabs {
 .table select{
     height: 23px;
     font-size: 11px;
-    margin-left: 6px;
+    margin-right: -12px;
     border-radius: 0px;
     padding-top: 2px;
 }
@@ -1078,5 +1078,9 @@ li > a > .fa{
 
 .input-xmini{
     width: 30px;
+}
+
+.input-xsmall{
+    width: 130px;
 }
 
