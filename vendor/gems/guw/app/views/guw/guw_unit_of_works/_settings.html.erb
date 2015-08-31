@@ -14,7 +14,7 @@
       <div class="label label-info pull-right">
         Total <%= @guw_model.retained_size_unit %> retenu :
         <span class="ajusted_effort">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum.to_f.round(3) %>
         </span>
       </div>
 
@@ -23,7 +23,7 @@
       <div class="pull-left">
         Total <%= @guw_model.retained_size_unit %> calculés :
         <span class="label label-info theorical_effort">
-            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum %>
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum.to_f.round(3) %>
         </span>
         &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. :
         <span class="label label-info number_of_unit_of_work">
@@ -71,12 +71,12 @@
             <span>
               Total <%= @guw_model.retained_size_unit %> retenu :
               <span class="<%= uowg.id %>_ajusted">
-                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum %>
+                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum.to_f.round(3) %>
               </span>
 
               - Total <%= @guw_model.retained_size_unit %> calculés :
               <span class="<%= uowg.id %>_theorical">
-                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum %>
+                <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum.to_f.round(3) %>
               </span>
 
               - Nombre d'U.O. :

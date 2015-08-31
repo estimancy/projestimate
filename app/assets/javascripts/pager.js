@@ -96,7 +96,7 @@ $(function table_sorter_filter() {
             // widget code contained in the jquery.tablesorter.widgets.js file
             // use the zebra stripe widget if you plan on hiding any rows (filter widget)
 
-            widgets: [ 'uitheme', 'zebra', 'filter'],
+            widgets: [ 'uitheme', 'zebra', 'filter', 'savesort'],
             widgetOptions : {
                 filter_cssFilter   : 'tablesorter-filter',
                 zebra : ["even", "odd"],
@@ -168,7 +168,7 @@ $(function table_sorter_filter() {
                     // widget code contained in the jquery.tablesorter.widgets.js file
                     // use the zebra stripe widget if you plan on hiding any rows (filter widget)
 
-                    widgets: [ 'uitheme', 'zebra', 'filter'],
+                    widgets: [ 'uitheme', 'zebra', 'filter', 'savesort'],
                     widgetOptions : {
                         filter_cssFilter   : 'tablesorter-filter',
                         zebra : ["even", "odd"],
