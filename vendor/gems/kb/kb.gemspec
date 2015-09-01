@@ -7,16 +7,14 @@ require "kb/version"
 Gem::Specification.new do |s|
   s.name        = "kb"
   s.version     = Kb::VERSION
-  s.authors     = ["Projestimate"]
-  s.email       = ["contact@estimancy.com"]
-  s.homepage    = "forge.estimancy.com"
-  s.summary     = "Summary of Kb."
-  s.description = "Description of Kb."
+  s.authors     = "Estimancy"
+  s.email       = "contact@estimancy.com"
+  s.homepage    = "www.estimancy.com"
+  s.summary     = "L'art d'estimer les projets"
+  s.description = "L'art d'estimer les projets"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.21"  # s.add_dependency "jquery-rails"
-
-  s.add_development_dependency "sqlite3"
+  s.add_dependency "rails", "~> 3.2.21"
 end
