@@ -74,7 +74,8 @@
           <% @effort = effort_current_ev.send("string_data_probable")[current_component.id] %>
 
           <span id="effort_label">
-            <%= text_field_tag "effort", @effort.nil? ? '' : @effort.round(2),
+            <%= text_field_tag "effort",
+                               @effort.nil? ? '' : @effort.round(2),
                                class: "string required input-xlarge" %>
           </span>
         </div>
