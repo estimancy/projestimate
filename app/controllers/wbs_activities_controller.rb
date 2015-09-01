@@ -348,11 +348,22 @@ class WbsActivitiesController < ApplicationController
                     res = Hash.new
                     efforts_man_month.each do |key, value|
                       tmp = Hash.new
-                      WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: key).first.wbs_activity_ratio_profiles.each do |warp|
-                        tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * (efforts_man_month[key].to_f * 8) * (warp.ratio_value / 100)
+                      wbs_activity_ratio_element = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: key).first
+                      unless wbs_activity_ratio_element.nil?
+                        wbs_activity_ratio_element.wbs_activity_ratio_profiles.each do |warp|
+                          tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * (efforts_man_month[key].to_f * 8) * (warp.ratio_value / 100)
+                        end
                       end
                       res[key] = tmp
+
+                      if WbsActivityElement.find(key).root?
+                        res[key] = tmp.values.sum
+                      else
+                        res[key] = tmp
+                      end
+
                     end
+
                     estimation_value_profile = res
 
                   else
