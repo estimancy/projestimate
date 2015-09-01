@@ -215,7 +215,7 @@ class OrganizationsController < ApplicationController
 
   # Method that execute the duplication: duplicate estimation model for organization
   def execute_duplication(project_id, new_organization_id)
-    user = User.find(user_id)
+    user = current_user
 
     #begin
     old_prj = Project.find(project_id)
@@ -663,7 +663,7 @@ class OrganizationsController < ApplicationController
             #OrganizationDuplicateProjectWorker.perform_async(project.id, new_organization.id, current_user.id)
             new_template = execute_duplication(project.id, new_organization.id)
             unless new_template.nil?
-              new_template.is_model = est_model.is_model
+              new_template.is_model = project.is_model
               new_template.save
             end
           end
