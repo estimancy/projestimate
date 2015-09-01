@@ -1,7 +1,0 @@
-<% prjs = Array.new %>
-<% prjs = Project.find_all_by_id(current_user.latest_project) %>
-<%= select_tag 'jump_projects', options_for_select(prjs), :id => 'jump_project_id', :prompt => 'Jump to a recent project...', :method => 'post', :class => 'simple_form'%>
-<%= form_tag '/searches/results', :class => 'simple_form' do %>
-  <%= search_field :search, 'search', :id => 'search_input', :style => 'float:right;' %>
-  <%= submit_tag 'Search', :style => 'float:right;' %>
-<% end %>

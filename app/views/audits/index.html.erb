@@ -1,46 +1,7 @@
-<h1>Listing audits</h1>
-
-<%#= will_filter_tag(@audits) %>
-
-<%#= will_filter_table_tag(@audits, :columns => [
-        #{:key => :auditable_type, :title => "Elément concerné", :value => lambda{|obj| obj.auditable_type }},
-        :auditable_type,
-        {:key => :auditable_id, :title => "ID élément", :value => lambda{|obj| link_to(obj.auditable_id, "#{obj.auditable_type.downcase.pluralize}/#{obj.auditable_id}") }},
-        {:key => :action, :value => lambda{|obj| obj.customize_action_name }},
-        {:key  => :audited_changes, :value => lambda{|obj| obj.customize_audited_changes}},
-        {:key => :user_id, :title => "Auteur", :value => lambda{|obj| obj.customize_user_id }},
-        {:key => :created_at, :title => "Date de l'action", :value => lambda{|obj| I18n.l(obj.created_at) }},
-        :remote_address,
-#
-#[:actions, lambda{ |obj|
-#  actions = []
-#  #actions <<  link_to("Afficher", :action => :show, :id => obj.id)
-#
-#  actions.join(' | ').html_safe
-#}, 'padding:3px;width:80px;padding-left:10px;']
-])
-%>
-
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs-1">
+      Listing audits
+    </a></li>
+  </ul>
 <%= render :partial => "audits/audits_list", :object => @audits %>
-
-<!--
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<%# @audits.each do |audit| %>
-  <tr>
-    <td><%#= link_to 'Show', audit %></td>
-    <td><%#= link_to 'Edit', edit_audit_path(audit) %></td>
-    <td><%#= link_to 'Destroy', audit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<%# end %>
-</table>
-
-<br />
-
-<%#= link_to 'New Audit', new_audit_path %>
--->

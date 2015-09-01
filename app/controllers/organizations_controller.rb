@@ -983,18 +983,13 @@ class OrganizationsController < ApplicationController
       when I18n.t('delete')
         if params[:yes_confirmation] == 'selected'
 
-          #====== REPLACE BY SIDEKIQ WORKER =================
-
-          OrganizationDeleteWorker.perform_async(@organization.id)
-          sleep(3)
-          #@organization.transaction do
-          #  OrganizationsUsers.delete_all("organization_id = #{@organization_id}")
-          #  @organization.groups.each do |group|
-          #    GroupsUsers.delete_all("group_id = #{group.id}")
-          #  end
-          #  @organization.destroy
-          #end
-          #============== END REPLACE BY SIDEKIQ WORKER =================
+          @organization.transaction do
+            OrganizationsUsers.delete_all("organization_id = #{@organization_id}")
+            @organization.groups.each do |group|
+              GroupsUsers.delete_all("group_id = #{group.id}")
+            end
+            @organization.destroy
+          end
 
           if session[:organization_id] == params[:id]
             session[:organization_id] = current_user.organizations.first  #session[:organization_id] = nil
