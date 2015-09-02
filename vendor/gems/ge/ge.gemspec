@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Ge::VERSION
   s.authors     = "Estimancy"
   s.email       = "contact@estimancy.com"
-  s.homepage    = "www.estimancy.com"
+  s.homepage    = "http://www.estimancy.com"
   s.summary     = "L'art d'estimer les projets"
   s.description = "L'art d'estimer les projets"
 

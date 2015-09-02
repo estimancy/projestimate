@@ -67,7 +67,7 @@
         <tr>
           <th>
             <% if can? :edit_organizations, Organization %>
-              <%= link_to 'Ajouter un niveau', new_organization_uow_complexity_path(:organization_id => nil, factor: factor.id), :class => '' %>
+              <%= link_to I18n.t(:add_level), new_organization_uow_complexity_path(:organization_id => nil, factor: factor.id), :class => '' %>
             <% end %>
           </th>
           <th></th>

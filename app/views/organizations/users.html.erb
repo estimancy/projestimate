@@ -9,23 +9,23 @@
       <% if can? :manage, User, :organization_id => @organization.id %>
         <%= link_to I18n.t('new_user'), new_organization_user_path(@organization), :class => 'btn pull-right' %>
 
-        <%= link_to "Exporter les utilisateurs (CSV)", organization_export_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
+        <%= link_to I18n.t(:Export_Users_CSV), organization_export_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
 
         <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import users from excel" data-toggle="modal">
-          Importer les utilisateurs (CSV)
+          <%= I18n.t(:Import_Users_CSV) %>
         </a>
 
         <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <%= form_tag organization_import_user_path(@organization), :multipart => true, :class => 'simple_form' do %>
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h3 id="myModalLabel">Import users from Excel</h3>
+              <h3 id="myModalLabel"> <%= I18n.t(:Import_user_from_excel) %></h3>
             </div>
             <div class="modal-body">
               <label>
                 <%= I18n.t(:file_csv) %>
                 <br>
-                Format (Prénom, Nom, Email, Login)
+                <%= I18n.t(:line_format) %>
               </label>
               <%= file_field_tag :file %>
 

@@ -293,6 +293,7 @@ fr:
 
   #attributes
   name: "Nom"
+  send_all_users: "Envoyer à tous les utilisateurs de la base"
   category: "Catégorie"
   description: "Description"
   alias: "Alias"
@@ -1355,6 +1356,7 @@ fr:
   live_chat_support: "Support messagerie instantanée "
   see_consultants: "Voir les conseillers "
 
+
   #label for Search results display
   label_OrganizationProfile: "Profil"
   label_EstimationStatus: "Statuts des estimations"
@@ -1491,3 +1493,29 @@ fr:
   warning_edit_instance_module: "Attention: Lorsque vous modifiez la configuration du module, toutes les estimations qui ont été construites avec le module sont susceptibles de recevoir les changements effectués dans le module, même si les estimations sont déjà réalisées et enregistrées."
   duplicate_module: "Dupliquer le module"
   staffing_duration: "Durée (%{unit})"
+
+  resend_confirmation_instructions: "Renvoyer les instructions de confirmation"
+  Sign_in_with_SAML: "S'inscrire avec SAML"
+  add_level: "Ajouter un niveau"
+  Standard_unit_conversion_factor: "Coefficient de conversion en unité standard"
+  new_UO_model: "Nouveau modèle d'UO"
+  new_instance_of_effort: "Nouvelle instance d'effort"
+  New_knowledge_base: "Nouvelle base de connaissance"
+  New_Team_module_instance: "Nouvelle instance de module d'équipe"
+  New_model_of_Judgment_Expert: "Nouveau modèle de Jugement d'Expert"
+  wait_message_for_organization_copy: "Veuillez patienter, la copie de l'organisation est en cours."
+  organization_copy: "Copie de l'organisation"
+  Technologies_List: "Liste des Technologies"
+  List_of_Works_Units: "Liste des Unités d'Oeuvres"
+  List_of_Acquisitions_Types: "Liste des Types d'Acquisitions"
+  Technology_warning: "Pour chaque technologie , configurer une taille equivalante (en pour cent ) selon le type de taille ."
+  wait_for_complete_organization_delete: "Veuillez patienter, la suppression de l'organisation et des objets liés est en cours..."
+  wait_for_new_organization_creation: "Veuillez patienter, la création de la nouvelle organisation est en cours..."
+  Export_Users_CSV: "Exporter les utilisateurs (CSV)"
+  Import_Users_CSV: "Importer les utilisateurs (CSV)"
+  line_format: "Format (Prénom, Nom, Email, Login)"
+  Import_user_from_excel: "Importer des utilisateurs depuis Excel"
+  Project_name: "Nom de projet"
+  title: "Titre"
+  Product_Name: "Nom du produit"
+  application_b: "application"
