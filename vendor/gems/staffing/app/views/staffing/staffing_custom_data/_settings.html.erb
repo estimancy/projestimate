@@ -66,12 +66,13 @@
         </div>
 
         <div class="span2">
-          <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium'} %>
+          <%= f.input :max_staffing, label: "Staffing", :input_html => { :class => 'input-medium'} %>
         </div>
 
         <div class="span2">
-          <%= f.input :max_staffing, label: "Staffing", :input_html => { :class => 'input-medium'} %>
+          <%= f.input :duration, label: "Durée (en semaine)", :input_html => { :class => 'input-medium'} %>
         </div>
+
       </div>
 
       <button name="actuals_based_on[trapeze]" type="submit" class="btn btn-success btn-mini pull-right">

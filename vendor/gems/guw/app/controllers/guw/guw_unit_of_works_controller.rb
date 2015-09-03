@@ -348,10 +348,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.flagged = true
       end
 
-      #if guw_unit_of_work.guw_type.allow_complexity == true
-      #  guw_unit_of_work.off_line_uo = false
-      #end
-
       guw_unit_of_work.save
     end
 
