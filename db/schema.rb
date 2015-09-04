@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150826071618) do
+ActiveRecord::Schema.define(:version => 20150903142831) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -387,17 +387,6 @@ ActiveRecord::Schema.define(:version => 20150826071618) do
     t.integer "copy_id"
   end
 
-  create_table "factor_translations", :force => true do |t|
-    t.integer  "factor_id"
-    t.string   "locale",     :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.text     "helps"
-  end
-
-  add_index "factor_translations", ["factor_id"], :name => "index_factor_translations_on_factor_id"
-  add_index "factor_translations", ["locale"], :name => "index_factor_translations_on_locale"
-
   create_table "factors", :force => true do |t|
     t.string   "name"
     t.string   "alias"
@@ -511,11 +500,11 @@ ActiveRecord::Schema.define(:version => 20150826071618) do
     t.integer  "bottom_range"
     t.integer  "top_range"
     t.integer  "guw_type_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "copy_id"
     t.boolean  "enable_value"
-    t.integer  "display_order"
+    t.integer  "display_order", :default => 0
   end
 
   create_table "guw_guw_complexity_technologies", :force => true do |t|
@@ -553,10 +542,10 @@ ActiveRecord::Schema.define(:version => 20150826071618) do
     t.text     "description"
     t.float    "value"
     t.integer  "guw_type_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "copy_id"
-    t.integer  "display_order"
+    t.integer  "display_order", :default => 0
   end
 
   create_table "guw_guw_types", :force => true do |t|
@@ -627,10 +616,10 @@ ActiveRecord::Schema.define(:version => 20150826071618) do
     t.string   "name"
     t.float    "value"
     t.integer  "guw_model_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "copy_id"
-    t.integer  "display_order"
+    t.integer  "display_order", :default => 0
   end
 
   create_table "input_cocomos", :force => true do |t|
@@ -671,31 +660,6 @@ ActiveRecord::Schema.define(:version => 20150826071618) do
     t.integer "organization_id"
   end
 
-  create_table "labor_categories", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-  end
-
-  add_index "labor_categories", ["record_status_id"], :name => "index_labor_categories_on_record_status_id"
-  add_index "labor_categories", ["reference_id"], :name => "index_labor_categories_on_parent_id"
-  add_index "labor_categories", ["uuid"], :name => "index_labor_categories_on_uuid", :unique => true
-
-  create_table "labor_categories_project_areas", :id => false, :force => true do |t|
-    t.integer  "labor_category_id"
-    t.integer  "project_area_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "languages", :force => true do |t|
     t.string   "name"
     t.string   "locale"
@@ -713,24 +677,6 @@ ActiveRecord::Schema.define(:version => 20150826071618) do
   add_index "languages", ["record_status_id"], :name => "index_languages_on_record_status_id"
   add_index "languages", ["reference_id"], :name => "index_languages_on_parent_id"
   add_index "languages", ["uuid"], :name => "index_languages_on_uuid", :unique => true
-
-  create_table "master_settings", :force => true do |t|
-    t.string   "key"
-    t.text     "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-  end
-
-  add_index "master_settings", ["record_status_id"], :name => "index_master_settings_on_record_status_id"
-  add_index "master_settings", ["reference_id"], :name => "index_master_settings_on_parent_id"
-  add_index "master_settings", ["uuid"], :name => "index_master_settings_on_uuid", :unique => true
 
   create_table "module_projects", :force => true do |t|
     t.integer  "pemodule_id"

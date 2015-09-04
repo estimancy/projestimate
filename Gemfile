@@ -109,7 +109,7 @@ group :ic do
 end
 
 # spreadsheet files management
-gem 'rubyzip', '~> 0.9'
+gem 'rubyzip'
 gem 'axlsx'
 gem 'roo'
 gem 'google_drive'
@@ -164,6 +164,8 @@ gem 'groupdate'
 #Faker
 gem 'faker'
 
+gem 'passenger'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -214,10 +216,7 @@ gem 'remotipart', '~> 1.2'
 gem 'rubyXL'
 gem 'nokogiri'
 
-#gem 'rubocop', require: false
-
-#TEST===============
-#gem 'thinreports'
+gem 'yaml_db'
 
 local_gemfile = File.join(File.dirname(__FILE__), 'Gemfile.local')
 if File.exists?(local_gemfile)
