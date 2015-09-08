@@ -307,7 +307,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_work_unit = guw_unit_of_work.guw_work_unit
       end
 
-      guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"].to_i
+      if params[:guw_technology].present?
+        guw_unit_of_work.organization_technology_id = params[:guw_technology]["#{guw_unit_of_work.id}"].to_i
+      end
+
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
       if params["quantity"].present?
@@ -328,8 +331,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-        @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_unit_of_work.guw_complexity.weight
-        guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity
+        @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_unit_of_work.guw_complexity.weight.to_f
+        guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity.to_f
       end
 
       if guw_unit_of_work.guw_type.allow_retained == false
@@ -347,10 +350,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       else
         guw_unit_of_work.flagged = true
       end
-
-      #if guw_unit_of_work.guw_type.allow_complexity == true
-      #  guw_unit_of_work.off_line_uo = false
-      #end
 
       guw_unit_of_work.save
     end
@@ -521,9 +520,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                 if (low >= guw_ac.bottom_range) and (low < guw_ac.top_range)
                   if guw_ac.enable_value == true
-                    @lows << guw_ac.value * low
+                    @lows << guw_ac.value.to_f * low
                   else
-                    @lows << guw_ac.value
+                    @lows << guw_ac.value.to_f
                   end
                 end
               end
@@ -538,9 +537,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
               if (most_likely >= guw_ac.bottom_range) and (most_likely < guw_ac.top_range)
                 if guw_ac.enable_value == true
-                  @mls << guw_ac.value * most_likely
+                  @mls << guw_ac.value.to_f * most_likely
                 else
-                  @mls << guw_ac.value
+                  @mls << guw_ac.value.to_f
                 end
               end
             end
@@ -554,9 +553,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
               if (high >= guw_ac.bottom_range) and (high < guw_ac.top_range)
                 if guw_ac.enable_value == true
-                  @highs << guw_ac.value * high
+                  @highs << guw_ac.value.to_f * high
                 else
-                  @highs << guw_ac.value
+                  @highs << guw_ac.value.to_f
                 end
               end
             end
@@ -590,7 +589,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_low = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       else
-        uo_weight_low = guw_unit_of_work.result_low.to_i * cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
+        uo_weight_low = guw_unit_of_work.result_low.to_i * cwu.value.to_i * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       end
     end
 
@@ -600,7 +599,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_ml = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       else
-        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * cwu.value  * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
+        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * cwu.value.to_i  * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       end
     end
 
@@ -610,7 +609,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_high = cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       else
-        uo_weight_high = guw_unit_of_work.result_high.to_i * cwu.value * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
+        uo_weight_high = guw_unit_of_work.result_high.to_i * cwu.value.to_i * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_c.weight.to_f
       end
     end
 

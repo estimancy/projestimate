@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.description = %q{TODO: Write a gem description}
   gem.summary = %q{TODO: Write a gem summary}
   gem.license = 'AGPL-3'
-  gem.homepage = 'hforge.estimancy.comte.org/'
+  gem.homepage = 'http://www.estimancy.com'
 
   gem.files = `git ls-files`.split($/)
   gem.executables = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }

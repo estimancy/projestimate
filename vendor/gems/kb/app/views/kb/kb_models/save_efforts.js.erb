@@ -1,5 +1,5 @@
 $("#formula").html("<%= @kb_input.formula %>")
-$("#effort").val("<%= @effort %>")
+$("#effort").val("<%= @effort.round(2) %>")
 
 $(function () {
         $('#scatter_chart').highcharts({
