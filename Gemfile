@@ -51,11 +51,11 @@ require 'yaml'
 #  warn('Please configure your config/database.yml first')
 #end
 
-gem 'mysql', '~> 2.8.1', :platforms => [:mri, :mingw]
-gem 'activerecord-jdbcmysql-adapter', :platforms => :jruby
+gem 'mysql', '~> 2.8.1'
+gem 'activerecord-jdbcmysql-adapter'
 
 gem 'pg'
-gem 'activerecord-jdbcpostgresql-adapter', :platforms => :jruby
+gem 'activerecord-jdbcpostgresql-adapter'
 
 #For PostgreSQL database
 
