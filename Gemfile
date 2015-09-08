@@ -52,6 +52,8 @@ require 'yaml'
 #end
 
 gem 'mysql2'
+gem 'activerecord-mysql2-adapter'
+
 #gem 'activerecord-jdbcmysql-adapter'
 
 gem 'pg'
