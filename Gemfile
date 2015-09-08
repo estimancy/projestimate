@@ -52,10 +52,10 @@ require 'yaml'
 #end
 
 gem 'mysql', '~> 2.8.1'
-gem 'activerecord-jdbcmysql-adapter'
+#gem 'activerecord-jdbcmysql-adapter'
 
 gem 'pg'
-gem 'activerecord-jdbcpostgresql-adapter'
+#gem 'activerecord-jdbcpostgresql-adapter'
 
 #For PostgreSQL database
 
