@@ -51,9 +51,7 @@ require 'yaml'
 #  warn('Please configure your config/database.yml first')
 #end
 
-gem 'mysql2'
-gem 'activerecord-mysql2-adapter'
-
+gem 'mysql2', '0.3.11'
 #gem 'activerecord-jdbcmysql-adapter'
 
 gem 'pg'
