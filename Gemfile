@@ -110,6 +110,7 @@ end
 
 # spreadsheet files management
 gem 'rubyzip'
+gem 'zip-zip'
 gem 'axlsx'
 gem 'roo'
 gem 'google_drive'
