@@ -24,7 +24,7 @@
       <tbody>
       <% @languages.each do |language| %>
           <tr>
-            <td><%= language.name %></td>
+            <td><%= language.to_s %></td>
             <td><%= language.locale %></td>
             <td><%= language.record_status.name unless language.record_status.nil? %> <%= language.show_custom_value %></td>
             <td class="center">

@@ -15,7 +15,7 @@
 
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to "Nouveau modèle d'UO", guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+        <%= link_to I18n.t(:new_UO_model), guw.new_guw_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
       <% end %>
       <br>
 
@@ -53,7 +53,7 @@
 
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
-          <%= link_to "Nouvelle instance d'effort", ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+          <%= link_to I18n.t(:new_instance_of_effort), ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
       <% end %>
 
       <table class="table table-bordered">
@@ -88,7 +88,7 @@
 
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to "Nouvelle base de connaissance", kb.new_kb_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+        <%= link_to I18n.t(:New_knowledge_base), kb.new_kb_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
       <% end %>
 
       <table class="table table-bordered">
@@ -191,7 +191,7 @@
 
     <% if can? :show_modules_instances, ModuleProject %>
         <% if can? :manage_modules_instances, ModuleProject %>
-            <%= link_to "Nouvelle instance de module d'équipe", staffing.new_staffing_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+            <%= link_to I18n.t(:New_Team_module_instance), staffing.new_staffing_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
         <% end %>
 
         <table class="table table-bordered">
@@ -236,7 +236,7 @@
     <b>Expert Judgment</b>
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
-         <%= link_to "Nouveau modèle de Jugement d'Expert", expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+         <%= link_to I18n.t(:New_model_of_Judgment_Expert), expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
       <% end %>
       <br>
 

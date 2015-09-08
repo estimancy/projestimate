@@ -117,7 +117,7 @@ fr:
       minute: "Minute"
       second: "Seconde"
       week:   "Semaine"
-      
+
   time:
     formats:
       default: ! "%d/%m/%Y %H:%M"
@@ -237,7 +237,7 @@ fr:
         limit3: "Affichage de l'effort en mois à partir de"
     errors:
       <<: *errors
-      
+
   #  Menu
   projects: "Projets"
   label_menu_projects: "Projets"
@@ -293,6 +293,7 @@ fr:
 
   #attributes
   name: "Nom"
+  send_all_users: "Envoyer à tous les utilisateurs de la base"
   category: "Catégorie"
   description: "Description"
   alias: "Alias"
@@ -460,7 +461,7 @@ fr:
   new_module_project: "Créer un nouveau module de projet"
   related_attributes: "Attributs associés"
   module_ratio_settings: "Paramètrage Ratio"
-  module_links_settings: "Liens entre Modules"  
+  module_links_settings: "Liens entre Modules"
   mandatory: "Obligatoire"
   links_to: "Liens vers"
   current_link: "Liens courant"
@@ -677,7 +678,7 @@ fr:
   sum_of_ratio_values: "Somme des valeurs des ratios :"
   one_activity_element: "Un activité-élément"
   all_activity_elements: "Tous les activité-éléments"
-  set_of_activity_elements: "Un ensemble d'activité-éléments" 
+  set_of_activity_elements: "Un ensemble d'activité-éléments"
   new_activities: "Nouvelle activité"
   general: "Général"
   file_csv: "Fichier (csv seulement)"
@@ -1355,6 +1356,7 @@ fr:
   live_chat_support: "Support messagerie instantanée "
   see_consultants: "Voir les conseillers "
 
+
   #label for Search results display
   label_OrganizationProfile: "Profil"
   label_EstimationStatus: "Statuts des estimations"
@@ -1491,3 +1493,49 @@ fr:
   warning_edit_instance_module: "Attention: Lorsque vous modifiez la configuration du module, toutes les estimations qui ont été construites avec le module sont susceptibles de recevoir les changements effectués dans le module, même si les estimations sont déjà réalisées et enregistrées."
   duplicate_module: "Dupliquer le module"
   staffing_duration: "Durée (%{unit})"
+
+  #recent
+  resend_confirmation_instructions: "Renvoyer les instructions de confirmation"
+  Sign_in_with_SAML: "S'inscrire avec SAML"
+  add_level: "Ajouter un niveau"
+  Standard_unit_conversion_factor: "Coefficient de conversion en unité standard"
+  new_UO_model: "Nouveau modèle d'UO"
+  new_instance_of_effort: "Nouvelle instance d'effort"
+  New_knowledge_base: "Nouvelle base de connaissance"
+  New_Team_module_instance: "Nouvelle instance de module d'équipe"
+  New_model_of_Judgment_Expert: "Nouveau modèle de Jugement d'Expert"
+  wait_message_for_organization_copy: "Veuillez patienter, la copie de l'organisation est en cours."
+  organization_copy: "Copie de l'organisation"
+  Technologies_List: "Liste des Technologies"
+  List_of_Works_Units: "Liste des Unités d'Oeuvres"
+  List_of_Acquisitions_Types: "Liste des Types d'Acquisitions"
+  Technology_warning: "Pour chaque technologie , configurer une taille equivalante (en pour cent ) selon le type de taille ."
+  wait_for_complete_organization_delete: "Veuillez patienter, la suppression de l'organisation et des objets liés est en cours..."
+  wait_for_new_organization_creation: "Veuillez patienter, la création de la nouvelle organisation est en cours..."
+  Export_Users_CSV: "Exporter les utilisateurs (CSV)"
+  Import_Users_CSV: "Importer les utilisateurs (CSV)"
+  line_format: "Format (Prénom, Nom, Email, Login)"
+  Import_user_from_excel: "Importer des utilisateurs depuis Excel"
+  Project_name: "Nom de projet"
+  title: "Titre"
+  Product_Name: "Nom du produit"
+  application_b: "application"
+  Start_date_organizations: "Date de début"
+  end_date_organizations: "Date de fin"
+  Platform_Categorie_organization: "Categorie de plateforme"
+  Project_Category: "Catégorie de projets"
+  Category_acquistion: "Catégorie d'acquistion"
+  Estimating_Status: "Statut de l'estimation"
+  with_header: "Avec en-tête"
+  Generate_Report: "Générer le rapport"
+  Actualize: "Actualiser"
+  Create_a_new_Work_Unit: "Créer une nouvelle Unité d'Oeuvre"
+  wiki_changelog: "Voir le changelog sur le wiki"
+  Listing_views: ""
+  Is_it_of_a_title_thumbnail: "S'agit-il d'une vignette de titre ?"
+  three_points_estimation_activities: "Estimation 3 points"
+  modification_entry_valur: "Modification des valeurs d'entrées"
+  Wording_of_the_module_unit_effort: "Libellé de l'unité d'effort du module"
+  Conversion_factor_standard_effort: "Coefficient de conversion en effort standard"
+  Exel_generator: "Générateur de rapport Excel"
+  Generate_Excel_report: "Générer un rapport Excel"
