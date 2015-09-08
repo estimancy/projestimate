@@ -106,7 +106,7 @@ group :ic do
 end
 
 # spreadsheet files management
-gem 'rubyzip', '~> 0.9'
+gem 'rubyzip'
 gem 'axlsx'
 gem 'roo'
 gem 'google_drive'

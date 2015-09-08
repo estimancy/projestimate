@@ -1,11 +1,11 @@
 <div class="tabs">
   <ul>
-    <li><a href="#tabs-report">Générateur de rapport Excel</a></li>
+    <li><a href="#tabs-report"><%= I18n.t(:Exel_generator) %></a></li>
   </ul>
 
   <div id="tabs-report" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 
-    <h3>Générer un rapport Excel</h3>
+    <h3><%= I18n.t(:Generate_Excel_report) %></h3>
 
     <%= form_tag "generate_report_excel", method: "post" do %>
 
@@ -31,7 +31,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Date de début" %>
+          <%= label_tag I18n.t(:Start_date_organization) %>
           <%= text_field_tag "report_date[start_date]", "", class: 'date-picker' %>
         </div>
       </div>
@@ -40,7 +40,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Date de fin" %>
+          <%= label_tag I18n.t(:end_date_organization) %>
           <%= text_field_tag "report_date[end_date]", "", class: 'date-picker' %>
         </div>
       </div>
@@ -49,7 +49,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Categorie de plateforme" %>
+          <%= label_tag I18n.t(:Platform_Categorie_organization) %>
           <%= select_tag "report[platform_category_id]", options_for_select(@organization.platform_categories.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
         </div>
       </div>
@@ -58,7 +58,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Catégorie de projets" %>
+          <%= label_tag I18n.t(:Project_Category) %>
           <%= select_tag "report[project_category_id]", options_for_select(@organization.project_categories.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
         </div>
       </div>
@@ -67,7 +67,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Catégorie d'acquistion" %>
+          <%= label_tag I18n.t(:Category_acquistion) %>
           <%= select_tag "report[acquisition_category_id]", options_for_select(@organization.acquisition_categories.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
         </div>
       </div>
@@ -76,7 +76,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Secteur de projets" %>
+          <%= label_tag I18n.t(:Project_Area) %>
           <%= select_tag "report[project_area_id]", options_for_select(@organization.project_areas.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
         </div>
       </div>
@@ -85,7 +85,7 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Statut de l'estimation" %>
+          <%= label_tag I18n.t(:Estimating_Status) %>
           <%= select_tag "report[estimation_status_id]", options_for_select(@organization.estimation_statuses.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
         </div>
       </div>
@@ -94,10 +94,10 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <%= label_tag "Avec en-tête" %>
+          <%= label_tag I18n.t(:with_header) %>
           <%= check_box_tag "with_header", "checked", true %>
 
-          <%= submit_tag "Générer le rapport", class: "btn pull-right" %>
+          <%= submit_tag I18n.t(:Generate_Report), class: "btn pull-right" %>
         </div>
       </div>
 

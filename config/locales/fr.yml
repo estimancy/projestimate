@@ -117,7 +117,7 @@ fr:
       minute: "Minute"
       second: "Seconde"
       week:   "Semaine"
-      
+
   time:
     formats:
       default: ! "%d/%m/%Y %H:%M"
@@ -237,7 +237,7 @@ fr:
         limit3: "Affichage de l'effort en mois à partir de"
     errors:
       <<: *errors
-      
+
   #  Menu
   projects: "Projets"
   label_menu_projects: "Projets"
@@ -461,7 +461,7 @@ fr:
   new_module_project: "Créer un nouveau module de projet"
   related_attributes: "Attributs associés"
   module_ratio_settings: "Paramètrage Ratio"
-  module_links_settings: "Liens entre Modules"  
+  module_links_settings: "Liens entre Modules"
   mandatory: "Obligatoire"
   links_to: "Liens vers"
   current_link: "Liens courant"
@@ -678,7 +678,7 @@ fr:
   sum_of_ratio_values: "Somme des valeurs des ratios :"
   one_activity_element: "Un activité-élément"
   all_activity_elements: "Tous les activité-éléments"
-  set_of_activity_elements: "Un ensemble d'activité-éléments" 
+  set_of_activity_elements: "Un ensemble d'activité-éléments"
   new_activities: "Nouvelle activité"
   general: "Général"
   file_csv: "Fichier (csv seulement)"
@@ -1494,6 +1494,7 @@ fr:
   duplicate_module: "Dupliquer le module"
   staffing_duration: "Durée (%{unit})"
 
+  #recent
   resend_confirmation_instructions: "Renvoyer les instructions de confirmation"
   Sign_in_with_SAML: "S'inscrire avec SAML"
   add_level: "Ajouter un niveau"
@@ -1519,3 +1520,22 @@ fr:
   title: "Titre"
   Product_Name: "Nom du produit"
   application_b: "application"
+  Start_date_organizations: "Date de début"
+  end_date_organizations: "Date de fin"
+  Platform_Categorie_organization: "Categorie de plateforme"
+  Project_Category: "Catégorie de projets"
+  Category_acquistion: "Catégorie d'acquistion"
+  Estimating_Status: "Statut de l'estimation"
+  with_header: "Avec en-tête"
+  Generate_Report: "Générer le rapport"
+  Actualize: "Actualiser"
+  Create_a_new_Work_Unit: "Créer une nouvelle Unité d'Oeuvre"
+  wiki_changelog: "Voir le changelog sur le wiki"
+  Listing_views: ""
+  Is_it_of_a_title_thumbnail: "S'agit-il d'une vignette de titre ?"
+  three_points_estimation_activities: "Estimation 3 points"
+  modification_entry_valur: "Modification des valeurs d'entrées"
+  Wording_of_the_module_unit_effort: "Libellé de l'unité d'effort du module"
+  Conversion_factor_standard_effort: "Coefficient de conversion en effort standard"
+  Exel_generator: "Générateur de rapport Excel"
+  Generate_Excel_report: "Générer un rapport Excel"
