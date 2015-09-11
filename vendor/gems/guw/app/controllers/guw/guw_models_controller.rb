@@ -134,10 +134,10 @@ class Guw::GuwModelsController < ApplicationController
     @guw_organisation = @guw_model.organization
     @guw_types = @guw_model.guw_types
     my_flag = false
-    my_flag2 = true
-    ind2 = 3
-    ind3 = 0
     ind = 0
+    ind2 = 1
+    ind3 = 0
+    ind4 = 0
     @guw_types.each do |guw_type|
       if my_flag == true
         worksheet = workbook.add_worksheet(guw_type.name)
@@ -149,82 +149,79 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.change_row_bold(0,true)
       worksheet.change_column_width(0, 65)
       @guw_complexities = guw_type.guw_complexities
+      description = Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(guw_type.description)).text
+      worksheet.add_cell(0, ind, description)
+      worksheet.change_row_horizontal_alignment(ind2, 'center')
+      worksheet.change_row_horizontal_alignment( ind2 + 1, 'center')
+      worksheet.change_row_bold(ind2,true)
+      worksheet.change_row_bold(ind2 + 3,true)
+      worksheet.add_cell(ind2 + 3, 0,  "Coefficient d'acquisiton")
+      worksheet.add_cell(ind2 + 2, 0, "Seuil")
+      worksheet.sheet_data[ind2 + 2][0].change_font_bold(true)
       @guw_complexities.each do |guw_complexity|
-        worksheet.merge_cells(0, ind + 1, 0, ind + 4)
-        worksheet.change_row_horizontal_alignment(0, 'center')
-        worksheet.add_cell(0, ind + 1, guw_complexity.name)
-        worksheet.change_row_horizontal_alignment(1, 'center')
-        worksheet.merge_cells(1, ind + 2, 1, ind + 4)
-        worksheet.add_cell(1, ind + 2, "[ ; [ / Poids ")
-        worksheet.add_cell(2, ind + 2, guw_complexity.bottom_range)
-        worksheet.add_cell(2, ind + 3, guw_complexity.top_range)
-        worksheet.add_cell(2, ind + 4, guw_complexity.weight)
-        worksheet.add_cell(1, ind + 1, "Prod")
-        worksheet.add_cell(2, ind + 1, guw_complexity.enable_value ? 1 : 0)
-        worksheet.merge_cells(ind2, ind, ind2, ind + 4)
-        worksheet.change_row_bold(ind2,true)
-        worksheet.add_cell(ind2 , 0,  "Coefficient d'acquisiton")
+        worksheet.add_cell(ind2 + 1, ind + 2, "[ ; [ / Poids ")
+        worksheet.add_cell(ind2 + 1, ind + 1, "Prod")
+        worksheet.merge_cells(0, 0, 0, ind + 4)
+        worksheet.merge_cells(ind2, ind + 1, ind2, ind + 4)
+        worksheet.merge_cells(ind2 + 3, 0, ind2 + 3, ind + 4)
+        worksheet.merge_cells(ind2 + 1, ind + 2, ind2 + 1, ind + 4)
+        worksheet.add_cell(ind2, ind + 1, guw_complexity.name)
+        worksheet.add_cell(ind2 + 2, ind + 2, guw_complexity.bottom_range)
+        worksheet.add_cell(ind2 + 2, ind + 3, guw_complexity.top_range)
+        worksheet.add_cell(ind2 + 2, ind + 4, guw_complexity.weight)
+        worksheet.add_cell(ind2 + 2, ind + 1, guw_complexity.enable_value ? 1 : 0)
         guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
-          if my_flag2 == true
-            worksheet.add_cell(ind2 - 1, 0, "Seuil")
-            worksheet.sheet_data[ind2 - 1][0].change_font_bold(true)
-            my_flag2 = false
-          end
           @guw_work_unit = guw_complexity_work_unit.guw_work_unit
           cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
-          worksheet.add_cell(ind2 + 1, 0, @guw_work_unit.name)
-          worksheet.merge_cells(ind2 + 1, ind + 1, ind2 + 1, ind + 4)
-          worksheet.merge_cells(ind2 + 1, ind + 1, ind2 + 1, ind + 4)
-          worksheet.add_cell(ind2 + 1, ind + 1, cu.value)
+          worksheet.add_cell(ind2 + 4, 0, @guw_work_unit.name)
+          worksheet.merge_cells(ind2 + 4, ind + 1, ind2 + 4, ind + 4)
+          worksheet.add_cell(ind2 + 4, ind + 1, cu.value)
           ind2 += 1
         end
-        worksheet.merge_cells(ind2 + 1, ind, ind2 + 1,ind + 1)
-        worksheet.change_row_bold(ind2 + 1,true)
-        worksheet.add_cell(ind2 + 1, 0, "Technologie")
+        worksheet.merge_cells(ind2 + 4, 0, ind2 + 4, ind + 4)
+        worksheet.change_row_bold(ind2 + 4,true)
+        worksheet.add_cell(ind2 + 4, 0, "Technologie")
         guw_complexity.guw_complexity_technologies.each do |complexity_technology|
           @guw_organisation_technology = complexity_technology.organization_technology
           ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
-          worksheet.add_cell(ind2 + 2, 0, @guw_organisation_technology.name)
-          worksheet.merge_cells(ind2 + 1, ind + 1, ind2 + 1, ind + 4)
-          worksheet.merge_cells(ind2 + 2, ind + 1, ind2 + 2, ind + 4)
-          worksheet.add_cell(ind2 + 2, ind + 1, ct.coefficient)
+          worksheet.add_cell(ind2 + 5, 0, @guw_organisation_technology.name)
+          worksheet.merge_cells(ind2 + 5, ind + 1, ind2 + 5, ind + 4)
+          worksheet.merge_cells(ind2 + 5, ind + 1, ind2 + 5, ind + 4)
+          worksheet.add_cell(ind2 + 5, ind + 1, ct.coefficient)
           ind2 += 1
           ind3 += 1
         end
-        ind2 = 3
+        ind2 = 1
         ind += 4
       end
       ind = 0
-      worksheet.add_cell(ind3 - 1, ind, "Seuils de complexité")
-      worksheet.change_row_bold(ind3 - 1,true)
-      worksheet.add_cell(ind3, ind, "Attributs")
-      worksheet.sheet_data[ind3][ind].change_font_bold(true)
+      worksheet.add_cell(ind3, ind, "Seuils de complexité")
+      worksheet.change_row_bold(ind3, true)
+      worksheet.add_cell(ind3 + 1, ind, "Attributs")
+      worksheet.sheet_data[ind3 + 1][ind].change_font_bold(true)
       guw_type.guw_type_complexities.each  do |type_attribute_complexity|
-        worksheet.merge_cells(ind3 - 1, ind + 1, ind3 - 1, ind + 4)
-        worksheet.add_cell(ind3 - 1, ind + 1, type_attribute_complexity.name)
-        worksheet.sheet_data[ind3 - 1][ind + 1].change_horizontal_alignment('center')
-        worksheet.add_cell(ind3 , ind + 1, "Prod")
+        worksheet.merge_cells(ind3, ind + 1, ind3, ind + 4)
+        worksheet.add_cell(ind3, ind + 1, type_attribute_complexity.name)
         worksheet.sheet_data[ind3][ind + 1].change_horizontal_alignment('center')
-        worksheet.merge_cells(ind3, ind + 2, ind3, ind + 4)
-        worksheet.add_cell(ind3 , ind + 2, "[ ; [ / Poids ")
-        worksheet.sheet_data[ind3][ind + 2].change_horizontal_alignment('center')
-        ind4 = ind3 + 1
+        worksheet.add_cell(ind3 + 1, ind + 1, "Prod")
+        worksheet.sheet_data[ind3 + 1][ind + 1].change_horizontal_alignment('center')
+        worksheet.merge_cells(ind3 + 1, ind + 2, ind3 + 1, ind + 4)
+        worksheet.add_cell(ind3 + 1 , ind + 2, "[ ; [ / Poids ")
+        worksheet.sheet_data[ind3 + 1][ind + 2].change_horizontal_alignment('center')
+        ind4 = ind3 + 2
         @guw_model.guw_attributes.order("name ASC").each do |attribute|
-          if ind == 0
-            worksheet.add_cell(ind4, ind, attribute.name)
-          end
+          worksheet.add_cell(ind4, 0, attribute.name)
           att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
           unless att_val.nil?
             worksheet.add_cell(ind4, ind + 1, att_val.enable_value ? 1 : 0)
             worksheet.add_cell(ind4, ind + 2, att_val.bottom_range)
             worksheet.add_cell(ind4, ind + 3, att_val.top_range)
             worksheet.add_cell(ind4, ind + 4, att_val.value)
-            ind4 += 1
           end
+          ind4 += 1
         end
         ind += 4
       end
-      my_flag2 = true
       ind = 0
       ind3 = 0
     end
