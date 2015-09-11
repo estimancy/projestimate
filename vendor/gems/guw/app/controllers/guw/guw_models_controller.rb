@@ -225,9 +225,8 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 0
     end
-    file_generate = StringIO.new
-    workbook.write(file_generate)
-    send_data file_generate.string, filename: "export.xlsx", type: "application/vnd.ms-excel"
+
+    send_data(workbook.stream.string, filename: "export.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show
