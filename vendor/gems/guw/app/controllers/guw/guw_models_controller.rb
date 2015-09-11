@@ -225,8 +225,9 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 0
     end
-    workbook.write("#{Rails.root}/public/export.xlsx")
-    redirect_to "#{SETTINGS['HOST_URL']}/export.xlsx"
+    file_generate = StringIO.new
+    workbook.write(file_generate)
+    send_data file_generate.string, filename: "export.xlsx", type: "application/vnd.ms-excel"
   end
 
   def show
