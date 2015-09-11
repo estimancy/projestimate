@@ -6,7 +6,40 @@
   <%= link_to "Gérer les types d'acquisitons", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "export", guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
+  <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="Import UO from excel" data-toggle="modal">
+    import
+  </a>
+
 </h4>
+
+
+<!-- -----------------------------------------------------------------------------------------------------------------  -->
+<!-- --------------------------------------- import module test ------------------------------------------------------  -->
+<!-- -----------------------------------------------------------------------------------------------------------------  -->
+<div id="import" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= form_tag guw.guw_model_importxl_path(@guw_model), :method => 'post', :multipart => true, :class => 'simple_form' do %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel"> import de donnée d'UO depuis un fichier excel</h3>
+      </div>
+      <div class="modal-body">
+        <p> choisie ton fichier LA FORCE TE L'ORDONNE !!!</p>
+        <%= file_field_tag :file %>
+      </div>
+       <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+      </div>
+      <div class="loading span11 hide">
+        <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %></h4>
+      </div>
+  <% end %>
+</div>
+<!-- -----------------------------------------------------------------------------------------------------------------  -->
+<!-- -------------------------------------------- FIN ----------------------------------------------------------------  -->
+<!-- -----------------------------------------------------------------------------------------------------------------  -->
+
+
 
 <div class="tabs">
 

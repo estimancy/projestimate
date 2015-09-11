@@ -24,6 +24,110 @@ class Guw::GuwModelsController < ApplicationController
 
   require 'rubyXL'
 
+  def importxl
+    @workbook = RubyXL::Parser.parse(params[:file].path)
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_organisation = @guw_model.organization
+    @guw_types = @guw_model.guw_types
+    element_found_flag = false
+    ind = 2
+    ind2 = 1
+    ind3 = 2
+    save_position = 0
+    #@guw_types.each do |guw_type|
+    @workbook.each do |worksheet|
+      tab = worksheet.extract_data
+      @guw_types.each do |guw_type|
+        if guw_type.name == worksheet.sheet_name
+          if tab[ind][0]== "seuil"
+            guw_type.guw_complexities.each do |guw_complexity|
+              if guw_complexity.name == tab[0][ind2]
+                guw_complexity.enable_value = tab[ind][ind2] == 0 ? false : true
+                guw_complexity.bottom_range = tab[ind][ind2 + 1]
+                guw_complexity.top_range = tab[ind][ind2 + 2]
+                guw_complexity.weight = tab[ind][ind2 + 3]
+                if tab[ind + 1][0] == "Coefficient d'acquisiton"
+                  while tab[ind + 2][0] != "Technologie"
+                    guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
+                      @guw_work_unit = guw_complexity_work_unit.guw_work_unit
+                      if @guw_work_unit.name == tab[ind + 2][0]
+                        cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
+                        cu.value = tab[ind + 2][ind2]
+                        cu.save
+                      end
+                    end
+                    ind += 1
+                  end
+                  if  tab[ind + 2] != nil && tab[ind + 2][0] == "Technologie"
+                    while tab[ind + 2] != nil
+                      guw_complexity.guw_complexity_technologies.each do |complexity_technology|
+                        @guw_organisation_technology = complexity_technology.organization_technology
+                        if @guw_organisation_technology.name ==  tab[ind + 2][0]
+                          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
+                          if ct
+                            ct.coefficient = tab[ind + 2][ind2]
+                            ct.save
+                          end
+                        end
+                      end
+                      ind += 1
+                    end
+                  end
+                end
+              end
+              if element_found_flag == false
+                # #ici on cree une nouvelle complexiter
+                # ind2 = 0
+                toto = 42
+              else
+                element_found_flag = false
+              end
+              guw_complexity.save
+              ind2 += 4
+              ind3 = ind + 3
+              ind = 2
+            end
+            ind = 1
+          end #parti pour le seuil
+          ind2 = 1
+           if tab[ind3][0] == "Seuils de complexité"
+             ind3 += 1
+              if tab[ind3][0] == "Attributs"
+                save_position = ind3 - 1
+                ind3 += 1
+                while tab[save_position][ind2]
+                  while tab[ind3]
+                    @guw_model.guw_attributes.each do |attribute|
+                      if attribute.name == tab[ind3][0]
+                        guw_type.guw_type_complexities.each  do |type_attribute_complexity|
+                          if type_attribute_complexity.name == tab[save_position][ind2]
+                            att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
+                            if !att_val.nil?
+                              att_val.enable_value = tab[ind3][ind2] == 0 ? false : true
+                              att_val.bottom_range = tab[ind3][ind2 + 1]
+                              att_val.top_range = tab[ind3][ind2 + 2]
+                              att_val.value = tab[ind3][ind2 + 3]
+                              att_val.save
+                            end
+                          end
+                        end
+                      end
+                    end
+                    ind3 += 1
+                  end
+                  ind3 = save_position
+                  ind2 += 4
+                end
+
+              end
+           end
+          toto =42
+        end
+      end
+    end
+    redirect_to :back
+  end
+
   def exportxl
     workbook = RubyXL::Workbook.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
@@ -42,6 +146,7 @@ class Guw::GuwModelsController < ApplicationController
         worksheet.sheet_name = guw_type.name
         my_flag = true
       end
+      worksheet.change_row_bold(0,true)
       worksheet.change_column_width(0, 65)
       @guw_complexities = guw_type.guw_complexities
       @guw_complexities.each do |guw_complexity|
@@ -54,19 +159,14 @@ class Guw::GuwModelsController < ApplicationController
         worksheet.add_cell(2, ind + 2, guw_complexity.bottom_range)
         worksheet.add_cell(2, ind + 3, guw_complexity.top_range)
         worksheet.add_cell(2, ind + 4, guw_complexity.weight)
-      #  worksheet.change_column_width(ind + 2, 15)
         worksheet.add_cell(1, ind + 1, "Prod")
         worksheet.add_cell(2, ind + 1, guw_complexity.enable_value ? 1 : 0)
-        if my_flag2 == 1
-          worksheet.merge_cells(ind2, ind, ind2, ind + 1)
-        else
-          worksheet.merge_cells(ind2, ind - 4, ind2, ind + 4)
-        end
+        worksheet.merge_cells(ind2, ind, ind2, ind + 4)
         worksheet.change_row_bold(ind2,true)
         worksheet.add_cell(ind2 , 0,  "Coefficient d'acquisiton")
         guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
           if my_flag2 == true
-            worksheet.add_cell(ind2 - 1, 0, "seuil")
+            worksheet.add_cell(ind2 - 1, 0, "Seuil")
             worksheet.sheet_data[ind2 - 1][0].change_font_bold(true)
             my_flag2 = false
           end
@@ -80,7 +180,7 @@ class Guw::GuwModelsController < ApplicationController
         end
         worksheet.merge_cells(ind2 + 1, ind, ind2 + 1,ind + 1)
         worksheet.change_row_bold(ind2 + 1,true)
-        worksheet.add_cell(ind2 + 1, 0, 'Technologie')
+        worksheet.add_cell(ind2 + 1, 0, "Technologie")
         guw_complexity.guw_complexity_technologies.each do |complexity_technology|
           @guw_organisation_technology = complexity_technology.organization_technology
           ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
@@ -96,7 +196,7 @@ class Guw::GuwModelsController < ApplicationController
       end
       ind = 0
       worksheet.add_cell(ind3 - 1, ind, "Seuils de complexité")
-      worksheet.sheet_data[ind3 - 1][ind].change_font_bold(true)
+      worksheet.change_row_bold(ind3 - 1,true)
       worksheet.add_cell(ind3, ind, "Attributs")
       worksheet.sheet_data[ind3][ind].change_font_bold(true)
       guw_type.guw_type_complexities.each  do |type_attribute_complexity|
