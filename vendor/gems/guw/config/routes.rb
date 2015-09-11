@@ -61,6 +61,7 @@ Guw::Engine.routes.draw do
     post "duplicate"
     post "export"
     post "exportxl"
+    post "importxl"
   end
 
   post "guw_unit_of_works/save_guw_unit_of_works"
