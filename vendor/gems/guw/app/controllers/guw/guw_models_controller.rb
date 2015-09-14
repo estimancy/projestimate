@@ -30,48 +30,50 @@ class Guw::GuwModelsController < ApplicationController
     @guw_organisation = @guw_model.organization
     @guw_types = @guw_model.guw_types
     element_found_flag = false
-    ind = 2
+    ind = 3
     ind2 = 1
     ind3 = 2
     save_position = 0
-    #@guw_types.each do |guw_type|
     @workbook.each do |worksheet|
       tab = worksheet.extract_data
       @guw_types.each do |guw_type|
         if guw_type.name == worksheet.sheet_name
-          if tab[ind][0]== "seuil"
+          if tab[ind][0]== "Seuil"
             guw_type.guw_complexities.each do |guw_complexity|
-              if guw_complexity.name == tab[0][ind2]
+              if guw_complexity.name == tab[ind - 2][ind2]
                 guw_complexity.enable_value = tab[ind][ind2] == 0 ? false : true
                 guw_complexity.bottom_range = tab[ind][ind2 + 1]
                 guw_complexity.top_range = tab[ind][ind2 + 2]
                 guw_complexity.weight = tab[ind][ind2 + 3]
-                if tab[ind + 1][0] == "Coefficient d'acquisiton"
-                  while tab[ind + 2][0] != "Technologie"
+                ind += 1
+                if tab[ind][0] == "Coefficient d'acquisiton"
+                  ind += 1
+                  while !tab[ind] != nil && tab[ind][0] != "Technologie"
                     guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
                       @guw_work_unit = guw_complexity_work_unit.guw_work_unit
-                      if @guw_work_unit.name == tab[ind + 2][0]
+                      if @guw_work_unit.name == tab[ind][0]
                         cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
-                        cu.value = tab[ind + 2][ind2]
+                        cu.value = tab[ind][ind2]
                         cu.save
+                        break
                       end
                     end
                     ind += 1
                   end
-                  if  tab[ind + 2] != nil && tab[ind + 2][0] == "Technologie"
-                    while tab[ind + 2] != nil
-                      guw_complexity.guw_complexity_technologies.each do |complexity_technology|
-                        @guw_organisation_technology = complexity_technology.organization_technology
-                        if @guw_organisation_technology.name ==  tab[ind + 2][0]
-                          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
-                          if ct
-                            ct.coefficient = tab[ind + 2][ind2]
-                            ct.save
-                          end
-                        end
-                      end
-                      ind += 1
-                    end
+                  if tab[ind][0] == "Technologie"
+                    #while tab[ind + 2] != nil
+                     # guw_complexity.guw_complexity_technologies.each do |complexity_technology|
+                      #  @guw_organisation_technology = complexity_technology.organization_technology
+                       # if @guw_organisation_technology.name ==  tab[ind + 2][0]
+                         # ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
+                        #  if ct
+                       #     ct.coefficient = tab[ind + 2][ind2]
+                      #      ct.save
+                     #     end
+                    #    end
+                   #   end
+                   #   ind += 1
+                   # end
                   end
                 end
               end
@@ -89,43 +91,72 @@ class Guw::GuwModelsController < ApplicationController
             end
             ind = 1
           end #parti pour le seuil
-          ind2 = 1
-           if tab[ind3][0] == "Seuils de complexité"
-             ind3 += 1
-              if tab[ind3][0] == "Attributs"
-                save_position = ind3 - 1
-                ind3 += 1
-                while tab[save_position][ind2]
-                  while tab[ind3]
-                    @guw_model.guw_attributes.each do |attribute|
-                      if attribute.name == tab[ind3][0]
-                        guw_type.guw_type_complexities.each  do |type_attribute_complexity|
-                          if type_attribute_complexity.name == tab[save_position][ind2]
-                            att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
-                            if !att_val.nil?
-                              att_val.enable_value = tab[ind3][ind2] == 0 ? false : true
-                              att_val.bottom_range = tab[ind3][ind2 + 1]
-                              att_val.top_range = tab[ind3][ind2 + 2]
-                              att_val.value = tab[ind3][ind2 + 3]
-                              att_val.save
-                            end
-                          end
-                        end
-                      end
-                    end
-                    ind3 += 1
-                  end
-                  ind3 = save_position
-                  ind2 += 4
-                end
-
-              end
-           end
-          toto =42
+         # ind2 = 1
+          # if tab[ind3][0] == "Seuils de complexité"
+            # ind3 += 1
+             # if tab[ind3][0] == "Attributs"
+               # save_position = ind3 - 1
+              #  ind3 += 1
+               # while tab[save_position][ind2]
+                #  while tab[ind3]
+                  #  @guw_model.guw_attributes.each do |attribute|
+                    #  if attribute.name == tab[ind3][0]
+                      #  guw_type.guw_type_complexities.each  do |type_attribute_complexity|
+                        #  if type_attribute_complexity.name == tab[save_position][ind2]
+                           # att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
+                          #  if !att_val.nil?
+                         #     att_val.enable_value = tab[ind3][ind2] == 0 ? false : true
+                        #      att_val.bottom_range = tab[ind3][ind2 + 1]
+                       #       att_val.top_range = tab[ind3][ind2 + 2]
+                      #        att_val.value = tab[ind3][ind2 + 3]
+                     #         att_val.save
+                    #        end
+                   #       end
+                  #      end
+                 #     end
+                #    end
+               #     ind3 += 1
+              #    end
+             #     ind3 = save_position
+            #      ind2 += 4
+           #     end
+          #    end
+         #  end
+         #elsif page de description du model tu voi se que je veut te dit quoi ;D
         end
       end
     end
     redirect_to :back
+  end
+
+  def deter_size(my_string)
+    ind = 0
+    len = 0
+    while my_string[ind]
+      if my_string[ind] == "\n"
+        len += 1
+      end
+      ind += 1
+    end
+    return len
+  end
+
+  def the_most_largest(my_string)
+    ind = 0
+    len = 0
+    len2 = 0
+    while my_string[ind]
+      if my_string[ind] == "\n" || my_string[ind + 1] == nil
+        if len2 < len
+          len2 = len
+        end
+        len = 0
+      else
+        len += 1
+      end
+      ind += 1
+    end
+    return len2
   end
 
   def exportxl
@@ -133,19 +164,74 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_organisation = @guw_model.organization
     @guw_types = @guw_model.guw_types
-    my_flag = false
     ind = 0
     ind2 = 1
     ind3 = 0
     ind4 = 0
-    @guw_types.each do |guw_type|
-      if my_flag == true
-        worksheet = workbook.add_worksheet(guw_type.name)
-      else
-        worksheet = workbook[0]
-        worksheet.sheet_name = guw_type.name
-        my_flag = true
+    #creation des page de description du model
+    worksheet = workbook[0]
+    worksheet.sheet_name = "Model"
+    workbook.add_worksheet("Atribut description")
+    workbook.add_worksheet("Type d'acquisitions")
+    #modification de la premier page
+    worksheet.add_cell(0, 0, "Nom du model")
+    worksheet.sheet_data[0][0].change_font_bold(true)
+    worksheet.add_cell(0, 1, @guw_model.name)
+    worksheet.sheet_data[0][1].change_horizontal_alignment('center')
+    worksheet.add_cell(1, 0, "Description du model")
+    worksheet.add_cell(1, 1, @guw_model.description)
+    worksheet.add_cell(2, 0, "Estimation 3 points")
+    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? 0 : 1)
+    worksheet.sheet_data[2][1].change_horizontal_alignment('center')
+    worksheet.add_cell(3, 0, "Libellé de l'unité de taille du modul")
+    worksheet.add_cell(3, 1, @guw_model.retained_size_unit)
+    worksheet.change_column_bold(0,true)
+    worksheet.sheet_data[3][1].change_horizontal_alignment('center')
+    worksheet.change_row_height(1,deter_size(@guw_model.description) * 13)
+    worksheet.change_column_width(0, 38)
+    worksheet.change_column_width(1, the_most_largest(@guw_model.description))
+    #modification 2eme page
+    worksheet = workbook[1]
+    worksheet.add_cell(0, 0, "Nom de l'atrtibut")
+    worksheet.add_cell(0, 1, "Description")
+    worksheet.change_row_bold(0,true)
+    worksheet.change_row_horizontal_alignment(0, 'center')
+    @guw_model.guw_attributes.order("name ASC").each_with_index do |attribute, indx|
+      worksheet.add_cell(indx + 1, 0, attribute.name)
+      worksheet.add_cell(indx + 1, 1, attribute.description)
+      if ind < attribute.name.size
+        worksheet.change_column_width(0, attribute.name.size)
+        ind = attribute.name.size
       end
+      if ind2 < the_most_largest(attribute.description)
+        worksheet.change_column_width(1, the_most_largest(attribute.description))
+        ind2 = the_most_largest(attribute.description)
+      end
+    end
+    ind = 0
+    ind2 = 0
+    #modification 3eme page
+    worksheet = workbook[2]
+    worksheet.change_row_bold(0,true)
+    worksheet.add_cell(0, 0, "nom")
+    worksheet.add_cell(0, 1, "valeur")
+    worksheet.add_cell(0, 2, "Ordre d'affichage")
+    worksheet.change_row_horizontal_alignment(0, 'center')
+    worksheet.change_column_width(2, 18)
+    @guw_model.guw_work_units.each_with_index do |aquisitions_type,indx|
+      worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
+      worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order)
+      if ind < aquisitions_type.name.size
+        worksheet.change_column_width(0, aquisitions_type.name.size)
+        ind = aquisitions_type.name.size
+      end
+    end
+    ind = 0
+    ####################################################################################
+
+    @guw_types.each do |guw_type|
+      worksheet = workbook.add_worksheet(guw_type.name)
       worksheet.change_row_bold(0,true)
       worksheet.change_column_width(0, 65)
       @guw_complexities = guw_type.guw_complexities
@@ -225,7 +311,6 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 0
     end
-
     send_data(workbook.stream.string, filename: "export.xlsx", type: "application/vnd.ms-excel")
   end
 
