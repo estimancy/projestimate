@@ -35,12 +35,6 @@ else
   warn('Please configure your config/database.yml first')
 end
 
-gem 'mysql2', '0.3.11'
-#gem 'activerecord-jdbcmysql-adapter'
-
-gem 'pg'
-#gem 'activerecord-jdbcpostgresql-adapter'
-
 #For PostgreSQL database
 
 #Permissions

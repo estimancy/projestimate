@@ -5,9 +5,9 @@
   <% end %>
   <%= link_to "Gérer les types d'acquisitons", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to "export", guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to "Exporter", guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
   <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="Import UO from excel" data-toggle="modal">
-    import
+    Importer
   </a>
 
 </h4>
