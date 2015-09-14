@@ -61,33 +61,36 @@ class Guw::GuwModelsController < ApplicationController
                     ind += 1
                   end
                   if tab[ind][0] == "Technologie"
-                    #while tab[ind + 2] != nil
-                     # guw_complexity.guw_complexity_technologies.each do |complexity_technology|
-                      #  @guw_organisation_technology = complexity_technology.organization_technology
-                       # if @guw_organisation_technology.name ==  tab[ind + 2][0]
-                         # ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
-                        #  if ct
-                       #     ct.coefficient = tab[ind + 2][ind2]
-                      #      ct.save
-                     #     end
-                    #    end
-                   #   end
-                   #   ind += 1
-                   # end
+                    ind += 1
+                    while tab[ind] != nil
+                      guw_complexity.guw_complexity_technologies.each do |complexity_technology|
+                        @guw_organisation_technology = complexity_technology.organization_technology
+                        if @guw_organisation_technology.name ==  tab[ind + 2][0]
+                          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
+                          if ct
+                            ct.coefficient = tab[ind + 2][ind2]
+                            ct.save
+                          end
+                          break
+                        end
+                      end
+                      ind += 1
+                    end
                   end
                 end
-              end
-              if element_found_flag == false
-                # #ici on cree une nouvelle complexiter
-                # ind2 = 0
-                toto = 42
-              else
-                element_found_flag = false
+                element_found_flag = true
               end
               guw_complexity.save
               ind2 += 4
               ind3 = ind + 3
               ind = 2
+            end
+            if element_found_flag == false
+              # #ici on cree une nouvelle complexiter
+              # ind2 = 0
+              toto = 42
+            else
+              element_found_flag = false
             end
             ind = 1
           end #parti pour le seuil
@@ -166,14 +169,12 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     ind = 0
     ind2 = 1
-    ind3 = 0
-    ind4 = 0
-    #creation des page de description du model
+    ind3 = 5
+
     worksheet = workbook[0]
     worksheet.sheet_name = "Model"
     workbook.add_worksheet("Atribut description")
     workbook.add_worksheet("Type d'acquisitions")
-    #modification de la premier page
     worksheet.add_cell(0, 0, "Nom du model")
     worksheet.sheet_data[0][0].change_font_bold(true)
     worksheet.add_cell(0, 1, @guw_model.name)
@@ -181,7 +182,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.add_cell(1, 0, "Description du model")
     worksheet.add_cell(1, 1, @guw_model.description)
     worksheet.add_cell(2, 0, "Estimation 3 points")
-    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? 0 : 1)
+    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? 1 : 0)
     worksheet.sheet_data[2][1].change_horizontal_alignment('center')
     worksheet.add_cell(3, 0, "Libellé de l'unité de taille du modul")
     worksheet.add_cell(3, 1, @guw_model.retained_size_unit)
@@ -190,7 +191,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.change_row_height(1,deter_size(@guw_model.description) * 13)
     worksheet.change_column_width(0, 38)
     worksheet.change_column_width(1, the_most_largest(@guw_model.description))
-    #modification 2eme page
+
     worksheet = workbook[1]
     worksheet.add_cell(0, 0, "Nom de l'atrtibut")
     worksheet.add_cell(0, 1, "Description")
@@ -209,34 +210,52 @@ class Guw::GuwModelsController < ApplicationController
       end
     end
     ind = 0
-    ind2 = 0
-    #modification 3eme page
+    ind2 = 6
+
     worksheet = workbook[2]
     worksheet.change_row_bold(0,true)
-    worksheet.add_cell(0, 0, "nom")
-    worksheet.add_cell(0, 1, "valeur")
+    worksheet.add_cell(0, 0, "Nom")
+    worksheet.add_cell(0, 1, "Valeur")
     worksheet.add_cell(0, 2, "Ordre d'affichage")
     worksheet.change_row_horizontal_alignment(0, 'center')
     worksheet.change_column_width(2, 18)
     @guw_model.guw_work_units.each_with_index do |aquisitions_type,indx|
       worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
       worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
-      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
       if ind < aquisitions_type.name.size
         worksheet.change_column_width(0, aquisitions_type.name.size)
         ind = aquisitions_type.name.size
       end
     end
     ind = 0
-    ####################################################################################
 
     @guw_types.each do |guw_type|
       worksheet = workbook.add_worksheet(guw_type.name)
-      worksheet.change_row_bold(0,true)
-      worksheet.change_column_width(0, 65)
-      @guw_complexities = guw_type.guw_complexities
+      #worksheet.change_row_bold(0,true)
       description = Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(guw_type.description)).text
       worksheet.add_cell(0, ind, description)
+      worksheet.change_row_height(0, deter_size(description) * 15)
+      worksheet.change_column_width(0, 65)
+
+
+      worksheet.add_cell(1, 0,  "Activer le retenu")
+      worksheet.sheet_data[1][0].change_font_bold(true)
+      worksheet.add_cell(1, 1,  guw_type.allow_retained ? 1 : 0)
+
+      worksheet.add_cell(2, 0,  "Activer la quantité")
+      worksheet.sheet_data[2][0].change_font_bold(true)
+      worksheet.add_cell(2, 1,  guw_type.allow_quantity ? 1 : 0)
+
+      worksheet.add_cell(3, 0,  "Activer la complexité")
+      worksheet.sheet_data[3][0].change_font_bold(true)
+      worksheet.add_cell(3, 1,  guw_type.allow_complexity ? 1 : 0)
+
+      worksheet.add_cell(4, 0, "Activer le dénombrement")
+      worksheet.sheet_data[4][0].change_font_bold(true)
+      worksheet.add_cell(4, 1,  guw_type.allow_criteria ? 1 : 0)
+
+      @guw_complexities = guw_type.guw_complexities
       worksheet.change_row_horizontal_alignment(ind2, 'center')
       worksheet.change_row_horizontal_alignment( ind2 + 1, 'center')
       worksheet.change_row_bold(ind2,true)
@@ -245,7 +264,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.add_cell(ind2 + 2, 0, "Seuil")
       worksheet.sheet_data[ind2 + 2][0].change_font_bold(true)
       @guw_complexities.each do |guw_complexity|
-        worksheet.add_cell(ind2 + 1, ind + 2, "[ ; [ / Poids ")
+        worksheet.add_cell(ind2 + 1, ind + 2, "[    ;    [      /   Poids")
         worksheet.add_cell(ind2 + 1, ind + 1, "Prod")
         worksheet.merge_cells(0, 0, 0, ind + 4)
         worksheet.merge_cells(ind2, ind + 1, ind2, ind + 4)
@@ -277,7 +296,7 @@ class Guw::GuwModelsController < ApplicationController
           ind2 += 1
           ind3 += 1
         end
-        ind2 = 1
+        ind2 = 6
         ind += 4
       end
       ind = 0
@@ -292,7 +311,7 @@ class Guw::GuwModelsController < ApplicationController
         worksheet.add_cell(ind3 + 1, ind + 1, "Prod")
         worksheet.sheet_data[ind3 + 1][ind + 1].change_horizontal_alignment('center')
         worksheet.merge_cells(ind3 + 1, ind + 2, ind3 + 1, ind + 4)
-        worksheet.add_cell(ind3 + 1 , ind + 2, "[ ; [ / Poids ")
+        worksheet.add_cell(ind3 + 1 , ind + 2, "[    ;    [      /    Poids")
         worksheet.sheet_data[ind3 + 1][ind + 2].change_horizontal_alignment('center')
         ind4 = ind3 + 2
         @guw_model.guw_attributes.order("name ASC").each do |attribute|
@@ -309,7 +328,7 @@ class Guw::GuwModelsController < ApplicationController
         ind += 4
       end
       ind = 0
-      ind3 = 0
+      ind3 = 5
     end
     send_data(workbook.stream.string, filename: "export.xlsx", type: "application/vnd.ms-excel")
   end
