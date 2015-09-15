@@ -54,7 +54,7 @@ class Kb::KbModelsController < ApplicationController
 
     unless params[:file].nil?
       begin
-        file = Roo::Spreadsheet.open(params[:file].path, extension: :xls)
+        file = Roo::Spreadsheet.open(params[:file].path, :extension => :xls)
       rescue
         flash[:error] = "Une erreur est survenue durant l'import du modèle. Veuillez vérifier l'extension du fichier Excel (.xls)"
         redirect_to kb.edit_kb_model_path(@kb_model) and return

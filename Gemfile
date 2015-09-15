@@ -92,8 +92,10 @@ end
 gem 'rubyzip'
 gem 'zip-zip'
 gem 'axlsx'
-gem 'roo'
-gem 'google_drive'
+gem 'roo', '~> 2.1.0'
+gem 'roo-xls'
+gem 'rubyXL'
+gem 'nokogiri'
 
 # Including
 gem 'cocomo_advanced', path: "vendor/gems/cocomo_advanced"
@@ -193,9 +195,6 @@ end
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 gem 'remotipart', '~> 1.2'
-
-gem 'rubyXL'
-gem 'nokogiri'
 
 gem 'yaml_db'
 
