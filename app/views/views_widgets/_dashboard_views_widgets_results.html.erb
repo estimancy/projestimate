@@ -118,9 +118,9 @@
                                       </span>
                                     </span>
                                   <% else %>
-                                    <span id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
+                                    <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
                                       <%= value_to_show %>
-                                    </span>
+                                    </div>
                                   <% end %>
 
                                   <% unless view_widget.project_fields.empty? %>

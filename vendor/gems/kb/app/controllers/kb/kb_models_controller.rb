@@ -25,21 +25,21 @@ class Kb::KbModelsController < ApplicationController
   require 'roo'
 
   def show
-    authorize! :show_modules_instances, ModuleProject
+    authorize! :manage_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
   end
 
   def new
-    authorize! :manakb_modules_instances, ModuleProject
+    authorize! :manage_modules_instances, ModuleProject
 
     @organization = Organization.find(params[:organization_id])
     @kb_model = Kb::KbModel.new
   end
 
   def edit
-    authorize! :show_modules_instances, ModuleProject
+    authorize! :manage_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
     @current_organization
@@ -48,6 +48,8 @@ class Kb::KbModelsController < ApplicationController
   end
 
   def import
+    authorize! :manage_modules_instances, ModuleProject
+
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
 
     unless params[:file].nil?
