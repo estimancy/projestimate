@@ -24,112 +24,167 @@ class Guw::GuwModelsController < ApplicationController
 
   require 'rubyXL'
 
+  def redirect_to_good_path(route_flag)
+    if route_flag == 1
+      redirect_to :back
+      flash[:error] = "imposible de cree se model, model deja existant"
+    elsif route_flag == 2
+      redirect_to :back
+      flash[:error] = "nom du model invalide merci de verifier le classeur importer"
+    else
+      redirect_to "/organizations/#{@current_organization.id}/module_estimation"
+      flash[:notice] = "model importer avec suces"
+    end
+  end
+
   def importxl
     @workbook = RubyXL::Parser.parse(params[:file].path)
-    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_organisation = @guw_model.organization
-    @guw_types = @guw_model.guw_types
+    #@guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    #@guw_organisation = @guw_model.organization
+    #@guw_types = @guw_model.guw_types
     element_found_flag = false
-    ind = 3
+    route_flag = 0
+    flag = false
+    ind = 8
     ind2 = 1
-    ind3 = 2
+    ind3 = 0
     save_position = 0
-    @workbook.each do |worksheet|
+    @workbook.each_with_index do |worksheet, index|
       tab = worksheet.extract_data
-      @guw_types.each do |guw_type|
-        if guw_type.name == worksheet.sheet_name
-          if tab[ind][0]== "Seuil"
-            guw_type.guw_complexities.each do |guw_complexity|
-              if guw_complexity.name == tab[ind - 2][ind2]
-                guw_complexity.enable_value = tab[ind][ind2] == 0 ? false : true
-                guw_complexity.bottom_range = tab[ind][ind2 + 1]
-                guw_complexity.top_range = tab[ind][ind2 + 2]
-                guw_complexity.weight = tab[ind][ind2 + 3]
-                ind += 1
-                if tab[ind][0] == "Coefficient d'acquisiton"
+      if index < 3
+        #ici on recupere les information sur le model
+        if index == 0
+          if tab[0][1].nil? || tab[0][1].empty?
+            route_flag = 2
+            break
+          end
+          @guw_model = Guw::GuwModel.find_by_name(tab[0][1])
+          if @guw_model.nil?
+            @guw_model = Guw::GuwModel.new(name: tab[0][1],
+                                           description: tab[1][1],
+                                           three_points_estimation: tab[2][1] == 1 ? true : false,
+                                           retained_size_unit: tab[3][1],
+                                           organization_id: @current_organization.id)
+            @guw_model.save
+          else
+            route_flag = 1
+            break
+          end
+        elsif index == 1
+          tab.each_with_index do |row, index|
+            if index != 0
+              Guw::GuwAttribute.where(name: row[0], guw_model_id: @guw_model.id).first_or_create(name: row[0],
+                                                                                                 description: row[1],
+                                                                                                 guw_model_id: @guw_model.id)
+            end
+          end
+        elsif index == 2
+          tab.each_with_index do |row, index|
+            if index != 0
+              Guw::GuwWorkUnit.where(name:row[0], guw_model_id: @guw_model.id).first_or_create(name:row[0],
+                                                                                               value: row[1],
+                                                                                               display_order: row[2],
+                                                                                               guw_model_id: @guw_model.id)
+            end
+          end
+        end
+      else
+=begin
+        @guw_types.each do |guw_type|
+          if guw_type.name == worksheet.sheet_name
+            if tab[ind][0]== "Seuil"
+              guw_type.guw_complexities.each do |guw_complexity|
+                if guw_complexity.name == tab[ind - 2][ind2]
+                  guw_complexity.enable_value = tab[ind][ind2] == 0 ? false : true
+                  guw_complexity.bottom_range = tab[ind][ind2 + 1]
+                  guw_complexity.top_range = tab[ind][ind2 + 2]
+                  guw_complexity.weight = tab[ind][ind2 + 3]
                   ind += 1
-                  while !tab[ind] != nil && tab[ind][0] != "Technologie"
-                    guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
-                      @guw_work_unit = guw_complexity_work_unit.guw_work_unit
-                      if @guw_work_unit.name == tab[ind][0]
-                        cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
-                        cu.value = tab[ind][ind2]
-                        cu.save
-                        break
-                      end
-                    end
+                  if tab[ind][0] == "Coefficient d'acquisiton"
                     ind += 1
-                  end
-                  if tab[ind][0] == "Technologie"
-                    ind += 1
-                    while tab[ind] != nil
-                      guw_complexity.guw_complexity_technologies.each do |complexity_technology|
-                        @guw_organisation_technology = complexity_technology.organization_technology
-                        if @guw_organisation_technology.name ==  tab[ind + 2][0]
-                          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
-                          if ct
-                            ct.coefficient = tab[ind + 2][ind2]
-                            ct.save
-                          end
+                    while !tab[ind].nil? && tab[ind][0] != "Technologie"
+                      guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
+                        @guw_work_unit = guw_complexity_work_unit.guw_work_unit
+                        if @guw_work_unit.name == tab[ind][0]
+                          cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
+                          cu.value = tab[ind][ind2]
+                          cu.save
                           break
                         end
                       end
                       ind += 1
                     end
+                    if tab[ind][0] == "Technologie"
+                      while !tab[ind].nil? && !tab[ind].empty?
+                        guw_complexity.guw_complexity_technologies.each do |complexity_technology|
+                          @guw_organisation_technology = complexity_technology.organization_technology
+                          if @guw_organisation_technology.name ==  tab[ind][0]
+                            ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
+                            if ct
+                              ct.coefficient = tab[ind][ind2]
+                              ct.save
+                              break
+                            end
+                          end
+                        end
+                        ind += 1
+                      end
+                    end
+                  end
+                  element_found_flag = true
+                end
+                guw_complexity.save
+                ind2 += 4
+                ind3 = ind + 1
+                ind = 8
+              end
+              if element_found_flag == false
+                # #ici on cree une nouvelle complexiter
+                # ind2 = 0
+                toto = 42
+              else
+                element_found_flag = false
+              end
+              ind = 8
+            end #parti pour le seuil
+            ind2 = 1
+            if tab[ind3][0] == "Seuils de complexité"
+               ind3 += 1
+                if tab[ind3][0] == "Attributs"
+                  save_position = ind3 - 1
+                  ind3 += 1
+                  while !tab[save_position][ind2].nil? && !tab[save_position][ind2].empty?
+                    while tab[ind3]
+                      @guw_model.guw_attributes.each do |attribute|
+                        if attribute.name == tab[ind3][0]
+                          guw_type.guw_type_complexities.each  do |type_attribute_complexity|
+                            if type_attribute_complexity.name == tab[save_position][ind2]
+                               att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
+                              if !att_val.nil?
+                                att_val.enable_value = tab[ind3][ind2] == 0 ? false : true
+                                att_val.bottom_range = tab[ind3][ind2 + 1]
+                                att_val.top_range = tab[ind3][ind2 + 2]
+                                att_val.value = tab[ind3][ind2 + 3]
+                                att_val.save
+                                break
+                             end
+                            end
+                          end
+                        end
+                      end
+                      ind3 += 1
+                    end
+                    ind3 = save_position
+                    ind2 += 4
                   end
                 end
-                element_found_flag = true
-              end
-              guw_complexity.save
-              ind2 += 4
-              ind3 = ind + 3
-              ind = 2
             end
-            if element_found_flag == false
-              # #ici on cree une nouvelle complexiter
-              # ind2 = 0
-              toto = 42
-            else
-              element_found_flag = false
-            end
-            ind = 1
-          end #parti pour le seuil
-         # ind2 = 1
-          # if tab[ind3][0] == "Seuils de complexité"
-            # ind3 += 1
-             # if tab[ind3][0] == "Attributs"
-               # save_position = ind3 - 1
-              #  ind3 += 1
-               # while tab[save_position][ind2]
-                #  while tab[ind3]
-                  #  @guw_model.guw_attributes.each do |attribute|
-                    #  if attribute.name == tab[ind3][0]
-                      #  guw_type.guw_type_complexities.each  do |type_attribute_complexity|
-                        #  if type_attribute_complexity.name == tab[save_position][ind2]
-                           # att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
-                          #  if !att_val.nil?
-                         #     att_val.enable_value = tab[ind3][ind2] == 0 ? false : true
-                        #      att_val.bottom_range = tab[ind3][ind2 + 1]
-                       #       att_val.top_range = tab[ind3][ind2 + 2]
-                      #        att_val.value = tab[ind3][ind2 + 3]
-                     #         att_val.save
-                    #        end
-                   #       end
-                  #      end
-                 #     end
-                #    end
-               #     ind3 += 1
-              #    end
-             #     ind3 = save_position
-            #      ind2 += 4
-           #     end
-          #    end
-         #  end
-         #elsif page de description du model tu voi se que je veut te dit quoi ;D
+          end
         end
+=end #boucle de remplissage des donner
       end
     end
-    redirect_to :back
+    redirect_to_good_path(route_flag)
   end
 
   def deter_size(my_string)

@@ -61,8 +61,9 @@ Guw::Engine.routes.draw do
     post "duplicate"
     post "export"
     post "exportxl"
-    post "importxl"
   end
+
+  post "importxl" => "guw_models#importxl"
 
   post "guw_unit_of_works/save_guw_unit_of_works"
   post "guw_complexity_work_units/save_complexity_work_units"
