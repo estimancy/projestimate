@@ -7,9 +7,9 @@ require "real_size/version"
 Gem::Specification.new do |s|
   s.name        = "real_size"
   s.version     = RealSize::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
+  s.authors     = ["Estimancy"]
+  s.email       = ["contact@estimancy.com"]
+  s.homepage    = "http://www.estimancy.com"
   s.summary     = "TODO: Summary of RealSize."
   s.description = "TODO: Description of RealSize."
 

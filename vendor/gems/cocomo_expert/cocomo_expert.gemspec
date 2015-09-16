@@ -7,9 +7,9 @@ require "cocomo_expert/version"
 Gem::Specification.new do |s|
   s.name        = "cocomo_expert"
   s.version     = CocomoExpert::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
+  s.authors     = ["Estimancy"]
+  s.email       = ["contact@estimancy.com"]
+  s.homepage    = "http://www.estimancy.com"
   s.summary     = "TODO: Summary of CocomoExpert."
   s.description = "TODO: Description of CocomoExpert."
 

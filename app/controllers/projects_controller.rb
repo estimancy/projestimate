@@ -923,8 +923,8 @@ class ProjectsController < ApplicationController
         wbs_id = params[:module_selected].split(',').first.to_i
         my_module_project.wbs_activity_id = wbs_id
         wai = WbsActivityInput.new(module_project_id: my_module_project.id,
-                                wbs_activity_id: wbs_id,
-                                wbs_activity_ratio_id: my_module_project.wbs_activity.wbs_activity_ratios.first )
+                                   wbs_activity_id: wbs_id,
+                                   wbs_activity_ratio_id: my_module_project.wbs_activity.wbs_activity_ratios.first )
         wai.save
       elsif @pemodule.alias == "expert_judgement"
         eji_id = params[:module_selected].split(',').first
