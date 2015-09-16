@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Ge::VERSION
   s.authors     = ["Projestimate"]
   s.email       = ["contact@estimancy.com"]
-  s.homepage    = "forge.estimancy.com"
+  s.homepage    = "http://forge.estimancy.com"
   s.summary     = "Summary of Ge."
   s.description = "Description of Ge."
 
