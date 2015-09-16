@@ -211,7 +211,7 @@ class Project < ActiveRecord::Base
 
   #Override
   def to_s
-    "#{title} - #{version}"
+    "#{self.nil? ? '' : self.title} - #{self.nil? ? '' : self.version}"
   end
 
   # Change project status according to the project's organization estimation statuses

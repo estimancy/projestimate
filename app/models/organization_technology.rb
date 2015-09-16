@@ -58,7 +58,7 @@ class OrganizationTechnology < ActiveRecord::Base
   scoped_search :on => [:name, :alias, :description]
 
   def to_s
-    name || ''
+    self.nil? ? '' : self.name
   end
 
   # To definitively remove

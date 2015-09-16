@@ -53,7 +53,7 @@ class ViewsWidget < ActiveRecord::Base
 
 
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 
   def self.update_field(view_widget, organization, project, component)

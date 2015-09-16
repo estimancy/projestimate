@@ -63,7 +63,7 @@ class PeAttribute < ActiveRecord::Base
 
   #Override
   def to_s
-    name + ' - ' + description.truncate(20)
+    "#{self.nil? ? '' : self.name} - #{self.nil? ? '' : self.description.truncate(20)}"
   end
 
   #Type of the aggregation

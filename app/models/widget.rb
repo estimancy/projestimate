@@ -30,7 +30,7 @@ class Widget < ActiveRecord::Base
   validates :name, presence: true
 
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 
 end

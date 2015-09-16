@@ -42,6 +42,6 @@ class PlatformCategory < ActiveRecord::Base
 
   #Override
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 end

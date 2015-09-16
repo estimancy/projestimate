@@ -88,6 +88,6 @@ class Pemodule < ActiveRecord::Base
 
   #Override
   def to_s
-    title
+    self.nil? ? '' : self.title
   end
 end

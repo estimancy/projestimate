@@ -47,7 +47,7 @@ class EstimationValue < ActiveRecord::Base
   end
 
   def to_s
-    self.pe_attribute.name
+    self.nil? ? '' : self.pe_attribute.name
   end
 
   # Verify if params val is validate

@@ -21,7 +21,7 @@ if File.exist?(database_file)
     adapters.each do |adapter|
       case adapter
         when 'mysql2'
-          gem 'mysql2'
+          gem 'mysql2', '~> 0.3.11'
         when /postgresql/
           gem 'pg'
         else
@@ -84,8 +84,8 @@ gem 'globalize', '~> 3.1.0'
 #Optional gem for monitoring
 group :ic do
   gem 'newrelic_rpm'
-  gem 'coveralls', require: false
-  gem "codeclimate-test-reporter", group: :test, require: nil
+  gem 'coveralls', :require => false
+  gem "codeclimate-test-reporter", :group => :test, :require => nil
   gem 'inch'
 end
 
@@ -99,16 +99,16 @@ gem 'rubyXL'
 gem 'nokogiri'
 
 # Including
-gem 'cocomo_advanced', path: "vendor/gems/cocomo_advanced"
-gem 'cocomo_expert', path: "vendor/gems/cocomo_expert"
-gem 'real_size', path: "vendor/gems/real_size"
+gem 'cocomo_advanced', :path => "vendor/gems/cocomo_advanced"
+gem 'cocomo_expert', :path => "vendor/gems/cocomo_expert"
+gem 'real_size', :path => "vendor/gems/real_size"
 gem 'uow', :path => 'vendor/gems/uow'
 gem 'guw', :path => 'vendor/gems/guw'
 gem 'ge', :path => 'vendor/gems/ge'
 gem 'kb', :path => 'vendor/gems/kb'
-gem 'balancing_module', path: "vendor/gems/balancing_module"
-gem 'expert_judgement', path: "vendor/gems/expert_judgement"
-gem 'staffing', path: "vendor/gems/staffing"
+gem 'balancing_module', :path => "vendor/gems/balancing_module"
+gem 'expert_judgement', :path => "vendor/gems/expert_judgement"
+gem 'staffing', :path => "vendor/gems/staffing"
 
 # This gem provides the JavaScript InfoVis Toolkit for your rails application.
 gem "jit-rails", "~> 0.0.2"
@@ -137,7 +137,7 @@ gem 'tinymce-rails'
 
 # Tool for asynchronous jobs processing
 gem 'sidekiq'
-gem 'sinatra', require: false
+gem 'sinatra', :require => false
 gem 'slim'
 
 # For chart generation

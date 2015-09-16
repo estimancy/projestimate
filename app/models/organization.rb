@@ -92,7 +92,7 @@ class Organization < ActiveRecord::Base
 
   #Override
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 
   ## Get the organization Custom fields for QueryColumn

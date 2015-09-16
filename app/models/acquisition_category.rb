@@ -37,6 +37,6 @@ class AcquisitionCategory < ActiveRecord::Base
   scoped_search :on => [:name, :description, :created_at, :updated_at]
 
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 end

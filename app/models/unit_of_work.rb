@@ -44,7 +44,7 @@ class UnitOfWork < ActiveRecord::Base
   scoped_search :in => :organization, :on => :name
 
   def to_s
-    name || ''
+    self.nil? ? '' : self.name
   end
 
   # To definitively remove ???

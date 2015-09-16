@@ -71,7 +71,7 @@ class EstimationStatus < ActiveRecord::Base
   end
 
   def to_s
-    libelle
+    self.nil? ? '' : self.libelle
   end
 
 end

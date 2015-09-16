@@ -35,6 +35,6 @@ class View < ActiveRecord::Base
   scope :referenced_views, where(is_reference_view: true)
 
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 end

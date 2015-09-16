@@ -5,6 +5,6 @@ class Application < ActiveRecord::Base
   has_and_belongs_to_many :projects
 
   def to_s
-    name
+    self.nil? ? '' : self.name
   end
 end
