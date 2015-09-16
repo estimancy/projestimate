@@ -205,7 +205,6 @@ class Kb::KbModelsController < ApplicationController
     @kb_model.save
     @kb_input.save
 
-
     current_module_project.pemodule.attribute_modules.each do |am|
       tmp_prbl = Array.new
 
@@ -220,7 +219,7 @@ class Kb::KbModelsController < ApplicationController
         end
 
         if am.pe_attribute.alias == "effort"
-          effort = coef_10 * params[:size].to_f ** pente
+          effort = (coef_10 * params[:size].to_f ** pente) * @kb_model.standard_unit_coefficient
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
@@ -238,7 +237,6 @@ class Kb::KbModelsController < ApplicationController
       end
 
       ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-
     end
 
     current_module_project.nexts.each do |n|

@@ -64,7 +64,7 @@
 
           <h5>
             <strong>
-              Effort
+              Effort (<%= @kb_model.effort_unit %>)
             </strong>
           </h5>
           <% effort_attr = PeAttribute.find_by_alias("effort") %>
@@ -75,7 +75,7 @@
 
           <span id="effort_label">
             <%= text_field_tag "effort",
-                               @effort.nil? ? '' : @effort.round(2),
+                               @effort.nil? ? '' : (@effort.round(2) / @kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient),
                                class: "string required input-xlarge" %>
           </span>
         </div>

@@ -23,6 +23,8 @@
         <%= f.input :name %>
         <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
         <%= f.input :enabled_input, label: 'Activer la taille' %>
+        <%= f.input :standard_unit_coefficient, label: 'Coefficient de conversion standard' %>
+        <%= f.input :effort_unit, label: "Unité d'effort" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

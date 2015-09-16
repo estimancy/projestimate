@@ -321,7 +321,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       #if guw_unit_of_work.guw_type.allow_complexity == true
       unless params["guw_complexity_#{guw_unit_of_work.id}"].nil?
-        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_id
+        guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
         guw_unit_of_work.guw_complexity_id = guw_complexity_id
         guw_unit_of_work.save
       else
