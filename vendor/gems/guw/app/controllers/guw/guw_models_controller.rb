@@ -89,6 +89,11 @@ class Guw::GuwModelsController < ApplicationController
           end
         end
       else
+        tab.each_with_index do |row, index|
+          if guw_type
+            guw_type = Guw::GuwType.create(name: worksheet.sheet_name)
+          end
+        end
 =begin
         @guw_types.each do |guw_type|
           if guw_type.name == worksheet.sheet_name
