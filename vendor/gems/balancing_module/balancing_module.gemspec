@@ -10,13 +10,13 @@ Gem::Specification.new do |s|
   s.authors     = ["Estimancy"]
   s.email       = ["contact@estimancy.com"]
   s.homepage    = "http://forge.estimancy.com"
-  s.summary     = "Summary of BalancingModule."
+  s.summary     = "Summary of Balancing Module."
   s.description = "Balancing Module includes the Effort-Balancing, Size-Balancing, Cost-Balancing,... modules."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.16"
+  s.add_dependency "rails", "~> 3.2.21"
   # s.add_dependency "jquery-rails"
 
   s.add_development_dependency "sqlite3"

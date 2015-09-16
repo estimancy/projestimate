@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Estimancy"]
   s.email       = ["contact@estimancy.com"]
   s.homepage    = "http://www.estimancy.com"
-  s.summary     = "TODO: Summary of CocomoExpert."
-  s.description = "TODO: Description of CocomoExpert."
+  s.summary     = "Summary of CocomoExpert."
+  s.description = "Description of CocomoExpert."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]

@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version = EffortBalancing::VERSION
   gem.authors = 'Spirula'
   gem.email = 'contact@estimancy.com'
-  gem.description = %q{TODO: Write a gem description}
-  gem.summary = %q{TODO: Write a gem summary}
+  gem.description = "Write a gem description"
+  gem.summary = "Write a gem summary"
   gem.license = 'AGPL-3'
   gem.homepage = 'http://www.estimancy.com'
 
