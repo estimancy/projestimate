@@ -39,6 +39,7 @@ end
 
 #Permissions
 gem 'cancan'
+
 #Authentication for tests
 gem "warden"
 
