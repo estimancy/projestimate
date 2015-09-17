@@ -334,7 +334,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
-      @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_unit_of_work.guw_complexity.weight.to_f
+      if guw_unit_of_work.guw_complexity.nil?
+        @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * 1
+      else
+        @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 0 : tcplx.coefficient.to_f) * guw_unit_of_work.guw_complexity.weight.to_f
+      end
       guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity.to_f
       #end
 
