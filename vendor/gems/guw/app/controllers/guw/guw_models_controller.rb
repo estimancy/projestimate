@@ -19,163 +19,6 @@
 #
 #############################################################################
 
-
-class Guw::GuwModelsController < ApplicationController
-
-  require 'rubyXL'
-
-  def redirect_to_good_path(route_flag)
-    if route_flag == 1
-      redirect_to :back
-      flash[:error] = "imposible de cree se model, model deja existant"
-    elsif route_flag == 2
-      redirect_to :back
-      flash[:error] = "nom du model invalide merci de verifier le classeur importer"
-    elsif route_flag == 3
-      redirect_to :back
-      flash[:error] = "des erreur se sont glisser dans votre fichier merci de bien vouloir les corriger pour un exemple de se a quoi doit resembler un fichier referer vous au wiki rubrique importation d'UO"
-    else
-      redirect_to "/organizations/#{@current_organization.id}/module_estimation"
-      flash[:notice] = "model importer avec suces"
-    end
-  end
-
-  def importxl
-    @workbook = RubyXL::Parser.parse(params[:file].path)
-    element_found_flag = false
-    route_flag = 0
-    flag = false
-    ind = 1
-    ind2 = 10
-    ind3 = 0
-    save_position = 0
-    @workbook.each_with_index do |worksheet, index|
-      tab = worksheet.extract_data
-        #ici on recupere les information sur le model
-        if index == 0
-          if tab[0][1].nil? || tab[0][1].empty?
-            route_flag = 2
-            break
-          end
-          @guw_model = Guw::GuwModel.find_by_name(tab[0][1])
-          if @guw_model.nil?
-            @guw_model = Guw::GuwModel.new(name: tab[0][1],
-                                           description: tab[1][1],
-                                           three_points_estimation: tab[2][1] == 1 ? true : false,
-                                           retained_size_unit: tab[3][1],
-                                           organization_id: @current_organization.id)
-            @guw_model.save
-          else
-            route_flag = 1
-            break
-          end
-        elsif index == 1
-          tab.each_with_index do |row, index|
-            if index != 0
-             Guw::GuwAttribute.where(name: row[0], guw_model_id: @guw_model.id).first_or_create(name: row[0],
-                                                                                                 description: row[1],
-                                                                                                 guw_model_id: @guw_model.id)
-            end
-          end
-        elsif index == 2
-          tab.each_with_index do |row, index|
-            if index != 0
-               Guw::GuwWorkUnit.where(name:row[0], guw_model_id: @guw_model.id).first_or_create(name:row[0],
-                                                                                               value: row[1],
-                                                                                               display_order: row[2],
-                                                                                               guw_model_id: @guw_model.id)
-            end
-          end
-        else
-          @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
-                                          description: tab[0][0],
-                                          allow_quantity: tab[2][1] == 1 ? true : false,
-                                          allow_retained: tab[1][1] == 1 ? true : false,
-                                          allow_complexity: tab[3][1] == 1 ? true : false,
-                                          allow_criteria: tab[4][1] == 1 ? true : false,
-                                          guw_model_id: @guw_model.id)
-
-          if tab[8][0] == "Seuil"
-            while tab[6][ind]
-              @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
-                                                         name: tab[6][ind],
-                                                         enable_value: tab[8][ind] == 1 ? true : false,
-                                                         bottom_range: tab[8][ind + 1],
-                                                         top_range: tab[8][ind + 2],
-                                                         weight:  tab[8][ind + 3])
-              @guw_model.guw_work_units.each do |wu|
-                while !tab[ind2].nil? && tab[ind2][0] != wu.name && tab[ind2][0] != "Technologie"
-                  ind2 += 1
-                end
-                if !tab[ind2].nil? && tab[ind2][0] != "Technologie"
-                  Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind])
-                elsif tab[ind2].nil?
-                  route_flag = 3
-                  break
-                end
-                ind2 = 10
-              end
-              if tab[ind2].nil? || route_flag == 3
-                route_flag = 3
-                break
-              end
-              while !tab[ind2].nil? && tab[ind2][0] != "Technologie"
-                ind2 += 1
-              end
-              ind3 = ind2
-              if tab[ind2][0] == "Technologie"
-                @current_organization.organization_technologies.each do |techno|
-                 while !tab[ind2].nil? && tab[ind2][0] != techno.name
-                   ind2 += 1
-                 end
-                 if !tab[ind2].nil?
-                   Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id, organization_technology_id: techno.id, coefficient: tab[ind2][ind])
-                 end
-                 ind2 = ind3
-                end
-                if save_position == 0
-                  while !tab[ind2].nil? #|| !tab[ind2][0].empty?
-                    ind2 += 1
-                  end
-                  save_position = ind2 + 1
-                end
-              end
-              ind2 = 10
-              ind += 4
-            end
-            ind = 1
-          end
-
-          if tab[save_position][0] == "Seuils de complexité"
-            ind3 = save_position + 2
-            ind = 1
-            while !tab[save_position][ind].nil? #|| !tab[save_position][ind].empty?
-             @guw_att_complexity =  Guw::GuwTypeComplexity.create(guw_type_id: @guw_type.id, name: tab[save_position][ind], value: 4)
-#=begin
-              @guw_model.guw_attributes.each do |att|
-                while !tab[ind3].nil? && tab[ind3][0] != att.name
-                  ind3 += 1
-                end
-                if !tab[ind3].nil?
-                  toto = Guw::GuwAttributeComplexity.create(guw_type_complexity_id: @guw_att_complexity.id,
-                                                     guw_attribute_id: att.id,
-                                                     guw_type_id: @guw_type.id,
-                                                     enable_value: tab[ind3][ind] == 0 ? false : true,
-                                                     bottom_range: tab[ind3][ind + 1],
-                                                     top_range: tab[ind3][ind + 2],
-                                                     value: tab[ind3][ind + 3])
-                end
-                ind3 = save_position + 2
-              end
-#=end
-              ind += 4
-            end
-            ind3 = 0
-            ind = 1
-          end
-
-        end
-      save_position = 0
 =begin
         @guw_types.each do |guw_type|
           if guw_type.name == worksheet.sheet_name
@@ -268,9 +111,257 @@ class Guw::GuwModelsController < ApplicationController
             end
           end
         end
-=end #boucle de remplissage des donner
+=end
+
+class Guw::GuwModelsController < ApplicationController
+
+  require 'rubyXL'
+
+
+  def bug_tracker (tab_error)
+    re = []
+    flag_for_show = false
+    tab_error.each_with_index do |row_error ,index|
+      if index == 0
+        if !row_error.empty?
+          re << "les Coefficient d'aquisition"
+          flag_for_show = true
+        end
+      elsif index == 1
+        if !row_error.empty?
+          re << "les technologies"
+          flag_for_show = true
+        end
+      elsif index == 2
+        if !row_error.empty?
+          re << "les Attributs"
+          flag_for_show = true
+        end
+      end
+      if flag_for_show == true
+        flash[:error] = "une erreur dans le fichier a causer l'imposibiliter dimporter les valeur pour #{re.join(", ")} pour l'onglet #{row_error.join(", ")} merci de vous referer au wiki rubrique importation d'UO"
+      end
     end
-    redirect_to_good_path(route_flag)
+  end
+
+  def redirect_to_good_path(route_flag, index)
+    if route_flag == 1
+      redirect_to :back
+      flash[:error] = "imposible de cree se model, model deja existant"
+    elsif route_flag == 2
+      redirect_to :back
+      flash[:error] = "nom du model invalide merci de verifier le classeur importer"
+    elsif route_flag == 3
+      redirect_to :back
+      flash[:error] = "des erreur se sont glisser dans votre fichier merci de bien vouloir les corriger pour un exemple de se a quoi doit resembler un fichier referer vous au wiki rubrique importation d'UO"
+    elsif route_flag == 4
+      redirect_to "/organizations/#{@current_organization.id}/module_estimation"
+      flash[:error] = "attention page non conforme : #{index} non importer"
+      flash[:notice] = "model importer avec suces"
+    elsif route_flag == 5
+      redirect_to :back
+      flash[:error] = "des information crutial sont manquante impossible de cree le model D'UO, referer vous au wiki rubrique importation d'UO pour plus dinformation"
+    elsif route_flag == 6
+      redirect_to "/organizations/#{@current_organization.id}/module_estimation"
+      flash[:error] = "un decallage dans les page du fichier a entrainer une erreur d'importation le madel a ete crée mais des information n'ont pas pue etre recuperer, referer vous au wiki rubrique importation d'UO pour plus d'information"
+    elsif route_flag == 7
+      redirect_to :back
+      flash[:error] = "erreur le fichier importer n'est pas un fichier exel"
+    else
+      redirect_to "/organizations/#{@current_organization.id}/module_estimation"
+      flash[:notice] = "model importer avec suces"
+    end
+  end
+
+  def importxl
+    element_found_flag = false
+    route_flag = 0
+    sheet_error = 0
+    critical_flag = true
+    action_type_aquisition_flag = false
+    action_technologie_flag = false
+    action_Attribu_flag = false
+    tab_error = [[], [], []]
+    ind = 1
+    ind2 = 10
+    ind3 = 0
+    save_position = 0
+    if !params[:file].nil? &&
+        (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      @workbook = RubyXL::Parser.parse(params[:file].path)
+      @workbook.each_with_index do |worksheet, index|
+      tab = worksheet.extract_data
+      if !tab.empty?
+        #ici on recupere les information sur le model
+        if index == 0
+          if tab[0][1].nil? || tab[0][1].empty?
+            route_flag = 2
+            break
+          end
+          @guw_model = Guw::GuwModel.find_by_name(tab[0][1])
+          if @guw_model.nil?
+            @guw_model = Guw::GuwModel.create(name: tab[0][1],
+                                           description: tab[1][1],
+                                           three_points_estimation: tab[2][1] == 1 ? true : false,
+                                           retained_size_unit: tab[3][1],
+                                           organization_id: @current_organization.id)
+            critical_flag = false
+          else
+            route_flag = 1
+            break
+          end
+        elsif index == 1
+          if critical_flag == true
+            route_flag = 5
+            break
+          end
+          tab.each_with_index do |row, index|
+            if index != 0 && !row.nil?
+             Guw::GuwAttribute.create(name: row[0],
+                                      description: row[1],
+                                      guw_model_id: @guw_model.id)
+            end
+          end
+        elsif index == 2
+          if critical_flag == true
+            route_flag = 5
+            break
+          end
+          tab.each_with_index do |row, index|
+            if index != 0 && !row.nil?
+               Guw::GuwWorkUnit.create(name:row[0],
+                                       value: row[1],
+                                       display_order: row[2],
+                                       guw_model_id: @guw_model.id)
+            end
+          end
+        else
+          if critical_flag == true
+            route_flag = 5
+            break
+          end
+          if worksheet.sheet_name != "Model" && worksheet.sheet_name != "Atribut description" && worksheet.sheet_name != "Type d'acquisitions"
+            if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
+              @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
+                                              description: tab[0][0],
+                                              allow_quantity: tab[2][1] == 1 ? true : false,
+                                              allow_retained: tab[1][1] == 1 ? true : false,
+                                              allow_complexity: tab[3][1] == 1 ? true : false,
+                                              allow_criteria: tab[4][1] == 1 ? true : false,
+                                              guw_model_id: @guw_model.id)
+              if !tab[8].nil? && !tab[9].nil? && tab[8][0] == "Seuil" && !tab[6].empty? && tab[9][0] == "Coefficient d'acquisiton"
+                while !tab[6][ind].nil?
+                  @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
+                                                             name: tab[6][ind],
+                                                             enable_value: tab[8][ind] == 1 ? true : false,
+                                                             bottom_range: tab[8][ind + 1],
+                                                             top_range: tab[8][ind + 2],
+                                                             weight:  tab[8][ind + 3])
+                  @guw_model.guw_work_units.each do |wu|
+                    while !tab[ind2].nil? && tab[ind2][0] != wu.name && tab[ind2][0] != "Technologie"
+                      ind2 += 1
+                    end
+                    if !tab[ind2].nil? && tab[ind2][0] != "Technologie"
+                      Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind])
+                    elsif tab[ind2].nil?
+                      route_flag = 3
+                      break
+                    end
+                    ind2 = 10
+                    action_type_aquisition_flag = true
+                  end
+                  if tab[ind2].nil? || route_flag == 3
+                    route_flag = 3
+                    break
+                  end
+                  while !tab[ind2].nil? && tab[ind2][0] != "Technologie"
+                    ind2 += 1
+                  end
+                  ind3 = ind2
+                  if !tab[ind2].nil? && tab[ind2][0] == "Technologie"
+                    @current_organization.organization_technologies.each do |techno|
+                     while !tab[ind2].nil? && tab[ind2][0] != techno.name
+                       ind2 += 1
+                     end
+                     if !tab[ind2].nil?
+                       Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id, organization_technology_id: techno.id, coefficient: tab[ind2][ind])
+                     end
+                     ind2 = ind3
+                    end
+                    if save_position == 0
+                      while !tab[ind2].nil? #&& !tab[ind2].empty?
+                        ind2 += 1
+                      end
+                      save_position = ind2 + 1
+                    end
+                    action_technologie_flag = true
+                  end
+                  ind2 = 10
+                  ind += 4
+                end
+                ind = 1
+              end
+              if !tab[save_position].nil? && tab[save_position][0] == "Seuils de complexité" && tab[save_position + 1][0] == "Attributs"
+                ind3 = save_position + 2
+                ind = 1
+                while !tab[save_position][ind].nil?
+                 @guw_att_complexity =  Guw::GuwTypeComplexity.create(guw_type_id: @guw_type.id, name: tab[save_position][ind], value: 4)
+                  @guw_model.guw_attributes.each do |att|
+                    while !tab[ind3].nil? && tab[ind3][0] != att.name
+                      ind3 += 1
+                    end
+                    if !tab[ind3].nil?
+                      toto = Guw::GuwAttributeComplexity.create(guw_type_complexity_id: @guw_att_complexity.id,
+                                                         guw_attribute_id: att.id,
+                                                         guw_type_id: @guw_type.id,
+                                                         enable_value: tab[ind3][ind] == 0 ? false : true,
+                                                         bottom_range: tab[ind3][ind + 1],
+                                                         top_range: tab[ind3][ind + 2],
+                                                         value: tab[ind3][ind + 3])
+                    end
+                    ind3 = save_position + 2
+                  end
+                 ind += 4
+                end
+                ind3 = 0
+                ind = 1
+                action_Attribu_flag = true
+              end
+              if action_type_aquisition_flag == false
+                tab_error[0].push(@guw_type.name)
+              else
+                action_type_aquisition_flag = false
+              end
+              if action_technologie_flag == false
+                tab_error[1].push(@guw_type.name)
+              else
+                action_technologie_flag = false
+              end
+              if action_Attribu_flag == false
+                tab_error[2].push(@guw_type.name)
+              else
+                action_Attribu_flag = false
+              end
+            else
+              route_flag = 4
+              sheet_error += 1
+            end
+          else
+            route_flag = 6
+            break
+          end
+        end
+      else
+        route_flag = 4
+        sheet_error += 1
+      end
+      save_position = 0
+      end
+    else
+      route_flag = 7
+    end
+    redirect_to_good_path(route_flag, sheet_error)
+    bug_tracker(tab_error)
   end
 
   def deter_size(my_string)
@@ -405,7 +496,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.add_cell(ind2 + 2, 0, "Seuil")
       worksheet.sheet_data[ind2 + 2][0].change_font_bold(true)
       @guw_complexities.each do |guw_complexity|
-        worksheet.add_cell(ind2 + 1, ind + 2, "[    ;    [      /   Poids")
+        worksheet.add_cell(ind2 + 1, ind + 2, "[    ;    [       /          Poids")
         worksheet.add_cell(ind2 + 1, ind + 1, "Prod")
         worksheet.merge_cells(0, 0, 0, ind + 4)
         worksheet.merge_cells(ind2, ind + 1, ind2, ind + 4)
@@ -452,7 +543,7 @@ class Guw::GuwModelsController < ApplicationController
         worksheet.add_cell(ind3 + 1, ind + 1, "Prod")
         worksheet.sheet_data[ind3 + 1][ind + 1].change_horizontal_alignment('center')
         worksheet.merge_cells(ind3 + 1, ind + 2, ind3 + 1, ind + 4)
-        worksheet.add_cell(ind3 + 1 , ind + 2, "[    ;    [      /    Poids")
+        worksheet.add_cell(ind3 + 1 , ind + 2, "[    ;    [        /          Poids")
         worksheet.sheet_data[ind3 + 1][ind + 2].change_horizontal_alignment('center')
         ind4 = ind3 + 2
         @guw_model.guw_attributes.order("name ASC").each do |attribute|
@@ -471,7 +562,7 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 5
     end
-    send_data(workbook.stream.string, filename: "export.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%m-%d-%Y")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show
