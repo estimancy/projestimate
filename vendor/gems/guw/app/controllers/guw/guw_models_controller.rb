@@ -174,6 +174,7 @@ class Guw::GuwModelsController < ApplicationController
   end
 
   def importxl
+
     element_found_flag = false
     route_flag = 0
     sheet_error = 0
@@ -367,6 +368,9 @@ class Guw::GuwModelsController < ApplicationController
   def deter_size(my_string)
     ind = 0
     len = 0
+    if my_string.nil?
+      return 1
+    end
     while my_string[ind]
       if my_string[ind] == "\n"
         len += 1
@@ -380,6 +384,9 @@ class Guw::GuwModelsController < ApplicationController
     ind = 0
     len = 0
     len2 = 0
+    if my_string.nil?
+      return 1
+    end
     while my_string[ind]
       if my_string[ind] == "\n" || my_string[ind + 1] == nil
         if len2 < len
@@ -395,6 +402,7 @@ class Guw::GuwModelsController < ApplicationController
   end
 
   def exportxl
+
     workbook = RubyXL::Workbook.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_organisation = @guw_model.organization
