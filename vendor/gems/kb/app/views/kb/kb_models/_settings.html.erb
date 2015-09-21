@@ -64,7 +64,7 @@
 
           <h5>
             <strong>
-              Effort (<%= @kb_model.effort_unit %>)
+              Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>)
             </strong>
           </h5>
           <% effort_attr = PeAttribute.find_by_alias("effort") %>
