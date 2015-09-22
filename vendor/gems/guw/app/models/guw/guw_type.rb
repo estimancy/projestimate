@@ -19,6 +19,8 @@
 #
 #############################################################################
 
+#  validates_uniqueness_of :name
+
 module Guw
   class GuwType < ActiveRecord::Base
     belongs_to :guw_model
@@ -31,6 +33,7 @@ module Guw
     has_many :guw_complexity_technologies, dependent: :destroy
 
     validates_presence_of :name
+
 
     amoeba do
       enable
