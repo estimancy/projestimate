@@ -19,8 +19,6 @@
 #
 #############################################################################
 
-#  validates_uniqueness_of :name
-
 module Guw
   class GuwType < ActiveRecord::Base
     belongs_to :guw_model
