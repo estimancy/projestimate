@@ -41,6 +41,6 @@ class ProjectArea < ActiveRecord::Base
 
   #Override
   def to_s
-    self.nil? ? '' : self.name
+    self.nil? ? 'N/A' : self.name
   end
 end

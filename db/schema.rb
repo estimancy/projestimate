@@ -387,6 +387,17 @@ ActiveRecord::Schema.define(:version => 20150916095705) do
     t.integer "copy_id"
   end
 
+  create_table "factor_translations", :force => true do |t|
+    t.integer  "factor_id"
+    t.string   "locale",     :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.text     "helps"
+  end
+
+  add_index "factor_translations", ["factor_id"], :name => "index_factor_translations_on_factor_id"
+  add_index "factor_translations", ["locale"], :name => "index_factor_translations_on_locale"
+
   create_table "factors", :force => true do |t|
     t.string   "name"
     t.string   "alias"
@@ -661,6 +672,24 @@ ActiveRecord::Schema.define(:version => 20150916095705) do
     t.float   "standard_unit_coefficient"
     t.string  "effort_unit"
   end
+
+  create_table "labor_categories", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "uuid"
+    t.integer  "record_status_id"
+    t.string   "custom_value"
+    t.integer  "owner_id"
+    t.text     "change_comment"
+    t.integer  "reference_id"
+    t.string   "reference_uuid"
+  end
+
+  add_index "labor_categories", ["record_status_id"], :name => "index_labor_categories_on_record_status_id"
+  add_index "labor_categories", ["reference_id"], :name => "index_labor_categories_on_parent_id"
+  add_index "labor_categories", ["uuid"], :name => "index_labor_categories_on_uuid", :unique => true
 
   create_table "labor_categories_project_areas", :id => false, :force => true do |t|
     t.integer  "labor_category_id"

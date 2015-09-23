@@ -333,6 +333,8 @@ Projestimate::Application.routes.draw do
   match 'wbs_activities/:id/validate_change_with_children' => 'wbs_activities#validate_change_with_children', :as => 'validate_change_with_children'
   post 'save_wbs_activity_ratio_per_profile' => 'wbs_activity_ratio_elements#save_wbs_activity_ratio_per_profile', :as => 'save_wbs_activity_ratio_per_profile'
   post "execute_estimation" => "projects#execute_estimation"
+  get "export_my_project_xl/:project_id" => "projects#export_my_project_xl" , :as => 'export_my_project_xl'
+
 
   resources :translations
   get 'load_translations' => 'translations#load_translations', :as => 'load_translations'
