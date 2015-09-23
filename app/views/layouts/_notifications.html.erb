@@ -1,24 +1,24 @@
 <div class="notifications_fixed_top">
   <% if flash[:warning] %>
-    <div class='alert pull-left' style="width: 50%">
+    <div class='alert pull-left'>
       <button type="button" class="close" data-dismiss="alert">x</button>
-      <%= flash[:warning] %>
+      <%= simple_format(flash[:warning]) %>
     </div>
   <% end -%>
   <% if flash[:notice] %>
-    <div class='alert alert-success pull-left' style="width: 50%">
+    <div class='alert alert-success pull-left'>
       <button type="button" class="close" data-dismiss="alert">x</button>
       <%= flash[:notice] %>
     </div>
   <% end %>
   <% if flash[:error] %>
-    <div class='alert alert-danger pull-left' style="width: 50%">
+    <div class='alert alert-danger pull-left'>
       <button type="button" class="close" data-dismiss="alert">x</button>
       <%= flash[:error] %>
     </div>
   <% end -%>
   <% if flash[:custom] %>
-    <div class='alert pull-left' style="width: 50%">
+    <div class='alert pull-left'>
       <button type="button" class="close" data-dismiss="alert">x</button>
       <%= flash[:custom] %>
     </div>
@@ -26,7 +26,7 @@
 
   <!-- for devise flash -->
   <% if alert && !alert.empty? %>
-    <div class='alert alert-danger pull-left' style="width: 50%">
+    <div class='alert alert-danger pull-left'>
       <button type="button" class="close" data-dismiss="alert">x</button>
       <%= flash[:alert] %>
     </div>
