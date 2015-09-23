@@ -95,13 +95,16 @@ class ApplicationController < ActionController::Base
 
     if user_signed_in?
       unless current_user.super_admin == true
-        if @disable_access == "1"
+        if current_user.subscription_end_date < Time.now
+          flash[:error] = "La licence de votre compte est expirée."
+          reset_session
+          redirect_to(root_path)
+        elsif @disable_access == "1"
           reset_session
           redirect_to(root_path)
         end
       end
     end
-
   end
 
   def current_ability

@@ -13,11 +13,25 @@
 <% organization = @project.organization %>
 <% wai = WbsActivityInput.where(module_project_id: current_module_project.id, wbs_activity_id: current_module_project.wbs_activity_id).first_or_create! %>
 <% coeff = current_module_project.wbs_activity.effort_unit_coefficient.nil? ? 1 : current_module_project.wbs_activity.effort_unit_coefficient %>
+
 <% if cev.string_data_low[component_id].blank? %>
-  <% v = pev.string_data_low[component_id] / coeff %>
+  <% v_low = pev.nil? ? nil : (pev.string_data_low[component_id] / coeff) %>
 <% else %>
-  <% v = cev.string_data_low[component_id] / coeff %>
+  <% v_low = cev.nil? ? nil : (cev.string_data_low[component_id] / coeff) %>
 <% end %>
+
+<% if cev.string_data_most_likely[component_id].blank? %>
+  <% v_ml = pev.nil? ? nil : (pev.string_data_most_likely[component_id] / coeff) %>
+<% else %>
+  <% v_ml = cev.nil? ? nil : (cev.string_data_most_likely[component_id] / coeff) %>
+<% end %>
+
+<% if cev.string_data_low[component_id].blank? %>
+  <% v_high = pev.nil? ? nil : (pev.string_data_high[component_id] / coeff) %>
+<% else %>
+  <% v_high = cev.nil? ? nil : (cev.string_data_high[component_id] / coeff) %>
+<% end %>
+
 <%= form_tag save_effort_breakdown_path do %>
 
   <table class="table table-bordered">
@@ -41,13 +55,13 @@
       </td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
-        <td><%= text_field_tag "values[low]", v, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
+        <td><%= text_field_tag "values[low]", v_low, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% end %>
 
-      <td><%= text_field_tag "values[low]", v, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
+      <td><%= text_field_tag "values[most_likely]", v_ml, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
-        <td><%= text_field_tag "values[low]", v, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
+        <td><%= text_field_tag "values[high]", v_high, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% end %>
 
       <td>
