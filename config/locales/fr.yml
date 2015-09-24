@@ -1564,3 +1564,7 @@ fr:
   route_flag_error_6: "Attention page non conforme détecter, nombre de pages non importées: "
   route_flag_error_7: "Un décalage dans les pages du fichier a entraîné une erreur l'or de l'importation, le modèle a été créé, mais des informations n'ont pas été récupérées, referer vous au wiki rubrique importation d'UO pour plus d'informations."
   attribute_description: "Atribut description"
+  export_vignette: "exporter la vignette \"%{value}\""
+  effort_import: "effort"
+  unit_value: "unité"
+  profile: "Profil"

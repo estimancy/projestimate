@@ -29,6 +29,7 @@ Projestimate::Application.routes.draw do
   get 'update_view_widget_positions' => 'views_widgets#update_view_widget_positions', :as => 'update_view_widget_positions'
   get 'update_view_widget_sizes' => 'views_widgets#update_view_widget_sizes', :as => 'update_view_widget_sizes'
   get 'update_widget_module_project_data' => 'views_widgets#update_widget_module_project_data', :as => 'update_widget_module_project_data'
+  get 'export_vignette' => 'views_widgets#export_vignette' , :as => 'export_vignette'
 
   resources :widgets
 

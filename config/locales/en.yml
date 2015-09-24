@@ -1559,3 +1559,7 @@ en:
   route_flag_error_6: "Warning: improper page detected, number of page imported: "
   route_flag_error_7: "A shift in the pages of the file resulted in an import error, the model has been create but some information may be missing, for more information tanks to refer to the section import in the wiki d'UO."
   attribute_description: "Atribut description"
+  export_vignette: "export widget \"%{value}\""
+  effort_import: "effort"
+  unity_value: "unit"
+  profile: "Profile"

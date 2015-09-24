@@ -17,6 +17,8 @@
 #############################################################################
 
 class ViewsWidgetsController < ApplicationController
+
+  require 'rubyXL'
   include ViewsWidgetsHelper
   include ProjectsHelper
   before_filter :load_current_project_data, only: [:create, :update, :destroy]
@@ -297,4 +299,50 @@ class ViewsWidgetsController < ApplicationController
     end
   end
 
+  def export_vignette
+    workbook = RubyXL::Workbook.new
+    widget = ViewsWidget.find(params[:view_widget_id])
+   # @project = current_project
+    worksheet = workbook[0]
+
+    if widget.widget_type == "table_effort_per_phase"
+      worksheet.add_cell(0, 0, I18n.t(:phases))
+      worksheet.add_cell(0, 1, I18n.t(:effort_import))
+      worksheet.add_cell(0, 2, I18n.t(:unit_value))
+      widget.module_project.wbs_activity.wbs_activity_elements.each_with_index  do |element, index|
+        worksheet.add_cell(index + 1, 0 ,  element.name)
+        worksheet.add_cell(index + 1, 1, convert(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+        worksheet.add_cell(index + 1, 2, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+      end
+    elsif widget.widget_type == "effort_per_phases_profiles_table"
+      worksheet.add_cell(0, 0, I18n.t(:phases))
+      worksheet.add_cell(0, 1, I18n.t(:profile))
+      attribute = widget.pe_attribute
+      activity = widget.module_project.wbs_activity
+      ratio = WbsActivityInput.where(wbs_activity_id: activity.id,
+                                     module_project_id: current_module_project.id).first.wbs_activity_ratio
+      ratio_profiles = ratio.wbs_activity_ratio_profiles
+      activity.wbs_activity_elements.each_with_index do |element, index|
+        worksheet.add_cell(index + 2, 0 ,  element.name)
+        ratio_profiles.each_with_index do |profil, index_2|
+          #Nom du profil
+          worksheet.add_cell(1, index_2 + 1, profil.organization_profile.name)
+
+          begin
+          #Value du couple profile/element
+            worksheet.add_cell(index + 2, index_2 + 1, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.organization_profile.id}"]["ratio_id_#{ratio.id}"][:value])
+          rescue
+            worksheet.add_cell(index + 2, index_2 + 1, "!")
+          end
+
+        end
+      end
+    end
+    send_data(workbook.stream.string, filename: "#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
 end
+
+
+
+
