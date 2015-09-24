@@ -351,7 +351,7 @@ class WbsActivitiesController < ApplicationController
                       wbs_activity_ratio_element = WbsActivityRatioElement.where(wbs_activity_ratio_id: @ratio_reference.id, wbs_activity_element_id: key).first
                       unless wbs_activity_ratio_element.nil?
                         wbs_activity_ratio_element.wbs_activity_ratio_profiles.each do |warp|
-                          tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * (efforts_man_month[key].to_f * 8) * (warp.ratio_value / 100)
+                          tmp[warp.organization_profile.id] = warp.organization_profile.cost_per_hour.to_f * (efforts_man_month[key].to_f * @wbs_activity.effort_unit_coefficient.to_f) * (warp.ratio_value / 100)
                         end
                       end
                       res[key] = tmp
