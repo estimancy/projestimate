@@ -379,7 +379,6 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_types.each do |guw_type|
       worksheet = workbook.add_worksheet(guw_type.name)
-      #worksheet.change_row_bold(0,true)
       description = Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(guw_type.description)).text
       worksheet.add_cell(0, ind, description)
       worksheet.change_row_height(0, deter_size(description) * 15)
@@ -403,9 +402,10 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.add_cell(4, 1,  guw_type.allow_criteria ? 1 : 0)
 
       @guw_complexities = guw_type.guw_complexities
-      worksheet.change_row_horizontal_alignment(ind2, 'center')
+      worksheet.add_cell(ind2 , 0,  I18n.t(:UO_type_complexity))
+      worksheet.sheet_data[ind2][0].change_font_bold(true)
+      worksheet.sheet_data[ind2][0].change_horizontal_alignment('left')
       worksheet.change_row_horizontal_alignment( ind2 + 1, 'center')
-      worksheet.change_row_bold(ind2,true)
       worksheet.change_row_bold(ind2 + 3,true)
       worksheet.add_cell(ind2 + 3, 0,  I18n.t(:Coefficient_of_acquisiton))
       worksheet.add_cell(ind2 + 2, 0, I18n.t(:threshold))
@@ -418,6 +418,7 @@ class Guw::GuwModelsController < ApplicationController
         worksheet.merge_cells(ind2 + 3, 0, ind2 + 3, ind + 4)
         worksheet.merge_cells(ind2 + 1, ind + 2, ind2 + 1, ind + 4)
         worksheet.add_cell(ind2, ind + 1, guw_complexity.name)
+        worksheet.sheet_data[ind2][ind + 1].change_horizontal_alignment('center')
         worksheet.add_cell(ind2 + 2, ind + 2, guw_complexity.bottom_range)
         worksheet.add_cell(ind2 + 2, ind + 3, guw_complexity.top_range)
         worksheet.add_cell(ind2 + 2, ind + 4, guw_complexity.weight)
@@ -448,7 +449,7 @@ class Guw::GuwModelsController < ApplicationController
       end
       ind = 0
       worksheet.add_cell(ind3, ind, I18n.t(:complexity_threshold))
-      worksheet.change_row_bold(ind3, true)
+      worksheet.sheet_data[ind3][ind].change_font_bold(true)
       worksheet.add_cell(ind3 + 1, ind, I18n.t(:pe_attributes))
       worksheet.sheet_data[ind3 + 1][ind].change_font_bold(true)
       guw_type.guw_type_complexities.each  do |type_attribute_complexity|
