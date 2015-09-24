@@ -317,24 +317,33 @@ class ViewsWidgetsController < ApplicationController
     elsif widget.widget_type == "effort_per_phases_profiles_table"
       worksheet.add_cell(0, 0, I18n.t(:phases))
       worksheet.add_cell(0, 1, I18n.t(:profile))
+
       attribute = widget.pe_attribute
       activity = widget.module_project.wbs_activity
+
       ratio = WbsActivityInput.where(wbs_activity_id: activity.id,
                                      module_project_id: current_module_project.id).first.wbs_activity_ratio
-      ratio_profiles = ratio.wbs_activity_ratio_profiles
+
       activity.wbs_activity_elements.each_with_index do |element, index|
-        worksheet.add_cell(index + 2, 0 ,  element.name)
-        ratio_profiles.each_with_index do |profil, index_2|
-          #Nom du profil
-          worksheet.add_cell(1, index_2 + 1, profil.organization_profile.name)
 
-          begin
-          #Value du couple profile/element
-            worksheet.add_cell(index + 2, index_2 + 1, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.organization_profile.id}"]["ratio_id_#{ratio.id}"][:value])
-          rescue
-            worksheet.add_cell(index + 2, index_2 + 1, "!")
+        element.wbs_activity_ratio_elements.each do |ware|
+
+          ratio_profiles = ratio.wbs_activity_ratio_profiles.where(wbs_activity_ratio_element_id: ware.id)
+
+          worksheet.add_cell(index + 2, 0 ,  element.name)
+
+          ratio_profiles.each_with_index do |profil, index_2|
+            #Nom du profil
+            worksheet.add_cell(1, index_2 + 1, profil.organization_profile.name)
+
+            begin
+            #Value du couple profile/element
+              worksheet.add_cell(index + 2, index_2 + 1, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.organization_profile.id}"]["ratio_id_#{ratio.id}"][:value])
+            rescue
+              worksheet.add_cell(index + 2, index_2 + 1, "!")
+            end
+
           end
-
         end
       end
     end
