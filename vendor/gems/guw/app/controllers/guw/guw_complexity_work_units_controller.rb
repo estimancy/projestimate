@@ -35,6 +35,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
             Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id, value: params[:value]["#{cplx.id}"]["#{wu.id}"])
           else
             cwu.value = params[:value]["#{cplx.id}"]["#{wu.id}"]
+            cwu.guw_type_id = @guw_type.id
             cwu.save
           end
 

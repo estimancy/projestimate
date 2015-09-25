@@ -185,13 +185,17 @@
                                readonly: !can?(:execute_estimation_plan, @project) %>
               </td>
 
-              <td class="span2 ">
-                <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.order("display_order ASC").map{|i| [i.name, i.id]},
-                                                                               selected: guow.guw_work_unit_id),
-                               class: "guw_work_unit input-xsmall",
-                               guw: guow.id,
-                               required: true,
-                               readonly: !can?(:execute_estimation_plan, @project) %>
+              <td class="span2">
+                <span class="work_unit_<%= guow.id %>" >
+                  <% unless @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact.empty? %>
+                    <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(@guw_model.guw_work_units.order("display_order ASC").map{|i| [i.name, i.id]},
+                                                                                   selected: guow.guw_work_unit_id),
+                                   class: "guw_work_unit input-xsmall",
+                                   guw: guow.id,
+                                   required: true,
+                                   readonly: !can?(:execute_estimation_plan, @project) %>
+                  <% end %>
+                </span>
               </td>
 
               <td class="span2 ">

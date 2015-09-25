@@ -3,15 +3,11 @@
   <% if can? :manage_modules_instances, ModuleProject %>
     <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
   <% end %>
-  <%= link_to "Gérer les types d'acquisitons", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to "Gérer les #{@guw_model.coefficient_label.underscore}", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "Exporter", guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
 
 </h4>
-
-
-
-
 
 <div class="tabs">
 
@@ -98,7 +94,7 @@
             <tr>
               <td colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
                 <b>
-                  Coefficient d'acquisiton
+                  <%= @guw_model.coefficient_label %>
                 </b>
               </td>
             </tr>
