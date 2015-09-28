@@ -29,7 +29,7 @@
                 <% wbs_activity_elt_id = wbs_activity_elt.id %>
                 <% profile_ratio_percentage = "" %>
 
-                <% wbs_probable_value =  estimation_pbs_probable_results[wbs_activity_elt.id] %>
+                <% wbs_probable_value = estimation_pbs_probable_results[wbs_activity_elt.id] %>
                 <% unless wbs_probable_value.nil? %>
                     <!-- Get the profile ratio percentage -->
                     <% unless wbs_activity_elt_id.nil?
@@ -64,7 +64,7 @@
                           <% end %>
                           <td style="text-align: right">
                             <% begin %>
-                              <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>
+                              <%= "#{convert(wbs_probable_value[:value], @current_organization)}" %>
                             <% rescue %>
                               <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision)}" %>
                             <% end %>
