@@ -23,7 +23,7 @@ module Operation
   class OperationModel < ActiveRecord::Base
 
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :standard_unit_coefficient, :presence => true
     validates :operation_type, :presence => true
     validates :effort_unit, :presence => true
 
