@@ -24,8 +24,8 @@ module Operation
 
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
     validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :operation_type, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :effort_unit, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :operation_type, :presence => true
+    validates :effort_unit, :presence => true
 
 
     belongs_to :organization

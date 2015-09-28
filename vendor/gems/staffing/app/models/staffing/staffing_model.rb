@@ -30,8 +30,8 @@ module Staffing
 
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
     validates :mc_donell_coef, :puissance_n, :organization_id, presence: true
-    validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :effort_unit, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :standard_unit_coefficient, :presence => true
+    validates :effort_unit, :presence => true
 
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy
