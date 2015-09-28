@@ -23,6 +23,10 @@ module Ge
   class GeModel < ActiveRecord::Base
     #validates_presence_of :name####, :organization_id
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :effort_unit, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :coeff_a, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :coeff_b, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy

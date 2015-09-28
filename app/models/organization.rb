@@ -60,6 +60,7 @@ class Organization < ActiveRecord::Base
   has_many :estimation_status_group_roles, :through => :estimation_statuses
 
   #Guw Model
+  has_many :operation_models, class_name: "Operation::OperationModel", dependent: :destroy
   has_many :guw_models, class_name: "Guw::GuwModel", dependent: :destroy
   has_many :ge_models, class_name: "Ge::GeModel", dependent: :destroy
   has_many :kb_models, class_name: "Kb::KbModel", dependent: :destroy
@@ -111,7 +112,7 @@ class Organization < ActiveRecord::Base
                          :work_element_types, :attribute_organizations, :organization_technologies,
                          :organization_profiles, :unit_of_works, :size_unit_types, :technology_size_types,
                          :organization_uow_complexities, :fields, :groups, :project_security_levels,
-                         :estimation_statuses, :guw_models, :ge_models, :expert_judgement_instances]
+                         :estimation_statuses, :guw_models, :operation_models, :expert_judgement_instances]
 
     customize(lambda { |original_organization, new_organization|
       new_copy_number = original_organization.copy_number.to_i+1

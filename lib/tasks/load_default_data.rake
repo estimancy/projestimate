@@ -255,7 +255,7 @@ def load_data!
       ['Cocomo Intermediate', 'cocomo_advanced', 'Cocomo Intermediate', 'no'],
       ['Effort Breakdown', 'effort_breakdown', 'Effort Breakdown', 'yes_for_output_with_ratio'],
       ['Generic Unit Of Work', 'guw', 'Generic Unit Of Work', 'no'],
-      ['Generic Effort', 'ge', 'Generic Effort', 'no'],
+      ['Generic Effort', 'operation', 'Generic Effort', 'no'],
       ['Staffing', 'staffing', 'Staffing module : project duration and team size', 'no'],
       ['Real Size', 'real_size', 'Real Size', 'no'],
       ['Activity Completion', 'wbs_activity_completion', 'Activity Completion', 'yes_for_input_output_without_ratio'],

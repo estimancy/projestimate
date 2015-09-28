@@ -1,0 +1,41 @@
+<div class="tabs">
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        Modèle d'éffort générique
+      </a>
+    </li>
+  </ul>
+
+  <div id="tabs-1">
+    <%= simple_form_for(@operation_model) do |f| %>
+
+      <div class="alert alert-info">
+        La méthode générique d'éffort correspond à une méthode de calcul de l'éffort
+        selon la formule a*x^b ou <b>a</b> correspond au facteur d'ajustement et <b>b</b> au facteur d'échelle.
+        <br>
+        L'effort E est généré dans l'unité propre au modèle (h.j, h.m etc...). L'utilisateur doit définir le coefficient de conversion en unité standard (des heures).
+      </div>
+      <%= f.error_notification %>
+
+      <%#= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+      <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
+
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
+        <%= f.input :enabled_input, label: "Modification des valeurs d'entrées" %>
+        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort" %>
+        <%= f.input :standard_unit_coefficient, label: 'Coefficient de conversion en unité standard (heures)' %>
+        <%= f.input :operation_type, as: :select, collection: [["Addition", "addition"],
+                                                               ["Moyenne", "moyenne"]], label: "Type d'opération" %>
+      </div>
+
+      <% if can? :manage_modules_instances, ModuleProject %>
+         <%= f.button :submit, I18n.t('save') %>
+      <% end %>
+      <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "effort"), class: "btn" %>
+    <% end %>
+
+  </div>
+</div>

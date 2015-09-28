@@ -155,6 +155,8 @@ class ProjectsController < ApplicationController
       @kb_input = Kb::KbInput.where(module_project_id: current_module_project.id).first_or_create
     elsif @module_project.pemodule.alias == "ge"
       @ge_model = current_module_project.ge_model
+    elsif @module_project.pemodule.alias == "operation"
+      @operation_model = current_module_project.operation_model
     elsif @module_project.pemodule.alias == "guw"
 
       #if current_module_project.guw_model.nil?
@@ -458,12 +460,14 @@ class ProjectsController < ApplicationController
     @guw_module = Pemodule.where(alias: "guw").first
     @kb_module = Pemodule.where(alias: "kb").first
     @ge_module = Pemodule.where(alias: "ge").first
+    @operation_module = Pemodule.where(alias: "operation").first
     @staffing_module = Pemodule.where(alias: "staffing").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
     @ebd_module = Pemodule.where(alias: "effort_breakdown").first
 
     @guw_modules = @guw_module.nil? ? [] : @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
     @ge_models = @ge_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @operation_models = @operation_module.nil? ? [] : @project.organization.operation_models.map{|i| [i, "#{i.id},#{@operation_module.id}"] }
     @kb_models = @project.organization.kb_models.map{|i| [i, "#{i.id},#{@kb_module.id}"] }
     @staffing_modules = @staffing_module.nil? ? [] : @project.organization.staffing_models.map{|i| [i, "#{i.id},#{@staffing_module.id}"] }
     @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
@@ -715,12 +719,15 @@ class ProjectsController < ApplicationController
 
     @guw_module = Pemodule.where(alias: "guw").first
     @ge_module = Pemodule.where(alias: "ge").first
+    @ge_module = Pemodule.where(alias: "operation").first
     @staffing_module = Pemodule.where(alias: "staffing").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
     @ebd_module = Pemodule.where(alias: "effort_breakdown").first
 
     @guw_modules = @guw_module.nil? ? [] : @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
     @ge_models = @ge_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+    @operation_models = @operation_module.nil? ? [] : @project.organization.operation_models.map{|i| [i, "#{i.id},#{@operation_module.id}"] }
+    @kb_models = @project.organization.kb_models.map{|i| [i, "#{i.id},#{@kb_module.id}"] }
     @staffing_modules = @staffing_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@staffing_module.id}"] }
     @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
@@ -927,6 +934,8 @@ class ProjectsController < ApplicationController
                             kb_model_id: kb_model_id)
       elsif @pemodule.alias == "ge"
         my_module_project.ge_model_id = params[:module_selected].split(',').first
+      elsif @pemodule.alias == "operation"
+        my_module_project.operation_model_id = params[:module_selected].split(',').first
       elsif @pemodule.alias == "staffing"
         staffing_model_id = params[:module_selected].split(',').first.to_i
         my_module_project.staffing_model_id = staffing_model_id
@@ -1097,7 +1106,7 @@ class ProjectsController < ApplicationController
     #      when "guw"
     #        obj = mp_klass.send(:new, @project, current_module_project)
     #        obj.send("get_#{attr.alias}")
-    #      when "ge"
+    #      when "operation"
     #        obj = mp_klass.send(:new, @project, current_module_project)
     #        obj.send("get_#{attr.alias}")
     #

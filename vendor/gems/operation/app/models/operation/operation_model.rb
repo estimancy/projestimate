@@ -19,23 +19,27 @@
 #
 #############################################################################
 
-module Staffing
-  class StaffingModel < ActiveRecord::Base
-    attr_accessible :puissance_n, :mc_donell_coef, :copy_id, :copy_number, :enabled_input, :name,
-                    :description, :organization_id, :trapeze_default_values, :three_points_estimation,
-                    :effort_unit, :standard_unit_coefficient
-    attr_accessor :x0, :y0, :x1, :x2, :x3, :y3
-
-    serialize :trapeze_default_values, Hash
+module Operation
+  class OperationModel < ActiveRecord::Base
 
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :mc_donell_coef, :puissance_n, :organization_id, presence: true
     validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :operation_type, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
     validates :effort_unit, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+
 
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy
-    has_many :staffing
+
+    amoeba do
+      enable
+      exclude_association [:module_projects]
+
+      customize(lambda { |original_ge_model, new_ge_model|
+        new_ge_model.copy_id = original_ge_model.id
+      })
+    end
+
 
     def to_s(mp=nil)
       if mp.nil?
@@ -45,5 +49,16 @@ module Staffing
       end
     end
 
+    def self.display_size(p, c, level, component_id)
+      if c.send("string_data_#{level}")[component_id].nil?
+        begin
+          p.send("string_data_#{level}")[component_id]
+        rescue
+          nil
+        end
+      else
+        c.send("string_data_#{level}")[component_id]
+      end
+    end
   end
 end

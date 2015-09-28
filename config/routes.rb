@@ -109,6 +109,7 @@ Projestimate::Application.routes.draw do
   mount ExpertJudgement::Engine, :at => '/expert_judgement'
   mount Guw::Engine, :at => '/guw'
   mount Ge::Engine, :at => '/ge'
+  mount Operation::Engine, :at => '/operation'
   mount Kb::Engine, :at => '/kb'
   mount Staffing::Engine, :at => '/staffing'
   mount Uow::Engine, :at => '/uow'

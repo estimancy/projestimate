@@ -29,6 +29,7 @@ class ModuleProject < ActiveRecord::Base
 
   belongs_to :guw_model, class_name: "Guw::GuwModel"
   belongs_to :ge_model, class_name: "Ge::GeModel"
+  belongs_to :operation_model, class_name: "Operation::OperationModel"
   belongs_to :kb_model, class_name: "Kb::KbModel"
   belongs_to :kb_input, class_name: "Kb::KbInput"
   belongs_to :staffing_model, class_name: "Staffing::StaffingModel"
@@ -154,6 +155,8 @@ class ModuleProject < ActiveRecord::Base
   def to_s
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION
       self.project.title
+    elsif self.pemodule.alias == "operation"
+      self.operation_model.nil? ? 'Undefined model': self.operation_model.to_s(self)
     elsif self.pemodule.alias == "ge"
       self.ge_model.nil? ? 'Undefined model': self.ge_model.to_s(self)
     elsif self.pemodule.alias == "kb"
@@ -173,7 +176,7 @@ class ModuleProject < ActiveRecord::Base
 
   def size
     module_alias = self.pemodule.alias
-    if module_alias == "ge"
+    if module_alias == "operation"
       self.ge_model.size_unit
     elsif module_alias == "guw"
       self.guw_model.retained_size_unit

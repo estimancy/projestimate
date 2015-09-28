@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150925075124) do
+ActiveRecord::Schema.define(:version => 20150928071751) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -755,12 +755,25 @@ ActiveRecord::Schema.define(:version => 20150925075124) do
     t.integer  "wbs_activity_id"
     t.integer  "staffing_model_id"
     t.integer  "kb_model_id"
+    t.integer  "operation_model_id"
   end
 
   create_table "module_projects_pbs_project_elements", :id => false, :force => true do |t|
     t.integer "module_project_id"
     t.integer "pbs_project_element_id"
     t.integer "copy_id"
+  end
+
+  create_table "operation_operation_models", :force => true do |t|
+    t.string  "name"
+    t.boolean "three_points_estimation"
+    t.boolean "enabled_input"
+    t.integer "organization_id"
+    t.string  "effort_unit"
+    t.integer "standard_unit_coefficient"
+    t.string  "operation_type"
+    t.integer "copy_id"
+    t.integer "copy_number"
   end
 
   create_table "organization_labor_categories", :force => true do |t|

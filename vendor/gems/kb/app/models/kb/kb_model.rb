@@ -22,6 +22,8 @@
 module Kb
   class KbModel < ActiveRecord::Base
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :effort_unit, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
 
     has_many :module_projects, :dependent => :destroy
 

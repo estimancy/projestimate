@@ -1,4 +1,4 @@
-#encoding: utf-8
+# encoding: UTF-8
 #############################################################################
 #
 # Estimancy, Open Source project estimation web application
@@ -19,22 +19,8 @@
 #
 #############################################################################
 
-class WbsActivityRatioElement < ActiveRecord::Base
-  attr_accessible :ratio_value,:simple_reference, :multiple_references, :wbs_activity_ratio_id, :record_status_id, :custom_value, :change_comment, :wbs_activity_element_id
-  ###include MasterDataHelper
-
-  belongs_to :wbs_activity_ratio
-  belongs_to :wbs_activity_element
-
-  belongs_to :record_status
-  belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
-
-  has_many :wbs_activity_ratio_profiles, dependent: :delete_all
-  has_many :organization_profiles, through: :wbs_activity_ratio_profiles
-
-  #Enable the amoeba gem for deep copy/clone (dup with associations)
-  amoeba do
-    enable
-    include_association [:wbs_activity_ratio_profiles]
+module Operation
+  class Engine < ::Rails::Engine
+    isolate_namespace Operation
   end
 end

@@ -73,4 +73,8 @@ class WbsActivity < ActiveRecord::Base
     end
   end
 
+  def root_element
+    self.wbs_activity_elements.select{|i| i.is_root == true }.first
+  end
+
 end

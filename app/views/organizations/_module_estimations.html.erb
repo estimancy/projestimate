@@ -7,7 +7,6 @@
     <li><a href="#conversion" data-toggle="tab">Conversion</a></li>
     <li><a href="#expert" data-toggle="tab">Jugement d'Expert</a></li>
     <li><a href="#taille_by_group" data-toggle="tab">Taille par groupe</a></li>
-    <li><a href="#kb" data-toggle="tab">Base de connaissance</a></li>
   </ul>
 
   <div id="taille">
@@ -49,74 +48,117 @@
   </div>
 
   <div id="effort">
-    <b>Module d'Effort Générique</b>
+    <div class="row-fluid">
+      <div class="span4">
+        <b>Module d'opération</b>
 
-    <% if can? :show_modules_instances, ModuleProject %>
-      <% if can? :manage_modules_instances, ModuleProject %>
-          <%= link_to I18n.t(:new_instance_of_effort), ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
-      <% end %>
+        <% if can? :show_modules_instances, ModuleProject %>
+          <% if can? :manage_modules_instances, ModuleProject %>
+            <%= link_to I18n.t(:new_instance_of_effort), operation.new_operation_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+            <hr>
+          <% end %>
 
-      <table class="table table-bordered">
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th class="action"><%= I18n.t(:actions) %></th>
-        </tr>
+          <table class="table table-bordered">
+            <tr>
+              <th><%= I18n.t(:name) %></th>
+              <th class="action"><%= I18n.t(:actions) %></th>
+            </tr>
 
-        <% @organization.ge_models.each do |i| %>
-          <tr>
-            <td class="span5">
-              <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
-            </td>
-            <td class="align-center">
-              <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
-              <%= link_to '', ge.ge_model_duplicate_path(i, organization_id: @organization.id), :class => 'fa fa-copy', :title => I18n.t(:duplicate_module), method: "post" %>
-              <% if can? :manage_modules_instances, ModuleProject %>
-                <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'ge_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
-                <%= link_to '', ge.ge_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
-              <% end %>
-            </td>
-          </tr>
+            <% @organization.operation_models.each do |i| %>
+              <tr>
+                <td class="span5">
+                  <%= link_to i.name, operation.edit_operation_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="align-center">
+                  <%= link_to '', operation.edit_operation_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
+                  <%= link_to '', operation.operation_model_duplicate_path(i, organization_id: @organization.id), :class => 'fa fa-copy', :title => I18n.t(:duplicate_module), method: "post" %>
+                  <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'operation_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
+                    <%= link_to '', operation.operation_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
         <% end %>
-      </table>
-    <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
-    <% end %>
-  </div>
-
-  <div id="kb">
-    <b>Base de connaissance</b>
-
-    <% if can? :show_modules_instances, ModuleProject %>
-      <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to I18n.t(:New_knowledge_base), kb.new_kb_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
-      <% end %>
-
-      <table class="table table-bordered">
-        <tr>
-          <th><%= I18n.t(:name) %></th>
-          <th class="action"><%= I18n.t(:actions) %></th>
-        </tr>
-
-        <% @organization.kb_models.each do |i| %>
-          <tr>
-            <td class="span5">
-              <%= link_to i.name, kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
-            </td>
-            <td class="align-center">
-              <%= link_to '', kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
-              <% if can? :manage_modules_instances, ModuleProject %>
-                <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'kb_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
-                <%= link_to '', kb.kb_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
-    <% else %>
-      <div class="red_color">
-        <%= I18n.t(:notice_cannot_view_modules_instances) %>
       </div>
-    <% end %>
+
+      <div class="span4">
+        <b>Module d'Effort Générique</b>
+
+        <% if can? :show_modules_instances, ModuleProject %>
+          <% if can? :manage_modules_instances, ModuleProject %>
+            <%= link_to I18n.t(:new_instance_of_effort), ge.new_ge_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+            <hr>
+          <% end %>
+
+          <table class="table table-bordered">
+            <tr>
+              <th><%= I18n.t(:name) %></th>
+              <th class="action"><%= I18n.t(:actions) %></th>
+            </tr>
+
+            <% @organization.ge_models.each do |i| %>
+              <tr>
+                <td class="span5">
+                  <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="align-center">
+                  <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
+                  <%= link_to '', ge.ge_model_duplicate_path(i, organization_id: @organization.id), :class => 'fa fa-copy', :title => I18n.t(:duplicate_module), method: "post" %>
+                  <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'ge_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
+                    <%= link_to '', ge.ge_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <div class="red_color"><%= I18n.t(:notice_cannot_view_modules_instances) %></div>
+        <% end %>
+      </div>
+
+      <div class="span4">
+
+        <b>Base de connaissance</b>
+
+        <% if can? :show_modules_instances, ModuleProject %>
+          <% if can? :manage_modules_instances, ModuleProject %>
+            <%= link_to I18n.t(:New_knowledge_base), kb.new_kb_model_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
+            <hr>
+        <% end %>
+
+          <table class="table table-bordered">
+            <tr>
+              <th><%= I18n.t(:name) %></th>
+              <th class="action"><%= I18n.t(:actions) %></th>
+            </tr>
+
+            <% @organization.kb_models.each do |i| %>
+              <tr>
+                <td class="span5">
+                  <%= link_to i.name, kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="align-center">
+                  <%= link_to '', kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
+                  <% if can? :manage_modules_instances, ModuleProject %>
+                    <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'kb_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
+                    <%= link_to '', kb.kb_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <div class="red_color">
+            <%= I18n.t(:notice_cannot_view_modules_instances) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 
   <div id="activite">
@@ -271,4 +313,5 @@
     <b>Modèle d'Unité d'Oeuvre par groupe (1 niveau)</b>
     <%= render :partial => 'organizations/technology_uow_synthesis' %>
   </div>
+
 </div>

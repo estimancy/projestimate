@@ -25,6 +25,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   include ModuleProjectsHelper
 
   def new
+    set_page_title "Toto"
     @guw_unit_of_work = Guw::GuwUnitOfWork.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
   end
