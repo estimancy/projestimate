@@ -26,6 +26,7 @@ class UnitOfWorksController < ApplicationController
   def index
     authorize! :show_unit_of_works, UnitOfWork
 
+    set_page_title 'Unite of work'
     @organization = Organization.find(params[:organization_id])
     @unit_of_works = @organization.unit_of_works
   end
