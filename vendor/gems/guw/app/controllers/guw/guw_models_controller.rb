@@ -62,21 +62,19 @@ class Guw::GuwModelsController < ApplicationController
     elsif route_flag == 5
       message <<  I18n.t(:route_flag_error_5)
    elsif route_flag == 6
-      message <<  I18n.t(:route_flag_error_6) +index
+      message <<  I18n.t(:route_flag_error_6, ind: index)
     elsif route_flag == 7
       message << I18n.t(:route_flag_error_7)
     end
-    if route_flag >= 1
-      if route_flag == 7 || route_flag == 6
+      if route_flag == 7 || route_flag == 6 || route_flag == 0
         redirect_to "/organizations/#{@current_organization.id}/module_estimation"
       else
         redirect_to :back
       end
-      flash[:error] = message.join(" ")
-    end
-    if route_flag == 0 || route_flag == 4
-      redirect_to "/organizations/#{@current_organization.id}/module_estimation"
+    if route_flag == 0
       flash[:notice] = I18n.t(:importation_success)
+    else
+      flash[:error] = message.join(" ")
     end
   end
 
@@ -338,6 +336,11 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.change_row_height(1,deter_size(@guw_model.description) * 13)
     worksheet.change_column_width(0, 38)
     worksheet.change_column_width(1, the_most_largest(@guw_model.description))
+    worksheet.add_cell(4, 0, I18n.t(:advice))
+    worksheet.sheet_data[4][0].change_font_bold(true)
+    worksheet.merge_cells(4, 0, 4, 1)
+    worksheet.change_row_height(4, 25)
+
 
     worksheet = workbook[1]
     worksheet.add_cell(0, 0, I18n.t(:pe_attribute_name))
@@ -496,6 +499,7 @@ class Guw::GuwModelsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
+    set_page_title 'New UO model'
   end
 
   def edit
@@ -503,6 +507,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
+    set_page_title "Edit #{@guw_model.organization}"
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 

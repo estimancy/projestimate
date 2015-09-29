@@ -34,7 +34,7 @@ class OrganizationTechnologiesController < ApplicationController
 
     @organization_technology = OrganizationTechnology.find(params[:id])
     @organization = @organization_technology.organization
-
+    set_page_title 'Edit Technology'
   end
 
   def new
@@ -42,6 +42,7 @@ class OrganizationTechnologiesController < ApplicationController
 
     @organization_technology = OrganizationTechnology.new
     @organization = Organization.find_by_id(params[:organization_id])
+    set_page_title 'New Technology'
   end
 
   def create

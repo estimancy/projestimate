@@ -34,6 +34,8 @@ class Ge::GeModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @ge_model = Ge::GeModel.new
+    set_page_title 'New instance of effort'
+
   end
 
   def edit
@@ -41,7 +43,7 @@ class Ge::GeModelsController < ApplicationController
 
     @ge_model = Ge::GeModel.find(params[:id])
     @organization = @ge_model.organization
-
+    set_page_title 'Edit Effort standard '
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
   end
 

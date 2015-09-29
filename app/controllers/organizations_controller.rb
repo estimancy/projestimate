@@ -172,7 +172,6 @@ class OrganizationsController < ApplicationController
     @organization_profiles = @organization.organization_profiles
 
     @organization_group = @organization.groups
-
     @estimation_models = @organization.projects.where(:is_model => true)
   end
 

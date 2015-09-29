@@ -29,6 +29,8 @@ class CurrenciesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
     @currencies = Currency.all
+    set_page_title 'Currencies'
+
   end
 
   # GET /currencies/new

@@ -36,11 +36,13 @@ class ExpertJudgement::InstancesController < ApplicationController
     authorize! :manage_modules_instances, ModuleProject
 
     @instance = ExpertJudgement::Instance.new
+    set_page_title 'New model of Judgment Expert'
   end
 
   def edit
     authorize! :show_modules_instances, ModuleProject
 
+    set_page_title 'Edit model of Judgment Expert'
     @instance = ExpertJudgement::Instance.find(params[:id])
   end
 

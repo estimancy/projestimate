@@ -28,6 +28,7 @@ class RecordStatusesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
+    set_page_title 'Record Status'
     @record_statuses = RecordStatus.all
 
     respond_to do |format|
@@ -49,6 +50,8 @@ class RecordStatusesController < ApplicationController
 
   def new
     authorize! :manage_master_data, :all
+
+    set_page_title 'New Record Status'
 
     @record_status = RecordStatus.new
 

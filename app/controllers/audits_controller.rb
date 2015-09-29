@@ -24,7 +24,7 @@ class AuditsController < ApplicationController
 
   def index
     @audits = Audit.all
-
+    set_page_title 'Audit'
     #@audits = Audit.filter(:params => params, :filter => :audit_filter)
     #@wf_filter = WillFilter::Filter.deserialize_from_params(params)
   end

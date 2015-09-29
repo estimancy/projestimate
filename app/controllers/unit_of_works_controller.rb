@@ -35,6 +35,7 @@ class UnitOfWorksController < ApplicationController
 
     @unit_of_work = UnitOfWork.find(params[:id])
     @organization = @unit_of_work.organization
+    set_page_title 'Edit Units Of Work'
   end
 
   def new

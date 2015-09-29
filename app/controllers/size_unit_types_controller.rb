@@ -38,6 +38,7 @@ class SizeUnitTypesController < ApplicationController
 
     @size_unit_type = SizeUnitType.new
     @organization = Organization.find(params[:organization_id])
+    set_page_title 'New size unit type'
   end
 
   def edit

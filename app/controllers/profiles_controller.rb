@@ -32,6 +32,7 @@ class ProfilesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @profiles = Profile.all
+    set_page_title 'Profiles'
   end
 
   # GET /profiles/new
