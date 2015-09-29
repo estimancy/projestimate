@@ -42,6 +42,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     @organization_uow_complexity = OrganizationUowComplexity.find(params[:id])
     @organization = Organization.find(params[:organization_id])
 
+    set_page_title 'Edit Complexity'
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization_uow_complexity.name => ""
   end
 
@@ -51,6 +52,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     @organization_uow_complexity = OrganizationUowComplexity.new
 
     set_breadcrumbs "Organizations" => "/organizationals_params", "New Complexity" => ""
+    set_page_title 'Complexity values used within Factor'
   end
 
   def create
