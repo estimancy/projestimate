@@ -12,7 +12,7 @@
       <%= simple_form_for(@wbs_activity) do |f| %>
         <%= f.error_notification %>
 
-        <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization_id } %>
+        <%= f.input :organization_id, as: :hidden, :input_html => { value: @current_organization } %>
         <% if controller.action_name == 'edit' and @wbs_activity.retired? %>
           <%= f.input :state, :label => I18n.t('state'), :as => :select, :collection => WbsActivity.aasm.states_for_select, :input_html => {:class => 'input-xxlarge'} %>
         <% else %>
@@ -22,7 +22,6 @@
           <%= f.input :enabled_input, label: "Modification des valeurs d'entrées" %>
           <%= f.input :effort_unit, :label => "Libellé de l'unité d'effort du module" %>
           <%= f.input :effort_unit_coefficient, :label => "Coefficient de conversion en effort standard" %>
-
         <% end %>
 
         <% if can? :manage_modules_instances, ModuleProject %>
@@ -34,7 +33,7 @@
           <% end %>
         <% end %>
 
-        <%= link_to I18n.t('back'), organization_module_estimation_path(@organization_id, anchor: "activite"), :class => 'btn back' %>
+        <%= link_to I18n.t('back'), organization_module_estimation_path(@current_organization, anchor: "activite"), :class => 'btn back' %>
       <% end %>
     </div>
 
