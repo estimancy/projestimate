@@ -926,6 +926,10 @@ class OrganizationsController < ApplicationController
 
     @size_units = SizeUnit.all
     @factors = Factor.order("factor_type")
+
+    if @organizations.size == 1
+      redirect_to organization_estimations_path(@organizations.first)
+    end
   end
 
   def export
