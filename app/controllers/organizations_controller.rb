@@ -203,7 +203,7 @@ class OrganizationsController < ApplicationController
 
   def estimations
     @organization = Organization.find(params[:organization_id])
-    # check_if_organization_is_image(@organization)
+    check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
     set_page_title "Estimations - #{@organization}"
@@ -926,10 +926,6 @@ class OrganizationsController < ApplicationController
 
     @size_units = SizeUnit.all
     @factors = Factor.order("factor_type")
-
-    if @organizations.size == 1 and @organizations.first.is_image_organization == false
-      redirect_to organization_estimations_path(@organizations.first) and return
-    end
   end
 
   def export

@@ -691,7 +691,12 @@ class ProjectsController < ApplicationController
 
     @organization = @project.organization
 
-    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    status_comment_link = ""
+    if can_alter_estimation?(@project) && ( can?(:alter_estimation_status, @project) || can?(:alter_project_status_comment, @project))
+      status_comment_link = "#{main_app.add_comment_on_status_change_path(:project_id => @project.id)}"
+    end
+    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => status_comment_link
+    # set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
@@ -2740,7 +2745,7 @@ public
       flash[:error] = I18n.t('errors.messages.not_saved')
     end
 
-    redirect_to :back
+    redirect_to organization_estimations_path(@current_organization)
   end
 
   # Display comments about estimation status changes
