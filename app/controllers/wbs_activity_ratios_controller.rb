@@ -74,7 +74,11 @@ class WbsActivityRatiosController < ApplicationController
     #end
 
     if @wbs_activity_ratio.update_attributes(params[:wbs_activity_ratio])
-      redirect_to redirect_apply(edit_wbs_activity_ratio_path(@wbs_activity_ratio,:activity_id=>@wbs_activity_ratio.wbs_activity_id), nil, edit_wbs_activity_path(@wbs_activity_ratio.wbs_activity, :anchor => 'tabs-3'))
+      redirect_to redirect_apply(edit_wbs_activity_ratio_path(@wbs_activity_ratio,
+                                                              activity_id: @wbs_activity_ratio.wbs_activity_id),
+                                 new_wbs_activity_path(activity_id: @wbs_activity_ratio.wbs_activity_id),
+                                 edit_wbs_activity_path(@wbs_activity_ratio.wbs_activity, :anchor => 'tabs-3')
+                  )
     else
       @activity_id = @wbs_activity_ratio.wbs_activity_id
       render :edit
