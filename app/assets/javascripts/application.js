@@ -14,3 +14,4 @@
 //= require highcharts
 //= require_self
 //= require_tree .
+//= require cookies_eu

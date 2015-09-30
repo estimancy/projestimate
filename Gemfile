@@ -4,6 +4,7 @@ gem 'rails', '3.2.22'
 gem 'jquery-rails', '~> 2.0.2'
 gem 'i18n', '~> 0.6.0'
 gem 'builder', '3.0.0'
+gem 'cookies_eu'
 
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', :require => 'bcrypt'
