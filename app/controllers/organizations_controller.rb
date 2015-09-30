@@ -203,7 +203,7 @@ class OrganizationsController < ApplicationController
 
   def estimations
     @organization = Organization.find(params[:organization_id])
-    check_if_organization_is_image(@organization)
+    # check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
     set_page_title "Estimations - #{@organization}"
