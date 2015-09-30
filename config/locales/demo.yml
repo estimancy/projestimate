@@ -1,4 +1,4 @@
-fr:
+demo:
   #standard local format
   # Text direction: Left-to-Right (ltr) or Right-to-Left (rtl)
   direction: ltr
