@@ -928,7 +928,7 @@ class OrganizationsController < ApplicationController
     @factors = Factor.order("factor_type")
 
     if @organizations.size == 1 and @organizations.first.is_image_organization == false
-      redirect_to organization_estimations_path(@organizations.first)
+      redirect_to organization_estimations_path(@organizations.first) and return
     end
   end
 
