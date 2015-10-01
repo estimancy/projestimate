@@ -26,20 +26,24 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
           <th>
             Module
           </th>
-          <th>
-            Effort en entrée
-          </th>
+          <% ["low", "most_likely", "high"].each do |level| %>
+            <th>
+              Effort en entrée <%= level %>
+            </th>
+          <% end %>
         </tr>
         <% @elements.each do |mp, val| %>
           <tr>
             <td><%= mp %></td>
-            <td>
-              <% begin %>
-                <%= val.round(2) %>
-              <% rescue %>
-                <%= val[mp.wbs_activity.root_element.id][:value] %>
-              <% end %>
-            </td>
+            <% ["low", "most_likely", "high"].each do |level| %>
+              <td>
+                <% begin %>
+                  <%= val.round(2) %>
+                <% rescue %>
+                  <%= val[mp.wbs_activity.root_element.id][:value] %>
+                <% end %>
+              </td>
+            <% end %>
           </tr>
         <% end %>
         <tr>
@@ -54,8 +58,9 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
             <% elsif @operation_model.operation_type == "moyenne" %>
               <% res = @elements.values.sum / @elements.values.size %>
             <% end %>
-
-            <%= text_field_tag "effort_most_likely", res.round(2), class: "input-small", readonly: (!@operation_model.enabled_input || cannot?(:alter_estimation_plan, @project))  %>
+            <% ["low", "most_likely", "high"].each do |level| %>
+              <%= text_field_tag "effort_#{level}", res.round(2), class: "input-small", readonly: (!@operation_model.enabled_input || cannot?(:alter_estimation_plan, @project))  %>
+            <% end %>
           </td>
         </tr>
       </table>
