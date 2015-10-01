@@ -302,8 +302,19 @@ class ViewsWidgetsController < ApplicationController
   def export_vignette
     workbook = RubyXL::Workbook.new
     widget = ViewsWidget.find(params[:view_widget_id])
-   # @project = current_project
+    ind_x = 4
+    ind_y = 1
+    @project
     worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, "Projet")
+
+    worksheet.add_cell(0, 1, "Version")
+
+    worksheet.add_cell(0, 2, "Date")
+
+    worksheet.add_cell(0, 3, "Produit")
+#    worksheet.add_cell(1, 3, @project)
 
     if widget.widget_type == "table_effort_per_phase"
       worksheet.add_cell(0, 0, I18n.t(:phases))
@@ -315,39 +326,34 @@ class ViewsWidgetsController < ApplicationController
         worksheet.add_cell(index + 1, 2, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
       end
     elsif widget.widget_type == "effort_per_phases_profiles_table"
-      worksheet.add_cell(0, 0, I18n.t(:phases))
-      worksheet.add_cell(0, 1, I18n.t(:profile))
+      worksheet.add_cell(0, 4, I18n.t(:phases))
+      worksheet.add_cell(0, 5, I18n.t(:profile))
+      worksheet.add_cell(0, 6, "Effort")
 
       attribute = widget.pe_attribute
       activity = widget.module_project.wbs_activity
+      ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first.wbs_activity_ratio
+      activity.wbs_activity_elements.each do |element|
 
-      ratio = WbsActivityInput.where(wbs_activity_id: activity.id,
-                                     module_project_id: current_module_project.id).first.wbs_activity_ratio
+        #worksheet.add_cell(ind_y, 4, element.name)
+        #element.wbs_activity_ratio_elements.each do |ware|
+         # ratio.wbs_activity_ratio_profiles.each do |profil|
+            worksheet.add_cell(ind_y, 0, @project.title)
+            worksheet.add_cell(ind_y, 1, @project.version)
+            worksheet.add_cell(ind_y, 2, @project.start_date)
+            worksheet.add_cell(ind_y, 3, current_component)
+            worksheet.add_cell(ind_y, 4, element.name)
+          #  worksheet.add_cell(ind_y, 5, profil.organization_profile.name)
+            #worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.organization_profile.id}"]["ratio_id_#{ratio.id}"][:value])
+           # ind_y += 1
+         # end
+          ind_y += 1
+        #end
 
-      activity.wbs_activity_elements.each_with_index do |element, index|
-
-        element.wbs_activity_ratio_elements.each do |ware|
-
-          ratio_profiles = ratio.wbs_activity_ratio_profiles.where(wbs_activity_ratio_element_id: ware.id)
-
-          worksheet.add_cell(index + 2, 0 ,  element.name)
-
-          ratio_profiles.each_with_index do |profil, index_2|
-            #Nom du profil
-            worksheet.add_cell(1, index_2 + 1, profil.organization_profile.name)
-
-            begin
-            #Value du couple profile/element
-              worksheet.add_cell(index + 2, index_2 + 1, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.organization_profile.id}"]["ratio_id_#{ratio.id}"][:value])
-            rescue
-              worksheet.add_cell(index + 2, index_2 + 1, "!")
-            end
-
-          end
-        end
       end
+
     end
-    send_data(workbook.stream.string, filename: "#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
 end
