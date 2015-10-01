@@ -312,14 +312,13 @@ class ViewsWidgetsController < ApplicationController
     worksheet.add_cell(0, 1, I18n.t(:version))
     worksheet.add_cell(0, 2, I18n.t(:start_date))
     worksheet.add_cell(0, 3, I18n.t(:Product_Name))
-
     worksheet.change_column_width(0, @project.title.to_s.length < I18n.t(:Project_name).length ? I18n.t(:Project_name).length : @project.title.to_s.length)
     worksheet.change_column_width(1, @project.version.to_s.length < I18n.t(:version).length ? I18n.t(:version).length : @project.version.to_s.length)
     worksheet.change_column_width(2, I18n.t(:start_date).length)
     worksheet.change_column_width(3, current_component.to_s.length < I18n.t(:Product_Name).length ? I18n.t(:Product_Name).length : current_component.to_s.length)
+    worksheet.add_cell(0, 4, I18n.t(:phases))
 
     if widget.widget_type == "table_effort_per_phase"
-      worksheet.add_cell(0, 4, I18n.t(:phases))
       worksheet.add_cell(0, 5, I18n.t(:effort_import))
       worksheet.add_cell(0, 6, I18n.t(:unit_value))
       widget.module_project.wbs_activity.wbs_activity_elements.each  do |element|
@@ -335,11 +334,9 @@ class ViewsWidgetsController < ApplicationController
         ind_y += 1
       end
     elsif widget.widget_type == "effort_per_phases_profiles_table"
-      worksheet.add_cell(0, 4, I18n.t(:phases))
       worksheet.add_cell(0, 5, I18n.t(:profile))
       worksheet.add_cell(0, 6, I18n.t(:effort_import))
       worksheet.add_cell(0, 7, I18n.t(:unit_value))
-
       attribute = widget.pe_attribute
       activity = widget.module_project.wbs_activity
       ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first.wbs_activity_ratio
@@ -361,9 +358,7 @@ class ViewsWidgetsController < ApplicationController
             ind_y += 1
          end
         end
-
       end
-
     end
     send_data(workbook.stream.string, filename: "widget_#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
