@@ -304,37 +304,48 @@ class ViewsWidgetsController < ApplicationController
     widget = ViewsWidget.find(params[:view_widget_id])
     ind_x = 4
     ind_y = 1
-    @project
+    my_len = I18n.t(:profile).length
+    my_len_2 = I18n.t(:phases).length
     worksheet = workbook[0]
 
-    worksheet.add_cell(0, 0, "Projet")
+    worksheet.add_cell(0, 0, I18n.t(:Project_name))
+    worksheet.add_cell(0, 1, I18n.t(:version))
+    worksheet.add_cell(0, 2, I18n.t(:start_date))
+    worksheet.add_cell(0, 3, I18n.t(:Product_Name))
 
-    worksheet.add_cell(0, 1, "Version")
-
-    worksheet.add_cell(0, 2, "Date")
-
-    worksheet.add_cell(0, 3, "Produit")
-#    worksheet.add_cell(1, 3, @project)
+    worksheet.change_column_width(0, @project.title.to_s.length < I18n.t(:Project_name).length ? I18n.t(:Project_name).length : @project.title.to_s.length)
+    worksheet.change_column_width(1, @project.version.to_s.length < I18n.t(:version).length ? I18n.t(:version).length : @project.version.to_s.length)
+    worksheet.change_column_width(2, I18n.t(:start_date).length)
+    worksheet.change_column_width(3, current_component.to_s.length < I18n.t(:Product_Name).length ? I18n.t(:Product_Name).length : current_component.to_s.length)
 
     if widget.widget_type == "table_effort_per_phase"
-      worksheet.add_cell(0, 0, I18n.t(:phases))
-      worksheet.add_cell(0, 1, I18n.t(:effort_import))
-      worksheet.add_cell(0, 2, I18n.t(:unit_value))
-      widget.module_project.wbs_activity.wbs_activity_elements.each_with_index  do |element, index|
-        worksheet.add_cell(index + 1, 0 ,  element.name)
-        worksheet.add_cell(index + 1, 1, convert(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
-        worksheet.add_cell(index + 1, 2, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+      worksheet.add_cell(0, 4, I18n.t(:phases))
+      worksheet.add_cell(0, 5, I18n.t(:effort_import))
+      worksheet.add_cell(0, 6, I18n.t(:unit_value))
+      widget.module_project.wbs_activity.wbs_activity_elements.each  do |element|
+        worksheet.add_cell(ind_y, 0, @project.title)
+        worksheet.add_cell(ind_y, 1, @project.version)
+        worksheet.add_cell(ind_y, 2, @project.start_date)
+        worksheet.add_cell(ind_y, 3, current_component)
+        worksheet.add_cell(ind_y, 4, element.name)
+        my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
+        worksheet.change_column_width(4, my_len_2)
+        worksheet.add_cell(ind_y, 5, convert(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+        worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+        ind_y += 1
       end
     elsif widget.widget_type == "effort_per_phases_profiles_table"
       worksheet.add_cell(0, 4, I18n.t(:phases))
       worksheet.add_cell(0, 5, I18n.t(:profile))
-      worksheet.add_cell(0, 6, "Effort")
+      worksheet.add_cell(0, 6, I18n.t(:effort_import))
+      worksheet.add_cell(0, 7, I18n.t(:unit_value))
 
       attribute = widget.pe_attribute
       activity = widget.module_project.wbs_activity
       ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first.wbs_activity_ratio
       activity.wbs_activity_elements.each do |element|
-
+        my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
+        worksheet.change_column_width(4, my_len_2)
         element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
           ware.organization_profiles.each do |profil|
             worksheet.add_cell(ind_y, 0, @project.title)
@@ -343,15 +354,18 @@ class ViewsWidgetsController < ApplicationController
             worksheet.add_cell(ind_y, 3, current_component)
             worksheet.add_cell(ind_y, 4, element.name)
             worksheet.add_cell(ind_y, 5, profil.name)
+            my_len = profil.name.length < my_len ? my_len : profil.name.length
+            worksheet.change_column_width(5, my_len)
             worksheet.add_cell(ind_y, 6, convert(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], @current_organization))
-           ind_y += 1
+            worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+            ind_y += 1
          end
         end
 
       end
 
     end
-    send_data(workbook.stream.string, filename: "#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "widget_#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
 end

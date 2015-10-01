@@ -1566,6 +1566,7 @@ fr:
   attribute_description: "Atribut description"
   export_vignette: "exporter la vignette \"%{value}\""
   effort_import: "effort"
+  version: "version"
   unit_value: "unité"
   profile: "Profil"
   UO_type_complexity: "Seuils de complexité de lUO"
