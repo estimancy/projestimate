@@ -335,20 +335,18 @@ class ViewsWidgetsController < ApplicationController
       ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first.wbs_activity_ratio
       activity.wbs_activity_elements.each do |element|
 
-        #worksheet.add_cell(ind_y, 4, element.name)
-        #element.wbs_activity_ratio_elements.each do |ware|
-         # ratio.wbs_activity_ratio_profiles.each do |profil|
+        element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
+          ware.organization_profiles.each do |profil|
             worksheet.add_cell(ind_y, 0, @project.title)
             worksheet.add_cell(ind_y, 1, @project.version)
             worksheet.add_cell(ind_y, 2, @project.start_date)
             worksheet.add_cell(ind_y, 3, current_component)
             worksheet.add_cell(ind_y, 4, element.name)
-          #  worksheet.add_cell(ind_y, 5, profil.organization_profile.name)
-            #worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.organization_profile.id}"]["ratio_id_#{ratio.id}"][:value])
-           # ind_y += 1
-         # end
-          ind_y += 1
-        #end
+            worksheet.add_cell(ind_y, 5, profil.name)
+            worksheet.add_cell(ind_y, 6, convert(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], @current_organization))
+           ind_y += 1
+         end
+        end
 
       end
 

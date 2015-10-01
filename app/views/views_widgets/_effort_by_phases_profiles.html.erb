@@ -63,9 +63,9 @@
                             <% end %>
                           <% end %>
                           <td style="text-align: right">
-                            <% begin %>
-                              <%= "#{convert(wbs_probable_value[:value], @current_organization)}" %>
-                            <% rescue %>
+                            <% if wbs_activity_elt.is_root? %>
+                              <%# "#{convert_with_precision(convert(wbs_probable_value[:value], @current_organization), 2)}" %>
+                            <% else %>
                               <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision)}" %>
                             <% end %>
                           </td>
