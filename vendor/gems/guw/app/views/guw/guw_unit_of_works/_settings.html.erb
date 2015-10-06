@@ -7,6 +7,10 @@
       <%= link_to "Gérer les groupes", guw.guw_model_guw_unit_of_work_groups_path(@guw_model), class: "btn btn-mini input-small" %>
     <% end %>
     <%= link_to "Exporter", guw.guw_model_export_path(@guw_model), class: "btn btn-mini input-small", method: "post" %>
+    <a href="#import_myexport" role="button" class="btn btn-mini input-small" title="Import UW from excel" data-toggle="modal">
+      Importer
+    </a>
+
   </div>
 
   <div class="pull-right">
@@ -61,7 +65,6 @@
   <hr>
 
   <div class="accordion" id="accordion">
-
   <% if @unit_of_work_groups.empty? %>
     <% if can? :execute_estimation_plan, @project %>
       <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini pull-left button_margin_right" %>
@@ -145,7 +148,7 @@
             <th class=""><%= I18n.t :actions %></th>
           </tr>
 
-          <% uowg.guw_unit_of_works.order("display_order ASC").each_with_index do |guow, i| %>
+         <% uowg.guw_unit_of_works.order("display_order ASC").each_with_index do |guow, i| %>
             <tr>
 
               <td style="border-left: 3px solid <%= (guow.flagged == true) ? 'red' : 'green' %>"></td>
@@ -285,6 +288,7 @@
           <% end %>
         </table>
       </div>
+
       <% if can? :execute_estimation_plan, @project %>
         <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini input-medium pull-left button_margin_right" %>
         <% unless @unit_of_work_groups.empty? %>
@@ -297,6 +301,27 @@
   <% end %>
   </div>
 <% end %>
+
+
+<div id="import_myexport" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= form_tag guw.import_myexport_path, :method => 'post', :multipart => true, :class => 'simple_form' do %>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel"> import de donnée d'une unité d'oeuvre</h3>
+    </div>
+    <div class="modal-body">
+      <!--<p>description de se que fait l'action peut etre ?</p>-->
+      <%= file_field_tag :file %>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+    </div>
+    <div class="loading span11 hide">
+      <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %></h4>
+    </div>
+  <% end %>
+</div>
 
 <script>
   function raz(group){
