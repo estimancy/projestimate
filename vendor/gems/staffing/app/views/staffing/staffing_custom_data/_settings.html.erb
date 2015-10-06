@@ -23,24 +23,28 @@
    previous_activity = current_module_project.previous.first.wbs_activity
    attribute = PeAttribute.find_by_alias("effort")
    unless previous_activity.nil?
-     previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
      begin
        ev = EstimationValue.where(:pe_attribute_id => attribute.id,
                                            :module_project_id => current_module_project.previous.first,
-                                           :in_out => "output").first.string_data_probable[current_component.id][previous_activity_root.id][:value]
+                                           :in_out => "output").first
      rescue
        ev = nil
      end
    else
      ev = EstimationValue.where(:pe_attribute_id => attribute.id,
-                                    :module_project_id => current_module_project.previous.first,
-                                    :in_out => "output").first.string_data_probable[current_component.id]
+                                    :module_project_id => current_module_project.id,
+                                    :in_out => "input").first
    end
 
    if ev.nil?
      effort = 0
    else
-     effort = ev / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
+     begin
+       previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
+       effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
+     rescue
+       effort = ev.string_data_probable[current_component.id]
+     end
    end
 %>
 
