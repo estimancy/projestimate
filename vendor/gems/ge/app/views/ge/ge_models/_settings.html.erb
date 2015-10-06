@@ -8,11 +8,11 @@
   <div class="row-fluid">
     <div class="span6">
 
-        <h4>
-          <b>
-            Taille en entrée (en <%= @ge_model.size_unit %>)
-          </b>
-        </h4>
+      <h4>
+        <b>
+          Taille en entrée (en <%= @ge_model.size_unit %>)
+        </b>
+      </h4>
 
       <% attr = PeAttribute.find_by_alias("retained_size") %>
       <% previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,

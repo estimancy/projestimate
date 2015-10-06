@@ -26,55 +26,52 @@
             <% referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles %>
 
             <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
+              <% unless wbs_activity_elt.is_root? %>
                 <% wbs_activity_elt_id = wbs_activity_elt.id %>
-                <% profile_ratio_percentage = "" %>
+                  <% profile_ratio_percentage = "" %>
 
-                <% wbs_probable_value = estimation_pbs_probable_results[wbs_activity_elt.id] %>
-                <% unless wbs_probable_value.nil? %>
-                    <!-- Get the profile ratio percentage -->
-                    <% unless wbs_activity_elt_id.nil?
-                         wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
-                    end %>
-                    <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
-                    <tr>
-                      <td><span style="float: left; margin-left:<%=wbs_activity_elt.depth%>em"> <%= wbs_activity_elt.name %> </span></td>
-                      <!--<td style="text-align: right">-->
-                        <!--<%# begin %>-->
-                          <!--<%# (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)} #{current_module_project.wbs_activity.effort_unit}" %>-->
-                        <!--<%# rescue %>-->
-                          <!--<%# (wbs_activity_elt.is_root? || wbs_probable_value[:value].nil?) ? "-" : "#{convert_with_precision(wbs_probable_value[:value], user_number_precision)}" %>-->
-                        <!--<%# end %>-->
-                      <!--</td>-->
+                  <% wbs_probable_value = estimation_pbs_probable_results[wbs_activity_elt.id] %>
+                  <% unless wbs_probable_value.nil? %>
+                      <!-- Get the profile ratio percentage -->
+                      <% unless wbs_activity_elt_id.nil?
+                           wbs_activity_ratio_elt = WbsActivityRatioElement.where('wbs_activity_ratio_id = ? and wbs_activity_element_id = ?', ratio_reference.id, wbs_activity_elt_id).first
+                      end %>
+                      <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
+                      <tr>
 
-                      <% if project_organization_profiles.length > 0 %>
-                        <% project_organization_profiles.each do |profile| %>
-                          <!-- Get the percentage of profile -->
-                          <% if !wbs_activity_ratio_elt.nil?
-                               # get the wbs_activity_ratio_profile
-                               corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
-                               # Get current profile ratio value for the referenced ratio
-                               profile_ratio_percentage = corresponding_ratio_profile.nil? ? nil : "#{corresponding_ratio_profile.ratio_value}%"
-                          end %>
+                        <td>
+                          <span style="float: left; margin-left:<%=wbs_activity_elt.depth%>em">
+                            <%= wbs_activity_elt.name %>
+                          </span>
+                        </td>
 
-                          <% wbs_profiles_value = nil %>
-                          <% unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty? || wbs_estimation_profiles_values["profile_id_#{profile.id}"].nil? %>
-                            <% if !wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil? %>
-                              <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
+                        <% if project_organization_profiles.length > 0 %>
+                          <% array_profile_sum = Array.new %>
+                          <% project_organization_profiles.each do |profile| %>
+                            <!-- Get the percentage of profile -->
+                            <% if !wbs_activity_ratio_elt.nil?
+                                 # get the wbs_activity_ratio_profile
+                                 corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
+                                 # Get current profile ratio value for the referenced ratio
+                                 profile_ratio_percentage = corresponding_ratio_profile.nil? ? nil : "#{corresponding_ratio_profile.ratio_value}%"
+                            end %>
+
+                            <% wbs_profiles_value = nil %>
+                            <% unless wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty? || wbs_estimation_profiles_values["profile_id_#{profile.id}"].nil? %>
+                              <% if !wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"].nil? %>
+                                <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value] %>
+                                <% array_profile_sum << wbs_profiles_value.to_i / 8 %>
+                              <% end %>
                             <% end %>
-                          <% end %>
-                          <td style="text-align: right">
-                            <% if wbs_activity_elt.is_root? %>
-                              <%# "#{convert_with_precision(convert(wbs_probable_value[:value], @current_organization), 2)}" %>
-                            <% else %>
+
+                            <td style="text-align: right">
                               <%= (wbs_activity_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision)}" %>
-                            <% end %>
-                          </td>
+                            </td>
+                          <% end %>
                         <% end %>
-                      <% else %>
-                        <td></td>
-                      <% end %>
-                    </tr>
-                <% end %>
+                      </tr>
+                  <% end %>
+              <% end %>
             <% end %>
         <% end %>
       </table>

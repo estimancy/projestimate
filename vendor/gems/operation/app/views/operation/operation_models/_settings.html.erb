@@ -8,34 +8,22 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
 
       <% effort = PeAttribute.find_by_alias("effort") %>
       <% @elements = Hash.new %>
-      <% current_module_project.previous.each do |mp| %>
-
-        <% elem = EstimationValue.where(module_project_id: mp.id,
-                                        pe_attribute_id: effort.id,
-                                        in_out: "output").first.string_data_probable[current_component.id] %>
-        <% if elem.is_a?(Hash) %>
-          <% @elements[mp] = elem[mp.wbs_activity.root_element.id][:value] / @operation_model.standard_unit_coefficient %>
-        <% else %>
-          <% @elements[mp] = elem / @operation_model.standard_unit_coefficient %>
-        <% end %>
-
-      <% end %>
 
       <table class="table">
         <tr>
           <th>
             Module
           </th>
-          <% ["low", "most_likely", "high"].each do |level| %>
+          <% ["low", "most_likely", "high", "probable"].each do |level| %>
             <th>
-              Effort en entrée <%= level %>
+              Effort <%= level %>
             </th>
           <% end %>
         </tr>
-        <% @elements.each do |mp, val| %>
+        <% current_module_project.previous.each do |mp| %>
           <tr>
             <td><%= mp %></td>
-            <% ["low", "most_likely", "high"].each do |level| %>
+            <% ["low", "most_likely", "high", "probable"].each do |level| %>
               <td>
                 <% begin %>
                   <%= val.round(2) %>

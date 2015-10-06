@@ -43,41 +43,51 @@
             </span>
           </p>
 
-          <h5>
-            <strong>
-              Taille
-            </strong>
-          </h5>
-          <% size_attr = PeAttribute.find_by_alias("retained_size") %>
-          <% size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
-                                                      :module_project_id => current_module_project.previous.first.id,
-                                                      :in_out => "output").first %>
+          <% if @kb_model.three_points_estimation %>
+            <% array = ["low", "most_likely", "high"] %>
+          <% else %>
+            <% array = ["most_likely"] %>
+          <% end %>
 
-          <% size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
-                                                     :module_project_id => current_module_project.id,
-                                                     :in_out => "input").first %>
+          <% array.each do |level| %>
 
-          <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id) %>
-          <%= text_field_tag "size", @size,
-                             class: "string required input-xlarge",
-                             readonly: !@kb_model.enabled_input %>
+            <h5>
+              <strong>
+                Taille <%= level %>
+              </strong>
+            </h5>
+            <% size_attr = PeAttribute.find_by_alias("retained_size") %>
+            <% size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+                                                        :module_project_id => current_module_project.previous.first.id,
+                                                        :in_out => "output").first %>
 
-          <h5>
-            <strong>
-              Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>)
-            </strong>
-          </h5>
-          <% effort_attr = PeAttribute.find_by_alias("effort") %>
-          <% effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
+            <% size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
                                                        :module_project_id => current_module_project.id,
-                                                       :in_out => "output").first %>
-          <% @effort = effort_current_ev.send("string_data_probable")[current_component.id] %>
+                                                       :in_out => "input").first %>
 
-          <span id="effort_label">
-            <%= text_field_tag "effort",
-                               @effort.nil? ? '' : (@effort.round(2) / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient)),
-                               class: "string required input-xlarge" %>
-          </span>
+            <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, level, current_component.id) %>
+            <%= text_field_tag "size", @size,
+                               class: "string required input-xlarge",
+                               readonly: !@kb_model.enabled_input %>
+
+            <h5>
+              <strong>
+                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>) <%= level %>
+              </strong>
+            </h5>
+            <% effort_attr = PeAttribute.find_by_alias("effort") %>
+            <% effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
+                                                         :module_project_id => current_module_project.id,
+                                                         :in_out => "output").first %>
+            <% @effort = effort_current_ev.send("string_data_#{level}")[current_component.id] %>
+
+            <span id="effort_label">
+              <%= text_field_tag "effort",
+                                 @effort.nil? ? '' : (@effort.round(2) / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient)),
+                                 class: "string required input-xlarge" %>
+            </span>
+          <% end %>
+
         </div>
         <div class="span9">
           <div id="scatter_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

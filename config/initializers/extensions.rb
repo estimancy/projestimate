@@ -105,3 +105,9 @@ class CustomCSV < CSV
     line
   end
 end
+
+class Integer
+  def plusplus
+    self + 1
+  end
+end

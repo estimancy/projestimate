@@ -51,7 +51,6 @@ class SessionsController < Devise::SessionsController
         else
       end
 
-
       set_flash_message(:notice, :signed_in) if is_flashing_format?
       sign_in(resource_name, resource)
       yield resource if block_given?
@@ -62,4 +61,5 @@ class SessionsController < Devise::SessionsController
       redirect_to root_url
     end
   end
+
 end
