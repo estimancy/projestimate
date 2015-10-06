@@ -293,6 +293,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
   end
 
 
+  private
   #Update estimation values
   def update_staffing_estimation_values
     @staffing_model = @module_project.staffing_model
