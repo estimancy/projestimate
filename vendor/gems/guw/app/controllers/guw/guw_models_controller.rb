@@ -589,8 +589,9 @@ class Guw::GuwModelsController < ApplicationController
           "Nom",
           "Description",
           "Type d'UO",
-          "Opération",
+          @guw_model.coefficient_label,
           "Technologie",
+          "Quantité",
           "Tracabilité",
           "Cotation",
           "Résultat",
@@ -622,6 +623,7 @@ class Guw::GuwModelsController < ApplicationController
             uow.guw_type,
             uow.guw_work_unit,
             uow.organization_technology,
+            uow.quantity,
             uow.tracking,
             cplx,
             uow.effort,
@@ -646,10 +648,93 @@ class Guw::GuwModelsController < ApplicationController
         end
       end
 
-    tmp_filename = "export-uo-#{Time.now.strftime('%d-%m-%Y')}"
-    filename = tmp_filename.gsub(" ", '-')
-    workbook.write("#{Rails.root}/public/#{filename}.xlsx")
-    redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
+    #tmp_filename = "export-uo-#{Time.now.strftime('%d-%m-%Y')}"
+    #filename = tmp_filename.gsub(" ", '-')
+    #workbook.write("#{Rails.root}/public/#{filename}.xlsx")
+    send_data(workbook.stream.string, filename: "export-uo-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+  end
+
+  def import_myexport
+    @guw_model = current_module_project.guw_model
+    @component = current_component
+    ind = 0
+    ok = false
+    tab_error = []
+
+    if !params[:file].nil? &&
+        (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      workbook = RubyXL::Parser.parse(params[:file].path)
+      worksheet =workbook[0]
+      tab = worksheet.extract_data
+
+      tab.each_with_index  do |row, index|
+        if index > 0
+          if !row[2].nil?
+            guw_uow_group = Guw::GuwUnitOfWorkGroup.where(name: row[2],
+                                                          module_project_id: current_module_project.id,
+                                                          pbs_project_element_id: @component.id,).first_or_create
+
+            my_order = Guw::GuwUnitOfWork.count('id' , :conditions => "module_project_id = #{current_module_project.id} AND pbs_project_element_id = #{@component.id} AND guw_unit_of_work_group_id = #{guw_uow_group.id}  AND guw_model_id = #{@guw_model.id}")
+
+            guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == "Oui" ? true : false,
+                                             name: row[4],
+                                             comments: row[5],
+                                             guw_unit_of_work_group_id: guw_uow_group.id,
+                                             module_project_id: current_module_project.id,
+                                             pbs_project_element_id: @component.id,
+                                             guw_model_id: @guw_model.id,
+                                             display_order: my_order,
+                                             tracking: row[10], quantity: row[9],
+                                             effort: row[12].nil? ? 0 : row[12],
+                                             ajusted_effort: row[13].nil? ? 0 : row[13])
+            @guw_model.guw_work_units.each do |wu|
+              if wu.name == row[7]
+                guw_uow.guw_work_unit_id = wu.id
+                ind += 1
+                break
+              end
+            end
+            @guw_model.guw_types.each do |type|
+              if row[6] == type.name
+                guw_uow.guw_type_id = type.id
+                if !row[11].nil? && row[11] != "-"
+                  type.guw_complexities.each do |complexity|
+                    if row[11] == complexity.name
+                      guw_uow.guw_complexity_id = complexity.id
+                      break
+                    end
+                  end
+                end
+                  type.guw_complexity_technologies.each do |techno|
+                    if row[8] == techno.organization_technology.name
+                      guw_uow.organization_technology_id = techno.organization_technology.id
+                      ind += 1
+                      break
+                    end
+                  end
+                 ind += 1
+                  break
+                end
+              end
+            if ind == 3
+              guw_uow.save
+            else
+              tab_error << index
+            end
+            ind = 0
+          end
+        end
+      end
+      ok = true
+      unless tab_error.empty?
+        flash[:error] = "ligne non importer du a des ereur dans le fichier: #{tab_error.join(", ")}"
+      end
+      flash[:notice] = "importation reussie !"
+    end
+    unless ok
+      flash[:error] = "erreur, le fichier n'est pas un fichier excel"
+    end
+    redirect_to :back
   end
 
 end

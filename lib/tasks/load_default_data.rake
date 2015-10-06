@@ -215,7 +215,7 @@ def load_data!
         AcquisitionCategory.create(:name => i[0], :description => i[1], :record_status_id => rsid)
       end
       #accategory=AcquisitionCategory.first
-      
+
     puts '   - Attributes'
       attributes = [
       ['SLOC', 'sloc', 'Kilo (1000) Source Lines Of Code.', 'float', ['float','>=', '0'], 'sum', nil],
@@ -280,13 +280,13 @@ def load_data!
     WorkElementType.create(:name => 'Purchased Miscellaneous', :alias => '$SMisc', :record_status_id => rsid)
 
     wet = WorkElementType.first
-           
+
     puts '   - Currencies'
-    # First need to fix Currency.delete_all 
+    # First need to fix Currency.delete_all
     Currency.create(:name => 'Euro', :alias => 'EUR', :description => 'TBD')
     Currency.create(:name => 'US Dollar', :alias => 'USD', :description => 'TBD')
     Currency.create(:name => 'British Pound', :alias => 'GBP', :description => 'TBD')
-    
+
     puts '   - Language...'
     #Create default language
     Language.create(:name => 'English (United States)', :locale => 'en', :record_status_id => rsid)
@@ -295,7 +295,7 @@ def load_data!
     Language.create(:name => 'Deutsch (Deutschland)', :locale => 'de', :record_status_id => rsid)
 
   puts ' Creating Admin Parameters ...'
-    
+
   puts '   - Admin setting'
     AdminSetting.create(:key => 'welcome_message', :value => 'Welcome aboard !', :record_status_id => rsid)
     AdminSetting.create(:key => 'notifications_email', :value => 'AdminEmail@domaine.com', :record_status_id => rsid)
