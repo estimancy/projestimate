@@ -73,6 +73,7 @@
       </div>
 
     </div>
+
         <div class="tabbable tabs-left">
           <ul id="myTab" class="nav nav-tabs">
             <li class="active"> <a datat-toggle="tab" href="#m1">Rayleigh</a></li>
@@ -204,46 +205,6 @@
                     </div>
                   </div>
 
-                  <script>
-                      $(function () {
-                          $('#staffing_trapeze_chart').highcharts({
-                              chart: {
-                                  type: 'column'
-                              },
-                              title: {
-                                  text: 'Répartition des ressources en fonction du temps'
-                              },
-                              xAxis: {
-                                  min: 0,
-                                  title: {
-                                      text: 'Evolution du temps'
-                                  }
-                              },
-                              yAxis: {
-                                  min: 0,
-                                  title: {
-                                      text: 'Nombre de personne'
-                                  }
-                              },
-                              plotOptions: {
-                                  column: {
-                                      pointPadding: 0.2,
-                                      borderWidth: 0
-                                  }
-                              },
-                              series: [{
-                                      name: 'Rayleigh théorique',
-                                      data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
-                                  },
-                                  {
-                                      name: 'Courbe actualisé',
-                                      data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
-
-                                  }]
-                          });
-                      });
-                  </script>
-
                 </div>
               </div>
 
@@ -271,7 +232,7 @@
                       <div id="staffing_trapeze_chart2">
                       </div>
                     </div>
-                  </div>
+                 </div>
 
                   <h4>
                     <b>
@@ -369,46 +330,6 @@
                       <% end %>
                     </div>
                   </div>
-
-                  <script>
-                      $(function () {
-                          $('#staffing_trapeze_chart2').highcharts({
-                              chart: {
-                                  type: 'column'
-                              },
-                              title: {
-                                  text: 'Répartition des ressources en fonction du temps'
-                              },
-                              xAxis: {
-                                  min: 0,
-                                  title: {
-                                      text: 'Evolution du temps'
-                                  }
-                              },
-                              yAxis: {
-                                  min: 0,
-                                  title: {
-                                      text: 'Nombre de personne'
-                                  }
-                              },
-                              plotOptions: {
-                                  column: {
-                                      pointPadding: 0.2,
-                                      borderWidth: 0
-                                  }
-                              },
-                              series: [{
-                                  name: 'Trapèze théorique',
-                                  data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
-                              }, {
-                                      name: 'Courbe actualisé',
-                                      data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
-
-                                  }]
-                          });
-                      });
-                  </script>
-
                 </div>
               </div>
 
@@ -434,6 +355,81 @@
   $('#optionsRadios2').click(function (e) {
     $("#my_id1").attr('disabled', "disabled")
     $("#my_id2").removeAttr('disabled')
+  })
+
+  $(function () {
+      $('#staffing_trapeze_chart2').highcharts({
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'Répartition des ressources en fonction du temps'
+          },
+          xAxis: {
+              min: 0,
+              title: {
+                  text: 'Evolution du temps'
+              }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Nombre de personne'
+              }
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: [{
+              name: 'Trapèze théorique',
+              data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
+          }, {
+              name: 'Courbe actualisé',
+              data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
+
+          }]
+      });
+  })
+
+  $(function () {
+      $('#staffing_trapeze_chart').highcharts({
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'Répartition des ressources en fonction du temps'
+          },
+          xAxis: {
+              min: 0,
+              title: {
+                  text: 'Evolution du temps'
+              }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Nombre de personne'
+              }
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: [{
+              name: 'Rayleigh théorique',
+              data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
+          },
+              {
+                  name: 'Courbe actualisé',
+                  data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
+
+              }]
+      });
   })
 
 </script>
