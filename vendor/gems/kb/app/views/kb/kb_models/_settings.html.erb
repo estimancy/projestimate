@@ -12,19 +12,28 @@
         <div class="span3">
           <% unless @kb_model.kb_datas.empty? %>
             <p>
-              <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each do |key| %>
+              <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each_with_index do |key, i| %>
                 <div class="input string required project_title">
                   <label class="string required control-label">
                     <strong>
                       <%= key %>
                     </strong>
                   </label>
-                  <%= select_tag "filters[#{key}]",
-                                 options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
-                                                    selected: @filters.nil? ? @kb_input.filters[key] : @filters[key]),
+                  <% if i == 0 %>
+                    <%= select_tag "filters[#{key}]",
+                                   options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
+                                                      selected: @filters.nil? ? @project.project_area : @filters[key]),
 
-                                 class: "string required input-xlarge filters",
-                                 prompt: "Indifférent" %>
+                                   class: "string required input-xlarge filters",
+                                   prompt: "Indifférent" %>
+                  <% else %>
+                    <%= select_tag "filters[#{key}]",
+                                   options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
+                                                      selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
+
+                                   class: "string required input-xlarge filters",
+                                   prompt: "Indifférent" %>
+                  <% end %>
                 </div>
               <% end %>
             </p>
@@ -53,7 +62,7 @@
 
             <h5>
               <strong>
-                Taille <%= level %>
+                Taille <%= level.humanize %>
               </strong>
             </h5>
             <% size_attr = PeAttribute.find_by_alias("retained_size") %>
@@ -72,7 +81,7 @@
 
             <h5>
               <strong>
-                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>) <%= level %>
+                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>) <%= level.humanize %>
               </strong>
             </h5>
             <% effort_attr = PeAttribute.find_by_alias("effort") %>
@@ -105,11 +114,13 @@
   </div>
 <% end %>
 
+<% @kb_model.kb_datas.map(&:custom_attributes).first.keys %>
+
 <script>
   $(function () {
     $('#scatter_chart').highcharts({
       chart: {
-        zoomType: 'x'
+        zoomType: 'xy'
       },
       title: {
         text: "<%= @kb_model.name %>"
@@ -134,6 +145,9 @@
         },
         type: 'scatter',
         color: 'rgba(223, 83, 83, 1)',
+        tooltip: {
+          pointFormat: 'UF : {point.x} <br> Effort : {point.y} <%= @kb_model.effort_unit %>'
+        },
         data: <%= @kb_input.values %>
       },{
         name: 'Courbe de régression linéaire',

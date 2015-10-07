@@ -251,8 +251,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     guw_unit_of_work.save
 
-    if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
-      guw_unit_of_work.flagged = false
+    if guw_unit_of_work.off_line == false && guw_unit_of_work.off_line_uo == false
+      if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
+        guw_unit_of_work.flagged = false
+      else
+        guw_unit_of_work.flagged = true
+      end
     else
       guw_unit_of_work.flagged = true
     end
@@ -353,8 +357,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       end
 
-      if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
-        guw_unit_of_work.flagged = false
+      if guw_unit_of_work.off_line == false && guw_unit_of_work.off_line_uo == false
+        if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
+          guw_unit_of_work.flagged = false
+        else
+          guw_unit_of_work.flagged = true
+        end
       else
         guw_unit_of_work.flagged = true
       end
@@ -536,6 +544,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               end
             else
               guw_unit_of_work.off_line = true
+              guw_unit_of_work.flagged = true
             end
           end
         end
@@ -553,6 +562,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
           else
             guw_unit_of_work.off_line = true
+            guw_unit_of_work.flagged = true
           end
         end
 
@@ -569,6 +579,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
           else
             guw_unit_of_work.off_line = true
+            guw_unit_of_work.flagged = true
           end
         end
       end
