@@ -578,80 +578,99 @@ class Guw::GuwModelsController < ApplicationController
                                                   guw_model_id: @guw_model.id)
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
+    ind = 1
+    tab_size = [10, 10, 10, 12, 1, 10, 10, @guw_model.coefficient_label.length, 12, 12, 10, 11, 10, 10, 10, 10, 10, 10]
 
-    tmp = Array.new
+    worksheet.change_row_bold(0,true)
+    worksheet.add_cell(0, 0,"Estimation")
+    worksheet.change_column_width(0, tab_size[0])
+    worksheet.add_cell(0, 1,"Version")
+    worksheet.change_column_width(1, tab_size[1])
+    worksheet.add_cell(0, 2,"Groupe")
+    worksheet.change_column_width(2, tab_size[2])
+    worksheet.add_cell(0, 3,"Sélectionné")
+    worksheet.change_column_width(3, tab_size[3])
+    worksheet.add_cell(0, 4,"Nom")
+    worksheet.add_cell(0, 5,"Description")
+    worksheet.change_column_width(5, tab_size[5])
+    worksheet.add_cell(0, 6,"Type d'UO")
+    worksheet.change_column_width(6, tab_size[6])
+    worksheet.add_cell(0, 7,@guw_model.coefficient_label)
+    worksheet.change_column_width(7, tab_size[7])
+    worksheet.add_cell(0, 8,"Technologie")
+    worksheet.change_column_width(8,tab_size[8])
+    worksheet.add_cell(0, 9,"Quantité")
+    worksheet.change_column_width(9, tab_size[9])
+    worksheet.add_cell(0, 10,"Tracabilité")
+    worksheet.change_column_width(10, tab_size[10])
+    worksheet.add_cell(0, 11,"Cotation")
+    worksheet.change_column_width(11, tab_size[11])
+    worksheet.add_cell(0, 12,"Résultat")
+    worksheet.change_column_width(12, tab_size[12])
+    worksheet.add_cell(0, 13,"Retenu")
+    worksheet.change_column_width(13, tab_size[13])
+    worksheet.add_cell(0, 14,"Attribut")
+    worksheet.change_column_width(14, tab_size[14])
+    worksheet.add_cell(0, 15,"inferieur")
+    worksheet.change_column_width(15, tab_size[15])
+    worksheet.add_cell(0, 16,"preferable")
+    worksheet.change_column_width(16, tab_size[16])
+    worksheet.add_cell(0, 17,"superieur")
+    worksheet.change_column_width(17, tab_size[17])
 
-    tmp << [
-          "Estimation",
-          "Version",
-          "Groupe",
-          "Sélectionné",
-          "Nom",
-          "Description",
-          "Type d'UO",
-          @guw_model.coefficient_label,
-          "Technologie",
-          "Quantité",
-          "Tracabilité",
-          "Cotation",
-          "Résultat",
-          "Retenu"
-      ] + @guw_model.guw_attributes.map(&:name)
-
-      @guw_unit_of_works.each do |uow|
-
-        array_uo = Array.new
-        array_value = Array.new
-
-        if uow.off_line == true
-          cplx = "HSAT"
-        elsif uow.off_line_uo
-          cplx = "HSUO"
-        elsif uow.guw_complexity.nil?
-          cplx = "-"
-        else
-          cplx = uow.guw_complexity.name
-        end
-
-        array_uo << [
-            current_module_project.project.title,
-            current_module_project.project.version,
-            uow.guw_unit_of_work_group.name,
-            uow.selected == true ? 'Oui' : 'Non',
-            uow.name,
-            uow.comments,
-            uow.guw_type,
-            uow.guw_work_unit,
-            uow.organization_technology,
-            uow.quantity,
-            uow.tracking,
-            cplx,
-            uow.effort,
-            uow.ajusted_effort
-        ]
-
-        @guw_model.guw_attributes.each do |guw_attribute|
-          uowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: uow.id, guw_attribute_id: guw_attribute.id).first
-          if uowa.blank?
-            array_value << '-'
-          else
-            array_value << uowa.most_likely
+    @guw_unit_of_works.each do |guow|
+      if guow.off_line == true
+        cplx = "HSAT"
+      elsif guow.off_line_uo
+        cplx = "HSUO"
+      elsif guow.guw_complexity.nil?
+        cplx = "-"
+      else
+        cplx = guow.guw_complexity.name
+      end
+      @guw_model.guw_attributes.all.each do |gac|
+        finder = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: gac.id, guw_type_id: guow.guw_type.id).first
+        unless finder.nil?
+          sum_range = gac.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
+          unless sum_range.nil? || sum_range.blank? || sum_range == 0
+            worksheet.add_cell(ind, 0, current_module_project.project.title)
+            tab_size[0]= tab_size[0] < current_module_project.project.title.length ? current_module_project.project.title.length : tab_size[0]
+            worksheet.change_column_width(0, tab_size[0])
+            worksheet.add_cell(ind, 1, current_module_project.project.version)
+            worksheet.add_cell(ind, 2, guow.guw_unit_of_work_group.name)
+            tab_size[2] = tab_size[2] < guow.guw_unit_of_work_group.name.length ? guow.guw_unit_of_work_group.name.length : tab_size[2]
+            worksheet.change_column_width(2, tab_size[2])
+            worksheet.add_cell(ind, 3, guow.selected ? 'Oui' : 'Non')
+            worksheet.add_cell(ind, 4, guow.name)
+            tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
+            worksheet.change_column_width(4, tab_size[4])
+            worksheet.add_cell(ind, 5, guow.comments)
+            worksheet.add_cell(ind, 6, guow.guw_type.name)
+            tab_size[6] = tab_size[6] < guow.guw_type.name.to_s.length ? guow.guw_type.name.to_s.length : tab_size[6]
+            worksheet.change_column_width(6, tab_size[6])
+            worksheet.add_cell(ind, 7, guow.guw_work_unit)
+            worksheet.add_cell(ind, 8, guow.organization_technology)
+            tab_size[8] = tab_size[8] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[8]
+            worksheet.change_column_width(8, tab_size[8])
+            worksheet.add_cell(ind, 9, guow.quantity)
+            worksheet.add_cell(ind, 10, guow.tracking)
+            worksheet.add_cell(ind, 11, cplx)
+            tab_size[11] = tab_size[11] < cplx.length ? cplx.length : tab_size[11]
+            worksheet.change_column_width(11, tab_size[11])
+            worksheet.add_cell(ind, 12, guow.effort)
+            worksheet.add_cell(ind, 13, guow.ajusted_effort)
+            worksheet.add_cell(ind, 14, finder.guw_attribute.name)
+            tab_size[14] = tab_size[14] < finder.guw_attribute.name.length ? finder.guw_attribute.name.length : tab_size[14]
+            worksheet.change_column_width(14, tab_size[14])
+            worksheet.add_cell(ind, 15, finder.low ? finder.low : "N/A")
+            worksheet.add_cell(ind, 16, finder.most_likely ? finder.most_likely : "N/A")
+            worksheet.add_cell(ind, 17, finder.high ? finder.high : "N/A")
+            ind += 1
           end
         end
-
-        tmp << (array_uo + array_value).flatten
       end
-
-      tmp.each_with_index do |r, i|
-        tmp[i].each_with_index do |r, j|
-          worksheet.add_cell(i, j, tmp[i][j])
-        end
-      end
-
-    #tmp_filename = "export-uo-#{Time.now.strftime('%d-%m-%Y')}"
-    #filename = tmp_filename.gsub(" ", '-')
-    #workbook.write("#{Rails.root}/public/#{filename}.xlsx")
-    send_data(workbook.stream.string, filename: "export-uo-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+    end
+  send_data(workbook.stream.string, filename: "export-uo-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def import_myexport
@@ -659,6 +678,11 @@ class Guw::GuwModelsController < ApplicationController
     @component = current_component
     ind = 0
     ok = false
+    already_exist = ["first"]
+    first = false
+    type_save = 0
+    guw_uow_save = 0
+    gac_save = 0
     tab_error = []
 
     if !params[:file].nil? &&
@@ -669,42 +693,66 @@ class Guw::GuwModelsController < ApplicationController
 
       tab.each_with_index  do |row, index|
         if index > 0
-          if !row[2].nil?
+          unless row[2].nil?
             guw_uow_group = Guw::GuwUnitOfWorkGroup.where(name: row[2],
                                                           module_project_id: current_module_project.id,
                                                           pbs_project_element_id: @component.id,).first_or_create
 
             my_order = Guw::GuwUnitOfWork.count('id' , :conditions => "module_project_id = #{current_module_project.id} AND pbs_project_element_id = #{@component.id} AND guw_unit_of_work_group_id = #{guw_uow_group.id}  AND guw_model_id = #{@guw_model.id}")
-
-            guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == "Oui" ? true : false,
-                                             name: row[4],
-                                             comments: row[5],
-                                             guw_unit_of_work_group_id: guw_uow_group.id,
-                                             module_project_id: current_module_project.id,
-                                             pbs_project_element_id: @component.id,
-                                             guw_model_id: @guw_model.id,
-                                             display_order: my_order,
-                                             tracking: row[10], quantity: row[9],
-                                             effort: row[12].nil? ? 0 : row[12],
-                                             ajusted_effort: row[13].nil? ? 0 : row[13])
-            @guw_model.guw_work_units.each do |wu|
-              if wu.name == row[7]
-                guw_uow.guw_work_unit_id = wu.id
-                ind += 1
-                break
+            if already_exist.join(",").include?(row[0..13].join(","))
+              @guw_model.guw_attributes.all.each do |gac|
+                if gac.name == row[14]
+                  finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
+                                                             guw_unit_of_work_id: guw_uow_save,
+                                                             guw_attribute_id: gac.id).first_or_create
+                  finder.low = row[15] == "N/A" ? nil : row[15]
+                  finder.most_likely = row[16] == "N/A" ? nil : row[16]
+                  finder.high = row[17] == "N/A" ? nil : row[17]
+                  finder.save
+                  break
+                end
               end
-            end
-            @guw_model.guw_types.each do |type|
-              if row[6] == type.name
-                guw_uow.guw_type_id = type.id
-                if !row[11].nil? && row[11] != "-"
-                  type.guw_complexities.each do |complexity|
-                    if row[11] == complexity.name
-                      guw_uow.guw_complexity_id = complexity.id
+            else
+              guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == "Oui" ? true : false,
+                                               name: row[4],
+                                               comments: row[5],
+                                               guw_unit_of_work_group_id: guw_uow_group.id,
+                                               module_project_id: current_module_project.id,
+                                               pbs_project_element_id: @component.id,
+                                               guw_model_id: @guw_model.id,
+                                               display_order: my_order,
+                                               tracking: row[10], quantity: row[9],
+                                               effort: row[12].nil? ? 0 : row[12],
+                                               ajusted_effort: row[13].nil? ? 0 : row[13])
+              @guw_model.guw_work_units.each do |wu|
+                if wu.name == row[7]
+                  guw_uow.guw_work_unit_id = wu.id
+                  ind += 1
+                  break
+                end
+              end
+              @guw_model.guw_types.each do |type|
+                if row[6] == type.name
+                  guw_uow.guw_type_id = type.id
+
+################################################pour recuperer les valeur###############################
+                  @guw_model.guw_attributes.all.each do |gac|
+                    if gac.name == row[14]
+                      gac_save = gac.id
+                      type_save = type.id
                       break
                     end
                   end
-                end
+########################################################################################################
+
+                  if !row[11].nil? && row[11] != "-"
+                    type.guw_complexities.each do |complexity|
+                      if row[11] == complexity.name
+                        guw_uow.guw_complexity_id = complexity.id
+                        break
+                      end
+                    end
+                  end
                   type.guw_complexity_technologies.each do |techno|
                     if row[8] == techno.organization_technology.name
                       guw_uow.organization_technology_id = techno.organization_technology.id
@@ -712,16 +760,26 @@ class Guw::GuwModelsController < ApplicationController
                       break
                     end
                   end
-                 ind += 1
+                  ind += 1
                   break
                 end
               end
-            if ind == 3
-              guw_uow.save
-            else
-              tab_error << index
+              if ind == 3
+                guw_uow.save
+                finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
+                                                           guw_unit_of_work_id: guw_uow.id,
+                                                           guw_attribute_id: gac_save).first_or_create
+                guw_uow_save = guw_uow.id
+                finder.low = row[15] == "N/A" ? nil : row[15]
+                finder.most_likely = row[16] == "N/A" ? nil : row[16]
+                finder.high = row[17] == "N/A" ? nil : row[17]
+                finder.save
+              else
+                tab_error << index
+              end
+              ind = 0
+              already_exist = row
             end
-            ind = 0
           end
         end
       end
