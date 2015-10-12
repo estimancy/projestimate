@@ -9,6 +9,7 @@
     <th><%= I18n.t(:last_login) %></th>
     <th class="filter-select"><%= I18n.t(:authentication) %></th>
     <th>Confirmé le</th>
+    <th>Bloqué le</th>
     <th class="action" style="width: 110px"><%= I18n.t(:actions) %></th>
   </tr>
   </thead>
@@ -26,7 +27,9 @@
           <td><%= I18n.l(user.last_sign_in_at) unless user.last_sign_in_at.nil? %></td>
           <td><%= user.auth_method %></td>
           <td><%= user.confirmed_at.nil? ? 'Non confirmé' : user.confirmed_at.strftime("%d/%m/%Y") %></td>
+          <td><%= user.locked_at.nil? ? 'Non bloqué' : user.locked_at.strftime("%d/%m/%Y") %></td>
           <td style="min-width: 105px;" class="align-center">
+            <%= link_to('', unlock_user_path(user), :class => 'icon-edit', :title => I18n.t('edit')) %>
             <%= link_to('', edit_user_path(user, :anchor => 'tabs-1'), :class => 'icon-pencil', :title => I18n.t('edit')) %>
             <%= link_to(' ', user, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete')) %>
           </td>

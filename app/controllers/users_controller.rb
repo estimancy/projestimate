@@ -238,6 +238,12 @@ public
     end
   end
 
+  def unlock_user
+    @user = User.find(params[:id])
+    @user.unlock_access!
+    redirect_to users_path
+  end
+
   #Create a inactive user if the demand is ok.
   def create_inactive_user
     #No authorize required since everyone can ask for new account which will be validated by an Admin

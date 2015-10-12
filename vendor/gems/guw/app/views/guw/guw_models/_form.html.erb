@@ -14,13 +14,12 @@
         <%= simple_form_for(@guw_model) do |f| %>
             <%= f.error_notification %>
 
-            <%#= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
             <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
 
             <div class="form-inputs">
               <%= f.input :name %>
               <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
-              <%= f.input :coefficient_label, input_html: { class: "input-xxlarge", rows: "5" } %>
+              <%= f.input :coefficient_label, input_html: { class: "input-xxlarge", rows: "5", label: "Nom du coefficient de pondération" } %>
               <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
               <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module" %>
             </div>
