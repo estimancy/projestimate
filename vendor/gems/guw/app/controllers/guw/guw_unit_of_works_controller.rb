@@ -251,7 +251,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     guw_unit_of_work.save
 
-    if guw_unit_of_work.off_line == false && guw_unit_of_work.off_line_uo == false
+    if guw_unit_of_work.off_line == false && guw_unit_of_work.off_line_uo == false && guw_unit_of_work.flagged == true
       if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
         guw_unit_of_work.flagged = false
       else
@@ -357,7 +357,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
       end
 
-      if guw_unit_of_work.off_line == false && guw_unit_of_work.off_line_uo == false
+      if guw_unit_of_work.off_line == false && guw_unit_of_work.off_line_uo == false  && guw_unit_of_work.flagged == true
         if guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
           guw_unit_of_work.flagged = false
         else
@@ -495,18 +495,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       #Estimation 3 points
       if params["low"]["#{guw_unit_of_work.id}"].nil?
         low = 0
+        guw_unit_of_work.flagged = true
       else
         low = params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["low"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
       end
 
       if params["most_likely"]["#{guw_unit_of_work.id}"].nil?
         most_likely = 0
+        guw_unit_of_work.flagged = true
       else
         most_likely = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
       end
 
       if params["high"]["#{guw_unit_of_work.id}"].nil?
         high = 0
+        guw_unit_of_work.flagged = true
       else
         high = params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["high"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
       end
@@ -515,6 +518,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         #Estimation 1 point
         if params["most_likely"]["#{guw_unit_of_work.id}"].nil? or params["most_likely"]["#{guw_unit_of_work.id}"].values.sum.blank?
           low = most_likely = high = nil
+          guw_unit_of_work.flagged = true
         else
           low = most_likely = high = params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].to_i unless params["most_likely"]["#{guw_unit_of_work.id}"]["#{guowa.id}"].blank?
         end

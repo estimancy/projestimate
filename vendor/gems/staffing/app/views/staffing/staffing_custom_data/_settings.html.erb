@@ -3,13 +3,15 @@
 </h3>
 
 <%
-   previous_activity = current_module_project.previous.first.wbs_activity
    attribute = PeAttribute.find_by_alias("effort")
+   unless current_module_project.previous.first.nil?
+    previous_activity = current_module_project.previous.first.wbs_activity
+   end
    unless previous_activity.nil?
      begin
        ev = EstimationValue.where(:pe_attribute_id => attribute.id,
-                                           :module_project_id => current_module_project.previous.first,
-                                           :in_out => "output").first
+                                   :module_project_id => current_module_project.previous.first,
+                                   :in_out => "output").first
      rescue
        ev = nil
      end
@@ -67,7 +69,7 @@
 
         <div class="tab-pane active" id="m1">
           <button name="actuals_based_on[rayleigh]" type="submit" class="btn btn-success btn-mini pull-right button_margin_right">
-            Initialiser a partir du Rayleigh
+            Initialiser le retenu
           </button>
 
           <button name="actuals_based_on[custom]" type="submit" class="btn btn-mini pull-right button_margin_right">
@@ -82,7 +84,6 @@
                 </b>
               </h4>
 
-              <!-- Affichage du trapèze de Staffing -->
               <div class="row-fluid">
                 <div class="span12">
                   <div id="staffing_trapeze_chart">
@@ -123,7 +124,7 @@
                         </tr>
 
                         <tr>
-                          <td>Nombre de personne</td>
+                          <td>Nombre de personnes</td>
                           <% actual_coordinates.each do |(coord,value)| %>
                               <% rounded_value = value.nil? ? 0 : value.round(1) %>
                               <% staffing_actuel += rounded_value %>
@@ -248,7 +249,7 @@
                         </tr>
 
                         <tr>
-                          <td>Nombre de personne</td>
+                          <td>Nombre de personnes</td>
                           <% actual_coordinates.each do |(coord,value)| %>
                               <% rounded_value = value.nil? ? 0 : value.round(1) %>
                               <% staffing_actuel += rounded_value %>
@@ -352,7 +353,7 @@
           yAxis: {
               min: 0,
               title: {
-                  text: 'Nombre de personne'
+                  text: 'Nombre de personnes'
               }
           },
           plotOptions: {
@@ -389,7 +390,7 @@
           yAxis: {
               min: 0,
               title: {
-                  text: 'Nombre de personne'
+                  text: 'Nombre de personnes'
               }
           },
           plotOptions: {

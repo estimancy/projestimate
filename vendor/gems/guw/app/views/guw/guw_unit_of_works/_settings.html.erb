@@ -151,7 +151,7 @@
            <% uowg.guw_unit_of_works.order("display_order ASC").each_with_index do |guow, i| %>
               <tr>
 
-                <td style="border-left: 3px solid <%= (guow.flagged == true) ? 'red' : 'green' %>"></td>
+                <td style="border-left: 6px solid <%= (guow.flagged == true) ? 'red' : 'green' %>"></td>
 
                 <td>
                   <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected", disabled: !can?(:execute_estimation_plan, @project) %>
@@ -249,9 +249,9 @@
                       <span class="text-center criteria_label_<%= guow.id %>">
                         <% counting = guow.guw_unit_of_work_attributes.where(guw_type_id: guow.guw_type_id).map(&:most_likely).compact %>
                         <% if counting.empty? %>
-                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: red" %>
+                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: black" %>
                         <% else %>
-                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: green" %>
+                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: #0088cc" %>
                         <% end %>
                       </span>
                     <% end %>
