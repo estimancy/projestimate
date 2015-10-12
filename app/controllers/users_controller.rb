@@ -240,7 +240,11 @@ public
 
   def unlock_user
     @user = User.find(params[:id])
-    @user.unlock_access!
+    if @user.locked_at.nil?
+      @user.lock_access!
+    else
+      @user.unlock_access!
+    end
     redirect_to users_path
   end
 
