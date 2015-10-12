@@ -1573,6 +1573,8 @@ en:
   effort_import: "effort"
   profile: "Profile"
   unit_value: "unit"
+  estimation: "estimation"
+  group: "group"
   version: "version"
   UO_type_complexity: "UW complexity threshold"
   advice: "Caution: Do not modify the cells with bold font, that may cause problem for the file importation from the application.\nFor more utilisation advice: http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work"

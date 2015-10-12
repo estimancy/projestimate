@@ -579,45 +579,61 @@ class Guw::GuwModelsController < ApplicationController
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
     ind = 1
-    tab_size = [10, 10, 10, 12, 1, 10, 10, @guw_model.coefficient_label.length, 12, 12, 10, 11, 10, 10, 10, 10, 10, 10]
+    tab_size = [I18n.t(:estimation).length,
+                I18n.t(:version).length,
+                I18n.t(:group).length,
+                I18n.t(:selected).length,
+                I18n.t(:name).length,
+                I18n.t(:description).length,
+                I18n.t(:work_unit_type).length,
+                @guw_model.coefficient_label.length,
+                I18n.t(:organization_technology).length,
+                I18n.t(:quantity).length,
+                I18n.t(:tracability).length,
+                I18n.t(:cotation).length,
+                I18n.t(:results).length,
+                I18n.t(:retained_result).length,
+                I18n.t(pe_attribute_name).length,
+                I18n.t(:low).length,
+                I18n.t(:likely).length,
+                I18n.t(:high).length]
 
     worksheet.change_row_bold(0,true)
-    worksheet.add_cell(0, 0,"Estimation")
+    worksheet.add_cell(0, 0, I18n.t(:estimation))
     worksheet.change_column_width(0, tab_size[0])
-    worksheet.add_cell(0, 1,"Version")
+    worksheet.add_cell(0, 1,I18n.t(:version))
     worksheet.change_column_width(1, tab_size[1])
-    worksheet.add_cell(0, 2,"Groupe")
+    worksheet.add_cell(0, 2, I18n.t(:group))
     worksheet.change_column_width(2, tab_size[2])
-    worksheet.add_cell(0, 3,"Sélectionné")
+    worksheet.add_cell(0, 3,I18n.t(:selected))
     worksheet.change_column_width(3, tab_size[3])
-    worksheet.add_cell(0, 4,"Nom")
-    worksheet.add_cell(0, 5,"Description")
+    worksheet.add_cell(0, 4,I18n.t(:name))
+    worksheet.add_cell(0, 5, I18n.t(:description))
     worksheet.change_column_width(5, tab_size[5])
-    worksheet.add_cell(0, 6,"Type d'UO")
+    worksheet.add_cell(0, 6, I18n.t(:work_unit_type))
     worksheet.change_column_width(6, tab_size[6])
     worksheet.add_cell(0, 7,@guw_model.coefficient_label)
     worksheet.change_column_width(7, tab_size[7])
-    worksheet.add_cell(0, 8,"Technologie")
+    worksheet.add_cell(0, 8,I18n.t(:organization_technology))
     worksheet.change_column_width(8,tab_size[8])
-    worksheet.add_cell(0, 9,"Quantité")
+    worksheet.add_cell(0, 9, I18n.t(:quantity))
     worksheet.change_column_width(9, tab_size[9])
-    worksheet.add_cell(0, 10,"Tracabilité")
+    worksheet.add_cell(0, 10,I18n.t(:tracability))
     worksheet.change_column_width(10, tab_size[10])
-    worksheet.add_cell(0, 11,"Cotation")
+    worksheet.add_cell(0, 11, I18n.t(:cotation))
     worksheet.change_column_width(11, tab_size[11])
-    worksheet.add_cell(0, 12,"Résultat")
+    worksheet.add_cell(0, 12, I18n.t(:results))
     worksheet.change_column_width(12, tab_size[12])
-    worksheet.add_cell(0, 13,"Retenu")
+    worksheet.add_cell(0, 13, I18n.t(:retained_result))
     worksheet.change_column_width(13, tab_size[13])
-    worksheet.add_cell(0, 14,"Attribut")
+    worksheet.add_cell(0, 14, I18n.t(pe_attribute_name))
     worksheet.change_column_width(14, tab_size[14])
-    worksheet.add_cell(0, 15,"inferieur")
+    worksheet.add_cell(0, 15, I18n.t(:low))
     worksheet.change_column_width(15, tab_size[15])
-    worksheet.add_cell(0, 16,"preferable")
+    worksheet.add_cell(0, 16, I18n.t(:likely))
     worksheet.change_column_width(16, tab_size[16])
-    worksheet.add_cell(0, 17,"superieur")
+    worksheet.add_cell(0, 17, I18n.t(:high))
     worksheet.change_column_width(17, tab_size[17])
-
     @guw_unit_of_works.each do |guow|
       if guow.off_line == true
         cplx = "HSAT"
@@ -640,7 +656,7 @@ class Guw::GuwModelsController < ApplicationController
             worksheet.add_cell(ind, 2, guow.guw_unit_of_work_group.name)
             tab_size[2] = tab_size[2] < guow.guw_unit_of_work_group.name.length ? guow.guw_unit_of_work_group.name.length : tab_size[2]
             worksheet.change_column_width(2, tab_size[2])
-            worksheet.add_cell(ind, 3, guow.selected ? 'Oui' : 'Non')
+            worksheet.add_cell(ind, 3, guow.selected ? I18n.t(:yes) : I18n.t(:no))
             worksheet.add_cell(ind, 4, guow.name)
             tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
             worksheet.change_column_width(4, tab_size[4])
@@ -680,7 +696,6 @@ class Guw::GuwModelsController < ApplicationController
     tab_error.each_with_index  do |error_type, index|
       if error_type[0] == true
         case
-
           when index == 0
             final_mess << I18n.t(:route_flag_error_8, mess_error: error_type[1..error_type.size - 1].join(", "))
           when index == 1
@@ -696,7 +711,6 @@ class Guw::GuwModelsController < ApplicationController
         end
       end
     end
-
     indexing_field_error.each_with_index  do |error_type, index|
       if error_type.size > 1
         case
@@ -719,6 +733,7 @@ class Guw::GuwModelsController < ApplicationController
   end
 
   def import_myexport
+
     @guw_model = current_module_project.guw_model
     @component = current_component
     ind = 0
@@ -827,7 +842,6 @@ class Guw::GuwModelsController < ApplicationController
                 unless indexing_field_error[0][0]
                   indexing_field_error[0] << index
                 end
-
                 if ind == 3
                   guw_uow.save
                   finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
@@ -870,16 +884,13 @@ class Guw::GuwModelsController < ApplicationController
         ok = true
       end
     end
-
     my_verrif_tab_error(tab_error, indexing_field_error)
     if ok
       flash[:notice] = I18n.t(:importation_sucess_uo)
     else ok
       flash[:error] = I18n.t(:route_flag_error_4)
     end
-
     redirect_to :back
-
   end
 
 end
