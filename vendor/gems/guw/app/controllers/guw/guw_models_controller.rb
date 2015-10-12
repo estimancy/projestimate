@@ -74,7 +74,7 @@ class Guw::GuwModelsController < ApplicationController
     if route_flag == 0
       flash[:notice] = I18n.t(:importation_success)
     else
-      flash[:error] = message.join(" ")
+      flash[:error] = message.join("<br/>").html_safe
     end
   end
 
@@ -673,6 +673,51 @@ class Guw::GuwModelsController < ApplicationController
   send_data(workbook.stream.string, filename: "export-uo-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 
+  def my_verrif_tab_error(tab_error, indexing_field_error)
+
+    final_mess = []
+
+    tab_error.each_with_index  do |error_type, index|
+      if error_type[0] == true
+        case
+
+          when index == 0
+            final_mess << I18n.t(:route_flag_error_8, mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 1
+            final_mess << I18n.t(:route_flag_error_9, mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 2
+            final_mess << I18n.t(:route_flag_error_10,mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 3
+            final_mess << I18n.t(:route_flag_error_11,mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 4
+            final_mess << I18n.t(:route_flag_error_12,mess_error: error_type[1..error_type.size - 1].join(", "))
+          else
+            nothing = 42
+        end
+      end
+    end
+
+    indexing_field_error.each_with_index  do |error_type, index|
+      if error_type.size > 1
+        case
+          when index == 0
+            final_mess << I18n.t(route_flag_error_13, mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 1
+            final_mess << I18n.t(route_flag_error_14, mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 2
+            final_mess << I18n.t(route_flag_error_15, mess_error: error_type[1..error_type.size - 1].join(", "))
+          when index == 3
+            final_mess << I18n.t(route_flag_error_16, mess_error: error_type[1..error_type.size - 1].join(", "))
+          else
+            nothing = 42
+        end
+      end
+    end
+      unless final_mess.empty?
+      flash[:error] = final_mess.join("<br/>").html_safe
+    end
+  end
+
   def import_myexport
     @guw_model = current_module_project.guw_model
     @component = current_component
@@ -683,7 +728,8 @@ class Guw::GuwModelsController < ApplicationController
     type_save = 0
     guw_uow_save = 0
     gac_save = 0
-    tab_error = []
+    tab_error = [[false], [false], [false], [false], [false]]
+    indexing_field_error = [[false],[false],[false],[false]]
 
     if !params[:file].nil? &&
         (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
@@ -693,11 +739,10 @@ class Guw::GuwModelsController < ApplicationController
 
       tab.each_with_index  do |row, index|
         if index > 0
-          unless row[2].nil?
+          if row[4] && row[2] && row[6] && row[7] && row[8]  && !row[4].empty? &&  !row[2].empty? && !row[6].empty? && !row[7].empty? && !row[8].empty?
             guw_uow_group = Guw::GuwUnitOfWorkGroup.where(name: row[2],
                                                           module_project_id: current_module_project.id,
                                                           pbs_project_element_id: @component.id,).first_or_create
-
             my_order = Guw::GuwUnitOfWork.count('id' , :conditions => "module_project_id = #{current_module_project.id} AND pbs_project_element_id = #{@component.id} AND guw_unit_of_work_group_id = #{guw_uow_group.id}  AND guw_model_id = #{@guw_model.id}")
             if already_exist.join(",").include?(row[0..13].join(","))
               @guw_model.guw_attributes.all.each do |gac|
@@ -713,86 +758,128 @@ class Guw::GuwModelsController < ApplicationController
                 end
               end
             else
-              guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == "Oui" ? true : false,
-                                               name: row[4],
-                                               comments: row[5],
-                                               guw_unit_of_work_group_id: guw_uow_group.id,
-                                               module_project_id: current_module_project.id,
-                                               pbs_project_element_id: @component.id,
-                                               guw_model_id: @guw_model.id,
-                                               display_order: my_order,
-                                               tracking: row[10], quantity: row[9],
-                                               effort: row[12].nil? ? 0 : row[12],
-                                               ajusted_effort: row[13].nil? ? 0 : row[13])
-              @guw_model.guw_work_units.each do |wu|
-                if wu.name == row[7]
-                  guw_uow.guw_work_unit_id = wu.id
-                  ind += 1
-                  break
-                end
-              end
-              @guw_model.guw_types.each do |type|
-                if row[6] == type.name
-                  guw_uow.guw_type_id = type.id
-
-################################################pour recuperer les valeur###############################
-                  @guw_model.guw_attributes.all.each do |gac|
-                    if gac.name == row[14]
-                      gac_save = gac.id
-                      type_save = type.id
-                      break
-                    end
+                guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == "Oui" ? true : false,
+                                                 name: row[4],
+                                                 comments: row[5],
+                                                 guw_unit_of_work_group_id: guw_uow_group.id,
+                                                 module_project_id: current_module_project.id,
+                                                 pbs_project_element_id: @component.id,
+                                                 guw_model_id: @guw_model.id,
+                                                 display_order: my_order,
+                                                 tracking: row[10], quantity: row[9],
+                                                 effort: row[12].nil? ? 0 : row[12],
+                                                 ajusted_effort: row[13].nil? ? 0 : row[13])
+                @guw_model.guw_work_units.each do |wu|
+                  if wu.name == row[7]
+                    guw_uow.guw_work_unit_id = wu.id
+                    ind += 1
+                    indexing_field_error[1][0] = true
+                    break
                   end
-########################################################################################################
-
-                  if !row[11].nil? && row[11] != "-"
-                    type.guw_complexities.each do |complexity|
-                      if row[11] == complexity.name
-                        guw_uow.guw_complexity_id = complexity.id
+                  indexing_field_error[1][0] = false
+                end
+                unless indexing_field_error[1][0]
+                  indexing_field_error[1] << index
+                end
+                @guw_model.guw_types.each do |type|
+                  if row[6] == type.name
+                    guw_uow.guw_type_id = type.id
+                    indexing_field_error[0][0] = true
+                    @guw_model.guw_attributes.all.each do |gac|
+                      if gac.name == row[14]
+                        gac_save = gac.id
+                        type_save = type.id
                         break
                       end
                     end
-                  end
-                  type.guw_complexity_technologies.each do |techno|
-                    if row[8] == techno.organization_technology.name
-                      guw_uow.organization_technology_id = techno.organization_technology.id
-                      ind += 1
-                      break
+                    if !row[11].nil? && row[11] != "-"
+                      type.guw_complexities.each do |complexity|
+                        if row[11] == complexity.name
+                          guw_uow.guw_complexity_id = complexity.id
+                          indexing_field_error[3][0] = true
+                          break
+                        end
+                        indexing_field_error[3][0] = false
+                      end
+                      unless indexing_field_error[3][0]
+                        indexing_field_error[3] << index
+                      end
                     end
+                    type.guw_complexity_technologies.each do |techno|
+                      if row[8] == techno.organization_technology.name
+                        guw_uow.organization_technology_id = techno.organization_technology.id
+                        ind += 1
+                        indexing_field_error[2][0] = true
+                        break
+                      end
+                      indexing_field_error[2][0] = false
+                    end
+
+                    unless indexing_field_error[2][0]
+                      indexing_field_error[2] << index
+                    end
+
+                    ind += 1
+                    break
                   end
-                  ind += 1
-                  break
+                  indexing_field_error[0][0] = false
                 end
-              end
-              if ind == 3
-                guw_uow.save
-                finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
-                                                           guw_unit_of_work_id: guw_uow.id,
-                                                           guw_attribute_id: gac_save).first_or_create
-                guw_uow_save = guw_uow.id
-                finder.low = row[15] == "N/A" ? nil : row[15]
-                finder.most_likely = row[16] == "N/A" ? nil : row[16]
-                finder.high = row[17] == "N/A" ? nil : row[17]
-                finder.save
-              else
-                tab_error << index
-              end
-              ind = 0
-              already_exist = row
+                unless indexing_field_error[0][0]
+                  indexing_field_error[0] << index
+                end
+
+                if ind == 3
+                  guw_uow.save
+                  finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
+                                                             guw_unit_of_work_id: guw_uow.id,
+                                                             guw_attribute_id: gac_save).first_or_create
+                  guw_uow_save = guw_uow.id
+                  finder.low = row[15] == "N/A" ? nil : row[15]
+                  finder.most_likely = row[16] == "N/A" ? nil : row[16]
+                  finder.high = row[17] == "N/A" ? nil : row[17]
+                  finder.save
+                else
+                  tab_error << index
+                end
+                ind = 0
+                already_exist = row
+            end
+          else
+            if row[4].nil? || row[4].empty?
+              tab_error[0][0] = true
+              tab_error[0] << index
+            end
+            if row[2].nil? || row[2].empty?
+              tab_error[1][0] = true
+              tab_error[1] << index
+            end
+            if row[6].nil? || row[6].empty?
+              tab_error[2][0] = true
+              tab_error[2] << index
+            end
+            if row[7].nil? || row[7].empty?
+              tab_error[3][0] = true
+              tab_error[3] << index
+            end
+            if row[8].nil? || row[8].empty?
+              tab_error[4][0] = true
+              tab_error[4] << index
             end
           end
         end
+        ok = true
       end
-      ok = true
-      unless tab_error.empty?
-        flash[:error] = "ligne non importer du a des ereur dans le fichier: #{tab_error.join(", ")}"
-      end
-      flash[:notice] = "importation reussie !"
     end
-    unless ok
-      flash[:error] = "erreur, le fichier n'est pas un fichier excel"
+
+    my_verrif_tab_error(tab_error, indexing_field_error)
+    if ok
+      flash[:notice] = I18n.t(:importation_sucess_uo)
+    else ok
+      flash[:error] = I18n.t(:route_flag_error_4)
     end
+
     redirect_to :back
+
   end
 
 end
