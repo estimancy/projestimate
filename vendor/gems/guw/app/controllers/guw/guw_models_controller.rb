@@ -773,22 +773,18 @@ class Guw::GuwModelsController < ApplicationController
                   if wu.name == row[7]
                     guw_uow.guw_work_unit_id = wu.id
                     ind += 1
-                    indexing_field_error[1][0] = true ## 42
+                    indexing_field_error[1][0] = true
                     break
                   end
-                  indexing_field_error[1][0] = false ## /42
+                  indexing_field_error[1][0] = false
                 end
-
-                ## 42
                 unless indexing_field_error[1][0]
                   indexing_field_error[1] << index
                 end
-                ##
-
                 @guw_model.guw_types.each do |type|
                   if row[6] == type.name
                     guw_uow.guw_type_id = type.id
-                    indexing_field_error[0][0] = true ## 42
+                    indexing_field_error[0][0] = true
                     @guw_model.guw_attributes.all.each do |gac|
                       if gac.name == row[14]
                         gac_save = gac.id
@@ -800,45 +796,37 @@ class Guw::GuwModelsController < ApplicationController
                       type.guw_complexities.each do |complexity|
                         if row[11] == complexity.name
                           guw_uow.guw_complexity_id = complexity.id
-                          indexing_field_error[3][0] = true ## 42
+                          indexing_field_error[3][0] = true
                           break
                         end
-                        indexing_field_error[3][0] = false ## /42
+                        indexing_field_error[3][0] = false
                       end
-
-                      ## 42
                       unless indexing_field_error[3][0]
                         indexing_field_error[3] << index
                       end
-                      ## 42
                     end
                     type.guw_complexity_technologies.each do |techno|
                       if row[8] == techno.organization_technology.name
                         guw_uow.organization_technology_id = techno.organization_technology.id
                         ind += 1
-                        indexing_field_error[2][0] = true ## 42
+                        indexing_field_error[2][0] = true
                         break
                       end
-                      indexing_field_error[2][0] = false ## /42
+                      indexing_field_error[2][0] = false
                     end
 
-                    ## 42
                     unless indexing_field_error[2][0]
                       indexing_field_error[2] << index
                     end
-                    ##42
 
                     ind += 1
                     break
                   end
-                  indexing_field_error[0][0] = false ## /42
+                  indexing_field_error[0][0] = false
                 end
-
-                ## 42
                 unless indexing_field_error[0][0]
                   indexing_field_error[0] << index
                 end
-                ##
 
                 if ind == 3
                   guw_uow.save
