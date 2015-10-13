@@ -1556,7 +1556,7 @@ fr:
   complexity_threshold: "Seuils de complexité"
   importation_success: "Modèle importé avec succès."
   importation_sucess_uo: "Unité d'oeuvre importé avec succés."
-  error_warning: "une erreur dans le fichier a causé l'impossibilité d'importer les valeurs pour les %{parameter_1} pour les onglets suivant: %{parameter_2} merci de vous référer au wiki pour plus d'infomation (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work)."
+  error_warning: "une erreur dans le fichier a causé l'impossibilité d'importer les valeurs et onglet suivant merci de vous référer au wiki pour plus d'infomation (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work): <br/> %{parameter}"
   route_flag_error_1: "Impossible de créer ce modèle, modèle déjà existant."
   route_flag_error_2: "Nom du modèle invalide merci de vérifier le classeur importé."
   route_flag_error_3: "Des erreurs se sont glissées dans votre fichier merci de bien vouloir les corriger pour un exemple de ce à quoi doit ressembler un fichier conforme référé vous au wiki pour plus d'information (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work)."
