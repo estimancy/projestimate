@@ -15,7 +15,6 @@
           <%= I18n.t(:Import_Users_CSV) %>
         </a>
 
-
         <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <%= form_tag organization_import_user_path(@organization), :multipart => true, :class => 'simple_form' do %>
             <div class="modal-header">
@@ -77,10 +76,12 @@
             <% end %>
             <td><%= user.locked_at.nil? ? 'Non bloqué' : user.locked_at.strftime("%d/%m/%Y") %></td>
             <td class="center">
-              <% if user.locked_at.nil? %>
-                <%= link_to('', unlock_user_path(user), :class => 'icon-unlock', :title => I18n.t('edit')) %>
-              <% else %>
-                <%= link_to('', unlock_user_path(user), :class => 'icon-lock', :title => I18n.t('edit')) %>
+              <% if user.super_admin == true %>
+                <% if user.locked_at.nil? %>
+                  <%= link_to('', unlock_user_path(user), :class => 'icon-unlock', :title => I18n.t('edit')) %>
+                <% else %>
+                  <%= link_to('', unlock_user_path(user), :class => 'icon-lock', :title => I18n.t('edit')) %>
+                <% end %>
               <% end %>
               <%= link_to "", edit_organization_user_path(@organization, user), class: "icon icon-pencil", :title => I18n.t('edit') %>
               <% if can? :manage, User, :organization_id => @organization.id %>
