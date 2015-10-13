@@ -75,22 +75,24 @@
             <% if current_user.super_admin? %>
               <td class="center"><%= check_box_tag "is_super_admin", user.super_admin, user.super_admin, disabled: true %></td>
             <% end %>
-            <td><%= user.locked_at.nil? ? 'Non bloqué' : user.locked_at.strftime("%d/%m/%Y") %></td>
+
+            <td>
+              <%= user.locked_at.nil? ? 'Non bloqué' : user.locked_at.strftime("%d/%m/%Y") %></td>
+            </td>
+
+            <td class="align-center">
               <% if user.super_admin == true %>
-                <td class="center">
-                  <% if user.locked_at.nil? %>
-                    <%= link_to('', unlock_user_path(user), :class => 'icon-unlock', :title => I18n.t('edit')) %>
-                  <% else %>
-                    <%= link_to('', unlock_user_path(user), :class => 'icon-lock', :title => I18n.t('edit')) %>
-                  <% end %>
-                </td>
+                <% if user.locked_at.nil? %>
+                  <%= link_to('', unlock_user_path(user), :class => 'icon-unlock', :title => I18n.t('edit')) %>
+                <% else %>
+                  <%= link_to('', unlock_user_path(user), :class => 'icon-lock', :title => I18n.t('edit')) %>
+                <% end %>
               <% end %>
-              <td>
-                <%= link_to "", edit_organization_user_path(@organization, user), class: "icon icon-pencil", :title => I18n.t('edit') %>
-              </td>
+              <%= link_to "", edit_organization_user_path(@organization, user), class: "icon icon-pencil", :title => I18n.t('edit') %>
               <% if can? :manage, User, :organization_id => @organization.id %>
                 <%= link_to '', organization_user_path(user, organization_id: @organization.id), confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :title => I18n.t('delete') %>
               <% end %>
+            </td>
           </tr>
         <% end %>
         <%= render :partial => 'layouts/footer_table' %>
