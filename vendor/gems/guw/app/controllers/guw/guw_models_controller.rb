@@ -24,28 +24,34 @@ class Guw::GuwModelsController < ApplicationController
   require 'rubyXL'
 
   def bug_tracker (tab_error)
-    re = []
-    flag_for_show = false
+    re = [[],[],[]]
+    list_tab = [[],[],[]]
+    final_message = []
     tab_error.each_with_index do |row_error ,index|
       if index == 0
-        if !row_error.empty?
-          re << I18n.t(:Coefficient_of_acquisiton)
-          flag_for_show = true
+        unless row_error.empty?
+          re[0] = I18n.t(:Coefficient_of_acquisiton)
+          list_tab[0] = row_error
         end
       elsif index == 1
-        if !row_error.empty?
-          re << I18n.t(:organization_technology)
-          flag_for_show = true
+        unless row_error.empty?
+          re[1] = I18n.t(:organization_technology)
+          list_tab[1] = row_error
         end
       elsif index == 2
-        if !row_error.empty?
-          re << I18n.t(:pe_attributes)
-          flag_for_show = true
+        unless row_error.empty?
+          re[2] = I18n.t(:pe_attributes)
+          list_tab[2] = row_error
         end
       end
-      if flag_for_show == true
-        flash[:error] = I18n.t(:error_warning, parameter_1: re.join(", "), parameter_2: row_error.join(", "))
+    end
+    re.each_with_index do |ligne, index|
+      unless ligne.empty?
+        final_message << " - #{ligne} : #{list_tab[index].join(", ")}"
       end
+    end
+    unless final_message.empty?
+      flash[:error] = I18n.t(:error_warning, parameter: final_message.join("<br/>")).html_safe
     end
   end
 
@@ -86,7 +92,7 @@ class Guw::GuwModelsController < ApplicationController
     critical_flag = true
     action_type_aquisition_flag = false
     action_technologie_flag = false
-    action_Attribute_flag = false
+    action_attribute_flag = false
     tab_error = [[], [], []]
     ind = 1
     ind2 = 10
@@ -106,17 +112,18 @@ class Guw::GuwModelsController < ApplicationController
             @guw_model = Guw::GuwModel.find_by_name(tab[0][1])
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
-                                             description: tab[1][1],
-                                             three_points_estimation: tab[2][1] == 1 ? true : false,
-                                             retained_size_unit: tab[3][1],
-                                             organization_id: @current_organization.id)
+                                                description: tab[1][1],
+                                                three_points_estimation: tab[2][1] == 1 ? true : false,
+                                                retained_size_unit: tab[3][1],
+                                                coefficient_label: "type acquisition",
+                                                organization_id: @current_organization.id)
               critical_flag = false
             else
               route_flag = 1
               break
             end
           elsif index == 1
-            if critical_flag == true
+            if critical_flag
               route_flag = 5
               break
             end
@@ -128,7 +135,7 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 2
-            if critical_flag == true
+            if critical_flag
               route_flag = 5
               break
             end
@@ -141,7 +148,7 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           else
-            if critical_flag == true
+            if critical_flag
               route_flag = 5
               break
             end
@@ -230,24 +237,21 @@ class Guw::GuwModelsController < ApplicationController
                   end
                   ind3 = 0
                   ind = 1
-                  action_Attribute_flag = true
+                  action_attribute_flag = true
                 end
 
-                if action_type_aquisition_flag == false
+                unless action_type_aquisition_flag
                   tab_error[0].push(@guw_type.name)
-                else
-                  action_type_aquisition_flag = false
                 end
-                if action_technologie_flag == false
+                unless action_technologie_flag
                   tab_error[1].push(@guw_type.name)
-                else
-                  action_technologie_flag = false
                 end
-                if action_Attribute_flag == false
+                unless action_attribute_flag
                   tab_error[2].push(@guw_type.name)
-                else
-                  action_Attribute_flag = false
                 end
+                action_attribute_flag = false
+                action_technologie_flag = false
+                action_type_aquisition_flag = false
               else
                 route_flag = 6
                 sheet_error += 1
@@ -386,24 +390,18 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.add_cell(0, ind, description)
       worksheet.change_row_height(0, deter_size(description) * 15)
       worksheet.change_column_width(0, 65)
-
-
       worksheet.add_cell(1, 0, I18n.t(:enable_restraint))
       worksheet.sheet_data[1][0].change_font_bold(true)
       worksheet.add_cell(1, 1,  guw_type.allow_retained ? 1 : 0)
-
       worksheet.add_cell(2, 0, I18n.t(:enable_amount))
       worksheet.sheet_data[2][0].change_font_bold(true)
       worksheet.add_cell(2, 1,  guw_type.allow_quantity ? 1 : 0)
-
       worksheet.add_cell(3, 0,  I18n.t(:enable_complexity))
       worksheet.sheet_data[3][0].change_font_bold(true)
       worksheet.add_cell(3, 1,  guw_type.allow_complexity ? 1 : 0)
-
       worksheet.add_cell(4, 0, I18n.t(:enable_counting))
       worksheet.sheet_data[4][0].change_font_bold(true)
       worksheet.add_cell(4, 1,  guw_type.allow_criteria ? 1 : 0)
-
       @guw_complexities = guw_type.guw_complexities
       worksheet.add_cell(ind2 , 0,  I18n.t(:UO_type_complexity))
       worksheet.sheet_data[ind2][0].change_font_bold(true)
@@ -445,7 +443,10 @@ class Guw::GuwModelsController < ApplicationController
           worksheet.merge_cells(ind2 + 5, ind + 1, ind2 + 5, ind + 4)
           worksheet.add_cell(ind2 + 5, ind + 1, ct.coefficient)
           ind2 += 1
-          ind3 += 1
+          #ind3 += 1
+        end
+        if ind3 < ind2
+          ind3 += (ind2 + 1)
         end
         ind2 = 6
         ind += 4
@@ -593,7 +594,7 @@ class Guw::GuwModelsController < ApplicationController
                 I18n.t(:cotation).length,
                 I18n.t(:results).length,
                 I18n.t(:retained_result).length,
-                I18n.t(pe_attribute_name).length,
+                I18n.t(:pe_attribute_name).length,
                 I18n.t(:low).length,
                 I18n.t(:likely).length,
                 I18n.t(:high).length]
@@ -626,7 +627,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.change_column_width(12, tab_size[12])
     worksheet.add_cell(0, 13, I18n.t(:retained_result))
     worksheet.change_column_width(13, tab_size[13])
-    worksheet.add_cell(0, 14, I18n.t(pe_attribute_name))
+    worksheet.add_cell(0, 14, I18n.t(:pe_attribute_name))
     worksheet.change_column_width(14, tab_size[14])
     worksheet.add_cell(0, 15, I18n.t(:low))
     worksheet.change_column_width(15, tab_size[15])
