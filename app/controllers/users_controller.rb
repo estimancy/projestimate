@@ -241,7 +241,7 @@ public
   def unlock_user
     @user = User.find(params[:id])
     if @user.locked_at.nil?
-      @user.lock_access!
+      @user.lock_access!(send_instructions: false)
     else
       @user.unlock_access!
     end

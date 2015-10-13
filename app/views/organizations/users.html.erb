@@ -59,6 +59,7 @@
             <th><%= I18n.t(:groups) %></th>
             <% if current_user.super_admin? %>
               <th><%= I18n.t(:is_super_admin) %></th>
+              <th>Bloqué le</th>
             <% end %>
             <th class="action" colspan="2"><%= I18n.t(:actions) %></th>
           </tr>
