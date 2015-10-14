@@ -737,6 +737,8 @@ fr:
   general_csv_separator: ','
   general_csv_decimal_separator: ','
   general_csv_encoding: ISO-8859-1
+  "yes": 'Oui'
+  "no": 'Non'
 
   simple_form:
     "yes": 'Oui'
@@ -1552,7 +1554,7 @@ fr:
   enable_counting: "Activer le dénombrement"
   Coefficient_of_acquisiton: "Coefficients d'acquisitons"
   threshold: "Seuil"
-  my_display: "[    ;    [       /          Poids"
+  my_display: "Poids"
   complexity_threshold: "Seuils de complexité"
   importation_success: "Modèle importé avec succès."
   importation_sucess_uo: "Unité d'oeuvre importé avec succés."

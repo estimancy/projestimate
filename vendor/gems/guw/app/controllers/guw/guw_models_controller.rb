@@ -113,7 +113,7 @@ class Guw::GuwModelsController < ApplicationController
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
-                                                three_points_estimation: tab[2][1] == 1 ? true : false,
+                                                three_points_estimation: tab[2][1] == I18n.t(:yes) ? true : false,
                                                 retained_size_unit: tab[3][1],
                                                 coefficient_label: "type acquisition",
                                                 organization_id: @current_organization.id)
@@ -156,16 +156,16 @@ class Guw::GuwModelsController < ApplicationController
               if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
                 @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
                                                 description: tab[0][0],
-                                                allow_quantity: tab[2][1] == 1 ? true : false,
-                                                allow_retained: tab[1][1] == 1 ? true : false,
-                                                allow_complexity: tab[3][1] == 1 ? true : false,
-                                                allow_criteria: tab[4][1] == 1 ? true : false,
+                                                allow_quantity: tab[2][1] == I18n.t(:yes) ? true : false,
+                                                allow_retained: tab[1][1] == I18n.t(:yes) ? true : false,
+                                                allow_complexity: tab[3][1] == I18n.t(:yes) ? true : false,
+                                                allow_criteria: tab[4][1] == I18n.t(:yes) ? true : false,
                                                 guw_model_id: @guw_model.id)
                 if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty? && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
                   while !tab[6][ind].nil?
                     @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
                                                                name: tab[6][ind],
-                                                               enable_value: tab[8][ind] == 1 ? true : false,
+                                                               enable_value: tab[8][ind] == I18n.t(:yes) ? true : false,
                                                                bottom_range: tab[8][ind + 1],
                                                                top_range: tab[8][ind + 2],
                                                                weight:  tab[8][ind + 3])
@@ -174,7 +174,7 @@ class Guw::GuwModelsController < ApplicationController
                         ind2 += 1
                       end
                       if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind])
+                        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind + 3])
                       elsif tab[ind2].nil?
                         route_flag = 3
                         break
@@ -196,7 +196,7 @@ class Guw::GuwModelsController < ApplicationController
                          ind2 += 1
                        end
                        if !tab[ind2].nil?
-                         Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id, organization_technology_id: techno.id, coefficient: tab[ind2][ind])
+                         Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id, organization_technology_id: techno.id, coefficient: tab[ind2][ind + 3])
                        end
                        ind2 = ind3
                       end
@@ -226,7 +226,7 @@ class Guw::GuwModelsController < ApplicationController
                         toto = Guw::GuwAttributeComplexity.create(guw_type_complexity_id: @guw_att_complexity.id,
                                                            guw_attribute_id: att.id,
                                                            guw_type_id: @guw_type.id,
-                                                           enable_value: tab[ind3][ind] == 0 ? false : true,
+                                                           enable_value: tab[ind3][ind] == I18n.t(:yes) ? true : false,
                                                            bottom_range: tab[ind3][ind + 1],
                                                            top_range: tab[ind3][ind + 2],
                                                            value: tab[ind3][ind + 3])
@@ -319,41 +319,85 @@ class Guw::GuwModelsController < ApplicationController
     ind = 0
     ind2 = 1
     ind3 = 5
+    used_column = []
 
     worksheet = workbook[0]
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
     workbook.add_worksheet(I18n.t(:Type_acquisitions))
     worksheet.add_cell(0, 0, I18n.t(:model_name))
+    worksheet[0][0].change_border(:bottom, 'thin')
+    worksheet[0][0].change_border(:right, 'thin')
     worksheet.sheet_data[0][0].change_font_bold(true)
+
     worksheet.add_cell(0, 1, @guw_model.name)
+    worksheet[0][1].change_border(:right, 'thin')
+    worksheet[0][1].change_border(:bottom, 'thin')
     worksheet.sheet_data[0][1].change_horizontal_alignment('center')
+
     worksheet.add_cell(1, 0, I18n.t(:model_description))
+    worksheet[1][0].change_border(:right, 'thin')
+    worksheet[1][0].change_border(:bottom, 'thin')
+
     worksheet.add_cell(1, 1, @guw_model.description)
+    worksheet[1][1].change_border(:right, 'thin')
+    worksheet[1][1].change_border(:bottom, 'thin')
+
     worksheet.add_cell(2, 0, I18n.t(:three_points_estimation_activities))
-    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? 1 : 0)
+    worksheet[2][0].change_border(:right, 'thin')
+    worksheet[2][0].change_border(:bottom, 'thin')
+
+    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? I18n.t(:yes) : I18n.t(:no))
+    worksheet[2][1].change_border(:right, 'thin')
+    worksheet[2][1].change_border(:bottom, 'thin')
     worksheet.sheet_data[2][1].change_horizontal_alignment('center')
+
     worksheet.add_cell(3, 0, I18n.t(:retained_size_unit))
+    worksheet[3][0].change_border(:right, 'thin')
+    worksheet[3][0].change_border(:bottom, 'thin')
+
     worksheet.add_cell(3, 1, @guw_model.retained_size_unit)
+    worksheet[3][1].change_border(:right, 'thin')
+    worksheet[3][1].change_border(:bottom, 'thin')
+
     worksheet.change_column_bold(0,true)
     worksheet.sheet_data[3][1].change_horizontal_alignment('center')
     worksheet.change_row_height(1,deter_size(@guw_model.description) * 13)
     worksheet.change_column_width(0, 38)
     worksheet.change_column_width(1, the_most_largest(@guw_model.description))
     worksheet.add_cell(4, 0, I18n.t(:advice))
+    worksheet.add_cell(4, 1, "")
+
     worksheet.sheet_data[4][0].change_font_bold(true)
     worksheet.merge_cells(4, 0, 4, 1)
+    worksheet[4][1].change_border(:right, 'thin')
+    worksheet[4][0].change_border(:bottom, 'thin')
     worksheet.change_row_height(4, 25)
 
-
     worksheet = workbook[1]
+
     worksheet.add_cell(0, 0, I18n.t(:pe_attribute_name))
+    worksheet[0][0].change_border(:right, 'thin')
+    worksheet[0][0].change_border(:bottom, 'thin')
+
     worksheet.add_cell(0, 1, I18n.t(:description))
+    worksheet[0][1].change_border(:right, 'thin')
+    worksheet[0][1].change_border(:bottom, 'thin')
+
+
     worksheet.change_row_bold(0,true)
     worksheet.change_row_horizontal_alignment(0, 'center')
     @guw_model.guw_attributes.order("name ASC").each_with_index do |attribute, indx|
+
       worksheet.add_cell(indx + 1, 0, attribute.name)
+      worksheet[indx + 1][0].change_border(:right, 'thin')
+      worksheet[indx + 1][0].change_border(:bottom, 'thin')
+
       worksheet.add_cell(indx + 1, 1, attribute.description)
+      worksheet[indx + 1][1].change_border(:right, 'thin')
+      worksheet[indx + 1][1].change_border(:bottom, 'thin')
+
+
       if ind < attribute.name.size
         worksheet.change_column_width(0, attribute.name.size)
         ind = attribute.name.size
@@ -363,88 +407,227 @@ class Guw::GuwModelsController < ApplicationController
         ind2 = the_most_largest(attribute.description)
       end
     end
+
     ind = 0
     ind2 = 6
 
     worksheet = workbook[2]
     worksheet.change_row_bold(0,true)
     worksheet.add_cell(0, 0, I18n.t(:name))
+    worksheet[0][0].change_border(:right, 'thin')
+    worksheet[0][0].change_border(:bottom, 'thin')
+
     worksheet.add_cell(0, 1, I18n.t(:value))
+    worksheet[0][1].change_border(:right, 'thin')
+    worksheet[0][1].change_border(:bottom, 'thin')
+
     worksheet.add_cell(0, 2, I18n.t(:display_order))
+    worksheet[0][2].change_border(:right, 'thin')
+    worksheet[0][2].change_border(:bottom, 'thin')
+
     worksheet.change_row_horizontal_alignment(0, 'center')
-    worksheet.change_column_width(2, 18)
+    worksheet.change_column_horizontal_alignment(1, 'center')
+    worksheet.change_column_horizontal_alignment(2, 'center')
+    worksheet.change_column_width(2, I18n.t(:display_order).size)
     @guw_model.guw_work_units.each_with_index do |aquisitions_type,indx|
       worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
+
+      worksheet[indx + 1][0].change_border(:right, 'thin')
+      worksheet[indx + 1][0].change_border(:bottom, 'thin')
+
       worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
+      worksheet[indx + 1][1].change_border(:right, 'thin')
+      worksheet[indx + 1][1].change_border(:bottom, 'thin')
+
       worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      worksheet[indx + 1][2].change_border(:right, 'thin')
+      worksheet[indx + 1][2].change_border(:bottom, 'thin')
+
       if ind < aquisitions_type.name.size
         worksheet.change_column_width(0, aquisitions_type.name.size)
         ind = aquisitions_type.name.size
       end
     end
+
     ind = 0
 
+    worksheet.change_column_horizontal_alignment(1, 'center')
     @guw_types.each do |guw_type|
       worksheet = workbook.add_worksheet(guw_type.name)
       description = Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(guw_type.description)).text
+
+
       worksheet.add_cell(0, ind, description)
+      worksheet[0][0].change_border(:right, 'thin')
+      worksheet[0][0].change_border(:bottom, 'thin')
       worksheet.change_row_height(0, deter_size(description) * 15)
       worksheet.change_column_width(0, 65)
+
       worksheet.add_cell(1, 0, I18n.t(:enable_restraint))
+      worksheet[1][0].change_border(:right, 'thin')
+      worksheet[1][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[1][0].change_font_bold(true)
-      worksheet.add_cell(1, 1,  guw_type.allow_retained ? 1 : 0)
+
+      worksheet.add_cell(1, 1,  guw_type.allow_retained ? I18n.t(:yes) : I18n.t(:no))
+      worksheet[1][1].change_border(:top, 'thin')
+      worksheet[1][1].change_border(:right, 'thin')
+      worksheet[1][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[1][1].change_horizontal_alignment('center')
+
       worksheet.add_cell(2, 0, I18n.t(:enable_amount))
+      worksheet[2][0].change_border(:right, 'thin')
+      worksheet[2][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[2][0].change_font_bold(true)
-      worksheet.add_cell(2, 1,  guw_type.allow_quantity ? 1 : 0)
+
+      worksheet.add_cell(2, 1,  guw_type.allow_quantity ? I18n.t(:yes) : I18n.t(:no))
+      worksheet[2][1].change_border(:right, 'thin')
+      worksheet[2][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[2][1].change_horizontal_alignment('center')
+
       worksheet.add_cell(3, 0,  I18n.t(:enable_complexity))
+      worksheet[3][0].change_border(:right, 'thin')
+      worksheet[3][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[3][0].change_font_bold(true)
-      worksheet.add_cell(3, 1,  guw_type.allow_complexity ? 1 : 0)
+
+      worksheet.add_cell(3, 1,  guw_type.allow_complexity ? I18n.t(:yes) : I18n.t(:no))
+      worksheet[3][1].change_border(:right, 'thin')
+      worksheet[3][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[3][1].change_horizontal_alignment('center')
+
       worksheet.add_cell(4, 0, I18n.t(:enable_counting))
+      worksheet[4][0].change_border(:right, 'thin')
+      worksheet[4][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[4][0].change_font_bold(true)
-      worksheet.add_cell(4, 1,  guw_type.allow_criteria ? 1 : 0)
+
+      worksheet.add_cell(4, 1,  guw_type.allow_criteria ? I18n.t(:yes) : I18n.t(:no))
+      worksheet[4][1].change_border(:right, 'thin')
+      worksheet[4][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[4][1].change_horizontal_alignment('center')
+
       @guw_complexities = guw_type.guw_complexities
       worksheet.add_cell(ind2 , 0,  I18n.t(:UO_type_complexity))
+      worksheet[ind2][0].change_border(:top, 'thin')
       worksheet.sheet_data[ind2][0].change_font_bold(true)
-      worksheet.sheet_data[ind2][0].change_horizontal_alignment('left')
-      worksheet.change_row_horizontal_alignment( ind2 + 1, 'center')
+
+      worksheet.add_cell(ind2 + 2, 0, I18n.t(:threshold))
+      worksheet[ind2 + 2][0].change_border(:bottom, 'thin')
+
+      worksheet.sheet_data[ind2 + 2][0].change_font_bold(true)
       worksheet.change_row_bold(ind2 + 3,true)
       worksheet.add_cell(ind2 + 3, 0,  I18n.t(:Coefficient_of_acquisiton))
-      worksheet.add_cell(ind2 + 2, 0, I18n.t(:threshold))
-      worksheet.sheet_data[ind2 + 2][0].change_font_bold(true)
+      worksheet[ind2 + 3][0].change_border(:bottom, 'thin')
+
       @guw_complexities.each do |guw_complexity|
-        worksheet.add_cell(ind2 + 1, ind + 2, I18n.t(:my_display))
+
         worksheet.add_cell(ind2 + 1, ind + 1, "Prod")
-        worksheet.merge_cells(0, 0, 0, ind + 4)
-        worksheet.merge_cells(ind2, ind + 1, ind2, ind + 4)
-        worksheet.merge_cells(ind2 + 3, 0, ind2 + 3, ind + 4)
-        worksheet.merge_cells(ind2 + 1, ind + 2, ind2 + 1, ind + 4)
+        worksheet.sheet_data[ind2 + 1][ind + 1].change_horizontal_alignment('center')
+        worksheet[ind2 + 1][ind + 1].change_border(:top, 'thin')
+        worksheet[ind2 + 1][ind + 1].change_border(:left, 'thin')
+        worksheet[ind2 + 1][ind + 1].change_border(:right, 'thin')
+        worksheet[ind2 + 1][ind + 1].change_border(:bottom, 'thin')
+
+        worksheet.add_cell(ind2 + 1, ind + 2, "[")
+        worksheet.sheet_data[ind2 + 1][ind + 2].change_horizontal_alignment('center')
+        worksheet[ind2 + 1][ind + 2].change_border(:top, 'thin')
+        worksheet[ind2 + 1][ind + 2].change_border(:right, 'thin')
+        worksheet[ind2 + 1][ind + 2].change_border(:bottom, 'thin')
+
+        worksheet.add_cell(ind2 + 1, ind + 3, "[")
+        worksheet.sheet_data[ind2 + 1][ind + 3].change_horizontal_alignment('center')
+        worksheet[ind2 + 1][ind + 3].change_border(:top, 'thin')
+        worksheet[ind2 + 1][ind + 3].change_border(:right, 'thin')
+        worksheet[ind2 + 1][ind + 3].change_border(:bottom, 'thin')
+
+        worksheet.add_cell(ind2 + 1, ind + 4, I18n.t(:my_display))
+        worksheet.sheet_data[ind2 + 1][ind + 4].change_horizontal_alignment('center')
+        worksheet[ind2 + 1][ind + 4].change_border(:top, 'thin')
+        worksheet[ind2 + 1][ind + 4].change_border(:right, 'thin')
+        worksheet[ind2 + 1][ind + 4].change_border(:bottom, 'thin')
+
         worksheet.add_cell(ind2, ind + 1, guw_complexity.name)
+        worksheet[ind2][ind + 1].change_border(:top, 'thin')
+        worksheet[ind2][ind + 1].change_border(:left, 'thin')
+        worksheet[ind2][ind + 1].change_border(:right, 'thin')
         worksheet.sheet_data[ind2][ind + 1].change_horizontal_alignment('center')
+
+        worksheet.add_cell(ind2 + 2, ind + 1, guw_complexity.enable_value ? I18n.t(:yes) : I18n.t(:no))
+        worksheet[ind2 + 2][ind + 1].change_border(:left, 'thin')
+        worksheet[ind2 + 2][ind + 1].change_border(:bottom, 'thin')
+        worksheet.sheet_data[ind2 + 2][ind + 1].change_horizontal_alignment('center')
+
         worksheet.add_cell(ind2 + 2, ind + 2, guw_complexity.bottom_range)
+        worksheet[ind2 + 2][ind + 2].change_border(:left, 'thin')
+        worksheet[ind2 + 2][ind + 2].change_border(:bottom, 'thin')
+        worksheet.sheet_data[ind2 + 2][ind + 2].change_horizontal_alignment('center')
+
         worksheet.add_cell(ind2 + 2, ind + 3, guw_complexity.top_range)
+        worksheet[ind2 + 2][ind + 3].change_border(:left, 'thin')
+        worksheet[ind2 + 2][ind + 3].change_border(:bottom, 'thin')
+        worksheet.sheet_data[ind2 + 2][ind + 3].change_horizontal_alignment('center')
+
         worksheet.add_cell(ind2 + 2, ind + 4, guw_complexity.weight)
-        worksheet.add_cell(ind2 + 2, ind + 1, guw_complexity.enable_value ? 1 : 0)
+        worksheet[ind2 + 2][ind + 4].change_border(:left, 'thin')
+        worksheet[ind2 + 2][ind + 4].change_border(:bottom, 'thin')
+        worksheet[ind2 + 2][ind + 4].change_border(:right, 'thin')
+        worksheet.sheet_data[ind2 + 2][ind + 4].change_horizontal_alignment('center')
+
         guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
           @guw_work_unit = guw_complexity_work_unit.guw_work_unit
           cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
           worksheet.add_cell(ind2 + 4, 0, @guw_work_unit.name)
-          worksheet.merge_cells(ind2 + 4, ind + 1, ind2 + 4, ind + 4)
-          worksheet.add_cell(ind2 + 4, ind + 1, cu.value)
+          worksheet[ind2 + 4][0].change_border(:right, 'thin')
+
+          worksheet.add_cell(ind2 + 4, ind + 1, "")
+          worksheet.add_cell(ind2 + 4, ind + 2, "")
+          worksheet.add_cell(ind2 + 4, ind + 3, "")
+          worksheet.add_cell(ind2 + 4, ind + 4, cu.value)
+          worksheet.sheet_data[ind2 + 4][ind + 4].change_horizontal_alignment('center')
+          worksheet[10][ind + 1].change_border(:top, 'thin')
+          worksheet[10][ind + 2].change_border(:top, 'thin')
+          worksheet[10][ind + 3].change_border(:top, 'thin')
+          worksheet[10][ind + 4].change_border(:top, 'thin')
+          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
+
           ind2 += 1
         end
-        worksheet.merge_cells(ind2 + 4, 0, ind2 + 4, ind + 4)
+
+        worksheet[ind2 + 3][0].change_border(:bottom, 'thin')
+        worksheet[ind2 + 3][ind + 1].change_border(:bottom, 'thin')
+        worksheet[ind2 + 3][ind + 2].change_border(:bottom, 'thin')
+        worksheet[ind2 + 3][ind + 3].change_border(:bottom, 'thin')
+        worksheet[ind2 + 3][ind + 4].change_border(:bottom, 'thin')
+
         worksheet.change_row_bold(ind2 + 4,true)
         worksheet.add_cell(ind2 + 4, 0, I18n.t(:organization_technology))
+        worksheet[ind2 + 4][0].change_border(:bottom, 'thin')
+
+        block_it = ind2 + 5
+
         guw_complexity.guw_complexity_technologies.each do |complexity_technology|
           @guw_organisation_technology = complexity_technology.organization_technology
           ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
           worksheet.add_cell(ind2 + 5, 0, @guw_organisation_technology.name)
-          worksheet.merge_cells(ind2 + 5, ind + 1, ind2 + 5, ind + 4)
-          worksheet.merge_cells(ind2 + 5, ind + 1, ind2 + 5, ind + 4)
-          worksheet.add_cell(ind2 + 5, ind + 1, ct.coefficient)
+          worksheet[ind2 + 5][0].change_border(:right, 'thin')
+
+          worksheet.add_cell(ind2 + 5, ind + 1, "")
+          worksheet.add_cell(ind2 + 5, ind + 2, "")
+          worksheet.add_cell(ind2 + 5, ind + 3, "")
+          worksheet.add_cell(ind2 + 5, ind + 4, ct.coefficient)
+          worksheet.sheet_data[ind2 + 5][ind + 4].change_horizontal_alignment('center')
+          worksheet[block_it][ind + 1].change_border(:top, 'thin')
+          worksheet[block_it][ind + 2].change_border(:top, 'thin')
+          worksheet[block_it][ind + 3].change_border(:top, 'thin')
+          worksheet[block_it][ind + 4].change_border(:top, 'thin')
+          worksheet[ind2 + 5][ind + 4].change_border(:right, 'thin')
+
           ind2 += 1
-          #ind3 += 1
         end
+        worksheet[ind2 + 4][0].change_border(:bottom, 'thin')
+        worksheet[ind2 + 4][ind + 1].change_border(:bottom, 'thin')
+        worksheet[ind2 + 4][ind + 2].change_border(:bottom, 'thin')
+        worksheet[ind2 + 4][ind + 3].change_border(:bottom, 'thin')
+        worksheet[ind2 + 4][ind + 4].change_border(:bottom, 'thin')
+
         if ind3 < ind2
           ind3 += (ind2 + 1)
         end
@@ -454,29 +637,78 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       worksheet.add_cell(ind3, ind, I18n.t(:complexity_threshold))
       worksheet.sheet_data[ind3][ind].change_font_bold(true)
+      worksheet[ind3][ind].change_border(:top, 'thin')
+
       worksheet.add_cell(ind3 + 1, ind, I18n.t(:pe_attributes))
       worksheet.sheet_data[ind3 + 1][ind].change_font_bold(true)
+      worksheet[ind3 + 1][ind].change_border(:bottom, 'thin')
+
       guw_type.guw_type_complexities.each  do |type_attribute_complexity|
-        worksheet.merge_cells(ind3, ind + 1, ind3, ind + 4)
         worksheet.add_cell(ind3, ind + 1, type_attribute_complexity.name)
+        worksheet[ind3][ind + 1].change_border(:top, 'thin')
+        worksheet[ind3][ind + 1].change_border(:right, 'thin')
+        worksheet[ind3][ind + 1].change_border(:left, 'thin')
         worksheet.sheet_data[ind3][ind + 1].change_horizontal_alignment('center')
+
         worksheet.add_cell(ind3 + 1, ind + 1, "Prod")
         worksheet.sheet_data[ind3 + 1][ind + 1].change_horizontal_alignment('center')
-        worksheet.merge_cells(ind3 + 1, ind + 2, ind3 + 1, ind + 4)
-        worksheet.add_cell(ind3 + 1 , ind + 2, I18n.t(:my_display))
+        worksheet[ind3 + 1][ind + 1].change_border(:top, 'thin')
+        worksheet[ind3 + 1][ind + 1].change_border(:bottom, 'thin')
+        worksheet[ind3 + 1][ind + 1].change_border(:left, 'thin')
+
+        worksheet.add_cell(ind3 + 1, ind + 2, "[")
         worksheet.sheet_data[ind3 + 1][ind + 2].change_horizontal_alignment('center')
+        worksheet[ind3 + 1][ind + 2].change_border(:top, 'thin')
+        worksheet[ind3 + 1][ind + 2].change_border(:bottom, 'thin')
+        worksheet[ind3 + 1][ind + 2].change_border(:left, 'thin')
+
+        worksheet.add_cell(ind3 + 1, ind + 3, "[")
+        worksheet.sheet_data[ind3 + 1][ind + 3].change_horizontal_alignment('center')
+        worksheet[ind3 + 1][ind + 3].change_border(:top, 'thin')
+        worksheet[ind3 + 1][ind + 3].change_border(:bottom, 'thin')
+        worksheet[ind3 + 1][ind + 3].change_border(:left, 'thin')
+
+        worksheet.add_cell(ind3 + 1, ind + 4, I18n.t(:my_display))
+        worksheet.sheet_data[ind3 + 1][ind + 4].change_horizontal_alignment('center')
+        worksheet[ind3 + 1][ind + 4].change_border(:top, 'thin')
+        worksheet[ind3 + 1][ind + 4].change_border(:bottom, 'thin')
+        worksheet[ind3 + 1][ind + 4].change_border(:left, 'thin')
+        worksheet[ind3 + 1][ind + 4].change_border(:right, 'thin')
+
         ind4 = ind3 + 2
         @guw_model.guw_attributes.order("name ASC").each do |attribute|
           worksheet.add_cell(ind4, 0, attribute.name)
+          worksheet[ind4][0].change_border(:right, 'thin')
+
           att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
           unless att_val.nil?
-            worksheet.add_cell(ind4, ind + 1, att_val.enable_value ? 1 : 0)
+            worksheet.add_cell(ind4, ind + 1, att_val.enable_value ? I18n.t(:yes) : I18n.t(:no))
+            worksheet[ind4][ind + 1].change_border(:right, 'thin')
+            worksheet.sheet_data[ind4][ind + 1].change_horizontal_alignment('center')
+
+
             worksheet.add_cell(ind4, ind + 2, att_val.bottom_range)
+            worksheet[ind4][ind + 2].change_border(:right, 'thin')
+            worksheet.sheet_data[ind4][ind + 2].change_horizontal_alignment('center')
+
             worksheet.add_cell(ind4, ind + 3, att_val.top_range)
+            worksheet[ind4][ind + 3].change_border(:right, 'thin')
+            worksheet.sheet_data[ind4][ind + 3].change_horizontal_alignment('center')
+
             worksheet.add_cell(ind4, ind + 4, att_val.value)
+            worksheet[ind4][ind + 4].change_border(:right, 'thin')
+            worksheet.sheet_data[ind4][ind + 4].change_horizontal_alignment('center')
+
           end
           ind4 += 1
         end
+
+        worksheet[ind4 - 1][0].change_border(:bottom, 'thin')
+        worksheet[ind4 - 1][ind + 1].change_border(:bottom, 'thin')
+        worksheet[ind4 - 1][ind + 2].change_border(:bottom, 'thin')
+        worksheet[ind4 - 1][ind + 3].change_border(:bottom, 'thin')
+        worksheet[ind4 - 1][ind + 4].change_border(:bottom, 'thin')
+
         ind += 4
       end
       ind = 0
@@ -636,7 +868,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.add_cell(0, 17, I18n.t(:high))
     worksheet.change_column_width(17, tab_size[17])
     @guw_unit_of_works.each do |guow|
-      if guow.off_line == true
+      if guow.off_line
         cplx = "HSAT"
       elsif guow.off_line_uo
         cplx = "HSUO"
