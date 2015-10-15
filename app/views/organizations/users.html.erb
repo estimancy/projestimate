@@ -81,7 +81,7 @@
             </td>
 
             <td class="align-center">
-              <% if user.super_admin == true %>
+              <% if can? :manage, User, :organization_id => @organization.id %>
                 <% if user.locked_at.nil? %>
                   <%= link_to('', unlock_user_path(user), :class => 'icon-unlock', :title => I18n.t('edit')) %>
                 <% else %>
