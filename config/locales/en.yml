@@ -738,6 +738,8 @@ en:
   general_csv_separator: ','
   general_csv_decimal_separator: '.'
   general_csv_encoding: ISO-8859-1
+  "yes": 'Yes'
+  "no": 'No'
 
   simple_form:
     "yes": 'Yes'
@@ -1547,7 +1549,7 @@ en:
   enable_counting: "Enable counting"
   Coefficient_of_acquisiton: "Coefficients acquisitons"
   threshold: "threshold"
-  my_display: "[    ;    [       /          weight"
+  my_display: "weight"
   complexity_threshold: "Complexity threshold"
   importation_success: "Importation success."
   importation_sucess_uo: "Unit of work importation success."
