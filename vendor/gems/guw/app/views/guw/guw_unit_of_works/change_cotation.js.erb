@@ -37,9 +37,9 @@ $(".ajusted_effort_<%= @guw_unit_of_work.id %>").html("<%= j(text_field_tag "aju
 <% if @guw_unit_of_work.guw_type.allow_criteria == true %>
   <% counting = @guw_unit_of_work.guw_unit_of_work_attributes.where(guw_type_id: @guw_unit_of_work.guw_type_id).map(&:most_likely).compact %>
   <% if counting.empty? %>
-    $(".criteria_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to("", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true, class: "fa fa-gears", style: "color: red")) %>")
+    $(".criteria_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to("", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true, class: "fa fa-gears", style: "color: black;")) %>")
   <% else %>
-    $(".criteria_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to("", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true, class: "fa fa-gears", style: "color: green")) %>")
+    $(".criteria_label_<%= @guw_unit_of_work.id %>").html("<%= j(link_to("", guw.guw_unit_of_work_load_cotations_path(@guw_unit_of_work), method: "post", remote: true, class: "fa fa-gears", style: "color: #0088cc;")) %>")
   <% end %>
 <% else %>
   $(".criteria_label_<%= @guw_unit_of_work.id %>").html("")
