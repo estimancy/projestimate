@@ -172,7 +172,6 @@ Projestimate::Application.routes.draw do
   match 'estimation_values/:type/convert' => 'estimation_values#convert', :as => 'convert'
 
   resources :attribute_modules
-  post 'check_attribute_modules' => 'attribute_modules#check_attribute_modules', :as => 'check_attribute_modules'
 
   resources :module_projects
   match 'module_projects/:project_id/module_projects_matrix' => 'module_projects#module_projects_matrix', :as => 'module_projects_matrix'

@@ -1,69 +1,43 @@
-<table class="table table-striped table-bordered table-condensed">
+<table id="table_list_3" class="table table-striped table-bordered table-condensed tablesorterPager">
 
-  <tr>
-    <th style="min-width: 110px"><%= I18n.t(:name) %></th>
-    <th><%= I18n.t(:description) %></th>
-    <th style="width: 90px"><%= I18n.t(:low) %></th>
-    <th style="width: 90px"><%= I18n.t(:likely) %></th>
-    <th style="width: 90px"><%= I18n.t(:high) %></th>
-    <th style="max-width: 50px"><%= I18n.t(:in_out) %></th>
-    <th style="max-width: 50px"><%= I18n.t(:mandatory) %></th>
-    <th style="max-width: 40px"><%= I18n.t(:display_order) %></th>
-    <th style="max-width: 70px"><%= I18n.t(:custom_attribute) %></th>
-    <th><%= I18n.t(:projects) %></th>
-    <th style="max-width: 70px"><%= I18n.t(:record_status) %></th>
-    <th class="action" style="min-width: 50px"><%= I18n.t(:actions) %></th>
-  </tr>
+  <thead>
+    <tr>
+      <th class="span4"><%= I18n.t(:name) %></th>
+      <th><%= I18n.t(:description) %></th>
+      <th><%= I18n.t(:low) %></th>
+      <th><%= I18n.t(:likely) %></th>
+      <th><%= I18n.t(:high) %></th>
+      <th><%= I18n.t(:in_out) %></th>
+      <th><%= I18n.t(:record_status) %></th>
+      <th class="action"><%= I18n.t(:actions) %></th>
+    </tr>
+  </thead>
 
   <tbody>
-  <% @attribute_settings.each_with_index do |ma, i| %>
-      <%= hidden_field_tag 'attributes[]', ma.pe_attribute_id %>
-      <tr class="">
-        <td><%= label_tag 'attribute_name', ma.pe_attribute.nil? ? '-' : ma.pe_attribute.name, :class => 'attribute_tooltip', :title => display_attribute_rule(ma.pe_attribute, ma) %></td>
-        <td><%= text_field_tag 'description[]', ma.description.blank? ? (ma.pe_attribute.nil? ? '-' : ma.pe_attribute.description) : ma.description %></td>
-        <td><%= text_field_tag 'default_low[]', ma.default_low, :class => "input-mini low #{ma.id} #{(ma.pe_attribute.attr_type == 'date') ? 'date-picker' : '' }" %></td>
-        <td><%= text_field_tag 'default_most_likely[]', ma.default_most_likely, :class => "input-mini ml #{ma.id}" %></td>
-        <td><%= text_field_tag 'default_high[]', ma.default_high, :class => "input-mini high #{ma.id}" %></td>
-        <td><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => ma.in_out), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small', :disabled => (@pemodule == @initialization_module) %> </td>
-        <td><%= select_tag 'is_mandatory[]', options_for_select([['yes', true], ['no', false]], :selected => ma.is_mandatory), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-mini', :disabled => ((@pemodule == @initialization_module) && ma.is_mandatory?) %></td>
-        <td><%= select_tag 'display_order[]', options_for_select((1..25).to_a, :selected => ma.display_order), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-mini' %></td>
-        <td><%= select_tag 'custom_attribute[]', options_for_select([['By user', 'user'], ['By module', 'module'], ['By project', 'project']], :selected => ma.custom_attribute), :onchange => "toggleProject(this.value, #{i});", :class => 'input-small' %></td>
-        <td><%= select_tag 'project_value[]', options_for_select(Project.attribute_names, :selected => ma.project_value), :style => ma.project_value.blank? ? 'display:none;' : '', :class => "input-small project_attribute_#{i}", :include_blank => true %></td>
-        <td><%= ma.record_status %></td>
-        <td>
-          <%= link_to '', ma, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete') %>
-          <% if is_master_instance? && !ma.is_local_record? %>
-              <% if ma.is_retired? %>
-                  <%= link_to('', "/attribute_modules/#{ma.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
-              <% else %>
-                  <% unless ma.is_defined? %>
-                      <%= link_to('', "/attribute_modules/#{ma.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
-                  <% end %>
-              <% end %>
-          <% end %>
-        </td>
-      </tr>
-  <% end %>
+    <% @attribute_settings.each_with_index do |ma, i| %>
+        <%= hidden_field_tag 'attributes[]', ma.pe_attribute_id %>
+        <tr class="">
+          <td><%= label_tag 'attribute_name', ma.pe_attribute.nil? ? '-' : ma.pe_attribute.name, :class => 'attribute_tooltip', :title => display_attribute_rule(ma.pe_attribute, ma) %></td>
+          <td><%= text_field_tag 'description[]', ma.description.blank? ? (ma.pe_attribute.nil? ? '-' : ma.pe_attribute.description) : ma.description %></td>
+          <td><%= text_field_tag 'default_low[]', ma.default_low, :class => "input-mini low #{ma.id} #{(ma.pe_attribute.attr_type == 'date') ? 'date-picker' : '' }" %></td>
+          <td><%= text_field_tag 'default_most_likely[]', ma.default_most_likely, :class => "input-mini ml #{ma.id}" %></td>
+          <td><%= text_field_tag 'default_high[]', ma.default_high, :class => "input-mini high #{ma.id}" %></td>
+          <td><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => ma.in_out), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small', :disabled => (@pemodule == @initialization_module) %> </td>
+          <td><%= ma.record_status %></td>
+          <td>
+            <%= link_to '', ma, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete') %>
+            <% if is_master_instance? && !ma.is_local_record? %>
+                <% if ma.is_retired? %>
+                    <%= link_to('', "/attribute_modules/#{ma.id}/restore_change", confirm: I18n.t('restoring'), :class => 'icon-undo pull-left', :style => 'color:orange', :title => I18n.t('restore_title')) %>
+                <% else %>
+                    <% unless ma.is_defined? %>
+                        <%= link_to('', "/attribute_modules/#{ma.id}/validate_change", confirm: I18n.t('validation'), :class => 'icon-ok pull-left', :style => 'color:green', :title => I18n.t('validate_title')) %>
+                    <% end %>
+                <% end %>
+            <% end %>
+          </td>
+        </tr>
+    <% end %>
+    <%= render :partial => 'layouts/footer_table' %>
   </tbody>
 </table>
-
-<script>
-    function toggleProject(elem, i) {
-        if (elem == "project") {
-            $(".project_attribute_" + i).show();
-        } else {
-            $(".project_attribute_" + i).hide();
-            $(".project_attribute_" + i).val("");
-        }
-    }
-
-    $(document).ready(function () {
-        $(".date-picker").datepicker({
-            language: '<%= set_user_language %>',
-            autoclose: true,
-            todayHighlight: true,
-            todayBtn: true
-        });
-    });
-
-</script>
