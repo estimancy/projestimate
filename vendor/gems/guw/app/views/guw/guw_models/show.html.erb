@@ -105,7 +105,7 @@
                   <%= work_unit.name %>
                 </td>
 
-                <% guw_type.guw_complexities.order("display_order ASC").each do |guw_cplx| %>
+                <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
                   <td colspan="2" class="align-center">
                     <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
                                                               guw_work_unit_id: work_unit.id).first %>
@@ -130,7 +130,7 @@
                   <%= technology.name %>
                 </td>
 
-                <% guw_type.guw_complexities.order("display_order ASC").each do |guw_cplx| %>
+                <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
                   <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
                                                                 organization_technology_id: technology.id).first %>
                   <td colspan="2" class="align-center">
