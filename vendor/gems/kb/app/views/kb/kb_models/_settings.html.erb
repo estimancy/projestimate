@@ -10,6 +10,18 @@
     <div class="span12">
       <div class="row-fluid">
         <div class="span3">
+          <h5>
+            <strong>
+              Nombre de projets :
+              <span class="project_numbers">
+                <%= @kb_input.values.size %>
+                </span>
+            </strong>
+          </h5>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3">
           <% unless @kb_model.kb_datas.empty? %>
             <p>
               <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each_with_index do |key, i| %>
@@ -62,7 +74,7 @@
 
             <h5>
               <strong>
-                Taille <%= level.humanize %>
+                Taille <%# level.humanize %>
               </strong>
             </h5>
             <% size_attr = PeAttribute.find_by_alias("retained_size") %>
@@ -81,7 +93,7 @@
 
             <h5>
               <strong>
-                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>) <%= level.humanize %>
+                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>) <%# level.humanize %>
               </strong>
             </h5>
             <% effort_attr = PeAttribute.find_by_alias("effort") %>
@@ -137,7 +149,7 @@
           title: {
             text: 'Effort',
             min: 0
-          }
+          },
         },
         series: [{
           name: 'Distribution Taille / Effort',
@@ -157,7 +169,7 @@
           },
           type: 'line',
           color: 'rgba(200, 200, 200, 1)',
-          data: <%= @kb_input.regression.map{|i, j| [i, j] }.sort %>
+          data: <%= @kb_input.regression.map{|i, j| [i.round(2), j.round(2)] }.sort %>
 
         },{
           name: 'Courbe de régression linéaire + 80%',
@@ -166,7 +178,7 @@
           },
           type: 'line',
           color: 'rgba(83, 223, 83, 1)',
-          data: <%= @kb_input.regression.map{|i, j| [i, j * 2.8] }.sort %>
+          data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j * 2.8).round(2)] }.sort %>
         },{
           name: 'Courbe de régression linéaire - 80%',
           marker: {
@@ -174,7 +186,7 @@
           },
           type: 'line',
           color: 'rgba(83, 223, 255, 1)',
-          data: <%= @kb_input.regression.map{|i, j| [i, j / 2.8] }.sort %>
+          data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j / 2.8).round(2)] }.sort %>
         },{
           name: 'Taille calculé',
           marker: {
@@ -182,7 +194,7 @@
           },
           type: 'scatter',
           color: 'rgba(0, 0, 0, 1)',
-          data: <%= [[@size, @effort]] %>
+          data: <%= [[@size, @effort.round(2)]] %>
         }]
       });
     });

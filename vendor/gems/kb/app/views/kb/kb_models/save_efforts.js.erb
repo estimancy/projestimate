@@ -1,5 +1,6 @@
 $("#formula").html("<%= @kb_input.formula %>")
 $("#effort").val("<%= @effort.round(2) %>")
+$(".project_numbers").html("<%= @kb_input.values.size %>")
 
 $(function () {
         $('#scatter_chart').highcharts({
@@ -37,7 +38,7 @@ data: <%= @kb_input.values %>
         },
 type: 'line',
 color: 'rgba(200, 200, 200, 1)',
-data: <%= @kb_input.regression.map{|i, j| [i, j] }.sort %>
+data: <%= @kb_input.regression.map{|i, j| [i.round(2), j.round(2)] }.sort %>
 
 },{
         name: 'Courbe de régression linéaire + 80%',
@@ -46,7 +47,7 @@ data: <%= @kb_input.regression.map{|i, j| [i, j] }.sort %>
         },
 type: 'line',
 color: 'rgba(83, 223, 83, 1)',
-data: <%= @kb_input.regression.map{|i, j| [i, j * 2.8] }.sort %>
+data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j * 2.8).round(2)] }.sort %>
 },{
         name: 'Courbe de régression linéaire - 80%',
         marker: {
@@ -54,7 +55,7 @@ data: <%= @kb_input.regression.map{|i, j| [i, j * 2.8] }.sort %>
         },
 type: 'line',
 color: 'rgba(83, 223, 255, 1)',
-data: <%= @kb_input.regression.map{|i, j| [i, j / 2.8] }.sort %>
+data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j / 2.8).round(2)] }.sort %>
 },{
         name: 'Taille calculé',
         marker: {
@@ -62,7 +63,7 @@ data: <%= @kb_input.regression.map{|i, j| [i, j / 2.8] }.sort %>
         },
 type: 'scatter',
 color: 'rgba(0, 0, 0, 1)',
-data: <%= [[@size, @effort]] %>
+data: <%= [[@size, @effort.round(2)]] %>
 }]
 });
 });

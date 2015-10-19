@@ -135,7 +135,7 @@ class Kb::KbModelsController < ApplicationController
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
     @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first_or_create
 
-    results = Array.new
+    @project_list = Array.new
     e_array = Array.new
     e_array2 = Array.new
     s_array = Array.new
@@ -148,16 +148,16 @@ class Kb::KbModelsController < ApplicationController
     @kb_model.kb_datas.each do |i|
       params["filters"].each do |f|
         if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
-          results << i
+          @project_list << i
         end
       end
     end
 
-    if results.blank?
-      results = @kb_model.kb_datas
+    if @project_list.blank?
+      @project_list = @kb_model.kb_datas
     end
 
-    results.each do |kb_data|
+    @project_list.each do |kb_data|
       s = Math.log10(kb_data.size.to_f)
       s2 = s * s
 
@@ -190,11 +190,11 @@ class Kb::KbModelsController < ApplicationController
     @values = Array.new
     @regression = Array.new
 
-    results.map do |kb_data|
+    @project_list.map do |kb_data|
       @values << [kb_data.size.round(2), kb_data.effort.round(2)]
     end
 
-    results.map(&:size).each do |i|
+    @project_list.map(&:size).each do |i|
       @regression << [i, (coef_10 * i ** pente).round(2)]
     end
 
