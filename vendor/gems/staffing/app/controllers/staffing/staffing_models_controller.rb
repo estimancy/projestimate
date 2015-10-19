@@ -55,7 +55,7 @@
       @organization = Organization.find(params[:organization_id])
       @staffing_model = StaffingModel.new
 
-      set_page_title 'New Team module instance'
+      set_page_title I18n.t(:New_Team_module_instance)
       set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'Équipe" => main_app.organization_module_estimation_path(params['organization_id']), @staffing_model.organization => ""
     end
   
@@ -66,7 +66,7 @@
       @staffing_model = StaffingModel.find(params[:id])
       @organization = @staffing_model.organization
 
-      set_page_title 'Edit Staffing'
+      set_page_title I18n.t(:Edit_Staffing)
       set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'Équipe" => main_app.organization_module_estimation_path(@staffing_model.organization), @staffing_model.organization => ""
     end
   

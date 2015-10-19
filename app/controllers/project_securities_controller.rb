@@ -23,14 +23,14 @@ class ProjectSecuritiesController < ApplicationController
   load_resource
 
   def new
-    set_page_title 'Project securities'
+    set_page_title I18n.t(:new_project_security)
     @project_security = ProjectSecurity.new
     @projects = Project.all.map{|i| [i.title, i.id]}
     @users = []
   end
 
   def edit
-    set_page_title 'Project securities'
+    set_page_title I18n.t(:edit_project_security)
     @project_security = ProjectSecurity.find(params[:id])
     @projects = Project.all.map{|i| [i.title, i.id]}
     @users = Project.find(@project_security.project.id).users.map{|i| [i.name, i.id]}

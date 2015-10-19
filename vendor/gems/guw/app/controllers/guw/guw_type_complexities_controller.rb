@@ -31,6 +31,7 @@ class Guw::GuwTypeComplexitiesController < ApplicationController
 
   def edit
     @guw_type_complexity = Guw::GuwTypeComplexity.find(params[:id])
+    set_page_title I18n.t(:edit_complexity)
   end
 
   def create

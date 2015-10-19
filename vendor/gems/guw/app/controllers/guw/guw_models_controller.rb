@@ -105,6 +105,10 @@ class Guw::GuwModelsController < ApplicationController
        tab = worksheet.extract_data
        if !tab.empty?
           if index == 0
+            if worksheet.sheet_name != I18n.t(:is_model)
+              route_flag = 5
+              break
+            end
             if tab[0][1].nil? || tab[0][1].empty?
               route_flag = 2
               break
@@ -123,7 +127,7 @@ class Guw::GuwModelsController < ApplicationController
               break
             end
           elsif index == 1
-            if critical_flag
+            if critical_flag || worksheet.sheet_name != I18n.t(:attribute_description)
               route_flag = 5
               break
             end
@@ -135,7 +139,7 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 2
-            if critical_flag
+            if critical_flag || worksheet.sheet_name != I18n.t(:Type_acquisitions)
               route_flag = 5
               break
             end
@@ -732,7 +736,7 @@ class Guw::GuwModelsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
-    set_page_title 'New UO model'
+    set_page_title I18n.t(:new_UO_model)
   end
 
   def edit
@@ -740,7 +744,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
-    set_page_title "Edit #{@guw_model.organization}"
+    set_page_title I18n.t(:edit_project_element_name, parameter: @guw_model.name)
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 

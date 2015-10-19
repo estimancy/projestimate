@@ -29,7 +29,7 @@ class ProjectCategoriesController < ApplicationController
   def new
     authorize! :manage, ProjectCategory
 
-    set_page_title 'Project Category'
+    set_page_title I18n.t(:label_ProjectCategory)
     @project_category = ProjectCategory.new
     @organization = Organization.find(params[:organization_id])
   end
@@ -37,7 +37,7 @@ class ProjectCategoriesController < ApplicationController
   def edit
     authorize! :show_project_categories, ProjectCategory
 
-    set_page_title 'Project Category'
+    set_page_title I18n.t(:label_ProjectCategory)
     @project_category = ProjectCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])
   end

@@ -28,7 +28,7 @@ class RecordStatusesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
-    set_page_title 'Record Status'
+    set_page_title I18n.t(:record_status)
     @record_statuses = RecordStatus.all
 
     respond_to do |format|
@@ -51,7 +51,7 @@ class RecordStatusesController < ApplicationController
   def new
     authorize! :manage_master_data, :all
 
-    set_page_title 'New Record Status'
+    set_page_title I18n.t(:new_record_status)
 
     @record_status = RecordStatus.new
 
@@ -65,7 +65,7 @@ class RecordStatusesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @record_status = RecordStatus.find(params[:id])
-
+    set_page_title I18n.t(:edit_record_status, value: @record_status.name)
     unless @record_status.child_reference.nil?
       if @record_status.child_reference.is_proposed_or_custom?
         flash[:warning] = I18n.t(:warning_record_status_cant_be_edit)

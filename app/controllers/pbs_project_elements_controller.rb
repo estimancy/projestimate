@@ -27,7 +27,7 @@ class PbsProjectElementsController < ApplicationController
     authorize! :alter_project_pbs_products, @project
 
     @pbs_project_element = PbsProjectElement.new
-    set_page_title("New #{@pbs_project_element.name}")
+    set_page_title I18n.t(:new_project_element_name, parameter: @pbs_project_element.name)
 
     @parent = PbsProjectElement.find(params[:parent_id])
 
@@ -39,7 +39,7 @@ class PbsProjectElementsController < ApplicationController
     authorize! :alter_project_pbs_products, @project
 
     @pbs_project_element = PbsProjectElement.find(params[:id])
-    set_page_title("Editing #{@pbs_project_element.name}")
+    set_page_title I18n.t(:edit_project_element_name, parameter: @pbs_project_element.name)
 
     @parent = @pbs_project_element.parent
 

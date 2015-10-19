@@ -26,7 +26,7 @@ class UnitOfWorksController < ApplicationController
   def index
     authorize! :show_unit_of_works, UnitOfWork
 
-    set_page_title 'Unit of work'
+    set_page_title I18n.t(:Unit_of_work)
     @organization = Organization.find(params[:organization_id])
     @unit_of_works = @organization.unit_of_works
   end
@@ -36,7 +36,7 @@ class UnitOfWorksController < ApplicationController
 
     @unit_of_work = UnitOfWork.find(params[:id])
     @organization = @unit_of_work.organization
-    set_page_title 'Edit Units Of Work'
+    set_page_title I18n.t(:Edit_Units_Of_Work)
   end
 
   def new
@@ -44,6 +44,8 @@ class UnitOfWorksController < ApplicationController
 
     @unit_of_work = UnitOfWork.new
     @organization = Organization.find_by_id(params[:organization_id])
+    set_page_title I18n.t(:New_Units_Of_Work)
+
   end
 
   def create

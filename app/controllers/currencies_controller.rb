@@ -29,7 +29,7 @@ class CurrenciesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
     @currencies = Currency.all
-    set_page_title 'Currencies'
+    set_page_title I18n.t(:currencies)
 
   end
 
@@ -38,12 +38,13 @@ class CurrenciesController < ApplicationController
   def new
     authorize! :manage_master_data, :all
     @currency = Currency.new
+    set_page_title I18n.t(:new_currency)
   end
 
   # GET /currencies/1/edit
   def edit
     authorize! :manage_master_data, :all
-
+    set_page_title I18n.t(:edit_currency)
     @currency = Currency.find(params[:id])
 
     unless @currency.child_reference.nil?

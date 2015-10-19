@@ -26,7 +26,7 @@ class FieldsController < ApplicationController
     authorize! :manage, Field
 
     @field = Field.new
-
+    set_page_title I18n.t(:fields)
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @field }
@@ -35,6 +35,7 @@ class FieldsController < ApplicationController
 
   # GET /fields/1/edit
   def edit
+    set_page_title I18n.t(:fields)
     authorize! :show_custom_fields, Field
     @field = Field.find(params[:id])
   end

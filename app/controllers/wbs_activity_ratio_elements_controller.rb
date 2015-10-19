@@ -26,13 +26,13 @@ class WbsActivityRatioElementsController < ApplicationController
 
   def edit
     authorize! :manage_modules_instances, ModuleProject
-    set_page_title 'Edit wbs-activity ratio'
+    set_page_title I18n.t(:Edit_wbs_activity_ratio)
     @wbs_activity_ratio_element = WbsActivityRatioElement.find(params[:id])
   end
 
   def new
     authorize! :manage_modules_instances, ModuleProject
-    set_page_title 'New wbs-activity ratio'
+    set_page_title I18n.t(:new_wbs_activity_ratio)
     @wbs_activity_ratio_element = WbsActivityRatioElement.new
   end
 

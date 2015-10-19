@@ -26,7 +26,7 @@ class GroupsController < ApplicationController
   def new
     authorize! :manage, Group
 
-    set_page_title 'New group'
+    set_page_title I18n.t(:new_group)
     @group = Group.new
     @organization = Organization.find_by_id(params[:organization_id])
 
@@ -39,14 +39,12 @@ class GroupsController < ApplicationController
 
   def edit
     authorize! :show_groups, Group
-    set_page_title 'Edit group'
 
     @group = Group.find(params[:id])
     @organization = @group.organization
-
+    set_page_title I18n.t(:edit_group, value: @group.name)
     #set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
     set_breadcrumbs "Organizations" => "/organizationals_params", "#{@organization.to_s} / #{I18n.t(:groups)} / #{@group.to_s}" => edit_organization_path(@organization)
-
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
   end

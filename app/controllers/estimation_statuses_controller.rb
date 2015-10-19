@@ -72,7 +72,7 @@ class EstimationStatusesController < ApplicationController
     authorize! :manage, EstimationStatus
     @estimation_status = EstimationStatus.new
     @organization = Organization.find_by_id(params[:organization_id])
-    set_page_title 'New estimation status'
+    set_page_title I18n.t(:new_estimation_status)
   end
 
   def edit
@@ -81,6 +81,7 @@ class EstimationStatusesController < ApplicationController
 
     @estimation_status = EstimationStatus.find(params[:id])
     @organization = @estimation_status.organization
+    set_page_title I18n.t(:edit_estimation_status, value: @estimation_status.name)
   end
 
   def create

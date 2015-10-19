@@ -28,19 +28,19 @@ class LanguagesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
-    set_page_title 'Languages'
+    set_page_title I18n.t(:languages)
     @languages = Language.all
   end
 
   def new
     authorize! :manage, Language
-    set_page_title 'Add a language'
+    set_page_title I18n.t(:add_language)
     @language = Language.new
   end
 
   def edit
     authorize! :manage_master_data, :all
-    set_page_title 'Edit language'
+    set_page_title I18n.t(:Edit_language)
     @language = Language.find(params[:id])
 
     unless @language.child_reference.nil?

@@ -99,7 +99,7 @@ class ProjectsController < ApplicationController
       redirect_to(root_url, flash: { error: "Vous ne pouvez pas accéder à une organization image"}) and return
     end
 
-    set_page_title "Estimation - #{@current_organization}"
+    set_page_title I18n.t(:spec_estimations, parameter: @current_organization)
 
     @user = current_user
     @pemodules ||= Pemodule.all
@@ -246,7 +246,7 @@ class ProjectsController < ApplicationController
 
   def index
     #No authorize required since everyone can access the list (permission will be managed project per project)
-    set_page_title 'Estimations'
+    set_page_title I18n.t(:estimation_setting)
 
     # The current user can only see projects of its organizations
     @projects = current_user.organizations.map{|i| i.projects }.flatten.reject { |j| !j.is_childless? }  #Then only projects on which the current is authorise to see will be displayed
@@ -269,11 +269,11 @@ class ProjectsController < ApplicationController
     if @is_model
       authorize! :manage_estimation_models, Project
       set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@current_organization, anchor: "tabs-estimation-models")
-      set_page_title 'New estimation model'
+      set_page_title I18n.t(:new_estimation_model)
     else
       authorize! :create_project_from_scratch, Project
       set_breadcrumbs "Estimations" => organization_estimations_path(@current_organization)
-      set_page_title 'New estimation'
+      set_page_title I18n.t(:new_estimation_model)
     end
 
     @organization = Organization.find(params[:organization_id])
@@ -292,7 +292,7 @@ class ProjectsController < ApplicationController
       authorize! :create_project_from_scratch, Project
     end
 
-    set_page_title 'Create estimation'
+    set_page_title I18n.t(:new_project)
 
     @project_title = params[:project][:title]
     @project = Project.new(params[:project])
@@ -409,7 +409,7 @@ class ProjectsController < ApplicationController
 
   #Edit a selected project
   def edit
-    set_page_title 'Edit estimation'
+    set_page_title I18n.t(:edit_estimation)
 
     @project = Project.find(params[:id])
     @organization = @project.organization
@@ -484,7 +484,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    set_page_title 'Edit estimation'
+    set_page_title I18n.t(:edit_estimation)
     @project = Project.find(params[:id])
     @organization = @project.organization
 
@@ -702,7 +702,7 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     authorize! :show_project, @project
-    set_page_title 'Show estimation'
+    set_page_title I18n.t(:estimation)
 
     # We need to verify user's groups rights on estimation according to the current estimation status
     if !can_show_estimation?(@project)
@@ -839,7 +839,7 @@ class ProjectsController < ApplicationController
   #Load specific security depending of user selected (last tabs on project editing page)
   def load_security_for_selected_user
     #No authorize required
-    set_page_title 'Project securities'
+    set_page_title I18n.t(:project_security)
     @user = User.find(params[:user_id])
     @project = Project.find(params[:project_id])
     @prj_scrt = ProjectSecurity.find_by_user_id_and_project_id(@user.id, @project.id)
@@ -856,7 +856,7 @@ class ProjectsController < ApplicationController
   #Load specific security depending of user selected (last tabs on project editing page)
   def load_security_for_selected_group
     #No authorize required
-    set_page_title 'Project securities'
+    set_page_title I18n.t(:project_security)
     @group = Group.find(params[:group_id])
     @project = Project.find(params[:project_id])
     @prj_scrt = ProjectSecurity.find_by_group_id_and_project_id(@group.id, @project.id)
@@ -873,7 +873,7 @@ class ProjectsController < ApplicationController
   #Updates the security according to the previous users
   def update_project_security_level
     #TODO check if No authorize is required
-    set_page_title 'Project securities'
+    set_page_title I18n.t(:project_security)
     @user = User.find(params[:user_id].to_i)
     @prj_scrt = ProjectSecurity.find_by_user_id_and_project_id(@user.id, @project.id)
     @prj_scrt.update_attribute('project_security_level_id', params[:project_security_level])
@@ -886,7 +886,7 @@ class ProjectsController < ApplicationController
   #Updates the security according to the previous users
   def update_project_security_level_group
     #TODO check if No authorize is required
-    set_page_title 'Project securities'
+    set_page_title I18n.t(:project_security)
     @group = Group.find(params[:group_id].to_i)
     @prj_scrt = ProjectSecurity.find_by_group_id_and_project_id(@group.id, @project.id)
     @prj_scrt.update_attribute('project_security_level_id', params[:project_security_level])
@@ -1782,7 +1782,7 @@ public
   end
 
   def projects_global_params
-    set_page_title 'Project global parameters'
+    set_page_title I18n.t(:project_global_parameters)
   end
 
   def sort_direction
@@ -1954,7 +1954,7 @@ public
   end
 
   def projects_from
-    set_page_title 'Create a project from template'
+    set_page_title I18n.t(:text_create_from_model_2)
 
     authorize! :create_project_from_template, Project
 

@@ -39,20 +39,20 @@ class AdminSettingsController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
-    set_page_title 'Parameters'
+    set_page_title I18n.t(:Parameters)
     @admin_settings = AdminSetting.all
   end
 
   def new
     authorize! :manage_master_data, :all
 
-    set_page_title 'Parameters'
+    set_page_title I18n.t(:Parameters)
     @admin_setting = AdminSetting.new
   end
 
   def edit
     authorize! :manage_master_data, :all
-    set_page_title 'Parameters'
+    set_page_title I18n.t(:Parameters)
     @admin_setting = AdminSetting.find(params[:id])
   end
 

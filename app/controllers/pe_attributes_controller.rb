@@ -28,21 +28,21 @@ class PeAttributesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
-    set_page_title 'Attributes'
+    set_page_title I18n.t(:pe_attributes)
     @attributes = PeAttribute.all
   end
 
   def new
     authorize! :manage_master_data, :all
 
-    set_page_title 'Attributes'
+    set_page_title I18n.t(:pe_attributes)
     @attribute = PeAttribute.new
   end
 
   def edit
     authorize! :manage_master_data, :all
 
-    set_page_title 'Attributes'
+    set_page_title I18n.t(:pe_attributes)
     @attribute = PeAttribute.find(params[:id])
 
     env["HTTP_REFERER"] += '#tabs-attribute'
@@ -58,7 +58,7 @@ class PeAttributesController < ApplicationController
   def create
     authorize! :manage_master_data, :all
 
-    set_page_title 'Attributes'
+    set_page_title I18n.t(:pe_attributes)
     @attribute = PeAttribute.new(params[:pe_attribute])
     @attribute.options = params[:options]
     @attribute.attr_type = params[:options][0]
@@ -74,7 +74,7 @@ class PeAttributesController < ApplicationController
   def update
     authorize! :manage_master_data, :all
 
-    set_page_title 'Attributes'
+    set_page_title I18n.t(:pe_attributes)
 
     @attribute = nil
     current_attribute = PeAttribute.find(params[:id])

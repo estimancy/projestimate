@@ -25,7 +25,7 @@ class WbsActivityElementsController < ApplicationController
   def new
     authorize! :manage_modules_instances, ModuleProject
 
-    set_page_title 'WBS-Activity elements'
+    set_page_title I18n.t(:wbs_activity_elements)
     @wbs_activity_element = WbsActivityElement.new
     if params[:activity_id]
       @wbs_activity = WbsActivity.find(params[:activity_id])
@@ -39,7 +39,7 @@ class WbsActivityElementsController < ApplicationController
   def edit
     authorize! :manage_modules_instances, ModuleProject
 
-    set_page_title 'WBS-Activity elements'
+    set_page_title I18n.(:wbs_activity_elements)
     @wbs_activity_element = WbsActivityElement.find(params[:id])
     if params[:activity_id]
       @wbs_activity = WbsActivity.find(params[:activity_id])

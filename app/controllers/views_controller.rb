@@ -58,6 +58,7 @@ class ViewsController < ApplicationController
   def edit
     @view = View.find(params[:id])
     @organization = @view.organization
+    set_page_title I18n.t(:edit_view_2)
   end
 
   # POST /views

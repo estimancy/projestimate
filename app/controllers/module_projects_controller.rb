@@ -36,7 +36,7 @@ class ModuleProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
-    set_page_title "Editing #{@module_project.pemodule.title}"
+    set_page_title I18n.t(:editing, parameter: @module_project.pemodule.title)
   end
 
 

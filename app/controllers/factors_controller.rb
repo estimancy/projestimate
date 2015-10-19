@@ -30,7 +30,7 @@ class FactorsController < ApplicationController
     authorize! :manage_master_data, :all
 
     @factors = Factor.order("factor_type")
-    set_page_title 'Complexities by factors'
+    set_page_title I18n.t(:complexity_by_factor)
   end
 
   def show
@@ -43,13 +43,14 @@ class FactorsController < ApplicationController
   def new
     authorize! :manage, Factor
     @factor = Factor.new
-    set_page_title 'New factor'
+    set_page_title I18n.t(:new_factor)
   end
 
   # GET /factors/1/edit
   def edit
     authorize! :manage_master_data, :all
     @factor = Factor.find(params[:id])
+    set_page_title I18n.t(:Edit_factor)
   end
 
   # POST /factors

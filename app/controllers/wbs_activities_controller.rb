@@ -56,7 +56,7 @@ class WbsActivitiesController < ApplicationController
 
   def index
     #No authorize required since everyone can access the list of ABS
-    set_page_title 'WBS activities'
+    set_page_title I18n.t(:WBS_activities)
     #@wbs_activities = WbsActivity.all
     # Need to show only wbs-activities of current_user's organizations
     @wbs_activities = WbsActivity.where('organization_id IN (?)', current_user.organizations)
@@ -65,7 +65,7 @@ class WbsActivitiesController < ApplicationController
   def edit
     #no authorize required since everyone can show this object
 
-    set_page_title 'WBS activities'
+    set_page_title I18n.t(:edit_wbs_activity)
     @wbs_activity = WbsActivity.find(params[:id])
     @organization_id = @wbs_activity.organization_id
 
@@ -108,7 +108,7 @@ class WbsActivitiesController < ApplicationController
   end
 
   def new
-    set_page_title 'WBS activities'
+    set_page_title I18n.t(:new_wbs_activity)
     @wbs_activity = WbsActivity.new
     @organization_id = params['organization_id']
   end

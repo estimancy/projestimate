@@ -36,7 +36,7 @@ class Kb::KbModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @kb_model = Kb::KbModel.new
-    set_page_title 'New knowledge base'
+    set_page_title I18n.t(:New_knowledge_base)
   end
 
   def edit
@@ -44,7 +44,7 @@ class Kb::KbModelsController < ApplicationController
 
     @kb_model = Kb::KbModel.find(params[:id])
     @current_organization
-    set_page_title 'Edit knowledge base'
+    set_page_title I18n.t(:Edit_knowledge_base)
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@current_organization), @current_organization => ""
   end
 

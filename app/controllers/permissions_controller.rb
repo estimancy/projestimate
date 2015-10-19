@@ -26,7 +26,7 @@ class PermissionsController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
-    set_page_title 'Permissions'
+    set_page_title I18n.t(:permissions)
     @permissions = Permission.all
 
     respond_to do |format|
@@ -37,14 +37,14 @@ class PermissionsController < ApplicationController
   def new
     authorize! :manage_master_data, :all
 
-    set_page_title 'Permissions'
+    set_page_title I18n.t(:permissions)
     @permission = Permission.new
   end
 
   def edit
     authorize! :manage_master_data, :all
 
-    set_page_title 'Permissions'
+    set_page_title I18n.t(:permissions)
     @permission = Permission.find(params[:id])
   end
 

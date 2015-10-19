@@ -55,7 +55,7 @@ class WbsActivityRatiosController < ApplicationController
 
   def edit
     authorize! :manage_modules_instances, ModuleProject
-    set_page_title 'Edit wbs-activity ratio'
+    set_page_title I18n.t(:Edit_wbs_activity_ratio)
     @activity_id = params[:activity_id]
     @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
     @wbs_activity=@wbs_activity_ratio.wbs_activity
@@ -87,7 +87,7 @@ class WbsActivityRatiosController < ApplicationController
 
   def new
     authorize! :manage_modules_instances, ModuleProject
-    set_page_title 'New wbs-activity ratio'
+    set_page_title I18n.t(:new_wbs_activity_ratio)
     @activity_id = params[:activity_id]
     @wbs_activity_ratio = WbsActivityRatio.new
   end

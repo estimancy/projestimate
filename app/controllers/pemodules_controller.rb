@@ -29,7 +29,7 @@ class PemodulesController < ApplicationController
   def index
     authorize! :manage_master_data, :all
 
-    set_page_title 'Modules'
+    set_page_title I18n.t(:projestimate_module)
     @pemodules = Pemodule.all
     @attributes = PeAttribute.defined.all
   end
@@ -37,7 +37,7 @@ class PemodulesController < ApplicationController
   def new
     authorize! :manage_master_data, :all
 
-    set_page_title 'New Modules'
+    set_page_title I18n.t(:projestimate_module_new)
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @pemodule = Pemodule.new
     @attributes = PeAttribute.defined.all
@@ -47,7 +47,7 @@ class PemodulesController < ApplicationController
   def edit
     authorize! :manage_master_data, :all
 
-    set_page_title 'Edit Modules'
+    set_page_title I18n.t(:projestimate_module_edit)
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @pemodule = Pemodule.find(params[:id])
     @attributes = PeAttribute.defined.all

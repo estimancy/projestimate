@@ -32,14 +32,14 @@ class ProfilesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @profiles = Profile.all
-    set_page_title 'Profiles'
+    set_page_title I18n.t(:profiles)
   end
 
   # GET /profiles/new
   # GET /profiles/new.json
   def new
     authorize! :manage_master_data, :all
-
+    set_page_title I18n.t(:new_profile)
     @profile = Profile.new
   end
 
@@ -47,8 +47,8 @@ class ProfilesController < ApplicationController
   def edit
     authorize! :manage_master_data, :all
 
-    set_page_title 'Edit profile'
     @profile = Profile.find(params[:id])
+    set_page_title I18n.t(:edit_profile, value: @profile.name)
 
     unless @profile.child_reference.nil?
       if @profile.child_reference.is_proposed_or_custom?
@@ -64,7 +64,7 @@ class ProfilesController < ApplicationController
   def create
     authorize! :manage_master_data, :all
 
-    set_page_title 'Create profile'
+    set_page_title I18n.t(:new_profile)
 
     @profile = Profile.new(params[:profile])
     @profile.owner_id = current_user.id
@@ -83,11 +83,12 @@ class ProfilesController < ApplicationController
   def update
     authorize! :manage_master_data, :all
 
-    set_page_title 'Update profile'
     @profile_categories = ProfileCategory.defined.all
 
     @profile = nil
     current_profile = Profile.find(params[:id])
+    set_page_title I18n.t(:update_profile, value: current_profile.name)
+
     if current_profile.is_defined?
       @profile = current_profile.amoeba_dup
       @profile.owner_id = current_user.id
@@ -109,8 +110,8 @@ class ProfilesController < ApplicationController
   def destroy
     authorize! :manage_master_data, :all
 
-    set_page_title 'Delete profile'
     @profile = Profile.find(params[:id])
+    set_page_title I18n.t(:delete_profile, value: @profile.name)
 
     if @profile.is_custom?
       #logical deletion  delete don't have to suppress records anymore on Defined record

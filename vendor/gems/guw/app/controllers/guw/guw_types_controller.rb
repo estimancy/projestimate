@@ -25,12 +25,14 @@ class Guw::GuwTypesController < ApplicationController
   def new
     @guw_type = Guw::GuwType.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    set_page_title I18n.t(:add_unit_of_work)
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def edit
     @guw_type = Guw::GuwType.find(params[:id])
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    set_page_title I18n.t(:edit_project_element_name, parameter: @guw_type.name)
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
   end
 
@@ -38,6 +40,7 @@ class Guw::GuwTypesController < ApplicationController
     @guw_type = Guw::GuwType.new(params[:guw_type])
     @guw_type.guw_model_id = params[:guw_type][:guw_model_id]
     @guw_type.save
+    set_page_title I18n.t(:new_complexity)
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
     redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
   end

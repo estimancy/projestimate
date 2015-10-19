@@ -26,6 +26,7 @@ class Guw::GuwAttributesController < ApplicationController
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_attributes = @guw_model.guw_attributes.order("name ASC")
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+    set_page_title I18n.t(:pe_attributes)
   end
 
   def new
@@ -38,6 +39,7 @@ class Guw::GuwAttributesController < ApplicationController
     @guw_attribute = Guw::GuwAttribute.find(params[:id])
     @guw_model = @guw_attribute.guw_model
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+    set_page_title I18n.t(:Edit_attribute)
   end
 
   def create

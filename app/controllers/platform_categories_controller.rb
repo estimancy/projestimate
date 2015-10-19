@@ -29,7 +29,7 @@ class PlatformCategoriesController < ApplicationController
   def new
     authorize! :manage, PlatformCategory
 
-    set_page_title 'Platform Category'
+    set_page_title I18n.t(:label_PlatformCategory)
     @platform_category = PlatformCategory.new
     @organization = Organization.find(params[:organization_id])
   end
@@ -37,7 +37,7 @@ class PlatformCategoriesController < ApplicationController
   def edit
     authorize! :show_platform_categories, PlatformCategory
 
-    set_page_title 'Platform Category'
+    set_page_title I18n.t(:label_PlatformCategory)
     @platform_category = PlatformCategory.find(params[:id])
     @organization = Organization.find(params[:organization_id])
   end

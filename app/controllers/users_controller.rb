@@ -46,7 +46,7 @@ public
     #all users menu/page is only visible by master users
     authorize! :manage_master_data, :all
 
-    set_page_title 'Users'
+    set_page_title I18n.t(:users)
     @users = User.all
     @audits = Audit.all
   end
@@ -54,7 +54,7 @@ public
   def new
     authorize! :manage, User
 
-    set_page_title 'New user'
+    set_page_title I18n.t(:new_user)
     set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @organization_id = params[:organization_id]
@@ -72,7 +72,7 @@ public
   def create
     authorize! :manage, User
 
-    set_page_title 'New user'
+    set_page_title I18n.t(:new_user)
 
     auth_type = AuthMethod.find(params[:user][:auth_type])
 
@@ -132,7 +132,7 @@ public
     end
 
     if current_user == @user
-      set_page_title 'Edit your user account'
+      set_page_title I18n.t(:edit_my_account)
     else
       authorize! :show_organization_users, User
     end
@@ -146,7 +146,7 @@ public
       authorize! :manage, User
     end
 
-    set_page_title 'Edit user'
+    set_page_title I18n.t(:edit_user, value: " ")
 
     if params[:organization_id].present?
       @organization = Organization.find(params[:organization_id])
@@ -318,7 +318,7 @@ public
 
   def about
     # No authorize required since everyone can access the about page
-    set_page_title 'About'
+    set_page_title I18n.t(:about)
     latest_record_version = Version.last.nil? ? Version.create(:comment => 'No update data has been save') : Version.last
     @latest_repo_update = latest_record_version.repository_latest_update #Home::latest_repo_update
     @latest_local_update = latest_record_version.local_latest_update

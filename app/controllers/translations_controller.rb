@@ -23,7 +23,7 @@ class TranslationsController < ApplicationController
 
   #Listing translations pages
   def index
-    set_page_title "Translations"
+    set_page_title I18n.t(:translations)
     authorize! :manage_master_data, :all
 
     I18n.backend.send(:init_translations)

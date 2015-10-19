@@ -19,19 +19,21 @@
 #
 #############################################################################
 
-
 class Guw::GuwUnitOfWorkGroupsController < ApplicationController
 
   def index
     @guw_unit_of_work_groups = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all
+    set_page_title I18n.t(:label_Group)
   end
 
   def new
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.new
+    set_page_title I18n.t(:new_group)
   end
 
   def edit
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.find(params[:id])
+    set_page_title I18n.t(:edit_group, value: @guw_unit_of_work_group.name)
   end
 
   def create

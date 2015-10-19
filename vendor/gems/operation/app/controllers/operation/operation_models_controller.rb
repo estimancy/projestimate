@@ -34,7 +34,7 @@ class Operation::OperationModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @operation_model = Operation::OperationModel.new
-    set_page_title 'New instance of effort'
+    set_page_title I18n.t(:new_instance_of_effort)
   end
 
   def edit

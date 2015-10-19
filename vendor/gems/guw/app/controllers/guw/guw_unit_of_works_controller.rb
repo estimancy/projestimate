@@ -25,14 +25,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
   include ModuleProjectsHelper
 
   def new
-    set_page_title "Créer une nouvel unité d'oeuvres"
     @guw_unit_of_work = Guw::GuwUnitOfWork.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    set_page_title I18n.t(:New_Units_Of_Work)
   end
 
   def edit
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:id])
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    set_page_title I18n.t(:Edit_Units_Of_Work)
   end
 
   def create

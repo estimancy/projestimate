@@ -25,14 +25,17 @@ class Guw::GuwWorkUnitsController < ApplicationController
   def index
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_work_units = @guw_model.guw_work_units
+    set_page_title I18n.t(:Work_Unit)
   end
 
   def new
     @guw_work_unit = Guw::GuwWorkUnit.new
+    set_page_title I18n.t(:Create_a_new_Work_Unit)
   end
 
   def edit
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+    set_page_title I18n.t(:Edit_a_new_Work_Unit)
   end
 
   def create
@@ -44,6 +47,7 @@ class Guw::GuwWorkUnitsController < ApplicationController
   def update
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     @guw_work_unit.update_attributes(params[:guw_work_unit])
+    set_page_title I18n.t(:Edit_Units_Of_Work)
     redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
   end
 

@@ -28,7 +28,7 @@ class WorkElementTypesController < ApplicationController
 
   def new
     authorize! :manage, WorkElementType
-    set_page_title 'Work Element Type'
+    set_page_title I18n.t(:work_element_type)
     @work_element_type = WorkElementType.new
     @organization = Organization.find(params[:organization_id])
   end
@@ -36,7 +36,7 @@ class WorkElementTypesController < ApplicationController
   # GET /work_element_types/1/edit
   def edit
     authorize! :show_work_element_types, WorkElementType
-    set_page_title 'Work Element Type'
+    set_page_title I18n.t(:work_element_type)
     @work_element_type = WorkElementType.find(params[:id])
     @organization = Organization.find(params[:organization_id])
   end

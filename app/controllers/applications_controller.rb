@@ -5,7 +5,7 @@ class ApplicationsController < ApplicationController
 
   def new
     authorize! :manage, Application
-
+    set_page_title I18n.t(:new_application)
     @application = Application.new
     @organization = Organization.find(params[:organization_id])
     respond_with(@application)
@@ -13,7 +13,7 @@ class ApplicationsController < ApplicationController
 
   def edit
     authorize! :show_project_areas, Application
-
+    set_page_title I18n.t(:edit_application)
     @organization = Organization.find(params[:organization_id])
   end
 

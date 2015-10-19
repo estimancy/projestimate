@@ -38,14 +38,14 @@ class ProjectAreasController < ApplicationController
   def new
     authorize! :manage, ProjectArea
 
-    set_page_title 'Project Area'
+    set_page_title I18n.t(:project_areas)
     @project_area = ProjectArea.new
     @organization = Organization.find(params[:organization_id])
   end
 
   def edit
     authorize! :show_project_areas, ProjectArea
-    set_page_title 'Project Area'
+    set_page_title I18n.t(:project_areas)
     @project_area = ProjectArea.find(params[:id])
     @organization = Organization.find(params[:organization_id])
   end
