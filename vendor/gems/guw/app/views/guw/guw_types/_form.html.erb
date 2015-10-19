@@ -18,10 +18,10 @@
         <%= f.input :name, label: "Type d'unité d'oeuvre" %>
         <%= tinymce %>
         <%= f.input :description, input_html: { class: 'tinymce', rows: 15, cols: 20 } %>
-        <%= f.input :allow_retained, label: "Activer le retenu" %>
-        <%= f.input :allow_quantity, label: "Activer la quantité" %>
-        <%= f.input :allow_complexity, label: "Activer la complexité" %>
-        <%= f.input :allow_criteria, label: "Activer le dénombrement" %>
+        <%= f.input :allow_retained, label: "Modification de la taille d'entrée permise" %>
+        <%= f.input :allow_quantity, label: "Modification de la quantité d'entrée permise" %>
+        <%= f.input :allow_complexity, label: "Modification de la complexité d'entrée permise" %>
+        <%= f.input :allow_criteria, label: "Modification du dénombrement d'entrée permise" %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

@@ -220,7 +220,7 @@ class Kb::KbModelsController < ApplicationController
         end
 
         if am.pe_attribute.alias == "effort"
-          effort = (coef_10 * params[:size].to_f ** pente) * @kb_model.standard_unit_coefficient
+          effort = ((coef_10 * params[:size].to_f) ** pente) * @kb_model.standard_unit_coefficient.to_i
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
@@ -266,7 +266,7 @@ class Kb::KbModelsController < ApplicationController
                                               :in_out => "output").first
 
     @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id)
-    @effort = effort_current_ev.send("string_data_probable")[current_component.id]
+    @effort = effort_current_ev.send("string_data_probable")[current_component.id].to_f / @kb_model.standard_unit_coefficient.to_i
   end
 
 end
