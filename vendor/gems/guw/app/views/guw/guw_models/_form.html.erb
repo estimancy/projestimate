@@ -2,7 +2,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Modèle d'Unité d'Oeuvres
+        <% I18n.t(:label_Guw_model) %>
       </a>
     </li>
   </ul>
@@ -19,9 +19,9 @@
             <div class="form-inputs">
               <%= f.input :name %>
               <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
-              <%= f.input :coefficient_label, input_html: { class: "input-xxlarge", rows: "5", label: "Nom du coefficient de pondération" } %>
-              <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
-              <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module" %>
+              <%= f.input :coefficient_label, input_html: { class: "input-xxlarge", rows: "5", label: I18n.t(:weighting_factor_Name) } %>
+              <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation_activities) %>
+              <%= f.input :retained_size_unit, label: I18n.t(:retained_size_unit) %>
             </div>
 
             <% if can? :manage_modules_instances, ModuleProject %>
@@ -35,17 +35,13 @@
         <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="Import UO from excel" data-toggle="modal">
           Importer
         </a>
-        <!-- -----------------------------------------------------------------------------------------------------------------  -->
-        <!-- --------------------------------------- import module test ------------------------------------------------------  -->
-        <!-- -----------------------------------------------------------------------------------------------------------------  -->
         <div id="import" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <%= form_tag guw.importxl_path, :method => 'post', :multipart => true, :class => 'simple_form' do %>
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel"> import de donnée d'UO depuis un fichier excel</h3>
+                <h3 id="myModalLabel"> <% I18n.t(:import_from) %></h3>
               </div>
               <div class="modal-body">
-                <!--<p>description de se que fait l'action peut etre ?</p>-->
                 <%= file_field_tag :file %>
               </div>
               <div class="modal-footer">
@@ -57,9 +53,6 @@
               </div>
           <% end %>
         </div>
-        <!-- -----------------------------------------------------------------------------------------------------------------  -->
-        <!-- -------------------------------------------- FIN ----------------------------------------------------------------  -->
-        <!-- -----------------------------------------------------------------------------------------------------------------  -->
       </div>
     </div>
 

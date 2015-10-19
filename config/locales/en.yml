@@ -1628,3 +1628,5 @@ en:
   edit_estimation: "Edit estimation"
   Edit_Staffing: "Edit Staffing"
   new_complexity: "New complexities"
+  import_from: "import UW data from a excel file"
+  weighting_factor_Name: "Name of the weighting factor"
