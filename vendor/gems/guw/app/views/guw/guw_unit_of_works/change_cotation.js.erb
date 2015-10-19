@@ -7,7 +7,6 @@ $(".cotation_label_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_com
 <% end %>
 
 <% results = Guw::GuwComplexityTechnology.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
-
 <% unless results.empty? %>
 $(".technology_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_technology[#{@guw_unit_of_work.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                 selected: @guw_unit_of_work.organization_technology.nil? ? @guw_unit_of_work.guw_unit_of_work_group.organization_technology_id : @guw_unit_of_work.organization_technology_id),
@@ -22,7 +21,7 @@ $(".technology_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_technol
 
 <% results_2 = Guw::GuwComplexityWorkUnit.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq %>
 <% unless results_2.empty? %>
-  $(".work_unit_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_work_unit[#{@guw_unit_of_work.id}]", options_for_select(@guw_model.guw_work_units.order("display_order ASC").map{|i| [i.name, i.id]},
+  $(".work_unit_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_work_unit[#{@guw_unit_of_work.id}]", options_for_select(results_2.map{|i| [i.name, i.id]},
                                                                  selected: @guw_unit_of_work.guw_work_unit_id),
                  class: "guw_work_unit input-xsmall",
                  guw: @guw_unit_of_work.id,
