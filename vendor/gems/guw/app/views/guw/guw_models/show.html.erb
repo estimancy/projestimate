@@ -1,11 +1,11 @@
 <h4>
   <%= @guw_model %>
   <% if can? :manage_modules_instances, ModuleProject %>
-    <%= link_to "Créer un nouveau type d'UO", guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
+    <%= link_to I18n.t(:new_uw_type), guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
   <% end %>
-  <%= link_to "Gérer les #{@guw_model.coefficient_label.underscore}", guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to "Gérer les attributs", guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to "Exporter", guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to I18n.t(:manage_the , parameter: @guw_model.coefficient_label.underscore) , guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to I18n.t(:manage_the_attribute), guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
 
 </h4>
 
@@ -40,16 +40,16 @@
 
       <div id="tabs-<%= guw_type.name.gsub(" ", "-") %>">
 
-        <%= link_to "Editer #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+        <%= link_to "#{I18n.t(:edit)} #{guw_type}", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
         <% if can? :manage_modules_instances, ModuleProject %>
-          <%= link_to "Créer un seuil de type d'UO", new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right button_margin_right" %>
+          <%= link_to I18n.t(:new_type_thresold), new_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right button_margin_right" %>
         <% end %>
 
         <%= simple_format(guw_type.description) %>
 
         <h4>
           <b>
-            Seuils de complexité de <%= guw_type %>
+             <%= I18n.t(:UO_type_complexity_of, parameter: guw_type) %>
           </b>
 
         </h4>
@@ -63,7 +63,7 @@
                   <%= guw_cplx.name %> -
                   <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_complexity_path(@guw_model, guw_type, guw_cplx) %>
                   <% if can? :manage_modules_instances, ModuleProject %>
-                      - <%= link_to I18n.t(:delete), guw_cplx, method: :delete, confirm: "Êtes vous sure ?" %>
+                      - <%= link_to I18n.t(:delete), guw_cplx, method: :delete, confirm: I18n.t(:are_you_sure) %>
                   <% end %>
                 </th>
               <% end %>
@@ -109,7 +109,7 @@
                   <td colspan="2" class="align-center">
                     <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
                                                               guw_work_unit_id: work_unit.id).first %>
-                    <%= text_field_tag "value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
+                    <%= text_field_tag I18n.t(:value) + "[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>
@@ -134,7 +134,7 @@
                   <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
                                                                 organization_technology_id: technology.id).first %>
                   <td colspan="2" class="align-center">
-                    <%= text_field_tag "coefficient[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
+                    <%= text_field_tag I18n.t(:coefficient) + "[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>
@@ -144,7 +144,7 @@
           </table>
 
           <% if can? :manage_modules_instances, ModuleProject %>
-            <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
+            <%= submit_tag I18n.t(:label_save), class: "btn btn-mini pull-right" %>
           <% end %>
         <% end %>
 
@@ -153,7 +153,7 @@
         <h4>
           <b><%= I18n.t :label_complexity_attributes %> <%= guw_type %> </b>
           <% if can? :manage_modules_instances, ModuleProject %>
-            <%= link_to "Créer un seuil d'attribut", guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
+            <%= link_to I18n.t(:new_attribute_thresold), guw.new_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type), class: "btn btn-mini pull-right" %>
           <% end %>
         </h4>
 
@@ -168,7 +168,7 @@
                   <%= type_complexity.name %> -
                   <%= link_to I18n.t(:edit), guw.edit_guw_model_guw_type_guw_type_complexity_path(@guw_model, guw_type, type_complexity) %>
                   <% if can? :manage_modules_instances, ModuleProject %>
-                      <%= link_to "  - #{I18n.t(:delete)}", type_complexity, method: :delete, confirm: "Êtes vous sure ?" %>
+                      <%= link_to "  - #{I18n.t(:delete)}", type_complexity, method: :delete, confirm: I18n.t(:are_you_sure) %>
                   <% end %>
                 </th>
               <% end %>
@@ -194,12 +194,12 @@
                   <% ac = Guw::GuwAttributeComplexity.where(guw_attribute_id: guw_attribute.id, guw_type_id: guw_type, guw_type_complexity_id: type_complexity.id).first %>
 
                   <td class="align-center">
-                    <%= check_box_tag "enable[#{guw_attribute.id}][#{type_complexity.id}]", "enable", ac.nil? ? false : ac.enable_value, class: "input-xmini" %>
+                    <%= check_box_tag I18n.t(:Enable) + "[#{guw_attribute.id}][#{type_complexity.id}]", "enable", ac.nil? ? false : ac.enable_value, class: "input-xmini" %>
                   </td>
                   <td class="align-center">
-                    <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-xmini" %>
-                    <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-xmini" %>
-                    <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? type_complexity.value : ac.value, class: "input-xmini" %>
+                    <%= text_field_tag I18n.t(:bottom) + "[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-xmini" %>
+                    <%= text_field_tag I18n.t(:top) + "[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-xmini" %>
+                    <%= text_field_tag I18n.t(:coefficient) + "[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? type_complexity.value : ac.value, class: "input-xmini" %>
                   </td>
                 <% end %>
               </tr>
@@ -210,7 +210,7 @@
             <% if can? :manage_modules_instances, ModuleProject %>
               <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
             <% end %>
-            <%= link_to "Retour", main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right button_margin_right' %>
+            <%= link_to I18n.t(:back), main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right button_margin_right' %>
           <% end %>
 
           <br>

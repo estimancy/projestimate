@@ -33,7 +33,7 @@
 
       <div class="span6">
         <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="Import UO from excel" data-toggle="modal">
-          Importer
+          <%= I18n.t(:import) %>
         </a>
         <div id="import" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <%= form_tag guw.importxl_path, :method => 'post', :multipart => true, :class => 'simple_form' do %>

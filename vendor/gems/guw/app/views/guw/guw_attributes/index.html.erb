@@ -1,6 +1,6 @@
 <h4>
   <b>
-    Liste des attributs (critères)
+    <%= I18n.t(:Attributes_list) %>
   </b>
 </h4>
 
@@ -8,7 +8,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Attributs
+        <%= I18n.t(:pe_attributes) %>
       </a>
     </li>
   </ul>
@@ -16,9 +16,9 @@
   <div id="tabs-1">
     <table class="table table-bordered">
       <tr>
-        <th>Nom</th>
-        <th>Description</th>
-        <th>Actions</th>
+        <th><%= I18n.t(:name) %></th>
+        <th><%=I18n.t(:description) %></th>
+        <th><%=I18n.t(:audit_action) %></th>
       </tr>
 
       <% @guw_attributes.each do |guw_attribute| %>
@@ -28,7 +28,7 @@
           <td class="center">
             <%= link_to '', guw.edit_guw_model_guw_attribute_path(params[:guw_model_id], guw_attribute), class: "fa fa-pencil" %>
             <% if can? :manage_modules_instances, ModuleProject %>
-              <%= link_to '', guw_attribute, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
+              <%= link_to '', guw_attribute, method: :delete, data: { confirm: I18n.t(:are_you_sure) }, class: "fa fa-trash" %>
             <% end %>
           </td>
         </tr>
@@ -40,6 +40,6 @@
 <br>
 
 <% if can? :manage_modules_instances, ModuleProject %>
-  <%= link_to 'Nouvel attribut', guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>
+  <%= link_to I18n.t(:new_pe_attribute), guw.new_guw_model_guw_attribute_path(params[:guw_model_id]), class: "btn" %>
 <% end %>
-<%= link_to "Retour", guw.guw_model_path(params[:guw_model_id]), class: "btn" %>
+<%= link_to I18n.t(:back) , guw.guw_model_path(params[:guw_model_id]), class: "btn" %>

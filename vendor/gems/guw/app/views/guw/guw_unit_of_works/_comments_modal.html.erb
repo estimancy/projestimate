@@ -3,22 +3,22 @@
     <h4 class="modal-title" id="comments_label<%= guow.id %>">
       <b>
         <%= guow.guw_type %>
-      </b> - Description et traçabilité de <%= guow %> </h4>
+      </b> - <%=I18n.t(:Description_and_trackings_of, parameter: guow) %> </h4>
   </div>
   <div class="modal-body">
     <label>
       <b>
-        Description
+        <%= I18n.t(:description) %>
       </b>
     </label>
-    <%= text_area_tag "comments[#{guow.id}]", guow.comments, class: "attribute_note_area", rows: 4, readonly: !can?(:execute_estimation_plan, @project) %>
+    <%= text_area_tag I18n.t(:comments) + "[#{guow.id}]", guow.comments, class: "attribute_note_area", rows: 4, readonly: !can?(:execute_estimation_plan, @project) %>
 
     <label>
       <b>
         Traçabilité
       </b>
     </label>
-    <%= text_area_tag "trackings[#{guow.id}]", guow.tracking, class: "attribute_note_area", rows: 4, readonly: !can?(:execute_estimation_plan, @project) %>
+    <%= text_area_tag I18n.t(:trackings) + "[#{guow.id}]", guow.tracking, class: "attribute_note_area", rows: 4, readonly: !can?(:execute_estimation_plan, @project) %>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal" ><%= I18n.t(:close) %></button>

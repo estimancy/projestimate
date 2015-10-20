@@ -11,22 +11,22 @@
 </p>
 
 <p>
-  <b>Period unit:</b>
+  <b><%= I18n.t(:Period_unit)%>:</b>
   <%= @staffing_custom_datum.period_unit %>
 </p>
 
 <p>
-  <b>Max staffing:</b>
+  <b><%= I18n.t(:Max_staffing)%>:</b>
   <%= @staffing_custom_datum.max_staffing %>
 </p>
 
 <p>
-  <b>Max duration:</b>
+  <b><%= I18n.t(:Max_duration)%>:</b>
   <%= @staffing_custom_datum.max_duration %>
 </p>
 
 <p>
-  <b>Staffing coordinates:</b>
+  <b><%= I18n.t(:Staffing_coordinates)%>:</b>
   <%= @staffing_custom_datum.staffing_coordinates %>
 </p>
 
@@ -51,5 +51,5 @@
 </p>
 
 
-<%= link_to 'Edit', edit_staffing_custom_datum_path(@staffing_custom_datum) %> |
-<%= link_to 'Back', staffing_custom_data_path %>
+<%= link_to I18n.t(:edit), edit_staffing_custom_datum_path(@staffing_custom_datum) %> |
+<%= link_to I18n.t(:back), staffing_custom_data_path %>

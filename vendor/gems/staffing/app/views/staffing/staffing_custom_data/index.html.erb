@@ -1,13 +1,13 @@
-<h1>Listing staffing_custom_data</h1>
+<h1><%= I18n.t(:Listing_staffing_custom_data)%></h1>
 
 <table>
   <tr>
-    <th>Method</th>
-    <th>Staffing constraint</th>
-    <th>Period unit</th>
-    <th>Max staffing</th>
-    <th>Max duration</th>
-    <th>Staffing coordinates</th>
+    <th><%= I18n.t(:Method)%></th>
+    <th><%= I18n.t(:Staffing_constraint) %></th>
+    <th><% I18n.t(:Period_unit) %></th>
+    <th><%= I18n.t(:Max_staffing) %></th>
+    <th><%= I18n.t(:Max_duration) %></th>
+    <th><%= I18n.t(:Staffing_coordinates) %></th>
     <th>Coef a</th>
     <th>Coef b</th>
     <th>Coef a prime</th>
@@ -29,13 +29,13 @@
     <td><%= staffing_custom_datum.coef_b %></td>
     <td><%= staffing_custom_datum.coef_a_prime %></td>
     <td><%= staffing_custom_datum.coef_b_prime %></td>
-    <td><%= link_to 'Show', staffing_custom_datum %></td>
-    <td><%= link_to 'Edit', edit_staffing_custom_datum_path(staffing_custom_datum) %></td>
-    <td><%= link_to 'Destroy', staffing_custom_datum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to I18n.t(:Show), staffing_custom_datum %></td>
+    <td><%= link_to I18n.t(:edit), edit_staffing_custom_datum_path(staffing_custom_datum) %></td>
+    <td><%= link_to I18n.t(:delete), staffing_custom_datum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Staffing custom datum', new_staffing_custom_datum_path %>
+<%= link_to I18n.t(:New_Staffing_custom_datum), new_staffing_custom_datum_path %>

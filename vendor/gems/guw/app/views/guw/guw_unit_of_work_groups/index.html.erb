@@ -1,6 +1,6 @@
 <h4>
   <b>
-    Liste des groupes
+    <%= I18n.t(:groups_list) %>
   </b>
 </h4>
 
@@ -8,7 +8,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Groupes
+        <%= I18n.t(:groups)%>
       </a>
     </li>
   </ul>
@@ -16,8 +16,8 @@
   <div id="tabs-1">
     <table class="table table-bordered">
       <tr>
-        <th>Nom</th>
-        <th>Actions</th>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:actions) %></th>
       </tr>
 
       <% @guw_unit_of_work_groups.each do |uowg| %>
@@ -26,7 +26,7 @@
           <td class="center">
             <%= link_to '', guw.edit_guw_model_guw_unit_of_work_group_path(params[:guw_model_id], uowg), class: "fa fa-pencil" %>
             <% if can? :execute_estimation_plan, @project %>
-                <%= link_to '', uowg, method: :delete, data: { confirm: 'Are you sure?' }, class: "fa fa-trash" %>
+                <%= link_to '', uowg, method: :delete, data: { confirm: I18n.t(:are_you_sure) }, class: "fa fa-trash" %>
             <% end %>
           </td>
         </tr>
@@ -38,6 +38,6 @@
 <br>
 
 <% if can? :execute_estimation_plan, @project %>
-    <%= link_to 'Nouveau groupe', guw.new_guw_model_guw_unit_of_work_group_path(params[:guw_model_id]), class: "btn" %>
+    <%= link_to I18n.t(:add_new_unit_of_work_group), guw.new_guw_model_guw_unit_of_work_group_path(params[:guw_model_id]), class: "btn" %>
 <% end %>
-<%= link_to "Retour", main_app.dashboard_path(@project), class: "btn" %>
+<%= link_to I18n.t(:back), main_app.dashboard_path(@project), class: "btn" %>

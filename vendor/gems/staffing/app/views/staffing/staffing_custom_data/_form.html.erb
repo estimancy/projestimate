@@ -1,7 +1,7 @@
 <%= form_for(@staffing_custom_datum) do |f| %>
   <% if @staffing_custom_datum.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@staffing_custom_datum.errors.count, "error") %> prohibited this staffing_custom_datum from being saved:</h2>
+      <h2><%= pluralize(@staffing_custom_datum.errors.count, "error") %> <%= I18n.t(:prohibited_datum)%> </h2>
 
       <ul>
       <% @staffing_custom_datum.errors.full_messages.each do |msg| %>

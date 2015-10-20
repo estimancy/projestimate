@@ -3,7 +3,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Seuil de complexité
+        <%= I18n.t(:complexity_threshold) %>
       </a>
     </li>
   </ul>
@@ -16,10 +16,10 @@
 
         <%= f.input :guw_type_id, as: :hidden, input_html: { value: params[:guw_type_id] } %>
 
-        <%= f.input :name, label: "Nom du seuil" %>
+        <%= f.input :name, label: I18n.t(:thresold_name) %>
         <%= f.input :description, input_html: { rows: "5"} %>
-        <%= f.input :value, label: "Valeur par défaut" %>
-        <%= f.input :display_order, label: "Ordre d'affichage" %>
+        <%= f.input :value, label: I18n.t(:default_value) %>
+        <%= f.input :display_order, label: I18n.t(:display_order) %>
       </div>
 
       <%= f.button :submit, I18n.t('save') %>

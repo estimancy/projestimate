@@ -15,18 +15,18 @@
       <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>
 
       <div class="form-inputs">
-        <%= f.input :name, label: "Type d'unité d'oeuvre" %>
+        <%= f.input :name, label: I18n.t(:work_unit_type) %>
         <%= tinymce %>
         <%= f.input :description, input_html: { class: 'tinymce', rows: 15, cols: 20 } %>
-        <%= f.input :allow_retained, label: "Modification de la taille d'entrée permise" %>
-        <%= f.input :allow_quantity, label: "Modification de la quantité d'entrée permise" %>
-        <%= f.input :allow_complexity, label: "Modification de la complexité d'entrée permise" %>
-        <%= f.input :allow_criteria, label: "Modification du dénombrement d'entrée permise" %>
+        <%= f.input :allow_retained, label: I18n.t(:Changing_of_the_size_enter) %>
+        <%= f.input :allow_quantity, label: I18n.t(:Changing_the_quantity_enter) %>
+        <%= f.input :allow_complexity, label: I18n.t(:Changing_the_complexity_enter) %>
+        <%= f.input :allow_criteria, label: I18n.t(:Changing_the_count_enter) %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
         <%= f.button :submit, I18n.t('save') %>
-        <%= link_to "Supprimer", @guw_type, method: :delete, confirm: "Etes vous sure de vouloir supprimer ce type d'UO ?", class: "btn btn-danger pull-right" %>
+        <%= link_to I18n.t(:delete), @guw_type, method: :delete, confirm: I18n.t(:are_you_sure), class: "btn btn-danger pull-right" %>
       <% end %>
       <%= link_to I18n.t(:back), :back, class: "btn" %>
     <% end %>

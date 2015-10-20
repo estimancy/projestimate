@@ -2,7 +2,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Type d'acquisitions
+        <%= I18n.t(:Type_acquisitions) %>
       </a>
     </li>
   </ul>
@@ -10,10 +10,10 @@
   <div id="tabs-1">
     <table class="table table-bordered">
       <tr>
-        <th>Name</th>
-        <th>Value</th>
-        <th>Ordre d'affichage</th>
-        <th>Actions</th>
+        <th><%= I18n.t(:name) %></th>
+        <th><%= I18n.t(:value) %></th>
+        <th><%= I18n.t(:display_order) %></th>
+        <th><%= I18n.t(:actions) %></th>
       </tr>
 
       <% @guw_work_units.order("display_order ASC").each do |guw_work_unit| %>
@@ -32,7 +32,7 @@
     </table>
 
     <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to "Nouveau type d'acquisition", guw.new_guw_model_guw_work_unit_path(@guw_model), class: "btn" %>
+        <%= link_to I18n.t(:new_acquisition_type), guw.new_guw_model_guw_work_unit_path(@guw_model), class: "btn" %>
     <% end %>
     <%= link_to I18n.t(:back), guw.guw_model_path(@guw_model) , class: "btn" %>
   </div>

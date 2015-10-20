@@ -23,20 +23,20 @@
 
             <%= hidden_field_tag :position, params[:position] %>
 
-            <%= f.input :name, label: "Nom de l'unité d'oeuvre", input_html: { class: "input-xxlarge" } %>
-            <%= f.input :comments, input_html: { rows: "5" }, label: "Description", input_html: { class: "input-xxlarge" }  %>
-            <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types.map{|i| [i.name, i.id]}, label: "Type d'UO", include_blank: false, input_html: { class: "input-xxlarge" }  %>
-            <%= f.input :guw_work_unit_id, as: :select, collection: @guw_model.guw_work_units, label: "Opération", include_blank: false, input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :name, label: I18n.t(:uw_name), input_html: { class: "input-xxlarge" } %>
+            <%= f.input :comments, input_html: { rows: "5" }, label: I18n.t(:description), input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types.map{|i| [i.name, i.id]}, label: I18n.t(:work_unit_type), include_blank: false, input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :guw_work_unit_id, as: :select, collection: @guw_model.guw_work_units, label: I18n.t(:Opération), include_blank: false, input_html: { class: "input-xxlarge" }  %>
             <% default_technology = Guw::GuwUnitOfWorkGroup.find(params[:g]).organization_technology %>
             <%= f.input :organization_technology_id,
                         as: :select,
                         collection: @guw_model.guw_types.first.guw_complexity_technologies.select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.map{|i| [i.name, i.id]},
                         selected: default_technology.nil? ? nil : default_technology.id,
-                        label: "Technologie",
+                        label: I18n.t(:organization_technology),
                         include_blank: false,
                         input_html: { class: "input-xxlarge" } %>
 
-            <%= f.input :guw_unit_of_work_group_id, as: :select, collection: current_module_project.guw_unit_of_work_groups, label: "Groupe d'UO", selected: params[:g], input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :guw_unit_of_work_group_id, as: :select, collection: current_module_project.guw_unit_of_work_groups, label: I18n.t(:uw_groups), selected: params[:g], input_html: { class: "input-xxlarge" }  %>
           </div>
         </div>
         <div class="span7">

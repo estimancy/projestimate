@@ -4,11 +4,11 @@
 
   <div class="pull-left">
     <% if can? :execute_estimation_plan, @project %>
-      <%= link_to "Gérer les groupes", guw.guw_model_guw_unit_of_work_groups_path(@guw_model), class: "btn btn-mini input-small" %>
+      <%= link_to I1_n.t(:manage_the_groups), guw.guw_model_guw_unit_of_work_groups_path(@guw_model), class: "btn btn-mini input-small" %>
     <% end %>
-    <%= link_to "Exporter", guw.guw_model_export_path(@guw_model), class: "btn btn-mini input-small", method: "post" %>
+    <%= link_to I18n.t(:export), guw.guw_model_export_path(@guw_model), class: "btn btn-mini input-small", method: "post" %>
     <a href="#import_myexport" role="button" class="btn btn-mini input-small" title="Import UW from excel" data-toggle="modal">
-      Importer
+      <%= I18n.t(:import) %>
     </a>
 
   </div>
@@ -24,28 +24,28 @@
         </span>
 
         <span class="label label-success">
-          Total <%= @guw_model.retained_size_unit %> calculés :
+          Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:Calculated)%> :
           <span class="label label-success theorical_effort">
               <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f }}.flatten.sum.to_f.round(3) %>
           </span>
         </span>
 
         <span class="label label-info">
-          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. :
+          &nbsp;&nbsp;&nbsp;&nbsp; <%= I18n.t(:numerber_of_uw) %> :
           <span class="label label-info number_of_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works }.flatten.size %>
           </span>
         </span>
 
         <span class="label label-info">
-          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. modifiés
+          &nbsp;&nbsp;&nbsp;&nbsp; <%= I18n.t(:numerber_of_uw_modifies) %>
           <span class="label label-info modified_of_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size %>
           </span>
         </span>
 
         <span class="label label-info">
-          &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. sélectionnés :
+          &nbsp;&nbsp;&nbsp;&nbsp; <%= I18n.t(:numerber_of_uw_selected) %> :
           <span class="label label-info selected_of_unit_of_work">
             <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size %>
           </span>
@@ -83,35 +83,35 @@
             </span>
             <span class="pull-right">
               <span class="label label-success">
-                Total <%= @guw_model.retained_size_unit %> retenu :
+                Total <%= @guw_model.retained_size_unit  I18n.t(:retained_result) %>  :
                 <span class="<%= uowg.id %>_ajusted">
                   <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum.to_f.round(3) %>
                 </span>
               </span>
 
               <span class="label label-success">
-                Total <%= @guw_model.retained_size_unit %> calculés :
+                Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:Calculated) %> :
                 <span class="<%= uowg.id %>_theorical">
                   <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.effort.to_f}.sum.to_f.round(3) %>
                 </span>
               </span>
 
               <span class="label label-info">
-                Nombre d'U.O. :
+                 <%= I18n.t(:numerber_of_uw) %> :
                 <span class="<%= uowg.id %>_number">
                   <%= uowg.guw_unit_of_works.size %>
                 </span>
               </span>
 
               <span class="label label-info">
-                Nombre d'U.O. modifiés :
+                <%= I18n.t(:numerber_of_uw_modifies) %> :
                 <span class="<%= uowg.id %>_flagged">
                   <%= uowg.guw_unit_of_works.where(flagged: true).size %>
                 </span>
               </span>
 
               <span class="label label-info">
-                Nombre d'U.O. sélectionnés :
+                <%= I18n.t(:numerber_of_uw_selected) %> :
                 <span class="<%= uowg.id %>_selected">
                   <%= uowg.guw_unit_of_works.where(selected: true).size %>
                 </span>
@@ -154,7 +154,7 @@
                 <td style="border-left: 6px solid <%= (guow.flagged == true) ? 'red' : 'green' %>"></td>
 
                 <td>
-                  <%= check_box_tag 'selected', guow.id, guow.selected, class: "selected", disabled: !can?(:execute_estimation_plan, @project) %>
+                  <%= check_box_tag I18n.t(:selected), guow.id, guow.selected, class: "selected", disabled: !can?(:execute_estimation_plan, @project) %>
                   <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
                   <%= hidden_field_tag "", guow.id, class: "#{guow.id}" %>
                 </td>
@@ -308,7 +308,7 @@
   <%= form_tag guw.import_myexport_path, :method => 'post', :multipart => true, :class => 'simple_form' do %>
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel"> import de donnée d'une unité d'oeuvre</h3>
+      <h3 id="myModalLabel"> <%= I18n.t(:import_data_from_uw) %></h3>
     </div>
     <div class="modal-body">
       <!--<p>description de se que fait l'action peut etre ?</p>-->

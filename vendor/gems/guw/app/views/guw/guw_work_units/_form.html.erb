@@ -3,7 +3,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Work Unit
+        <%= I18n.t(:Work_Unit) %>
       </a>
     </li>
   </ul>
@@ -17,7 +17,7 @@
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :value %>
-        <%= f.input :display_order, label: "Ordre d'affichage" %>
+        <%= f.input :display_order, label: I18n.t(:display_order) %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
