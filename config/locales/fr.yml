@@ -1667,7 +1667,7 @@ fr:
   attribute_of: "Attributs de %{parameter}"
   close_without_calculate: "Fermer sans calculer"
   calculate: "Calculer"
-  Calculated: "Calculaté"
+  Calculated: "Calculé"
   numerber_of_uw: "Nombre d'U.O"
   numerber_of_uw_modifies: "Nombre d'U.O. modifiés"
   numerber_of_uw_selected: "Nombre d'U.O. sélectionnés"

@@ -83,7 +83,7 @@
             </span>
             <span class="pull-right">
               <span class="label label-success">
-                Total <%= @guw_model.retained_size_unit  I18n.t(:retained_result) %>  :
+                Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:retained_result) %>  :
                 <span class="<%= uowg.id %>_ajusted">
                   <%= uowg.guw_unit_of_works.where(selected: true).map{|i| i.ajusted_effort.to_f }.flatten.sum.to_f.round(3) %>
                 </span>
