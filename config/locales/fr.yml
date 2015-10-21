@@ -1,6 +1,4 @@
 fr:
-  #standard local format
-  # Text direction: Left-to-Right (ltr) or Right-to-Left (rtl)
   direction: ltr
   date:
     abbr_day_names:
@@ -1644,7 +1642,7 @@ fr:
   new_complexity_for: "Créer une nouvelle complexité pour %{parameter}"
   new_uw_type: "Créer un nouveau type d'UO"
   manage_the: "Gérer les %{parameter}"
-  manage_the_groups: "Gérer les groupes""
+  manage_the_groups: "Gérer les groupes"
   manage_the_attribute: "Gérer les attributs"
   new_type_thresold: "Créer un seuil de type d'UO"
   new_attribute_thresold: "Créer un seuil d'attribut"
@@ -1663,7 +1661,7 @@ fr:
   trackings_of: "Traçabilité de %{parameter}"
   Description_and_trackings_of: "Description et traçabilité de %{parameter}"
   comments: "Remarques"
-  uw_name = "Nom de l'unité d'oeuvre"
+  uw_name: "Nom de l'unité d'oeuvre"
   Opération: "Opération"
   uw_groups: "Groupe d'UO"
   attribute_of: "Attributs de %{parameter}"
