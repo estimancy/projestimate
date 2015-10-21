@@ -146,16 +146,18 @@ class Kb::KbModelsController < ApplicationController
     @kb_input.filters = params["filters"]
 
     @kb_model.kb_datas.each do |i|
-      params["filters"].each do |f|
-        if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
-          @project_list << i
+      unless params["filters"].nil?
+        params["filters"].each do |f|
+          if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
+            @project_list << i
+          end
         end
       end
     end
 
-    if @project_list.blank?
-      @project_list = @kb_model.kb_datas
-    end
+    # if @project_list.blank?
+    #   @project_list = @kb_model.kb_datas
+    # end
 
     @project_list.each do |kb_data|
       s = Math.log10(kb_data.size.to_f)
@@ -175,20 +177,22 @@ class Kb::KbModelsController < ApplicationController
       es_array << se
     end
 
-    ms = s_array.sum / s_array.size
-    ms2 = s_array2.sum / s_array2.size
+    unless @project_list.empty?
+      ms = s_array.sum / s_array.size
+      ms2 = s_array2.sum / s_array2.size
 
-    me = e_array.sum / e_array.size
-    me2 = e_array2.sum / e_array2.size
+      me = e_array.sum / e_array.size
+      me2 = e_array2.sum / e_array2.size
 
-    mes = es_array.sum / es_array.size
+      mes = es_array.sum / es_array.size
 
-    pente = ((mes - ms * me) / (ms2 - ms * ms)).round(2)
-    coef = (me - pente * ms).round(2)
-    coef_10 = (10**coef).round(2)
+      pente = ((mes - ms * me) / (ms2 - ms * ms)).round(2)
+      coef = (me - pente * ms).round(2)
+      coef_10 = (10**coef).round(2)
 
-    @values = Array.new
-    @regression = Array.new
+      @values = Array.new
+      @regression = Array.new
+    end
 
     @project_list.map do |kb_data|
       @values << [kb_data.size.round(2), kb_data.effort.round(2)]
@@ -198,7 +202,7 @@ class Kb::KbModelsController < ApplicationController
       @regression << [i, (coef_10 * i ** pente).round(2)]
     end
 
-    @formula = "#{coef_10} X ^ #{pente}"
+    @formula = "#{coef_10.to_f} X ^ #{pente.to_f}"
     @kb_input.values = @values
     @kb_input.regression = @regression
     @kb_input.formula = @formula
@@ -220,7 +224,7 @@ class Kb::KbModelsController < ApplicationController
         end
 
         if am.pe_attribute.alias == "effort"
-          effort = (coef_10 * params[:size].to_f ** pente) * @kb_model.standard_unit_coefficient.to_i
+          effort = (coef_10.to_f * params[:size].to_f ** pente.to_f) * @kb_model.standard_unit_coefficient.to_i
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
