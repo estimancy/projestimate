@@ -10,7 +10,7 @@
   </ul>
 
   <div id="taille">
-    <b>Modèle d'Unité Oeuvre générique</b>
+    <b><%= I18n.t(:label_Guw::GuwModel)%></b>
 
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
@@ -86,7 +86,7 @@
       </div>
 
       <div class="span4">
-        <b>Module d'Effort Générique</b>
+        <b><%= I18n.t(:module_effort_generique) %></b>
 
         <% if can? :show_modules_instances, ModuleProject %>
           <% if can? :manage_modules_instances, ModuleProject %>
@@ -123,7 +123,7 @@
 
       <div class="span4">
 
-        <b>Base de connaissance</b>
+        <b><%= I18n.t(:knowledge_base)%></b>
 
         <% if can? :show_modules_instances, ModuleProject %>
           <% if can? :manage_modules_instances, ModuleProject %>
@@ -229,7 +229,7 @@
   </div>
 
   <div id="team">
-    <b>Module d'Equipe</b>
+    <b><%= I18n.t(:team_module) %></b>
 
     <% if can? :show_modules_instances, ModuleProject %>
         <% if can? :manage_modules_instances, ModuleProject %>
@@ -275,7 +275,7 @@
   </div>
 
   <div id="expert">
-    <b>Expert Judgment</b>
+    <b><%= I18n.t(:Judgment_Expert)%></b>
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>
          <%= link_to I18n.t(:New_model_of_Judgment_Expert), expert_judgement.new_instance_path(organization_id: @organization.id), :class => 'btn btn-mini pull-right' %>
@@ -310,7 +310,7 @@
   </div>
 
   <div id="taille_by_group">
-    <b>Modèle d'Unité d'Oeuvre par groupe (1 niveau)</b>
+    <b><%= I18n.t(:model_uw_by_group)%></b>
     <%= render :partial => 'organizations/technology_uow_synthesis' %>
   </div>
 

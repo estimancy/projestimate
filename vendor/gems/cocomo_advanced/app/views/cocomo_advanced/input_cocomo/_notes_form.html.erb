@@ -2,12 +2,12 @@
   <div class="span12">
 
     <div class="zdzd">
-      <label>Notes</label>
-      <%= text_area_tag "notes", @notes, class: "attribute_note_area" %>
+      <label><%= I1_n.t(:notes)%></label>
+      <%= text_area_tag I1_n.t(:notes), @notes, class: "attribute_note_area" %>
     </div>
 
     <br>
 
-    <%= submit_tag "Save", class: "btn" %>
+    <%= submit_tag I18n.t(:save), class: "btn" %>
   </div>
 <% end %>

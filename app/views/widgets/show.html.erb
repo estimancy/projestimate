@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<p id="notice"><%= I18n.t(:notice) %></p>
 
 <p>
   <b><%= I18n.t(:name) + ":" %></b>
@@ -6,17 +6,17 @@
 </p>
 
 <p>
-  <b>Icon class:</b>
+  <b><%= I18n.t(:Icon_class)%>:</b>
   <%= @widget.icon_class %>
 </p>
 
 <p>
-  <b>Color:</b>
+  <b><%= I18n.t(:Color)%>:</b>
   <%= @widget.color %>
 </p>
 
 <p>
-  <b>Pe attribute:</b>
+  <b><%= I18n.t(:pe_attributes)%>:</b>
   <%= @widget.pe_attribute_id %>
 </p>
 

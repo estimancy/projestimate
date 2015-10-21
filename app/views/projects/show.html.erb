@@ -55,7 +55,7 @@
       <%= tinymce %>
       <label>
         <b>
-          Description
+          <%= I18n.t(:description) %>
         </b>
       </label>
       <%= simple_format(@project.description) %>
@@ -66,7 +66,7 @@
 
       <table>
         <tr>
-          <td><%= f.input :estimation_status_id, label: "Estimation Status", as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
+          <td><%= f.input :estimation_status_id, label: I18n.t(:estimation_status), as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
           <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
             <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
           <% end %>

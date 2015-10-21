@@ -3,16 +3,16 @@
   <table class="table table-bordered table-condensed">
 
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th colspan="3">Valeur</th>
-      <th>Actions</th>
+      <th><%= I18n.t(:name)%></th>
+      <th><%= I1_n.t(:description)%></th>
+      <th colspan="3"><%= I18n.t(:value)%></th>
+      <th><%= I18n.t(:actions)%></th>
     </tr>
 
     <tr>
       <td colspan="2">
         <b class="pull-left">
-          Attribut générique
+          <%= I18n.t(:generique_attribute)%>
         </b>
       </td>
       <td><%= I18n.t(:low) %></td>
@@ -22,8 +22,8 @@
     </tr>
 
     <tr>
-      <td>Size (SLOC)</td>
-      <td>Sloc description</td>
+      <td><%= I18n.t(:size)%> (SLOC)</td>
+      <td>Sloc <%= I18n.t(:description) %></td>
       <% ['low', 'most_likely', 'high'].each do |level| %>
         <td>
           <% size = PeAttribute.where(alias: "sloc").first %>
@@ -38,8 +38,8 @@
     </tr>
 
     <tr>
-      <td>Complexity</td>
-      <td>Complexity description</td>
+      <td><%= I18n.t(:complexity)%></td>
+      <td><%= I18n.t(:Complexity_description)%></td>
       <% ['low', 'most_likely', 'high'].each do |level| %>
         <td>
           <% cplx = PeAttribute.where(alias: "complexity").first %>
@@ -56,7 +56,7 @@
     <tr>
       <td colspan="6">
         <b class="pull-left">
-          Attribut produit
+          <%= I18n.t(:product_attribute)%>
         </b>
       </td>
     </tr>
@@ -80,7 +80,7 @@
     <tr>
       <td colspan="6">
         <b class="pull-left">
-          Attribut plateforme
+          <%= I18n.t(:plateforme_attribute)%>
         </b>
       </td>
     </tr>
@@ -102,7 +102,7 @@
     <tr>
       <td colspan="6">
         <b class="pull-left">
-          Attribut personnel
+          <%= I18n.t(:personal_attribute)%>
         </b>
       </td>
     </tr>
@@ -124,7 +124,7 @@
     <tr>
       <td colspan="6">
         <b class="pull-left">
-          Attribut projet
+          <%= I18n.t(:Project_attribute)%>
         </b>
       </td>
     </tr>
@@ -144,7 +144,7 @@
     <% end %>
   </table>
 
-  <%= submit_tag "Save", class: 'btn' %>
+  <%= submit_tag I18n.t(:save), class: 'btn' %>
 <% end %>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

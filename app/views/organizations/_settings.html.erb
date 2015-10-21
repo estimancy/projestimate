@@ -346,9 +346,9 @@
     <br>
     <table class="table table-bordered">
       <tr>
-        <th>Name</th>
-        <th>Alias</th>
-        <th>Description</th>
+        <th><%= I18n.t(:name)%></th>
+        <th><%= I18n.t(:alias)%></th>
+        <th><%= I18n.t(:description)%></th>
         <th></th>
         <th></th>
       </tr>
@@ -359,7 +359,7 @@
           <td><%= size_unit_type.alias %></td>
           <td><%= size_unit_type.description %></td>
           <td><%= link_to I18n.t('Edit'), edit_size_unit_type_path(size_unit_type, organization_id: @organization.id) %></td>
-          <td><%= link_to I18n.t('Destroy'), size_unit_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to I18n.t('Destroy'), size_unit_type, method: :delete, data: { confirm: I18n.t(:are_you_sure) } %></td>
         </tr>
       <% end %>
     </table>

@@ -1,22 +1,22 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Organization:</b>
+  <b><%= I18n.t(:label_Organization) %>:</b>
   <%= @estimation_status.organization_id %>
 </p>
 
 <p>
-  <b>Status number:</b>
+  <b><%=I18n.t(:status_number)%>:</b>
   <%= @estimation_status.status_number %>
 </p>
 
 <p>
-  <b>Name:</b>
+  <b><%= I18n.t(:name) %>:</b>
   <%= @estimation_status.name %>
 </p>
 
 <p>
-  <b>Description:</b>
+  <b><%= I18n.t(:description) %>:</b>
   <%= @estimation_status.description %>
 </p>
 

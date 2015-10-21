@@ -1,12 +1,12 @@
-<p id="notice"><%= notice %></p>
+<p id="notice"><%= I18n.t(:notice) %></p>
 
 <p>
-  <b>Name:</b>
+  <b><%=I18n.t(:name)%>:</b>
   <%= @view.name %>
 </p>
 
 <p>
-  <b>User:</b>
+  <b><%= I18n.t(:user)%>:</b>
   <%= @view.organization_id %>
 </p>
 

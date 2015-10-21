@@ -4,9 +4,9 @@
 
     <table class="table table-bordered permissions">
       <tr>
-        <th>Technology</th>
-        <th>Unit of Work</th>
-        <th>Complexity</th>
+        <th><%= I18n.t(:technology) %></th>
+        <th><%= I18n.t(:unit_of_work)%>/th>
+        <th><%= I1_n.t(:complexity)%></th>
         <% @organization.size_unit_types.each do |sut| %>
           <th><%= link_to "#{sut.name}", edit_size_unit_type_path(sut, organization_id: @organization.id) %></th>
         <% end %>

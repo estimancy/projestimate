@@ -1,8 +1,8 @@
 <h3>
-  Calcul de l'effort
+  <%= I18n.t(:cal_effort)%>
 </h3>
 <div class="alert alert-dismissable">
-  Formule de calcul de l'effort = ax^b ou <b>a</b> = <%= @ge_model.coeff_a %> et <b>b</b> = <%= @ge_model.coeff_b %>
+  <%= I18n.t(:effort_formula, parameter_1: @ge_model.coeff_a, parameter_2: @ge_model.coeff_b).html_safe %>
 </div>
 <%= form_tag ge.ge_model_save_efforts_path(@ge_model) do %>
   <div class="row-fluid">
@@ -10,7 +10,7 @@
 
       <h4>
         <b>
-          Taille en entrée (en <%= @ge_model.size_unit %>)
+          <%= I18n.t(:@ge_model.size_unit)%>
         </b>
       </h4>
 
@@ -29,11 +29,11 @@
       <table class="table table-condensed table-striped">
         <tr>
           <% if @ge_model.three_points_estimation == true %>
-            <th>Bas</th>
+            <th><%= I18n.t(:bottom)%></th>
           <% end %>
-          <th>Probable</th>
+          <th><%= I18n.t(:probable)%></th>
           <% if @ge_model.three_points_estimation == true %>
-            <th>Haut</th>
+            <th><%= I18n.t(:top)%></th>
           <% end %>
         </tr>
         <tr>
@@ -60,17 +60,17 @@
       <% component_id = current_component.id %>
       <h4>
         <b>
-          Effort calculé (en <%= convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization) %>)
+          <%= I18n.t(:cal_effort_for, parameter: convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization))%>
         </b>
       </h4>
       <table class="table table-condensed table-striped">
         <tr>
           <% if @ge_model.three_points_estimation == true %>
-            <th>Bas</th>
+            <th><%= I18n.t(:bottom)%></th>
           <% end %>
-          <th>Probable</th>
+          <th><%= I18n.t(:probable)%></th>
           <% if @ge_model.three_points_estimation == true %>
-            <th>Haut</th>
+            <th><% I18n.t(:high)%></th>
           <% end %>
         </tr>
         <tr>
