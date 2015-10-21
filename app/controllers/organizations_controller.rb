@@ -203,7 +203,7 @@ class OrganizationsController < ApplicationController
     check_if_organization_is_image(@organization)
 
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
-    set_page_title I18n.t(:spec_estimations, parameter: @organization)
+    set_page_title I18n.t(:spec_estimations, parameter: @organization.to_s)
 
     @projects = @organization.projects.where(is_model: false).all
   end
