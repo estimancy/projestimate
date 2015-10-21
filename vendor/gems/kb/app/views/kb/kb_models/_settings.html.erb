@@ -15,7 +15,7 @@
               Nombre de projets :
               <span class="project_numbers">
                 <%= @kb_input.values.size %>
-                </span>
+              </span>
             </strong>
           </h5>
         </div>
@@ -37,14 +37,16 @@
                                                       selected: @filters.nil? ? @project.project_area : @filters[key]),
 
                                    class: "string required input-xlarge filters",
-                                   prompt: "Indifférent" %>
+                                   prompt: "Indifférent",
+                                   disabled: !@kb_model.enabled_input %>
                   <% else %>
                     <%= select_tag "filters[#{key}]",
                                    options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
                                                       selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
 
                                    class: "string required input-xlarge filters",
-                                   prompt: "Indifférent" %>
+                                   prompt: "Indifférent",
+                                   disabled: !@kb_model.enabled_input %>
                   <% end %>
                 </div>
               <% end %>

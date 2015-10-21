@@ -1,0 +1,17 @@
+development:
+  adapter: mysql2
+  database: estimancy_development_2
+  pool: 5
+  username: root
+  password: f_oxf_axfn
+  host: localhost
+  socket: /home/goliti_j/mysql/mysql.sock
+
+production:
+  adapter: mysql2
+  database: estimancy_development_2
+  pool: 5
+  username: root
+  password: f_oxf_axfn
+  host: localhost
+  socket: /home/goliti_j/mysql/mysql.sock

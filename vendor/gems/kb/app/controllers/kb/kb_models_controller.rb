@@ -220,7 +220,7 @@ class Kb::KbModelsController < ApplicationController
         end
 
         if am.pe_attribute.alias == "effort"
-          effort = ((coef_10 * params[:size].to_f) ** pente) * @kb_model.standard_unit_coefficient.to_i
+          effort = (coef_10 * params[:size].to_f ** pente) * @kb_model.standard_unit_coefficient.to_i
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]

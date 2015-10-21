@@ -1,6 +1,4 @@
 fr:
-  #standard local format
-  # Text direction: Left-to-Right (ltr) or Right-to-Left (rtl)
   direction: ltr
   date:
     abbr_day_names:
@@ -1644,7 +1642,7 @@ fr:
   new_complexity_for: "Créer une nouvelle complexité pour %{parameter}"
   new_uw_type: "Créer un nouveau type d'UO"
   manage_the: "Gérer les %{parameter}"
-  manage_the_groups: "Gérer les groupes""
+  manage_the_groups: "Gérer les groupes"
   manage_the_attribute: "Gérer les attributs"
   new_type_thresold: "Créer un seuil de type d'UO"
   new_attribute_thresold: "Créer un seuil d'attribut"
@@ -1669,7 +1667,7 @@ fr:
   attribute_of: "Attributs de %{parameter}"
   close_without_calculate: "Fermer sans calculer"
   calculate: "Calculer"
-  Calculated: "Calculaté"
+  Calculated: "Calculé"
   numerber_of_uw: "Nombre d'U.O"
   numerber_of_uw_modifies: "Nombre d'U.O. modifiés"
   numerber_of_uw_selected: "Nombre d'U.O. sélectionnés"
