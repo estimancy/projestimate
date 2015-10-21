@@ -327,6 +327,9 @@
     e.preventDefault();
     $(this).tab('show');
     refresh_chart();
+
+    $.cookie("lastTab", $(this).attr('href'))
+
   })
 
   function refresh_chart() {
