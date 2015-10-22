@@ -39,7 +39,8 @@
                                    class: "string required input-xlarge filters",
                                    prompt: "Indifférent",
                                    disabled: !@kb_model.enabled_input %>
-                  <% else %>
+                    <input type="hidden" name="filters[<%= key %>]" value="<%= @project.project_area %>" />
+                <% else %>
                     <%= select_tag "filters[#{key}]",
                                    options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
                                                       selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
@@ -47,6 +48,7 @@
                                    class: "string required input-xlarge filters",
                                    prompt: "Indifférent",
                                    disabled: !@kb_model.enabled_input %>
+                    <input type="hidden" name="filters[<%= key %>]" value="<%= @filters.nil? ? (@kb_input.filters[key]) : @filters[key] %>" />
                   <% end %>
                 </div>
               <% end %>
