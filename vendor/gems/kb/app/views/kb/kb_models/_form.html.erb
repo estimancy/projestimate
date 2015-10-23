@@ -30,9 +30,8 @@
       <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
 
         <div class="input boolean optional kb_model_selected_attributes<%= k %>">
-          <input name="selected_attributes<%= k %>" type="hidden">
           <label class="boolean optional control-label checkbox" for="selected_attributes<%= k %>">
-            <input class="boolean optional" id="kb_model_selected_attributes<%= k %>" name="selected_attributes[<%= k %>]" type="checkbox">
+            <input class="boolean optional" id="kb_model_selected_attributes<%= k %>" name="selected_attributes[<%= k %>]" type="checkbox" <%= @kb_model.selected_attributes.include?(k.to_s) ? 'checked=checked' : '' %>">
             <%= k %>
           </label>
         </div>
