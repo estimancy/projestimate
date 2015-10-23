@@ -106,7 +106,7 @@
             <% effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id,
                                                          :module_project_id => current_module_project.id,
                                                          :in_out => "output").first %>
-            <% @effort = effort_current_ev.send("string_data_#{level}")[current_component.id] / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient) %>
+            <% @effort = effort_current_ev.send("string_data_#{level}")[current_component.id].to_f / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient) %>
 
             <span id="effort_label">
               <%= text_field_tag "effort",
