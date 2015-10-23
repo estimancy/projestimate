@@ -1705,3 +1705,7 @@ en:
   label_from_model_user_security_resume: "user's rigth management for estimation create from this model"
   label_from_model_group_security_resume: "groups rigth management for estimation create from this model"
   team_module: "Team module"
+  module_effort_generique: "Generic module effort"
+  knowledge_base: "Knowledge base"
+  Judgment_Expert: "Expert judgment"
+  config_function_point: "Configure the function point in SLOC tab"
