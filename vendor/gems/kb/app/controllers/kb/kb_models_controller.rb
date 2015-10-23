@@ -108,12 +108,17 @@ class Kb::KbModelsController < ApplicationController
 
     @kb_model = Kb::KbModel.find(params[:id])
 
-    arr = []
-    params[:selected_attributes].keys.each do |i|
-      arr << i
+    if params[:selected_attributes].nil?
+      @kb_model.selected_attributes = []
+      @kb_model.save
+    else
+      arr = []
+      params[:selected_attributes].keys.each do |i|
+        arr << i
+      end
+      @kb_model.selected_attributes = arr
+      @kb_model.save
     end
-    @kb_model.selected_attributes = arr
-    @kb_model.save
 
     if @kb_model.update_attributes(params[:kb_model])
       redirect_to main_app.organization_module_estimation_path(@current_organization, anchor: "kb")
