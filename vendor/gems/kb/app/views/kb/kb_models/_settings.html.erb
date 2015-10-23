@@ -26,31 +26,38 @@
             <p>
               <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each_with_index do |key, i| %>
                 <div class="input string required project_title">
-                  <label class="string required control-label">
-                    <strong>
-                      <%= key %>
-                    </strong>
-                  </label>
-                  <% if i == 0 %>
-                    <%= select_tag "filters[#{key}]",
-                                   options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
-                                                      selected: @filters.nil? ? @project.project_area : @filters[key]),
+                  <% if @kb_model.selected_attributes.include?(key.to_s) %>
+                    <% if i == 0 %>
+                      <label class="string required control-label">
+                        <strong>
+                          <%= I18n.t(:project_area) %>
+                        </strong>
+                      </label>
+                      <%= select_tag "filters[#{key}]",
+                                     options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
+                                                        selected: @filters.nil? ? @project.project_area : @filters[key]),
 
-                                   class: "string required input-xlarge filters",
-                                   prompt: "Indifférent",
-                                   disabled: !@kb_model.enabled_input %>
-                    <% unless @kb_model.enabled_input %>
-                      <input type="hidden" name="filters[<%= key %>]" value="<%= @project.project_area %>" />
+                                     class: "string required input-xlarge filters",
+                                     prompt: "Indifférent",
+                                     disabled: !@kb_model.enabled_input %>
+                      <% unless @kb_model.enabled_input %>
+                        <input type="hidden" name="filters[<%= key %>]" value="<%= @project.project_area %>" />
+                      <% end %>
+                    <% else %>
+                      <label class="string required control-label">
+                        <strong>
+                          <%= key %>
+                        </strong>
+                      </label>
+                      <%= select_tag "filters[#{key}]",
+                                     options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
+                                                        selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
+
+                                     class: "string required input-xlarge filters",
+                                     prompt: "Indifférent",
+                                     disabled: !@kb_model.enabled_input %>
+                      <input type="hidden" name="filters[<%= key %>]" value="<%= @filters.nil? ? (@kb_input.filters[key]) : @filters[key] %>" />
                     <% end %>
-                <% else %>
-                    <%= select_tag "filters[#{key}]",
-                                   options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
-                                                      selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
-
-                                   class: "string required input-xlarge filters",
-                                   prompt: "Indifférent",
-                                   disabled: !@kb_model.enabled_input %>
-                    <input type="hidden" name="filters[<%= key %>]" value="<%= @filters.nil? ? (@kb_input.filters[key]) : @filters[key] %>" />
                   <% end %>
                 </div>
               <% end %>

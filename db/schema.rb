@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150928071751) do
+ActiveRecord::Schema.define(:version => 20151023145132) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -673,6 +673,7 @@ ActiveRecord::Schema.define(:version => 20150928071751) do
     t.integer "organization_id"
     t.float   "standard_unit_coefficient"
     t.string  "effort_unit"
+    t.text    "selected_attributes"
   end
 
   create_table "labor_categories", :force => true do |t|
@@ -1457,7 +1458,7 @@ ActiveRecord::Schema.define(:version => 20150928071751) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-10-15 07:30:12'
+    t.datetime "subscription_end_date",  :default => '2016-09-23 10:15:10'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
