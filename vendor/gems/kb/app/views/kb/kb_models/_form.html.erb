@@ -27,6 +27,18 @@
         <%= f.input :effort_unit, label: "Unité d'effort" %>
       </div>
 
+      <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
+
+        <div class="input boolean optional kb_model_<%= k %>">
+          <input name="kb_model[<%= k %>]" type="hidden">
+          <label class="boolean optional control-label checkbox" for="kb_model_<%= k %>">
+            <input class="boolean optional" id="kb_model_<%= k %>" name="kb_model[<%= k %>]" type="checkbox">
+            <%= k %>
+          </label>
+        </div>
+
+      <% end %>
+
       <% if can? :manage_modules_instances, ModuleProject %>
          <%= f.button :submit, I18n.t('save') %>
       <% end %>
@@ -67,6 +79,11 @@
                 <% end %>
               </tr>
             </thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th><%= I18n.t(:project_area) %></th>
+            </tr>
             <tbody>
               <% @kb_model.kb_datas.each do |kb_data| %>
                 <tr>
