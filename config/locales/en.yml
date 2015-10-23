@@ -1704,3 +1704,4 @@ en:
   effort_unit: "Effort unit"
   label_from_model_user_security_resume: "user's rigth management for estimation create from this model"
   label_from_model_group_security_resume: "groups rigth management for estimation create from this model"
+  team_module: "Team module"
