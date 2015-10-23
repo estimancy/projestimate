@@ -294,7 +294,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
       @weight_pert = Array.new
-
+      if !params[:selected].nil? && params[:selected].join(",").include?(guw_unit_of_work.id.to_s)
+        guw_unit_of_work.selected = true
+      else
+        guw_unit_of_work.selected = false
+      end
 
       #reorder to keep good order
       reorder guw_unit_of_work.guw_unit_of_work_group
@@ -652,33 +656,34 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @module_project.guw_model_id = @guw_model.id
     @module_project.save
 
+    retained_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                             pbs_project_element_id: current_component.id,
+                                             guw_model_id: @guw_model.id,
+                                             selected: true).map(&:ajusted_effort).compact.sum
+
+    theorical_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
+                                              pbs_project_element_id: current_component.id,
+                                              guw_model_id: @guw_model.id,
+                                              selected: true).map(&:effort).compact.sum
+
+    number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                           module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works}.flatten.size
+
+    selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                             module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
+
+    offline_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                         module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size
+
+    flagged_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
+                                                         module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size
+
+
     @module_project.pemodule.attribute_modules.each do |am|
       @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
-
-          retained_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                   pbs_project_element_id: current_component.id,
-                                                   guw_model_id: @guw_model.id,
-                                                   selected: true).map(&:ajusted_effort).compact.sum
-
-          theorical_size = Guw::GuwUnitOfWork.where(module_project_id: @module_project.id,
-                                                    pbs_project_element_id: current_component.id,
-                                                    guw_model_id: @guw_model.id,
-                                                    selected: true).map(&:effort).compact.sum
-
-          number_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                                 module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works}.flatten.size
-
-          selected_of_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                                   module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(selected: true)}.flatten.size
-
-          offline_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size
-
-          flagged_unit_of_work = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id,
-                                                               module_project_id: current_module_project.id).all.map{|i| i.guw_unit_of_works.where(flagged: true)}.flatten.size
 
 
           if am.pe_attribute.alias == "retained_size"
@@ -717,10 +722,16 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
 
         if ev.in_out == "output"
-          ev.update_attribute(:"string_data_low", { @component.id => tmp_prbl[0] } )
-          ev.update_attribute(:"string_data_most_likely", { @component.id => tmp_prbl[1].to_f } )
-          ev.update_attribute(:"string_data_high", { @component.id => tmp_prbl[2].to_f } )
-          ev.update_attribute(:"string_data_probable", { @component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+
+          h = Hash.new
+          h = {
+                :"string_data_low" => { @component.id => tmp_prbl[0] },
+                :"string_data_most_likely" => { @component.id => tmp_prbl[1].to_f },
+                :"string_data_high" => { @component.id => tmp_prbl[2].to_f },
+                :"string_data_probable" => { @component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) }
+          }
+
+          ev.update_attributes(h)
         end
       end
     end

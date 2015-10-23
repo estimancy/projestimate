@@ -133,7 +133,7 @@
           <table class="table table-striped">
             <tr>
               <th class=""></th>
-              <th class=""></th>
+              <th class=""> <%= link_to '', '#!', onclick: "toggle_group(#{uowg.id});", class:"fa fa-check-square-o" %> </th> <!-- tu travaille ici  -->
               <th class="">#</th>
               <th class="text_left"><%= I18n.t :name %></th>
               <th class="text_left"><%= I18n.t :description %></th>
@@ -154,7 +154,7 @@
                 <td style="border-left: 6px solid <%= (guow.flagged == true) ? 'red' : 'green' %>"></td>
 
                 <td>
-                  <%= check_box_tag I18n.t(:selected), guow.id, guow.selected, class: "selected", disabled: !can?(:execute_estimation_plan, @project) %>
+                  <%= check_box_tag "selected[]", guow.id, guow.selected, class: "selected checkbox_#{uowg.id}", selected: guow.id,disabled: !can?(:execute_estimation_plan, @project) %>
                   <%= hidden_field_tag "", uowg.id, class: "#{guow.id}_group" %>
                   <%= hidden_field_tag "", guow.id, class: "#{guow.id}" %>
                 </td>
@@ -329,6 +329,23 @@
     $('.retained-' + group).val('');
     return false; // prevent default click action from happening!
     e.preventDefault();
+  }
+
+  function toggle_group(group_id){
+    var number_of_checked = 0;
+    var number_of_line = 0;
+
+    $(".checkbox_" + group_id).each(function() {
+      if (this.checked)
+        number_of_checked = number_of_checked + 1;
+      number_of_line = number_of_line + 1
+    });
+    if (number_of_checked < number_of_line){
+      $(".checkbox_" + group_id).attr("checked", true);
+    }
+    else if (number_of_checked == number_of_line){
+      $(".checkbox_" + group_id).attr("checked", false);
+    }
   }
 
   $(document).ready(function () {
