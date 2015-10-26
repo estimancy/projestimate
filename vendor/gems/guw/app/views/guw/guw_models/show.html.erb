@@ -109,7 +109,7 @@
                   <td colspan="2" class="align-center">
                     <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
                                                               guw_work_unit_id: work_unit.id).first %>
-                    <%= text_field_tag I18n.t(:value) + "[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
+                    <%= text_field_tag "value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>
@@ -134,7 +134,7 @@
                   <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
                                                                 organization_technology_id: technology.id).first %>
                   <td colspan="2" class="align-center">
-                    <%= text_field_tag I18n.t(:coefficient) + "[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
+                    <%= text_field_tag "coefficient[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>
@@ -197,9 +197,9 @@
                     <%= check_box_tag I18n.t(:Enable) + "[#{guw_attribute.id}][#{type_complexity.id}]", "enable", ac.nil? ? false : ac.enable_value, class: "input-xmini" %>
                   </td>
                   <td class="align-center">
-                    <%= text_field_tag I18n.t(:bottom) + "[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-xmini" %>
-                    <%= text_field_tag I18n.t(:top) + "[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-xmini" %>
-                    <%= text_field_tag I18n.t(:coefficient) + "[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? type_complexity.value : ac.value, class: "input-xmini" %>
+                    <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-xmini" %>
+                    <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-xmini" %>
+                    <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? type_complexity.value : ac.value, class: "input-xmini" %>
                   </td>
                 <% end %>
               </tr>
