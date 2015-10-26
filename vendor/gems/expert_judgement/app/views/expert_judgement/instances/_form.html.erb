@@ -2,7 +2,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Modèle Jugement d'Expert
+        <%= I18n.t(:Judgment_Expert_model) %>
       </a>
     </li>
   </ul>
@@ -17,24 +17,24 @@
         <%= f.input :name %>
         <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
 
-        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
+        <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation_activities) %>
 
         <hr>
         <h3>Cout</h3>
-        <%= f.input :enabled_cost, label: "Activer les couts" %>
-        <%= f.input :cost_unit, label: "Libellé de l'unité de cout du module", disabled: !@instance.enabled_cost %>
-        <%= f.input :cost_unit_coefficient, label: "Coefficient de conversion en cout standard", disabled: !@instance.enabled_cost %>
+        <%= f.input :enabled_cost, label: I18n.t(:eneable_cost) %>
+        <%= f.input :cost_unit, label: I18n.t(:label_unit_cost_wording), disabled: !@instance.enabled_cost %>
+        <%= f.input :cost_unit_coefficient, label: I18n.t(:label_coef_conv_cost), disabled: !@instance.enabled_cost %>
 
         <hr>
         <h3>Effort</h3>
-        <%= f.input :enabled_effort, label: "Activer les efforts" %>
-        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort du module", disabled: !@instance.enabled_effort %>
-        <%= f.input :effort_unit_coefficient, label: "Coefficient de l'unité d'effort du module", disabled: !@instance.enabled_effort %>
+        <%= f.input :enabled_effort, label: I18n.t(:eneable_effort) %>
+        <%= f.input :effort_unit, label: I18n.t(:Wording_of_the_module_unit_effort), disabled: !@instance.enabled_effort %>
+        <%= f.input :effort_unit_coefficient, label: I18n.t(:label_coef_effort_unit), disabled: !@instance.enabled_effort %>
 
         <hr>
         <h3>Taille</h3>
-        <%= f.input :enabled_size, label: "Modification de la valeur d'entrée permise" %>
-        <%= f.input :retained_size_unit, label: "Libellé de l'unité de taille du module", disabled: !@instance.enabled_size %>
+        <%= f.input :enabled_size, label: I18n.t(:modification_of_the_input_value_allow) %>
+        <%= f.input :retained_size_unit, label: I18n.t(:retained_size_unit), disabled: !@instance.enabled_size %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
