@@ -97,7 +97,7 @@ module OrganizationsHelper
       if val.nil?
         '-'
       else
-        val.html_safe
+        val.to_s.html_safe
       end
     else
       column_value(column, project, value)
@@ -130,27 +130,27 @@ module OrganizationsHelper
         if can_show_estimation?(project)
           content_tag("td class='center'") do
             content_tag(:span, link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true),
-                        class: "badge", style: "background-color: #{project.status_background_color}").html_safe
+                        class: "badge", style: "background-color: #{project.status_background_color}").to_s.html_safe
           end
         else
           #content_tag('td class="exportable"', content_tag('span class="badge" style="background-color: #{project.status_background_color}', project.status_name))
           content_tag(:td) do
-            content_tag(:span, project.status_name, class: "badge", style: "background-color: #{project.status_background_color}").html_safe
+            content_tag(:span, project.status_name, class: "badge", style: "background-color: #{project.status_background_color}").to_s.html_safe
           end
         end
       when :description
         # mettre un truncate sinon ca plante sous ie8
-        content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).html_safe, :class => "text_field_text_overflow")
+        content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).to_s.html_safe, :class => "text_field_text_overflow")
       when :start_date, :created_at, :updated_at
         content_tag('td', I18n.l(value), class: "center")
       else
         if column.field_id
           content_tag("td") do
-            content_tag(:span, value, class: "pull-right").html_safe
+            content_tag(:span, value, class: "pull-right").to_s.html_safe
           end
         else
           content_tag("td") do
-            content_tag(:span, value, class: "pull-left").html_safe
+            content_tag(:span, value, class: "pull-left").to_s.html_safe
           end
         end
     end
