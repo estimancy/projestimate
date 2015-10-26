@@ -130,7 +130,11 @@ module ProjectsHelper
 
   #Conversion en fonction de la précision en params uniquement #> 12.12300 (si precision = 5) ou 12.12 si (si precision = 2)
   def convert_with_precision(value, precision)
-    "%.#{precision}f" % value
+    begin
+      "%.#{precision}f" % value
+    rescue
+      0
+    end
   end
 
   def convert_label(v, organization)
