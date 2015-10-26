@@ -93,7 +93,12 @@ module OrganizationsHelper
     end
 
     if value.is_a?(Array)
-      value.collect {|v| column_value(column, project, v)}.compact.join(', ').html_safe
+      val = value.collect {|v| column_value(column, project, v)}.compact.join(', ')
+      if val.nil?
+        '-'
+      else
+        val.html_safe
+      end
     else
       column_value(column, project, value)
     end
