@@ -27,15 +27,17 @@
         <%= f.input :effort_unit, label: "Unité d'effort" %>
       </div>
 
-      <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
+      <% unless @kb_model.kb_datas.empty? %>
+        <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
 
-        <div class="input boolean optional kb_model_selected_attributes<%= k %>">
-          <label class="boolean optional control-label checkbox" for="selected_attributes<%= k %>">
-            <input class="boolean optional" id="kb_model_selected_attributes<%= k %>" name="selected_attributes[<%= k %>]" type="checkbox" <%= @kb_model.selected_attributes.include?(k.to_s) ? 'checked=checked' : '' %>">
-            <%= k %>
-          </label>
-        </div>
+          <div class="input boolean optional kb_model_selected_attributes<%= k %>">
+            <label class="boolean optional control-label checkbox" for="selected_attributes<%= k %>">
+              <input class="boolean optional" id="kb_model_selected_attributes<%= k %>" name="selected_attributes[<%= k %>]" type="checkbox" <%= @kb_model.selected_attributes.include?(k.to_s) ? 'checked=checked' : '' %>">
+              <%= k %>
+            </label>
+          </div>
 
+        <% end %>
       <% end %>
 
       <% if can? :manage_modules_instances, ModuleProject %>
