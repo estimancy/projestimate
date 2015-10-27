@@ -25,9 +25,9 @@
         <% unless estimation_pbs_probable_results.nil? || ratio_reference.nil? %>
           <% referenced_wbs_activity_ratio_profiles = ratio_reference.wbs_activity_ratio_profiles %>
 
-          <% array_root = [] %>
+          <% array_root = Hash.new {|h,k| h[k]=[]} %>
           <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
-            <%# unless wbs_activity_elt.is_root? %>
+            <% unless wbs_activity_elt.is_root? %>
               <% wbs_activity_elt_id = wbs_activity_elt.id %>
                 <% profile_ratio_percentage = "" %>
 
@@ -65,24 +65,42 @@
                             <% array_profile_sum << wbs_profiles_value.to_i / 8 %>
                           <% end %>
                         <% end %>
-
-                        <% array_root << wbs_profiles_value %>
-
-                        <td style="text-align: right">
                           <% if wbs_activity_elt.is_root? %>
-                            -
+                            <td style="text-align: right">
+                              -
+                            </td>
                           <% elsif  wbs_profiles_value.nil? %>
-                            -
+                            <td style="text-align: right">
+                              -
+                            </td>
                           <% else %>
-                            <%= convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision) %>
+                            <td style="text-align: right">
+                              <% array_root[profile.id] << convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision) %>
+                              <%= convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision) %>
+                            </td>
                           <% end %>
-                        </td>
                       <% end %>
                     <% end %>
                   </tr>
                 <% end %>
               <% end %>
-            <%#  end %>
+            <% end %>
+
+          <tr>
+            <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
+              <% if wbs_activity_elt.is_root? %>
+                <td>
+                  <%= wbs_activity_elt.name %>
+                </td>
+                <% project_organization_profiles.each do |profile| %>
+                  <td style="text-align: right">
+                    <%= array_root[profile.id].sum %>
+                  </td>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tr>
+
         <% end %>
       </table>
   </div>
