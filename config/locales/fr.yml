@@ -1652,7 +1652,7 @@ fr:
   thresold_name: "Nom du seuil"
   default_value: "Valeur par défaut"
   complexity_threshold_of: "Seuils de complexité de %{parameter}"
-  Changing_the_size_enter: "Modification de la taille d'entrée permise"
+  Changing_of_the_size_enter: "Modification de la taille d'entrée permise"
   Changing_the_quantity_enter: "Modification de la quantité d'entrée permise"
   Changing_the_complexity_enter: "Modification de la complexité d'entrée permise"
   Changing_the_count_enter: "Modification du dénombrement d'entrée permise"

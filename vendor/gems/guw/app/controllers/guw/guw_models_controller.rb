@@ -119,7 +119,7 @@ class Guw::GuwModelsController < ApplicationController
                                                 description: tab[1][1],
                                                 three_points_estimation: tab[2][1] == I18n.t(:yes) ? true : false,
                                                 retained_size_unit: tab[3][1],
-                                                coefficient_label: "type acquisition",
+                                                coefficient_label: "Type d'acquisition",
                                                 organization_id: @current_organization.id)
               critical_flag = false
             else
