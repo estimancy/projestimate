@@ -23,7 +23,7 @@
                         collection: apps.empty? ? @current_organization.applications : apps.map{|i| [i.name, i.id]},
                         label: I18n.t(:label_product_name),
                         input_html: {:class => 'input-large'},
-                        selected: @project.application_id %>
+                        selected: @project_template.application_id %>
           <% end %>
         </td>
       </tr>
