@@ -1615,7 +1615,7 @@ frsncf:
   effort_restraint: "Effort retenu : %{parameter}"
   Duration_restraint: "Durée retenu : %{parameter}"
   Staffing_restraint: "Staffing retenu : %{parameter}"
-  update_restraint_effort: "Mettre à jour le l'effort retenu"
+  update_restraint_effort: "Mettre à jour l'effort retenu"
   Initialize_from_the_Trapeze: "Initialiser a partir du Trapeze"
   theoretical_trapeze: "Trapèze théorique"
   Number_of_people: "Nombre de personnes"
