@@ -718,9 +718,11 @@ class ProjectsController < ApplicationController
     @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
     @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
 
+
     @guw_module = Pemodule.where(alias: "guw").first
+    @kb_module = Pemodule.where(alias: "kb").first
     @ge_module = Pemodule.where(alias: "ge").first
-    @ge_module = Pemodule.where(alias: "operation").first
+    @operation_module = Pemodule.where(alias: "operation").first
     @staffing_module = Pemodule.where(alias: "staffing").first
     @ej_module = Pemodule.where(alias: "expert_judgement").first
     @ebd_module = Pemodule.where(alias: "effort_breakdown").first
