@@ -66,11 +66,10 @@
                           <% end %>
                         <% end %>
 
-                        <% array_root << convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision) %>
+                        <% array_root << wbs_profiles_value %>
 
                         <td style="text-align: right">
                           <% if wbs_activity_elt.is_root? %>
-                            <%# array_root %>
                             -
                           <% elsif  wbs_profiles_value.nil? %>
                             -
