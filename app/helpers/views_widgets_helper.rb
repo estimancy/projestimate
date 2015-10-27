@@ -219,16 +219,16 @@ module ViewsWidgetsHelper
         #According to the widget type, we will show simple text, charts, timeline, etc
         #get  rounded values before use
         user_precision = user_number_precision
-        data_low = data_low.is_a?(Hash) ? data_low.update(data_low){|key,value| value.round(user_precision)} : data_low
-        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.update(data_most_likely){|key,value| value.round(user_precision)} : data_most_likely
-        data_high = data_high.is_a?(Hash) ? data_high.update(data_high){|key,value| value.round(user_precision)} : data_high
-        data_probable = data_probable.is_a?(Hash) ? data_probable.update(data_probable){|key,value| value.round(user_precision)} : data_probable
+        data_low = data_low.is_a?(Hash) ? data_low.map{|key,value| value.round(user_precision)}.first : data_low
+        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.map{|key,value| value.round(user_precision)} .first : data_most_likely
+        data_high = data_high.is_a?(Hash) ? data_high.map{|key,value| value.round(user_precision) }.first : data_high
+        data_probable = data_probable.is_a?(Hash) ? data_probable.map{|key,value| value.round(user_precision)}.first : data_probable
 
         chart_level_values = []
-        chart_level_values << ["low", data_low]
-        chart_level_values << ["ml", data_most_likely]
-        chart_level_values << ["high", data_high]
-        chart_level_values << ["probable", data_probable]
+        chart_level_values << [I18n.t(:low), data_low]
+        chart_level_values << [I18n.t(:most_likely), data_most_likely]
+        chart_level_values << [I18n.t(:high), data_high]
+        chart_level_values << [I18n.t(:probable), data_probable]
 
         widget_data[:chart_level_values] = chart_level_values
         chart_height = height-50
@@ -252,7 +252,10 @@ module ViewsWidgetsHelper
             value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
 
           when "area_chart"
-            value_to_show = area_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
+            value_to_show =  line_chart([ {name: I18n.t(:low), data: {Time.new => data_low} },  #10
+                                          {name: I18n.t(:most_likely), data: {Time.new => data_most_likely} }, #30
+                                          {name: I18n.t(:high), data: {Time.new => data_high} } ],  #50
+                                        {height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: chart_vAxis}}})
 
           when "pie_chart"
             value_to_show = pie_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title})
