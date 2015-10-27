@@ -172,7 +172,7 @@ class Guw::GuwModelsController < ApplicationController
                                                                enable_value: tab[8][ind] == I18n.t(:yes) ? true : false,
                                                                bottom_range: tab[8][ind + 1],
                                                                top_range: tab[8][ind + 2],
-                                                               weight:  tab[8][ind + 3])
+                                                               weight:  tab[8][ind + 3] ? tab[8][ind + 3] : 1)
                     @guw_model.guw_work_units.each do |wu|
                       while !tab[ind2].nil? && tab[ind2][0] != wu.name && tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
@@ -233,7 +233,7 @@ class Guw::GuwModelsController < ApplicationController
                                                            enable_value: tab[ind3][ind] == I18n.t(:yes) ? true : false,
                                                            bottom_range: tab[ind3][ind + 1],
                                                            top_range: tab[ind3][ind + 2],
-                                                           value: tab[ind3][ind + 3])
+                                                           value: tab[ind3][ind + 3] ? tab[ind3][ind + 3] : (tab[ind3][ind + 2] && tab[ind3][ind + 1] ? 1 : nil))
                       end
                       ind3 = save_position + 2
                     end
@@ -699,7 +699,7 @@ class Guw::GuwModelsController < ApplicationController
             worksheet[ind4][ind + 3].change_border(:right, 'thin')
             worksheet.sheet_data[ind4][ind + 3].change_horizontal_alignment('center')
 
-            worksheet.add_cell(ind4, ind + 4, att_val.value)
+            worksheet.add_cell(ind4, ind + 4, att_val.value )
             worksheet[ind4][ind + 4].change_border(:right, 'thin')
             worksheet.sheet_data[ind4][ind + 4].change_horizontal_alignment('center')
 
@@ -1010,7 +1010,7 @@ class Guw::GuwModelsController < ApplicationController
                 end
               end
             else
-                guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == "Oui" ? true : false,
+                guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == I18n.t(:yes) ? true : false,
                                                  name: row[4],
                                                  comments: row[5],
                                                  guw_unit_of_work_group_id: guw_uow_group.id,
