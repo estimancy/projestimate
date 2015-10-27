@@ -53,7 +53,7 @@
         <label class="radio">
           <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
           <label>Staffing</label>
-          <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium', :id => "my_id2", disabled: true} %>
+          <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium', :id => "my_id2", disabled: true, value: @staffing_custom_data.max_staffing.to_f.round(2) } %>
         </label>
       </div>
 
@@ -145,7 +145,7 @@
                   <p>
                     <span class="badge badge-important">
                       <b>
-                          <%= I18n.t(:Rayleigh_effor, prameter: rayleigh_staffing_theorique.to_f.round(2)) %>
+                          <%= I18n.t(:Rayleigh_effort, parameter: rayleigh_staffing_theorique.to_f.round(2)) %>
                       </b>
                     </span>
                   </p>

@@ -1431,6 +1431,7 @@ en:
   notice_cannot_view_modules_permissions: "You don't have the rights to view the modules permissions"
   notice_cannot_view_organization_users: "You don't have the rights to view the users"
   notice_cannot_view_modules_instances: "You don't have the rights to view the modules instances"
+  notice_cannot_view_applications: "Vous n'avez pas les autorisations nécessaires pour voir les applications"
   warning_no_modify_permission_on_project_status: "You don't have the rights to modify the estimation in its actual status"
 
   is_image_organization: "Image organization"

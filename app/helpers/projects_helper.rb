@@ -959,6 +959,8 @@ module ProjectsHelper
       "#{convert_with_precision(value.to_f, precision)} #{module_project.size}"
     elsif est_val_pe_attribute.alias == "effort"
       "#{convert_with_precision(convert(value, @project.organization), precision)} #{convert_label(value, @project.organization)}"
+    elsif est_val_pe_attribute.alias == "staffing" || est_val_pe_attribute.alias == "duration"
+      "#{convert_with_precision(value, precision)}"
     elsif est_val_pe_attribute.alias == "cost"
       unless value.class == Hash
         "#{convert_with_precision(value, 2)} #{get_attribute_unit(est_val_pe_attribute)}"
