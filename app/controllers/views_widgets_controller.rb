@@ -339,30 +339,25 @@ class ViewsWidgetsController < ApplicationController
       worksheet.add_cell(0, 7, I18n.t(:unit_value))
       attribute = widget.pe_attribute
       activity = widget.module_project.wbs_activity
-      wbs_activity_input = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first
-      unless wbs_activity_input.nil?
-        ratio = wbs_activity_input.ratio
-        activity.wbs_activity_elements.each do |element|
-          my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
-          worksheet.change_column_width(4, my_len_2)
-          element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
-            ware.organization_profiles.each do |profil|
-              worksheet.add_cell(ind_y, 0, @project.title)
-              worksheet.add_cell(ind_y, 1, @project.version)
-              worksheet.add_cell(ind_y, 2, @project.start_date)
-              worksheet.add_cell(ind_y, 3, current_component)
-              worksheet.add_cell(ind_y, 4, element.name)
-              worksheet.add_cell(ind_y, 5, profil.name)
-              my_len = profil.name.length < my_len ? my_len : profil.name.length
-              worksheet.change_column_width(5, my_len)
-              worksheet.add_cell(ind_y, 6, convert(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], @current_organization))
-              worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
-              ind_y += 1
-           end
-          end
+      ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first.wbs_activity_ratio
+      activity.wbs_activity_elements.each do |element|
+        my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
+        worksheet.change_column_width(4, my_len_2)
+        element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
+          ware.organization_profiles.each do |profil|
+            worksheet.add_cell(ind_y, 0, @project.title)
+            worksheet.add_cell(ind_y, 1, @project.version)
+            worksheet.add_cell(ind_y, 2, @project.start_date)
+            worksheet.add_cell(ind_y, 3, current_component)
+            worksheet.add_cell(ind_y, 4, element.name)
+            worksheet.add_cell(ind_y, 5, profil.name)
+            my_len = profil.name.length < my_len ? my_len : profil.name.length
+            worksheet.change_column_width(5, my_len)
+            worksheet.add_cell(ind_y, 6, convert(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], @current_organization))
+            worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+            ind_y += 1
+         end
         end
-      else
-        error_selected_wbs = true
       end
     end
     send_data(workbook.stream.string, filename: "widget_#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
