@@ -131,6 +131,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
     if @staffing_custom_data.update_attributes(params[:staffing_custom_datum])
 
       @staffing_custom_data.staffing_constraint = params[:option_radios]
+      @staffing_custom_data.trapeze_parameter_values = @staffing_model.trapeze_default_values
       @staffing_custom_data.save
 
       constraint = @staffing_custom_data.staffing_constraint

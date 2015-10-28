@@ -376,9 +376,9 @@ class ApplicationController < ActionController::Base
   # Get the current_user number precision defined in the user preferences (default is 2)
   def user_number_precision
     if current_user && !current_user.number_precision.nil?
-      return current_user.number_precision
+      current_user.number_precision
     else
-      return 2
+      2
     end
   end
 

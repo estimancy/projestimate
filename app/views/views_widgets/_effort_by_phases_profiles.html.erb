@@ -89,12 +89,14 @@
           <tr>
             <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
               <% if wbs_activity_elt.is_root? %>
-                <td>
-                  <%= wbs_activity_elt.name %>
+                <td style="text-align: left">
+                  <strong>
+                    <%= wbs_activity_elt.name %>
+                  </strong>
                 </td>
                 <% project_organization_profiles.each do |profile| %>
                   <td style="text-align: right">
-                    <%= array_root[profile.id].map(&:to_f).sum %>
+                    <%= convert_with_precision(array_root[profile.id].map(&:to_f).sum.to_f.round(2), user_number_precision) %>
                   </td>
                 <% end %>
               <% end %>
