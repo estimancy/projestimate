@@ -29,6 +29,7 @@
         <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
         <%= f.input :name, label: I18n.t(:name) %>
         <%= f.input :description, label: I18n.t(:description), :input_html => {:class => 'input-xxlarge', :rows => 5 } %>
+        <%= f.input :staffing_method, as: :select, collection: [["Trapeze", "trapeze"], ["Rayleigh", "rayleigh"]], selected: @staffing_model.staffing_method, label: 'Méthode de staffing' %>
         <%= f.input :mc_donell_coef, label: 'McDonell Coef' , input_html: { value: 6 } %>
         <%= f.input :puissance_n, label: "Puissance N", input_html: { value: 0.33 }, hint: "(1/3 = 0.33)" %>
         <div>
@@ -58,12 +59,11 @@
         <%= f.input :standard_unit_coefficient, label: I18n.t(:standard_coef_conv) %>
       </div>
 
-      <div class="actions">
-        <% if can? :manage_modules_instances, ModuleProject %>
-            <%= f.button :submit, I18n.t('save') %>
-        <% end %>
-        <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "team"), class: "btn" %>
-      </div>
+      <% if can? :manage_modules_instances, ModuleProject %>
+          <%= f.button :submit, I18n.t('save') %>
+      <% end %>
+      <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "team"), class: "btn" %>
+
     <% end %>
 
   </div>

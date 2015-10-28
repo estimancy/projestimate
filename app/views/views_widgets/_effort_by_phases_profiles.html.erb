@@ -94,7 +94,7 @@
                 </td>
                 <% project_organization_profiles.each do |profile| %>
                   <td style="text-align: right">
-                    <%= array_root[profile.id].sum %>
+                    <%= array_root[profile.id].map(&:to_f).sum %>
                   </td>
                 <% end %>
               <% end %>

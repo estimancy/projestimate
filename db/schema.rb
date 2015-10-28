@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151023145132) do
+ActiveRecord::Schema.define(:version => 20151027132428) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1331,6 +1331,7 @@ ActiveRecord::Schema.define(:version => 20151023145132) do
     t.datetime "updated_at",                :null => false
     t.float    "standard_unit_coefficient"
     t.string   "effort_unit"
+    t.string   "staffing_method"
   end
 
   create_table "status_transitions", :force => true do |t|
