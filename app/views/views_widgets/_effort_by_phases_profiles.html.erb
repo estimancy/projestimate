@@ -93,8 +93,8 @@
                   <%= wbs_activity_elt.name %>
                 </td>
                 <% project_organization_profiles.each do |profile| %>
-                  <td style="text-align: right">
-                    <%= array_root[profile.id].map(&:to_f).sum %>
+                  <td style="text-align: left">
+                    <%= array_root[profile.id].map(&:to_f).sum.to_f.round(2) %>
                   </td>
                 <% end %>
               <% end %>

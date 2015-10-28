@@ -22,9 +22,9 @@
 module Ge
   class GeModel < ActiveRecord::Base
     #validates_presence_of :name####, :organization_id
-    validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :standard_unit_coefficient, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
-    validates :effort_unit, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
+    validates :name, :presence => true
+    validates :standard_unit_coefficient, :presence => true
+    validates :effort_unit, :presence => true
     validates :coeff_a, :presence => true
     validates :coeff_b, :presence => true
 

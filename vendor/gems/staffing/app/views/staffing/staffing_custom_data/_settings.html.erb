@@ -59,19 +59,9 @@
 
     </div>
 
-    <h3>
-      <%= @staffing_model.staffing_method.to_s.humanize %>
-    </h3>
-
-    <% if @staffing_model.staffing_method == "trapeze" %>
-      <button name="actuals_based_on[trapeze]" type="submit" class="btn btn-success btn-mini pull-right button_margin_right">
-        <%= I18n.t(:initialize_restraint) %>
-      </button>
-    <% else %>
-      <button name="actuals_based_on[rayleigh]" type="submit" class="btn btn-success btn-mini pull-right button_margin_right">
-        <%= I18n.t(:initialize_restraint) %>
-      </button>
-    <% end %>
+    <button name="actuals_based_on[trapeze]" type="submit" class="btn btn-success btn-mini pull-right button_margin_right">
+      <%= I18n.t(:initialize_restraint) %>
+    </button>
 
     <button name="actuals_based_on[custom]" type="submit" class="btn btn-mini pull-right button_margin_right">
       <%= I18n.t(:update) %>
@@ -83,19 +73,11 @@
       </b>
     </h4>
 
-    <% if @staffing_model.staffing_method == "rayleigh" %>
-      <div class="row-fluid">
-        <div class="span12">
-          <div id="staffing_rayleigh_chart"></div>
-        </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <div id="staffing_trapeze_chart"></div>
       </div>
-    <% else %>
-      <div class="row-fluid">
-        <div class="span12">
-          <div id="staffing_trapeze_chart"></div>
-        </div>
-      </div>
-    <% end %>
+    </div>
 
     <% if @staffing_model.staffing_method == "rayleigh" %>
       <div class="row-fluid">
@@ -324,46 +306,8 @@ $('#myTab a').click(function (e) {
 })
 
 function refresh_chart() {
-  <% if @staffing_model.staffing_method == "rayleigh" %>
-    $('#staffing_rayleigh_chart').highcharts({
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: 'Répartition des ressources en fonction du temps'
-      },
-      xAxis: {
-        min: 0,
-        title: {
-          text: 'Evolution du temps'
-        }
-      },
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Nombre de personnes'
-        }
-      },
-      plotOptions: {
-        column: {
-          pointPadding: 0.2,
-          borderWidth: 0
-        }
-      },
-      series: [{
-        name: 'Rayleigh théorique',
-        data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
-      },{
-        name: 'Courbe actualisé',
-        data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
-
-      }]
-    });
-  <% else %>
+  <% if @staffing_model.staffing_method == "trapeze" %>
     $('#staffing_trapeze_chart').highcharts({
-      chart: {
-        type: 'column'
-      },
       title: {
         text: 'Répartition des ressources en fonction du temps'
       },
@@ -387,14 +331,20 @@ function refresh_chart() {
       },
       series: [{
         name: 'Trapèze théorique',
+        type: 'column',
         data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
       },{
         name: 'Courbe actualisé',
-        data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>
-
+        type: 'column',
+        data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>,
+        color: '#7CB9E8'
+},{
+        type: 'spline',
+        name: 'Rayleigh',
+        data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>,
+        color: '#000000'
       }]
     });
-
   <% end %>
 }
 

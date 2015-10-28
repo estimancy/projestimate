@@ -150,7 +150,6 @@ class Ge::GeModelsController < ApplicationController
     @ge_model = Ge::GeModel.find(params[:ge_model_id])
     new_ge_model = @ge_model.amoeba_dup
 
-
     new_copy_number = @ge_model.copy_number.to_i+1
     new_ge_model.name = "#{@ge_model.name}(#{new_copy_number})"
     new_ge_model.copy_number = 0
