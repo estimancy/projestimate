@@ -37,7 +37,10 @@
     <div class="row-fluid">
 
       <div class="span2">
-        <%= f.input :global_effort_value, label: "Effort (#{@staffing_model.effort_unit})", :input_html => { :class => 'input-medium', value: effort.nil? ? '' : effort.round(1)} %>
+        <%= f.input :global_effort_value,
+                    label: "Effort (#{@staffing_model.effort_unit})",
+                    step: 0.0001,
+                    input_html: { :class => 'input-medium', value: effort.nil? ? '' : effort.round(user_number_precision) } %>
       </div>
 
       <div class="span2">
