@@ -25,6 +25,7 @@ Kb::Engine.routes.draw do
   resources :kb_models do
     post "save_efforts"
     post "import"
+    post "duplicate"
   end
 
 end

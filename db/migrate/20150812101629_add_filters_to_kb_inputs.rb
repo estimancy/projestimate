@@ -3,3 +3,4 @@ class AddFiltersToKbInputs < ActiveRecord::Migration
     add_column :kb_kb_inputs, :filters, :text
   end
 end
+kb

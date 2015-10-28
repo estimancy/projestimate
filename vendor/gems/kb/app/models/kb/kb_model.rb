@@ -36,8 +36,10 @@ module Kb
       enable
       exclude_association [:module_projects]
 
-      customize(lambda { |original_ge_model, new_ge_model|
-        new_ge_model.copy_id = original_ge_model.id
+      customize(lambda { |original_kb_model, new_kb_model|
+        new_kb_model.copy_id = original_kb_model.id
+        new_kb_model.standard_unit_coefficient = original_kb_model.standard_unit_coefficient
+        new_kb_model.effort_unit= original_kb_model.effort_unit
       })
     end
 
