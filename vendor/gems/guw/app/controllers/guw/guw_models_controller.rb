@@ -991,7 +991,7 @@ class Guw::GuwModelsController < ApplicationController
 
       tab.each_with_index  do |row, index|
         if index > 0
-          if row[4] && row[2] && row[6] && row[7] && row[8]  && !row[4].empty? &&  !row[2].empty? && !row[6].empty? && !row[7].empty? && !row[8].empty?
+          if row[4] && row[2] && row[6]  && !row[4].empty? &&  !row[2].empty? && !row[6].empty?
             guw_uow_group = Guw::GuwUnitOfWorkGroup.where(name: row[2],
                                                           module_project_id: current_module_project.id,
                                                           pbs_project_element_id: @component.id,).first_or_create
@@ -1021,14 +1021,20 @@ class Guw::GuwModelsController < ApplicationController
                                                  tracking: row[10], quantity: row[9],
                                                  effort: row[12].nil? ? 0 : row[12],
                                                  ajusted_effort: row[13].nil? ? 0 : row[13])
-                @guw_model.guw_work_units.each do |wu|
-                  if wu.name == row[7]
-                    guw_uow.guw_work_unit_id = wu.id
-                    ind += 1
-                    indexing_field_error[1][0] = true
-                    break
+                if !row[7].nil?
+                  @guw_model.guw_work_units.each do |wu|
+                    if wu.name == row[7]
+                      guw_uow.guw_work_unit_id = wu.id
+                      ind += 1
+                      indexing_field_error[1][0] = true
+                      break
+                    end
+                    indexing_field_error[1][0] = false
                   end
-                  indexing_field_error[1][0] = false
+                else
+                  guw_uow.guw_work_unit_id = @guw_model.guw_work_units.first.id
+                  ind += 1
+                  indexing_field_error[1][0] = true
                 end
                 unless indexing_field_error[1][0]
                   indexing_field_error[1] << index
@@ -1057,14 +1063,20 @@ class Guw::GuwModelsController < ApplicationController
                         indexing_field_error[3] << index
                       end
                     end
-                    type.guw_complexity_technologies.each do |techno|
-                      if row[8] == techno.organization_technology.name
-                        guw_uow.organization_technology_id = techno.organization_technology.id
-                        ind += 1
-                        indexing_field_error[2][0] = true
-                        break
+                    if !row[8].nil?
+                      type.guw_complexity_technologies.each do |techno|
+                        if row[8] == techno.organization_technology.name
+                          guw_uow.organization_technology_id = techno.organization_technology.id
+                          ind += 1
+                          indexing_field_error[2][0] = true
+                          break
+                        end
+                        indexing_field_error[2][0] = false
                       end
-                      indexing_field_error[2][0] = false
+                    else
+                      guw_uow.organization_technology_id = type.guw_complexity_technologies.first.organization_technology.id
+                      ind += 1
+                      indexing_field_error[2][0] = true
                     end
 
                     unless indexing_field_error[2][0]
