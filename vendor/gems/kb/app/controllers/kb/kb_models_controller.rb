@@ -31,6 +31,32 @@ class Kb::KbModelsController < ApplicationController
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
   end
 
+  def duplicate
+    @kb_model = Kb::KbModel.find(params[:kb_model_id])
+    new_kb_model = @kb_model.amoeba_dup
+
+    if @kb_model.copy_number.nil?
+      @kb_model.copy_number = 0
+    end
+
+    new_copy_number =  @kb_model.copy_number.to_i + 1
+    new_kb_model.name = "#{@kb_model.name}(#{new_copy_number})"
+    new_kb_model.copy_number = 0
+    @kb_model.copy_number = new_copy_number
+
+    #Terminate the model duplication
+    new_kb_model.transaction do
+      if new_kb_model.save
+        @kb_model.save
+        flash[:notice] = "Base copié avec succès"
+      else
+        flash[:error] = "Erreur lors de la copie de la base"
+      end
+    end
+
+    redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
+  end
+
   def new
     authorize! :manage_modules_instances, ModuleProject
 
