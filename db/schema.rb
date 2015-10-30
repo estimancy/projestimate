@@ -1461,7 +1461,7 @@ ActiveRecord::Schema.define(:version => 20151028110039) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-10-15 07:30:12'
+    t.datetime "subscription_end_date",  :default => '2016-09-23 10:15:10'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
