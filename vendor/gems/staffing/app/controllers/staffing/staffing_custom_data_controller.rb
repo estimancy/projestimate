@@ -119,9 +119,6 @@ class Staffing::StaffingCustomDataController < ApplicationController
       @staffing_custom_data = Staffing::StaffingCustomDatum.create( staffing_model_id: @staffing_model.id,
                                                                     module_project_id: @module_project.id,
                                                                     pbs_project_element_id: @component.id,
-                                                                    staffing_method: 'trapeze',
-                                                                    period_unit: 'week',
-                                                                    global_effort_type: 'probable',
                                                                     mc_donell_coef: 6,
                                                                     puissance_n: 0.33,
                                                                     trapeze_default_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] },
@@ -135,9 +132,13 @@ class Staffing::StaffingCustomDataController < ApplicationController
       @staffing_custom_data.save
 
       constraint = @staffing_custom_data.staffing_constraint
-      effort = @staffing_custom_data.global_effort_value
 
-      #TRAPEZE
+      effort = @staffing_custom_data.global_effort_value * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit
+
+
+
+      # =====================================================================================================================================
+      # Trapeze
       trapeze_parameter_values = @staffing_custom_data.trapeze_parameter_values
 
       # Calcul des vraies valeurs de (x0, x1, x2, x3) en % de la durée D ; et  (y0, y3) en % de M
@@ -222,6 +223,17 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
 
 
+
+
+      # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
+      rayleigh_chart_theoretical_coordinates = []
+      mcdonnell_chart_theorical_coordinates = []
+
+
+
+
+      # =====================================================================================================================================
+      # Rayleigh
       # Contrainte de Staffing Max
       if constraint == "max_staffing_constraint"
         # coefficient de forme : a
@@ -256,10 +268,6 @@ class Staffing::StaffingCustomDataController < ApplicationController
         #@staffing_custom_data.max_staffing = @staffing
       end
 
-      # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
-      rayleigh_chart_theoretical_coordinates = []
-      rayleigh_chart_actual_coordinates = []
-
       for t in 0..@duration
         # E(t) = 2 * K * a * t * e(-a*t*t)
         t_staffing = 2 * effort * form_coef * t * Math.exp(-form_coef*t*t)
@@ -270,21 +278,63 @@ class Staffing::StaffingCustomDataController < ApplicationController
           actual_staffing_values << ["#{t}", t_staffing]
         end
       end
-
       @staffing_custom_data.rayleigh_chart_theoretical_coordinates = rayleigh_chart_theoretical_coordinates
 
+
+
+      # =====================================================================================================================================
+
+      #For mcdonnell
+      @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
+
+      # Contrainte de Staffing Max
+      if constraint == "max_staffing_constraint"
+        # coefficient de forme : a
+        form_coef = (@staffing*@staffing) * (Math.exp(1) / (2*effort*effort))
+        @staffing_custom_data.form_coef = form_coef
+
+        # coefficient de difficulté
+        difficulty_coef = 2*effort*form_coef
+        @staffing_custom_data.difficulty_coef = difficulty_coef
+
+        # numero de la semaine au Pic de Staffing
+        t_max_staffing = Math.sqrt(1/(2*form_coef))
+        @staffing_custom_data.t_max_staffing = t_max_staffing
+
+        # Contrainte de Durée
+      elsif constraint == "duration_constraint"
+
+        # coefficient de forme : a
+        form_coef = -Math.log(1-0.97) / (@md_duration * @md_duration)
+        @staffing_custom_data.form_coef = form_coef
+
+        # coefficient de difficulté
+        difficulty_coef = 2*effort*form_coef
+        @staffing_custom_data.difficulty_coef = difficulty_coef
+
+        # numero de la semaine au Pic de Staffing
+        t_max_staffing = Math.sqrt(1/(2*form_coef))
+        @staffing_custom_data.t_max_staffing = t_max_staffing
+
+        # MAx Staffing
+        #max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+        #@staffing_custom_data.max_staffing = @staffing
+      end
+
+      for t in 0..@md_duration
+        # E(t) = 2 * K * a * t * e(-a*t*t)
+        t_staffing = 2 * effort * form_coef * t * Math.exp(-form_coef*t*t)
+        mcdonnell_chart_theorical_coordinates << ["#{t}", t_staffing]
+      end
+      @staffing_custom_data.mcdonnell_chart_theorical_coordinates = mcdonnell_chart_theorical_coordinates
+
       if params["actuals_based_on"].present?
-        if params["actuals_based_on"]["rayleigh"]
-          @staffing_custom_data.chart_actual_coordinates = rayleigh_chart_theoretical_coordinates
-          @staffing_custom_data.actuals_based_on = "rayleigh"
-        elsif params["actuals_based_on"]["custom"]
+        if params["actuals_based_on"]["custom"]
           if params[:actuals].present?
             @staffing_custom_data.chart_actual_coordinates = actual_staffing_values.first
-            @staffing_custom_data.actuals_based_on = "custom"
           end
-        elsif params["actuals_based_on"]["trapeze"]
+        else
           @staffing_custom_data.chart_actual_coordinates = trapeze_theorical_staffing_values
-          @staffing_custom_data.actuals_based_on = "trapeze"
         end
       end
     end
