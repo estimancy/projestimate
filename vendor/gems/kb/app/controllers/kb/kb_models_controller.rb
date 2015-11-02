@@ -23,6 +23,7 @@
 class Kb::KbModelsController < ApplicationController
 
   require 'roo'
+  require 'rubyXL'
 
   def show
     authorize! :manage_modules_instances, ModuleProject
@@ -311,6 +312,15 @@ class Kb::KbModelsController < ApplicationController
     eff = effort_current_ev.send("string_data_probable")[current_component.id].to_f
     @effort = eff.to_f / @kb_model.standard_unit_coefficient.to_i
 
+  end
+
+  def dot_export
+    my_kb_model = Kb::KbModel.find(params[:kb_model_id])
+    value = Kb::KbInput.where(module_project_id: current_module_project.id, kb_model_id: my_kb_model.id).first.values
+    workbook = RubyXL::Workbook.new
+
+
+    redirect_to :back
   end
 
 end

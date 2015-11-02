@@ -127,12 +127,12 @@
         <div class="span9">
           <div id="scatter_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
           <hr>
-
           <% if can? :execute_estimation_plan, @project %>
             <button type="submit" class="btn btn-default btn-mini pull-right">
               Mettre à jour
             </button>
           <% end %>
+          <%= link_to"importer nuage de point", kb.kb_model_dot_export_path(@kb_model), :class => "btn btn-default btn-mini pull-right" , :method => "post" %>
         </div>
 
       </div>

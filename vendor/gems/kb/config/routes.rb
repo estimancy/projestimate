@@ -26,6 +26,7 @@ Kb::Engine.routes.draw do
     post "save_efforts"
     post "import"
     post "duplicate"
+    post "dot_export"
   end
 
 end
