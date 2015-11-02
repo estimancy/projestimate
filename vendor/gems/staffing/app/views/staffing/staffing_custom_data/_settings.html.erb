@@ -15,38 +15,47 @@
    rescue
      ev = nil
    end
- else
-   ev = EstimationValue.where(:pe_attribute_id => attribute.id,
-                                  :module_project_id => current_module_project.id,
-                                  :in_out => "input").first
- end
 
- if ev.nil?
-   effort = 0
- else
    begin
      previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
      effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    rescue
      effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
+
+   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
+
+ else
+   ev = EstimationValue.where(:pe_attribute_id => attribute.id,
+                                  :module_project_id => current_module_project.id,
+                                  :in_out => "input").first
+
+   begin
+     previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
+     effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
+   rescue
+     effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.v.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
+   end
+
+   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
  end
 %>
 
   <%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| %>
     <div class="row-fluid">
 
+
       <div class="span2">
         <%= f.input :global_effort_value,
                     label: "Effort (#{@staffing_model.effort_unit})",
-                    input_html: { :class => 'input-medium', value: effort.nil? ? '' : effort.round(user_number_precision) } %>
+                    input_html: { :class => 'input-medium', value: effort == 0 ? '' : effort.round(user_number_precision) } %>
       </div>
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= @staffing_custom_data.staffing_constraint == "duration_constraint" ? 'checked' : '' %>>
+          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? 'checked' : '' %>>
           <label> <%= I18n.t(:duration_in_week) %> </label>
-          <%= f.input :duration, label: false, :input_html => { :class => 'input-medium', :id => "my_id1"} %>
+          <%= f.input :duration, label: false, :input_html => { :class => 'input-medium', :id => "my_id1", value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration } %>
         </label>
 
       </div>
@@ -166,7 +175,6 @@ $('#myTab a').click(function (e) {
 })
 
 function refresh_chart() {
-  <% if @staffing_model.staffing_method == "trapeze" %>
     $('#staffing_trapeze_chart').highcharts({
       title: {
         text: 'Répartition des ressources en fonction du temps'
@@ -185,27 +193,42 @@ function refresh_chart() {
       },
       plotOptions: {
         column: {
-          pointPadding: 0.2,
+          pointPadding: 0,
           borderWidth: 0
+        },
+        line: {
+          marker: {
+            enabled: false
+          }
         }
       },
       series: [{
-        name: 'Trapèze théorique',
+        name: 'Répartition en trapèze théorique',
         type: 'column',
         data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
       },{
-        name: 'Courbe actualisé',
+        name: 'Répartition en trapèze personnalisé',
         type: 'column',
         data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>,
         color: '#7CB9E8'
-},{
+      },{
         type: 'spline',
-        name: 'Rayleigh',
+        name: 'Votre répartition',
         data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>,
-        color: '#000000'
+        color: '#CC0000',
+        marker: {
+          enabled: false
+        }
+      },{
+        type: 'spline',
+        name: 'Répartition optimal',
+        data: <%= @staffing_custom_data.mcdonnell_chart_theorical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>,
+        color: '#00CC00',
+        marker: {
+          enabled: false
+        }
       }]
     });
-  <% end %>
 }
 
 </script>
