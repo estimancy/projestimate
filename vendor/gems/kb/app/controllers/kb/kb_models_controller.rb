@@ -182,6 +182,7 @@ class Kb::KbModelsController < ApplicationController
     es_array = Array.new
 
     @filters = params["filters"]
+
     @kb_input.filters = params["filters"]
 
     @kb_model.kb_datas.each do |i|
@@ -317,31 +318,83 @@ class Kb::KbModelsController < ApplicationController
     kb_input = Kb::KbInput.where(kb_model_id: my_kb_model.id, module_project_id: current_module_project.id).first
     effort_attr = PeAttribute.find_by_alias("effort")
     effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id, :module_project_id => current_module_project.id, :in_out => "output").first
+    size_attr = PeAttribute.find_by_alias("retained_size")
+    size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id, :module_project_id => current_module_project.previous.first.id, :in_out => "output").first
+    size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id, :module_project_id => current_module_project.id, :in_out => "input").first
     workbook = RubyXL::Workbook.new
     worksheet = workbook[0]
     my_helper = 0
 
     my_field = my_kb_model.selected_attributes
-    worksheet.add_cell(0, 0, "Nombre de projet")
+    worksheet.add_cell(0, 0, I18n.t(:project_number))
     worksheet.add_cell(0, 1, kb_input.values.size)
+    worksheet.sheet_data[0][0].change_font_bold(true)
+    worksheet.sheet_data[0][0].change_border(:left, 'thin')
+    worksheet.sheet_data[0][0].change_border(:bottom, 'thin')
+    worksheet.sheet_data[0][1].change_border(:left, 'thin')
+    worksheet.sheet_data[0][1].change_border(:bottom, 'thin')
+    worksheet.sheet_data[0][1].change_border(:right, 'thin')
+
     my_field.each_with_index  do |field_name, index|
       worksheet.add_cell(index + 1, 0, field_name)
       worksheet.add_cell(index + 1, 1, kb_input.filters[field_name])
+      worksheet.sheet_data[index + 1][0].change_font_bold(true)
+      worksheet.sheet_data[my_helper + 1][0].change_border(:left, 'thin')
+      worksheet.sheet_data[my_helper + 1][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[my_helper + 1][1].change_border(:left, 'thin')
+      worksheet.sheet_data[my_helper + 1][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[my_helper + 1][1].change_border(:right, 'thin')
       my_helper = index
     end
-    worksheet.add_cell(my_helper + 2, 0, "Equation")
+
+    worksheet.add_cell(my_helper + 2, 0, I18n.t(:equation))
     worksheet.add_cell(my_helper + 2, 1, kb_input.formula)
-    worksheet.add_cell(my_helper + 3, 0, " Effort #{ my_kb_model.effort_unit.blank? ? 'h.h' : my_kb_model.effort_unit}")
-    worksheet.add_cell(my_helper + 3, 1, effort_current_ev.send("string_data_most_likely")[current_component.id].to_f / (my_kb_model.standard_unit_coefficient.nil? ? 1 : my_kb_model.standard_unit_coefficient))
+    worksheet.sheet_data[my_helper + 2][0].change_font_bold(true)
+    worksheet.sheet_data[my_helper + 2][0].change_border(:left, 'thin')
+    worksheet.sheet_data[my_helper + 2][0].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper + 2][1].change_border(:left, 'thin')
+    worksheet.sheet_data[my_helper + 2][1].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper + 2][1].change_border(:right, 'thin')
+
+    worksheet.add_cell(my_helper + 3, 0, I18n.t(:size))
+    worksheet.add_cell(my_helper + 3, 1, Kb::KbModel::display_size(size_previous_ev, size_current_ev, "most_likely", current_component.id))
+    worksheet.sheet_data[my_helper + 3][0].change_font_bold(true)
+    worksheet.sheet_data[my_helper + 3][0].change_border(:left, 'thin')
+    worksheet.sheet_data[my_helper + 3][0].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper + 3][1].change_border(:left, 'thin')
+    worksheet.sheet_data[my_helper + 3][1].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper + 3][1].change_border(:right, 'thin')
+
+    worksheet.add_cell(my_helper + 4, 0, "#{I18n.t(:effort_import)} #{my_kb_model.effort_unit.blank? ? 'h.h' : my_kb_model.effort_unit}")
+    worksheet.add_cell(my_helper + 4, 1, effort_current_ev.send("string_data_most_likely")[current_component.id].to_f / (my_kb_model.standard_unit_coefficient.nil? ? 1 : my_kb_model.standard_unit_coefficient))
+    worksheet.sheet_data[my_helper + 4][0].change_font_bold(true)
+    worksheet.sheet_data[my_helper + 4][0].change_border(:left, 'thin')
+    worksheet.sheet_data[my_helper + 4][0].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper + 4][1].change_border(:left, 'thin')
+    worksheet.sheet_data[my_helper + 4][1].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper + 4][1].change_border(:right, 'thin')
+
     kb_input.values.each_with_index do |one_dot, index|
       if index == 0
-        worksheet.add_cell(index, 4, "effort")
-        worksheet.add_cell(index, 3, "taille")
-      else
-        worksheet.add_cell(index, 3, one_dot[0])
-        worksheet.add_cell(index, 4, one_dot[1])
-      end
+        worksheet.add_cell(index, 4, I18n.t(:effort_import))
+        worksheet.add_cell(index, 3, I18n.t(:size))
+        worksheet.sheet_data[index][3].change_font_bold(true)
+        worksheet.sheet_data[index][4].change_font_bold(true)
+        worksheet.sheet_data[index][4].change_border(:left, 'thin')
+        worksheet.sheet_data[index][3].change_border(:left, 'thin')
+        worksheet.sheet_data[index][4].change_border(:right, 'thin')
+        worksheet.sheet_data[index][4].change_border(:bottom, 'thin')
+        worksheet.sheet_data[index][3].change_border(:bottom, 'thin')
+        end
+      worksheet.add_cell(index + 1, 3, one_dot[0])
+      worksheet.add_cell(index + 1, 4, one_dot[1])
+      worksheet.sheet_data[index + 1][4].change_border(:left, 'thin')
+      worksheet.sheet_data[index + 1][3].change_border(:left, 'thin')
+      worksheet.sheet_data[index + 1][4].change_border(:right, 'thin')
+      my_helper = index + 1
     end
+    worksheet.sheet_data[my_helper][4].change_border(:bottom, 'thin')
+    worksheet.sheet_data[my_helper][3].change_border(:bottom, 'thin')
     send_data(workbook.stream.string, filename: "#{my_kb_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 

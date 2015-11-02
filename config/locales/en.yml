@@ -1717,3 +1717,5 @@ en:
   eneable_effort: "Eneable effort"
   label_coef_effort_unit: "Module effort unit Coefficient"
   modification_of_the_input_value_allow: "Modification of the input value allowed"
+  equation: "Equation"
+  project_number: "Project number"
