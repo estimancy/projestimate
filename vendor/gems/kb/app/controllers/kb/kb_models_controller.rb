@@ -313,12 +313,36 @@ class Kb::KbModelsController < ApplicationController
   end
 
   def dot_export
-    my_kb_model = Kb::KbModel.find(params[:kb_model_id])
-    value = Kb::KbInput.where(module_project_id: current_module_project.id, kb_model_id: my_kb_model.id).first.values
+    my_kb_model = Kb::KbModel.find(params[:kb_model_id]) #id
+    kb_input = Kb::KbInput.where(kb_model_id: my_kb_model.id, module_project_id: current_module_project.id).first
+    effort_attr = PeAttribute.find_by_alias("effort")
+    effort_current_ev = EstimationValue.where(:pe_attribute_id => effort_attr.id, :module_project_id => current_module_project.id, :in_out => "output").first
     workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+    my_helper = 0
 
-
-    redirect_to :back
+    my_field = my_kb_model.selected_attributes
+    worksheet.add_cell(0, 0, "Nombre de projet")
+    worksheet.add_cell(0, 1, kb_input.values.size)
+    my_field.each_with_index  do |field_name, index|
+      worksheet.add_cell(index + 1, 0, field_name)
+      worksheet.add_cell(index + 1, 1, kb_input.filters[field_name])
+      my_helper = index
+    end
+    worksheet.add_cell(my_helper + 2, 0, "Equation")
+    worksheet.add_cell(my_helper + 2, 1, kb_input.formula)
+    worksheet.add_cell(my_helper + 3, 0, " Effort #{ my_kb_model.effort_unit.blank? ? 'h.h' : my_kb_model.effort_unit}")
+    worksheet.add_cell(my_helper + 3, 1, effort_current_ev.send("string_data_most_likely")[current_component.id].to_f / (my_kb_model.standard_unit_coefficient.nil? ? 1 : my_kb_model.standard_unit_coefficient))
+    kb_input.values.each_with_index do |one_dot, index|
+      if index == 0
+        worksheet.add_cell(index, 4, "effort")
+        worksheet.add_cell(index, 3, "taille")
+      else
+        worksheet.add_cell(index, 3, one_dot[0])
+        worksheet.add_cell(index, 4, one_dot[1])
+      end
+    end
+    send_data(workbook.stream.string, filename: "#{my_kb_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
 end
