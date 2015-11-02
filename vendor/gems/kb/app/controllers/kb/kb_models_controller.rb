@@ -185,18 +185,16 @@ class Kb::KbModelsController < ApplicationController
     @kb_input.filters = params["filters"]
 
     @kb_model.kb_datas.each do |i|
-      unless params["filters"].nil?
-        params["filters"].each do |f|
-          if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
-            @project_list << i
-          end
+      params["filters"].each do |f|
+        if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
+          @project_list << i
         end
       end
     end
 
-    # if @project_list.blank?
-    #   @project_list = @kb_model.kb_datas
-    # end
+    if @project_list.blank?
+      @project_list = @kb_model.kb_datas
+    end
 
     @project_list.each do |kb_data|
       s = Math.log10(kb_data.size.to_f)
