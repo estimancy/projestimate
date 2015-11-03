@@ -162,26 +162,117 @@
 
       worksheet = workbook[0]
       worksheet.add_cell(0,0, "Période")
+      worksheet.sheet_data[0][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[0][0].change_border(:right, 'thin')
       worksheet.add_cell(1,0, "Trapeze theorique")
+      worksheet.sheet_data[1][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[1][0].change_border(:right, 'thin')
       worksheet.add_cell(2,0, "Rayleigh theorique")
+      worksheet.sheet_data[2][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[2][0].change_border(:right, 'thin')
       worksheet.add_cell(3,0, "Nombre de personnes")
+      worksheet.sheet_data[3][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[3][0].change_border(:right, 'thin')
 
       theoretical_trapeze_values.each_with_index do |trap_val, index|
         worksheet.add_cell(0,index + 1, "P#{trap_val[0]}")
         worksheet.sheet_data[0][index + 1].change_horizontal_alignment('center')
+        worksheet.sheet_data[0][index + 1].change_border(:bottom, 'thin')
+        worksheet.sheet_data[0][index + 1].change_border(:right, 'thin')
+
         worksheet.add_cell(1,index + 1, trap_val[1].round(1))
         worksheet.sheet_data[1][index + 1].change_horizontal_alignment('center')
+        worksheet.sheet_data[1][index + 1].change_border(:bottom, 'thin')
+        worksheet.sheet_data[1][index + 1].change_border(:right, 'thin')
+
       end
 
       theoretical_rayleigh_values.each_with_index do |ray_val, index|
         worksheet.add_cell(2,index + 1, ray_val[1].round(1))
         worksheet.sheet_data[2][index + 1].change_horizontal_alignment('center')
+        worksheet.sheet_data[2][index + 1].change_border(:bottom, 'thin')
+        worksheet.sheet_data[2][index + 1].change_border(:right, 'thin')
+
       end
 
       number_of_people.each_with_index do |num_peop, index|
         worksheet.add_cell(3,index + 1, num_peop[1].round(1))
         worksheet.sheet_data[3][index + 1].change_horizontal_alignment('center')
+        worksheet.sheet_data[3][index + 1].change_border(:bottom, 'thin')
+        worksheet.sheet_data[3][index + 1].change_border(:right, 'thin')
+
       end
+
+      worksheet.add_cell(4,0, "Effort (semaine)")
+      worksheet.add_cell(4,1, "toto")
+      worksheet.sheet_data[4][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[4][0].change_border(:right, 'thin')
+      worksheet.sheet_data[4][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[4][1].change_border(:right, 'thin')
+
+      worksheet.add_cell(5,0, "Durée(en semaine)")
+      worksheet.add_cell(5,1, "toto")
+      worksheet.sheet_data[5][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[5][0].change_border(:right, 'thin')
+      worksheet.sheet_data[5][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[5][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(6,0, "Staffing maximum (Trapéze)")
+      worksheet.add_cell(6,1, "toto")
+      worksheet.sheet_data[6][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[6][0].change_border(:right, 'thin')
+      worksheet.sheet_data[6][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[6][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(7,0, "Staffing maximum (Rayleigh)")
+      worksheet.add_cell(7,1, "toto")
+      worksheet.sheet_data[7][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[7][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[7][0].change_border(:right, 'thin')
+      worksheet.sheet_data[7][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(8,0, "Staffing Trapeze maximum")
+      worksheet.add_cell(8,1, "toto")
+      worksheet.sheet_data[8][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[8][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[8][0].change_border(:right, 'thin')
+      worksheet.sheet_data[8][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(9,0, "Effort Trapéze")
+      worksheet.add_cell(9,1, "toto")
+      worksheet.sheet_data[9][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[9][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[9][0].change_border(:right, 'thin')
+      worksheet.sheet_data[9][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(10,0, "Effort retenu")
+      worksheet.add_cell(10,1, "toto")
+      worksheet.sheet_data[10][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[10][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[10][0].change_border(:right, 'thin')
+      worksheet.sheet_data[10][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(11,0, "Durée retenu")
+      worksheet.add_cell(11,1, "toto")
+      worksheet.sheet_data[11][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[11][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[11][0].change_border(:right, 'thin')
+      worksheet.sheet_data[11][1].change_border(:right, 'thin')
+
+
+      worksheet.add_cell(12,0, "Staffing retenu")
+      worksheet.add_cell(12,1, "toto")
+      worksheet.sheet_data[12][0].change_border(:bottom, 'thin')
+      worksheet.sheet_data[12][1].change_border(:bottom, 'thin')
+      worksheet.sheet_data[12][0].change_border(:right, 'thin')
+      worksheet.sheet_data[12][1].change_border(:right, 'thin')
+
 
       send_data(workbook.stream.string, filename: "export-staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
     end
