@@ -150,9 +150,9 @@ class Staffing::StaffingCustomDataController < ApplicationController
       y3 = trapeze_parameter_values[:y3].to_f / 100
 
       if constraint == "max_staffing_constraint"
-        @staffing = @staffing_custom_data.max_staffing
+        @staffing_trapeze = @staffing_custom_data.max_staffing
 
-        @duration = 2 * (effort / @staffing) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+        @duration = 2 * (effort / @staffing_trapeze) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
 
         @staffing_custom_data.duration = @duration
 
@@ -160,9 +160,9 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
         @duration = @staffing_custom_data.duration
 
-        @staffing = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+        @staffing_trapeze = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
 
-        @staffing_custom_data.max_staffing = @staffing
+        @staffing_custom_data.max_staffing = @staffing_trapeze
       end
 
       x0D = x0 * @duration
@@ -172,19 +172,19 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       # Calcul de a, b, a', b' avec
       # a = M(1 - y0) / D(x1 - x2)
-      coef_a = (@staffing*(1-y0)) / (@duration*(x1-x0))
+      coef_a = (@staffing_trapeze*(1-y0)) / (@duration*(x1-x0))
       @staffing_custom_data.coef_a = coef_a
 
       # b = M(x1y0 - x0) / (x1 - x0)
-      coef_b = (@staffing * ((x1*y0) - x0)) / (x1-x0)
+      coef_b = (@staffing_trapeze * ((x1*y0) - x0)) / (x1-x0)
       @staffing_custom_data.coef_b = coef_b
 
       # a' = M(1 - y3) / D(x2 - x3)
-      coef_a_prime = (@staffing*(1-y3)) / (@duration*(x2-x3))
+      coef_a_prime = (@staffing_trapeze*(1-y3)) / (@duration*(x2-x3))
       @staffing_custom_data.coef_a_prime = coef_a_prime
 
       # b' = M(x2y3 - x3) / D(x2 - x3)
-      coef_b_prime = (@staffing * ((x2*y3) - x3)) / (x2-x3)
+      coef_b_prime = (@staffing_trapeze * ((x2*y3) - x3)) / (x2-x3)
       @staffing_custom_data.coef_b_prime = coef_b_prime
 
       # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
@@ -204,7 +204,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
           #intervalle_3 = x(semaine) compris dans ]x1*D ; x2*D]  =>   f(x) = M
           when x1D..x2D
-            t_staffing = @staffing
+            t_staffing = @staffing_trapeze
 
           #intervalle_4 = x(semaine) compris dans ]x2*D ; x3*D]   =>  f(x) = a'x+b'
           when x2D..x3D
@@ -235,9 +235,12 @@ class Staffing::StaffingCustomDataController < ApplicationController
       # =====================================================================================================================================
       # Rayleigh
       # Contrainte de Staffing Max
+
+      @staffing_rayleigh = @staffing_custom_data.max_staffing_rayleigh
+
       if constraint == "max_staffing_constraint"
         # coefficient de forme : a
-        form_coef = (@staffing*@staffing) * (Math.exp(1) / (2*effort*effort))
+        form_coef = (@staffing_rayleigh*@staffing_rayleigh) * (Math.exp(1) / (2*effort*effort))
         @staffing_custom_data.form_coef = form_coef
 
         # coefficient de difficulté
@@ -285,7 +288,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
       # =====================================================================================================================================
 
       #For mcdonnell
-      @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
+      @md_duration = @staffing_model.mc_donell_coef * effort ** @staffing_model.puissance_n
 
       # coefficient de forme : a
       form_coef = -Math.log(1-0.97) / (@md_duration * @md_duration)
@@ -309,6 +312,13 @@ class Staffing::StaffingCustomDataController < ApplicationController
         mcdonnell_chart_theorical_coordinates << ["#{t}", t_staffing]
       end
       @staffing_custom_data.mcdonnell_chart_theorical_coordinates = mcdonnell_chart_theorical_coordinates
+
+      if params["actuals_based_on"].present?
+        if params["actuals_based_on"]["mcdonell"]
+          @staffing_custom_data.duration = @md_duration
+          @staffing_custom_data.save
+        end
+      end
 
       if params["actuals_based_on"].present?
         if params["actuals_based_on"]["custom"]

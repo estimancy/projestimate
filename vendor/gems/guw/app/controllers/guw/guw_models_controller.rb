@@ -952,13 +952,13 @@ class Guw::GuwModelsController < ApplicationController
       if error_type.size > 1
         case
           when index == 0
-            final_mess << I18n.t(route_flag_error_13, mess_error: error_type[1..error_type.size - 1].join(", "))
+            final_mess << I18n.t(:route_flag_error_13, mess_error: error_type[1..error_type.size - 1].join(", "))
           when index == 1
-            final_mess << I18n.t(route_flag_error_14, mess_error: error_type[1..error_type.size - 1].join(", "))
+            final_mess << I18n.t(:route_flag_error_14, mess_error: error_type[1..error_type.size - 1].join(", "))
           when index == 2
-            final_mess << I18n.t(route_flag_error_15, mess_error: error_type[1..error_type.size - 1].join(", "))
+            final_mess << I18n.t(:route_flag_error_15, mess_error: error_type[1..error_type.size - 1].join(", "))
           when index == 3
-            final_mess << I18n.t(route_flag_error_16, mess_error: error_type[1..error_type.size - 1].join(", "))
+            final_mess << I18n.t(:route_flag_error_16, mess_error: error_type[1..error_type.size - 1].join(", "))
           else
             nothing = 42
         end
