@@ -153,5 +153,12 @@
 
     end
 
+    def export_staffing
+      staffing = Staffing::StaffingCustomDatum.find(params[:staffing_model_id])
+      workbook = RubyXL::Workbook.new
+
+      redirect_to :back
+    end
+
   end
 #end
