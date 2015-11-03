@@ -7,6 +7,9 @@
  unless current_module_project.previous.first.nil?
   previous_activity = current_module_project.previous.first.wbs_activity
  end
+
+ effort_week_unit = @staffing_model.effort_week_unit.nil? ? 1 : @staffing_model.effort_week_unit
+
  unless previous_activity.nil?
    begin
      ev = EstimationValue.where(:pe_attribute_id => attribute.id,
@@ -23,7 +26,7 @@
      effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
 
-   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
+   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
 
  else
    ev = EstimationValue.where(:pe_attribute_id => attribute.id,
@@ -37,7 +40,7 @@
      effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.v.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
 
-   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
+   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
  end
 %>
 
@@ -48,7 +51,8 @@
       <div class="span2">
         <%= f.input :global_effort_value,
                     label: "Effort (#{@staffing_model.effort_unit})",
-                    input_html: { :class => 'input-medium', value: effort == 0 ? '' : effort.round(user_number_precision) } %>
+                    input_html: { :class => 'input-medium', value: effort == 0 ? '' : effort.round(user_number_precision) },
+                    readonly: @staffing_model.enabled_input %>
       </div>
 
       <div class="span2">
@@ -66,13 +70,13 @@
         <label class="radio">
           <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
           <label>Staffing maximum (Trapèze)</label>
-          <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium', :id => "my_id2", disabled: true, value: @staffing_custom_data.max_staffing.to_f.round(2) } %>
+          <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium', :id => "my_id2", disabled: true, value: @staffing_custom_data.max_staffing.to_f.round(user_number_precision) } %>
         </label>
       </div>
 
       <div class="span2">
         <label>Staffing maximum (Rayleigh)</label>
-        <%= @staffing_custom_data.max_staffing_rayleigh %>
+        <%= f.input :max_staffing_rayleigh, label: false, :input_html => { :class => 'input-medium', :id => "my_id3", disabled: true, value: @staffing_custom_data.max_staffing_rayleigh.to_f.round(user_number_precision) } %>
       </div>
 
     </div>
@@ -83,6 +87,10 @@
 
     <button name="actuals_based_on[custom]" type="submit" class="btn btn-mini pull-right button_margin_right">
       <%= I18n.t(:update) %>
+    </button>
+
+    <button name="actuals_based_on[mcdonell]" type="submit" class="btn btn-mini pull-right button_margin_right">
+      Réinitialiser
     </button>
 
     <h4>
@@ -111,6 +119,7 @@
           <div class="span12">
 
             <% trapeze_theoretical_coordinates = @staffing_custom_data.trapeze_chart_theoretical_coordinates %>
+            <% rayleigh_theoretical_coordinates = @staffing_custom_data.rayleigh_chart_theoretical_coordinates %>
             <% actual_coordinates = @staffing_custom_data.chart_actual_coordinates %>
             <% trapeze_staffing_theorique = 0 %>
             <% staffing_actuel = 0 %>
@@ -130,6 +139,17 @@
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% trapeze_staffing_theorique += rounded_value %>
                     <td><%= rounded_value %></td>
+                  <% end %>
+                </tr>
+
+                <tr>
+                  <td><%= I18n.t(:theoretical_rayleigh) %></td>
+                  <% rayleigh_theoretical_coordinates.each do |(coord,value)| %>
+                    <% rounded_value = value.nil? ? 0 : value.round(1) %>
+                    <%# rayleigh_theoretical_coordinates += rounded_value %>
+                    <td>
+                      <%= rounded_value %>
+                    </td>
                   <% end %>
                 </tr>
 
@@ -158,17 +178,66 @@
 
       </div>
     </div>
+
+
+
+  <div class="row-fluid">
+    <div class="span10">
+      <p>
+        <span class="badge badge-important">
+          <b>
+            Staffing Trapeze maximum : <%= @staffing_custom_data.calculated_staffing.to_f.round(1) %>
+          </b>
+        </span>
+      </p>
+
+      <p>
+        <span class="badge badge-important">
+          <b>
+            Effort Trapèze : <%= trapeze_staffing_theorique.to_f.round(2) %>
+          </b>
+        </span>
+      </p>
+
+      <p>
+        <span class="badge badge-info">
+          <b>
+            Effort retenu : <%= staffing_actuel.to_f.round(2) %>
+          </b>
+        </span>
+      </p>
+
+      <p>
+        <span class="badge badge-info">
+          <b>
+            Durée retenu : <%= (@staffing_custom_data.chart_actual_coordinates.size - 1).to_f.round(2) %>
+          </b>
+        </span>
+      </p>
+
+      <p>
+        <span class="badge badge-info">
+          <b>
+            Staffing retenu : <%= @staffing_custom_data.chart_actual_coordinates.map(&:last).max.to_f.round(2) %>
+          </b>
+        </span>
+      </p>
+    </div>
+    </div>
+
   <% end %>
 
 <script>
 
 $('#optionsRadios1').click(function (e) {
+  $("#my_id3").attr('disabled', "disabled")
   $("#my_id2").attr('disabled', "disabled")
   $("#my_id1").removeAttr('disabled')
 })
 $('#optionsRadios2').click(function (e) {
   $("#my_id1").attr('disabled', "disabled")
   $("#my_id2").removeAttr('disabled')
+  $("#my_id3").removeAttr('disabled')
 })
 refresh_chart();
 
