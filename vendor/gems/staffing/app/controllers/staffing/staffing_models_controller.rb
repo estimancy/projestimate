@@ -167,10 +167,21 @@
       worksheet.add_cell(3,0, "Nombre de personnes")
 
       theoretical_trapeze_values.each_with_index do |trap_val, index|
-        worksheet.add_cell(0,index + 1, trap_val[0])
-        worksheet.add_cell(1,index + 1, trap_val[1].round(2))
+        worksheet.add_cell(0,index + 1, "P#{trap_val[0]}")
+        worksheet.sheet_data[0][index + 1].change_horizontal_alignment('center')
+        worksheet.add_cell(1,index + 1, trap_val[1].round(1))
+        worksheet.sheet_data[1][index + 1].change_horizontal_alignment('center')
       end
 
+      theoretical_rayleigh_values.each_with_index do |ray_val, index|
+        worksheet.add_cell(2,index + 1, ray_val[1].round(1))
+        worksheet.sheet_data[2][index + 1].change_horizontal_alignment('center')
+      end
+
+      number_of_people.each_with_index do |num_peop, index|
+        worksheet.add_cell(3,index + 1, num_peop[1].round(1))
+        worksheet.sheet_data[3][index + 1].change_horizontal_alignment('center')
+      end
 
       send_data(workbook.stream.string, filename: "export-staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
     end
