@@ -54,7 +54,9 @@
       <div class="span2">
         <label class="radio">
           <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? 'checked' : '' %>>
-          <label> <%= I18n.t(:duration_in_week) %> </label>
+          <label>
+            <%= I18n.t(:duration_in_week) %>
+          </label>
           <%= f.input :duration, label: false, :input_html => { :class => 'input-medium', :id => "my_id1", value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration } %>
         </label>
 
@@ -63,9 +65,14 @@
       <div class="span2">
         <label class="radio">
           <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
-          <label>Staffing</label>
+          <label>Staffing maximum (Trapèze)</label>
           <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium', :id => "my_id2", disabled: true, value: @staffing_custom_data.max_staffing.to_f.round(2) } %>
         </label>
+      </div>
+
+      <div class="span2">
+        <label>Staffing maximum (Rayleigh)</label>
+        <%= @staffing_custom_data.max_staffing_rayleigh %>
       </div>
 
     </div>
@@ -213,7 +220,7 @@ function refresh_chart() {
         color: '#7CB9E8'
       },{
         type: 'spline',
-        name: 'Votre répartition',
+        name: 'Vos contraintes',
         data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>,
         color: '#CC0000',
         marker: {

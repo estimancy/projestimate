@@ -264,8 +264,8 @@ class Staffing::StaffingCustomDataController < ApplicationController
         @staffing_custom_data.t_max_staffing = t_max_staffing
 
         # MAx Staffing
-        #max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
-        #@staffing_custom_data.max_staffing = @staffing
+        max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+        @staffing_custom_data.max_staffing_rayleigh = max_staffing
       end
 
       for t in 0..@duration
@@ -287,39 +287,21 @@ class Staffing::StaffingCustomDataController < ApplicationController
       #For mcdonnell
       @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n
 
-      # Contrainte de Staffing Max
-      if constraint == "max_staffing_constraint"
-        # coefficient de forme : a
-        form_coef = (@staffing*@staffing) * (Math.exp(1) / (2*effort*effort))
-        @staffing_custom_data.form_coef = form_coef
+      # coefficient de forme : a
+      form_coef = -Math.log(1-0.97) / (@md_duration * @md_duration)
+      @staffing_custom_data.form_coef = form_coef
 
-        # coefficient de difficulté
-        difficulty_coef = 2*effort*form_coef
-        @staffing_custom_data.difficulty_coef = difficulty_coef
+      # coefficient de difficulté
+      difficulty_coef = 2*effort*form_coef
+      @staffing_custom_data.difficulty_coef = difficulty_coef
 
-        # numero de la semaine au Pic de Staffing
-        t_max_staffing = Math.sqrt(1/(2*form_coef))
-        @staffing_custom_data.t_max_staffing = t_max_staffing
+      # numero de la semaine au Pic de Staffing
+      t_max_staffing = Math.sqrt(1/(2*form_coef))
+      @staffing_custom_data.t_max_staffing = t_max_staffing
 
-        # Contrainte de Durée
-      elsif constraint == "duration_constraint"
-
-        # coefficient de forme : a
-        form_coef = -Math.log(1-0.97) / (@md_duration * @md_duration)
-        @staffing_custom_data.form_coef = form_coef
-
-        # coefficient de difficulté
-        difficulty_coef = 2*effort*form_coef
-        @staffing_custom_data.difficulty_coef = difficulty_coef
-
-        # numero de la semaine au Pic de Staffing
-        t_max_staffing = Math.sqrt(1/(2*form_coef))
-        @staffing_custom_data.t_max_staffing = t_max_staffing
-
-        # MAx Staffing
-        #max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
-        #@staffing_custom_data.max_staffing = @staffing
-      end
+      # MAx Staffing
+      #max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+      # @staffing_custom_data.max_staffing_rayleigh = @staffing
 
       for t in 0..@md_duration
         # E(t) = 2 * K * a * t * e(-a*t*t)
