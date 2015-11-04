@@ -930,7 +930,7 @@ class Guw::GuwModelsController < ApplicationController
 
     final_mess = []
 
-    tab_error.each_with_index  do |error_type, index|
+    tab_error.each_with_index do |error_type, index|
       if error_type[0] == true
         case
           when index == 0
@@ -948,7 +948,7 @@ class Guw::GuwModelsController < ApplicationController
         end
       end
     end
-    indexing_field_error.each_with_index  do |error_type, index|
+    indexing_field_error.each_with_index do |error_type, index|
       if error_type.size > 1
         case
           when index == 0

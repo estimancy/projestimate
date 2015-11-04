@@ -1669,6 +1669,7 @@ frsncf:
   update_restraint_effort: "Mettre à jour l'effort retenu"
   Initialize_from_the_Trapeze: "Initialiser à partir du Trapeze"
   theoretical_trapeze: "Trapèze théorique"
+  theoretical_rayleigh: "Rayleigh théorique"
   Number_of_people: "Nombre de personnes"
   Trapeze_maximum_Staffing: "Trapeze maximum Staffing : %{parameter}"
   Trapèze_effort: "Effort Trapèze : %{parameter}"
@@ -1737,4 +1738,4 @@ frsncf:
   Changing_of_the_size_enter: "Modification de la taille de saisie autorisée"
   equation: "Equation"
   project_number: "Nombre de projet"
-  effort_week_unit: "Nombre d'heure par semaine"
+  effort_week_unit: "Nombre d'heures par semaine"
