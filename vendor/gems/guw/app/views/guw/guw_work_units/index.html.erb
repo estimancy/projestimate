@@ -2,7 +2,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        <%= I18n.t(:Type_acquisitions) %>
+        <%= @guw_model.coefficient_label %>
       </a>
     </li>
   </ul>
@@ -32,7 +32,7 @@
     </table>
 
     <% if can? :manage_modules_instances, ModuleProject %>
-        <%= link_to I18n.t(:new_acquisition_type), guw.new_guw_model_guw_work_unit_path(@guw_model), class: "btn" %>
+        <%= link_to "Nouveau #{@guw_model.coefficient_label}", guw.new_guw_model_guw_work_unit_path(@guw_model), class: "btn" %>
     <% end %>
     <%= link_to I18n.t(:back), guw.guw_model_path(@guw_model) , class: "btn" %>
   </div>
