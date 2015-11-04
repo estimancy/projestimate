@@ -1697,6 +1697,7 @@ fr:
   Editing_staffing_custom_datum: "Editer"
   Listing_staffing_custom_data: "Liste"
   Method: "Méthode"
+  theoretical_rayleigh: "Rayleigh théorique"
   Staffing_constraint: "Contrainte de staffing"
   Period_unit: "Unité de Période"
   Max_staffing: "Staffing max"

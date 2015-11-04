@@ -1738,4 +1738,5 @@ frsncf:
   Changing_of_the_size_enter: "Modification de la taille de saisie autorisée"
   equation: "Equation"
   project_number: "Nombre de projet"
-  effort_week_unit: "Nombre d'heures par semaine"
+  effort_week_unit: "Nombre d'heure par semaine"
+  theoretical_rayleigh: "Rayleigh théorique"

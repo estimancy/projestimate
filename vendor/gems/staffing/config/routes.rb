@@ -30,6 +30,7 @@ Staffing::Engine.routes.draw do
 
   resources :staffing_models do
     post 'duplicate'
+    post 'export_staffing'
   end
 
   get "staffing_models/index"
