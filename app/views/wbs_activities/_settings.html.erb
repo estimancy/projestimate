@@ -3,10 +3,14 @@
 </h3>
 
 <% effort = PeAttribute.find_by_alias("effort") %>
+<% ratio = PeAttribute.find_by_alias("ratio") %>
 <% cev = EstimationValue.where(:pe_attribute_id => effort.id,
                                :module_project_id => current_module_project.id,
                                :in_out => "input").first %>
 <% cev_output = EstimationValue.where(:pe_attribute_id => effort.id,
+                                      :module_project_id => current_module_project.id,
+                                      :in_out => "output").first %>
+<% ratio_output = EstimationValue.where(:pe_attribute_id => ratio.id,
                                       :module_project_id => current_module_project.id,
                                       :in_out => "output").first %>
 <% pev = EstimationValue.where(:pe_attribute_id => effort.id,
@@ -49,6 +53,7 @@
         <th>H</th>
       <% end %>
       <th>Effort total</th>
+      <th>Ratio global</th>
       <th><%= I18n.t(:comment) %></th>
     </tr>
     <tr>
@@ -74,6 +79,10 @@
         <% rescue %>
           -
         <% end %>
+      </td>
+
+      <td>
+        <%= ratio_output.string_data_probable[component_id] %>
       </td>
 
       <td>
