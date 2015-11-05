@@ -1676,7 +1676,7 @@ fr:
   import_data_from_uw: "Import de donnée d'une unité d'oeuvre"
   new_acquisition_type: "Nouveau type d'acquisition"
   calculate_duration_and_size: "Calcul de la durée et de la taille des équipes"
-  duration_in_week: "Durée (en semaine)"
+  duration_in_week: "Durée(semaine)"
   initialize_restraint: "Réinitialiser le staffing personnalisé"
   graphical_output: "Sortie graphique"
   Staffing_distribution: "Répartition du staffing"
@@ -1760,3 +1760,7 @@ fr:
   equation: "Equation"
   project_number: "Nombre de projet"
   effort_week_unit: "Nombre d'heures par semaine"
+  effort_week: "Effort(semaine)"
+  max_staff_trap: "Staffing maximum(Trapéze)"
+  max_staff_rayl: "Staffing maximum (Rayleigh)"
+
