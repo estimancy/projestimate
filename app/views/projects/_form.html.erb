@@ -43,7 +43,11 @@
             <% else %>
 
               <% unless @project.original_model_id.nil? %>
-                <% apps = Project.find(@project.original_model_id).applications %>
+                <% begin %>
+                  <% apps = Project.find(@project.original_model_id).applications %>
+                <% rescue %>
+                  <% apps = Array.new %>
+                <% end %>
               <% else %>
                <% apps = Array.new %>
               <% end %>
