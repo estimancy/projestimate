@@ -6,6 +6,9 @@
 <% cev = EstimationValue.where(:pe_attribute_id => effort.id,
                                :module_project_id => current_module_project.id,
                                :in_out => "input").first %>
+<% cev_output = EstimationValue.where(:pe_attribute_id => effort.id,
+                                      :module_project_id => current_module_project.id,
+                                      :in_out => "output").first %>
 <% pev = EstimationValue.where(:pe_attribute_id => effort.id,
                                :module_project_id => current_module_project.previous.first,
                                :in_out => "output").first %>
@@ -37,7 +40,7 @@
   <table class="table table-bordered">
     <tr>
       <th></th>
-      <th>Activity Ratio</th>
+      <th><%= I18n.t(:change_ratio) %></th>
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <th>L</th>
       <% end %>
@@ -45,14 +48,11 @@
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <th>H</th>
       <% end %>
+      <th>Effort total</th>
       <th><%= I18n.t(:comment) %></th>
     </tr>
     <tr>
       <td>Effort (<%= current_module_project.wbs_activity.effort_unit %>)</td>
-
-      <td>
-        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id), readonly: cannot?(:execute_estimation_plan, @project) %>
-      </td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <td><%= text_field_tag "values[low]", v_low, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
@@ -63,6 +63,14 @@
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <td><%= text_field_tag "values[high]", v_high, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% end %>
+
+      <td>
+        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id), readonly: cannot?(:execute_estimation_plan, @project) %>
+      </td>
+
+      <td>
+        <%= (cev_output.string_data_most_likely[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff).round(user_number_precision) %>
+      </td>
 
       <td>
         <span class="pull-left" >
