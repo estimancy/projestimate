@@ -69,7 +69,11 @@
       </td>
 
       <td>
-        <%= (cev_output.string_data_most_likely[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff).round(user_number_precision) %>
+        <% begin %>
+          <%= (cev_output.string_data_most_likely[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff).round(user_number_precision) %>
+        <% rescue %>
+          -
+        <% end %>
       </td>
 
       <td>
