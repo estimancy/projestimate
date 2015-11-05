@@ -30,11 +30,13 @@ class Guw::GuwWorkUnitsController < ApplicationController
 
   def new
     @guw_work_unit = Guw::GuwWorkUnit.new
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     set_page_title I18n.t(:Create_a_new_Work_Unit)
   end
 
   def edit
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     set_page_title I18n.t(:Edit_a_new_Work_Unit)
   end
 
