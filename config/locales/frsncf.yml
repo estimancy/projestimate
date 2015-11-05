@@ -1743,3 +1743,4 @@ frsncf:
   effort_week: "Effort(semaine)"
   max_staff_trap: "Staffing maximum(Trapéze)"
   max_staff_rayl: "Staffing maximum (Rayleigh)"
+  person_number: "Nombre de personnes"

@@ -160,13 +160,13 @@
       theoretical_trapeze_values = staffing.trapeze_chart_theoretical_coordinates
 
       worksheet = workbook[0]
-      worksheet.add_cell(0,0, "Période")
+      worksheet.add_cell(0,0, I18n.t(:period))
       worksheet.sheet_data[0][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[0][0].change_border(:right, 'thin')
-      worksheet.add_cell(1,0, "Trapeze theorique")
+      worksheet.add_cell(1,0, I18n.t(:theoretical_trapeze))
       worksheet.sheet_data[1][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[1][0].change_border(:right, 'thin')
-      worksheet.add_cell(2,0, "Nombre de personnes")
+      worksheet.add_cell(2,0, I18n.t(:person_number))
       worksheet.sheet_data[2][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[2][0].change_border(:right, 'thin')
 
