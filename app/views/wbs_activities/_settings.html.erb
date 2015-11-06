@@ -44,7 +44,6 @@
   <table class="table table-bordered">
     <tr>
       <th></th>
-      <th><%= I18n.t(:change_ratio) %></th>
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <th>L</th>
       <% end %>
@@ -52,6 +51,7 @@
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <th>H</th>
       <% end %>
+      <th><%= I18n.t(:change_ratio) %></th>
       <th>Effort total</th>
       <th>Ratio global</th>
       <th><%= I18n.t(:comment) %></th>
