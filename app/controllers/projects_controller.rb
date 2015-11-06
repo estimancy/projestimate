@@ -1587,6 +1587,7 @@ public
     new_prj = old_prj.amoeba_dup #amoeba gem is configured in Project class model
     new_prj.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_from_estimation_by, estimation_name: old_prj, username: current_user.name)} \r\n"
     new_prj.ancestry = nil
+    new_prj.creator_id = current_user.id
     if params[:action_name] == "duplication_model"
       new_prj.is_model = true
     else
@@ -1611,7 +1612,6 @@ public
       new_prj.description = params['project']['description']
       start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
       new_prj.start_date = start_date
-      new_prj.creator_id = current_user.id
 
       #Only the securities for the generated project will be taken in account
       new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }
@@ -2003,6 +2003,7 @@ public
       new_prj.alias = old_prj.alias
       new_prj.description = params[:description]
       new_prj.parent_id = old_prj.id
+      new_prj.creator_id = current_user.id
 
       new_prj.version = params[:new_version]  #set_project_version(old_prj)
       if params[:new_version].nil? || params[:new_version].empty?
