@@ -1018,7 +1018,8 @@ class Guw::GuwModelsController < ApplicationController
                                                  pbs_project_element_id: @component.id,
                                                  guw_model_id: @guw_model.id,
                                                  display_order: my_order,
-                                                 tracking: row[10], quantity: row[9],
+                                                 tracking: row[10],
+                                                 quantity: row[9].nil? ? 1 : row[9],
                                                  effort: row[12].nil? ? nil : row[12],
                                                  ajusted_effort: row[13].nil? ? nil : row[13],
                                                  quantity: 1)
@@ -1068,7 +1069,7 @@ class Guw::GuwModelsController < ApplicationController
                         indexing_field_error[2][0] = false
                       end
                     else
-                      guw_uow.organization_technology_id = type.guw_complexity_technologies.first.organization_technology.id
+                      guw_uow.organization_technology_id = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first.organization_technology.id
                       ind += 1
                       indexing_field_error[2][0] = true
                     end
