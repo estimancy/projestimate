@@ -1637,7 +1637,7 @@ fr:
   weighting_factor_Name: "Nom du coefficient de pondération"
   Attributes_list: "Liste des attributs (critères)"
   Product: "Produit"
-  Low_border_include: "Borne basse (comprises)"
+  low_border_include: "Borne basse (comprises)"
   high_border_include: "Borne haute (non comprises)"
   UO_type_complexity_of: "Seuils de complexité de %{parameter}"
   new_complexity_for: "Créer une nouvelle complexité pour %{parameter}"

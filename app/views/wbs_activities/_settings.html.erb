@@ -43,21 +43,25 @@
 
   <table class="table table-bordered">
     <tr>
-      <th></th>
       <% if current_module_project.wbs_activity.three_points_estimation? %>
-        <th>L</th>
+        <th>Effort (L)</th>
       <% end %>
-      <th>M</th>
+      <th>Effort (M)</th>
       <% if current_module_project.wbs_activity.three_points_estimation? %>
-        <th>H</th>
+        <th>Effort (H)</th>
       <% end %>
       <th><%= I18n.t(:change_ratio) %></th>
-      <th>Effort total</th>
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <th>Effort total (L)</th>
+      <% end %>
+      <th>Effort total (M)</th>
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <th>Effort total (H)</th>
+      <% end %>
       <th>Ratio global</th>
       <th><%= I18n.t(:comment) %></th>
     </tr>
     <tr>
-      <td>Effort (<%= current_module_project.wbs_activity.effort_unit %>)</td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <td><%= text_field_tag "values[low]", v_low, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
@@ -73,6 +77,16 @@
         <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id), readonly: cannot?(:execute_estimation_plan, @project) %>
       </td>
 
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <td>
+          <% begin %>
+            <%= (cev_output.string_data_low[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff).round(user_number_precision) %>
+          <% rescue %>
+            -
+          <% end %>
+        </td>
+      <% end %>
+
       <td>
         <% begin %>
           <%= (cev_output.string_data_most_likely[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff).round(user_number_precision) %>
@@ -80,6 +94,17 @@
           -
         <% end %>
       </td>
+
+      <% if current_module_project.wbs_activity.three_points_estimation? %>
+        <td>
+          <% begin %>
+            <%= (cev_output.string_data_high[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff).round(user_number_precision) %>
+          <% rescue %>
+            -
+          <% end %>
+        </td>
+      <% end %>
+
 
       <td>
         <%= ratio_output.string_data_probable[component_id] %>
@@ -115,6 +140,6 @@
     </tr>
   </table>
   <% if can?(:execute_estimation_plan, @project) %>
-    <%= submit_tag I18n.t(:tooltip_run_estimation), class: "pull-right btn btn-mini" %>
+    <%= submit_tag "Lancer le calcul", class: "pull-right btn btn-mini" %>
   <% end %>
 <% end %>

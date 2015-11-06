@@ -1632,7 +1632,7 @@ en:
   import_from: "import UW data from a excel file"
   weighting_factor_Name: "Name of the weighting factor"
   Attributes_list: "Attributes list (criteria)"
-  Low_border_include: "Low border (include)"
+  low_border_include: "Low border (include)"
   high_border_include: "high border (none include)"
   Product: "Product"
   UO_type_complexity_of: "%{parameter} complexity threshold"
