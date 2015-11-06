@@ -235,7 +235,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].blank? ? 1 : params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
     guw_unit_of_work.save
 
-    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * guw_unit_of_work.quantity
+    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f)
 
     if guw_unit_of_work.guw_type.allow_retained == false
       guw_unit_of_work.effort == guw_unit_of_work.ajusted_effort
@@ -326,7 +326,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.guw_type_id = guw_type.id
       guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
       if params["quantity"].present?
-        guw_unit_of_work.quantity = params["quantity"]["#{guw_unit_of_work.id}"].to_f
+        guw_unit_of_work.quantity = params["quantity"]["#{guw_unit_of_work.id}"].nil? ? 1 : params["quantity"]["#{guw_unit_of_work.id}"].to_f
       else
         guw_unit_of_work.quantity = 1
       end
@@ -352,7 +352,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         else
           @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
         end
-        guw_unit_of_work.effort = @weight_pert.sum * guw_unit_of_work.quantity.to_f
+
+        guw_unit_of_work.effort = @weight_pert.sum * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f)
       end
 
       if guw_unit_of_work.guw_type.allow_retained == false

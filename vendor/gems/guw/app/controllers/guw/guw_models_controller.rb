@@ -1020,7 +1020,8 @@ class Guw::GuwModelsController < ApplicationController
                                                  display_order: my_order,
                                                  tracking: row[10], quantity: row[9],
                                                  effort: row[12].nil? ? nil : row[12],
-                                                 ajusted_effort: row[13].nil? ? nil : row[13])
+                                                 ajusted_effort: row[13].nil? ? nil : row[13],
+                                                 quantity: 1)
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
