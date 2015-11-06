@@ -60,7 +60,9 @@
             <% end %>
           </td>
 
-          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => {:class => 'input-large'} %></td>
+          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => { :class => 'input-large' } %></td>
+
+          <td><%= f.input :creator_id, as: :select, collection: @organization.users.map{|i| [i.name, i.id]}, :label => I18n.t('creator'), :input_html => { :class => 'input-large' } %></td>
         </tr>
         <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
             <tr><td>
