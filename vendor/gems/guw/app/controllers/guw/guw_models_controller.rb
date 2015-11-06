@@ -807,7 +807,7 @@ class Guw::GuwModelsController < ApplicationController
     redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
   end
 
-  def export
+    def export
     @guw_model = current_module_project.guw_model
     @component = current_component
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
@@ -881,7 +881,7 @@ class Guw::GuwModelsController < ApplicationController
       else
         cplx = guow.guw_complexity.name
       end
-      @guw_model.guw_attributes.all.each do |gac|
+      @guw_model.guw_attributes.each do |gac|
         finder = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: gac.id, guw_type_id: guow.guw_type.id).first
         unless finder.nil?
           sum_range = gac.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
@@ -977,9 +977,9 @@ class Guw::GuwModelsController < ApplicationController
     ok = false
     already_exist = ["first"]
     first = false
-    type_save = 0
-    guw_uow_save = 0
-    gac_save = 0
+    type_save = nil
+    guw_uow_save = nil
+    gac_save = nil
     tab_error = [[false], [false], [false], [false], [false]]
     indexing_field_error = [[false],[false],[false],[false]]
 
@@ -1043,13 +1043,6 @@ class Guw::GuwModelsController < ApplicationController
                   if row[6] == type.name
                     guw_uow.guw_type_id = type.id
                     indexing_field_error[0][0] = true
-                    @guw_model.guw_attributes.all.each do |gac|
-                      if gac.name == row[14]
-                        gac_save = gac.id
-                        type_save = type.id
-                        break
-                      end
-                    end
                     if !row[11].nil? && row[11] != "-"
                       type.guw_complexities.each do |complexity|
                         if row[11] == complexity.name
@@ -1083,6 +1076,18 @@ class Guw::GuwModelsController < ApplicationController
                       indexing_field_error[2] << index
                     end
 
+                    @guw_model.guw_attributes.all.each do |gac|
+                      guw_uow.save
+                      finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type.id,
+                                                                 guw_unit_of_work_id: guw_uow.id,
+                                                                 guw_attribute_id: gac.id).first_or_create
+                      guw_uow_save = guw_uow.id
+                      finder.low = row[15] == "N/A" ? nil : row[15]
+                      finder.most_likely = row[16] == "N/A" ? nil : row[16]
+                      finder.high = row[17] == "N/A" ? nil : row[17]
+                      finder.save
+                    end
+
                     ind += 1
                     break
                   end
@@ -1093,14 +1098,6 @@ class Guw::GuwModelsController < ApplicationController
                 end
                 if ind == 3
                   guw_uow.save
-                  finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
-                                                             guw_unit_of_work_id: guw_uow.id,
-                                                             guw_attribute_id: gac_save).first_or_create
-                  guw_uow_save = guw_uow.id
-                  finder.low = row[15] == "N/A" ? nil : row[15]
-                  finder.most_likely = row[16] == "N/A" ? nil : row[16]
-                  finder.high = row[17] == "N/A" ? nil : row[17]
-                  finder.save
                 else
                   tab_error << index
                 end
