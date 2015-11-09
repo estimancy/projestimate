@@ -332,12 +332,13 @@ class ProjectsController < ApplicationController
     end
 
     current_user_ps = @project.project_securities.build
-    if params[:project][:creator_id].nil?
+    if params[:project][:creator_id].blank?
       current_user_ps.user_id = current_user.id
     else
       current_user_ps.user_id = params[:project][:creator_id].to_i
     end
     current_user_ps.project_security_level = full_control_security_level
+    current_user_ps.is_model_permission = false
     current_user_ps.save
 
     @project.is_locked = false
