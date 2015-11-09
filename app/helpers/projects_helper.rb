@@ -131,12 +131,12 @@ module ProjectsHelper
   #Conversion en fonction de la précision en params uniquement #> 12.12300 (si precision = 5) ou 12.12 si (si precision = 2)
   def convert_with_precision(value, precision)
     begin
-      number_with_precision(value, precision: precision, locale: :fr)
+      v = number_with_precision(value, precision: precision, locale: :fr, delimiter: ' ')
     rescue
       begin
-        "%.#{precision}f" % value
+        v = "%.#{precision}f" % value
       rescue
-        0
+        v = 0
       end
     end
   end
