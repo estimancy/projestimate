@@ -49,6 +49,7 @@
           <td>
             <%= f.input :version, :input_html => {:class => 'input-large'}, :disabled => true %>
           </td>
+
         </tr>
       </table>
 
@@ -70,6 +71,15 @@
           <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
             <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
           <% end %>
+        </tr>
+        <tr>
+          <td>
+            <%= f.input :creator_id,
+                        as: :select,
+                        collection: @organization.users.map{|i| [i.name, i.id]},
+                        label: I18n.t('creator'),
+                        input_html: { :class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
+          </td>
         </tr>
         <tr>
           <td>
