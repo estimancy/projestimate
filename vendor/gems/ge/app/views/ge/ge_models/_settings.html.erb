@@ -77,17 +77,17 @@
           <% if @ge_model.three_points_estimation == true %>
             <td>
               <%# hidden_field_tag "effort_high", ev.send("string_data_most_likely")[component_id] %>
-              <%= text_field_tag "effort_low", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization, 3), class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
+              <%= number_field_tag "effort_low", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization, 3), step: "any", class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
             </td>
           <% end %>
           <td>
             <%# hidden_field_tag "effort_most_likely", ev.send("string_data_most_likely")[component_id] %>
-            <%= text_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization, 3), class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
+            <%= number_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization, 3), step: "any", class: "input-large", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
               <%# hidden_field_tag "effort_high", ev.send("string_data_most_likely")[component_id] %>
-              <%= text_field_tag "effort_high", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization, 3), class: "input-medium", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
+              <%= number_field_tag "effort_high", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization, 3), step: "any", class: "input-large", readonly: (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
             </td>
           <% end %>
         </tr>

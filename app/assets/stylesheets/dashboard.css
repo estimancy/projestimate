@@ -198,13 +198,20 @@ div.actions-tabs {
     text-align: center; /* center checkbox horizontally */
     height: 12px;
 }
-.table input[type='number']{
+.guw_number_field_tag{
     text-align: center; /* center checkbox horizontally */
     height: 20px;
     box-sizing: content-box;
     padding-top: 0;
     padding-bottom: 0;
     width: 60px;
+}
+.table input[type='number']{
+    text-align: center; /* center checkbox horizontally */
+    height: 20px;
+    box-sizing: content-box;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
