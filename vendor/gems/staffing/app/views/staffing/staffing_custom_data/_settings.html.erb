@@ -146,7 +146,7 @@
                   <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% trapeze_staffing_theorique += rounded_value %>
-                    <td><%= rounded_value %></td>
+                    <td><%= convert_with_precision(rounded_value, user_number_precision) %></td>
                   <% end %>
                 </tr>
 
@@ -156,7 +156,7 @@
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% staffing_actuel += rounded_value %>
                     <td>
-                      <%= text_field_tag "actuals[#{coord}]", rounded_value, class: "input-mini" %>
+                      <%= text_field_tag "actuals[#{coord}]", convert_with_precision(rounded_value, user_number_precision), class: "input-mini" %>
                     </td>
                   <% end %>
 
