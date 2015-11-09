@@ -50,9 +50,9 @@
 
       <div class="span2">
         <%= f.input :global_effort_value,
-                    as: :string,
                     label: "Effort (#{@staffing_model.effort_unit})",
-                    input_html: { :class => 'input-medium', value: convert_with_precision(effort, user_number_precision) },
+                    input_html: { :class => 'input-medium',
+                                  value: convert_with_precision(effort, user_number_precision) },
                     readonly: !@staffing_model.enabled_input %>
       </div>
 
@@ -63,8 +63,9 @@
             <%= I18n.t(:duration_in_week) %>
           </label>
           <%= f.input :duration,
-                      as: :string,
-                      label: false, :input_html => { :class => 'input-medium', :id => "my_id1", value: @staffing_custom_data.duration.nil? ? convert_with_precision(@md_duration, user_number_precision) : convert_with_precision(@staffing_custom_data.duration, user_number_precision) } %>
+                      label: false, :input_html => { class: 'input-medium',
+                                                     id: "my_id1",
+                                                     value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration.round(user_number_precision) } %>
         </label>
 
       </div>
@@ -74,17 +75,21 @@
           <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
           <label>Staffing maximum (Trapèze)</label>
           <%= f.input :max_staffing,
-                      as: :string,
                       label: false,
-                      :input_html => { :class => 'input-medium commonclass', :id => "my_id2", disabled: true, value: convert_with_precision(@staffing_custom_data.max_staffing.to_f, user_number_precision) } %>
+                      :input_html => { class: 'input-medium commonclass',
+                                       id: "my_id2",
+                                       value: @staffing_custom_data.max_staffing.to_f.round(user_number_precision),
+                                       disabled: true } %>
         </label>
       </div>
 
       <div class="span2">
         <label>Staffing maximum (Rayleigh)</label>
         <%= f.input :max_staffing_rayleigh,
-                    as: :string,
-                    label: false, :input_html => { :class => 'input-medium commonclass', :id => "my_id3", disabled: true, value: convert_with_precision(@staffing_custom_data.max_staffing_rayleigh, user_number_precision) } %>
+                    label: false, :input_html => { class: 'input-medium commonclass',
+                                                   id: "my_id3",
+                                                   value: @staffing_custom_data.max_staffing_rayleigh.to_f.round(user_number_precision),
+                                                   disabled: true } %>
       </div>
 
     </div>
@@ -146,7 +151,7 @@
                   <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% trapeze_staffing_theorique += rounded_value %>
-                    <td><%= convert_with_precision(rounded_value, user_number_precision) %></td>
+                    <td><%= convert_with_precision(rounded_value, user_number_precision, true) %></td>
                   <% end %>
                 </tr>
 
@@ -156,7 +161,7 @@
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% staffing_actuel += rounded_value %>
                     <td>
-                      <%= text_field_tag "actuals[#{coord}]", convert_with_precision(rounded_value, user_number_precision), class: "input-mini" %>
+                      <%= text_field_tag "actuals[#{coord}]", convert_with_precision(rounded_value, user_number_precision, true), class: "input-mini" %>
                     </td>
                   <% end %>
 
@@ -232,14 +237,12 @@
 <script>
 
 $('#optionsRadios1').click(function (e) {
-  $("#my_id3").attr('disabled', "disabled")
   $("#my_id2").attr('disabled', "disabled")
   $("#my_id1").removeAttr('disabled')
 })
 $('#optionsRadios2').click(function (e) {
   $("#my_id1").attr('disabled', "disabled")
   $("#my_id2").removeAttr('disabled')
-  $("#my_id3").removeAttr('disabled')
 })
 refresh_chart();
 
@@ -248,10 +251,6 @@ $('#myTab a').click(function (e) {
   $(this).tab('show');
   refresh_chart();
   $.cookie("lastTab", $(this).attr('href'))
-});
-
-$('.commonclass').on('blur', function(event){
-  $("#my_id3").val(this.value);
 });
 
 function refresh_chart() {

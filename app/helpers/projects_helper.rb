@@ -73,15 +73,15 @@ module ProjectsHelper
     unless v.class == Hash
       value = v.to_f
       if value < organization.limit1.to_i
-        convert_with_precision(value / organization.limit1_coef.to_f, user_number_precision)
+        convert_with_precision(value / organization.limit1_coef.to_f, user_number_precision, true)
       elsif value < organization.limit2.to_i
-        convert_with_precision(value / organization.limit2_coef.to_f, user_number_precision)
+        convert_with_precision(value / organization.limit2_coef.to_f, user_number_precision, true)
       elsif value < organization.limit3.to_i
-        convert_with_precision(value / organization.limit3_coef.to_f, user_number_precision)
+        convert_with_precision(value / organization.limit3_coef.to_f, user_number_precision, true)
       elsif value < organization.limit4.to_i
-        convert_with_precision(value / organization.limit4_coef.to_f, user_number_precision)
+        convert_with_precision(value / organization.limit4_coef.to_f, user_number_precision, true)
       else
-        convert_with_precision(value / organization.limit4_coef.to_f, user_number_precision)
+        convert_with_precision(value / organization.limit4_coef.to_f, user_number_precision, true)
       end
     else
       0
@@ -129,9 +129,9 @@ module ProjectsHelper
   end
 
   #Conversion en fonction de la précision en params uniquement #> 12.12300 (si precision = 5) ou 12.12 si (si precision = 2)
-  def convert_with_precision(value, precision)
+  def convert_with_precision(value, precision, delimiter = false)
     begin
-      v = number_with_precision(value, precision: precision, locale: :fr, delimiter: ' ')
+      v = number_with_precision(value, precision: precision, locale: :fr, delimiter: delimiter ? ' ' : '')
     rescue
       begin
         v = "%.#{precision}f" % value
@@ -960,21 +960,21 @@ module ProjectsHelper
     est_val_pe_attribute = est_val.pe_attribute
     precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
     if est_val_pe_attribute.alias == "retained_size" || est_val_pe_attribute.alias == "theorical_size"
-      "#{convert_with_precision(value.to_f, precision)} #{module_project.size}"
+      "#{convert_with_precision(value.to_f, precision, true)} #{module_project.size}"
     elsif est_val_pe_attribute.alias == "effort"
-      "#{convert_with_precision(convert(value, @project.organization), precision)} #{convert_label(value, @project.organization)}"
+      "#{convert_with_precision(convert(value, @project.organization), precision, true)} #{convert_label(value, @project.organization)}"
     elsif est_val_pe_attribute.alias == "staffing" || est_val_pe_attribute.alias == "duration"
-      "#{convert_with_precision(value, precision)}"
+      "#{convert_with_precision(value, precision, true)}"
     elsif est_val_pe_attribute.alias == "cost"
       unless value.class == Hash
-        "#{convert_with_precision(value, 2)} #{get_attribute_unit(est_val_pe_attribute)}"
+        "#{convert_with_precision(value, 2, true)} #{get_attribute_unit(est_val_pe_attribute)}"
       end
     else
       case est_val_pe_attribute
         when 'date'
           display_date(value)
         when 'float'
-          "#{ convert_with_precision(convert(value, @project.organization), precision) } #{convert_label(value, @project.organization)}"
+          "#{ convert_with_precision(convert(value, @project.organization), precision, true) } #{convert_label(value, @project.organization)}"
         when 'integer'
           "#{convert(value, @project.organization).round(precision)} #{convert_label(value, @project.organization)}"
         else

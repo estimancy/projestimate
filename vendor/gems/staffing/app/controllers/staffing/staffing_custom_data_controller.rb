@@ -127,14 +127,14 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
     if @staffing_custom_data.update_attributes(params[:staffing_custom_datum])
 
+      @staffing_custom_data.global_effort_value = params[:staffing_custom_datum]['global_effort_value']
       @staffing_custom_data.staffing_constraint = params[:option_radios]
       @staffing_custom_data.trapeze_parameter_values = @staffing_model.trapeze_default_values
       @staffing_custom_data.save
 
       constraint = @staffing_custom_data.staffing_constraint
 
-      effort = @staffing_custom_data.global_effort_value.to_f * @staffing_model.standard_unit_coefficient.to_f / (@staffing_model.effort_week_unit.nil? ? 1 : @staffing_model.effort_week_unit)
-
+      effort = @staffing_custom_data.global_effort_value.to_f * @staffing_model.standard_unit_coefficient.to_f / (@staffing_model.effort_week_unit.nil? ? 1 : @staffing_model.effort_week_unit.to_f)
 
       # =====================================================================================================================================
       # Trapeze
@@ -159,7 +159,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
         @duration = @staffing_custom_data.duration
 
-        @staffing_trapeze = 2 * (effort / @duration) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
+        @staffing_trapeze = 2 * (effort / (@duration.nil? ? 1 : @duration)) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
 
         @staffing_custom_data.max_staffing = @staffing_trapeze
       end
@@ -220,15 +220,9 @@ class Staffing::StaffingCustomDataController < ApplicationController
       @staffing_custom_data.trapeze_chart_theoretical_coordinates = trapeze_theorical_staffing_values
       @staffing_custom_data.save
 
-
-
-
-
       # Calcul du Staffing f(x) pour la duree indiquee : intervalle de temps par defaut = 1 semaine
       rayleigh_chart_theoretical_coordinates = []
       mcdonnell_chart_theorical_coordinates = []
-
-
 
 
       # =====================================================================================================================================
@@ -237,38 +231,21 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       @staffing_rayleigh = @staffing_custom_data.max_staffing_rayleigh
 
-      if constraint == "max_staffing_constraint"
-        # coefficient de forme : a
-        form_coef = (@staffing_rayleigh*@staffing_rayleigh) * (Math.exp(1) / (2*effort*effort))
-        @staffing_custom_data.form_coef = form_coef
+      # coefficient de forme : a
+      form_coef = -Math.log(1-0.97) / (@duration * @duration)
+      @staffing_custom_data.form_coef = form_coef
 
-        # coefficient de difficulté
-        difficulty_coef = 2*effort*form_coef
-        @staffing_custom_data.difficulty_coef = difficulty_coef
+      # coefficient de difficulté
+      difficulty_coef = 2*effort*form_coef
+      @staffing_custom_data.difficulty_coef = difficulty_coef
 
-        # numero de la semaine au Pic de Staffing
-        t_max_staffing = Math.sqrt(1/(2*form_coef))
-        @staffing_custom_data.t_max_staffing = t_max_staffing
+      # numero de la semaine au Pic de Staffing
+      t_max_staffing = Math.sqrt(1/(2*form_coef))
+      @staffing_custom_data.t_max_staffing = t_max_staffing
 
-        # Contrainte de Durée
-      elsif constraint == "duration_constraint"
-
-        # coefficient de forme : a
-        form_coef = -Math.log(1-0.97) / (@duration * @duration)
-        @staffing_custom_data.form_coef = form_coef
-
-        # coefficient de difficulté
-        difficulty_coef = 2*effort*form_coef
-        @staffing_custom_data.difficulty_coef = difficulty_coef
-
-        # numero de la semaine au Pic de Staffing
-        t_max_staffing = Math.sqrt(1/(2*form_coef))
-        @staffing_custom_data.t_max_staffing = t_max_staffing
-
-        # MAx Staffing
-        max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
-        @staffing_custom_data.max_staffing_rayleigh = max_staffing
-      end
+      # MAx Staffing
+      max_staffing = effort / (t_max_staffing * Math.sqrt(Math.exp(1)))
+      @staffing_custom_data.max_staffing_rayleigh = max_staffing
 
       for t in 0..@duration
         # E(t) = 2 * K * a * t * e(-a*t*t)

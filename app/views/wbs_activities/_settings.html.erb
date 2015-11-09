@@ -22,21 +22,21 @@
 <% coeff = current_module_project.wbs_activity.effort_unit_coefficient.nil? ? 1 : current_module_project.wbs_activity.effort_unit_coefficient %>
 
 <% if cev.string_data_low[component_id].blank? %>
-  <% v_low = pev.nil? ? nil : convert_with_precision(pev.string_data_low[component_id].to_i / coeff, user_number_precision) %>
+  <% v_low = pev.nil? ? nil : (pev.string_data_low[component_id].to_i / coeff).round(user_number_precision) %>
 <% else %>
-  <% v_low = cev.nil? ? nil : convert_with_precision(cev.string_data_low[component_id].to_i / coeff, user_number_precision) %>
+  <% v_low = cev.nil? ? nil : (cev.string_data_low[component_id].to_i / coeff).round(user_number_precision) %>
 <% end %>
 
 <% if cev.string_data_most_likely[component_id].blank? %>
-  <% v_ml = pev.nil? ? nil : convert_with_precision(pev.string_data_most_likely[component_id].to_i / coeff, user_number_precision) %>
+  <% v_ml = pev.nil? ? nil : (pev.string_data_most_likely[component_id].to_i / coeff).round(user_number_precision) %>
 <% else %>
-  <% v_ml = cev.nil? ? nil : convert_with_precision(cev.string_data_most_likely[component_id].to_i / coeff, user_number_precision) %>
+  <% v_ml = cev.nil? ? nil : (cev.string_data_most_likely[component_id].to_i / coeff).round(user_number_precision) %>
 <% end %>
 
 <% if cev.string_data_low[component_id].blank? %>
-  <% v_high = pev.nil? ? nil : convert_with_precision(pev.string_data_high[component_id].to_i / coeff, user_number_precision) %>
+  <% v_high = pev.nil? ? nil : (pev.string_data_high[component_id].to_i / coeff).round(user_number_precision) %>
 <% else %>
-  <% v_high = cev.nil? ? nil : convert_with_precision(cev.string_data_high[component_id].to_i / coeff, user_number_precision) %>
+  <% v_high = cev.nil? ? nil : (cev.string_data_high[component_id].to_i / coeff).round(user_number_precision) %>
 <% end %>
 
 <%= form_tag save_effort_breakdown_path do %>
@@ -64,13 +64,13 @@
     <tr>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
-        <td><%= text_field_tag "values[low]", v_low, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
+        <td><%= number_field_tag "values[low]", v_low, step: "any", readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% end %>
 
-      <td><%= text_field_tag "values[most_likely]", v_ml, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
+      <td><%= number_field_tag "values[most_likely]", v_ml, step: "any", readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
-        <td><%= text_field_tag "values[high]", v_high, readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
+        <td><%= number_field_tag "values[high]", v_high, step: "any", readonly: (!current_module_project.wbs_activity.enabled_input || cannot?(:alter_estimation_plan, @project)) %></td>
       <% end %>
 
       <td>
@@ -80,7 +80,7 @@
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <td>
           <% begin %>
-            <%= convert_with_precision(cev_output.string_data_low[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff, user_number_precision) %>
+            <%= convert_with_precision(cev_output.string_data_low[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff, user_number_precision, true) %>
           <% rescue %>
             -
           <% end %>
@@ -89,7 +89,7 @@
 
       <td>
         <% begin %>
-          <%= convert_with_precision(cev_output.string_data_most_likely[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff, user_number_precision) %>
+          <%= convert_with_precision(cev_output.string_data_most_likely[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff, user_number_precision, true) %>
         <% rescue %>
           -
         <% end %>
@@ -98,7 +98,7 @@
       <% if current_module_project.wbs_activity.three_points_estimation? %>
         <td>
           <% begin %>
-            <%= convert_with_precision(cev_output.string_data_high[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff, user_number_precision) %>
+            <%= convert_with_precision(cev_output.string_data_high[component_id][current_module_project.wbs_activity.root_element.id].to_f / coeff, user_number_precision, true) %>
           <% rescue %>
             -
           <% end %>
@@ -107,7 +107,7 @@
 
 
       <td>
-        <%= convert_with_precision(ratio_output.string_data_probable[component_id], user_number_precision) %>
+        <%= convert_with_precision(ratio_output.string_data_probable[component_id], user_number_precision, true) %>
       </td>
 
       <td>

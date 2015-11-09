@@ -100,9 +100,9 @@
                                                        :in_out => "input").first %>
 
             <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, level, current_component.id) %>
-            <%= text_field_tag "size", @size,
+            <%= number_field_tag "size", @size,
                                class: "string required input-xlarge",
-                               readonly: !@kb_model.enabled_input %>
+                               readonly: !@kb_model.enabled_input, step: "any" %>
 
             <h5>
               <strong>
@@ -116,10 +116,10 @@
             <% @effort = effort_current_ev.send("string_data_#{level}")[current_component.id].to_f / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient) %>
 
             <span id="effort_label">
-              <%= text_field_tag "effort",
-                                 @effort.nil? ? '' : (@effort.round(2)),
+              <%= number_field_tag "effort",
+                                 @effort.nil? ? '' : (@effort.round(user_number_precision)),
                                  class: "string required input-xlarge",
-                                 readonly: true %>
+                                 readonly: true, step: "any" %>
             </span>
           <% end %>
 
