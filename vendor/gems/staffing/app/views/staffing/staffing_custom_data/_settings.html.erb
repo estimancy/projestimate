@@ -52,7 +52,7 @@
         <%= f.input :global_effort_value,
                     label: "Effort (#{@staffing_model.effort_unit})",
                     input_html: { :class => 'input-medium',
-                                  value: convert_with_precision(effort, user_number_precision) },
+                                  value: effort.round(user_number_precision) },
                     readonly: !@staffing_model.enabled_input %>
       </div>
 
