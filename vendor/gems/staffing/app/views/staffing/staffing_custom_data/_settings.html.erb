@@ -58,7 +58,7 @@
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? 'checked' : '' %>>
+          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? '' : 'checked' %>>
           <label>
             <%= I18n.t(:duration_in_week) %>
           </label>
@@ -72,7 +72,7 @@
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
+          <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= (@staffing_custom_data.staffing_constraint == "max_staffing_constraint" || @staffing_custom_data.duration.nil?) ? '' : 'checked' %>>
           <label>Staffing maximum (Trapèze)</label>
           <%= f.input :max_staffing,
                       label: false,
