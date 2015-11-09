@@ -49,11 +49,16 @@
 
 
       <div class="span2">
-        <%= f.input :global_effort_value,
-                    label: "Effort (#{@staffing_model.effort_unit})",
-                    input_html: { :class => 'input-medium',
-                                  value: effort.round(user_number_precision) },
-                    readonly: !@staffing_model.enabled_input %>
+        <% unless @staffing_model.enabled_input %>
+          <%= hidden_field_tag "staffing_custom_datum[global_effort_value]", effort %>
+          <label>Effort (<%= @staffing_model.effort_unit %>)</label>
+          <%= text_field_tag "", convert_with_precision(effort, user_number_precision), class: 'input-medium', disabled: true %>
+        <% else %>
+          <%= f.input :global_effort_value,
+                      label: "Effort (#{@staffing_model.effort_unit})",
+                      input_html: { :class => 'input-medium',
+                                    value: effort } %>
+        <% end %>
       </div>
 
       <div class="span2">

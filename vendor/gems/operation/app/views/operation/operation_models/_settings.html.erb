@@ -8,6 +8,7 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
 
       <% effort = PeAttribute.find_by_alias("effort") %>
       <% @elements = Hash.new %>
+      <% val = 0 %>
 
       <table class="table">
         <tr>
@@ -47,7 +48,12 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
               <% res = @elements.values.sum / @elements.values.size %>
             <% end %>
             <% ["low", "most_likely", "high"].each do |level| %>
-              <%= text_field_tag "effort_#{level}", res.round(2), class: "input-small", readonly: (!@operation_model.enabled_input || cannot?(:alter_estimation_plan, @project))  %>
+              <% unless (!@operation_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
+                <%= hidden_field_tag "effort_#{level}", res, class: "input-small" %>
+                <%= text_field_tag "effort_#{level}", convert_with_precision(res, user_number_precision), class: "input-small" %>
+              <% else %>
+                <%= text_field_tag "effort_#{level}", res, class: "input-small" %>
+              <% end %>
             <% end %>
           </td>
         </tr>
