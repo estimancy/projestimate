@@ -132,7 +132,7 @@
               Mettre à jour
             </button>
           <% end %>
-          <%= link_to "Exporter nuage de point", kb.kb_model_dot_export_path(@kb_model), :class => "btn btn-default btn-mini pull-right" , :method => "post" %>
+          <%= link_to I18n.t(:export), kb.kb_model_dot_export_path(@kb_model), :class => "btn btn-default btn-mini button_margin_right pull-right" , :method => "post" %>
         </div>
 
       </div>

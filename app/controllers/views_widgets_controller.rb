@@ -166,13 +166,17 @@ class ViewsWidgetsController < ApplicationController
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
-    project = @views_widget.estimation_value.module_project.project unless @views_widget.is_label_widget?
+    if @views_widget.is_label_widget?
+      project = @project
+    else
+      project = @views_widget.estimation_value.module_project.project
+    end
 
     if params["field"].blank?
       pfs = @views_widget.project_fields
       pfs.destroy_all
     else
-      pf = ProjectField.where(field_id: params["field"], project_id: project.id).last
+      pf = ProjectField.where(views_widget_id: @views_widget.id).last
 
       if @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
         begin
@@ -189,7 +193,7 @@ class ViewsWidgetsController < ApplicationController
       end
 
       if pf.nil?
-        ProjectField.create(project_id: project.id, field_id: params["field"], views_widget_id: @views_widget.id, value: @value)
+          ProjectField.create(project_id: project.id, field_id: params["field"].to_i, views_widget_id: @views_widget.id, value: @value)
       else
         pf.value = @value
         pf.views_widget_id = @views_widget.id

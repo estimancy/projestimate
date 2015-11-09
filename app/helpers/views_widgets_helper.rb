@@ -505,7 +505,7 @@ module ViewsWidgetsHelper
             if estimation_value.pe_attribute.alias == "effort"
               chart_data << ["#{wbs_activity_elt.name}", convert(wbs_value, @current_organization)]
             else
-              chart_data << ["#{wbs_activity_elt.name}", wbs_value.round(user_number_precision)]
+              chart_data << ["#{wbs_activity_elt.name}", convert_with_precision(wbs_value, user_number_precision)]
             end
           end
         end
