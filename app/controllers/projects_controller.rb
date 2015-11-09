@@ -322,7 +322,7 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    full_control_security_level = ProjectSecurityLevel.where(name: 'FullControl', organization_id: @organization.id).first_or_create(name: 'FullControl', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+    full_control_security_level = ProjectSecurityLevel.where(name: '*ALL', organization_id: @organization.id).first_or_create(name: '*ALL', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
     manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
     # Add the "manage project" authorization to the "FullControl" security level
     if manage_project_permission
@@ -332,7 +332,11 @@ class ProjectsController < ApplicationController
     end
 
     current_user_ps = @project.project_securities.build
-    current_user_ps.user = current_user
+    if params[:project][:creator_id].nil?
+      current_user_ps.user_id = current_user.id
+    else
+      current_user_ps.user_id = params[:project][:creator_id].to_i
+    end
     current_user_ps.project_security_level = full_control_security_level
     current_user_ps.save
 

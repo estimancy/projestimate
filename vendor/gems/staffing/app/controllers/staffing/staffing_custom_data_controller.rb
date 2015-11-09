@@ -133,8 +133,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       constraint = @staffing_custom_data.staffing_constraint
 
-      effort = @staffing_custom_data.global_effort_value * @staffing_model.standard_unit_coefficient / @staffing_model.effort_week_unit
-
+      effort = @staffing_custom_data.global_effort_value.to_f * @staffing_model.standard_unit_coefficient.to_f / (@staffing_model.effort_week_unit.nil? ? 1 : @staffing_model.effort_week_unit)
 
 
       # =====================================================================================================================================

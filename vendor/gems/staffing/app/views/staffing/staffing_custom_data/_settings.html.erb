@@ -40,7 +40,7 @@
      effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.v.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
 
-   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
+   @md_duration = @staffing_model.mc_donell_coef.to_f * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
  end
 %>
 
@@ -50,9 +50,10 @@
 
       <div class="span2">
         <%= f.input :global_effort_value,
+                    as: :string,
                     label: "Effort (#{@staffing_model.effort_unit})",
-                    input_html: { :class => 'input-medium', value: effort == 0 ? '' : convert_with_precision(effort, user_number_precision) },
-                    readonly: @staffing_model.enabled_input %>
+                    input_html: { :class => 'input-medium', value: convert_with_precision(effort, user_number_precision) },
+                    readonly: !@staffing_model.enabled_input %>
       </div>
 
       <div class="span2">
@@ -61,7 +62,9 @@
           <label>
             <%= I18n.t(:duration_in_week) %>
           </label>
-          <%= f.input :duration, label: false, :input_html => { :class => 'input-medium', :id => "my_id1", value: @staffing_custom_data.duration.nil? ? convert_with_precision(@md_duration, user_number_precision) : @staffing_custom_data.duration } %>
+          <%= f.input :duration,
+                      as: :string,
+                      label: false, :input_html => { :class => 'input-medium', :id => "my_id1", value: @staffing_custom_data.duration.nil? ? convert_with_precision(@md_duration, user_number_precision) : convert_with_precision(@staffing_custom_data.duration, user_number_precision) } %>
         </label>
 
       </div>
@@ -70,13 +73,18 @@
         <label class="radio">
           <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
           <label>Staffing maximum (Trapèze)</label>
-          <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium commonclass', :id => "my_id2", disabled: true, value: convert_with_precision(@staffing_custom_data.max_staffing.to_f, user_number_precision) } %>
+          <%= f.input :max_staffing,
+                      as: :string,
+                      label: false,
+                      :input_html => { :class => 'input-medium commonclass', :id => "my_id2", disabled: true, value: convert_with_precision(@staffing_custom_data.max_staffing.to_f, user_number_precision) } %>
         </label>
       </div>
 
       <div class="span2">
         <label>Staffing maximum (Rayleigh)</label>
-        <%= f.input :max_staffing_rayleigh, label: false, :input_html => { :class => 'input-medium commonclass', :id => "my_id3", disabled: true, value: convert_with_precision(@staffing_custom_data.max_staffing_rayleigh, user_number_precision) } %>
+        <%= f.input :max_staffing_rayleigh,
+                    as: :string,
+                    label: false, :input_html => { :class => 'input-medium commonclass', :id => "my_id3", disabled: true, value: convert_with_precision(@staffing_custom_data.max_staffing_rayleigh, user_number_precision) } %>
       </div>
 
     </div>
@@ -242,9 +250,8 @@ $('#myTab a').click(function (e) {
   $.cookie("lastTab", $(this).attr('href'))
 });
 
-$('.commonclass').keypress(function(event){
-//  $(this.id)event.keyCode);
-//  alert("id: " + this.id);
+$('.commonclass').on('blur', function(event){
+  $("#my_id3").val(this.value);
 });
 
 function refresh_chart() {
