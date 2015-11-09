@@ -334,6 +334,7 @@ class ProjectsController < ApplicationController
     current_user_ps = @project.project_securities.build
     current_user_ps.user = current_user
     current_user_ps.project_security_level = full_control_security_level
+    current_user_ps.save
 
     @project.is_locked = false
 
