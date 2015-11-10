@@ -616,13 +616,15 @@ class ProjectsController < ApplicationController
       #Get the project Organization before update
       project_organization = @project.organization
 
-      # Before saving project, update the project comment when the status has changed
-      if params[:project][:estimation_status_id]
-        new_status_id = params[:project][:estimation_status_id].to_i
-        if @project.estimation_status_id != new_status_id
-          new_comments = auto_update_status_comment(params[:id], new_status_id)
-          new_comments << "#{@project.status_comment} \r\n"
-          @project.status_comment = new_comments
+      if params[:project].present?
+        # Before saving project, update the project comment when the status has changed
+        if params[:project][:estimation_status_id]
+          new_status_id = params[:project][:estimation_status_id].to_i
+          if @project.estimation_status_id != new_status_id
+            new_comments = auto_update_status_comment(params[:id], new_status_id)
+            new_comments << "#{@project.status_comment} \r\n"
+            @project.status_comment = new_comments
+          end
         end
       end
 
