@@ -1,11 +1,11 @@
-<h3>
+<h3 id="kb">
   <strong>
     <%= @kb_model %>
   </strong>
   <hr>
 </h3>
 
-<%= form_tag kb.kb_model_save_efforts_path(@kb_model), remote: true, method: "post" do %>
+<%= form_tag kb.kb_model_save_efforts_path(@kb_model), method: "post" do %>
   <div class="row-fluid">
     <div class="span12">
       <div class="row-fluid">
