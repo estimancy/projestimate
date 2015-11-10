@@ -1,5 +1,8 @@
 $("#formula").html("<%= @kb_input.formula %>")
-$("#effort").val("<%= @effort.round(2) %>")
+
+$("#effort").val("<%= @effort %>")
+$(".effort").val("<%= convert_with_precision(@effort, user_number_precision) %>")
+
 $(".project_numbers").html("<%= @kb_input.values.size %>")
 
 $(function () {

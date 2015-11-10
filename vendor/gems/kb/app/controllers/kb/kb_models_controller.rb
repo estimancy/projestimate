@@ -311,6 +311,8 @@ class Kb::KbModelsController < ApplicationController
     eff = effort_current_ev.send("string_data_probable")[current_component.id].to_f
     @effort = eff.to_f / @kb_model.standard_unit_coefficient.to_i
 
+    redirect_to main_app.dashboard_path(@project, anchor: "kb")
+
   end
 
   def dot_export
