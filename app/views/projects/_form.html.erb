@@ -64,13 +64,15 @@
 
         </tr>
         <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
-            <tr><td>
+          <tr>
+            <td>
               <% if can_show_estimation?(@project.original_model) %>
                 <span><%= I18n.t(:original_model) %> : <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br></span>
               <% else %>
                 <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
               <% end %>
-            </td></tr>
+            </td>
+          </tr>
         <% end %>
       </table>
 

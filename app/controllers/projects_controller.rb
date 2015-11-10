@@ -322,7 +322,7 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    full_control_security_level = ProjectSecurityLevel.where(name: 'FullControl', organization_id: @organization.id).first_or_create(name: 'FullControl', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+    full_control_security_level = ProjectSecurityLevel.where(name: '*ALL', organization_id: @organization.id).first_or_create(name: '*ALL', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
     manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
     # Add the "manage project" authorization to the "FullControl" security level
     if manage_project_permission
@@ -332,8 +332,14 @@ class ProjectsController < ApplicationController
     end
 
     current_user_ps = @project.project_securities.build
-    current_user_ps.user = current_user
+    if params[:project][:creator_id].blank?
+      current_user_ps.user_id = current_user.id
+    else
+      current_user_ps.user_id = params[:project][:creator_id].to_i
+    end
     current_user_ps.project_security_level = full_control_security_level
+    current_user_ps.is_model_permission = false
+    current_user_ps.save
 
     @project.is_locked = false
 
@@ -474,7 +480,7 @@ class ProjectsController < ApplicationController
     @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title,i.id]}
+    @modules_selected = ([@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title,i.id]}
 
     project_root = @project.root
     project_tree = project_root.subtree

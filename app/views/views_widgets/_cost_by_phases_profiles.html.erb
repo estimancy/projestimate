@@ -42,9 +42,9 @@
                   <% end %>
 
                   <% if @wbs_activity.nil? %>
-                    <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)}" %>
+                    <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision, true)}" %>
                   <% else %>
-                    <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision)} #{@wbs_activity.cost_unit}" %>
+                    <%= (wbs_project_elt.is_root? || wbs_profiles_value.nil?) ? "-" : "#{convert_with_precision(wbs_profiles_value, user_number_precision, true)} #{@wbs_activity.cost_unit}" %>
                   <% end %>
 
                 </td>

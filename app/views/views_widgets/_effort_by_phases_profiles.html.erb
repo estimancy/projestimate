@@ -75,8 +75,8 @@
                             </td>
                           <% else %>
                             <td style="text-align: right">
-                              <% array_root[profile.id] << convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision) %>
-                              <%= convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision) %>
+                              <% array_root[profile.id] << convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision, true) %>
+                              <%= convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision, true) %>
                             </td>
                           <% end %>
                       <% end %>
@@ -96,7 +96,7 @@
                 </td>
                 <% project_organization_profiles.each do |profile| %>
                   <td style="text-align: right">
-                    <%= convert_with_precision(array_root[profile.id].map(&:to_f).sum.to_f.round(2), user_number_precision) %>
+                    <%= convert_with_precision(array_root[profile.id].map(&:to_f).sum.to_f.round(2), user_number_precision, true) %>
                   </td>
                 <% end %>
               <% end %>

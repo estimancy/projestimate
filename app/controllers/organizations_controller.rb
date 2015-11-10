@@ -86,7 +86,7 @@ class OrganizationsController < ApplicationController
           if pf.nil?
             array_value << ''
           else
-            array_value << (pf.value.to_f / field.coefficient.to_f).round(user_number_precision)
+            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision, true)
           end
         end
 
@@ -105,7 +105,7 @@ class OrganizationsController < ApplicationController
           if pf.nil?
             array_value << ''
           else
-            array_value << (pf.value.to_f / field.coefficient.to_f).round(user_number_precision)
+            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision, true)
           end
         end
 

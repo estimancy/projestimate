@@ -100,9 +100,14 @@
                                                        :in_out => "input").first %>
 
             <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, level, current_component.id) %>
-            <%= text_field_tag "size", @size,
-                               class: "string required input-xlarge",
-                               readonly: !@kb_model.enabled_input %>
+            <% unless @kb_model.enabled_input %>
+              <%= hidden_field_tag "size", @size %>
+              <%= text_field_tag "", convert_with_precision(@size, user_number_precision, true),
+                                 class: "string required input-xlarge",
+                                 disabled: true %>
+            <% else %>
+              <%= number_field_tag "size", @size, class: "string required input-xlarge", step: "any" %>
+            <% end %>
 
             <h5>
               <strong>
@@ -115,12 +120,18 @@
                                                          :in_out => "output").first %>
             <% @effort = effort_current_ev.send("string_data_#{level}")[current_component.id].to_f / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient) %>
 
-            <span id="effort_label">
-              <%= text_field_tag "effort",
-                                 @effort.nil? ? '' : (@effort.round(2)),
-                                 class: "string required input-xlarge",
-                                 readonly: true %>
-            </span>
+            <% unless @kb_model.enabled_input %>
+              <span id="effort_label">
+                <%= hidden_field_tag "effort", @effort %>
+                <%= text_field_tag "", convert_with_precision(@effort, user_number_precision, true),
+                                     class: "string required input-xlarge",
+                                     disabled: true %>
+              </span>
+            <% else %>
+              <%= number_field_tag "effort",
+                                   @effort.nil? ? '' : @effort,
+                                   class: "string required input-xlarge", step: "any" %>
+            <% end %>
           <% end %>
 
         </div>
@@ -132,7 +143,7 @@
               Mettre à jour
             </button>
           <% end %>
-          <%= link_to "Exporter nuage de point", kb.kb_model_dot_export_path(@kb_model), :class => "btn btn-default btn-mini pull-right" , :method => "post" %>
+          <%= link_to I18n.t(:export), kb.kb_model_dot_export_path(@kb_model), :class => "btn btn-default btn-mini button_margin_right pull-right" , :method => "post" %>
         </div>
 
       </div>

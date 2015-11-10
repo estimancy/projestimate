@@ -40,7 +40,7 @@
      effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.v.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
 
-   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
+   @md_duration = @staffing_model.mc_donell_coef.to_f * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
  end
 %>
 
@@ -49,34 +49,52 @@
 
 
       <div class="span2">
-        <%= f.input :global_effort_value,
-                    label: "Effort (#{@staffing_model.effort_unit})",
-                    input_html: { :class => 'input-medium', value: effort == 0 ? '' : effort.round(user_number_precision) },
-                    readonly: @staffing_model.enabled_input %>
+        <% unless @staffing_model.enabled_input %>
+          <%= hidden_field_tag "staffing_custom_datum[global_effort_value]", effort %>
+          <label>Effort (<%= @staffing_model.effort_unit %>)</label>
+          <%= text_field_tag "", convert_with_precision(effort, user_number_precision), class: 'input-medium', disabled: true %>
+        <% else %>
+          <%= f.input :global_effort_value,
+                      label: "Effort (#{@staffing_model.effort_unit})",
+                      input_html: { :class => 'input-medium',
+                                    value: effort } %>
+        <% end %>
       </div>
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? 'checked' : '' %>>
+          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? '' : 'checked' %>>
           <label>
             <%= I18n.t(:duration_in_week) %>
           </label>
-          <%= f.input :duration, label: false, :input_html => { :class => 'input-medium', :id => "my_id1", value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration } %>
+          <%= f.input :duration,
+                      label: false, :input_html => { class: 'input-medium',
+                                                     id: "my_id1",
+                                                     value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration.round(user_number_precision) } %>
         </label>
 
       </div>
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= @staffing_custom_data.staffing_constraint == "max_staffing_constraint" ? 'checked' : '' %>>
+          <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= (@staffing_custom_data.staffing_constraint == "max_staffing_constraint" || @staffing_custom_data.duration.nil?) ? '' : 'checked' %>>
           <label>Staffing maximum (Trapèze)</label>
-          <%= f.input :max_staffing, label: false, :input_html => { :class => 'input-medium commonclass', :id => "my_id2", disabled: true, value: @staffing_custom_data.max_staffing.to_f.round(user_number_precision) } %>
+          <%= f.input :max_staffing,
+                      label: false,
+                      :input_html => { class: 'input-medium commonclass',
+                                       id: "my_id2",
+                                       value: @staffing_custom_data.max_staffing.to_f.round(user_number_precision),
+                                       disabled: true } %>
         </label>
       </div>
 
       <div class="span2">
         <label>Staffing maximum (Rayleigh)</label>
-        <%= f.input :max_staffing_rayleigh, label: false, :input_html => { :class => 'input-medium commonclass', :id => "my_id3", disabled: true, value: @staffing_custom_data.max_staffing_rayleigh.to_f.round(user_number_precision) } %>
+        <%= f.input :max_staffing_rayleigh,
+                    label: false, :input_html => { class: 'input-medium commonclass',
+                                                   id: "my_id3",
+                                                   value: @staffing_custom_data.max_staffing_rayleigh.to_f.round(user_number_precision),
+                                                   disabled: true } %>
       </div>
 
     </div>
@@ -138,7 +156,7 @@
                   <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% trapeze_staffing_theorique += rounded_value %>
-                    <td><%= rounded_value %></td>
+                    <td><%= convert_with_precision(rounded_value, user_number_precision, true) %></td>
                   <% end %>
                 </tr>
 
@@ -148,7 +166,7 @@
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% staffing_actuel += rounded_value %>
                     <td>
-                      <%= text_field_tag "actuals[#{coord}]", rounded_value, class: "input-mini" %>
+                      <%= text_field_tag "actuals[#{coord}]", convert_with_precision(rounded_value, user_number_precision, true), class: "input-mini" %>
                     </td>
                   <% end %>
 
@@ -224,14 +242,12 @@
 <script>
 
 $('#optionsRadios1').click(function (e) {
-  $("#my_id3").attr('disabled', "disabled")
   $("#my_id2").attr('disabled', "disabled")
   $("#my_id1").removeAttr('disabled')
 })
 $('#optionsRadios2').click(function (e) {
   $("#my_id1").attr('disabled', "disabled")
   $("#my_id2").removeAttr('disabled')
-  $("#my_id3").removeAttr('disabled')
 })
 refresh_chart();
 
@@ -240,11 +256,6 @@ $('#myTab a').click(function (e) {
   $(this).tab('show');
   refresh_chart();
   $.cookie("lastTab", $(this).attr('href'))
-});
-
-$('.commonclass').keypress(function(event){
-//  $(this.id)event.keyCode);
-//  alert("id: " + this.id);
 });
 
 function refresh_chart() {

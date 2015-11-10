@@ -505,7 +505,7 @@ module ViewsWidgetsHelper
             if estimation_value.pe_attribute.alias == "effort"
               chart_data << ["#{wbs_activity_elt.name}", convert(wbs_value, @current_organization)]
             else
-              chart_data << ["#{wbs_activity_elt.name}", wbs_value.round(user_number_precision)]
+              chart_data << ["#{wbs_activity_elt.name}", convert_with_precision(wbs_value, user_number_precision, true)]
             end
           end
         end
@@ -610,20 +610,20 @@ module ViewsWidgetsHelper
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], user_number_precision)} €"
+                res << "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], user_number_precision, true)} €"
               end
             else
-              res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), user_number_precision)} #{@wbs_unit}"
+              res << "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), user_number_precision, true)} #{@wbs_unit}"
             end
           rescue
             if estimation_value.pe_attribute.alias == "cost"
               if pbs_estimation_values.nil?
                 res << "-"
               else
-                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], user_number_precision) } €"
+                res << "#{ convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], user_number_precision, true) } €"
               end
             else
-              res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), user_number_precision) } #{@wbs_unit}" unless pbs_estimation_values.nil?
+              res << "#{ convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), user_number_precision, true) } #{@wbs_unit}" unless pbs_estimation_values.nil?
             end
           end
 
