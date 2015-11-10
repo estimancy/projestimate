@@ -71,7 +71,7 @@
                       label: false, :input_html => { class: 'input-medium',
                                                      id: "my_id1",
                                                      value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration.round(user_number_precision),
-                                                     disabled: !(@staffing_custom_data.staffing_constraint == "duration_constraint") } %>
+                                                     disabled: !(@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.staffing_constraint.nil? ) } %>
         </label>
 
       </div>
