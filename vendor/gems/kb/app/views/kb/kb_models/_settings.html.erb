@@ -124,7 +124,7 @@
               <span id="effort_label">
                 <%= hidden_field_tag "effort", @effort %>
                 <%= text_field_tag "", convert_with_precision(@effort, user_number_precision, true),
-                                     class: "string required input-xlarge",
+                                     class: "string required input-xlarge effort",
                                      disabled: true %>
               </span>
             <% else %>
@@ -150,8 +150,6 @@
     </div>
   </div>
 <% end %>
-
-<% @kb_model.kb_datas.map(&:custom_attributes).first.keys %>
 
 <script>
   $(document).ready(function(){

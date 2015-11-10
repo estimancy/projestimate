@@ -63,28 +63,29 @@
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.duration.nil? ) ? '' : 'checked' %>>
+          <input type="radio" name="option_radios" id="optionsRadios1" value="duration_constraint" <%= (@staffing_custom_data.staffing_constraint == "max_staffing_constraint" ) ? 'checked' : 'checked' %>>
           <label>
             <%= I18n.t(:duration_in_week) %>
           </label>
           <%= f.input :duration,
                       label: false, :input_html => { class: 'input-medium',
                                                      id: "my_id1",
-                                                     value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration.round(user_number_precision) } %>
+                                                     value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration.round(user_number_precision),
+                                                     disabled: !(@staffing_custom_data.staffing_constraint == "duration_constraint") } %>
         </label>
 
       </div>
 
       <div class="span2">
         <label class="radio">
-          <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= (@staffing_custom_data.staffing_constraint == "max_staffing_constraint" || @staffing_custom_data.duration.nil?) ? '' : 'checked' %>>
+          <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= (@staffing_custom_data.staffing_constraint == "duration_constraint"  || @staffing_custom_data.staffing_constraint.nil?) ? '' : 'checked' %>>
           <label>Staffing maximum (Trapèze)</label>
           <%= f.input :max_staffing,
                       label: false,
                       :input_html => { class: 'input-medium commonclass',
                                        id: "my_id2",
                                        value: @staffing_custom_data.max_staffing.to_f.round(user_number_precision),
-                                       disabled: true } %>
+                                       disabled: !(@staffing_custom_data.staffing_constraint == "max_staffing_constraint") } %>
         </label>
       </div>
 

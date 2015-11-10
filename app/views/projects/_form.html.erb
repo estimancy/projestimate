@@ -43,9 +43,13 @@
             <% else %>
 
               <% unless @project.original_model_id.nil? %>
-                <% apps = Project.find(@project.original_model_id).applications %>
+                <% begin %>
+                  <% apps = Project.find(@project.original_model_id).applications %>
+                <% rescue %>
+                  <% apps = [] %>
+                <% end %>
               <% else %>
-               <% apps = Array.new %>
+                <% apps = [] %>
               <% end %>
 
               <% if @current_organization.applications.empty? and apps.empty? %>
