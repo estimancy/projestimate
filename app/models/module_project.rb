@@ -31,7 +31,6 @@ class ModuleProject < ActiveRecord::Base
   belongs_to :ge_model, class_name: "Ge::GeModel"
   belongs_to :operation_model, class_name: "Operation::OperationModel"
   belongs_to :kb_model, class_name: "Kb::KbModel"
-  belongs_to :kb_input, class_name: "Kb::KbInput"
   belongs_to :staffing_model, class_name: "Staffing::StaffingModel"
   belongs_to :expert_judgement_instance, class_name: "ExpertJudgement::Instance"
   belongs_to :wbs_activity

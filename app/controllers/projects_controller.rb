@@ -537,10 +537,14 @@ class ProjectsController < ApplicationController
           @project.application_name = params[:project][:application_name]
         end
       else
-        if params[:project][:application_id].present?
-          @project.application_id = params[:project][:application_id]
-        else
-          @project.application_name = params[:project][:application_name]
+        begin
+          if params[:project][:application_id].present?
+            @project.application_id = params[:project][:application_id]
+          else
+            @project.application_name = params[:project][:application_name]
+          end
+        rescue
+
         end
       end
 
@@ -816,6 +820,8 @@ class ProjectsController < ApplicationController
   end
 
   def confirm_deletion
+    set_page_title I18n.t(:confirm_deletion)
+
     @project = Project.find(params[:project_id])
     authorize! :delete_project, @project
 

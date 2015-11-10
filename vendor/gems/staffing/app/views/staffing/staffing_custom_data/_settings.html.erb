@@ -71,7 +71,7 @@
                       label: false, :input_html => { class: 'input-medium',
                                                      id: "my_id1",
                                                      value: @staffing_custom_data.duration.nil? ? @md_duration.round(user_number_precision) : @staffing_custom_data.duration.round(user_number_precision),
-                                                     disabled: !(@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.staffing_constraint.nil? ) } %>
+                                                     disabled: !(@staffing_custom_data.staffing_constraint == "duration_constraint" || @staffing_custom_data.staffing_constraint.nil?) || !(can? :execute_estimation_plan, @project) } %>
         </label>
 
       </div>
@@ -85,7 +85,7 @@
                       :input_html => { class: 'input-medium commonclass',
                                        id: "my_id2",
                                        value: @staffing_custom_data.max_staffing.to_f.round(user_number_precision),
-                                       disabled: !(@staffing_custom_data.staffing_constraint == "max_staffing_constraint") } %>
+                                       disabled: !(@staffing_custom_data.staffing_constraint == "max_staffing_constraint") || !(can? :execute_estimation_plan, @project) } %>
         </label>
       </div>
 
@@ -100,14 +100,16 @@
 
     </div>
 
-    <button name="actuals_based_on[custom]" type="submit" class="btn btn-mini pull-right button_margin_right">
-      Lancer le calcul
-    </button>
+    <% if can? :execute_estimation_plan, @project %>
+      <button name="actuals_based_on[custom]" type="submit" class="btn btn-mini pull-right button_margin_right">
+        Lancer le calcul
+      </button>
 
 
-    <button name="actuals_based_on[mcdonell]" type="submit" class="btn btn-mini pull-right button_margin_right">
-      Réinitialiser le délai et le staffing
-    </button>
+      <button name="actuals_based_on[mcdonell]" type="submit" class="btn btn-mini pull-right button_margin_right">
+        Réinitialiser le délai et le staffing
+      </button>
+    <% end %>
 
     <%= link_to "Exporter", staffing.staffing_model_export_staffing_path(@staffing_custom_data), :method => 'post', :class=> "btn btn-mini pull-right button_margin_right"%>
 
@@ -185,7 +187,6 @@
               <button name="actuals_based_on[trapeze]" type="submit" class="btn btn-info btn-mini pull-right button_margin_right">
                 <%= I18n.t(:initialize_restraint) %>
               </button>
-
             <% end %>
           </div>
         </div>
