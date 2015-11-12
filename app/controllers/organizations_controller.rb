@@ -124,8 +124,11 @@ class OrganizationsController < ApplicationController
     worksheet.change_row_bold(0 , true)
 
     filename = "Data v2.0"
-    workbook.write("#{Rails.root}/public/#{filename}.xlsx")
-    redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
+
+    send_data(workbook.stream.string, filename: "#{filename}-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+
+    # workbook.write("#{Rails.root}/public/#{filename}.xlsx")
+    # redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
   end
 
   def report
