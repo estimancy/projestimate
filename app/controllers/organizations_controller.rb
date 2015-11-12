@@ -1034,6 +1034,30 @@ class OrganizationsController < ApplicationController
 
   def export
     @organization = Organization.find(params[:organization_id])
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+    first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Authentification de l\'utilisateur','Description', 'Langue', 'Groupes']
+    line = []
+
+    first_line.each_with_index do |name, index|
+      worksheet.add_cell(0, index, name)
+      worksheet[0][index].change_border(:bottom, 'thin')
+      worksheet[0][index].change_border(:right, 'thin')
+    end
+
+    @organization.users.each_with_index do |user, index_line|
+      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language] + user.groups.where(organization_id: @organization.id).map(&:name)
+      line.each_with_index do |my_case, index|
+        worksheet.add_cell(index_line + 1, index, my_case)
+        worksheet[index_line + 1][index].change_border(:bottom, 'thin')
+        worksheet[index_line + 1][index].change_border(:right, 'thin')
+        worksheet[index_line + 1][index].change_border(:top, 'thin')
+      end
+    end
+
+    send_data(workbook.stream.string, filename: "Users_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+=begin
+    @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
       csv << ['Prénom', 'Nom', 'Email', 'Login', 'Groupes']
       @organization.users.take(3).each do |user|
@@ -1041,13 +1065,75 @@ class OrganizationsController < ApplicationController
       end
     end
     send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=modele_import_utilisateurs.csv")
+=end
   end
 
   def import_user
+    workbook = RubyXL::Parser.parse(params[:file].path)
+    worksheet = workbook[0]
+    tab = worksheet.extract_data
+
+    tab.each_with_index do |line, index_line|
+
+      if index_line > 0
+        user = User.find_by_login_name(line[3])
+        if user.nil?
+          password = SecureRandom.hex(8)
+
+          if line[7]
+            langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+          else
+            langue = params[:language_id].to_i
+          end
+
+          if line[5]
+            auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
+          else
+            auth_method = AuthMethod.first.id
+          end
+
+          user = User.new(first_name: line[0],
+                       last_name: line[1],
+                       initials: line[2].nil? ? "#{line[0].first}#{line[1].first}" : line[2],
+                       email: line[3],
+                       login_name: line[4],
+                       id_connexion: line[4],
+                       description: line[6],
+                       super_admin: false,
+                       password: password,
+                       password_confirmation: password,
+                       language_id: langue,
+                       time_zone: "Paris",
+                       object_per_page: 50,
+                       auth_type: auth_method,
+                       number_precision: 2)
+          if auth_method == "SAML"
+            user.skip_confirmation!
+          end
+          user.save
+          toto = 42
+          OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
+          group_index = 7
+           while line[group_index]
+              group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
+              begin
+                GroupsUsers.create(group_id: group.id, user_id: u.id)
+              rescue
+                #rien
+              end
+             group_index += 1
+           end
+        end
+      end
+    end
+    redirect_to organization_users_path(@current_organization)
+
+=begin
     sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
     error_count = 0
     file = params[:file]
     encoding = params[:encoding]
+
     #begin
       CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:utf-8") do |csv|
         csv.each_with_index do |row, i|
@@ -1092,7 +1178,7 @@ class OrganizationsController < ApplicationController
     #rescue
     #  flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
     #end
-    redirect_to organization_users_path(@current_organization)
+=end
   end
 
   def set_technology_size_type_abacus
