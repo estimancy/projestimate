@@ -407,7 +407,7 @@ frsncf:
   email_attribute: "Courriel"
   initials_attribute: "Initiales"
   priority_order: "Priorité"
-  edit_auth_method: "Editer la  méthode d'autentification \"%{value}\" ..."
+  edit_auth_method: "Editer la  méthode d'authentification \"%{value}\" ..."
   new_auth_method: "Créer une nouvelle méthode d'authentification"
   encryption: "Méthode d'encryption"
 
@@ -1442,6 +1442,7 @@ frsncf:
   label_from_model_group_security_resume: "Gestion des droits des groupes de l'estimation créée à partir de ce modèle"
   estimation_creator_from_model: "Créateur de l'estimation qui sera créée à partir de ce model"
   text_create_from_model: "Créer une nouvelle estimation à partir du modèle \"%{model_name}\""
+  text_create_from_model_2: "Créer une nouvelle estimation à partir d'un modèle"
   model_securities: "Autorisations sur le modèle"
   securities_for_generated_project: "Autorisations de l'estimation créée à partir de ce modèle"
   update_password_first_connexion: "You must change your password during your first connection"

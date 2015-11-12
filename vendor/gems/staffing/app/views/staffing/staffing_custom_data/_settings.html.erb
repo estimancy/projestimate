@@ -105,7 +105,6 @@
         Lancer le calcul
       </button>
 
-
       <button name="actuals_based_on[mcdonell]" type="submit" class="btn btn-mini pull-right button_margin_right">
         Réinitialiser le délai et le staffing
       </button>
@@ -142,6 +141,7 @@
             <% rayleigh_theoretical_coordinates = @staffing_custom_data.rayleigh_chart_theoretical_coordinates %>
             <% actual_coordinates = @staffing_custom_data.chart_actual_coordinates %>
             <% trapeze_staffing_theorique = 0 %>
+            <% rayleigh_staffing_theorique = 0 %>
             <% staffing_actuel = 0 %>
 
             <% unless @staffing_custom_data.duration.nil? and @staffing_custom_data.rayleigh_duration.nil? %>
@@ -160,6 +160,15 @@
                     <% rounded_value = value.nil? ? 0 : value.round(1) %>
                     <% trapeze_staffing_theorique += rounded_value %>
                     <td><%= convert_with_precision(rounded_value, user_number_precision, true) %></td>
+                  <% end %>
+                </tr>
+
+                <tr>
+                  <td><%= I18n.t(:theoretical_rayleigh) %></td>
+                  <% rayleigh_theoretical_coordinates.each do |(coord,value)| %>
+                    <% rounded_value = value.nil? ? 0 : value.round(1) %>
+                    <% rayleigh_staffing_theorique += rounded_value %>
+                    <td><%= rounded_value %></td>
                   <% end %>
                 </tr>
 
@@ -196,48 +205,72 @@
 
 
   <div class="row-fluid">
-    <div class="span10">
-      <p>
-        <span class="badge badge-important">
-          <b>
-            Staffing Trapeze maximum : <%= @staffing_custom_data.calculated_staffing.to_f.round(1) %>
-          </b>
-        </span>
-      </p>
+    <div class="span3">
 
-      <p>
-        <span class="badge badge-important">
-          <b>
-            Effort Trapèze : <%= trapeze_staffing_theorique.to_f.round(2) %>
-          </b>
-        </span>
-      </p>
-
-      <p>
-        <span class="badge badge-info">
-          <b>
-            Effort retenu : <%= staffing_actuel.to_f.round(2) %>
-          </b>
-        </span>
-      </p>
-
-      <p>
-        <span class="badge badge-info">
-          <b>
-            Durée retenu : <%= (@staffing_custom_data.chart_actual_coordinates.size - 1).to_f.round(2) %>
-          </b>
-        </span>
-      </p>
-
-      <p>
-        <span class="badge badge-info">
-          <b>
-            Staffing retenu : <%= @staffing_custom_data.chart_actual_coordinates.map(&:last).max.to_f.round(2) %>
-          </b>
-        </span>
-      </p>
+      <table class="table">
+        <tr>
+          <td>
+            <b>
+              Effort Trapèze
+            </b>
+          </td>
+          <td>
+            <%= convert_with_precision(trapeze_staffing_theorique.to_f / @staffing_model.standard_unit_coefficient * effort_week_unit, user_number_precision)  %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>
+              Staffing Max Trapeze
+            </b>
+          </td>
+          <td>
+            <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map(&:last).max.to_f.round(user_number_precision)  %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>
+              Effort Rayleigh
+            </b>
+          </td>
+          <td>
+            <%= convert_with_precision(rayleigh_staffing_theorique.to_f / @staffing_model.standard_unit_coefficient * effort_week_unit, user_number_precision)  %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>
+              Staffing Max Rayleigh
+            </b>
+          </td>
+          <td>
+            <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map(&:last).max.to_f.round(user_number_precision)  %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>
+              Effort retenu
+            </b>
+          </td>
+          <td>
+            <%= convert_with_precision(staffing_actuel / @staffing_model.standard_unit_coefficient * effort_week_unit , user_number_precision) %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <b>
+              Staffing Max retenu
+            </b>
+          </td>
+          <td>
+            <%= @staffing_custom_data.chart_actual_coordinates.map(&:last).max.to_f.round(2) %>
+          </td>
+        </tr>
+      </table>
     </div>
-    </div>
+  </div>
 
   <% end %>
 

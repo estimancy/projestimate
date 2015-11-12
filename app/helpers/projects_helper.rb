@@ -1149,7 +1149,7 @@ module ProjectsHelper
   def can_see_estimation?(estimation)
     #authorization =  can_do_action_on_estimation?(estimation, "see_project")# || can_do_action_on_estimation?(estimation, "show_project") || can_do_action_on_estimation?(estimation, "edit_project")
     #authorization &&
-    can?(:see_project, estimation)
+    can?(:see_project, estimation, estimation_status_id: estimation.estimation_status_id)
   end
 
   # Got the right to show the estimation details

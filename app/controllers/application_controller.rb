@@ -41,6 +41,13 @@ class ApplicationController < ActionController::Base
     flash[:error] = I18n.t(:error_connection_refused)
   end
 
+  if Rails.env == "production"
+    rescue_from StandardError do |exception|
+      UserMailer.crash_log(exception, current_user).deliver
+      render :template => "layouts/500.html", :status => 500
+    end
+  end
+
   helper_method :root_url
   helper_method :browser
   helper_method :version_browser

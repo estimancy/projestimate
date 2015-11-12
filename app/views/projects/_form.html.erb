@@ -1,7 +1,7 @@
-<%= simple_form_for(@project) do |f| %>
-  <%= f.error_notification %>
+<div class="tabs-project">
+  <%= simple_form_for(@project) do |f| %>
+    <%= f.error_notification %>
 
-    <div class="tabs-project">
       <ul>
         <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
         <% if action_name.in? %w(edit update) %>
@@ -411,8 +411,7 @@
       <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
       <%= render :partial => "show_project_tree_history", :object => [@projects_json_tree] %>
     </div>
-
-<% end %>
+  <% end %>
 </div>
 
 

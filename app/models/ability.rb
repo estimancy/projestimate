@@ -109,7 +109,7 @@ class Ability
           unless prj_scrt.project_security_level.nil?
             prj_scrt.project.organization.estimation_statuses.each do |es|
               prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-                if permission.name[0..2] == "000"
+                if permission.alias == "manage" and permission.category == "Project"
                   can :manage, prj_scrt.project, estimation_status_id: es.id
                 else
                   @array_users << [permission.id, prj_scrt.project.id, es.id]
@@ -129,7 +129,11 @@ class Ability
             unless prj_scrt.project_security_level.nil?
               prj_scrt.project.organization.estimation_statuses.each do |es|
                 prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-                  @array_groups << [permission.id, prj_scrt.project.id, es.id]
+                  if permission.alias == "manage" and permission.category == "Project"
+                    can :manage, prj_scrt.project.id, estimation_status_id: es.id
+                  else
+                    @array_groups << [permission.id, prj_scrt.project.id, es.id]
+                  end
                 end
               end
             end
@@ -141,7 +145,11 @@ class Ability
           unless esgr_security_level.nil?
             esgr_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
               esgr.organization.projects.each do |project|
-                @array_status_groups << [permission.id, project.id, esgr.estimation_status.id]
+                if permission.alias == "manage" and permission.category == "Project"
+                  can :manage, project, estimation_status_id: esgr.estimation_status.id
+                else
+                  @array_status_groups << [permission.id, project.id, esgr.estimation_status.id]
+                end
               end
             end
           end
@@ -175,6 +183,7 @@ class Ability
 
       [status, global].inject(:&).each_with_index do |a, i|
         unless hash_project[a[1]].nil?
+          # p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, #{hash_status[a[2]]}"
           can hash_permission[a[0]], hash_project[a[1]], estimation_status_id: hash_status[a[2]]
           #p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, estimation_status_id: #{hash_status[a[2]]} => #{organization}"
         end

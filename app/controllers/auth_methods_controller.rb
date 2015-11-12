@@ -36,7 +36,7 @@ class AuthMethodsController < ApplicationController
     authorize! :manage_master_data, :all
 
     @auth_method = AuthMethod.find(params[:id])
-    set_page_title I18n.t(:edit_auth_method_2, parameter: @auth_method.name)
+    set_page_title I18n.t(:edit_auth_method, parameter: @auth_method.name)
 
     if is_master_instance?
       unless @auth_method.child_reference.nil?
