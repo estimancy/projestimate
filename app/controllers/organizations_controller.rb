@@ -1032,11 +1032,11 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def export
+  def export_user
     @organization = Organization.find(params[:organization_id])
     workbook = RubyXL::Workbook.new
     worksheet = workbook[0]
-    first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Authentification de l\'utilisateur','Description', 'Langue', 'Groupes']
+    first_line = [I18n.t(:first_name_attribute), I18n.t(:last_name_attribute), I18n.t(:initials_attribute),I18n.t(:email_attribute), I18n.t(:login_name_or_email), I18n.t(:authentication),I18n.t(:description), I18n.t(:label_language), I18n.t(:groups)]
     line = []
 
     first_line.each_with_index do |name, index|
@@ -1095,7 +1095,7 @@ class OrganizationsController < ApplicationController
 
           user = User.new(first_name: line[0],
                        last_name: line[1],
-                       initials: line[2].nil? ? "#{line[0].first}#{line[1].first}" : line[2],
+                       initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
                        email: line[3],
                        login_name: line[4],
                        id_connexion: line[4],

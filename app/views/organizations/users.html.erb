@@ -9,13 +9,13 @@
       <% if can? :manage, User, :organization_id => @organization.id %>
         <%= link_to I18n.t('new_user'), new_organization_user_path(@organization), :class => 'btn pull-right' %>
 
-        <%= link_to I18n.t(:Export_Users_CSV), organization_export_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
-
-        <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import users from excel" data-toggle="modal">
+        <%= link_to I18n.t(:Export_Users), organization_export_user_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
+         <%= link_to I18n.t(:Import_Users), organization_import_user_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
+       <!-- <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import users from excel" data-toggle="modal">
           <%= I18n.t(:Import_Users_CSV) %>
         </a>
 
-        <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <%= form_tag organization_import_user_path(@organization), :multipart => true, :class => 'simple_form' do %>
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -46,7 +46,7 @@
               <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %> </h4>
             </div>
           <% end %>
-        </div>
+        </div> -->
       <% end %>
 
       <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">

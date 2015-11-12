@@ -220,7 +220,7 @@ Projestimate::Application.routes.draw do
     post "generate_report_excel" => 'organizations#generate_report_excel'
     post "generate_report_excel_from_file" => 'organizations#generate_report_excel_from_file'
     post "import_user" => 'organizations#import_user'
-    post "export" => 'organizations#export'
+    post "export_user" => 'organizations#export_user'
   end
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
