@@ -1015,7 +1015,7 @@ frsncf:
   text_create_project_from_template: "Depuis la liste ci-dessous, cliquez sur l'icone de copie du modèle souhaité pour créer un projet sur la base de ce modèle."
   notice_pe_attribute_successful_created: "Attribut créé avec succès."
   notice_pe_attribute_successful_updated: "Attribut mis à jour avec succès."
-  text_index_permissions_guidance: "Liste toutes les permissions (globales et projets)."
+  text_index_permissions_guidance: "Liste toutes les permissions globales et projets"
   notice_end_of_estimation_execution: "Fin de l'exécution des modules"
   label_project_name: "N° de la demande"
   label_product_name: "Nom du produit"

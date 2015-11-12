@@ -1012,7 +1012,7 @@ en-gb:
   text_create_project_from_template: "From the list below, click on the Copy icon of the desired template to create a project based on it."
   notice_pe_attribute_successful_created: "Attribute successfully created."
   notice_pe_attribute_successful_updated: "Attribute successfully updated."
-  text_index_permissions_guidance: "List all permissions (global and project)"
+  text_index_permissions_guidance: "List all global and project permissions"
   notice_end_of_estimation_execution: "Finish to execute modules"
   label_project_name: "Estimation name"
   label_project_version: "Version"

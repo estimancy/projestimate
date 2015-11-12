@@ -21,8 +21,6 @@
 
 module Kb
   class KbInput < ActiveRecord::Base
-    belongs_to :organization
-    has_many :module_projects, :dependent => :destroy
     belongs_to :kb_model
 
     serialize :filters, Hash
