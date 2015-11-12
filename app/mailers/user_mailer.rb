@@ -26,7 +26,6 @@ class UserMailer < ActionMailer::Base
     if Rails.env == "production"
       @exception = exception
       @backtrace = exception.backtrace
-      @os = os
       mail(:to => "nicolas.renard@estimancy.com", :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] - Crash logs")
     end
   end
