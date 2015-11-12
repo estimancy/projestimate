@@ -410,7 +410,7 @@ fr:
   email_attribute: "Courriel"
   initials_attribute: "Initiales"
   priority_order: "Priorité"
-  edit_auth_method: "Editer la  méthode d'autentification \"%{value}\" ..."
+  edit_auth_method: "Editer la  méthode d'authentification \"%{value}\" ..."
   new_auth_method: "Créer une nouvelle méthode d'authentification"
   encryption: "Méthode d'encryption"
 
