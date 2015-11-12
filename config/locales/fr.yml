@@ -1764,4 +1764,7 @@ fr:
   max_staff_trap: "Staffing maximum(Trapéze)"
   max_staff_rayl: "Staffing maximum (Rayleigh)"
   person_number: "Nombre de personnes"
+  error_message_1: "Une anomalie est survenue."
+  error_message_2: "Un administrateur Estimancy a été averti."
+  error_message_3: "Vous pouvez continuer."
 
