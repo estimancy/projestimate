@@ -1072,6 +1072,7 @@ class OrganizationsController < ApplicationController
     workbook = RubyXL::Parser.parse(params[:file].path)
     worksheet = workbook[0]
     tab = worksheet.extract_data
+    users_existing = []
 
     tab.each_with_index do |line, index_line|
 
@@ -1107,25 +1108,30 @@ class OrganizationsController < ApplicationController
                        object_per_page: 50,
                        auth_type: auth_method,
                        number_precision: 2)
-          if auth_method == "SAML"
+          if line[5].upcase == "SAML"
             user.skip_confirmation!
           end
           user.save
-          toto = 42
           OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
-          group_index = 7
+          group_index = 8
            while line[group_index]
               group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
               begin
-                GroupsUsers.create(group_id: group.id, user_id: u.id)
+                GroupsUsers.create(group_id: group.id, user_id: user.id)
               rescue
                 #rien
               end
              group_index += 1
            end
+        else
+          users_existing << line[3]
         end
       end
     end
+    unless users_existing.empty?
+      flash[:error] = "Le(s) utilisateur suivant #{users_existing.join(", ")} existe déjâ"
+    end
+    flash[:notice] = "importation reussi"
     redirect_to organization_users_path(@current_organization)
 
 =begin
