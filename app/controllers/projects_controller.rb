@@ -537,10 +537,14 @@ class ProjectsController < ApplicationController
           @project.application_name = params[:project][:application_name]
         end
       else
-        if params[:project][:application_id].present?
-          @project.application_id = params[:project][:application_id]
-        else
-          @project.application_name = params[:project][:application_name]
+        begin
+          if params[:project][:application_id].present?
+            @project.application_id = params[:project][:application_id]
+          else
+            @project.application_name = params[:project][:application_name]
+          end
+        rescue
+
         end
       end
 
@@ -612,13 +616,15 @@ class ProjectsController < ApplicationController
       #Get the project Organization before update
       project_organization = @project.organization
 
-      # Before saving project, update the project comment when the status has changed
-      if params[:project][:estimation_status_id]
-        new_status_id = params[:project][:estimation_status_id].to_i
-        if @project.estimation_status_id != new_status_id
-          new_comments = auto_update_status_comment(params[:id], new_status_id)
-          new_comments << "#{@project.status_comment} \r\n"
-          @project.status_comment = new_comments
+      if params[:project].present?
+        # Before saving project, update the project comment when the status has changed
+        if params[:project][:estimation_status_id]
+          new_status_id = params[:project][:estimation_status_id].to_i
+          if @project.estimation_status_id != new_status_id
+            new_comments = auto_update_status_comment(params[:id], new_status_id)
+            new_comments << "#{@project.status_comment} \r\n"
+            @project.status_comment = new_comments
+          end
         end
       end
 
@@ -816,6 +822,8 @@ class ProjectsController < ApplicationController
   end
 
   def confirm_deletion
+    set_page_title I18n.t(:confirm_deletion)
+
     @project = Project.find(params[:project_id])
     authorize! :delete_project, @project
 

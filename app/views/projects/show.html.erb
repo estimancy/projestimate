@@ -32,7 +32,12 @@
                                   :disabled => !(can_alter_estimation?(@project) && can?(:alter_product_name, @project)) %>
               <% end %>
             <% else %>
-              <% apps = Project.find(@project.original_model_id).applications %>
+              <% begin %>
+                <% apps = Project.find(@project.original_model_id).applications %>
+              <% rescue %>
+                <% apps = [] %>
+              <% end %>
+
               <% if @current_organization.applications.empty? and apps.empty? %>
                 <%= f.input :application_name, :input_html => {:class => 'input-large'}, :label => I18n.t(:label_product_name), :disabled => !(can_alter_estimation?(@project) && can?(:alter_product_name, @project)) %>
               <% else %>
