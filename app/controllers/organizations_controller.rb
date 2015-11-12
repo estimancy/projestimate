@@ -1055,7 +1055,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    send_data(workbook.stream.string, filename: "User_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "Users_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 =begin
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
@@ -1069,17 +1069,28 @@ class OrganizationsController < ApplicationController
   end
 
   def import_user
-    sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
-    error_count = 0
     workbook = RubyXL::Parser.parse(params[:file].path)
     worksheet = workbook[0]
 
     worksheet.each_with_index do |line, index_line|
 
-      user = User.where(login_name: line[3]).first
+      user = User.find_by_login_name(line[3]).first
       if user.nil?
         password = SecureRandom.hex(8)
-        u = User.new(first_name: line[0],
+
+        if line[7]
+          langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+        else
+          langue = params[:language_id].to_i
+        end
+
+        if line[5]
+          auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
+        else
+          auth_method = AuthMethod.first.id
+        end
+
+        user = User.new(first_name: line[0],
                      last_name: line[1],
                      initials: line[2].nil? ? "#{row[0].first}#{row[1].first}" : line[2],
                      email: line[3],
@@ -1089,21 +1100,32 @@ class OrganizationsController < ApplicationController
                      super_admin: false,
                      password: password,
                      password_confirmation: password,
-                     language_id: line[7].nil? ? params[:language_id].to_i : Langue.where(name: line[7]).nil? ? params[:language_id].to_i : Langue.where(name: line[7]).id,
-                     #language_id: if line[7] then Langue.where(name: line[7]) ? Langue.where(name: line[7]).id : params[:language_id].to_i else params[:language_id].to_i end,
+                     language_id: langue,
                      time_zone: "Paris",
                      object_per_page: 50,
-                     auth_type: line[5].nil? ? AuthMethod.first.id : AuthMethod.where(name: line[5]).nil? ? AuthMethod.first.id : AuthMethod.where(name: line[5]).id,
-                     #auth_type: if line[5] then AuthMethod.where(name: line[5]) ? AuthMethod.where(name: line[5]).id : AuthMethod.first.id else AuthMethod.first.id end,
+                     auth_type: auth_method,
                      number_precision: 2)
+        OrganizationsUsers.create(organization_id: @current_organization.id, user_id: u.id)
+        group_index = 7
+         while line[group_index]
+            group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
+            begin
+              GroupsUsers.create(group_id: group.id, user_id: u.id)
+            rescue
+              #rien
+            end
+           group_index += 1
+         end
 
-        first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Authentification de l\'utilisateur','Description', 'Langue', 'Groupes']
-
-        u.save(validate: false)
-
+        if auth_method == "Application"
+          user.skip_confirmation!
+        end
+        user.save
       end
     end
 =begin
+    sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
+    error_count = 0
     file = params[:file]
     encoding = params[:encoding]
 
