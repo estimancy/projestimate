@@ -1071,58 +1071,63 @@ class OrganizationsController < ApplicationController
   def import_user
     workbook = RubyXL::Parser.parse(params[:file].path)
     worksheet = workbook[0]
+    tab = worksheet.extract_data
 
-    worksheet.each_with_index do |line, index_line|
+    tab.each_with_index do |line, index_line|
 
-      user = User.find_by_login_name(line[3]).first
-      if user.nil?
-        password = SecureRandom.hex(8)
+      if index_line > 0
+        user = User.find_by_login_name(line[3])
+        if user.nil?
+          password = SecureRandom.hex(8)
 
-        if line[7]
-          langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
-        else
-          langue = params[:language_id].to_i
+          if line[7]
+            langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+          else
+            langue = params[:language_id].to_i
+          end
+
+          if line[5]
+            auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
+          else
+            auth_method = AuthMethod.first.id
+          end
+
+          user = User.new(first_name: line[0],
+                       last_name: line[1],
+                       initials: line[2].nil? ? "#{line[0].first}#{line[1].first}" : line[2],
+                       email: line[3],
+                       login_name: line[4],
+                       id_connexion: line[4],
+                       description: line[6],
+                       super_admin: false,
+                       password: password,
+                       password_confirmation: password,
+                       language_id: langue,
+                       time_zone: "Paris",
+                       object_per_page: 50,
+                       auth_type: auth_method,
+                       number_precision: 2)
+          if auth_method == "SAML"
+            user.skip_confirmation!
+          end
+          user.save
+          toto = 42
+          OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
+          group_index = 7
+           while line[group_index]
+              group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
+              begin
+                GroupsUsers.create(group_id: group.id, user_id: u.id)
+              rescue
+                #rien
+              end
+             group_index += 1
+           end
         end
-
-        if line[5]
-          auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
-        else
-          auth_method = AuthMethod.first.id
-        end
-
-        user = User.new(first_name: line[0],
-                     last_name: line[1],
-                     initials: line[2].nil? ? "#{row[0].first}#{row[1].first}" : line[2],
-                     email: line[3],
-                     login_name: line[4],
-                     id_connexion: line[4],
-                     description: line[6],
-                     super_admin: false,
-                     password: password,
-                     password_confirmation: password,
-                     language_id: langue,
-                     time_zone: "Paris",
-                     object_per_page: 50,
-                     auth_type: auth_method,
-                     number_precision: 2)
-        OrganizationsUsers.create(organization_id: @current_organization.id, user_id: u.id)
-        group_index = 7
-         while line[group_index]
-            group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
-            begin
-              GroupsUsers.create(group_id: group.id, user_id: u.id)
-            rescue
-              #rien
-            end
-           group_index += 1
-         end
-
-        if auth_method == "Application"
-          user.skip_confirmation!
-        end
-        user.save
       end
     end
+    redirect_to organization_users_path(@current_organization)
+
 =begin
     sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
     error_count = 0
@@ -1174,7 +1179,6 @@ class OrganizationsController < ApplicationController
     #  flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
     #end
 =end
-    redirect_to organization_users_path(@current_organization)
   end
 
   def set_technology_size_type_abacus
