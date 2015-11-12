@@ -1036,7 +1036,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     workbook = RubyXL::Workbook.new
     worksheet = workbook[0]
-    first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Verification','Description', 'Langue', 'Groupes']
+    first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Authentification de l\'utilisateur','Description', 'Langue', 'Groupes']
     line = []
 
     first_line.each_with_index do |name, index|
@@ -1046,7 +1046,7 @@ class OrganizationsController < ApplicationController
     end
 
     @organization.users.each_with_index do |user, index_line|
-      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, '', user.description, user.language] + user.groups.where(organization_id: @organization.id).map(&:name)
+      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language] + user.groups.where(organization_id: @organization.id).map(&:name)
       line.each_with_index do |my_case, index|
         worksheet.add_cell(index_line + 1, index, my_case)
         worksheet[index_line + 1][index].change_border(:bottom, 'thin')
@@ -1056,7 +1056,6 @@ class OrganizationsController < ApplicationController
     end
 
     send_data(workbook.stream.string, filename: "User_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
-
 =begin
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
@@ -1072,8 +1071,42 @@ class OrganizationsController < ApplicationController
   def import_user
     sep = "#{params[:separator].blank? ? I18n.t(:general_csv_separator) : params[:separator]}"
     error_count = 0
+    workbook = RubyXL::Parser.parse(params[:file].path)
+    worksheet = workbook[0]
+
+    worksheet.each_with_index do |line, index_line|
+
+      user = User.where(login_name: line[3]).first
+      if user.nil?
+        password = SecureRandom.hex(8)
+        u = User.new(first_name: line[0],
+                     last_name: line[1],
+                     initials: line[2].nil? ? "#{row[0].first}#{row[1].first}" : line[2],
+                     email: line[3],
+                     login_name: line[4],
+                     id_connexion: line[4],
+                     description: line[6],
+                     super_admin: false,
+                     password: password,
+                     password_confirmation: password,
+                     language_id: line[7].nil? ? params[:language_id].to_i : Langue.where(name: line[7]).nil? ? params[:language_id].to_i : Langue.where(name: line[7]).id,
+                     #language_id: if line[7] then Langue.where(name: line[7]) ? Langue.where(name: line[7]).id : params[:language_id].to_i else params[:language_id].to_i end,
+                     time_zone: "Paris",
+                     object_per_page: 50,
+                     auth_type: line[5].nil? ? AuthMethod.first.id : AuthMethod.where(name: line[5]).nil? ? AuthMethod.first.id : AuthMethod.where(name: line[5]).id,
+                     #auth_type: if line[5] then AuthMethod.where(name: line[5]) ? AuthMethod.where(name: line[5]).id : AuthMethod.first.id else AuthMethod.first.id end,
+                     number_precision: 2)
+
+        first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Authentification de l\'utilisateur','Description', 'Langue', 'Groupes']
+
+        u.save(validate: false)
+
+      end
+    end
+=begin
     file = params[:file]
     encoding = params[:encoding]
+
     #begin
       CSV.open(file.path, 'r', :quote_char => "\"", :row_sep => :auto, :col_sep => sep, :encoding => "ISO-8859-1:utf-8") do |csv|
         csv.each_with_index do |row, i|
@@ -1118,6 +1151,7 @@ class OrganizationsController < ApplicationController
     #rescue
     #  flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
     #end
+=end
     redirect_to organization_users_path(@current_organization)
   end
 
