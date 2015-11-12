@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
 
   if Rails.env == "production"
     rescue_from StandardError do |exception|
-      UserMailer.crash_log(exception).deliver
+      UserMailer.crash_log(exception, current_user).deliver
       render :template => "layouts/500.html", :status => 500
     end
   end

@@ -1,14 +1,34 @@
+<br>
+<br>
+<br>
 <div class="container-fluid text-center">
-  <div class="row-fluid">
-    <div class="span12">
-      <strong>
-        Une erreur est survenue au sein de l'application. Ne paniquez pas, un administrateur Estimancy a bien été averti.
-      </strong>
+  <div class="panel-body">
+
+    <div class="row-fluid">
+      <div class="span12">
+        <i class="fa fa-5x fa-info-circle"></i>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="span12">
-      <%= link_to "Revenir sur la précédente", :back %>
+    <div class="row-fluid">
+      <div class="span12">
+        <strong>
+          <h3>
+            Une anomalie est survenue.
+          </h3>
+          <h3>
+            Un administrateur Estimancy a été averti.
+          </h3>
+          <h3>
+            Vous pouvez continuer.
+          </h3>
+        </strong>
+        <br>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12">
+        <%= link_to "Revenir sur la précédente", :back, class: "btn" %>
+      </div>
     </div>
   </div>
 </div>
