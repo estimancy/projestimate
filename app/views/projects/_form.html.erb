@@ -1,7 +1,6 @@
-<div class="tabs-project">
-  <%= simple_form_for(@project) do |f| %>
-    <%= f.error_notification %>
-
+<%= simple_form_for(@project) do |f| %>
+  <%= f.error_notification %>
+    <div class="tabs-project">
       <ul>
         <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
         <% if action_name.in? %w(edit update) %>
@@ -11,168 +10,167 @@
           <li><a href="#tabs-history"><%= I18n.t(:label_project_history) %> </a></li>
         <% end %>
       </ul>
-
-    <div id="tabs-1">
-      <table>
-        <%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
-        <tr>
-          <% if action_name.in?(['new', 'create']) %>
-            <td>
-              <label class="checkbox"></label>
-              <% if can?(:manage_estimation_models, Project) && @is_model %>
-                <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: @is_model, :class => 'input-xlarge'} %>
-              <% else %>
-                <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: false, :class => 'input-xlarge'} %>
+        <div id="tabs-1">
+          <table>
+            <%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+            <tr>
+              <% if action_name.in?(['new', 'create']) %>
+                <td>
+                  <label class="checkbox"></label>
+                  <% if can?(:manage_estimation_models, Project) && @is_model %>
+                    <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: @is_model, :class => 'input-xlarge'} %>
+                  <% else %>
+                    <%= f.input :is_model, :label => I18n.t('label_project_is_model'), :as => :hidden, :input_html => {value: false, :class => 'input-xlarge'} %>
+                  <% end %>
+                </td>
               <% end %>
-            </td>
-          <% end %>
-        </tr>
-        <tr>
-          <td>
-            <% if @project.is_model == true %>
-              <% apps = @project.applications %>
-              <% if @current_organization.applications.empty? and apps.empty? %>
-                <%= f.input :application_name, :input_html => {:class => 'input-large'}, :label => I18n.t(:label_product_name) %>
-              <% else %>
-                <%= f.association :applications, as: :select,
-                                  collection: @current_organization.applications,
-                                  :label => I18n.t(:label_product_name),
-                                  :input_html => { :class => 'input-large' },
-                                  include_blank: true %>
-              <% end %>
-            <% else %>
+            </tr>
+            <tr>
+              <td>
+                <% if @project.is_model == true %>
+                  <% apps = @project.applications %>
+                  <% if @current_organization.applications.empty? and apps.empty? %>
+                    <%= f.input :application_name, :input_html => {:class => 'input-large'}, :label => I18n.t(:label_product_name) %>
+                  <% else %>
+                    <%= f.association :applications, as: :select,
+                                      collection: @current_organization.applications,
+                                      :label => I18n.t(:label_product_name),
+                                      :input_html => { :class => 'input-large' },
+                                      include_blank: true %>
+                  <% end %>
+                <% else %>
 
-              <% unless @project.original_model_id.nil? %>
-                <% begin %>
-                  <% apps = Project.find(@project.original_model_id).applications %>
-                <% rescue %>
-                  <% apps = [] %>
+                  <% unless @project.original_model_id.nil? %>
+                    <% begin %>
+                      <% apps = Project.find(@project.original_model_id).applications %>
+                    <% rescue %>
+                      <% apps = [] %>
+                    <% end %>
+                  <% else %>
+                    <% apps = [] %>
+                  <% end %>
+
+                  <% if @current_organization.applications.empty? and apps.empty? %>
+                    <%= f.input :application_name, :input_html => {:class => 'input-large'}, :label => I18n.t(:label_product_name) %>
+                  <% else %>
+                    <%= f.input :application_id, as: :select,
+                                  collection: apps.empty? ? @current_organization.applications.map{|i| [i.name, i.id]} : apps.map{|i| [i.name, i.id]},
+                                  label: I18n.t(:label_product_name),
+                                  input_html: {:class => 'input-large'},
+                                  selected: @project.application_id %>
+                  <% end %>
                 <% end %>
-              <% else %>
-                <% apps = [] %>
-              <% end %>
+              </td>
 
-              <% if @current_organization.applications.empty? and apps.empty? %>
-                <%= f.input :application_name, :input_html => {:class => 'input-large'}, :label => I18n.t(:label_product_name) %>
-              <% else %>
-                <%= f.input :application_id, as: :select,
-                              collection: apps.empty? ? @current_organization.applications.map{|i| [i.name, i.id]} : apps.map{|i| [i.name, i.id]},
-                              label: I18n.t(:label_product_name),
-                              input_html: {:class => 'input-large'},
-                              selected: @project.application_id %>
-              <% end %>
+              <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => { :class => 'input-large' } %></td>
+
+            </tr>
+            <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
+              <tr>
+                <td>
+                  <% if can_show_estimation?(@project.original_model) %>
+                    <span><%= I18n.t(:original_model) %> : <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br></span>
+                  <% else %>
+                    <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
+                  <% end %>
+                </td>
+              </tr>
             <% end %>
-          </td>
+          </table>
 
-          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => { :class => 'input-large' } %></td>
+           <%= tinymce %>
 
-        </tr>
-        <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
-          <tr>
-            <td>
-              <% if can_show_estimation?(@project.original_model) %>
-                <span><%= I18n.t(:original_model) %> : <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br></span>
-              <% else %>
-                <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
+           <label><b> <%= I18n.t(:description) %> </b> </label>
 
-       <%= tinymce %>
+           <%= simple_format(@project.description) %>
+           <%= f.input :description, :label => false, :input_html => {:class => 'input-large tinymce', :rows => 5, :cols => 10 } %>
 
-       <label><b> <%= I18n.t(:description) %> </b> </label>
+          <table>
+            <tr>
+              <td><%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %></td>
 
-       <%= simple_format(@project.description) %>
-       <%= f.input :description, :label => false, :input_html => {:class => 'input-large tinymce', :rows => 5, :cols => 10 } %>
-
-      <table>
-        <tr>
-          <td><%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %></td>
-
-          <script>
-            $(document).ready(function () {
-                $(".date-picker").datepicker({
-                    language: '<%= set_user_language %>',
-                    autoclose: true,
-                    todayHighlight: true,
-                    todayBtn: true
+              <script>
+                $(document).ready(function () {
+                    $(".date-picker").datepicker({
+                        language: '<%= set_user_language %>',
+                        autoclose: true,
+                        todayHighlight: true,
+                        todayBtn: true
+                    });
                 });
-            });
-          </script>
-        </tr>
+              </script>
+            </tr>
 
-        <tr>
-          <td>
-            <%= f.input :creator_id,
-                        as: :select,
-                        collection: @organization.users.map{|i| [i.name, i.id]},
-                        label: I18n.t('creator'),
-                        input_html: { :class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
-          </td>
-        </tr>
+            <tr>
+              <td>
+                <%= f.input :creator_id,
+                            as: :select,
+                            collection: @organization.users.map{|i| [i.name, i.id]},
+                            label: I18n.t('creator'),
+                            input_html: { :class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
+              </td>
+            </tr>
 
-        <tr>
-          <td>
-            <%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => [[@organization.name, @organization.id]], selected: @organization.id, :input_html => {:class => 'input-large'}, disabled: true %>
-            <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization.id } %>
-          </td>
+            <tr>
+              <td>
+                <%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => [[@organization.name, @organization.id]], selected: @organization.id, :input_html => {:class => 'input-large'}, disabled: true %>
+                <%= f.input :organization_id, as: :hidden, :input_html => { value: @organization.id } %>
+              </td>
 
-          <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %></td>
-          <% unless @project.new_record? %>
-            <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}", :remote => true) %></td>
-          <% end %>
-        </tr>
-      </table>
+              <td><%= f.input :estimation_status_id, label: I18n.t('state'), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %></td>
+              <% unless @project.new_record? %>
+                <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}", :remote => true) %></td>
+              <% end %>
+            </tr>
+          </table>
 
-      <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :project_area_id, :label => "#{I18n.t 'project_area'}", :as => :select, :collection => @project_areas, :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :acquisition_category_id, :label => "#{I18n.t 'acquisition_category'}", :as => :select, :collection => @acquisition_categories, :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :acquisition_category_id, :label => "#{I18n.t 'acquisition_category'}", :as => :select, :collection => @acquisition_categories, :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :platform_category_id, :label => "#{I18n.t 'platform_category'}", :as => :select, :collection => @platform_categories, :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :platform_category_id, :label => "#{I18n.t 'platform_category'}", :as => :select, :collection => @platform_categories, :input_html => {:class => 'input-xxlarge'} %>
 
-      <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'} %>
+          <%= f.input :project_category_id, :label => "#{I18n.t 'project_category'}", :as => :select, :collection => @project_categories, :input_html => {:class => 'input-xxlarge'} %>
 
-      <br>
+          <br>
 
-      <div class="actions-tabs">
-        <% if action_name.in?(['edit', 'update']) %>
-            <% if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && can_modify_estimation?(@project)) %>
-                <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
-                <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+          <div class="actions-tabs">
+            <% if action_name.in?(['edit', 'update']) %>
+                <% if (@project.is_model && can?(:manage_estimation_models, Project)) || (!@project.is_model && can_modify_estimation?(@project)) %>
+                    <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
+                    <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+                <% end %>
+
+            <% elsif action_name.in?(['new', 'create']) %>
+                <% if (@is_model.in?(["true", true]) && can?(:manage_estimation_models, Project)) || (!@is_model.in?(["true", true]) && can?(:create_project_from_scratch, Project)) %>
+                    <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+                <% end %>
             <% end %>
 
-        <% elsif action_name.in?(['new', 'create']) %>
-            <% if (@is_model.in?(["true", true]) && can?(:manage_estimation_models, Project)) || (!@is_model.in?(["true", true]) && can?(:create_project_from_scratch, Project)) %>
-                <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+            <% if @project.is_model %>
+                <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
+            <% else %>
+                <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
             <% end %>
-        <% end %>
-
-        <% if @project.is_model %>
-            <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
-        <% else %>
-            <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
-        <% end %>
-      </div>
-  <% end %>
-</div>
-
-<% if action_name.in?(%w(edit update)) %>
-
-    <div id="tabs-2">
-      <div class="component_tree" id="project_wbs_product_section">
-        <div class="tab-pane active">
-          <% unless @project.nil? || @pe_wbs_project_product.nil? %>
-            <%= raw generate_wbs_product(@project.root_component, @project, '', 5) unless @pe_wbs_project_product.pbs_project_elements.last.nil? %>
-          <% end %>
-        </div>
-      </div>
+          </div>
+      <% end %>
     </div>
 
-    <div id="tabs-4" class="tabs_4_with_estimation_plan2">
-      <% if controller.controller_name == 'projects' %>
-        <% if @project.is_locked == false or @project.is_locked.nil? %>
+    <% if action_name.in?(%w(edit update)) %>
+
+      <div id="tabs-2">
+          <div class="component_tree" id="project_wbs_product_section">
+            <div class="tab-pane active">
+              <% unless @project.nil? || @pe_wbs_project_product.nil? %>
+                <%= raw generate_wbs_product(@project.root_component, @project, '', 5) unless @pe_wbs_project_product.pbs_project_elements.last.nil? %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+      <div id="tabs-4" class="tabs_4_with_estimation_plan2">
+        <% if controller.controller_name == 'projects' %>
+          <% if @project.is_locked == false or @project.is_locked.nil? %>
           <div class="row-fluid">
             <div class="span12">
               <%= I18n.t(:label_add_a_module_to_project) %>
@@ -220,102 +218,118 @@
             </div>
           </div>
         <% end %>
-      <% end %>
-
-    <br>
-    <div class="module_box"  style=" width: auto; overflow-x:auto;">
-        <%= render :partial => 'module_projects/estimation_plan', :locals => { :module_projects => @project.module_projects } %>
+        <% end %>
+        <br>
+        <div class="module_box"  style=" width: auto; overflow-x:auto;">
+          <%= render :partial => 'module_projects/estimation_plan', :locals => { :module_projects => @project.module_projects } %>
+        </div>
       </div>
-    </div>
 
-    <div id="tabs-5">
-      <div id="accordion-security">
-        <!--define the security of the model itself-->
-        <% if @project.is_model %>
-            <h3><%= I18n.t(:model_securities) %></h3>
-            <div id="accordion_model" class="accordion">
-              <div class="accordion-group accordion-caret">
-                <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_model" href="#collapseModel">
-                    <i class="fa fa-caret-down"></i>
-                    <b><%= @project.is_model ? I18n.t(:label_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
-                  </a>
-                </div>
-                <div id="collapseModel" class="accordion-body in collapse">
-                  <div class="accordion-inner">
-                    <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
-                      <thead>
-                        <tr>
-                          <th>Group name</th>
-                          <% @organization.project_security_levels.each do |prj_level| %>
-                              <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
-                          <% end %>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% @organization.groups.each do |group| %>
+      <div id="tabs-5">
+          <div id="accordion-security">
+            <!--define the security of the model itself-->
+            <% if @project.is_model %>
+              <h3><%= I18n.t(:model_securities) %></h3>
+              <div id="accordion_model" class="accordion">
+                <div class="accordion-group accordion-caret">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_model" href="#collapseModel">
+                      <i class="fa fa-caret-down"></i>
+                      <b><%= @project.is_model ? I18n.t(:label_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
+                    </a>
+                  </div>
+                  <div id="collapseModel" class="accordion-body in collapse">
+                    <div class="accordion-inner">
+                      <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+                        <thead>
                           <tr>
-                            <td>
-                              <%= group.name %>
-                              <% @organization.project_security_levels.each do |prj_level| %>
-                                <%
-                                   ps = ProjectSecurity.where(group_id: group.id,
-                                                              project_id: @project.id,
-                                                              project_security_level_id: prj_level.id,
-                                                              is_model_permission: true).first
-                                %>
-                                <td style="text-align: center">
-                                  <%= check_box_tag("group_securities[#{prj_level.id}][#{group.id}]", group.name, !ps.nil?) %>
-                                </td>
+                            <th>Group name</th>
+                            <% @organization.project_security_levels.each do |prj_level| %>
+                                <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                             <% end %>
                           </tr>
-                        <% end %>
-                      </tbody>
-                      <%= render :partial => 'layouts/footer_table' %>
-                    </table>
+                        </thead>
+                        <tbody>
+                          <% @organization.groups.each do |group| %>
+                            <tr>
+                              <td>
+                                <%= group.name %>
+                                <% @organization.project_security_levels.each do |prj_level| %>
+                                  <%
+                                     ps = ProjectSecurity.where(group_id: group.id,
+                                                                project_id: @project.id,
+                                                                project_security_level_id: prj_level.id,
+                                                                is_model_permission: true).first
+                                  %>
+                                  <td style="text-align: center">
+                                    <%= check_box_tag("group_securities[#{prj_level.id}][#{group.id}]", group.name, !ps.nil?) %>
+                                  </td>
+                              <% end %>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                        <%= render :partial => 'layouts/footer_table' %>
+                      </table>
 
-                    <%= submit_tag I18n.t('save'), :name => "model_group_security_levels", :class => 'btn' %>
-                    <%= submit_tag I18n.t('apply'), :name => "model_group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
-                    <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
+                      <%= submit_tag I18n.t('save'), :name => "model_group_security_levels", :class => 'btn' %>
+                      <%= submit_tag I18n.t('apply'), :name => "model_group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
+                      <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
+                    </div>
                   </div>
                 </div>
               </div>
+          <% end %>
+
+          <h3><%= @project.is_model ? I18n.t(:securities_for_generated_project) : "" %></h3>
+
+          <div class="accordion" id="accordion1">
+          <div class="accordion-group accordion-caret">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                <i class="fa fa-caret-down"></i>
+                <b><%= @project.is_model ? I18n.t(:label_from_model_user_security_resume) : I18n.t(:label_user_security_resume) %></b>
+              </a>
             </div>
-        <% end %>
+            <div id="collapseOne" class="accordion-body in collapse">
+              <div class="accordion-inner">
+                <table  id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+                  <thead>
+                    <tr>
+                      <th>User name</th>
+                      <% @organization.project_security_levels.each do |prj_level| %>
+                        <th class="filter-select">
+                          <span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span>
+                        </th>
+                      <% end %>
+                    </tr>
+                  </thead>
 
-        <h3><%= @project.is_model ? I18n.t(:securities_for_generated_project) : "" %></h3>
-
-        <div class="accordion" id="accordion1">
-            <div class="accordion-group accordion-caret">
-              <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-                  <i class="fa fa-caret-down"></i>
-                  <b><%= @project.is_model ? I18n.t(:label_from_model_user_security_resume) : I18n.t(:label_user_security_resume) %></b>
-                </a>
-              </div>
-              <div id="collapseOne" class="accordion-body in collapse">
-                <div class="accordion-inner">
-                  <table  id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
-                    <thead>
+                  <tbody>
+                  <!--If project is an estimation model, the user permission will be affected to the creator of the created estimation from this model-->
+                    <% if @project.is_model %>
+                      <% user = @project.creator %>
+                      <% model_creator_id = @project.creator_id %>
+                      <%= hidden_field_tag "user_securities_#{model_creator_id}" %>
                       <tr>
-                        <th>User name</th>
-                        <% @organization.project_security_levels.each do |prj_level| %>
-                          <th class="filter-select">
-                            <span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span>
-                          </th>
+                        <td>
+                          <%= I18n.t(:estimation_creator_from_model) %>
+                          <% @organization.project_security_levels.each do |prj_level| %>
+                            <%
+                               ps = ProjectSecurity.where(user_id: user.id,
+                                                          project_id: @project.id,
+                                                          project_security_level_id: prj_level.id,
+                                                          is_model_permission: false).first
+                            %>
+                          <td style="text-align: center">
+                            <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, !ps.nil?) %>
+                          </td>
                         <% end %>
                       </tr>
-                    </thead>
-
-                    <tbody>
-                    <!--If project is an estimation model, the user permission will be affected to the creator of the created estimation from this model-->
-                      <% if @project.is_model %>
-                        <% user = @project.creator %>
-                        <% model_creator_id = @project.creator_id %>
-                        <%= hidden_field_tag "user_securities_#{model_creator_id}" %>
+                    <% else %>
+                      <% @organization.users.each do |user| %>
                         <tr>
                           <td>
-                            <%= I18n.t(:estimation_creator_from_model) %>
+                            <%= user %>
                             <% @organization.project_security_levels.each do |prj_level| %>
                               <%
                                  ps = ProjectSecurity.where(user_id: user.id,
@@ -324,76 +338,13 @@
                                                             is_model_permission: false).first
                               %>
                             <td style="text-align: center">
-                              <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, !ps.nil?) %>
+                              <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true) %>
                             </td>
                           <% end %>
                         </tr>
-                      <% else %>
-                        <% @organization.users.each do |user| %>
-                          <tr>
-                            <td>
-                              <%= user %>
-                              <% @organization.project_security_levels.each do |prj_level| %>
-                                <%
-                                   ps = ProjectSecurity.where(user_id: user.id,
-                                                              project_id: @project.id,
-                                                              project_security_level_id: prj_level.id,
-                                                              is_model_permission: false).first
-                                %>
-                              <td style="text-align: center">
-                                <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true) %>
-                              </td>
-                            <% end %>
-                          </tr>
-                        <% end %>
-                      </tbody>
-                    <% end %>
-                  </table>
-
-                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                  <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
-                  <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
-                </div>
-              </div>
-            </div>
-        </div>
-
-        <br>
-        <div id="accordion2" class="accordion">
-          <div class="accordion-group accordion-caret">
-            <div class="accordion-heading">
-              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                <i class="fa fa-caret-down"></i>
-                <b><%= @project.is_model ? I18n.t(:label_from_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
-              </a>
-            </div>
-            <div id="collapseTwo" class="accordion-body in collapse">
-              <div class="accordion-inner">
-                <table class="table table-striped table-bordered table-condensed">
-                  <thead>
-                    <tr>
-                      <th>Group name</th>
-                      <% @organization.project_security_levels.each do |prj_level| %>
-                          <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
                       <% end %>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @organization.groups.each do |group| %>
-                      <tr>
-                        <td>
-                          <%= group.name %>
-                          <% @organization.project_security_levels.each do |prj_level| %>
-                            <% ps = ProjectSecurity.where(group_id: group.id,
-                                                          project_id: @project.id,
-                                                          project_security_level_id: prj_level.id,
-                                                          is_model_permission: false).first %>
-                          <td style="text-align: center">
-                            <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?) %>
-                          </td>
-                        <% end %>
-                      </tr>
-                    <% end %>
+                    </tbody>
+                  <% end %>
                 </table>
 
                 <%= submit_tag I18n.t('save'), :class => 'btn' %>
@@ -402,16 +353,64 @@
               </div>
             </div>
           </div>
+      </div>
+
+      <br>
+      <div id="accordion2" class="accordion">
+        <div class="accordion-group accordion-caret">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+              <i class="fa fa-caret-down"></i>
+              <b><%= @project.is_model ? I18n.t(:label_from_model_group_security_resume) : I18n.t(:label_group_security_resume) %></b>
+            </a>
+          </div>
+          <div id="collapseTwo" class="accordion-body in collapse">
+            <div class="accordion-inner">
+              <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th>Group name</th>
+                    <% @organization.project_security_levels.each do |prj_level| %>
+                        <th><span class="attribute_tooltip" title='<%= display_security_level_description(prj_level) %>'><%= prj_level.name %></span></th>
+                    <% end %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @organization.groups.each do |group| %>
+                    <tr>
+                      <td>
+                        <%= group.name %>
+                        <% @organization.project_security_levels.each do |prj_level| %>
+                          <% ps = ProjectSecurity.where(group_id: group.id,
+                                                        project_id: @project.id,
+                                                        project_security_level_id: prj_level.id,
+                                                        is_model_permission: false).first %>
+                        <td style="text-align: center">
+                          <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?) %>
+                        </td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+              </table>
+
+              <%= submit_tag I18n.t('save'), :class => 'btn' %>
+              <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+              <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
     <div id="tabs-history">
       <%= hidden_field_tag "current_showed_project_id", @project.id %>
       <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
       <%= render :partial => "show_project_tree_history", :object => [@projects_json_tree] %>
     </div>
-  <% end %>
-</div>
+  </div>
+
+<% end %>
+
 
 
