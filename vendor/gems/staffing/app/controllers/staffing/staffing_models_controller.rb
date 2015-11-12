@@ -160,6 +160,7 @@
       theoretical_trapeze_values = staffing.trapeze_chart_theoretical_coordinates
 
       worksheet = workbook[0]
+
       worksheet.add_cell(0,0, I18n.t(:period))
       worksheet.sheet_data[0][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[0][0].change_border(:right, 'thin')
@@ -218,42 +219,6 @@
       worksheet.sheet_data[7][0].change_border(:right, 'thin')
       worksheet.sheet_data[7][1].change_border(:right, 'thin')
 
-=begin
-      worksheet.add_cell(8,0, "Staffing Trapeze maximum")
-      worksheet.add_cell(8,1, "toto").change_horizontal_alignment('center')
-      worksheet.sheet_data[8][0].change_border(:bottom, 'thin')
-      worksheet.sheet_data[8][1].change_border(:bottom, 'thin')
-      worksheet.sheet_data[8][0].change_border(:right, 'thin')
-      worksheet.sheet_data[8][1].change_border(:right, 'thin')
-
-      worksheet.add_cell(9,0, "Effort Trapéze")
-      worksheet.add_cell(9,1, "toto").change_horizontal_alignment('center')
-      worksheet.sheet_data[9][0].change_border(:bottom, 'thin')
-      worksheet.sheet_data[9][1].change_border(:bottom, 'thin')
-      worksheet.sheet_data[9][0].change_border(:right, 'thin')
-      worksheet.sheet_data[9][1].change_border(:right, 'thin')
-
-      worksheet.add_cell(10,0, "Effort retenu")
-      worksheet.add_cell(10,1, "toto").change_horizontal_alignment('center')
-      worksheet.sheet_data[10][0].change_border(:bottom, 'thin')
-      worksheet.sheet_data[10][1].change_border(:bottom, 'thin')
-      worksheet.sheet_data[10][0].change_border(:right, 'thin')
-      worksheet.sheet_data[10][1].change_border(:right, 'thin')
-
-      worksheet.add_cell(11,0, "Durée retenu")
-      worksheet.add_cell(11,1, "toto").change_horizontal_alignment('center')
-      worksheet.sheet_data[11][0].change_border(:bottom, 'thin')
-      worksheet.sheet_data[11][1].change_border(:bottom, 'thin')
-      worksheet.sheet_data[11][0].change_border(:right, 'thin')
-      worksheet.sheet_data[11][1].change_border(:right, 'thin')
-
-      worksheet.add_cell(12,0, "Staffing retenu")
-      worksheet.add_cell(12,1, "toto").change_horizontal_alignment('center')
-      worksheet.sheet_data[12][0].change_border(:bottom, 'thin')
-      worksheet.sheet_data[12][1].change_border(:bottom, 'thin')
-      worksheet.sheet_data[12][0].change_border(:right, 'thin')
-      worksheet.sheet_data[12][1].change_border(:right, 'thin')
-=end
       send_data(workbook.stream.string, filename: "export-staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
     end
 

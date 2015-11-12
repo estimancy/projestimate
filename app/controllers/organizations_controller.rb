@@ -1031,6 +1031,31 @@ class OrganizationsController < ApplicationController
 
   def export
     @organization = Organization.find(params[:organization_id])
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+    first_line = ['Prénom', 'Nom', 'Initiale','Email', 'Login', 'Verification','Description', 'Langue', 'Groupes']
+    line = []
+
+    first_line.each_with_index do |name, index|
+      worksheet.add_cell(0, index, name)
+      worksheet[0][index].change_border(:bottom, 'thin')
+      worksheet[0][index].change_border(:right, 'thin')
+    end
+
+    @organization.users.each_with_index do |user, index_line|
+      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, '', user.description, user.language] + user.groups.where(organization_id: @organization.id).map(&:name)
+      line.each_with_index do |my_case, index|
+        worksheet.add_cell(index_line + 1, index, my_case)
+        worksheet[index_line + 1][index].change_border(:bottom, 'thin')
+        worksheet[index_line + 1][index].change_border(:right, 'thin')
+        worksheet[index_line + 1][index].change_border(:top, 'thin')
+      end
+    end
+
+    send_data(workbook.stream.string, filename: "User_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+
+=begin
+    @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
       csv << ['Prénom', 'Nom', 'Email', 'Login', 'Groupes']
       @organization.users.take(3).each do |user|
@@ -1038,6 +1063,7 @@ class OrganizationsController < ApplicationController
       end
     end
     send_data(csv_string.encode("ISO-8859-1"), :type => 'text/csv; header=present', :disposition => "attachment; filename=modele_import_utilisateurs.csv")
+=end
   end
 
   def import_user
