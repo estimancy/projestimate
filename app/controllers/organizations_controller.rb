@@ -1076,7 +1076,7 @@ class OrganizationsController < ApplicationController
         user = User.find_by_login_name(line[3])
         if user.nil?
           password = SecureRandom.hex(8)
-          if tab[0] && tab[1]
+          if line[0] && line[1] && line[4]
             if line[7]
               langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
             else
@@ -1090,24 +1090,25 @@ class OrganizationsController < ApplicationController
             end
 
             user = User.new(first_name: line[0],
-                         last_name: line[1],
-                         initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
-                         email: line[3],
-                         login_name: line[4],
-                         id_connexion: line[4],
-                         description: line[6],
-                         super_admin: false,
-                         password: password,
-                         password_confirmation: password,
-                         language_id: langue,
-                         time_zone: "Paris",
-                         object_per_page: 50,
-                         auth_type: auth_method,
-                         number_precision: 2)
+                           last_name: line[1],
+                           initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
+                           email: line[3],
+                           login_name: line[4],
+                           id_connexion: line[4],
+                           description: line[6],
+                           super_admin: false,
+                           password: password,
+                           password_confirmation: password,
+                           language_id: langue,
+                           time_zone: "Paris",
+                           object_per_page: 50,
+                           auth_type: auth_method,
+                           number_precision: 2)
             if line[5] == "SAML"
+              user.skip_confirmation_notification!
               user.skip_confirmation!
             end
-            user.save!
+            user.save
             OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
             group_index = 8
              while line[group_index]
