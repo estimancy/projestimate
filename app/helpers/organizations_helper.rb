@@ -142,7 +142,11 @@ module OrganizationsHelper
         # mettre un truncate sinon ca plante sous ie8
         content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).to_s.html_safe, :class => "text_field_text_overflow")
       when :start_date, :created_at, :updated_at
-        content_tag('td', I18n.l(value), class: "center")
+        if value.nil?
+          content_tag('td', value, class: "center")
+        else
+          content_tag('td', I18n.l(value), class: "center")
+        end
       else
         if column.field_id
           content_tag("td") do

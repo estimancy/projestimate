@@ -324,7 +324,9 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    full_control_security_level = ProjectSecurityLevel.where(name: '*ALL', organization_id: @organization.id).first_or_create(name: '*ALL', organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+    defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
+    full_control_security_level = ProjectSecurityLevel.where(name: defaut_psl, organization_id: @organization.id).first_or_create(name: defaut_psl, organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+
     manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
     # Add the "manage project" authorization to the "FullControl" security level
     if manage_project_permission
@@ -333,6 +335,7 @@ class ProjectsController < ApplicationController
       end
     end
 
+    #For user
     current_user_ps = @project.project_securities.build
     if params[:project][:creator_id].blank?
       current_user_ps.user_id = current_user.id
@@ -342,6 +345,14 @@ class ProjectsController < ApplicationController
     current_user_ps.project_security_level = full_control_security_level
     current_user_ps.is_model_permission = false
     current_user_ps.save
+
+    #For group
+    # defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
+    # defaut_group = AdminSetting.where(key: "Groupe using estimation").first.value
+    # defaut_group_ps = @project.project_securities.build
+    # defaut_group_ps.group_id = Group.find_by_name(defaut_group)
+    # defaut_group_ps.project_security_level = full_control_security_level
+    # defaut_group_ps.save
 
     @project.is_locked = false
 
@@ -603,7 +614,7 @@ class ProjectsController < ApplicationController
               ProjectSecurity.create(user_id: group.first.to_i,
                                      project_id: @project.id,
                                      project_security_level_id: psl.first,
-                                     is_model_permission: false)
+                                     is_model_permission: @project.is_model)
             end
           end
         end
