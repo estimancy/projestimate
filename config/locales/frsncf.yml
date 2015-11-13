@@ -1748,3 +1748,8 @@ frsncf:
   error_message_1: "Une anomalie est survenue."
   error_message_2: "Un administrateur Estimancy a été averti."
   error_message_3: "Vous pouvez continuer."
+  locked_at: "Bloquer le"
+  unlocked: "Non bloqué"
+  user_exist: "Le(s) utilisateurs \"%{parameter}\" existe déjâ"
+  user_with_no_name: "la/les ligne(s) suivante contienne des erreurs (nom|prenom|login manquant): %{parameter}"
+  user_importation_success: "Importation reussi"
