@@ -497,7 +497,7 @@ class OrganizationsController < ApplicationController
 
       new_organization.transaction do
 
-        if new_organization.save
+        if new_organization.save(validate: false)
 
           organization_image.save #Original organization copy number will be incremented to 1
 
@@ -706,6 +706,20 @@ class OrganizationsController < ApplicationController
             # Update all the new organization module_project's guw_model with the current guw_model
             ge_copy_id = ge_model.copy_id
             new_organization.module_projects.where(ge_model_id: ge_copy_id).update_all(ge_model_id: ge_model.id)
+          end
+
+          # Update the modules's GE Models instances
+          new_organization.staffing_models.each do |staffing_model|
+            # Update all the new organization module_project's guw_model with the current guw_model
+            staffing_model_copy_id = staffing_model.copy_id
+            new_organization.module_projects.where(staffing_model_id: staffing_model_copy_id).update_all(staffing_model_id: staffing_model_copy_id.id)
+          end
+
+          # Update the modules's GE Models instances
+          new_organization.kb_models.each do |kb_model|
+            # Update all the new organization module_project's guw_model with the current guw_model
+            kb_copy_id = kb_model.copy_id
+            new_organization.module_projects.where(kb_model_id: kb_copy_id).update_all(kb_model_id: kb_model.id)
           end
 
           # Copy the modules's GUW Models instances

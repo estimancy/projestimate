@@ -102,7 +102,7 @@ class Ability
       @array_groups = Array.new
 
       #Specfic project security loading
-      prj_scrts = ProjectSecurity.find_all_by_user_id(user.id)
+      prj_scrts = ProjectSecurity.find_all_by_user_id_and_is_model_permission(user.id, false)
       unless prj_scrts.empty?
         specific_permissions_array = []
         prj_scrts.each do |prj_scrt|
