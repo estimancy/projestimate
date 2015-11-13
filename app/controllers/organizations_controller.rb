@@ -1067,15 +1067,14 @@ class OrganizationsController < ApplicationController
     users_existing = []
     user_with_no_name = []
 
-    if !params[:file].nil? &&
-        (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
         workbook = RubyXL::Parser.parse(params[:file].path)
         worksheet = workbook[0]
         tab = worksheet.extract_data
 
         tab.each_with_index do |line, index_line|
         if index_line > 0
-          user = User.find_by_login_name(line[3])
+          user = User.find_by_login_name(line[4])
           if user.nil?
             password = SecureRandom.hex(8)
             if line[0] && line[1] && line[4]
@@ -1127,19 +1126,19 @@ class OrganizationsController < ApplicationController
               user_with_no_name << index_line
             end
           else
-            users_existing << line[3]
+            users_existing << line[4]
           end
         end
       end
-      final_error = nil
+      final_error = []
       unless users_existing.empty?
-        final_error =  "Le(s) utilisateur suivant #{users_existing.join(", ")} existe déjâ <br/>"
+        final_error <<  "Le(s) utilisateurs \"#{users_existing.join(", ")}\" existe déjâ"
       end
       unless user_with_no_name.empty?
-        final_error = "erreur au ligne suivante (nom|prenom|login manquant): #{user_with_no_name.join("<br/>")} #{final_error}"
+        final_error << "la/les ligne(s) suivante contienne des erreurs (nom|prenom|login manquant): #{user_with_no_name.join(", ")}"
       end
-      unless user_with_no_name.empty? ||  users_existing.empty?
-        flash[:error] = final_error.html_safe
+      unless final_error.empty?
+        flash[:error] = final_error.join("<br/>").html_safe
       end
       flash[:notice] = "importation reussi"
     else
