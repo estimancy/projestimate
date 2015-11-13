@@ -1133,10 +1133,10 @@ class OrganizationsController < ApplicationController
       end
       final_error = nil
       unless users_existing.empty?
-        final_error =  "Le(s) utilisateur suivant #{users_existing.join(", "} existe déjâ <br/>"
+        final_error =  "Le(s) utilisateur suivant #{users_existing.join(", ")} existe déjâ <br/>"
       end
       unless user_with_no_name.empty?
-        final_error += "erreur au ligne suivante (nom|prenom|login manquant): #{user_with_no_name.join("<br/>")}"
+        final_error = "erreur au ligne suivante (nom|prenom|login manquant): #{user_with_no_name.join("<br/>")} #{final_error}"
       end
       unless user_with_no_name.empty? ||  users_existing.empty?
         flash[:error] = final_error.html_safe
