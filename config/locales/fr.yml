@@ -1774,4 +1774,6 @@ fr:
   user_importation_success: "Importation reussi"
   not_confirmed: "Non confirmé"
   Confirmed_at: "Confirmé le"
+  operation_module: "Module d'opération"
+  total_effort: "Effort total (%{parameter})"
 

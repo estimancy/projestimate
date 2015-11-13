@@ -1736,3 +1736,11 @@ en:
   user_importation_success: "Users importation success"
   not_confirmed: "Not confirmed"
   Confirmed_at: "Confirmed at"
+  Factor_Complexities_Library: "Complexities factor library"
+  Edit: "Edit"
+  Destroy: "Destroy"
+  label_Guw_model: "Units of work model"
+  operation_module: "Operation Module"
+  total_effort: "Total effort (%{parameter})"
+
+
