@@ -712,7 +712,7 @@ class OrganizationsController < ApplicationController
           new_organization.staffing_models.each do |staffing_model|
             # Update all the new organization module_project's guw_model with the current guw_model
             staffing_model_copy_id = staffing_model.copy_id
-            new_organization.module_projects.where(staffing_model_id: staffing_model_copy_id).update_all(staffing_model_id: staffing_model_copy_id.id)
+            new_organization.module_projects.where(staffing_model_id: staffing_model_copy_id).update_all(staffing_model_id: staffing_model.id)
           end
 
           # Update the modules's GE Models instances
