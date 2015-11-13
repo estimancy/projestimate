@@ -1586,7 +1586,7 @@ en:
   route_flag_error_2: "Invalide modèl name, please check the imported file."
   route_flag_error_3: "Some error ad been detected in your file, please check the imported file , for more information tanks to refer to the wiki for more information (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work)."
   route_flag_error_4: "Error, the imported file is not a Excel file or are not valid."
-  route_flag_error_5: "The model connot be create, Some importante information are missing, for more information tanks to refer to the wiki for more information (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work)."
+  route_flag_error_5: "The model cannot be create, Some importante information are missing, for more information thanks to refer to the wiki (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work)."
   route_flag_error_6: "Warning: improper page detected, number of page imported: %{ind}"
   route_flag_error_7: "A shift in the pages of the file resulted in an import error, the model has been create but some information may be missing, for more information tanks to refer to the wiki for more information (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work)."
   route_flag_error_8: "The name is missing for the following line(s): %{mess_error}"
