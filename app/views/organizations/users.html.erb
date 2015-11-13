@@ -10,9 +10,9 @@
         <%= link_to I18n.t('new_user'), new_organization_user_path(@organization), :class => 'btn pull-right' %>
 
         <%= link_to I18n.t(:Export_Users), organization_export_user_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
-         <%= link_to I18n.t(:Import_Users), organization_import_user_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
-       <!-- <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import users from excel" data-toggle="modal">
-          <%= I18n.t(:Import_Users_CSV) %>
+        <%#= link_to I18n.t(:Import_Users), organization_import_user_path(@organization), :class => 'btn pull-right button_margin_right', method: "post" %>
+        <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import users from excel" data-toggle="modal">
+          <%= I18n.t(:Import_Users) %>
         </a>
 
       <div id="myWBSModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -22,21 +22,7 @@
               <h3 id="myModalLabel"> <%= I18n.t(:Import_user_from_excel) %></h3>
             </div>
             <div class="modal-body">
-              <label>
-                <%= I18n.t(:file_csv) %>
-                <br>
-                <%= I18n.t(:line_format) %>
-              </label>
               <%= file_field_tag :file %>
-
-              <label><%= I18n.t(:separator) %>'<%= I18n.t(:general_csv_separator) %>') </label>
-              <%= text_field_tag :separator %>
-
-              <label><%= I18n.t(:encoding) %></label>
-              <%= select_tag :encoding, options_for_select(Project::encoding, :selected => I18n.t(:general_csv_encoding)) %>
-
-              <label><%= I18n.t(:languages) %></label>
-              <%= select_tag :language_id, options_for_select(Language.all.map{|i| [i.name, i.id]}) %>
             </div>
             <div class="modal-footer">
               <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

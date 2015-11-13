@@ -1041,17 +1041,12 @@ class OrganizationsController < ApplicationController
 
     first_line.each_with_index do |name, index|
       worksheet.add_cell(0, index, name)
-      worksheet[0][index].change_border(:bottom, 'thin')
-      worksheet[0][index].change_border(:right, 'thin')
     end
 
-    @organization.users.each_with_index do |user, index_line|
+    @organization.users.take(3).each_with_index do |user, index_line|
       line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language] + user.groups.where(organization_id: @organization.id).map(&:name)
       line.each_with_index do |my_case, index|
         worksheet.add_cell(index_line + 1, index, my_case)
-        worksheet[index_line + 1][index].change_border(:bottom, 'thin')
-        worksheet[index_line + 1][index].change_border(:right, 'thin')
-        worksheet[index_line + 1][index].change_border(:top, 'thin')
       end
     end
 
@@ -1073,6 +1068,7 @@ class OrganizationsController < ApplicationController
     worksheet = workbook[0]
     tab = worksheet.extract_data
     users_existing = []
+    user_with_no_name = []
 
     tab.each_with_index do |line, index_line|
 
@@ -1080,49 +1076,52 @@ class OrganizationsController < ApplicationController
         user = User.find_by_login_name(line[3])
         if user.nil?
           password = SecureRandom.hex(8)
+          if tab[0] && tab[1]
+            if line[7]
+              langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+            else
+              langue = params[:language_id].to_i
+            end
 
-          if line[7]
-            langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+            if line[5]
+              auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
+            else
+              auth_method = AuthMethod.first.id
+            end
+
+            user = User.new(first_name: line[0],
+                         last_name: line[1],
+                         initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
+                         email: line[3],
+                         login_name: line[4],
+                         id_connexion: line[4],
+                         description: line[6],
+                         super_admin: false,
+                         password: password,
+                         password_confirmation: password,
+                         language_id: langue,
+                         time_zone: "Paris",
+                         object_per_page: 50,
+                         auth_type: auth_method,
+                         number_precision: 2)
+            if line[5] == "SAML"
+              user.skip_confirmation!
+            end
+            user.save!
+            OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
+            group_index = 8
+             while line[group_index]
+                group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
+                begin
+                  GroupsUsers.create(group_id: group.id, user_id: user.id)
+                rescue
+                  #rien
+                end
+               group_index += 1
+             end
           else
-            langue = params[:language_id].to_i
+            user_with_no_name << index_line
           end
-
-          if line[5]
-            auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
-          else
-            auth_method = AuthMethod.first.id
-          end
-
-          user = User.new(first_name: line[0],
-                       last_name: line[1],
-                       initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
-                       email: line[3],
-                       login_name: line[4],
-                       id_connexion: line[4],
-                       description: line[6],
-                       super_admin: false,
-                       password: password,
-                       password_confirmation: password,
-                       language_id: langue,
-                       time_zone: "Paris",
-                       object_per_page: 50,
-                       auth_type: auth_method,
-                       number_precision: 2)
-          if line[5].upcase == "SAML"
-            user.skip_confirmation!
-          end
-          user.save
-          OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
-          group_index = 8
-           while line[group_index]
-              group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
-              begin
-                GroupsUsers.create(group_id: group.id, user_id: user.id)
-              rescue
-                #rien
-              end
-             group_index += 1
-           end
         else
           users_existing << line[3]
         end
