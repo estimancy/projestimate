@@ -83,8 +83,6 @@ class ProfilesController < ApplicationController
   def update
     authorize! :manage_master_data, :all
 
-    @profile_categories = ProfileCategory.defined.all
-
     @profile = nil
     current_profile = Profile.find(params[:id])
     set_page_title I18n.t(:update_profile, value: current_profile.name)
