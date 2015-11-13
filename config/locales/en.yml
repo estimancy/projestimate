@@ -414,7 +414,7 @@ en:
   email_attribute: "Email"
   initials_attribute: "Initials"
   priority_order: "Priority order"
-  edit_auth_method: "Edit the \"%{value}\" authentication method ..."
+  edit_auth_method: "Edit the \"%{parameter}\" authentication method"
   new_auth_method: "New authentication method"
   encryption: "Encryption method"
   editing: "Editing %{parameter}"

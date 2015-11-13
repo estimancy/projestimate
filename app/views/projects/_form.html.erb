@@ -320,9 +320,11 @@
                                                           project_security_level_id: prj_level.id,
                                                           is_model_permission: false).first
                             %>
-                          <td style="text-align: center">
-                            <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{creator.id}]", creator.id, !ps.nil?) %>
-                          </td>
+                          <% unless creator.nil? %>
+                            <td style="text-align: center">
+                              <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{creator.id}]", creator.id, !ps.nil?) %>
+                            </td>
+                          <% end %>
                         <% end %>
                       </tr>
                     <% else %>
