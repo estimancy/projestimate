@@ -1050,15 +1050,15 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     workbook = RubyXL::Workbook.new
     worksheet = workbook[0]
-    first_line = [I18n.t(:first_name_attribute), I18n.t(:last_name_attribute), I18n.t(:initials_attribute),I18n.t(:email_attribute), I18n.t(:login_name_or_email), I18n.t(:authentication),I18n.t(:description), I18n.t(:label_language), "Bloquer le",I18n.t(:groups)]
+    first_line = [I18n.t(:first_name_attribute), I18n.t(:last_name_attribute), I18n.t(:initials_attribute),I18n.t(:email_attribute), I18n.t(:login_name_or_email), I18n.t(:authentication),I18n.t(:description), I18n.t(:label_language), I18n.t(:locked_at),I18n.t(:groups)]
     line = []
 
     first_line.each_with_index do |name, index|
       worksheet.add_cell(0, index, name)
     end
 
-    @organization.users.take(3).each_with_index do |user, index_line|
-      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language, user.locked_at.nil? ? "Non bloqué" : user.locked_at] + user.groups.where(organization_id: @organization.id).map(&:name)
+    @organization.users.each_with_index do |user, index_line|
+      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language, user.locked_at.nil? ? I18n.t(:unlocked) : user.locked_at] + user.groups.where(organization_id: @organization.id).map(&:name)
       line.each_with_index do |my_case, index|
         worksheet.add_cell(index_line + 1, index, my_case)
       end
@@ -1118,7 +1118,7 @@ class OrganizationsController < ApplicationController
                               time_zone: "Paris",
                               object_per_page: 50,
                               auth_type: auth_method,
-                              locked_at: line[8] == "Non bloqué" ? nil : Time.now,
+                              locked_at: line[8].upcase ==  I18n.t(:unlocked).upcase ? nil : Time.now,
                               number_precision: 2)
               if line[5].upcase == "SAML"
                 user.skip_confirmation_notification!
@@ -1133,7 +1133,6 @@ class OrganizationsController < ApplicationController
                     GroupsUsers.create(group_id: group.id, user_id: user.id)
                   rescue
                     #rien
-                    toto = 42
                   end
                  group_index += 1
                end
@@ -1147,17 +1146,17 @@ class OrganizationsController < ApplicationController
       end
       final_error = []
       unless users_existing.empty?
-        final_error <<  "Le(s) utilisateurs \"#{users_existing.join(", ")}\" existe déjâ"
+        final_error <<  I18n.t(:user_exist, parameter: users_existing.join(", "))
       end
       unless user_with_no_name.empty?
-        final_error << "la/les ligne(s) suivante contienne des erreurs (nom|prenom|login manquant): #{user_with_no_name.join(", ")}"
+        final_error << I18n.t(:user_with_no_name, paremeter: user_with_no_name.join(", "))
       end
       unless final_error.empty?
         flash[:error] = final_error.join("<br/>").html_safe
       end
-      flash[:notice] = "importation reussi"
+      flash[:notice] = I18n.t(:user_importation_success)
     else
-      flash[:error] = "Fichier invalide (le fichier doit etre un excel (Avec l'extension \".xlsx\")"
+      flash[:error] = I18n.t(:route_flag_error_4)
     end
     redirect_to organization_users_path(@current_organization)
 

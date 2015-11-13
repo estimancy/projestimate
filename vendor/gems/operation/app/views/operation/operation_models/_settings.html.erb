@@ -1,5 +1,5 @@
 <h3>
-Module d'opération : <%= @operation_model.operation_type.humanize %>
+  <%= "#{operation_module}:#{@operation_model.operation_type.humanize}" %>
 </h3>
 
 <%= form_tag operation.operation_model_save_efforts_path(@operation_model), method: "POST" do %>
@@ -13,11 +13,11 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
       <table class="table">
         <tr>
           <th>
-            Module
+            <%= I18n.t(:label_Pemodule) %>
           </th>
           <% ["low", "most_likely", "high", "probable"].each do |level| %>
             <th>
-              Effort <%= level %>
+               <%="#{I18n.t(effort_import)} #{level}"%>
             </th>
           <% end %>
         </tr>
@@ -38,7 +38,7 @@ Module d'opération : <%= @operation_model.operation_type.humanize %>
         <tr>
           <td>
             <b>
-              Effort total (<%= @operation_model.effort_unit %>)
+              <%= I18n.t(:total_effort , parameter: @operation_model.effort_unit)%>
             </b>
           </td>
           <td>

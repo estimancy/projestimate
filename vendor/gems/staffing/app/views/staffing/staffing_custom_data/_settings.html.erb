@@ -110,7 +110,7 @@
       </button>
     <% end %>
 
-    <%= link_to "Exporter", staffing.staffing_model_export_staffing_path(@staffing_custom_data), :method => 'post', :class=> "btn btn-mini pull-right button_margin_right"%>
+    <%= link_to I18n.t(:export), staffing.staffing_model_export_staffing_path(@staffing_custom_data), :method => 'post', :class=> "btn btn-mini pull-right button_margin_right"%>
 
     <h4>
       <b>
