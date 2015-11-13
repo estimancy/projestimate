@@ -1133,6 +1133,7 @@ class OrganizationsController < ApplicationController
                     GroupsUsers.create(group_id: group.id, user_id: user.id)
                   rescue
                     #rien
+                    toto = 42
                   end
                  group_index += 1
                end

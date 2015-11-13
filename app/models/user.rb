@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :current_password, :email, :login_name, :id_connexion, :super_admin, :password_changed,
                   :password, :password_confirmation, :remember_me, :provider, :uid, :description,
-                  :avatar, :language_id, :first_name, :last_name, :initials, :time_zone,
+                  :avatar, :language_id, :first_name, :last_name, :initials, :time_zone, :locked_at,
                   :object_per_page, :password_salt, :password_hash, :password_reset_token, :auth_token, :created_at,
                   :updated_at, :auth_type, :number_precision
 
