@@ -71,9 +71,9 @@
                   <tr>
                     <td colspan="2">
                       <% if @user.locked_at.nil? %>
-                        <%= 'Compte non-bloqué' %>
+                        <%= I18n.t(:unlocked) %>
                       <% else %>
-                        <%= "Compte bloqué le #{@user.locked_at}" %>
+                        <%= "#{I18n.t(:locked_at)} #{@user.locked_at}" %>
                       <% end %>
                     </td>
                   </tr>
