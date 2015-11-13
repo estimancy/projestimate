@@ -1031,7 +1031,13 @@ class Guw::GuwModelsController < ApplicationController
                         indexing_field_error[2][0] = false
                       end
                     else
-                      guw_uow.organization_technology_id = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first.organization_technology.id
+                      guw_ct = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first
+                      unless guw_ct.nil?
+                        guw_uow.organization_technology_id = guw_ct.organization_technology.id
+                      else
+                        guw_uow.organization_technology_id = nil
+                      end
+
                       ind += 1
                       indexing_field_error[2][0] = true
                     end

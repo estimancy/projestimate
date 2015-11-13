@@ -69,7 +69,11 @@
               <tr>
                 <td>
                   <% if can_show_estimation?(@project.original_model) %>
-                    <span><%= I18n.t(:original_model) %> : <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br></span>
+                    <% unless @project.original_model.nil? %>
+                      <span>
+                        <%= I18n.t(:original_model) %> : <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br>
+                      </span>
+                    <% end %>
                   <% else %>
                     <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
                   <% end %>

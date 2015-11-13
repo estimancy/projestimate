@@ -37,7 +37,7 @@
      previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
      effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    rescue
-     effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.v.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
+     effort = ev.string_data_probable[current_component.id].to_f / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
 
    @md_duration = @staffing_model.mc_donell_coef.to_f * (effort * @staffing_model.standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
