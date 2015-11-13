@@ -1036,7 +1036,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     workbook = RubyXL::Workbook.new
     worksheet = workbook[0]
-    first_line = [I18n.t(:first_name_attribute), I18n.t(:last_name_attribute), I18n.t(:initials_attribute),I18n.t(:email_attribute), I18n.t(:login_name_or_email), I18n.t(:authentication),I18n.t(:description), I18n.t(:label_language), I18n.t(:groups)]
+    first_line = [I18n.t(:first_name_attribute), I18n.t(:last_name_attribute), I18n.t(:initials_attribute),I18n.t(:email_attribute), I18n.t(:login_name_or_email), I18n.t(:authentication),I18n.t(:description), I18n.t(:label_language), "Bloquer le",I18n.t(:groups)]
     line = []
 
     first_line.each_with_index do |name, index|
@@ -1044,7 +1044,7 @@ class OrganizationsController < ApplicationController
     end
 
     @organization.users.take(3).each_with_index do |user, index_line|
-      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language] + user.groups.where(organization_id: @organization.id).map(&:name)
+      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language, user.locked_at.nil? ? "Non bloqué" : user.locked_at] + user.groups.where(organization_id: @organization.id).map(&:name)
       line.each_with_index do |my_case, index|
         worksheet.add_cell(index_line + 1, index, my_case)
       end
@@ -1064,74 +1064,87 @@ class OrganizationsController < ApplicationController
   end
 
   def import_user
-    workbook = RubyXL::Parser.parse(params[:file].path)
-    worksheet = workbook[0]
-    tab = worksheet.extract_data
     users_existing = []
     user_with_no_name = []
 
-    tab.each_with_index do |line, index_line|
+    if !params[:file].nil? &&
+        (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+        workbook = RubyXL::Parser.parse(params[:file].path)
+        worksheet = workbook[0]
+        tab = worksheet.extract_data
 
-      if index_line > 0
-        user = User.find_by_login_name(line[3])
-        if user.nil?
-          password = SecureRandom.hex(8)
-          if line[0] && line[1] && line[4]
-            if line[7]
-              langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+        tab.each_with_index do |line, index_line|
+        if index_line > 0
+          user = User.find_by_login_name(line[3])
+          if user.nil?
+            password = SecureRandom.hex(8)
+            if line[0] && line[1] && line[4]
+              if line[7]
+                langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+              else
+                langue = params[:language_id].to_i
+              end
+
+              if line[5]
+                auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
+              else
+                auth_method = AuthMethod.first.id
+              end
+
+              user = User.new(first_name: line[0],
+                              last_name: line[1],
+                              initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
+                              email: line[3],
+                              login_name: line[4],
+                              id_connexion: line[4],
+                              description: line[6],
+                              super_admin: false,
+                              password: password,
+                              password_confirmation: password,
+                              language_id: langue,
+                              time_zone: "Paris",
+                              object_per_page: 50,
+                              auth_type: auth_method,
+                              locked_at: line[8] == "Non bloqué" ? nil : Time.now,
+                              number_precision: 2)
+              if line[5].upcase == "SAML"
+                user.skip_confirmation_notification!
+                user.skip_confirmation!
+              end
+              user.save
+              OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
+              group_index = 9
+               while line[group_index]
+                  group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
+                  begin
+                    GroupsUsers.create(group_id: group.id, user_id: user.id)
+                  rescue
+                    #rien
+                  end
+                 group_index += 1
+               end
             else
-              langue = params[:language_id].to_i
+              user_with_no_name << index_line
             end
-
-            if line[5]
-              auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
-            else
-              auth_method = AuthMethod.first.id
-            end
-
-            user = User.new(first_name: line[0],
-                           last_name: line[1],
-                           initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
-                           email: line[3],
-                           login_name: line[4],
-                           id_connexion: line[4],
-                           description: line[6],
-                           super_admin: false,
-                           password: password,
-                           password_confirmation: password,
-                           language_id: langue,
-                           time_zone: "Paris",
-                           object_per_page: 50,
-                           auth_type: auth_method,
-                           number_precision: 2)
-            if line[5] == "SAML"
-              user.skip_confirmation_notification!
-              user.skip_confirmation!
-            end
-            user.save
-            OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
-            group_index = 8
-             while line[group_index]
-                group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
-                begin
-                  GroupsUsers.create(group_id: group.id, user_id: user.id)
-                rescue
-                  #rien
-                end
-               group_index += 1
-             end
           else
-            user_with_no_name << index_line
+            users_existing << line[3]
           end
-        else
-          users_existing << line[3]
         end
       end
+      final_error = nil
+      unless users_existing.empty?
+        final_error =  "Le(s) utilisateur suivant #{users_existing.join(", "} existe déjâ <br/>"
+      end
+      unless user_with_no_name.empty?
+        final_error += "erreur au ligne suivante (nom|prenom|login manquant): #{user_with_no_name.join("<br/>")}"
+      end
+      unless user_with_no_name.empty? ||  users_existing.empty?
+        flash[:error] = final_error.html_safe
+      end
+      flash[:notice] = "importation reussi"
+    else
+      flash[:error] = "Fichier invalide (le fichier doit etre un excel (Avec l'extension \".xlsx\")"
     end
-    unless users_existing.empty?
-      flash[:error] = "Le(s) utilisateur suivant #{users_existing.join(", ")} existe déjâ"
-    end
-    flash[:notice] = "importation reussi"
     redirect_to organization_users_path(@current_organization)
 
 =begin
