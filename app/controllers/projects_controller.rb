@@ -592,7 +592,8 @@ class ProjectsController < ApplicationController
               ProjectSecurity.create(group_id: group.first.to_i,
                                      project_id: @project.id,
                                      project_security_level_id: psl.first,
-                                     is_model_permission: true)
+                                     is_model_permission: false,
+                                     is_estimation_permission: true)
             end
           end
         end
@@ -603,7 +604,8 @@ class ProjectsController < ApplicationController
               ProjectSecurity.create(group_id: group.first.to_i,
                                      project_id: @project.id,
                                      project_security_level_id: psl.first,
-                                     is_model_permission: false)
+                                     is_model_permission: true,
+                                     is_estimation_permission: false)
             end
           end
         end
@@ -614,7 +616,8 @@ class ProjectsController < ApplicationController
               ProjectSecurity.create(user_id: group.first.to_i,
                                      project_id: @project.id,
                                      project_security_level_id: psl.first,
-                                     is_model_permission: @project.is_model)
+                                     is_model_permission: @project.is_model,
+                                     is_estimation_permission: false)
             end
           end
         end

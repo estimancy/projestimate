@@ -259,7 +259,8 @@
                                      ps = ProjectSecurity.where(group_id: group.id,
                                                                 project_id: @project.id,
                                                                 project_security_level_id: prj_level.id,
-                                                                is_model_permission: true).first
+                                                                is_model_permission: false,
+                                                                is_estimation_permission: true).first
                                   %>
                                   <td style="text-align: center">
                                     <%= check_box_tag("group_securities[#{prj_level.id}][#{group.id}]", group.name, !ps.nil?) %>
@@ -318,14 +319,15 @@
                                ps = ProjectSecurity.where(user_id: creator.nil? ? nil : creator.id,
                                                           project_id: @project.id,
                                                           project_security_level_id: prj_level.id,
-                                                          is_model_permission: true).first
+                                                          is_model_permission: true,
+                                                          is_estimation_permission: false).first
                             %>
-                          <%# unless creator.nil? %>
-                          <td style="text-align: center">
-                            <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{creator.id}]", creator.id, ps.nil? ? false : true) %>
-                          </td>
-                          <%# end %>
-                        <% end %>
+                            <% unless creator.nil? %>
+                              <td style="text-align: center">
+                                <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{creator.id}]", creator.id, ps.nil? ? false : true) %>
+                              </td>
+                            <% end %>
+                          <% end %>
                       </tr>
                     <% else %>
                       <% @organization.users.each do |user| %>
@@ -337,7 +339,8 @@
                                  ps = ProjectSecurity.where(user_id: user.id,
                                                             project_id: @project.id,
                                                             project_security_level_id: prj_level.id,
-                                                            is_model_permission: false).first
+                                                            is_model_permission: false,
+                                                            is_estimation_permission: true).first
                               %>
                             <td style="text-align: center">
                               <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true) %>
@@ -386,7 +389,8 @@
                           <% ps = ProjectSecurity.where(group_id: group.id,
                                                         project_id: @project.id,
                                                         project_security_level_id: prj_level.id,
-                                                        is_model_permission: false).first %>
+                                                        is_model_permission: true,
+                                                        is_estimation_permission: false).first %>
                         <td style="text-align: center">
                           <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?) %>
                         </td>
