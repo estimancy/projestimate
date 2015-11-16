@@ -208,7 +208,7 @@
 
           <% unless @guw_model.guw_attributes.empty? %>
             <% if can? :manage_modules_instances, ModuleProject %>
-              <%= submit_tag "Enregistrer", class: "btn btn-mini pull-right" %>
+              <%= submit_tag I18n.t(:save), class: "btn btn-mini pull-right" %>
             <% end %>
             <%= link_to I18n.t(:back), main_app.edit_organization_path(@guw_model.organization), :class => 'btn btn-mini pull-right button_margin_right' %>
           <% end %>
