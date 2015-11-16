@@ -1777,3 +1777,6 @@ frsncf:
   permission: "Autorisation"
   config_and_setting: "Configuration et paramétrage"
   users_env: "Environnement utilisateur"
+  Current_estimate: "Estimation en cours"
+  report: "Rapport"
+  import_uo_from_excel: "Importation d'UO depuis excel"

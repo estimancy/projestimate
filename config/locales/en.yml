@@ -1772,5 +1772,7 @@ en:
   permission: "Permission"
   config_and_setting: "Configuration and setting"
   users_env: "User environment"
-
+  Current_estimate: "Current estimation"
+  report: "Raport"
+  import_uo_from_excel: "Import Uw from excel"
 
