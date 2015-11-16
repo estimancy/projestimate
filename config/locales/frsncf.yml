@@ -1775,3 +1775,5 @@ frsncf:
   op_mess_2: "L'effort E est généré dans l'unité propre au modèle (h.j, h.m etc...). L'utilisateur doit définir le coefficient de conversion en unité standard (des heures)."
   Organisation_change: "Changement d'organisation"
   permission: "Autorisation"
+  config_and_setting: "Configuration et paramétrage"
+  users_env: "Environnement utilisateur"

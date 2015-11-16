@@ -1770,5 +1770,7 @@ en:
   op_mess_2: "The effort E is generate in the unit belonging to the model (h.j, h.m etc...). The user must define the conversion coefficient in standard units (hours)."
   Organisation_change: " Changing organisation"
   permission: "Permission"
+  config_and_setting: "Configuration and setting"
+  users_env: "User environment"
 
 
