@@ -50,7 +50,7 @@
       <div class="row-fluid">
         <div class="span12">
           <%= label_tag I18n.t(:Platform_Categorie_organization) %>
-          <%= select_tag "report[platform_category_id]", options_for_select(@organization.platform_categories.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
+          <%= select_tag "report[platform_category_id]", options_for_select(@organization.platform_categories.map{|i| [i.name, i.id]}), prompt: I18n.t(:Indifferent) %>
         </div>
       </div>
 
@@ -59,7 +59,7 @@
       <div class="row-fluid">
         <div class="span12">
           <%= label_tag I18n.t(:Project_Category) %>
-          <%= select_tag "report[project_category_id]", options_for_select(@organization.project_categories.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
+          <%= select_tag "report[project_category_id]", options_for_select(@organization.project_categories.map{|i| [i.name, i.id]}), prompt: I18n.t(:Indifferent) %>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
       <div class="row-fluid">
         <div class="span12">
           <%= label_tag I18n.t(:Category_acquistion) %>
-          <%= select_tag "report[acquisition_category_id]", options_for_select(@organization.acquisition_categories.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
+          <%= select_tag "report[acquisition_category_id]", options_for_select(@organization.acquisition_categories.map{|i| [i.name, i.id]}), prompt: I18n.t(:Indifferent) %>
         </div>
       </div>
 
@@ -77,7 +77,7 @@
       <div class="row-fluid">
         <div class="span12">
           <%= label_tag I18n.t(:project_area) %>
-          <%= select_tag "report[project_area_id]", options_for_select(@organization.project_areas.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
+          <%= select_tag "report[project_area_id]", options_for_select(@organization.project_areas.map{|i| [i.name, i.id]}), prompt: I18n.t(:Indifferent) %>
         </div>
       </div>
 
@@ -86,7 +86,7 @@
       <div class="row-fluid">
         <div class="span12">
           <%= label_tag I18n.t(:Estimating_Status) %>
-          <%= select_tag "report[estimation_status_id]", options_for_select(@organization.estimation_statuses.map{|i| [i.name, i.id]}), prompt: "Indifférent" %>
+          <%= select_tag "report[estimation_status_id]", options_for_select(@organization.estimation_statuses.map{|i| [i.name, i.id]}), prompt: I18n.t(:Indifferent) %>
         </div>
       </div>
 

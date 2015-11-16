@@ -12,7 +12,7 @@
         <div class="span3">
           <h5>
             <strong>
-              Nombre de projets :
+               <%= I18n.t(:project_number)%>
               <span class="project_numbers">
                 <%= @kb_input.values.size %>
               </span>
@@ -38,7 +38,7 @@
                                                         selected: @filters.nil? ? @project.project_area : @filters[key]),
 
                                      class: "string required input-xlarge filters",
-                                     prompt: "Indifférent",
+                                     prompt: I18n.t(:Indifferent),
                                      disabled: !@kb_model.enabled_input %>
                       <% unless @kb_model.enabled_input %>
                         <input type="hidden" name="filters[<%= key %>]" value="<%= @project.project_area %>" />
@@ -54,7 +54,7 @@
                                                         selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
 
                                      class: "string required input-xlarge filters",
-                                     prompt: "Indifférent",
+                                     prompt: I18n.t(:Indifferent),
                                      disabled: !@kb_model.enabled_input %>
                       <input type="hidden" name="filters[<%= key %>]" value="<%= @filters.nil? ? (@kb_input.filters[key]) : @filters[key] %>" />
                     <% end %>
@@ -68,7 +68,7 @@
 
           <h5>
             <strong>
-              Equation
+              <%= I18n.t(:equation) %>
             </strong>
           </h5>
           <p>
@@ -87,7 +87,7 @@
 
             <h5>
               <strong>
-                Taille
+                <%= I18n.t(:size)%>
               </strong>
             </h5>
             <% size_attr = PeAttribute.find_by_alias("retained_size") %>
@@ -140,7 +140,7 @@
           <hr>
           <% if can? :execute_estimation_plan, @project %>
             <button type="submit" class="btn btn-default btn-mini pull-right">
-              Mettre à jour
+              <%= I18n.t(:update)%>
             </button>
           <% end %>
           <%= link_to I18n.t(:export), kb.kb_model_dot_export_path(@kb_model), :class => "btn btn-default btn-mini button_margin_right pull-right" , :method => "post" %>
