@@ -1742,5 +1742,5 @@ en:
   label_Guw_model: "Units of work model"
   operation_module: "Operation Module"
   total_effort: "Total effort (%{parameter})"
-
+  Exel_generator: "Excel Report Generator"
 
