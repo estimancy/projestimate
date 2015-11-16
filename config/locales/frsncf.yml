@@ -1780,3 +1780,4 @@ frsncf:
   Current_estimate: "Estimation en cours"
   report: "Rapport"
   import_uo_from_excel: "Importation d'UO depuis excel"
+  private_estimation: "Estimation privée"
