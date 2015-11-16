@@ -325,7 +325,7 @@ class ProjectsController < ApplicationController
 
     #Give full control to project creator
     defaut_psl = AdminSetting.where(key: "Secure Level Creator").first_or_create!(key: "Secure Level Creator", value: "*ALL")
-    full_control_security_level = ProjectSecurityLevel.where(name: defaut_psl.first.value, organization_id: @organization.id).first_or_create(name: defaut_psl.first.value, organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+    full_control_security_level = ProjectSecurityLevel.where(name: defaut_psl.value, organization_id: @organization.id).first_or_create(name: defaut_psl.value, organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
 
     manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
     # Add the "manage project" authorization to the "FullControl" security level
@@ -344,15 +344,18 @@ class ProjectsController < ApplicationController
     end
     current_user_ps.project_security_level = full_control_security_level
     current_user_ps.is_model_permission = false
+    current_user_ps.is_estimation_permission = true
     current_user_ps.save
 
     #For group
-    # defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
-    # defaut_group = AdminSetting.where(key: "Groupe using estimation").first_or_create.value
-    # defaut_group_ps = @project.project_securities.build
-    # defaut_group_ps.group_id = Group.find_by_name(defaut_group)
-    # defaut_group_ps.project_security_level = full_control_security_level
-    # defaut_group_ps.save
+    defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
+    defaut_group = AdminSetting.where(key: "Groupe using estimation").first_or_create!(value: "*USER")
+    defaut_group_ps = @project.project_securities.build
+    defaut_group_ps.group_id = Group.find_by_name(defaut_group.value).id
+    defaut_group_ps.project_security_level = full_control_security_level
+    defaut_group_ps.is_model_permission = false
+    defaut_group_ps.is_estimation_permission = true
+    defaut_group_ps.save
 
     @project.is_locked = false
 
@@ -1678,21 +1681,6 @@ public
           end
         end
       end
-
-        # creator_securities = ProjectSecurity.where(project_id: old_prj.id)
-        # creator_securities.each do |ps|
-        #   ps.user_id = current_user.id
-          # ps.groups.each do |g|
-          #   ps.group_id = g.id
-          # end
-          # ps.save
-        # end
-        # old_prj.project_securities.where(is_model_permission: true,
-        #                                  is_estimation_permission: false).each do |pj|
-        #
-        #   creator_securities.update_attribute(:user_id, current_user.id)
-        # end
-      # end
 
       #Managing the component tree : PBS
       pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first
