@@ -1757,3 +1757,8 @@ frsncf:
   Confirmed_at: "Confirmé le"
   operation_module: "Module d'opération"
   total_effort: "Effort total (%{parameter})"
+  new_model: "Nouveau modèle"
+  new: "Nouveau"
+  setting: "Paramétrage"
+  tech_setting: "Paramétrages techniques"
+  maintenance_message: "Message de maintenance"
