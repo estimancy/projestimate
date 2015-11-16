@@ -70,7 +70,7 @@
           </li>
           <li class="dropdown">
             <a href="<%= main_app.organization_setting_path(@current_organization)%>">
-              Paramétrage
+              <%= I18n.t(:setting)%>
             </a>
           </li>
           <li class="dropdown">
@@ -108,14 +108,14 @@
           <li class="divider"></li>
 
           <li class="dropdown"><a href="<%= main_app.admin_settings_path %>">
-            Paramétrages techniques</a>
+            <%= I18n.t(:tech_setting) %></a>
           </li>
 
           <li class="dropdown"><a href="<%= main_app.maintenances_path %>">
-            Message de maintenance</a>
+            <%= I18n;t(:maintenance_message)%></a>
           </li>
 
-          <li class="dropdown"><a href="<%= main_app.audits_path %>"> Audits </a></li>
+          <li class="dropdown"><a href="<%= main_app.audits_path %>"> <%= I18n.t(:Audit)%> </a></li>
 
           <li class="divider"></li>
 

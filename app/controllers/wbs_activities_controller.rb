@@ -65,9 +65,9 @@ class WbsActivitiesController < ApplicationController
   def edit
     #no authorize required since everyone can show this object
 
-    set_page_title I18n.t(:edit_wbs_activity)
     @wbs_activity = WbsActivity.find(params[:id])
     @organization_id = @wbs_activity.organization_id
+    set_page_title I18n.t(:edit_wbs_activity, value: @wbs_activity.name)
 
     @wbs_activity_elements_list = @wbs_activity.wbs_activity_elements
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
