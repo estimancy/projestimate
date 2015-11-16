@@ -11,10 +11,9 @@
     <%= simple_form_for(@operation_model) do |f| %>
 
       <div class="alert alert-info">
-        La méthode générique d'éffort correspond à une méthode de calcul de l'éffort
-        selon la formule a*x^b ou <b>a</b> correspond au facteur d'ajustement et <b>b</b> au facteur d'échelle.
+        <%= I18n.t(:op_mess_1).html_safe %>
         <br>
-        L'effort E est généré dans l'unité propre au modèle (h.j, h.m etc...). L'utilisateur doit définir le coefficient de conversion en unité standard (des heures).
+        <%= I18n.t(:op_mess_2) %>
       </div>
       <%= f.error_notification %>
 
@@ -23,12 +22,12 @@
 
       <div class="form-inputs">
         <%= f.input :name %>
-        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
-        <%= f.input :enabled_input, label: "Modification des valeurs d'entrées" %>
-        <%= f.input :effort_unit, label: "Libellé de l'unité d'effort" %>
-        <%= f.input :standard_unit_coefficient, label: 'Coefficient de conversion en unité standard (heures)' %>
+        <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
+        <%= f.input :enabled_input, label: I18n.t(:changing_enter_value) %>
+        <%= f.input :effort_unit, label: I18n.t(:Wording_of_the_module_unit_effort) %>
+        <%= f.input :standard_unit_coefficient, label: I18n.t(:standard_coef_conv) %>
         <%= f.input :operation_type, as: :select, collection: [["Addition", "addition"],
-                                                               ["Moyenne", "moyenne"]], label: "Type d'opération" %>
+                                                               ["Moyenne", "moyenne"]], label: I18n.t(:op_type) %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>

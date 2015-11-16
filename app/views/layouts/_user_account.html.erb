@@ -44,7 +44,7 @@
       </li>
 
       <li class="dropdown">
-        <a href="<%= main_app.organization_authorization_path(@current_organization) %>"> Autorisations </a>
+        <a href="<%= main_app.organization_authorization_path(@current_organization) %>"> <%= I18n.t(:permission) %> </a>
       </li>
 
       <li class="dropdown">
@@ -52,7 +52,7 @@
       </li>
 
       <li class="dropdown">
-        <a href="/organizationals_params"> Changement d'organisation </a>
+        <a href="/organizationals_params"><%= I18n.t(:Organisation_change) %> </a>
       </li>
     </ul>
   </li>
