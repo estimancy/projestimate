@@ -1656,7 +1656,7 @@ public
       new_prj.start_date = start_date
 
       #Only the securities for the generated project will be taken in account
-      new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }
+      # new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }
     end
 
     if new_prj.save
@@ -1665,11 +1665,34 @@ public
       #Update the project securities for the current user who create the estimation from model
       #if params[:action_name] == "create_project_from_template"
       if !params[:create_project_from_template].nil?
-        creator_securities = old_prj.creator.project_securities_for_select(new_prj.id)
-        unless creator_securities.nil?
-          creator_securities.update_attribute(:user_id, current_user.id)
+        creator_securities = new_prj.project_securities
+        creator_securities.each do |ps|
+          if ps.is_model_permission == true
+            ps.update_attribute(:is_model_permission, false)
+            ps.update_attribute(:is_estimation_permission, true)
+            if !ps.user_id.nil?
+              ps.update_attribute(:user_id, current_user.id)
+            end
+          else
+            ps.destroy
+          end
         end
       end
+
+        # creator_securities = ProjectSecurity.where(project_id: old_prj.id)
+        # creator_securities.each do |ps|
+        #   ps.user_id = current_user.id
+          # ps.groups.each do |g|
+          #   ps.group_id = g.id
+          # end
+          # ps.save
+        # end
+        # old_prj.project_securities.where(is_model_permission: true,
+        #                                  is_estimation_permission: false).each do |pj|
+        #
+        #   creator_securities.update_attribute(:user_id, current_user.id)
+        # end
+      # end
 
       #Managing the component tree : PBS
       pe_wbs_product = new_prj.pe_wbs_projects.products_wbs.first

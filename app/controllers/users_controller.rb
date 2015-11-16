@@ -245,7 +245,7 @@ public
     else
       @user.unlock_access!
     end
-    redirect_to users_path
+    redirect_to :back
   end
 
   #Create a inactive user if the demand is ok.

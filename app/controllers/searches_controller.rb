@@ -30,8 +30,8 @@ class SearchesController < ApplicationController
       classes = params[:search][:classes].map { |i| String::keep_clean_space(i).camelcase.constantize }
     else
       classes = [Project, ProjectArea, PlatformCategory, ProjectCategory, AcquisitionCategory, WbsActivity, Pemodule, PeAttribute, WorkElementType,
-                 Organization, User, Group, OrganizationProfile, OrganizationUowComplexity, Field, ProjectField, EstimationStatus, OrganizationTechnology,
-                 UnitOfWork, Factor, SizeUnit, SizeUnitType, Guw::GuwModel]
+                 Organization, User, Group, OrganizationProfile, Field, ProjectField, EstimationStatus, OrganizationTechnology,
+                 Factor, SizeUnit, SizeUnitType, Guw::GuwModel, Staffing::StaffingModel]
     end
 
     # Get the current_user Organization
