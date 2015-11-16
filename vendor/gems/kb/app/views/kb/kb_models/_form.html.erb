@@ -2,12 +2,12 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        Base de connaissance
+        <%= I18n.t(:knowledge_base) %>
       </a>
     </li>
     <li>
       <a href="#tabs-2">
-        Données
+        <%= I18n.t(:data) %>
       </a>
     </li>
   </ul>
@@ -21,10 +21,10 @@
 
       <div class="form-inputs">
         <%= f.input :name %>
-        <%= f.input :three_points_estimation, label: 'Estimation 3 points' %>
-        <%= f.input :enabled_input, label: "Modification de la valeur d'entrée permise" %>
-        <%= f.input :standard_unit_coefficient, label: 'Coefficient de conversion standard' %>
-        <%= f.input :effort_unit, label: "Unité d'effort" %>
+        <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
+        <%= f.input :enabled_input, label: I18n.t(:modification_of_the_input_value_allow) %>
+        <%= f.input :standard_unit_coefficient, label: I18n.t(:standard_coef_conv) %>
+        <%= f.input :effort_unit, label: I18n.t(:effort_unit) %>
       </div>
 
       <% unless @kb_model.kb_datas.empty? %>
@@ -54,14 +54,14 @@
           <%= form_tag kb.kb_model_import_path(@kb_model.id), :multipart => true, method: "post", :class => 'simple_form' do %>
 
             <div class="form-inputs">
-              <label>Importer une base de connaissance </label>
+              <label><%= I18n.t(:import) %> </label>
               <%= file_field_tag :file %>
 
               <%= hidden_field_tag :kb_model_id, @kb_model.id %>
             </div>
 
             <hr>
-            <%= submit_tag 'Importer', :class => 'btn btn-primary' %>
+            <%= submit_tag I18n.t(:import), :class => 'btn btn-primary' %>
 
           <% end %>
         <% end %>
@@ -71,7 +71,7 @@
           <table class="table table-bordered tablesorterPager">
             <thead>
               <tr>
-                <th>Taille</th>
+                <th><%= I18n.t(:size) %></th>
                 <th>Effort</th>
                 <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
                   <th>

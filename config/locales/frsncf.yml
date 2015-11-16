@@ -1537,11 +1537,11 @@ frsncf:
   wiki_changelog: "Voir le changelog sur le wiki"
   Listing_views: ""
   Is_it_of_a_title_thumbnail: "S'agit-il d'une vignette de titre ?"
-  three_points_estimation_activities: "Estimation 3 points"
+  three_points_estimation: "Estimation 3 points"
   modification_entry_valur: "Modification des valeurs d'entrées"
   Wording_of_the_module_unit_effort: "Libellé de l'unité d'effort du module"
   Conversion_factor_standard_effort: "Coefficient de conversion en effort standard"
-  Exel_generator: "Générateur de rapport Excel"
+  excel_generator: "Générateur de rapport Excel"
   Generate_Excel_report: "Générer un rapport Excel"
 
   #traduction import/export
@@ -1758,4 +1758,6 @@ frsncf:
   operation_module: "Module d'opération"
   total_effort: "Effort total (%{parameter})"
   team: "Equipe"
+  expert_judgement: "Judgement d'Expert"
   size_by_group: "Taille par groupe"
+  data: "Données"

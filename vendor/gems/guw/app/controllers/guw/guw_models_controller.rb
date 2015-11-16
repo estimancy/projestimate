@@ -331,7 +331,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet[1][1].change_border(:right, 'thin')
     worksheet[1][1].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(2, 0, I18n.t(:three_points_estimation_activities))
+    worksheet.add_cell(2, 0, I18n.t(:three_points_estimation))
     worksheet[2][0].change_border(:right, 'thin')
     worksheet[2][0].change_border(:bottom, 'thin')
 
