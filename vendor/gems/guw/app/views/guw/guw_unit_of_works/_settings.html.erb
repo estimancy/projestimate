@@ -134,7 +134,11 @@
           <table class="table table-striped">
             <tr>
               <th class=""></th>
-              <th class=""> <%= link_to '', '#!', onclick: "toggle_group(#{uowg.id});", class:"fa fa-check-square-o" %> </th> <!-- tu travaille ici  -->
+              <th class="">
+                <% if can?(:execute_estimation_plan, @project) %>
+                  <%= link_to '', '#!', onclick: "toggle_group(#{uowg.id});", class: "fa fa-check-square-o" %>
+                <% end %>
+              </th>
               <th class="">#</th>
               <th class="text_left"><%= I18n.t :name %></th>
               <th class="text_left"><%= I18n.t :description %></th>
