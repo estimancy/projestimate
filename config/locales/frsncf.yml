@@ -1767,3 +1767,5 @@ frsncf:
   size_by_group: "Taille par groupe"
   data: "Données"
   last_update: "Last update"
+  project_number: "Nombre de projets: "
+  Indifferent: "Indifférent"
