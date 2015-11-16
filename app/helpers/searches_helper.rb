@@ -32,7 +32,12 @@ module SearchesHelper
       result += " ("+res.alias+")"
     end
     query_string =  params.gsub /"/, ''
-    link_to(raw("#{highlight(result, query_string.split) unless params.nil?}"), "/#{String::keep_clean_space(res.class.to_s.underscore.pluralize)}/#{res.id}/edit", :class => "search_result", :style => "font-size:12px; color: #467aa7;")
+    begin
+      link_to(raw("#{highlight(result, query_string.split) unless params.nil?}"),
+              "/#{String::keep_clean_space(res.class.to_s.underscore.pluralize)}/#{res.id}/edit", :class => "search_result", :style => "font-size:12px; color: #467aa7;")
+    rescue
+      '#'
+    end
   end
 
   def display_description(res, params=nil)

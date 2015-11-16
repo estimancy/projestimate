@@ -1761,4 +1761,6 @@ en:
   data: "Datas"
   last_update: "Last update"
   project_number: "Numbers of project: "
-  Indifferent: "Indifferent"
+  Indifferent: "Indifferent"  last_update: "Last update"
+  standard_coef_conv: "Standard unit coefficient"
+
