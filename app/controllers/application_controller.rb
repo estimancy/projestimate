@@ -38,13 +38,16 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Errno::ECONNREFUSED do |error|
-    flash[:error] = I18n.t(:error_connection_refused)
   end
 
   if Rails.env == "production"
     rescue_from StandardError do |exception|
-      UserMailer.crash_log(exception, current_user).deliver
-      render :template => "layouts/500.html", :status => 500
+      if exception == Errno::ECONNREFUSED
+        flash[:error] = I18n.t(:error_connection_refused)
+      else
+        UserMailer.crash_log(exception, current_user).deliver
+        render :template => "layouts/500.html", :status => 500
+      end
     end
   end
 
