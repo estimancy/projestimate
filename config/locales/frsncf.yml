@@ -1757,3 +1757,5 @@ frsncf:
   Confirmed_at: "Confirmé le"
   operation_module: "Module d'opération"
   total_effort: "Effort total (%{parameter})"
+  team: "Equipe"
+  size_by_group: "Taille par groupe"

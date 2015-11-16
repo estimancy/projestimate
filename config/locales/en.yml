@@ -1742,5 +1742,8 @@ en:
   label_Guw_model: "Units of work model"
   operation_module: "Operation Module"
   total_effort: "Total effort (%{parameter})"
+  team: "Team"
+  expert_judgement: "Expert Judgement"
+  size_by_group: "Size by group"
 
 

@@ -1776,4 +1776,7 @@ fr:
   Confirmed_at: "Confirmé le"
   operation_module: "Module d'opération"
   total_effort: "Effort total (%{parameter})"
+  team: "Equipe"
+  expert_judgement: "Judgement d'Expert"
+  size_by_group: "Taille par groupe"
 
