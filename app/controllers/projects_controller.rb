@@ -324,8 +324,8 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     #Give full control to project creator
-    defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
-    full_control_security_level = ProjectSecurityLevel.where(name: defaut_psl, organization_id: @organization.id).first_or_create(name: defaut_psl, organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
+    defaut_psl = AdminSetting.where(key: "Secure Level Creator").first_or_create!(key: "Secure Level Creator", value: "*ALL")
+    full_control_security_level = ProjectSecurityLevel.where(name: defaut_psl.first.value, organization_id: @organization.id).first_or_create(name: defaut_psl.first.value, organization_id: @organization.id, description: "Authorization to Read + Comment + Modify + Define + can change users's permissions on the project")
 
     manage_project_permission = Permission.where(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status).first_or_create(alias: "manage", object_associated: "Project", record_status_id: @defined_record_status, name: "Manage Projet", uuid: UUIDTools::UUID.random_create.to_s)
     # Add the "manage project" authorization to the "FullControl" security level
@@ -348,7 +348,7 @@ class ProjectsController < ApplicationController
 
     #For group
     # defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
-    # defaut_group = AdminSetting.where(key: "Groupe using estimation").first.value
+    # defaut_group = AdminSetting.where(key: "Groupe using estimation").first_or_create.value
     # defaut_group_ps = @project.project_securities.build
     # defaut_group_ps.group_id = Group.find_by_name(defaut_group)
     # defaut_group_ps.project_security_level = full_control_security_level
@@ -610,10 +610,22 @@ class ProjectsController < ApplicationController
           end
         end
 
+        unless params["user_securities"].nil?
+          params["user_securities"].each do |psl|
+            params["user_securities"][psl.first].each do |user|
+              ProjectSecurity.create(user_id: user.first.to_i,
+                                     project_id: @project.id,
+                                     project_security_level_id: psl.first,
+                                     is_model_permission: @project.is_model,
+                                     is_estimation_permission: true)
+            end
+          end
+        end
+
         unless params["user_securities_from_model"].nil?
           params["user_securities_from_model"].each do |psl|
-            params["user_securities_from_model"][psl.first].each do |group|
-              ProjectSecurity.create(user_id: group.first.to_i,
+            params["user_securities_from_model"][psl.first].each do |user|
+              ProjectSecurity.create(user_id: user.first.to_i,
                                      project_id: @project.id,
                                      project_security_level_id: psl.first,
                                      is_model_permission: @project.is_model,

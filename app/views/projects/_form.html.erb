@@ -347,7 +347,7 @@
                                                             is_estimation_permission: true).first
                               %>
                             <td style="text-align: center">
-                              <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true) %>
+                              <%= check_box_tag("user_securities[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true) %>
                             </td>
                           <% end %>
                         </tr>
