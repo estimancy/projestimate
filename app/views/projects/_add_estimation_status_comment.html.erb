@@ -1,6 +1,6 @@
 <%= simple_form_for @project, :url => update_comments_status_change_path(params[:id]) do |f| %>
 
-  <% if @project.private == false %>
+  <% if @project.private == false || current_user.super_admin == true || can?(:manage, @project) %>
     <%= hidden_field_tag :project_id, params[:project_id] %>
 
     <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
@@ -9,7 +9,12 @@
     <% end %>
 
     <% if can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) %>
-      <%= f.input :estimation_status_id, required: false, label: I18n.t(:change_estimation_status), as: :select, collection: @project.project_estimation_statuses(@organization), :input_html => {:class => 'input-xlarge'}, include_blank: false %>
+      <%= f.input :estimation_status_id, required: false,
+                  label: I18n.t(:change_estimation_status),
+                  as: :select,
+                  collection: @project.project_estimation_statuses(@organization),
+                  input_html: {:class => 'input-xlarge'},
+                  include_blank: false %>
     <% end %>
 
     <div class="modal-footer-left">
