@@ -208,9 +208,13 @@ class OrganizationsController < ApplicationController
     set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
     set_page_title I18n.t(:spec_estimations, parameter: @organization.to_s)
 
-    tmp1 = @organization.projects.where(is_model: false, private: false).all
-    tmp2 = @organization.projects.where(creator_id: current_user.id).all
-    @projects = (tmp1 + tmp2).uniq
+    if current_user.super_admin == true
+      @projects = @organization.projects.where(is_model: false).all
+    else
+      tmp1 = @organization.projects.where(is_model: false, private: false).all
+      tmp2 = @organization.projects.where(creator_id: current_user.id, is_model: false, private: true).all
+      @projects = (tmp1 + tmp2).uniq
+    end
   end
 
   # New organization from image

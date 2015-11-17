@@ -1,5 +1,5 @@
 <h3>
-  <%= "#{operation_module}:#{@operation_model.operation_type.humanize}" %>
+  <%# "#{OperationModel}::#{@operation_model.operation_type.humanize}" %>
 </h3>
 
 <%= form_tag operation.operation_model_save_efforts_path(@operation_model), method: "POST" do %>
@@ -15,16 +15,16 @@
           <th>
             <%= I18n.t(:label_Pemodule) %>
           </th>
-          <% ["low", "most_likely", "high", "probable"].each do |level| %>
+          <% ["Most Likely"].each do |level| %>
             <th>
-               <%="#{I18n.t(effort_import)} #{level}"%>
+               <%= "Effort (#{level})" %>
             </th>
           <% end %>
         </tr>
         <% current_module_project.previous.each do |mp| %>
           <tr>
             <td><%= mp %></td>
-            <% ["low", "most_likely", "high", "probable"].each do |level| %>
+            <% ["most_likely"].each do |level| %>
               <td>
                 <% begin %>
                   <%= val.round(2) %>
@@ -47,7 +47,7 @@
             <% elsif @operation_model.operation_type == "moyenne" %>
               <% res = @elements.values.sum / @elements.values.size %>
             <% end %>
-            <% ["low", "most_likely", "high"].each do |level| %>
+            <% ["low"].each do |level| %>
               <% unless (!@operation_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
                 <%= hidden_field_tag "effort_#{level}", res, class: "input-small" %>
                 <%= text_field_tag "effort_#{level}", convert_with_precision(res, user_number_precision), class: "input-small" %>

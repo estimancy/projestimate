@@ -23,7 +23,7 @@
         <%= hidden_field_tag :is_project_show_view, "true" %>
 
         <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')}, :disabled => true %>
-        <%= f.input :private, :label => I18n.t(:private_estimation), disabled: can?(:alter_private_estimation_setup, @project) %>
+        <%= f.input :private, :label => I18n.t(:private_estimation), disabled: !can?(:alter_private_estimation_setup, @project) %>
 
         <table>
           <tr>
@@ -56,7 +56,7 @@
                               label: I18n.t(:label_product_name),
                               input_html: {:class => 'input-large'},
                               selected: @project.application_id,
-                              :disabled => !(can_alter_estimation?(@project) && can?(:alter_product_name, @project)) %>
+                              disabled: (!(can_alter_estimation?(@project) && can?(:alter_product_name, @project)) || @project.private) %>
                 <% end %>
               <% end %>
             </td>
