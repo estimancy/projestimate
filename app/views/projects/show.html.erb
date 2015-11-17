@@ -23,6 +23,8 @@
         <%= hidden_field_tag :is_project_show_view, "true" %>
 
         <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')}, :disabled => true %>
+        <%= f.input :private, :label => I18n.t(:private_estimation), disabled: can?(:alter_private_estimation_setup, @project) %>
+
         <table>
           <tr>
 
@@ -79,12 +81,14 @@
         <% end %>
 
         <table>
-          <tr>
-            <td><%= f.input :estimation_status_id, label: I18n.t(:estimation_status), as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
-            <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
-              <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
-            <% end %>
-          </tr>
+          <% unless @project.private == true %>
+            <tr>
+              <td><%= f.input :estimation_status_id, label: I18n.t(:estimation_status), as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
+              <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
+                <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
+              <% end %>
+            </tr>
+          <% end %>
           <tr>
             <td>
               <%= f.input :creator_id,
@@ -121,8 +125,8 @@
 
         <div class="actions-tabs">
           <% if can_alter_estimation?(@project) %>
-              <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
-              <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
+            <%= submit_tag I18n.t('save'), :class => 'btn submit_project' %>
+            <%= submit_tag I18n.t('apply'), :class => 'btn submit_project' %>
           <% end %>
           <% if @project.is_model %>
               <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>

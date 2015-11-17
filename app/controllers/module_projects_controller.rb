@@ -23,6 +23,43 @@ class ModuleProjectsController < ApplicationController
 
   load_resource
 
+  def module_projects_reassign
+    @module_project = ModuleProject.find(params[:mp])
+      if params[:guw_model_id].present?
+
+        @module_project.guw_model_id = params[:guw_model_id]
+
+      elsif params[:ge_model_id].present?
+
+        @module_project.ge_model_id = params[:ge_model_id]
+
+      elsif params[:staffing_model_id].present?
+
+        @module_project.staffing_model_id = params[:staffing_model_id]
+
+      elsif params[:wbs_activity_id].present?
+
+        @module_project.wbs_activity_id = params[:wbs_activity_id]
+
+      elsif params[:operation_model_id].present?
+
+        @module_project.operation_model_id = params[:operation_model_id]
+
+      elsif params[:expert_judgement_id].present?
+
+        @module_project.expert_judgement_id = params[:expert_judgement_id]
+
+      elsif params[:kb_model_id].present?
+
+        @module_project.kb_model_id = params[:kb_model_id]
+
+      end
+
+    @module_project.save(validate: false)
+
+    redirect_to :back
+  end
+
   def edit
     @module_project = ModuleProject.find(params[:id])
     @project = @module_project.project

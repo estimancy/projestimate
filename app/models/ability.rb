@@ -129,8 +129,12 @@ class Ability
             unless prj_scrt.project_security_level.nil?
               prj_scrt.project.organization.estimation_statuses.each do |es|
                 prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-                  if permission.alias == "manage" and permission.category == "Project"
-                    can :manage, prj_scrt.project.id, estimation_status_id: es.id
+                  unless prj_scrt.project.private == true
+                    if permission.alias == "manage" and permission.category == "Project"
+                      can :manage, prj_scrt.project.id, estimation_status_id: es.id
+                    else
+                      @array_groups << [permission.id, prj_scrt.project.id, es.id]
+                    end
                   else
                     @array_groups << [permission.id, prj_scrt.project.id, es.id]
                   end
