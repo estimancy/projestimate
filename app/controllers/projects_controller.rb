@@ -1639,6 +1639,8 @@ public
       new_prj.is_model = false
     end
 
+    # new_prj.is_private = old_prj.is_private
+
     #if creation from template
     if !params[:create_project_from_template].nil?
       new_prj.original_model_id = old_prj.id

@@ -129,7 +129,7 @@ class Ability
             unless prj_scrt.project_security_level.nil?
               prj_scrt.project.organization.estimation_statuses.each do |es|
                 prj_scrt.project_security_level.permissions.select{|i| i.is_permission_project }.map do |permission|
-                  if prj_scrt.project.private == true
+                  if prj_scrt.project.private == true && prj_scrt.project.is_model != true
                     @array_groups << []
                   else
                     if permission.alias == "manage" and permission.category == "Project"
