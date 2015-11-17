@@ -143,7 +143,6 @@
   </li>
 </ul>
 
-
 <ul class="nav pull-right">
 
   <li class="divider-vertical"></li>
@@ -151,6 +150,13 @@
   <li>
     <a href="<%= main_app.destroy_user_session_path %>#" data-method="delete" rel="nofollow" title="<%= I18n.t 'logout' %>">
       <i class="fa fa-power-off fa-lg"></i>
+    </a>
+  </li>
+
+  <li class="divider-vertical"></li>
+  <li>
+    <a href="#FeedbackModal"  data-toggle="modal" title="<%= I18n.t(:send_feedback)%>">
+      <i class="fa fa-comment"></i>
     </a>
   </li>
 
@@ -209,3 +215,39 @@
     <% end %>
   </ul>
 </ul>
+
+
+<div id="FeedbackModal" style="width: 600px;" class="modal hide fade" tabindex="-1" role="dialog" >
+
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+    <h3 id="myModalLabel"><%= I18n.t(:send_feedback) %> &nbsp; - &nbsp;<%= I18n.t(:notice_send_feedback) %></h3>
+  </div>
+
+  <div class="modal-body" >
+    <div id="error_send_feedback" class="alert alert-error hide" style="margin-bottom: 15px; ">
+      <%= I18n.t('error_send_feedback_empty') %>
+    </div>
+
+    <%= simple_form_for(:send_feedback, {:url => main_app.send_feedback_path, :method => 'post'}) do |f| %>
+        <div>
+          <%= f.input :user_name, :label => I18n.t('user'), :input_html => {:class => 'input-xxlarge', :value => current_user.nil? ? '' : (current_user.first_name + ' ' + current_user.last_name + ' (' + current_user.email+ ' )') } %>
+          <%= f.input :type, :label => I18n.t('label_feedback_type'), :input_html => {:class => 'input-large'}, :collection => (['Problem', 'Suggestion', 'Other']) %>
+          <%= f.input :description, :label => I18n.t('description'), :as => :text, :input_html => {:class => 'input-xxlarge', :rows => 8} %>
+        </div>
+        <div class="modal-footer-left">
+          <%= f.submit I18n.t('send_request'), :class => 'btn' %>
+          <button class="btn" data-dismiss="modal" aria-hidden="true" id="cancel"><%= I18n.t(:cancel) %></button>
+        </div>
+    <% end %>
+  </div>
+
+</div>
+
+<script>
+    <% if allow_feedback? %>
+    $(".btn-primary").show();
+    <% else %>
+    $(".btn-primary").hide();
+    <% end %>
+</script>
