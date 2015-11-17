@@ -27,6 +27,13 @@ class OrganizationsController < ApplicationController
   include OrganizationsHelper
   include ActionView::Helpers::NumberHelper
 
+  def my_preparse(my_hash)
+    my_swap = my_hash[:mon]
+    my_hash[:mon] = my_hash[:mday]
+    my_hash[:mday] = my_swap
+    return "#{my_hash[:mday]}/#{my_hash[:mon]}/#{my_hash[:year]}"
+  end
+
   def generate_report_excel
     conditions = Hash.new
     params[:report].each do |i|
@@ -34,14 +41,18 @@ class OrganizationsController < ApplicationController
         conditions[i.first] = i.last
       end
     end
+    start_date_hash = Date._parse(params[:report_date][:start_date])
+    end_date_hash = Date._parse(params[:report_date][:start_date])
 
+    start_date = my_preparse(start_date_hash)
+    end_date = my_preparse(end_date_hash)
     @organization = @current_organization
     check_if_organization_is_image(@organization)
 
     if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
       @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
     else
-      @projects = @organization.projects.where(is_model: false).where(conditions).where(:start_date => Time.parse(params[:report_date][:start_date])..Time.parse(params[:report_date][:end_date])).where("title like '%?%'").all
+      @projects = @organization.projects.where(is_model: false).where(conditions).where(start_date: (Time.parse(start_date)..Time.parse(end_date))).where("title like '%?%'").all
     end
 
     workbook = RubyXL::Workbook.new
