@@ -972,7 +972,7 @@ class Guw::GuwModelsController < ApplicationController
                 end
               end
             else
-                guw_uow = Guw::GuwUnitOfWork.new(selected: row[3] == I18n.t(:yes) ? true : false,
+              guw_uow = Guw::GuwUnitOfWork.new(selected: row[3].upcase == I18n.t(:yes).upcase,
                                                  name: row[4],
                                                  comments: row[5],
                                                  guw_unit_of_work_group_id: guw_uow_group.id,
