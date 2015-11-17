@@ -1776,4 +1776,6 @@ en:
   report: "Report"
   import_uo_from_excel: "Import Uw from excel"
   private_estimation: "Private estimation"
+  launch_calculation: "Calculate"
+  reinitialize_delay_staffing: "Reinitialize duration and staffing"
 

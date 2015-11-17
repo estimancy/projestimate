@@ -1800,4 +1800,6 @@ fr:
   report: "Rapport"
   import_uo_from_excel: "Importation d'UO depuis excel"
   private_estimation: "Estimation privée"
+  launch_calculation: "Lancer le calcul"
+  reinitialize_delay_staffing: "Réinitialiser le délai et le staffing"
 
