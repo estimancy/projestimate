@@ -87,6 +87,8 @@ class User < ActiveRecord::Base
   has_many :change_on_groups, :foreign_key => 'owner_id', :class_name => 'Group'
   has_many :change_on_permissions, :foreign_key => 'owner_id', :class_name => 'Permission'
 
+  has_many :estimations, :foreign_key => 'creator_id', :class_name => 'Project'
+
   serialize :ten_latest_projects, Array
 
   validates_presence_of :last_name, :first_name

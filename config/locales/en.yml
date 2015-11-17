@@ -1778,4 +1778,10 @@ en:
   private_estimation: "Private estimation"
   launch_calculation: "Calculate"
   reinitialize_delay_staffing: "Reinitialize duration and staffing"
+  private: "Private"
+  unprivate: "Public"
+  effort_formula: "Formula : E = ax^b ou <b>a</b> = %{parameter_1} and <b>b</b> = %{parameter_2}"
+  enter_size_in: "Input size (en %{parameter})"
+  cal_effort_for: "Calculated effort (en %{parameter})"
+  cal_effort: "Effort calculation"
 

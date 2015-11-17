@@ -23,7 +23,7 @@
         <%= hidden_field_tag :is_project_show_view, "true" %>
 
         <%= f.input :title, :label => "#{I18n.t 'label_project_name'}", :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')}, :disabled => true %>
-        <%= f.input :private, :label => I18n.t(:private_estimation), disabled: can?(:alter_private_estimation_setup, @project) %>
+        <%= f.input :private, :label => I18n.t(:private_estimation), disabled: !can?(:alter_private_estimation_setup, @project) %>
 
         <table>
           <tr>
@@ -56,7 +56,7 @@
                               label: I18n.t(:label_product_name),
                               input_html: {:class => 'input-large'},
                               selected: @project.application_id,
-                              :disabled => !(can_alter_estimation?(@project) && can?(:alter_product_name, @project)) %>
+                              disabled: (!(can_alter_estimation?(@project) && can?(:alter_product_name, @project)) || @project.private) %>
                 <% end %>
               <% end %>
             </td>
@@ -81,40 +81,65 @@
         <% end %>
 
         <table>
-          <% unless @project.private == true %>
-            <tr>
-              <td><%= f.input :estimation_status_id, label: I18n.t(:estimation_status), as: :select, collection: @project.project_estimation_statuses, :disabled => !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project) ), :input_html => {:class => 'input-xlarge'}  %></td>
-              <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
-                <td><%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %></td>
-              <% end %>
-            </tr>
-          <% end %>
+
+          <tr>
+
+          </tr>
+
+          <tr>
+            <td>
+              <%= f.input :start_date,
+                          :as => :string,
+                          :disabled => !( can_alter_estimation?(@project) && can?(:alter_start_date, @project)),
+                          :input_html => { :class => 'date-picker',
+                                           :value => (@project.start_date.nil? ? '' : I18n.l(@project.start_date))} %>
+            </td>
+
+            <script>
+              $(document).ready(function () {
+                $(".date-picker").datepicker({
+                  language: '<%= set_user_language %>',
+                  autoclose: true,
+                  todayHighlight: true,
+                  todayBtn: true
+                });
+              });
+            </script>
+          </tr>
+
           <tr>
             <td>
               <%= f.input :creator_id,
                           as: :select,
                           collection: @organization.users.map{|i| [i.name, i.id]},
                           label: I18n.t('creator'),
-                          input_html: { :class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
+                          input_html: { :class => 'input-large',
+                                        disabled: !can?(:alter_creator, @project) } %>
             </td>
           </tr>
           <tr>
+
             <td>
-              <%= f.input :start_date, :as => :string, :disabled => !( can_alter_estimation?(@project) && can?(:alter_start_date, @project)), :input_html => { :class => 'date-picker', :value => (@project.start_date.nil? ? '' : I18n.l(@project.start_date))} %>
+              <%= f.input :organization_id,
+                          :label => "#{I18n.t 'organizations'}",
+                          :as => :select,
+                          :collection => @organizations.map{|i| [i.name, i.id] },
+                          :input_html => {:class => 'input-xlarge'},
+                          :disabled => true %>
+
+              <td>
+                <%= f.input :estimation_status_id,
+                            label: I18n.t(:estimation_status),
+                            as: :select, collection: @project.project_estimation_statuses,
+                            disabled: !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project)) || @project.private,
+                            input_html: { :class => 'input-xlarge' }  %>
+              </td>
+              <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
+                <td>
+                  <%= link_to('', main_app.add_comment_on_status_change_path(:project_id => @project.id), :class => "icon-comment", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true) %>
+                </td>
+              <% end %>
             </td>
-
-            <script>
-                $(document).ready(function () {
-                    $(".date-picker").datepicker({
-                        language: '<%= set_user_language %>',
-                        autoclose: true,
-                        todayHighlight: true,
-                        todayBtn: true
-                    });
-                });
-            </script>
-
-            <td><%= f.input :organization_id, :label => "#{I18n.t 'organizations'}", :as => :select, :collection => @organizations.map{|i| [i.name, i.id] }, :input_html => {:class => 'input-xlarge'}, :disabled => true %></td>
           </tr>
         </table>
 

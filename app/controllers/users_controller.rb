@@ -291,14 +291,23 @@ public
     authorize! :manage, User
 
     @user = User.find(params[:id])
-    @user.destroy
 
-    if params[:organization_id]
-      redirect_to organization_users_path(organization_id: params[:organization_id]) and return
-    elsif current_user.super_admin?
-      redirect_to users_path and return
+    if @user.estimations.where(private: true).empty? || @user.estimations.where(is_model: true).empty?
+      @user.destroy
+      if params[:organization_id]
+        redirect_to organization_users_path(organization_id: params[:organization_id]) and return
+      elsif current_user.super_admin?
+        redirect_to users_path and return
+      else
+        redirect_to :back
+      end
     else
-      redirect_to :back
+      flash[:error] = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.join(', ')})"
+      if params[:organization_id]
+        redirect_to organization_users_path(organization_id: params[:organization_id]) and return
+      else
+        redirect_to users_path and return
+      end
     end
   end
 
