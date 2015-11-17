@@ -1655,8 +1655,8 @@ public
       new_prj.title = params['project']['title']
       new_prj.version = params['project']['version']
       new_prj.description = params['project']['description']
-      start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
-      new_prj.start_date = start_date
+      # start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
+      new_prj.start_date = Time.now
 
       #Only the securities for the generated project will be taken in account
       # new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }

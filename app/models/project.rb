@@ -59,10 +59,12 @@ class Project < ActiveRecord::Base
 
   serialize :included_wbs_activities, Array
 
-  validates_presence_of :organization_id, :estimation_status_id
+  validates_presence_of :organization_id, :estimation_status_id, :creator_id
   validates :title, :presence => true, :uniqueness => {  :scope => [:version,:organization_id], case_sensitive: false, :message => I18n.t(:error_validation_project) }
   ###validates :alias, :presence => true, :uniqueness => { :scope => :organization_id, case_sensitive: false, :message => I18n.t(:error_validation_project) }
-  validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => [:title, :organization_id], case_sensitive: false, :message => I18n.t(:error_validation_project) }
+  validates :version, :presence => true, :length => { :maximum => 64 }, :uniqueness => { :scope => [:title, :organization_id],
+                                                                                         case_sensitive: false,
+                                                                                         :message => I18n.t(:error_validation_project) }
 
   #Search fields
   scoped_search :on => [:title, :alias, :description, :start_date, :created_at, :updated_at]

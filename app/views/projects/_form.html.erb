@@ -93,7 +93,11 @@
 
       <table>
         <tr>
-          <td><%= f.input :start_date, :as => :string, :label => I18n.t(:start_date), :input_html => { :class => 'date-picker', :value => @project.start_date.nil? ? '' : I18n.l(@project.start_date) } %></td>
+          <td><%= f.input :start_date,
+                          :as => :string,
+                          :label => I18n.t(:start_date),
+                          :input_html => { :class => 'date-picker',
+                                           :value => @project.start_date.nil? ? Time.now : I18n.l(@project.start_date) } %></td>
 
           <script>
             $(document).ready(function () {
