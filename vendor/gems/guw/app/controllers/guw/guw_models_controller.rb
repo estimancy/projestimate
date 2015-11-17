@@ -117,7 +117,7 @@ class Guw::GuwModelsController < ApplicationController
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
-                                                three_points_estimation: tab[2][1].upcase == I18n.t(:yes).upcase ? true : false,
+                                                three_points_estimation: tab[2][1].to_i == 1,
                                                 retained_size_unit: tab[3][1],
                                                 coefficient_label: "Type d'acquisition",
                                                 organization_id: @current_organization.id)
@@ -160,16 +160,16 @@ class Guw::GuwModelsController < ApplicationController
               if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
                 @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
                                                 description: tab[0][0],
-                                                allow_quantity: tab[2][1].upcase == I18n.t(:yes).upcase ? true : false,
-                                                allow_retained: tab[1][1].upcase == I18n.t(:yes).upcase ? true : false,
-                                                allow_complexity: tab[3][1].upcase == I18n.t(:yes).upcase ? true : false,
-                                                allow_criteria: tab[4][1].upcase == I18n.t(:yes).upcase ? true : false,
+                                                allow_quantity: tab[2][1].upcase == 1,
+                                                allow_retained: tab[1][1].upcase == 1,
+                                                allow_complexity: tab[3][1].upcase == 1,
+                                                allow_criteria: tab[4][1].upcase == 1,
                                                 guw_model_id: @guw_model.id)
                 if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty? && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
                   while !tab[6][ind].nil?
                     @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
                                                                name: tab[6][ind],
-                                                               enable_value: tab[8][ind] == I18n.t(:yes).upcase ? true : false,
+                                                               enable_value: tab[8][ind] == 1,
                                                                bottom_range: tab[8][ind + 1],
                                                                top_range: tab[8][ind + 2],
                                                                weight:  tab[8][ind + 3] ? tab[8][ind + 3] : 1)
@@ -230,7 +230,7 @@ class Guw::GuwModelsController < ApplicationController
                         toto = Guw::GuwAttributeComplexity.create(guw_type_complexity_id: @guw_att_complexity.id,
                                                            guw_attribute_id: att.id,
                                                            guw_type_id: @guw_type.id,
-                                                           enable_value: tab[ind3][ind].upcase == I18n.t(:yes).upcase ? true : false,
+                                                           enable_value: tab[ind3][ind] == 1,
                                                            bottom_range: tab[ind3][ind + 1],
                                                            top_range: tab[ind3][ind + 2],
                                                            value: tab[ind3][ind + 3] ? tab[ind3][ind + 3] : (tab[ind3][ind + 2] && tab[ind3][ind + 1] ? 1 : nil))
@@ -335,7 +335,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet[2][0].change_border(:right, 'thin')
     worksheet[2][0].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? I18n.t(:yes) : I18n.t(:no)).change_horizontal_alignment('center')
+    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? 1 : 0).change_horizontal_alignment('center')
     worksheet[2][1].change_border(:right, 'thin')
     worksheet[2][1].change_border(:bottom, 'thin')
 
@@ -454,7 +454,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet[1][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[1][0].change_font_bold(true)
 
-      worksheet.add_cell(1, 1,  guw_type.allow_retained ? I18n.t(:yes) : I18n.t(:no)).change_horizontal_alignment('center')
+      worksheet.add_cell(1, 1,  guw_type.allow_retained ? 1 : 0).change_horizontal_alignment('center')
       worksheet[1][1].change_border(:top, 'thin')
       worksheet[1][1].change_border(:right, 'thin')
       worksheet[1][1].change_border(:bottom, 'thin')
@@ -464,7 +464,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet[2][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[2][0].change_font_bold(true)
 
-      worksheet.add_cell(2, 1,  guw_type.allow_quantity ? I18n.t(:yes) : I18n.t(:no)).change_horizontal_alignment('center')
+      worksheet.add_cell(2, 1,  guw_type.allow_quantity ? 1 : 0).change_horizontal_alignment('center')
       worksheet[2][1].change_border(:right, 'thin')
       worksheet[2][1].change_border(:bottom, 'thin')
 
@@ -473,7 +473,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet[3][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[3][0].change_font_bold(true)
 
-      worksheet.add_cell(3, 1,  guw_type.allow_complexity ? I18n.t(:yes) : I18n.t(:no)).change_horizontal_alignment('center')
+      worksheet.add_cell(3, 1,  guw_type.allow_complexity ? 1 : 0).change_horizontal_alignment('center')
       worksheet[3][1].change_border(:right, 'thin')
       worksheet[3][1].change_border(:bottom, 'thin')
 
@@ -482,7 +482,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet[4][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[4][0].change_font_bold(true)
 
-      worksheet.add_cell(4, 1,  guw_type.allow_criteria ? I18n.t(:yes) : I18n.t(:no)).change_horizontal_alignment('center')
+      worksheet.add_cell(4, 1,  guw_type.allow_criteria ? 1 : 0).change_horizontal_alignment('center')
       worksheet[4][1].change_border(:right, 'thin')
       worksheet[4][1].change_border(:bottom, 'thin')
 
@@ -527,7 +527,7 @@ class Guw::GuwModelsController < ApplicationController
         worksheet[ind2][ind + 1].change_border(:left, 'thin')
         worksheet[ind2][ind + 1].change_border(:right, 'thin')
 
-        worksheet.add_cell(ind2 + 2, ind + 1, guw_complexity.enable_value ? I18n.t(:yes) : I18n.t(:no)).change_horizontal_alignment('center')
+        worksheet.add_cell(ind2 + 2, ind + 1, guw_complexity.enable_value ? 1 : 0).change_horizontal_alignment('center')
         worksheet[ind2 + 2][ind + 1].change_border(:left, 'thin')
         worksheet[ind2 + 2][ind + 1].change_border(:bottom, 'thin')
 
@@ -648,7 +648,7 @@ class Guw::GuwModelsController < ApplicationController
 
           att_val = Guw::GuwAttributeComplexity.where(guw_type_complexity_id: type_attribute_complexity.id, guw_attribute_id: attribute.id).first
           unless att_val.nil?
-            worksheet.add_cell(ind4, ind + 1, att_val.enable_value ? I18n.t(:yes) : I18n.t(:no))
+            worksheet.add_cell(ind4, ind + 1, att_val.enable_value ? 1 : 0)
             worksheet[ind4][ind + 1].change_border(:right, 'thin')
             worksheet.sheet_data[ind4][ind + 1].change_horizontal_alignment('center')
 
@@ -944,8 +944,6 @@ class Guw::GuwModelsController < ApplicationController
     gac_save = nil
     tab_error = [[false], [false], [false], [false], [false]]
     indexing_field_error = [[false],[false],[false],[false]]
-    ex_locale = I18n.locale
-    I18n.locale = :fr
 
     if !params[:file].nil? &&
         (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
@@ -1103,7 +1101,6 @@ class Guw::GuwModelsController < ApplicationController
       end
     end
 
-    I18n.locale = ex_locale.to_sym
     my_verrif_tab_error(tab_error, indexing_field_error)
     if ok
       flash[:notice] = I18n.t(:importation_sucess_uo)
