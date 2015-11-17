@@ -141,6 +141,10 @@ module OrganizationsHelper
       when :description
         # mettre un truncate sinon ca plante sous ie8
         content_tag('td', ActionView::Base.full_sanitizer.sanitize(value).to_s.html_safe, :class => "text_field_text_overflow")
+      when :private
+        # mettre un truncate sinon ca plante sous ie8
+
+        content_tag('td', value ? I18n.t(:private) : I18n.t(:unprivate))
       when :start_date, :created_at, :updated_at
         if value.nil?
           content_tag('td', value, class: "center")

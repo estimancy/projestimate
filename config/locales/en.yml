@@ -1778,4 +1778,6 @@ en:
   private_estimation: "Private estimation"
   launch_calculation: "Calculate"
   reinitialize_delay_staffing: "Reinitialize duration and staffing"
+  private: "Private"
+  private: "Public"
 

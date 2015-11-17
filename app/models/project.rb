@@ -107,7 +107,8 @@ class Project < ActiveRecord::Base
       QueryColumn.new(:start_date, :sortable => "#{Project.table_name}.start_date", :caption => "label_date"),
       QueryColumn.new(:creator, :sortable => "#{User.table_name}.first_name", :caption => "author"),
       QueryColumn.new(:created_at, :sortable => "#{Project.table_name}.created_at", :caption => "created_at"),
-      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at")
+      QueryColumn.new(:updated_at, :sortable => "#{Project.table_name}.updated_at", :caption => "updated_at"),
+      QueryColumn.new(:private, :sortable => "#{Project.table_name}.private", :caption => "private_estimation")
     ]
 
   #class_attribute :selected_inline_columns
