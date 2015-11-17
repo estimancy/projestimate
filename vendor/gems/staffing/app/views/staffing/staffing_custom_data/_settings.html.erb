@@ -79,7 +79,7 @@
       <div class="span2">
         <label class="radio">
           <input type="radio" name="option_radios" id="optionsRadios2" value="max_staffing_constraint" <%= !(can? :execute_estimation_plan, @project) ? 'disabled' : '' %> <%= (@staffing_custom_data.staffing_constraint == "duration_constraint"  || @staffing_custom_data.staffing_constraint.nil?) ? '' : 'checked' %>>
-          <label>Staffing maximum (Trapèze)</label>
+          <label>Staffing max. (Trapèze)</label>
           <%= f.input :max_staffing,
                       label: false,
                       :input_html => { class: 'input-medium commonclass',
@@ -90,7 +90,7 @@
       </div>
 
       <div class="span2">
-        <label>Staffing maximum (Rayleigh)</label>
+        <label>Staffing max. (Rayleigh)</label>
         <%= f.input :max_staffing_rayleigh,
                     label: false, :input_html => { class: 'input-medium commonclass',
                                                    id: "my_id3",
@@ -102,11 +102,11 @@
 
     <% if can? :execute_estimation_plan, @project %>
       <button name="actuals_based_on[custom]" type="submit" class="btn btn-mini pull-right button_margin_right">
-        Lancer le calcul
+        <%= I18n.t(:launch_calculation) %>
       </button>
 
       <button name="actuals_based_on[mcdonell]" type="submit" class="btn btn-mini pull-right button_margin_right">
-        Réinitialiser le délai et le staffing
+        <%= I18n.t(:reinitialize_delay_staffing) %>
       </button>
     <% end %>
 

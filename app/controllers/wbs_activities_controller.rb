@@ -417,8 +417,9 @@ class WbsActivitiesController < ApplicationController
       end
     end
 
-    wai = WbsActivityInput.where(module_project_id: current_module_project.id).first
-    wai.wbs_activity_ratio_id = params[:ratio].to_i
+    wai = WbsActivityInput.where(module_project_id: current_module_project.id,
+                                 wbs_activity_id: @wbs_activity.id).first
+    wai.wbs_activity_ratio_id = @ratio_reference.id.to_i
     wai.comment = params[:comment][wai.id.to_s]
     wai.save
 

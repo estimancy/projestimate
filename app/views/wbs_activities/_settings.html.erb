@@ -1,5 +1,5 @@
 <h3>
-  Ventilation par activités
+  <%= I18n.t(:wbs_activities) %>
 </h3>
 
 <% effort = PeAttribute.find_by_alias("effort") %>
@@ -18,7 +18,8 @@
                                :in_out => "output").first %>
 <% component_id = current_component.id %>
 <% organization = @project.organization %>
-<% wai = WbsActivityInput.where(module_project_id: current_module_project.id, wbs_activity_id: current_module_project.wbs_activity_id).first_or_create! %>
+<% wai = WbsActivityInput.where(module_project_id: current_module_project.id,
+                                wbs_activity_id: current_module_project.wbs_activity_id).first_or_create! %>
 <% coeff = current_module_project.wbs_activity.effort_unit_coefficient.nil? ? 1 : current_module_project.wbs_activity.effort_unit_coefficient %>
 
 <% if cev.string_data_low[component_id].blank? %>
@@ -96,7 +97,10 @@
       <% end %>
 
       <td>
-        <%= select_tag "ratio", options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]}, selected: wai.wbs_activity_ratio_id), readonly: cannot?(:execute_estimation_plan, @project) %>
+        <%= select_tag "ratio",
+                       options_for_select(current_module_project.wbs_activity.wbs_activity_ratios.map{|i| [i.name, i.id]},
+                                          selected: wai.wbs_activity_ratio_id),
+                       readonly: cannot?(:execute_estimation_plan, @project) %>
       </td>
 
       <% if current_module_project.wbs_activity.three_points_estimation? %>
@@ -168,6 +172,6 @@
     </tr>
   </table>
   <% if can?(:execute_estimation_plan, @project) %>
-    <%= submit_tag "Lancer le calcul", class: "pull-right btn btn-mini" %>
+    <%= submit_tag I18n.t(:launch_calculation), class: "pull-right btn btn-mini" %>
   <% end %>
 <% end %>
