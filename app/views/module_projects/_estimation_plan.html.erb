@@ -8,7 +8,7 @@
     <tr>
       <td class="center">
         <% if can_alter_estimation?(@project) && can?(:alter_estimation_plan, @project) %>
-            <%= link_to "", locked_plan_path(@project.id), :class => "#{ @project.locked? ? 'icon-lock' : 'icon-unlock' } icon-large", :title => "#{ @project.locked? ? 'Unlock estimation plan' : 'Lock estimation plan' }" %>
+          <%= link_to "", locked_plan_path(@project.id), :class => "#{ @project.locked? ? 'icon-lock' : 'icon-unlock' } icon-large", :title => "#{ @project.locked? ? 'Unlock estimation plan' : 'Lock estimation plan' }" %>
         <% end %>
       </td>
       <% for x in 1..@module_positions_x.to_i do %>
@@ -44,7 +44,11 @@
                 <% end %>
 
                 <div class="<%= pbs_class %> module_project <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
-                    <%= pmod %>
+                    <% if current_user.super_admin == true %>
+                      <%= link_to pmod, edit_module_project_path(pmod), class: "a_white" %>
+                    <% else %>
+                      <%= pmod %>
+                    <% end %>
                     <br>
                     <% unless @project.locked? %>
                       <% if can_alter_estimation?(@project) && can?(:alter_estimation_plan, @project) %>

@@ -22,13 +22,13 @@
 class Project < ActiveRecord::Base
   attr_accessible :title, :description, :version, :alias, :state, :estimation_status_id, :status_comment,
                   :start_date, :is_model, :organization_id, :project_area_id, :project_category_id,
-                  :acquisition_category_id, :platform_category_id, :parent_id, :application_id, :creator_id
+                  :acquisition_category_id, :platform_category_id, :parent_id, :application_id, :creator_id,
+                  :private
 
   attr_accessor :project_organization_statuses, :new_status_comment, :available_inline_columns
 
   include ActionView::Helpers
   include ActiveModel::Dirty
-  #require 'organization.rb'
 
   has_ancestry  # For the Ancestry gem
 
