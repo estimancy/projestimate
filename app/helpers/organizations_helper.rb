@@ -127,13 +127,13 @@ module OrganizationsHelper
       when :version
         content_tag("td class='center'", value)
       when :status_name
-        if can_show_estimation?(project) || project.private != true
+        if can_show_estimation?(project) || project.private == false
             content_tag("td class='center'") do
             content_tag(:span, link_to(project.status_name, main_app.add_comment_on_status_change_path(:project_id => project.id), style: "color: #FFFFFF;", :title => "#{I18n.t(:label_add_status_change_comment)}" , :remote => true),
                         class: "badge", style: "background-color: #{project.status_background_color}").to_s.html_safe
           end
         else
-          content_tag(:td) do
+          content_tag("td class='center'") do
             content_tag(:span, project.status_name, class: "badge", style: "background-color: #{project.status_background_color}").to_s.html_safe
           end
         end
