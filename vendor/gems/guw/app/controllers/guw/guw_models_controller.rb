@@ -855,7 +855,7 @@ class Guw::GuwModelsController < ApplicationController
             worksheet.add_cell(ind, 2, guow.guw_unit_of_work_group.name)
             tab_size[2] = tab_size[2] < guow.guw_unit_of_work_group.name.length ? guow.guw_unit_of_work_group.name.length : tab_size[2]
             worksheet.change_column_width(2, tab_size[2])
-            worksheet.add_cell(ind, 3, guow.selected ? I18n.t(:yes) : I18n.t(:no))
+            worksheet.add_cell(ind, 3, guow.selected ? 1 : 0)
             worksheet.add_cell(ind, 4, guow.name)
             tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
             worksheet.change_column_width(4, tab_size[4])
@@ -944,6 +944,8 @@ class Guw::GuwModelsController < ApplicationController
     gac_save = nil
     tab_error = [[false], [false], [false], [false], [false]]
     indexing_field_error = [[false],[false],[false],[false]]
+    ex_locale = I18n.locale
+    I18n.locale = :fr
 
     if !params[:file].nil? &&
         (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
@@ -972,7 +974,7 @@ class Guw::GuwModelsController < ApplicationController
                 end
               end
             else
-              guw_uow = Guw::GuwUnitOfWork.new(selected: row[3].upcase == I18n.t(:yes).upcase,
+              guw_uow = Guw::GuwUnitOfWork.new(selected: row[3].to_i == 1,
                                                  name: row[4],
                                                  comments: row[5],
                                                  guw_unit_of_work_group_id: guw_uow_group.id,
@@ -1100,12 +1102,15 @@ class Guw::GuwModelsController < ApplicationController
         ok = true
       end
     end
+
+    I18n.locale = ex_locale.to_sym
     my_verrif_tab_error(tab_error, indexing_field_error)
     if ok
       flash[:notice] = I18n.t(:importation_sucess_uo)
     else ok
       flash[:error] = I18n.t(:route_flag_error_4)
     end
+
     redirect_to :back
   end
 
