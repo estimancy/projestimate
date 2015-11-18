@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151116162416) do
+ActiveRecord::Schema.define(:version => 20151118085254) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -71,6 +71,8 @@ ActiveRecord::Schema.define(:version => 20151116162416) do
     t.text     "change_comment"
     t.integer  "reference_id"
     t.string   "reference_uuid"
+    t.text     "description"
+    t.string   "category"
   end
 
   add_index "admin_settings", ["record_status_id"], :name => "index_admin_settings_on_record_status_id"
