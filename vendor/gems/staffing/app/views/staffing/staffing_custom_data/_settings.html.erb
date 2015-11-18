@@ -147,7 +147,7 @@
             <% unless @staffing_custom_data.duration.nil? and @staffing_custom_data.rayleigh_duration.nil? %>
               <table class="table table-striped table-bordered table-condensed">
                 <tr>
-                  <th>Période</th>
+                  <th><%= I18n.t(:periode) %></th>
                   <% for t in 0..[@staffing_custom_data.duration.to_f, @staffing_custom_data.rayleigh_duration.to_f].max %>
                     <th><%= "P#{t}" %></th>
                   <% end %>
@@ -296,18 +296,18 @@ $('#myTab a').click(function (e) {
 function refresh_chart() {
     $('#staffing_trapeze_chart').highcharts({
       title: {
-        text: 'Répartition des ressources en fonction du temps'
+        text: '<%= I18n.t("Répartition des ressources en fonction du temps") %>'
       },
       xAxis: {
         min: 0,
         title: {
-          text: 'Evolution du temps'
+          text: '<%= I18n.t("Evolution du temps") %>'
         }
       },
       yAxis: {
         min: 0,
         title: {
-          text: 'Nombre de personnes'
+          text: '<%= I18n.t(:staffing) %>'
         }
       },
       plotOptions: {
@@ -322,17 +322,17 @@ function refresh_chart() {
         }
       },
       series: [{
-        name: 'Répartition en trapèze théorique',
+        name: '<%= I18n.t("Répartition en trapèze théorique") %>',
         type: 'column',
         data: <%= @staffing_custom_data.trapeze_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>
       },{
-        name: 'Répartition en trapèze personnalisé',
+        name: '<%= I18n.t("Répartition en trapèze personnalisé") %>',
         type: 'column',
         data: <%= @staffing_custom_data.chart_actual_coordinates.map{|i| i.last.round(1)} %>,
         color: '#7CB9E8'
       },{
         type: 'spline',
-        name: 'Vos contraintes',
+        name: '<%= I18n.t("Vos contraintes") %>',
         data: <%= @staffing_custom_data.rayleigh_chart_theoretical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>,
         color: '#CC0000',
         marker: {
@@ -340,7 +340,7 @@ function refresh_chart() {
         }
       },{
         type: 'spline',
-        name: 'Répartition optimal',
+        name: '<%= I18n.t("Répartition optimal") %>',
         data: <%= @staffing_custom_data.mcdonnell_chart_theorical_coordinates.map{|i| i.last.nil? ? 0 : i.last.round(1)} %>,
         color: '#000000',
         marker: {
