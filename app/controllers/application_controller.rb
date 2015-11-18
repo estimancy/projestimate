@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   # rescue_from Errno::ECONNREFUSED do |error|
   # end
 
-  if Rails.env == "production"
+  # if Rails.env == "production"
     rescue_from StandardError do |exception|
       if exception.class == Errno::ECONNREFUSED
         flash[:error] = I18n.t(:error_connection_refused)
@@ -56,7 +56,7 @@ class ApplicationController < ActionController::Base
         render :template => "layouts/500.html", :status => 500
       end
     end
-  end
+  # end
 
   helper_method :root_url
   helper_method :browser
