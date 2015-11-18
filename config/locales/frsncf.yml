@@ -1520,7 +1520,7 @@ frsncf:
   Import_user_from_excel: "Importer des utilisateurs depuis Excel"
   Project_name: "Nom de projet"
   title: "Titre"
-  Product_Name: "Nom du produit"
+  Product_Name: "Application"
   application_b: "application"
   Start_date_organizations: "Date de début"
   end_date_organizations: "Date de fin"

@@ -305,7 +305,7 @@ en-gb:
   text_module_name: "Modules"
   text_attribute_specification_in_current_module: "How attribute is used in this module"
   text_use_as: "Use as"
-  text_organization_name: "Organisations"
+  text_organization_name: "Organization"
   text_attribute_specification_in_current_organization: "How attribute is used in current organisation"
 
   wbs_activity_elements: "WBS-Activity Elements"
