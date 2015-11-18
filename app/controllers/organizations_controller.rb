@@ -1075,7 +1075,7 @@ class OrganizationsController < ApplicationController
     end
 
     @organization.users.each_with_index do |user, index_line|
-      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language, user.locked_at.nil? ? I18n.t(:unlocked) : user.locked_at] + user.groups.where(organization_id: @organization.id).map(&:name)
+      line =  [user.first_name, user.last_name, user.initials,user.email, user.login_name, user.auth_method ? user.auth_method.name : "Application" , user.description, user.language, user.locked_at.nil? ? 0 : 1] + user.groups.where(organization_id: @organization.id).map(&:name)
       line.each_with_index do |my_case, index|
         worksheet.add_cell(index_line + 1, index, my_case)
       end
@@ -1135,7 +1135,7 @@ class OrganizationsController < ApplicationController
                               time_zone: "Paris",
                               object_per_page: 50,
                               auth_type: auth_method,
-                              locked_at: line[8].upcase ==  I18n.t(:unlocked).upcase ? nil : Time.now,
+                              locked_at: line[8].upcase ==  0 ? nil : Time.now,
                               number_precision: 2)
               if line[5].upcase == "SAML"
                 user.skip_confirmation_notification!
