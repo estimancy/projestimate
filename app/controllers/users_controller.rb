@@ -157,11 +157,13 @@ public
 
         @user.organizations.each do |organization|
           organization.groups.each do |group|
-            GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+            if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
+              GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+              @user.organization_ids = []
+            end
           end
         end
 
-        @user.organization_ids = []
         @user.save
 
       elsif current_user.super_admin == true
@@ -169,7 +171,9 @@ public
         organizations.each do |organization_id|
           organization = Organization.find(organization_id)
           organization.groups.each do |group|
-            GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+            if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
+              GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+            end
           end
         end
         @user.organization_ids = params[:organizations].keys
