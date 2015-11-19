@@ -1641,10 +1641,10 @@ public
 
     # new_prj.is_private = old_prj.is_private
 
-    # if Project.all.map(&:title).include?(params['project']['title'])
-    #   flash[:error] = I18n.t(:project_already_exist, value: old_prj.title)
-    #   redirect_to projects_from_path(organization_id: @organization.id) and return
-    # end
+    if @organization.projects.map(&:title).include?(params['project']['title'])
+      flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+      redirect_to projects_from_path(organization_id: @organization.id) and return
+    end
 
     #if creation from template
     if !params[:create_project_from_template].nil?
