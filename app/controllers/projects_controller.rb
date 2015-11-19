@@ -318,6 +318,11 @@ class ProjectsController < ApplicationController
     @project.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_by, username: current_user.name)} \r\n"
     @organization = Organization.find(params[:project][:organization_id])
 
+    if @organization.projects.map(&:title).include?(params['project']['title'])
+      flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+      redirect_to organization_estimations_path(@organization) and return
+    end
+
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
     @acquisition_categories = @organization.platform_categories
@@ -560,6 +565,11 @@ class ProjectsController < ApplicationController
         rescue
 
         end
+      end
+
+      if (@organization.projects.map(&:title) - [@project.title]).include?(params['project']['title'])
+        flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+        redirect_to organization_estimations_path(organization_id: @organization.id) and return
       end
 
       @project.save
