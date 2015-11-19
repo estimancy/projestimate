@@ -1641,6 +1641,11 @@ public
 
     # new_prj.is_private = old_prj.is_private
 
+    # if Project.all.map(&:title).include?(params['project']['title'])
+    #   flash[:error] = I18n.t(:project_already_exist, value: old_prj.title)
+    #   redirect_to projects_from_path(organization_id: @organization.id) and return
+    # end
+
     #if creation from template
     if !params[:create_project_from_template].nil?
       new_prj.original_model_id = old_prj.id
@@ -1659,8 +1664,6 @@ public
       new_prj.description = params['project']['description']
       # start_date = (params['project']['start_date'].nil? || params['project']['start_date'].blank?) ? Time.now.to_date : params['project']['start_date']
       new_prj.start_date = Time.now
-
-      # @current_organization.projects.
 
       #Only the securities for the generated project will be taken in account
       # new_prj.project_securities = new_prj.project_securities.reject{|i| i.is_model_permission == true }
