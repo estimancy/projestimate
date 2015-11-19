@@ -417,7 +417,7 @@ class ProjectsController < ApplicationController
           end
           redirect_to redirect_apply(edit_project_path(@project)), notice: "#{I18n.t(:notice_project_successful_created)}"
         else
-          flash[:error] = "#{I18n.t(:error_project_creation_failed)} #{@project.errors.full_messages.to_sentence}"
+          flash[:error] = "#{I18n.t(:error_project_creation_failed)}"
           render action: :new
         end
 

@@ -914,7 +914,7 @@ en-gb:
   warning_master_data_unauthorized_action: "unauthorized action: you are trying to restore a non retired record ! "
   notice_project_successful_updated: "Project was successfully updated"
   notice_project_successful_deleted: "Project was successfully deleted"
-  error_project_creation_failed: "An error has occurred during the creation of project"
+  error_project_creation_failed: "An error has occurred during the creation of estimation"
   notice_project_successful_duplicated: "Project successfully duplicated"
   error_project_duplication_failed: "An error has occurred during the duplication of project"
   error_project_checkout_failed: "An error has occurred during the checkout of project"

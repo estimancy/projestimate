@@ -917,7 +917,7 @@ fr1:
   warning_master_data_unauthorized_action: "action non autorisée: vous essayez de restaurer un enregistrement qui n'est pas 'retired'! "
   notice_project_successful_updated: "Le projet a été mis à jour avec succès"
   notice_project_successful_deleted: "Le projet a été supprimé"
-  error_project_creation_failed: "Une erreur est survenue lors de la création du projet"
+  error_project_creation_failed: "Une erreur est survenue lors de la création de l'estimation"
   notice_project_successful_duplicated: "Le projet a été dupliqué avec succès"
   error_project_duplication_failed: "Une erreur est survenue lors de la duplication du projet"
   error_project_checkout_failed: "Une erreur est survenue lors de la création de la nouvelle version du projet"
