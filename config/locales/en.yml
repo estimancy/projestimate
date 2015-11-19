@@ -870,6 +870,7 @@ en:
   project_successful_updated: "Project was successfully updated."
   notice_project_successful_duplicated: "Project was successfully duplicated"
   error_project_failed_duplicate: "Duplication failed: Error happened on Project duplication"
+  project_already_exist: "L'estimation \"%{value}\" existe déja. Veuillez choisir un autre nom d'estimation"
   confirm_new_branch_project_checkout: "You are on the way to create a new branch. Despite the difficulties the fusion will cause, can you confirm this?"
   notice_project_successful_checkout: "Project was successfully checkout"
   notice_wbs_activity_successful_added: "Wbs-Activity was successfully added to Project."

@@ -1772,11 +1772,12 @@ public
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
       redirect_to edit_project_path(new_prj) and return
     else
-      flash[:error] = I18n.t(:error_project_failed_duplicate)
       #if params[:action_name] == "create_project_from_template"
       if !params[:create_project_from_template].nil?
+        flash[:error] = I18n.t(:project_already_exist, value: old_prj.title)
         redirect_to projects_from_path(organization_id: @organization.id) and return
       else
+        flash[:error] = I18n.t(:error_project_failed_duplicate)
         redirect_to organization_estimations_path(@current_organization)
       end
     end

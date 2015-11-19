@@ -31,7 +31,13 @@
         <%= f.input :value, :label => I18n.t('value'), :collection => [[I18n.t(:label_disabled), 0]]+ [1, 2, 3, 4, 5, 6, 10].collect { |days| [I18n.t('datetime.distance_in_words.x_days', :count => days), I18n.t('datetime.distance_in_words.x_days', :count => days, :locale => :en)] } + [1, 2, 3].collect { |weeks| [I18n.t('datetime.distance_in_words.x_weeks', :count => weeks), I18n.t('datetime.distance_in_words.x_weeks', :count => weeks, :locale => :en)] } + [1, 2, 3, 6, 12].collect { |months| [I18n.t('datetime.distance_in_words.x_months', :count => months), I18n.t('datetime.distance_in_words.x_months', :count => months, :locale => :en)] } if (@admin_setting.key=='audit_history_lifetime') %>
 
         <%= f.input :description, :label => I18n.t('description'), input_html: { rows: 10, class: "span4" } %>
-        <%= f.input :category, :label => I18n.t('category'), collection: ["Autorisations", "Autres"] %>
+
+        <%= f.input :category, :label => I18n.t('category'), collection: ["Access Management",
+                                                                          "Emails Management",
+                                                                          "Additional Services",
+                                                                          "Information messages",
+                                                                          "Others",
+                                                                          "Information memo"] %>
 
         <div class="actions-tabs">
           <% if action_name == 'new' || action_name=="create" %>
