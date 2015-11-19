@@ -569,7 +569,7 @@ class ProjectsController < ApplicationController
 
       if (@organization.projects.map(&:title) - [@project.title]).include?(params['project']['title'])
         flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
-        redirect_to organization_estimations_path(organization_id: @organization.id) and return
+        redirect_to edit_project_path and return
       end
 
       @project.save
@@ -1651,13 +1651,16 @@ public
 
     # new_prj.is_private = old_prj.is_private
 
-    if @organization.projects.map(&:title).include?(params['project']['title'])
-      flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
-      redirect_to projects_from_path(organization_id: @organization.id) and return
-    end
-
     #if creation from template
     if !params[:create_project_from_template].nil?
+
+      unless params['project'].nil?
+        if @organization.projects.map(&:title).include?(params['project']['title'])
+          flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+          redirect_to projects_from_path(organization_id: @organization.id) and return
+        end
+      end
+
       new_prj.original_model_id = old_prj.id
 
       #Update some params with the form input data
