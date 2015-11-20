@@ -156,14 +156,13 @@ class PemodulesController < ApplicationController
       conditions = {:pe_attribute_id => attr.to_i, :pemodule_id => params[:module_id]}
       attribute_module = AttributeModule.first(:conditions => conditions)
 
-      project_value = nil
-      unless params[:custom_attribute][i] == 'user'
-        project_value = params[:project_value][i]
-      end
+      # project_value = nil
+      # unless params[:custom_attribute][i] == 'user'
+      #   project_value = params[:project_value][i]
+      # end
 
-      attribute_module.update_attributes(:in_out => params[:in_out][i], :is_mandatory => params[:is_mandatory][i], :display_order => params[:display_order][i],
-                                  :description => params[:description][i], :custom_attribute => params[:custom_attribute][i], :default_low =>  params[:default_low][i],
-                                  :default_most_likely =>  params[:default_most_likely][i], :default_high =>  params[:default_high][i], :project_value => project_value)
+      attribute_module.update_attributes(:in_out => params[:in_out][i], :description => params[:description][i], :default_low =>  params[:default_low][i],
+                                  :default_most_likely =>  params[:default_most_likely][i], :default_high =>  params[:default_high][i])
     end
     redirect_to redirect_apply(edit_pemodule_path(@pemodule, :anchor=>'tabs-3'), nil, pemodules_path), :notice => "#{I18n.t (:notice_module_project_successful_updated)}"
   end

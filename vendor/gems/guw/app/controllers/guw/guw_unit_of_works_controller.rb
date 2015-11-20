@@ -686,7 +686,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
 
     @module_project.pemodule.attribute_modules.each do |am|
-      @evs = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).all
+      @evs = EstimationValue.where(:module_project_id => @module_project.id,
+                                   :pe_attribute_id => am.pe_attribute.id).all
       @evs.each do |ev|
         tmp_prbl = Array.new
         ["low", "most_likely", "high"].each do |level|
@@ -694,6 +695,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
           if am.pe_attribute.alias == "retained_size"
             ev.send("string_data_#{level}")[current_component.id] = retained_size
+            tmp_prbl << ev.send("string_data_#{level}")[@component.id]
+          elsif am.pe_attribute.alias == "effort"
+            ev.send("string_data_#{level}")[current_component.id] = retained_size.to_f * (@guw_model.hour_coefficient_conversion.nil? ? 0 : @guw_model.hour_coefficient_conversion)
             tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "theorical_size"
             ev.send("string_data_#{level}")[current_component.id] = theorical_size
