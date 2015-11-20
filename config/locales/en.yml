@@ -1571,6 +1571,7 @@ en:
   model_name: "Model name"
   model_description: "model Description"
   retained_size_unit: "Wording of the module size unit"
+  hour_coefficient_conversion: "Hour coefficient conversion"
   attribute_name: "Attribute name"
   enable_restraint: "Enable restraint"
   enable_amount: "Enable amount"
