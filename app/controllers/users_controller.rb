@@ -296,7 +296,7 @@ public
 
     @user = User.find(params[:id])
 
-    if @user.estimations.where(private: true).empty? || @user.estimations.where(is_model: true).empty?
+    if @user.estimations.where(organization_id: params[:organization_id].to_i, is_model: true).nil? && @user.estimations.where(organization_id: params[:organization_id].to_i, private: true).nil?
       @user.destroy
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
