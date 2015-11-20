@@ -173,13 +173,13 @@ public
           organization.groups.each do |group|
             if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+              @user.organization_ids = params[:organizations].keys
             end
           end
         end
-        @user.organization_ids = params[:organizations].keys
         @user.save
       else
-        #hum?
+        #il ne se passe rien, un user non super admin nepeux pas décoché un autre utilisateur d'une organisation
       end
     else
       if params[:groups].nil?
