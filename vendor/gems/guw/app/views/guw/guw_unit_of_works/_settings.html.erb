@@ -143,7 +143,7 @@
               <th class="text_left"><%= I18n.t :name %></th>
               <th class="text_left"><%= I18n.t :description %></th>
               <th class=""><%= I18n.t :type %></th>
-              <th class=""><%= @guw_model.coefficient_label.humanize %></th>
+              <th class=""><%= @guw_model.coefficient_label.to_s.humanize %></th>
               <th class=""><%= I18n.t :technology %></th>
               <th class=""><%= I18n.t :quantity %></th>
               <th class=""><%= I18n.t :complexity %></th>

@@ -804,7 +804,7 @@ class Guw::GuwModelsController < ApplicationController
                 I18n.t(:name).length,
                 I18n.t(:description).length,
                 I18n.t(:work_unit_type).length,
-                @guw_model.coefficient_label.length,
+                @guw_model.coefficient_label.to_s.length,
                 I18n.t(:organization_technology).length,
                 I18n.t(:quantity).length,
                 I18n.t(:tracability).length,
