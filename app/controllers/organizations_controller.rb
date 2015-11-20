@@ -55,11 +55,15 @@ class OrganizationsController < ApplicationController
     @organization = @current_organization
     check_if_organization_is_image(@organization)
 
+    tmp1 = @organization.projects.where(creator_id: current_user.id, is_model: false, private: true).all
+
     if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
-      @projects = @organization.projects.where(is_model: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
+      tmp2 = @organization.projects.where(conditions).where("title like ?", "%#{params[:title]}%").all
     else
-      @projects = @organization.projects.where(is_model: false).where(conditions).where(start_date: (Time.parse(start_date)..Time.parse(end_date))).where("title like ?", "%#{params[:title]}%").all
+      tmp2 = @organization.projects.where(is_model: false).where(conditions).where(start_date: (Time.parse(start_date)..Time.parse(end_date))).where("title like ?", "%#{params[:title]}%").all
     end
+
+    @projects = (tmp1 + tmp2).uniq
 
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
@@ -85,8 +89,8 @@ class OrganizationsController < ApplicationController
       array_project = Array.new
       array_value = Array.new
 
-      if can_show_estimation?(project)
-        array_project << [
+      if can_show_estimation?(project) || can_see_estimation?(project)
+          array_project << [
             project.title,
             project.version,
             (project.application.nil? ? project.application_name : project.application.name),
@@ -97,25 +101,6 @@ class OrganizationsController < ApplicationController
             project.estimation_status,
             project.creator
         ]
-
-        @organization.fields.each do |field|
-          pf = ProjectField.where(field_id: field.id, project_id: project.id).last
-          if pf.nil?
-            array_value << ''
-          else
-            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision, true)
-          end
-        end
-
-      elsif can_see_estimation?(project)
-
-        array_project = update_selected_inline_columns(Project).map do |column|
-                  if column.caption == "description"
-                    "#{ Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(column.value_object(project))).text } "
-                  else
-                    column.value_object(project)
-                  end
-                end
 
         @organization.fields.each do |field|
           pf = ProjectField.where(field_id: field.id, project_id: project.id).last
