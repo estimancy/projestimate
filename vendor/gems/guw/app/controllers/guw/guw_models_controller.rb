@@ -117,9 +117,9 @@ class Guw::GuwModelsController < ApplicationController
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
-                                                three_points_estimation: tab[2][1].to_i == 1,
-                                                retained_size_unit: tab[3][1],
-                                                coefficient_label: "Type d'acquisition",
+                                                three_points_estimation: tab[3][1].to_i == 1,
+                                                retained_size_unit: tab[4][1],
+                                                coefficient_label: tab[2][1],
                                                 organization_id: @current_organization.id)
               critical_flag = false
             else
@@ -331,34 +331,44 @@ class Guw::GuwModelsController < ApplicationController
     worksheet[1][1].change_border(:right, 'thin')
     worksheet[1][1].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(2, 0, I18n.t(:three_points_estimation))
+
+    worksheet.add_cell(2, 0, I18n.t(:weighting_factor_Name))
     worksheet[2][0].change_border(:right, 'thin')
     worksheet[2][0].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(2, 1, @guw_model.three_points_estimation ? 1 : 0).change_horizontal_alignment('center')
+    worksheet.add_cell(2, 1, @guw_model.coefficient_label)
     worksheet[2][1].change_border(:right, 'thin')
     worksheet[2][1].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(3, 0, I18n.t(:retained_size_unit))
+
+    worksheet.add_cell(3, 0, I18n.t(:three_points_estimation))
     worksheet[3][0].change_border(:right, 'thin')
     worksheet[3][0].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(3, 1, @guw_model.retained_size_unit).change_horizontal_alignment('center')
+    worksheet.add_cell(3, 1, @guw_model.three_points_estimation ? 1 : 0).change_horizontal_alignment('center')
     worksheet[3][1].change_border(:right, 'thin')
     worksheet[3][1].change_border(:bottom, 'thin')
+
+    worksheet.add_cell(4, 0, I18n.t(:retained_size_unit))
+    worksheet[4][0].change_border(:right, 'thin')
+    worksheet[4][0].change_border(:bottom, 'thin')
+
+    worksheet.add_cell(4, 1, @guw_model.retained_size_unit).change_horizontal_alignment('center')
+    worksheet[4][1].change_border(:right, 'thin')
+    worksheet[4][1].change_border(:bottom, 'thin')
 
     worksheet.change_column_bold(0,true)
     worksheet.change_row_height(1, @guw_model.description.count("\n") * 13 + 1)
     worksheet.change_column_width(0, 38)
     worksheet.change_column_width(1, the_most_largest(@guw_model.description))
-    worksheet.add_cell(4, 0, I18n.t(:advice))
-    worksheet.add_cell(4, 1, "")
+    worksheet.add_cell(5, 0, I18n.t(:advice))
+    worksheet.add_cell(5, 1, "")
 
-    worksheet.sheet_data[4][0].change_font_bold(true)
-    worksheet.merge_cells(4, 0, 4, 1)
-    worksheet[4][1].change_border(:right, 'thin')
-    worksheet[4][0].change_border(:bottom, 'thin')
-    worksheet.change_row_height(4, 25)
+    worksheet.sheet_data[5][0].change_font_bold(true)
+    worksheet.merge_cells(5, 0, 5, 1)
+    worksheet[5][1].change_border(:right, 'thin')
+    worksheet[5][0].change_border(:bottom, 'thin')
+    worksheet.change_row_height(5, 25)
 
     worksheet = workbook[1]
 
