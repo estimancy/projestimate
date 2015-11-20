@@ -297,7 +297,7 @@ public
     @user = User.find(params[:id])
 
     if @user.estimations.where(organization_id: params[:organization_id].to_i, is_model: true).nil? && @user.estimations.where(organization_id: params[:organization_id].to_i, private: true).nil?
-      @user.destroy
+      # @user.destroy
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
       elsif current_user.super_admin?

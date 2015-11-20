@@ -56,6 +56,7 @@ class AuthMethod < ActiveRecord::Base
       new_record.record_status = RecordStatus.find_by_name('Proposed')
     })
   end
+
   KEY = '0123456789abcdef01234567890' # 24 characters
 
   def validate_if_fly_user_creation
