@@ -160,10 +160,10 @@ class Guw::GuwModelsController < ApplicationController
               if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
                 @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
                                                 description: tab[0][0],
-                                                allow_quantity: tab[2][1].upcase == 1,
-                                                allow_retained: tab[1][1].upcase == 1,
-                                                allow_complexity: tab[3][1].upcase == 1,
-                                                allow_criteria: tab[4][1].upcase == 1,
+                                                allow_quantity: tab[2][1] == 1,
+                                                allow_retained: tab[1][1] == 1,
+                                                allow_complexity: tab[3][1] == 1,
+                                                allow_criteria: tab[4][1] == 1,
                                                 guw_model_id: @guw_model.id)
                 if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty? && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
                   while !tab[6][ind].nil?
