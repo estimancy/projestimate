@@ -58,9 +58,9 @@ class OrganizationsController < ApplicationController
     tmp1 = @organization.projects.where(creator_id: current_user.id, is_model: false, private: true).all
 
     if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
-      tmp2 = @organization.projects.where(conditions).where("title like ?", "%#{params[:title]}%").all
+      tmp2 = @organization.projects.where(is_model: false, private: false).where(conditions).where("title like ?", "%#{params[:title]}%").all
     else
-      tmp2 = @organization.projects.where(is_model: false).where(conditions).where(start_date: (Time.parse(start_date)..Time.parse(end_date))).where("title like ?", "%#{params[:title]}%").all
+      tmp2 = @organization.projects.where(is_model: false, private: false).where(conditions).where(start_date: (Time.parse(start_date)..Time.parse(end_date))).where("title like ?", "%#{params[:title]}%").all
     end
 
     @projects = (tmp1 + tmp2).uniq

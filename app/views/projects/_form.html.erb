@@ -97,7 +97,7 @@
                           :as => :string,
                           :label => I18n.t(:start_date),
                           :input_html => { :class => 'date-picker',
-                                           :value => @project.start_date.nil? ? Time.now : I18n.l(@project.start_date) } %></td>
+                                           :value => @project.start_date.nil? ? I18n.l(Time.parse(Time.now.strftime("%d/%m/%Y"))) : I18n.l(@project.start_date) } %></td>
 
           <script>
             $(document).ready(function () {
