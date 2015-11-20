@@ -120,6 +120,7 @@ class Guw::GuwModelsController < ApplicationController
                                                 three_points_estimation: tab[3][1].to_i == 1,
                                                 retained_size_unit: tab[4][1],
                                                 coefficient_label: tab[2][1],
+                                                hour_coefficient_conversion: tab[5][1],
                                                 organization_id: @current_organization.id)
               critical_flag = false
             else
@@ -357,17 +358,25 @@ class Guw::GuwModelsController < ApplicationController
     worksheet[4][1].change_border(:right, 'thin')
     worksheet[4][1].change_border(:bottom, 'thin')
 
+    worksheet.add_cell(5, 0, "toto")#I18n.t(:hour_coefficient_conversion))
+    worksheet[5][0].change_border(:right, 'thin')
+    worksheet[5][0].change_border(:bottom, 'thin')
+
+    worksheet.add_cell(5, 1, @guw_model.hour_coefficient_conversion).change_horizontal_alignment('center')
+    worksheet[5][1].change_border(:right, 'thin')
+    worksheet[5][1].change_border(:bottom, 'thin')
+
     worksheet.change_column_bold(0,true)
     worksheet.change_row_height(1, @guw_model.description.count("\n") * 13 + 1)
     worksheet.change_column_width(0, 38)
     worksheet.change_column_width(1, the_most_largest(@guw_model.description))
-    worksheet.add_cell(5, 0, I18n.t(:advice))
-    worksheet.add_cell(5, 1, "")
+    worksheet.add_cell(6, 0, I18n.t(:advice))
+    worksheet.add_cell(6, 1, "")
 
-    worksheet.sheet_data[5][0].change_font_bold(true)
-    worksheet.merge_cells(5, 0, 5, 1)
-    worksheet[5][1].change_border(:right, 'thin')
-    worksheet[5][0].change_border(:bottom, 'thin')
+    worksheet.sheet_data[6][0].change_font_bold(true)
+    worksheet.merge_cells(6, 0, 6, 1)
+    worksheet[6][1].change_border(:right, 'thin')
+    worksheet[6][0].change_border(:bottom, 'thin')
     worksheet.change_row_height(5, 25)
 
     worksheet = workbook[1]

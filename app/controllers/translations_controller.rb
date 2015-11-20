@@ -36,22 +36,23 @@ class TranslationsController < ApplicationController
   end
 
   def call_my_recursive_friend(f, key, value, index)
-    tabulation = ""
+    tabulation = index > 1 ? "  " : ""
     index.times do tabulation += "  " end
     f.puts("#{tabulation}#{key}:")
     value.each do |sub_key, val|
+
       if val.is_a?(Hash)
-        f.puts("#{tabulation}#{sub_key}:")
+        f.puts("#{tabulation}  #{sub_key}:")
         val.each do |sub_key_prime, sub_val|
           if sub_val.is_a?(Hash)
-            call_my_recursive_friend(f, sub_key_prime, sub_val, index.to_i + 1)
+            call_my_recursive_friend(f, sub_key_prime, sub_val, index.to_i + 2)
           elsif sub_val.is_a?(Array) && sub_val.length > 1
             f.puts("#{tabulation}  #{sub_key_prime}:")
             sub_val.each do |sub_val_prime|
               f.puts("#{tabulation}    - #{sub_val_prime.nil? ? "~" : sub_val_prime}")
             end
           else
-            f.puts("#{tabulation}  #{sub_key_prime}: \"#{sub_val}\"")
+            f.puts("#{tabulation}    #{sub_key_prime}: \"#{sub_val}\"")
           end
         end
 
