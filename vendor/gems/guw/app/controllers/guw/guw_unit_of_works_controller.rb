@@ -617,9 +617,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
-        uo_weight_low = cwu.value * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_low = (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       else
-        uo_weight_low = guw_unit_of_work.result_low.to_i * cwu.value.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_low = guw_unit_of_work.result_low.to_i * (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
@@ -627,9 +627,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
-        uo_weight_ml = cwu.value * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_ml = (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       else
-        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * cwu.value.to_i  * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * (cwu.value.nil? ? 1 : cwu.value.to_f)  * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
@@ -637,9 +637,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
       if guw_c.enable_value == false
-        uo_weight_high = cwu.value * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_high = (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       else
-        uo_weight_high = guw_unit_of_work.result_high.to_i * cwu.value.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_high = guw_unit_of_work.result_high.to_i * (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
