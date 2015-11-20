@@ -157,7 +157,7 @@ public
 
         @user.organizations.each do |organization|
           organization.groups.each do |group|
-            if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
+            if @user.estimations.where(organization_id: organization.id).nil?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
               @user.organization_ids = []
             end
@@ -171,7 +171,7 @@ public
         organizations.each do |organization_id|
           organization = Organization.find(organization_id)
           organization.groups.each do |group|
-            if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
+            if @user.estimations.where(organization_id: organization.id).nil?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
               @user.organization_ids = params[:organizations].keys
             end
@@ -296,7 +296,7 @@ public
 
     @user = User.find(params[:id])
 
-    if @user.estimations.where(organization_id: params[:organization_id].to_i, is_model: true).nil? && @user.estimations.where(organization_id: params[:organization_id].to_i, private: true).nil?
+    if @user.estimations.where(organization_id: params[:organization_id].to_i)
       # @user.destroy
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
