@@ -22,8 +22,8 @@
 module Guw
   class GuwAttribute < ActiveRecord::Base
     belongs_to :guw_model
-    has_many :guw_attribute_complexities
-    has_many :guw_unit_of_work_attributes
+    has_many :guw_attribute_complexities, dependent: :destroy
+    has_many :guw_unit_of_work_attributes, dependent: :destroy
     validates_presence_of :name
 
     amoeba do

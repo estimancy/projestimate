@@ -24,8 +24,8 @@ module Guw
     belongs_to :guw_type
 
     ### added for copy
-    has_many :guw_complexity_technologies
-    has_many :guw_complexity_work_units
+    has_many :guw_complexity_technologies, dependent: :destroy
+    has_many :guw_complexity_work_units, dependent: :destroy
 
     validates_presence_of :name#, :guw_type_id#, :bottom_range, :top_range,
 
