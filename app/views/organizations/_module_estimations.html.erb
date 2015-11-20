@@ -27,7 +27,6 @@
         <% @guw_models.each do |i| %>
           <tr>
             <td class="span5">
-
               <%= link_to i.name, guw.guw_model_path(i), confirm: I18n.t(:warning_edit_instance_module) %>
             </td>
             <td class="align-center">

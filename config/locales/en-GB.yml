@@ -305,7 +305,7 @@ en-gb:
   text_module_name: "Modules"
   text_attribute_specification_in_current_module: "How attribute is used in this module"
   text_use_as: "Use as"
-  text_organization_name: "Organisations"
+  text_organization_name: "Organization"
   text_attribute_specification_in_current_organization: "How attribute is used in current organisation"
 
   wbs_activity_elements: "WBS-Activity Elements"
@@ -914,7 +914,7 @@ en-gb:
   warning_master_data_unauthorized_action: "unauthorized action: you are trying to restore a non retired record ! "
   notice_project_successful_updated: "Project was successfully updated"
   notice_project_successful_deleted: "Project was successfully deleted"
-  error_project_creation_failed: "An error has occurred during the creation of project"
+  error_project_creation_failed: "An error has occurred during the creation of estimation"
   notice_project_successful_duplicated: "Project successfully duplicated"
   error_project_duplication_failed: "An error has occurred during the duplication of project"
   error_project_checkout_failed: "An error has occurred during the checkout of project"

@@ -1,5 +1,5 @@
 <%= simple_form_for(@project) do |f| %>
-  <%= f.error_notification %>
+  <%# f.error_notification %>
   <div class="tabs-project">
     <ul>
       <li><a href="#tabs-1"><%= I18n.t(:global_properties) %></a></li>
@@ -243,7 +243,6 @@
 
       <div id="tabs-5">
         <div id="accordion-security">
-          <h3><%= I18n.t(:model_securities) %></h3>
           <div id="accordion_model" class="accordion">
             <div class="accordion-group accordion-caret">
               <div class="accordion-heading">

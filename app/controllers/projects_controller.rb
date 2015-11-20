@@ -318,6 +318,11 @@ class ProjectsController < ApplicationController
     @project.status_comment = "#{I18n.l(Time.now)} : #{I18n.t(:estimation_created_by, username: current_user.name)} \r\n"
     @organization = Organization.find(params[:project][:organization_id])
 
+    if @organization.projects.map(&:title).include?(params['project']['title'])
+      flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+      redirect_to organization_estimations_path(@organization) and return
+    end
+
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
     @acquisition_categories = @organization.platform_categories
@@ -417,7 +422,7 @@ class ProjectsController < ApplicationController
           end
           redirect_to redirect_apply(edit_project_path(@project)), notice: "#{I18n.t(:notice_project_successful_created)}"
         else
-          flash[:error] = "#{I18n.t(:error_project_creation_failed)} #{@project.errors.full_messages.to_sentence}"
+          flash[:error] = "#{I18n.t(:error_project_creation_failed)}"
           render action: :new
         end
 
@@ -560,6 +565,11 @@ class ProjectsController < ApplicationController
         rescue
 
         end
+      end
+
+      if (@organization.projects.map(&:title) - [@project.title]).include?(params['project']['title'])
+        flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+        redirect_to edit_project_path and return
       end
 
       @project.save
@@ -1643,6 +1653,14 @@ public
 
     #if creation from template
     if !params[:create_project_from_template].nil?
+
+      unless params['project'].nil?
+        if @organization.projects.map(&:title).include?(params['project']['title'])
+          flash[:error] = I18n.t(:project_already_exist, value: params['project']['title'])
+          redirect_to projects_from_path(organization_id: @organization.id) and return
+        end
+      end
+
       new_prj.original_model_id = old_prj.id
 
       #Update some params with the form input data
@@ -1772,11 +1790,12 @@ public
       flash[:success] = I18n.t(:notice_project_successful_duplicated)
       redirect_to edit_project_path(new_prj) and return
     else
-      flash[:error] = I18n.t(:error_project_failed_duplicate)
       #if params[:action_name] == "create_project_from_template"
       if !params[:create_project_from_template].nil?
+        flash[:error] = I18n.t(:project_already_exist, value: old_prj.title)
         redirect_to projects_from_path(organization_id: @organization.id) and return
       else
+        flash[:error] = I18n.t(:error_project_failed_duplicate)
         redirect_to organization_estimations_path(@current_organization)
       end
     end

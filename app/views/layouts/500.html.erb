@@ -13,13 +13,13 @@
       <div class="span12">
         <strong>
           <h3>
-            Une anomalie est survenue.
+            <%= I18n.t(:error_message_1) %>
           </h3>
           <h3>
-            Un administrateur Estimancy a été averti.
+            <%= I18n.t(:error_message_2) %>
           </h3>
           <h3>
-            Vous pouvez continuer.
+            <%= I18n.t(:error_message_3) %>
           </h3>
         </strong>
         <br>
@@ -27,7 +27,7 @@
     </div>
     <div class="row">
       <div class="span12">
-        <%= link_to "Revenir sur la précédente", :back, class: "btn" %>
+        <%= link_to I18n.t("Revenir sur la page précédente"), :back, class: "btn" %>
       </div>
     </div>
   </div>

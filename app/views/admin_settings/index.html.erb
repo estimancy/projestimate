@@ -15,21 +15,25 @@
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
       <tr>
+        <th><%= I18n.t(:category) %></th>
         <th><%= I18n.t(:key) %></th>
         <th><%= I18n.t(:value) %></th>
+        <th><%= I18n.t(:description) %></th>
         <th class="action"><%= I18n.t(:actions) %></th>
       </tr>
       </thead>
 
       <% @admin_settings.each do |admin_setting| %>
-          <tr>
-            <td><%= admin_setting.key %></td>
-            <td><%= admin_setting.value %></td>
-            <td class="center">
-              <%= link_to '', edit_admin_setting_path(admin_setting), :class => 'icon-pencil', :title => I18n.t('edit') %>
-              <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
-            </td>
-          </tr>
+        <tr>
+          <td class="span1"><%= admin_setting.category %></td>
+          <td class="span1"><%= admin_setting.key %></td>
+          <td class="span1"><%= admin_setting.value %></td>
+          <td class="span3"><%= admin_setting.description %></td>
+          <td class="center">
+            <%= link_to '', edit_admin_setting_path(admin_setting), :class => 'icon-pencil', :title => I18n.t('edit') %>
+            <%= link_to ' ', admin_setting, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash', :style => 'color:red', :title => I18n.t('delete') %>
+          </td>
+        </tr>
       <% end %>
       <%= render :partial => 'layouts/footer_table' %>
     </table>
