@@ -761,6 +761,27 @@ class ProjectsController < ApplicationController
     end
   end
 
+  #copy model project security to all projects based on this model
+  def copy_security
+    model_project = Project.find(params[:project_id])
+    model_project.projects_from_model.each do |project|
+
+      # ProjectSecurity.delete_all("project = ?", project.id)
+      project.project_securities.delete_all
+
+      model_project.project_securities.where(is_model_permission: true, is_estimation_permission: false).all.each do |ps|
+
+        ProjectSecurity.create(project_id: project.id,
+                               user_id: nil,
+                               project_security_level_id: ps.project_security_level_id,
+                               group_id: ps.group_id,
+                               is_model_permission: false,
+                               is_estimation_permission: true)
+      end
+    end
+
+    redirect_to :back
+  end
 
   def show
     @project = Project.find(params[:id])

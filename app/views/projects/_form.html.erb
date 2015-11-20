@@ -242,6 +242,13 @@
       </div>
 
       <div id="tabs-5">
+
+        <% if @project.is_model == true && current_user.super_admin == true %>
+          <div class="row">
+            <%= link_to "Copier les sécurités", copy_security_path(@project), class: "btn btn-mini pull-right", method: "post" %>
+          </div>
+        <% end %>
+
         <div id="accordion-security">
           <div id="accordion_model" class="accordion">
             <div class="accordion-group accordion-caret">

@@ -282,6 +282,7 @@ Projestimate::Application.routes.draw do
   get 'append_pemodule' => 'projects#append_pemodule'
   get 'select_categories' => 'projects#select_categories', :as => 'select_categories'
   post 'run_estimation' => 'projects#run_estimation', :as => 'run_estimation'
+  post 'copy_security/:project_id' => 'projects#copy_security', :as => 'copy_security'
 
   get 'show_estimation_graph' => 'projects#show_estimation_graph', :as => 'show_estimation_graph'
   get 'show_module_configuration' => 'projects#show_module_configuration', :as => 'show_module_configuration'
