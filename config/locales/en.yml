@@ -1797,3 +1797,4 @@ en:
   error_impor_groups: "The groups has not been imported for the following row : %{parameter}"
   error_impor_appli: "The applications has not been imported for the following row : %{parameter}"
   error_impor_project_area: "The project areas has not been imported for the following row : %{parameter}"
+  import_data_from: "Import data from excel file"
