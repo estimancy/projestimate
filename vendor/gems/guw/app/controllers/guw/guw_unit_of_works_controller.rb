@@ -344,13 +344,14 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                guw_work_unit_id: guw_work_unit.id).first
 
         tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
-                                                   organization_technology_id: guw_unit_of_work.organization_technology_id).first
+                                                   organization_technology_id: guw_unit_of_work.organization_technology_id,
+                                                   guw_type_id: guw_unit_of_work.guw_type_id).first
 
 
         if guw_unit_of_work.guw_complexity.nil?
-          @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * 1
+          @weight_pert << (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * 1
         else
-          @weight_pert << (cwu.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+          @weight_pert << (cwu.value.nil? ? 1 : cwu.value.to_f) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
         end
 
         guw_unit_of_work.effort = @weight_pert.sum * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f)
