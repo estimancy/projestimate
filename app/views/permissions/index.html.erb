@@ -11,7 +11,7 @@
 
     <%= link_to I18n.t('new_permission'), new_permission_path, :class => 'btn pull-right' %>
 
-    <%= link_to "Exporter", export_permissions_path, class: "btn pull-right button_margin_right" %>
+    <%= link_to I18n.t(:export), export_permissions_path, class: "btn pull-right button_margin_right" %>
 
     <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Importer et mettre à jour les permissions" data-toggle="modal">
       <%= I18n.t(:import) %>

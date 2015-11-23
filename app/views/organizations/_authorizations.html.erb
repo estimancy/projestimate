@@ -14,8 +14,8 @@
     </b>
     <% if can? :show_groups, Group %>
       <% if can? :manage, Group  %>
-        <%= link_to I18n.t('new_group'), new_organization_group_path(@organization), :class => 'btn pull-right' %>
-        <%= link_to I18n.t('export'), organization_export_groups_path(@organization), :class => 'btn pull-right' %>
+        <%= link_to I18n.t('new_group'), new_organization_group_path(@organization), :class => 'btn pull-right button_margin_right' %>
+        <%= link_to I18n.t('export'), organization_export_groups_path(@organization), :class => 'btn pull-right button_margin_right' %>
         <a href="#myWBSModal" role="button" class="btn pull-right" title="Import groups from excel" data-toggle="modal">
           <%= I18n.t(:import) %>
         </a>
