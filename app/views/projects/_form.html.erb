@@ -67,13 +67,19 @@
           <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => { :class => 'input-large' } %></td>
 
         </tr>
+
         <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
+          <tr>
+            <td>
+              <%= I18n.t(:original_model) %>
+            </td>
+          </tr>
           <tr>
             <td>
               <% if can_show_estimation?(@project.original_model) %>
                 <% unless @project.original_model.nil? %>
                   <span>
-                    <%= I18n.t(:original_model) %> : <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br>
+                    <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br>
                   </span>
                 <% end %>
               <% else %>
@@ -81,12 +87,26 @@
               <% end %>
             </td>
           </tr>
+        <% else %>
+          <tr>
+            <td>
+              <%= I18n.t(:original_model) %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Aucun modèle n'a été définie
+            </td>
+          </tr>
         <% end %>
       </table>
 
-       <%= tinymce %>
+      <br>
+      <%= tinymce %>
 
-       <label><b> <%= I18n.t(:description) %> </b> </label>
+      <label>
+         <%= I18n.t(:description) %>
+       </label>
 
        <%= simple_format(@project.description) %>
        <%= f.input :description, :label => false, :input_html => {:class => 'input-large tinymce', :rows => 5, :cols => 10 } %>
