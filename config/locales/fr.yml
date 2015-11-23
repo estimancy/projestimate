@@ -886,7 +886,7 @@ fr:
   edit_application: "Editer application"
   notice_translation_successful_added: "Traduction ajoutée"
   notice_account_successful_created: "Votre compte a été créé avec succès"
-  notice_account_successful_updated: "Votre compte a été mis à jour avec succès.."
+  notice_account_successful_updated: "Votre compte a été mis à jour avec succès."
   warning_email_or_username_already_exist: "Cet email ou ce nom d'utilisateur existe déjà dans la base"
   warning_invalid_import_from_ldap: "Cette utilisateur ne peut être importé :"
   warning_ldap_attribute_missing:  "L'attribut \"%{value}\" est vide."

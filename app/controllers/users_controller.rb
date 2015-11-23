@@ -141,6 +141,7 @@ public
 
   #Update user
   def update
+    specific_message = ""
     @user = User.find(params[:id])
     if current_user != @user
       authorize! :manage, User
@@ -157,9 +158,11 @@ public
 
         @user.organizations.each do |organization|
           organization.groups.each do |group|
-            if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
+            if @user.estimations.where(organization_id: organization.id).nil?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
               @user.organization_ids = []
+            else
+              specific_message = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.where(organization_id: organization.id).join(', ')})"
             end
           end
         end
@@ -171,15 +174,15 @@ public
         organizations.each do |organization_id|
           organization = Organization.find(organization_id)
           organization.groups.each do |group|
-            if @user.estimations.where(organization_id: organization.id, is_model: true).nil? && @user.estimations.where(organization_id: organization.id, private: true).nil?
+            if @user.estimations.where(organization_id: organization.id).nil?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
+              @user.organization_ids = params[:organizations].keys
             end
           end
         end
-        @user.organization_ids = params[:organizations].keys
         @user.save
       else
-        #hum?
+        #il ne se passe rien, un user non super admin nepeux pas décoché un autre utilisateur d'une organisation
       end
     else
       if params[:groups].nil?
@@ -228,6 +231,11 @@ public
     if successfully_updated
       set_user_language
       flash[:notice] = I18n.t (:notice_account_successful_updated)
+
+      unless specific_message.blank?
+        flash[:error] = specific_message
+      end
+
       @user_current_password = nil;  @user_password = nil; @user_password_confirmation = nil
 
       if @organization.nil?
@@ -296,7 +304,7 @@ public
 
     @user = User.find(params[:id])
 
-    if @user.estimations.where(private: true).empty? || @user.estimations.where(is_model: true).empty?
+    if @user.estimations.where(organization_id: params[:organization_id].to_i).nil?
       @user.destroy
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
@@ -306,7 +314,7 @@ public
         redirect_to :back
       end
     else
-      flash[:error] = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.join(', ')})"
+      flash[:error] = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.where(organization_id: organization.id).join(', ')})"
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
       else

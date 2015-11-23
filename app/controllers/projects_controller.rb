@@ -501,7 +501,7 @@ class ProjectsController < ApplicationController
     @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = ([@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title,i.id]}
+    @modules_selected = ([@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title, i.id]}
 
     project_root = @project.root
     project_tree = project_root.subtree
@@ -737,11 +737,59 @@ class ProjectsController < ApplicationController
           redirect_to redirect_apply(edit_project_path(@project, :anchor => session[:anchor]), nil, organization_estimations_path(@project.organization)) and return
         end
       else
+
+        @guw_module = Pemodule.where(alias: "guw").first
+        @kb_module = Pemodule.where(alias: "kb").first
+        @ge_module = Pemodule.where(alias: "ge").first
+        @operation_module = Pemodule.where(alias: "operation").first
+        @staffing_module = Pemodule.where(alias: "staffing").first
+        @ej_module = Pemodule.where(alias: "expert_judgement").first
+        @ebd_module = Pemodule.where(alias: "effort_breakdown").first
+
+        @guw_modules = @guw_module.nil? ? [] : @project.organization.guw_models.map{|i| [i, "#{i.id},#{@guw_module.id}"] }
+        @ge_models = @ge_module.nil? ? [] : @project.organization.ge_models.map{|i| [i, "#{i.id},#{@ge_module.id}"] }
+        @operation_models = @operation_module.nil? ? [] : @project.organization.operation_models.map{|i| [i, "#{i.id},#{@operation_module.id}"] }
+        @kb_models = @project.organization.kb_models.map{|i| [i, "#{i.id},#{@kb_module.id}"] }
+        @staffing_modules = @staffing_module.nil? ? [] : @project.organization.staffing_models.map{|i| [i, "#{i.id},#{@staffing_module.id}"] }
+        @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
+        @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
+
+        @modules_selected = ([@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title, i.id]}
+
         render :action => 'edit'
       end
     end
   end
 
+  #copy model project security to all projects based on this model
+  def copy_security
+    model_project = Project.find(params[:project_id])
+    model_project.projects_from_model.each do |project|
+
+      # ProjectSecurity.delete_all("project = ?", project.id)
+      project.project_securities.delete_all
+
+      model_project.project_securities.where(is_model_permission: true, is_estimation_permission: false).all.each do |ps|
+        if ps.user_id.nil?
+          ProjectSecurity.create(project_id: project.id,
+                                 user_id: nil,
+                                 project_security_level_id: ps.project_security_level_id,
+                                 group_id: ps.group_id,
+                                 is_model_permission: false,
+                                 is_estimation_permission: true)
+        else
+          ProjectSecurity.create(project_id: project.id,
+                                 user_id: project.creator_id,
+                                 project_security_level_id: ps.project_security_level_id,
+                                 group_id: nil,
+                                 is_model_permission: false,
+                                 is_estimation_permission: true)
+        end
+      end
+    end
+
+    redirect_to :back
+  end
 
   def show
     @project = Project.find(params[:id])
@@ -788,7 +836,7 @@ class ProjectsController < ApplicationController
     @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = (Pemodule.defined.all - [@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
+    @modules_selected = (Pemodule.defined.all - [@guw_module, @kb_module, @ge_module, @staffing_module, @ej_module, @ebd_module]).map{|i| [i.title,i.id]}
 
     project_root = @project.root
     project_tree = project_root.subtree

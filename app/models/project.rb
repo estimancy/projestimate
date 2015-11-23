@@ -49,6 +49,8 @@ class Project < ActiveRecord::Base
   has_many :project_securities, :dependent => :destroy
   has_many :project_fields, :dependent => :destroy
 
+  has_many :projects_from_model, foreign_key: "original_model_id", class_name: "Project"
+
   has_and_belongs_to_many :groups
 
   has_many :pe_wbs_projects

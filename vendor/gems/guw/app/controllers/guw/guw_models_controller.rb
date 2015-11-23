@@ -358,7 +358,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet[4][1].change_border(:right, 'thin')
     worksheet[4][1].change_border(:bottom, 'thin')
 
-    worksheet.add_cell(5, 0, "toto")#I18n.t(:hour_coefficient_conversion))
+    worksheet.add_cell(5, 0, I18n.t(:hour_coefficient_conversion))
     worksheet[5][0].change_border(:right, 'thin')
     worksheet[5][0].change_border(:bottom, 'thin')
 
@@ -804,7 +804,7 @@ class Guw::GuwModelsController < ApplicationController
                 I18n.t(:name).length,
                 I18n.t(:description).length,
                 I18n.t(:work_unit_type).length,
-                @guw_model.coefficient_label.length,
+                @guw_model.coefficient_label.to_s.length,
                 I18n.t(:organization_technology).length,
                 I18n.t(:quantity).length,
                 I18n.t(:tracability).length,
