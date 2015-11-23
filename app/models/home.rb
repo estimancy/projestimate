@@ -50,100 +50,100 @@ class Home < ActiveRecord::Base
     ext_defined_rs_id = ExternalMasterDatabase::ExternalRecordStatus.find_by_name('Defined').id
     local_defined_rs_id = RecordStatus.find_by_name('Defined').id
 
-    puts '   - Estimancy Module'
-    self.update_records(ExternalMasterDatabase::ExternalPemodule, Pemodule, ['title', 'alias', 'description', 'compliant_component_type', 'with_activities', 'uuid'])
-
-    puts '   - Attribute...'
-    self.update_records(ExternalMasterDatabase::ExternalPeAttribute, PeAttribute, ['name', 'alias', 'description', 'attr_type', 'aggregation', 'options', 'uuid', 'precision', 'single_entry_attribute'])
-
-    puts '   - Attribute Module'
-    self.update_records(ExternalMasterDatabase::ExternalAttributeModule, AttributeModule, ['description', 'default_low', 'default_most_likely', 'default_high', 'in_out', 'is_mandatory', 'uuid'])
-
-    #Associate attribute modules to modules
-    ext_pemodules = ExternalPemodule.all
-    ext_attr_modules = ExternalAttributeModule.all
-    ext_pemodules.each do |ext_module|
-      ext_attr_modules.each do |ext_attr_module|
-        if ext_module.id == ext_attr_module.pemodule_id and ext_module.record_status_id == ext_defined_rs_id
-          loc_module = Pemodule.find_by_uuid(ext_module.uuid)
-          ext_attr = ExternalMasterDatabase::ExternalPeAttribute.find_by_id(ext_attr_module.pe_attribute_id)
-          loc_attr = PeAttribute.find_by_uuid(ext_attr.uuid)
-          ActiveRecord::Base.connection.execute("UPDATE attribute_modules SET pemodule_id = #{loc_module.id} WHERE uuid = '#{ext_attr_module.uuid}'")
-          ActiveRecord::Base.connection.execute("UPDATE attribute_modules SET pe_attribute_id = #{loc_attr.id} WHERE uuid = '#{ext_attr_module.uuid}'")
-          ActiveRecord::Base.connection.execute("UPDATE attribute_modules SET record_status_id = #{local_defined_rs_id} WHERE uuid = '#{ext_attr_module.uuid}'")
-        end
-      end
-    end
-
-    puts '   - WBS Activity'   # The WBS Activity is no longer a master table
-    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivity, WbsActivity, ['name', 'description', 'uuid', 'state'])
-
-    puts '   - WBS Activity Elements'  # The WBS Activity Elements is no longer a master table
-    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityElement, WbsActivityElement, ['name', 'description', 'dotted_id', 'uuid', 'is_root'])
-
-    puts '   - Wbs Activity Ratio'  # The WBS Activity Ratio is no longer a master table
-    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatio, WbsActivityRatio, ['name', 'description', 'uuid'])
-
-    puts '   - Wbs Activity Ratio Elements' # The WBS Activity Ratio Elements is no longer a master table
-    ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatioElement, WbsActivityRatioElement, ['ratio_value', 'simple_reference', 'multiple_references', 'uuid'])
-
-    #puts '   - Project areas'
-    #self.update_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])
-
-    #puts '   - Project categories'
-    #self.update_records(ExternalMasterDatabase::ExternalProjectCategory, ProjectCategory, ['name', 'description', 'uuid'])
-
-    #puts '   - Platform categories'
-    #self.update_records(ExternalMasterDatabase::ExternalPlatformCategory, PlatformCategory, ['name', 'description', 'uuid'])
-
-    #puts '   - Acquisition categories'
-    #self.update_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
-
-    puts '   - Factor'
-    self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])
-
-    puts '   - Complexity...'
-    self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
-
-    puts '   - Technologies...'
-    self.update_records(ExternalMasterDatabase::ExternalTechnology, Technology, ['name', 'description', 'uuid'])
-
-    puts '   - Size Unit...'
-    self.update_records(ExternalMasterDatabase::ExternalSizeUnit, SizeUnit, ['name', 'alias', 'description', 'uuid'])
-
-    #Associate
-    ext_factors = ExternalMasterDatabase::ExternalFactor.all
-    ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
-    ext_factors.each do |ext_factor|
-      ext_complexities.each do |ext_complexity|
-        if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
-          loc_factor = Factor.find_by_uuid(ext_factor.uuid)
-          loc_cplx = OrganizationUowComplexity.where(uuid: ext_complexity.uuid, organization_id: nil).first
-          begin
-            loc_cplx.factor_id = loc_factor.id
-            loc_cplx.display_order = ext_complexity.display_order
-            loc_cplx.value = ext_complexity.value
-            loc_cplx.save(validate: false)
-          rescue
-          end
-        end
-      end
-    end
+    # puts '   - Estimancy Module'
+    # self.update_records(ExternalMasterDatabase::ExternalPemodule, Pemodule, ['title', 'alias', 'description', 'compliant_component_type', 'with_activities', 'uuid'])
+    #
+    # puts '   - Attribute...'
+    # self.update_records(ExternalMasterDatabase::ExternalPeAttribute, PeAttribute, ['name', 'alias', 'description', 'attr_type', 'aggregation', 'options', 'uuid', 'precision', 'single_entry_attribute'])
+    #
+    # puts '   - Attribute Module'
+    # self.update_records(ExternalMasterDatabase::ExternalAttributeModule, AttributeModule, ['description', 'default_low', 'default_most_likely', 'default_high', 'in_out', 'is_mandatory', 'uuid'])
+    #
+    # #Associate attribute modules to modules
+    # ext_pemodules = ExternalPemodule.all
+    # ext_attr_modules = ExternalAttributeModule.all
+    # ext_pemodules.each do |ext_module|
+    #   ext_attr_modules.each do |ext_attr_module|
+    #     if ext_module.id == ext_attr_module.pemodule_id and ext_module.record_status_id == ext_defined_rs_id
+    #       loc_module = Pemodule.find_by_uuid(ext_module.uuid)
+    #       ext_attr = ExternalMasterDatabase::ExternalPeAttribute.find_by_id(ext_attr_module.pe_attribute_id)
+    #       loc_attr = PeAttribute.find_by_uuid(ext_attr.uuid)
+    #       ActiveRecord::Base.connection.execute("UPDATE attribute_modules SET pemodule_id = #{loc_module.id} WHERE uuid = '#{ext_attr_module.uuid}'")
+    #       ActiveRecord::Base.connection.execute("UPDATE attribute_modules SET pe_attribute_id = #{loc_attr.id} WHERE uuid = '#{ext_attr_module.uuid}'")
+    #       ActiveRecord::Base.connection.execute("UPDATE attribute_modules SET record_status_id = #{local_defined_rs_id} WHERE uuid = '#{ext_attr_module.uuid}'")
+    #     end
+    #   end
+    # end
+    #
+    # puts '   - WBS Activity'   # The WBS Activity is no longer a master table
+    # ###self.update_records(ExternalMasterDatabase::ExternalWbsActivity, WbsActivity, ['name', 'description', 'uuid', 'state'])
+    #
+    # puts '   - WBS Activity Elements'  # The WBS Activity Elements is no longer a master table
+    # ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityElement, WbsActivityElement, ['name', 'description', 'dotted_id', 'uuid', 'is_root'])
+    #
+    # puts '   - Wbs Activity Ratio'  # The WBS Activity Ratio is no longer a master table
+    # ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatio, WbsActivityRatio, ['name', 'description', 'uuid'])
+    #
+    # puts '   - Wbs Activity Ratio Elements' # The WBS Activity Ratio Elements is no longer a master table
+    # ###self.update_records(ExternalMasterDatabase::ExternalWbsActivityRatioElement, WbsActivityRatioElement, ['ratio_value', 'simple_reference', 'multiple_references', 'uuid'])
+    #
+    # #puts '   - Project areas'
+    # #self.update_records(ExternalMasterDatabase::ExternalProjectArea, ProjectArea, ['name', 'description', 'uuid'])
+    #
+    # #puts '   - Project categories'
+    # #self.update_records(ExternalMasterDatabase::ExternalProjectCategory, ProjectCategory, ['name', 'description', 'uuid'])
+    #
+    # #puts '   - Platform categories'
+    # #self.update_records(ExternalMasterDatabase::ExternalPlatformCategory, PlatformCategory, ['name', 'description', 'uuid'])
+    #
+    # #puts '   - Acquisition categories'
+    # #self.update_records(ExternalMasterDatabase::ExternalAcquisitionCategory, AcquisitionCategory, ['name', 'description', 'uuid'])
+    #
+    # puts '   - Factor'
+    # self.update_records(ExternalMasterDatabase::ExternalFactor, Factor, ['name', 'alias', 'description', 'factor_type', 'uuid'])
+    #
+    # puts '   - Complexity...'
+    # self.update_records(ExternalMasterDatabase::ExternalOrganizationUowComplexity, OrganizationUowComplexity, ['name', 'description', 'display_order', 'uuid'])
+    #
+    # puts '   - Technologies...'
+    # self.update_records(ExternalMasterDatabase::ExternalTechnology, Technology, ['name', 'description', 'uuid'])
+    #
+    # puts '   - Size Unit...'
+    # self.update_records(ExternalMasterDatabase::ExternalSizeUnit, SizeUnit, ['name', 'alias', 'description', 'uuid'])
+    #
+    # #Associate
+    # ext_factors = ExternalMasterDatabase::ExternalFactor.all
+    # ext_complexities = ExternalMasterDatabase::ExternalOrganizationUowComplexity.all
+    # ext_factors.each do |ext_factor|
+    #   ext_complexities.each do |ext_complexity|
+    #     if ext_factor.id == ext_complexity.factor_id and ext_factor.record_status_id == ext_defined_rs_id
+    #       loc_factor = Factor.find_by_uuid(ext_factor.uuid)
+    #       loc_cplx = OrganizationUowComplexity.where(uuid: ext_complexity.uuid, organization_id: nil).first
+    #       begin
+    #         loc_cplx.factor_id = loc_factor.id
+    #         loc_cplx.display_order = ext_complexity.display_order
+    #         loc_cplx.value = ext_complexity.value
+    #         loc_cplx.save(validate: false)
+    #       rescue
+    #       end
+    #     end
+    #   end
+    # end
 
     #puts '   - WorkElementType'
     #self.update_records(ExternalMasterDatabase::ExternalWorkElementType, WorkElementType, ['name', 'alias', 'uuid'])
 
-    puts '   - Currencies'
-    self.update_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])
-
-    puts '   - Language...'
-    self.update_records(ExternalMasterDatabase::ExternalLanguage, Language, ['name', 'locale', 'uuid'])
-
-    puts '   - Admin Settings'
-    self.update_records(ExternalMasterDatabase::ExternalAdminSetting, AdminSetting, ['key', 'value', 'uuid'])
-
-    puts '   - Auth Method'
-    self.update_records(ExternalMasterDatabase::ExternalAuthMethod, AuthMethod, ['name', 'server_name', 'port', 'base_dn', 'uuid'])
+    # puts '   - Currencies'
+    # self.update_records(ExternalMasterDatabase::ExternalCurrency, Currency, ['name', 'alias', 'description', 'iso_code', 'iso_code_number', 'sign', 'conversion_rate', 'uuid'])
+    #
+    # puts '   - Language...'
+    # self.update_records(ExternalMasterDatabase::ExternalLanguage, Language, ['name', 'locale', 'uuid'])
+    #
+    # puts '   - Admin Settings'
+    # self.update_records(ExternalMasterDatabase::ExternalAdminSetting, AdminSetting, ['key', 'value', 'uuid'])
+    #
+    # puts '   - Auth Method'
+    # self.update_records(ExternalMasterDatabase::ExternalAuthMethod, AuthMethod, ['name', 'server_name', 'port', 'base_dn', 'uuid'])
 
     #puts '   - Default groups'   # The Group table is no longer a master table
     ###self.update_records(ExternalMasterDatabase::ExternalGroup, Group, ['name', 'description', 'for_global_permission', 'for_project_security', 'uuid'])
@@ -152,12 +152,12 @@ class Home < ActiveRecord::Base
     #self.update_records(ExternalMasterDatabase::ExternalProjectSecurityLevel, ProjectSecurityLevel, ['name', 'description', 'uuid'])
 
     puts '   - Global permissions'
-    self.update_records(ExternalMasterDatabase::ExternalPermission, Permission, ['name', 'description', 'object_associated', 'is_permission_project', 'uuid','alias','is_master_permission','category'])
+    self.update_records(ExternalMasterDatabase::ExternalPermission, Permission, ['name', 'description', 'object_associated', 'is_permission_project', 'uuid', 'alias', 'is_master_permission', 'category'])
 
     #Update the latest update date information
-    latest_saved_record = Version.last
-    latest_repo_update = Home::latest_repo_update
-    latest_saved_record.update_attributes(:local_latest_update => Time.now, :repository_latest_update => latest_repo_update, :comment => 'Your Application latest update date')
+    # latest_saved_record = Version.last
+    # latest_repo_update = Home::latest_repo_update
+    # latest_saved_record.update_attributes(:local_latest_update => Time.now, :repository_latest_update => latest_repo_update, :comment => 'Your Application latest update date')
 
     #  puts "\n\n"
     #  puts "Default data was successfully loaded. Enjoy !"
@@ -698,7 +698,7 @@ class Home < ActiveRecord::Base
 
     ext_records_permission=Array.new
     groups_permissions.each do |record_groups_permissions|
-      ext_records_permission.push([record_groups_permissions['permission_id'],record_groups_permissions['group_id']])
+      ext_records_permission.push([record_groups_permissions['permission_id'], record_groups_permissions['group_id']])
     end
 
     begin

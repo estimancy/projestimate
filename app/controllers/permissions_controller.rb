@@ -132,4 +132,56 @@ class PermissionsController < ApplicationController
       redirect_to organization_authorization_path(@organization, anchor: "tabs-estimations-permissions")
     end
   end
+
+  def export_permissions
+    authorize! :manage_master_data, Permission
+
+    permissions = Permission.all
+
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, I18n.t(:name))
+    worksheet.add_cell(0, 1, I18n.t(:description))
+    worksheet.add_cell(0, 2, I18n.t(:alias))
+    worksheet.add_cell(0, 3, I18n.t(:object_type))
+    worksheet.add_cell(0, 4, I18n.t(:category))
+    worksheet.add_cell(0, 5, I18n.t(:project_permissions))
+    worksheet.add_cell(0, 6, I18n.t(:global_permissions))
+    worksheet.add_cell(0, 7, I18n.t(:associated_object))
+
+    permissions.each_with_index do |permission, index|
+      ["name", "description", "alias", "object_type", "category", "is_master_permission", "is_permission_project", "object_associated"].each_with_index do |attribut, i|
+        worksheet.add_cell(index + 1, i, permission.send("#{attribut}"))
+      end
+    end
+
+    send_data(workbook.stream.string, filename: "Permissions-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
+  def import_permissions
+    tab_error = []
+    del_array = []
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      workbook = RubyXL::Parser.parse(params[:file].path)
+      tab = workbook[0].extract_data
+
+      tab.each_with_index do |row, index|
+        if index > 0 && !row[0].nil?
+          permission = Permission.where(alias: row[2], object_type: row[3], category: row[4], associated_object: row[7]).first
+          if !permission.nil?
+            permission.name = row[0]
+          else
+            del_array << permission
+          end
+        end
+      end
+
+      # del_array.each{|da| da.destroy }
+    else
+      flash[:error] = I18n.t(:route_flag_error_4)
+    end
+
+    redirect_to :back
+  end
 end

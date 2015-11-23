@@ -228,8 +228,10 @@ Projestimate::Application.routes.draw do
     post "import_appli" => 'organizations#import_appli'
     get "export_project_areas" => 'organizations#export_project_areas'
     post "import_project_areas" => 'organizations#import_project_areas'
-
   end
+
+  get "export_permissions" => 'permissions#export_permissions'
+  get "import_permissions" => 'permissions#import_permissions'
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
   post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'
