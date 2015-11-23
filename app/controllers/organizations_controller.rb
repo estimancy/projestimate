@@ -27,6 +27,129 @@ class OrganizationsController < ApplicationController
   include OrganizationsHelper
   include ActionView::Helpers::NumberHelper
 
+  def import_project_areas
+    @organization = Organization.find(params[:organization_id])
+    tab_error = []
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      workbook = RubyXL::Parser.parse(params[:file].path)
+      tab = workbook[0].extract_data
+
+      tab.each_with_index do |row, index|
+        if index > 0 && !row[0].nil?
+          new_app = ProjectArea.new(name: row[0], description: row[1],organization_id: @organization.id)
+          unless new_app.save
+            tab_error << index + 1
+          end
+        elsif row[0].nil?
+          tab_error << index + 1
+        end
+      end
+    else
+      flash[:error] = I18n.t(:route_flag_error_4)
+    end
+    unless tab_error.empty?
+      flash[:error] = I18n.t(:error_import_groups, parameter: tab_error.join(", "))
+    end
+    flash[:notice] = I18n.t(:notice_wbs_activity_element_import_successful)
+    redirect_to :back
+  end
+
+  def export_project_areas
+    @organization = Organization.find(params[:organization_id])
+    organization_project_area = @organization.project_areas
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, I18n.t(:name))
+    worksheet.add_cell(0, 1, I18n.t(:description))
+    organization_project_area.each_with_index do |project_area, index|
+      worksheet.add_cell(index + 1, 0, project_area.name)
+      worksheet.add_cell(index + 1, 1, project_area.description)
+    end
+    send_data(workbook.stream.string, filename: "#{@organization.name}_project_areas-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
+  def import_appli
+    @organization = Organization.find(params[:organization_id])
+    tab_error = []
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      workbook = RubyXL::Parser.parse(params[:file].path)
+      tab = workbook[0].extract_data
+
+      tab.each_with_index do |row, index|
+        if index > 0
+          new_app = Application.new(name: row[0], organization_id: @organization.id)
+          unless new_app.save
+            tab_error << index + 1
+          end
+        end
+      end
+    else
+      flash[:error] = I18n.t(:route_flag_error_4)
+    end
+    unless tab_error.empty?
+      flash[:error] = I18n.t(:error_impor_groups, parameter: tab_error.join(", "))
+    end
+    flash[:notice] = I18n.t(:notice_wbs_activity_element_import_successful)
+    redirect_to :back
+  end
+
+  def export_appli
+    @organization = Organization.find(params[:organization_id])
+    organization_appli = @organization.applications
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, I18n.t(:name))
+    organization_appli.each_with_index do |appli, index|
+      worksheet.add_cell(index + 1, 0, appli.name)
+    end
+    send_data(workbook.stream.string, filename: "#{@organization.name}_applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
+  def import_groups
+    @organization = Organization.find(params[:organization_id])
+    tab_error = []
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      workbook = RubyXL::Parser.parse(params[:file].path)
+      tab = workbook[0].extract_data
+
+      tab.each_with_index do |row, index|
+        if index > 0 && !row[0].nil?
+          new_group = Group.new(name: row[0], description: row[1], organization_id: @organization.id)
+          unless new_group.save
+            tab_error << index + 1
+          end
+        elsif row[0].nil?
+          tab_error << index + 1
+        end
+      end
+      unless tab_error.empty?
+        flash[:error] = I18n.t(:error_impor_groups, parameter: tab_error.join(", "))
+      end
+    else
+      flash[:error] = I18n.t(:route_flag_error_4)
+    end
+    flash[:notice] = I18n.t(:notice_wbs_activity_element_import_successful)
+    redirect_to :back
+  end
+
+  def export_groups
+    @organization = Organization.find(params[:organization_id])
+    organization_groups = @organization.groups
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, I18n.t(:name))
+    worksheet.add_cell(0, 1, I18n.t(:description))
+    organization_groups.each_with_index do |groups, index|
+      worksheet.add_cell(index + 1, 0, groups.name)
+      worksheet.add_cell(index + 1, 1, groups.description)
+    end
+
+    send_data(workbook.stream.string, filename: "#{@organization.name}_groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
   def my_preparse(my_hash)
     my_swap = my_hash[:mon]
     my_hash[:mon] = my_hash[:mday]

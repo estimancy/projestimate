@@ -1794,4 +1794,6 @@ en:
   "Répartition des ressources en fonction du temps": "Resources distribution over of time"
   "periode": "Périod"
   "Revenir sur la page précédente": "Back to previous page"
-
+  error_impor_groups: "The groups has not been imported for the following row : %{parameter}"
+  error_impor_appli: "The applications has not been imported for the following row : %{parameter}"
+  error_impor_project_area: "The project areas has not been imported for the following row : %{parameter}"

@@ -36,33 +36,26 @@ class TranslationsController < ApplicationController
   end
 
   def call_my_recursive_friend(f, key, value, index)
-    tabulation = index > 1 ? "  " : ""
+    tabulation = "  "
     index.times do tabulation += "  " end
-    f.puts("#{tabulation}#{key}:")
     value.each do |sub_key, val|
 
-      if val.is_a?(Hash)
-        f.puts("#{tabulation}  #{sub_key}:")
-        val.each do |sub_key_prime, sub_val|
-          if sub_val.is_a?(Hash)
-            call_my_recursive_friend(f, sub_key_prime, sub_val, index.to_i + 2)
-          elsif sub_val.is_a?(Array) && sub_val.length > 1
-            f.puts("#{tabulation}  #{sub_key_prime}:")
-            sub_val.each do |sub_val_prime|
-              f.puts("#{tabulation}    - #{sub_val_prime.nil? ? "~" : sub_val_prime}")
-            end
-          else
-            f.puts("#{tabulation}    #{sub_key_prime}: \"#{sub_val}\"")
-          end
-        end
+      if sub_key.is_a?(String)
+        ok_key = sub_key.split(//).include?(" ") ?   "\"#{sub_key}\"" : sub_key
+      else
+        ok_key = sub_key
+      end
 
+      if val.is_a?(Hash)
+        f.puts("#{tabulation}#{ok_key}:")
+        call_my_recursive_friend(f, sub_key, val, index.to_i + 1)
       elsif val.is_a?(Array) && val.length > 1
-        f.puts("#{tabulation}  #{sub_key}:")
+        f.puts("#{tabulation}#{ok_key}:")
         val.each do |sub_val|
-          f.puts("#{tabulation}    - #{sub_val.nil? ? "~" : sub_val}")
+          f.puts("#{tabulation}  - #{sub_val.nil? ? "~" : sub_val}")
         end
       else
-        f.puts("#{tabulation}#{sub_key}: \"#{val}\"")
+        f.puts("#{tabulation}#{ok_key}: \"#{val.is_a?(String) ? val.gsub('"', '\"') : val}\"")
       end
     end
   end
@@ -70,32 +63,41 @@ class TranslationsController < ApplicationController
   #Create a new entry
   def create
 
-    locale = params[:available_locales].to_sym
+    locale = params[:available_locales].to_s
     modified_hash = params[:translations]
     begin
       f = File.new("./config/locales/#{locale}.yml", "w")
       save_file = f
       f.puts("#{locale}:")
       modified_hash.each do |key, value|
-        if value[0] == "{" && value[value.size - 1] == "}"
-            my_eval = eval(value)
-          if my_eval.is_a?(Hash)
-            #toto = 42
-            call_my_recursive_friend(f, key, my_eval, 1)
+        if key != "errors" && key != "helpers" && key != "simple_form" && key != "faker"
+
+          if key.is_a?(String)
+            ok_key = key.split(//).include?(" ") ?   "\"#{key}\"" : key
+          else
+            ok_key = key
           end
-        else
-          f.puts("  #{key}: \"#{value}\"")
+
+          if value[0] == "{" && value[value.size - 1] == "}"
+              my_eval = eval(value)
+            if my_eval.is_a?(Hash)
+              f.puts("  #{ok_key}:")
+              call_my_recursive_friend(f, key, my_eval, 1)
+            end
+          elsif value.is_a? (Array)
+            f.puts("  #{ok_key}:")
+            call_my_recursive_friend(f, key, my_eval, 1)
+          else
+            f.puts("  #{ok_key}: \"#{value.is_a?(String) ? value.gsub('"', '\"') : value}\"")
+          end
         end
       end
       f.close
     rescue Exception => exc
-      f.close
-      flash[:error] = "YOU SHALL NOT PASS ! ! ! !"
-    end
+     f.close
+     flash[:error] = "YOU SHALL NOT PASS ! ! ! !"
+   end
 
-    #deep_merge by Stefan Rusterholz, see http://www.ruby-forum.com/topic/142809
-    #merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
-    #translations[locale].merge!(data, "tuto")
 =begin
     authorize! :manage_master_data, :all
 

@@ -148,7 +148,7 @@ gem "highcharts-rails", "~> 3.0.0"
 gem 'groupdate'
 
 #Faker
-gem 'faker'
+#gem 'faker'
 
 gem 'passenger'
 
