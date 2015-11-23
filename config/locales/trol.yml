@@ -1,17 +1,2 @@
 trol:
-  formats: "tululu"
-  hey:
-    Val:
-      - ok
-      - ok2
-    val3:
-       key2:
-         s_val: "toto"
-         ss_val:
-           toto_1: "ok"
-           toto_2: "ok ok"
-         sss_val:
-           - vous
-           - ne
-           - passez
-           - pas
+  hey: "MACARENA ! !"
