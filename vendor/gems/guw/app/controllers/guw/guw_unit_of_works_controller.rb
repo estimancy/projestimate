@@ -349,7 +349,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
 
         if guw_unit_of_work.guw_complexity.nil?
-          @weight_pert << (cwu.nil? ? 1 : (cwu.value.nil? ? 1 : cwu.value.to_f)) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * 1
+          @weight_pert << 0
         else
           @weight_pert << (cwu.nil? ? 1 : (cwu.value.nil? ? 1 : cwu.value.to_f)) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
         end
