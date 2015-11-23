@@ -222,11 +222,11 @@ Projestimate::Application.routes.draw do
     post "generate_report_excel_from_file" => 'organizations#generate_report_excel_from_file'
     post "import_user" => 'organizations#import_user'
     post "export_user" => 'organizations#export_user'
-    post "export_groups" => 'organizations#export_groups'
+    get "export_groups" => 'organizations#export_groups'
     post "import_groups" => 'organizations#import_groups'
-    post "export_appli" => 'organizations#export_appli'
+    get "export_appli" => 'organizations#export_appli'
     post "import_appli" => 'organizations#import_appli'
-    post "export_project_areas" => 'organizations#export_project_areas'
+    get "export_project_areas" => 'organizations#export_project_areas'
     post "import_project_areas" => 'organizations#import_project_areas'
   end
 

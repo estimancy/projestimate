@@ -142,9 +142,9 @@ class OrganizationsController < ApplicationController
 
     worksheet.add_cell(0, 0, I18n.t(:name))
     worksheet.add_cell(0, 1, I18n.t(:description))
-    organization_groups.each_with_index do |groups, index|
-      worksheet.add_cell(index + 1, 0, groups.name)
-      worksheet.add_cell(index + 1, 1, groups.description)
+    organization_groups.each_with_index do |group, index|
+      worksheet.add_cell(index + 1, 0, group.name)
+      worksheet.add_cell(index + 1, 1, group.description)
     end
 
     send_data(workbook.stream.string, filename: "#{@organization.name}_groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
