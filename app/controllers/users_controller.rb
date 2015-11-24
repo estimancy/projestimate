@@ -170,19 +170,26 @@ public
         @user.save
 
       elsif current_user.super_admin == true
-        organizations = @user.organization_ids - params[:organizations].keys.map(&:to_i)
-        organizations.each do |organization_id|
+
+        old_organizations = @user.organization_ids - params[:organizations].keys.map(&:to_i)
+        new_organizations_array = params[:organizations].keys.map(&:to_i)
+
+        old_organizations.each do |organization_id|
           organization = Organization.find(organization_id)
           organization.groups.each do |group|
             if @user.estimations.where(organization_id: organization.id).empty?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
-              @user.organization_ids = params[:organizations].keys
+            else
+              new_organizations_array << organization_id
+              specific_message = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.where(organization_id: organization.id).join(', ')})"
             end
           end
         end
+
+        @user.organization_ids = new_organizations_array.uniq
         @user.save
       else
-        #il ne se passe rien, un user non super admin nepeux pas décoché un autre utilisateur d'une organisation
+        #il ne se passe rien, un user non super admin ne peux pas décoché un autre utilisateur d'une organisation
       end
     else
       if params[:groups].nil?

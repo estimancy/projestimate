@@ -61,9 +61,46 @@
           <td>
             <%= f.input :version, :input_html => {:class => 'input-large'}, :disabled => true %>
           </td>
-
         </tr>
+
+        <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
+          <tr>
+            <td>
+              <label>
+                <%= I18n.t(:original_model) %>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <% if can_show_estimation?(@project.original_model) %>
+                <% unless @project.original_model.nil? %>
+                  <span>
+                    <%= link_to(@project.original_model, dashboard_path(@project.original_model)) %>  <br>
+                  </span>
+                <% end %>
+              <% else %>
+                <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
+              <% end %>
+            </td>
+          </tr>
+        <% else %>
+          <tr>
+            <td>
+              <label>
+                <%= I18n.t(:original_model) %>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              -
+            </td>
+          </tr>
+        <% end %>
       </table>
+
+      <br>
 
       <%= tinymce %>
       <label>
