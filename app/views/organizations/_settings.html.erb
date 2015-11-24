@@ -21,8 +21,8 @@
 
       <% if can? :manage, Application %>
         <%= link_to I18n.t('new_application'), new_organization_application_path(@organization), :class => 'btn pull-right' %>
-        <%= link_to I18n.t('export'), organization_export_appli_path(@organization), :class => 'btn pull-right'%>
-            <a href="#myWBSModal" role="button" class="btn pull-right" title="Import applications from excel" data-toggle="modal">
+        <%= link_to I18n.t('export'), organization_export_appli_path(@organization), :class => 'btn pull-right button_margin_right'%>
+            <a href="#myWBSModal" role="button" class="btn pull-right button_margin_right" title="Import applications from excel" data-toggle="modal">
               <%= I18n.t(:import) %>
             </a>
 
@@ -80,8 +80,8 @@
 
       <% if can? :manage, ProjectArea %>
          <%= link_to I18n.t('new_project_area'), new_organization_project_area_path(@organization), :class => 'btn pull-right' %>
-            <%= link_to I18n.t('export'), organization_export_project_areas_path(@organization), :class => 'btn pull-right'%>
-            <a href="#ImportProjectAreas" role="button" class="btn pull-right" title="Import project areas from excel" data-toggle="modal">
+            <%= link_to I18n.t('export'), organization_export_project_areas_path(@organization), :class => 'btn pull-right button_margin_right'%>
+            <a href="#ImportProjectAreas" role="button" class="btn pull-right button_margin_right" title="Import project areas from excel" data-toggle="modal">
               <%= I18n.t(:import) %>
             </a>
 
