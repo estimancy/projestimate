@@ -613,10 +613,12 @@ class Guw::GuwModelsController < ApplicationController
           ind2 += 1
         end
         worksheet[ind2 + 4][0].change_border(:bottom, 'thin')
-        worksheet[ind2 + 4][ind + 1].change_border(:bottom, 'thin')
-        worksheet[ind2 + 4][ind + 2].change_border(:bottom, 'thin')
-        worksheet[ind2 + 4][ind + 3].change_border(:bottom, 'thin')
-        worksheet[ind2 + 4][ind + 4].change_border(:bottom, 'thin')
+        unless guw_complexity.guw_complexity_technologies.empty?
+          worksheet[ind2 + 4][ind + 1].change_border(:bottom, 'thin')
+          worksheet[ind2 + 4][ind + 2].change_border(:bottom, 'thin')
+          worksheet[ind2 + 4][ind + 3].change_border(:bottom, 'thin')
+          worksheet[ind2 + 4][ind + 4].change_border(:bottom, 'thin')
+        end
 
         if ind3 < ind2
           ind3 += (ind2 + 1)
