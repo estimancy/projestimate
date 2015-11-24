@@ -71,7 +71,9 @@
         <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
           <tr>
             <td>
-              <%= I18n.t(:original_model) %>
+              <label>
+                <%= I18n.t(:original_model) %>
+              </label>
             </td>
           </tr>
           <tr>
@@ -90,12 +92,14 @@
         <% else %>
           <tr>
             <td>
-              <%= I18n.t(:original_model) %>
+              <label>
+                <%= I18n.t(:original_model) %>
+              </label>
             </td>
           </tr>
           <tr>
             <td>
-              Aucun modèle n'a été définie
+              -
             </td>
           </tr>
         <% end %>
