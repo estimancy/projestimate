@@ -321,7 +321,7 @@ public
         redirect_to :back
       end
     else
-      flash[:error] = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.where(organization_id: organization.id).join(', ')})"
+      flash[:error] = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.where(organization_id: params[:organization_id]).join(', ')})"
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
       else

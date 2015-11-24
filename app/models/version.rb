@@ -21,10 +21,4 @@
 
 class Version < ActiveRecord::Base
   attr_accessible :comment, :local_latest_update, :repository_latest_update
-
-  def testnico
-    str = "En tant qu'utilisateur, je veux trier le texte sous forme de lorem, d'ipsum et de toto pour assurer une homogeinité de la solution"
-
-    str
-  end
 end
