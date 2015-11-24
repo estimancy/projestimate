@@ -48,6 +48,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
         i.last.each do |j|
           ot = OrganizationTechnology.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
+          @guw_type = cplx.guw_type
 
           if params['enable_value'].present?
             cplx.enable_value = params['enable_value']["#{cplx.guw_type.id}"]["#{cplx.id}"].nil? ? false : true
