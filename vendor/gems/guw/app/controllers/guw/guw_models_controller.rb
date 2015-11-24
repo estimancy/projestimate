@@ -1017,7 +1017,12 @@ class Guw::GuwModelsController < ApplicationController
                     indexing_field_error[1][0] = false
                   end
                 else
-                  guw_uow.guw_work_unit_id = @guw_model.guw_work_units.first.id
+                  first_work_unit = @guw_model.guw_work_units.first
+                  unless first_work_unit.nil?
+                    guw_uow.guw_work_unit_id = @guw_model.guw_work_units.first.id
+                  else
+                    guw_uow.guw_work_unit_id = nil
+                  end
                   ind += 1
                   indexing_field_error[1][0] = true
                 end
