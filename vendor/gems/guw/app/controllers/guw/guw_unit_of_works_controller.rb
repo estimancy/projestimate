@@ -200,7 +200,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.guw_complexity_id = guw_complexity_id
 
       cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-                                             guw_work_unit_id: guw_work_unit.id).first
+                                             guw_work_unit_id: guw_work_unit).first
 
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
@@ -324,7 +324,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
 
       guw_unit_of_work.guw_type_id = guw_type.id
-      guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+      guw_unit_of_work.guw_work_unit = guw_work_unit
       if params["quantity"].present?
         guw_unit_of_work.quantity = params["quantity"]["#{guw_unit_of_work.id}"].nil? ? 1 : params["quantity"]["#{guw_unit_of_work.id}"].to_f
       else
@@ -341,7 +341,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
 
         cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-                                               guw_work_unit_id: guw_work_unit.id).first
+                                               guw_work_unit_id: guw_work_unit).first
 
         tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                    organization_technology_id: guw_unit_of_work.organization_technology_id,
@@ -615,7 +615,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
     if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
-      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
         uo_weight_low = (cwu.value.nil? ? 1 : (cwu.value.nil? ? 1 : cwu.value.to_f)) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
@@ -625,7 +625,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
 
     if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
-      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
         uo_weight_ml = (cwu.value.nil? ? 1 : (cwu.value.nil? ? 1 : cwu.value.to_f)) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
@@ -636,7 +636,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
-      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit.id).first
+      cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
       if guw_c.enable_value == false
         uo_weight_high = (cwu.value.nil? ? 1 : (cwu.value.nil? ? 1 : cwu.value.to_f)) * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       else
