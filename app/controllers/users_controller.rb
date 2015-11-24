@@ -158,7 +158,7 @@ public
 
         @user.organizations.each do |organization|
           organization.groups.each do |group|
-            if @user.estimations.where(organization_id: organization.id).nil?
+            if @user.estimations.where(organization_id: organization.id).empty?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
               @user.organization_ids = []
             else
@@ -174,7 +174,7 @@ public
         organizations.each do |organization_id|
           organization = Organization.find(organization_id)
           organization.groups.each do |group|
-            if @user.estimations.where(organization_id: organization.id).nil?
+            if @user.estimations.where(organization_id: organization.id).empty?
               GroupsUsers.delete_all("user_id = #{@user.id} and group_id = #{group.id}")
               @user.organization_ids = params[:organizations].keys
             end

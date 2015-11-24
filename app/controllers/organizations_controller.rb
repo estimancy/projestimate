@@ -178,7 +178,9 @@ class OrganizationsController < ApplicationController
     @organization = @current_organization
     check_if_organization_is_image(@organization)
 
-    tmp1 = @organization.projects.where(creator_id: current_user.id, is_model: false, private: true).all
+    tmp1 = @organization.projects.where(creator_id: current_user.id,
+                                        is_model: false,
+                                        private: true).all
 
     if params[:report_date][:start_date].blank? || params[:report_date][:end_date].blank?
       tmp2 = @organization.projects.where(is_model: false, private: false).where(conditions).where("title like ?", "%#{params[:title]}%").all

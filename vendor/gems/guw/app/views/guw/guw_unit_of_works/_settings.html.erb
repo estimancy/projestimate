@@ -225,9 +225,7 @@
                 <td class="span2 quantity_label_<%= guow.id %>">
                   <% unless guow.guw_type.nil? %>
                     <% if guow.guw_type.allow_quantity == true %>
-                      <%= number_field_tag "quantity[#{guow.id}]", guow.quantity, class: "input-mini" %>
-                    <% else %>
-
+                      <%= number_field_tag "quantity[#{guow.id}]", guow.quantity.nil? ? 1 : guow.quantity, class: "input-mini" %>
                     <% end %>
                   <% end %>
                 </td>
