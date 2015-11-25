@@ -68,14 +68,14 @@
 
         </tr>
 
+        <tr>
+          <td>
+            <label>
+              <%= I18n.t(:original_model) %>
+            </label>
+          </td>
+        </tr>
         <% if action_name.in?(%w(edit update)) && !@project.original_model_id.nil? %>
-          <tr>
-            <td>
-              <label>
-                <%= I18n.t(:original_model) %>
-              </label>
-            </td>
-          </tr>
           <tr>
             <td>
               <% if can_show_estimation?(@project.original_model) %>
@@ -85,18 +85,14 @@
                   </span>
                 <% end %>
               <% else %>
-                <%= f.input :original_model, label: I18n.t(:original_model), disabled: true %>
+                <span>
+                  <%= @project.original_model %>
+                  <br>
+                </span>
               <% end %>
             </td>
           </tr>
         <% else %>
-          <tr>
-            <td>
-              <label>
-                <%= I18n.t(:original_model) %>
-              </label>
-            </td>
-          </tr>
           <tr>
             <td>
               -
