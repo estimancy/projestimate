@@ -64,7 +64,9 @@
             <%= submit_tag I18n.t(:import), :class => 'btn btn-primary' %>
 
           <% end %>
-        <% end %>
+
+            <%= link_to I18n.t(:export), kb.kb_model_data_export_path(@kb_model), :class => 'btn' %>
+      <% end %>
       </div>
       <div class="span8">
         <% unless @kb_model.kb_datas.empty? %>
