@@ -25,6 +25,7 @@ Kb::Engine.routes.draw do
   resources :kb_models do
     post "save_efforts"
     post "import"
+    get "data_export"
     post "duplicate"
     post "dot_export"
   end

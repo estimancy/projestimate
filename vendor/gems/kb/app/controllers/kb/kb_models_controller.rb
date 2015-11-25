@@ -25,6 +25,36 @@ class Kb::KbModelsController < ApplicationController
   require 'roo'
   require 'rubyXL'
 
+  def data_export
+
+    @kb_model = Kb::KbModel.find(params[:kb_model_id])
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+    kb_model_datas = @kb_model.kb_datas
+    default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
+
+    if !kb_model_datas.nil? && !kb_model_datas.empty?
+      kb_model_datas.each_with_index do |kb_data, index|
+        worksheet.add_cell(index + 1, 0, kb_data.size).change_horizontal_alignment('center')
+        worksheet.add_cell(index + 1, 1, kb_data.effort).change_horizontal_alignment('center')
+        kb_data.custom_attributes.each_with_index  do |(custom_attr_k, custom_attr_v),index_2|
+          worksheet.add_cell(index + 1, index_2 + 2, custom_attr_v).change_horizontal_alignment('center')
+          if index_2 + 2 > 2
+            default_attributs.include?(custom_attr_k.to_s) ? default_attributs : default_attributs  << custom_attr_k.to_s
+          end
+        end
+      end
+    else
+      default_attributs << [ "#{I18n.t(:custom_attribute)}_1", "#{I18n.t(:custom_attribute)}_2", "ect..."]
+    end
+
+    default_attributs.flatten.each_with_index do |w_header, index|
+      worksheet.add_cell(0, index, w_header).change_horizontal_alignment('center')
+    end
+
+    send_data(workbook.stream.string, filename: "#{@kb_model.name.gsub(" ", "_")}_kb__data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
   def show
     authorize! :manage_modules_instances, ModuleProject
 

@@ -1204,7 +1204,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.text     "status_comment"
     t.integer  "application_id"
     t.string   "application_name"
-    t.boolean  "private",                               :default => false
+    t.boolean  "private"
   end
 
   add_index "projects", ["ancestry"], :name => "index_projects_on_ancestry"
@@ -1468,7 +1468,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-11-20 14:38:54'
+    t.datetime "subscription_end_date",  :default => '2016-09-23 10:15:10'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
