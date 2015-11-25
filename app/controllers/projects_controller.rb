@@ -501,7 +501,11 @@ class ProjectsController < ApplicationController
     @ej_modules = @ej_module.nil? ? [] : @project.organization.expert_judgement_instances.map{|i| [i, "#{i.id},#{@ej_module.id}"] }
     @wbs_instances = @ebd_module.nil? ? [] : @project.organization.wbs_activities.map{|i| [i, "#{i.id},#{@ebd_module.id}"] }
 
-    @modules_selected = ([@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map{|i| [i.title, i.id]}
+    @modules_selected = ([@guw_module, @ge_module, @staffing_module, @ej_module, @ebd_module, @kb_module]).map do |i|
+      unless i.nil?
+        [i.title, i.id]
+      end
+    end
 
     project_root = @project.root
     project_tree = project_root.subtree
