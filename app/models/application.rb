@@ -6,6 +6,8 @@ class Application < ActiveRecord::Base
 
   validates :name, :presence => true , :uniqueness => { :scope => :organization_id, :case_sensitive => false }
 
+  default_scope order('name ASC')
+
   def to_s
     self.nil? ? '' : self.name
   end

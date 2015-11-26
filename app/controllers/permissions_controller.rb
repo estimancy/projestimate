@@ -160,37 +160,37 @@ class PermissionsController < ApplicationController
   end
 
   def import_permissions
-    # tab_error = []
-    # del_array = []
-    # if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
-    #   workbook = RubyXL::Parser.parse(params[:file].path)
-    #   tab = workbook[0].extract_data
-    #
-    #   tab.each_with_index do |row, index|
-    #     if index > 0 && !row[0].nil?
-    #
-    #       permission = Permission.where(name: row[0],
-    #                                     description: row[1],
-    #                                     alias: row[2],
-    #                                     object_type: row[3],
-    #                                     category: row[4],
-    #                                     is_permission_project: row[5] == "true",
-    #                                     is_master_permission: row[6] == "true",
-    #                                     object_associated: row[7]).first_or_create!
-    #
-    #       if !permission.nil?
-    #         permission.name = row[0]
-    #       else
-    #         del_array << permission
-    #       end
-    #     end
-    #   end
-    #
-    #   # del_array.each{|da| da.destroy }
-    # else
-    #   flash[:error] = I18n.t(:route_flag_error_4)
-    # end
-    #
+    tab_error = []
+    del_array = []
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+      workbook = RubyXL::Parser.parse(params[:file].path)
+      tab = workbook[0].extract_data
+
+      tab.each_with_index do |row, index|
+        if index > 0 && !row[0].nil?
+
+          permission = Permission.where(name: row[0],
+                                        description: row[1],
+                                        alias: row[2],
+                                        object_type: row[3],
+                                        category: row[4],
+                                        is_permission_project: row[5] == "true",
+                                        is_master_permission: row[6] == "true",
+                                        object_associated: row[7]).first_or_create!
+
+          if !permission.nil?
+            permission.name = row[0]
+          else
+            del_array << permission
+          end
+        end
+      end
+
+      # del_array.each{|da| da.destroy }
+    else
+      flash[:error] = I18n.t(:route_flag_error_4)
+    end
+
     # doublons = Permission.all.group_by{|perm| [perm.name, perm.alias]}
     # doublons.values.each do |duplicates|
     #   first_one = duplicates.shift

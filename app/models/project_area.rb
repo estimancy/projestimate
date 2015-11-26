@@ -39,6 +39,8 @@ class ProjectArea < ActiveRecord::Base
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
 
+  default_scope order('name ASC')
+
   #Override
   def to_s
     self.nil? ? 'N/A' : self.name
