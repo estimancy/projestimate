@@ -790,7 +790,7 @@ class Guw::GuwModelsController < ApplicationController
     redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
   end
 
-    def export
+  def export
     @guw_model = current_module_project.guw_model
     @component = current_component
     @guw_unit_of_works = Guw::GuwUnitOfWork.where(module_project_id: current_module_project.id,
@@ -798,7 +798,7 @@ class Guw::GuwModelsController < ApplicationController
                                                   guw_model_id: @guw_model.id)
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
-    ind = 1
+    # ind = 1
     tab_size = [I18n.t(:estimation).length,
                 I18n.t(:version).length,
                 I18n.t(:group).length,
@@ -854,7 +854,11 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.change_column_width(16, tab_size[16])
     worksheet.add_cell(0, 17, I18n.t(:high))
     worksheet.change_column_width(17, tab_size[17])
-    @guw_unit_of_works.each do |guow|
+
+    @guw_unit_of_works.each_with_index do |guow, i|
+
+      ind = i + 1
+
       if guow.off_line
         cplx = "HSAT"
       elsif guow.off_line_uo
@@ -864,44 +868,60 @@ class Guw::GuwModelsController < ApplicationController
       else
         cplx = guow.guw_complexity.name
       end
+
+      worksheet.add_cell(ind, 0, current_module_project.project.title)
+      tab_size[0]= tab_size[0] < current_module_project.project.title.length ? current_module_project.project.title.length : tab_size[0]
+      worksheet.change_column_width(0, tab_size[0])
+
+      worksheet.add_cell(ind, 1, current_module_project.project.version)
+
+      worksheet.add_cell(ind, 2, guow.guw_unit_of_work_group.name)
+      tab_size[2] = tab_size[2] < guow.guw_unit_of_work_group.name.length ? guow.guw_unit_of_work_group.name.length : tab_size[2]
+      worksheet.change_column_width(2, tab_size[2])
+
+      worksheet.add_cell(ind, 3, guow.selected ? 1 : 0)
+
+      worksheet.add_cell(ind, 4, guow.name)
+      tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
+      worksheet.change_column_width(4, tab_size[4])
+
+      worksheet.add_cell(ind, 5, guow.comments)
+
+      worksheet.add_cell(ind, 6, guow.guw_type.name)
+      tab_size[6] = tab_size[6] < guow.guw_type.name.to_s.length ? guow.guw_type.name.to_s.length : tab_size[6]
+      worksheet.change_column_width(6, tab_size[6])
+
+      worksheet.add_cell(ind, 7, guow.guw_work_unit)
+
+      worksheet.add_cell(ind, 8, guow.organization_technology)
+      tab_size[8] = tab_size[8] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[8]
+      worksheet.change_column_width(8, tab_size[8])
+
+      worksheet.add_cell(ind, 9, guow.quantity)
+
+      worksheet.add_cell(ind, 10, guow.tracking)
+
+      worksheet.add_cell(ind, 11, cplx)
+      tab_size[11] = tab_size[11] < cplx.length ? cplx.length : tab_size[11]
+
+      worksheet.change_column_width(11, tab_size[11])
+      worksheet.add_cell(ind, 12, guow.effort)
+
+      worksheet.add_cell(ind, 13, guow.ajusted_effort)
+
       @guw_model.guw_attributes.each do |gac|
         finder = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: gac.id, guw_type_id: guow.guw_type.id).first
         unless finder.nil?
           sum_range = gac.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
           unless sum_range.nil? || sum_range.blank? || sum_range == 0
-            worksheet.add_cell(ind, 0, current_module_project.project.title)
-            tab_size[0]= tab_size[0] < current_module_project.project.title.length ? current_module_project.project.title.length : tab_size[0]
-            worksheet.change_column_width(0, tab_size[0])
-            worksheet.add_cell(ind, 1, current_module_project.project.version)
-            worksheet.add_cell(ind, 2, guow.guw_unit_of_work_group.name)
-            tab_size[2] = tab_size[2] < guow.guw_unit_of_work_group.name.length ? guow.guw_unit_of_work_group.name.length : tab_size[2]
-            worksheet.change_column_width(2, tab_size[2])
-            worksheet.add_cell(ind, 3, guow.selected ? 1 : 0)
-            worksheet.add_cell(ind, 4, guow.name)
-            tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
-            worksheet.change_column_width(4, tab_size[4])
-            worksheet.add_cell(ind, 5, guow.comments)
-            worksheet.add_cell(ind, 6, guow.guw_type.name)
-            tab_size[6] = tab_size[6] < guow.guw_type.name.to_s.length ? guow.guw_type.name.to_s.length : tab_size[6]
-            worksheet.change_column_width(6, tab_size[6])
-            worksheet.add_cell(ind, 7, guow.guw_work_unit)
-            worksheet.add_cell(ind, 8, guow.organization_technology)
-            tab_size[8] = tab_size[8] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[8]
-            worksheet.change_column_width(8, tab_size[8])
-            worksheet.add_cell(ind, 9, guow.quantity)
-            worksheet.add_cell(ind, 10, guow.tracking)
-            worksheet.add_cell(ind, 11, cplx)
-            tab_size[11] = tab_size[11] < cplx.length ? cplx.length : tab_size[11]
-            worksheet.change_column_width(11, tab_size[11])
-            worksheet.add_cell(ind, 12, guow.effort)
-            worksheet.add_cell(ind, 13, guow.ajusted_effort)
+
             worksheet.add_cell(ind, 14, finder.guw_attribute.name)
             tab_size[14] = tab_size[14] < finder.guw_attribute.name.length ? finder.guw_attribute.name.length : tab_size[14]
             worksheet.change_column_width(14, tab_size[14])
             worksheet.add_cell(ind, 15, finder.low ? finder.low : "N/A")
             worksheet.add_cell(ind, 16, finder.most_likely ? finder.most_likely : "N/A")
             worksheet.add_cell(ind, 17, finder.high ? finder.high : "N/A")
-            ind += 1
+
           end
         end
       end
@@ -956,6 +976,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = current_module_project.guw_model
     @component = current_component
+
     ind = 0
     ok = false
     already_exist = ["first"]
