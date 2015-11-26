@@ -36,6 +36,8 @@ class ProjectCategory < ActiveRecord::Base
   validates :name, :presence => true#, :uniqueness => {:case_sensitive => false, :scope => :record_status_id}
   #validates :custom_value, :presence => true, :if => :is_custom?
 
+  default_scope order('name ASC')
+
   amoeba do
     enable
     exclude_association [:projects]
