@@ -650,62 +650,29 @@ class Guw::GuwModelsController < ApplicationController
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
     # ind = 1
-    tab_size = [I18n.t(:estimation).length,
-                I18n.t(:version).length,
-                I18n.t(:group).length,
-                I18n.t(:selected).length,
-                I18n.t(:name).length,
-                I18n.t(:description).length,
-                I18n.t(:work_unit_type).length,
-                @guw_model.coefficient_label.to_s.length,
-                I18n.t(:organization_technology).length,
-                I18n.t(:quantity).length,
-                I18n.t(:tracability).length,
-                I18n.t(:cotation).length,
-                I18n.t(:results).length,
-                I18n.t(:retained_result).length,
-                I18n.t(:pe_attribute_name).length,
-                I18n.t(:low).length,
-                I18n.t(:likely).length,
-                I18n.t(:high).length]
+    tab_size = [I18n.t(:estimation).length, I18n.t(:version).length,
+                I18n.t(:group).length, I18n.t(:selected).length,
+                I18n.t(:name).length, I18n.t(:description).length,
+                I18n.t(:work_unit_type).length, @guw_model.coefficient_label.to_s.length,
+                I18n.t(:organization_technology).length, I18n.t(:quantity).length,
+                I18n.t(:tracability).length, I18n.t(:cotation).length,
+                I18n.t(:results).length, I18n.t(:retained_result).length,
+                I18n.t(:pe_attribute_name).length, I18n.t(:low).length,
+                I18n.t(:likely).length, I18n.t(:high).length]
+
+    [I18n.t(:estimation),I18n.t(:version),
+     I18n.t(:group), I18n.t(:selected),
+     I18n.t(:name),I18n.t(:description),
+     I18n.t(:work_unit_type), @guw_model.coefficient_label,
+     I18n.t(:organization_technology),I18n.t(:quantity),
+     I18n.t(:tracability), I18n.t(:cotation),
+     I18n.t(:results), I18n.t(:retained_result),
+     I18n.t(:pe_attribute_name), I18n.t(:low),
+     I18n.t(:likely), I18n.t(:high)].each_with_index do |val, index|
+      worksheet.add_cell(index, 0, val)
+    end
 
     worksheet.change_row_bold(0,true)
-    worksheet.add_cell(0, 0, I18n.t(:estimation))
-    worksheet.change_column_width(0, tab_size[0])
-    worksheet.add_cell(0, 1,I18n.t(:version))
-    worksheet.change_column_width(1, tab_size[1])
-    worksheet.add_cell(0, 2, I18n.t(:group))
-    worksheet.change_column_width(2, tab_size[2])
-    worksheet.add_cell(0, 3,I18n.t(:selected))
-    worksheet.change_column_width(3, tab_size[3])
-    worksheet.add_cell(0, 4,I18n.t(:name))
-    worksheet.add_cell(0, 5, I18n.t(:description))
-    worksheet.change_column_width(5, tab_size[5])
-    worksheet.add_cell(0, 6, I18n.t(:work_unit_type))
-    worksheet.change_column_width(6, tab_size[6])
-    worksheet.add_cell(0, 7,@guw_model.coefficient_label)
-    worksheet.change_column_width(7, tab_size[7])
-    worksheet.add_cell(0, 8,I18n.t(:organization_technology))
-    worksheet.change_column_width(8,tab_size[8])
-    worksheet.add_cell(0, 9, I18n.t(:quantity))
-    worksheet.change_column_width(9, tab_size[9])
-    worksheet.add_cell(0, 10,I18n.t(:tracability))
-    worksheet.change_column_width(10, tab_size[10])
-    worksheet.add_cell(0, 11, I18n.t(:cotation))
-    worksheet.change_column_width(11, tab_size[11])
-    worksheet.add_cell(0, 12, I18n.t(:results))
-    worksheet.change_column_width(12, tab_size[12])
-    worksheet.add_cell(0, 13, I18n.t(:retained_result))
-    worksheet.change_column_width(13, tab_size[13])
-    worksheet.add_cell(0, 14, I18n.t(:pe_attribute_name))
-    worksheet.change_column_width(14, tab_size[14])
-    worksheet.add_cell(0, 15, I18n.t(:low))
-    worksheet.change_column_width(15, tab_size[15])
-    worksheet.add_cell(0, 16, I18n.t(:likely))
-    worksheet.change_column_width(16, tab_size[16])
-    worksheet.add_cell(0, 17, I18n.t(:high))
-    worksheet.change_column_width(17, tab_size[17])
-
     @guw_unit_of_works.each_with_index do |guow, i|
 
       ind = i + 1
