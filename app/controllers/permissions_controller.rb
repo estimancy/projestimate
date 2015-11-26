@@ -168,34 +168,38 @@ class PermissionsController < ApplicationController
 
       tab.each_with_index do |row, index|
         if index > 0 && !row[0].nil?
-
-          permission = Permission.where(name: row[0],
-                                        description: row[1],
+          permission = Permission.where(description: row[1],
                                         alias: row[2],
                                         object_type: row[3],
                                         category: row[4],
                                         is_permission_project: row[5] == "true",
                                         is_master_permission: row[6] == "true",
-                                        object_associated: row[7]).first_or_create!
+                                        object_associated: row[7]).first
 
-          if !permission.nil?
-            permission.name = row[0]
+          if permission.nil?
+            permission = Permission.create(name: row[0],
+                                          description: row[1],
+                                          alias: row[2],
+                                          object_type: row[3],
+                                          category: row[4],
+                                          is_permission_project: row[5] == "true",
+                                          is_master_permission: row[6] == "true",
+                                          object_associated: row[7])
           else
             del_array << permission
           end
         end
       end
 
-      # del_array.each{|da| da.destroy }
     else
       flash[:error] = I18n.t(:route_flag_error_4)
     end
 
-    # doublons = Permission.all.group_by{|perm| [perm.name, perm.alias]}
-    # doublons.values.each do |duplicates|
-    #   first_one = duplicates.shift
-    #   duplicates.each{|doub| doub.destroy }
-    # end
+    doublons = Permission.all.group_by{|perm| [perm.name, perm.alias]}
+    doublons.values.each do |duplicates|
+      first_one = duplicates.shift
+      duplicates.each{|doub| doub.destroy }
+    end
 
     redirect_to :back
   end
