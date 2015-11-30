@@ -66,7 +66,7 @@ class OrganizationsController < ApplicationController
       worksheet.add_cell(index + 1, 0, project_area.name)
       worksheet.add_cell(index + 1, 1, project_area.description)
     end
-    send_data(workbook.stream.string, filename: "#{@organization.name}_project_areas-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_project_areas-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def import_appli
@@ -104,7 +104,7 @@ class OrganizationsController < ApplicationController
     organization_appli.each_with_index do |appli, index|
       worksheet.add_cell(index + 1, 0, appli.name)
     end
-    send_data(workbook.stream.string, filename: "#{@organization.name}_applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def import_groups
@@ -147,7 +147,7 @@ class OrganizationsController < ApplicationController
       worksheet.add_cell(index + 1, 1, group.description)
     end
 
-    send_data(workbook.stream.string, filename: "#{@organization.name}_groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_preparse(my_hash)
@@ -257,9 +257,7 @@ class OrganizationsController < ApplicationController
 
     worksheet.change_row_bold(0 , true)
 
-    filename = "Data v2.0"
-
-    send_data(workbook.stream.string, filename: "#{filename}-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_Data_v2.0_-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
     # workbook.write("#{Rails.root}/public/#{filename}.xlsx")
     # redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
@@ -1204,7 +1202,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    send_data(workbook.stream.string, filename: "Users_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_users_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 =begin
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
@@ -1229,58 +1227,60 @@ class OrganizationsController < ApplicationController
         tab.each_with_index do |line, index_line|
         if index_line > 0
           user = User.find_by_login_name(line[4])
-          if user.nil?
-            password = SecureRandom.hex(8)
-            if line[0] && line[1] && line[4]
-              if line[7]
-                langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
-              else
-                langue = params[:language_id].to_i
-              end
+          if  !line.empty? && !line.nil?
+            if user.nil?
+              password = SecureRandom.hex(8)
+              if line[0] && line[1] && line[4] && line[3]
+                if line[7]
+                  langue = Language.find_by_name(line[7]) ? Language.find_by_name(line[7]).id : params[:language_id].to_i
+                else
+                  langue = params[:language_id].to_i
+                end
 
-              if line[5]
-                auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
-              else
-                auth_method = AuthMethod.first.id
-              end
+                if line[5]
+                  auth_method = AuthMethod.find_by_name(line[5]) ? AuthMethod.find_by_name(line[5]).id : AuthMethod.first.id
+                else
+                  auth_method = AuthMethod.first.id
+                end
 
-              user = User.new(first_name: line[0],
-                              last_name: line[1],
-                              initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
-                              email: line[3],
-                              login_name: line[4],
-                              id_connexion: line[4],
-                              description: line[6],
-                              super_admin: false,
-                              password: password,
-                              password_confirmation: password,
-                              language_id: langue,
-                              time_zone: "Paris",
-                              object_per_page: 50,
-                              auth_type: auth_method,
-                              locked_at: line[8] ==  0 ? nil : Time.now,
-                              number_precision: 2)
-              if line[5].upcase == "SAML"
-                user.skip_confirmation_notification!
-                user.skip_confirmation!
+                user = User.new(first_name: line[0],
+                                last_name: line[1],
+                                initials: line[2].nil? ? "#{line[0][0]}#{line[1][0]}" : line[2],
+                                email: line[3],
+                                login_name: line[4],
+                                id_connexion: line[4],
+                                description: line[6],
+                                super_admin: false,
+                                password: password,
+                                password_confirmation: password,
+                                language_id: langue,
+                                time_zone: "Paris",
+                                object_per_page: 50,
+                                auth_type: auth_method,
+                                locked_at: line[8] ==  0 ? nil : Time.now,
+                                number_precision: 2)
+                if line[5].upcase == "SAML"
+                  user.skip_confirmation_notification!
+                  user.skip_confirmation!
+                end
+                user.save
+                OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
+                group_index = 9
+                 while line[group_index]
+                    group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
+                    begin
+                      GroupsUsers.create(group_id: group.id, user_id: user.id)
+                    rescue
+                      #rien
+                    end
+                   group_index += 1
+                 end
+              else
+                user_with_no_name << index_line
               end
-              user.save
-              OrganizationsUsers.create(organization_id: @current_organization.id, user_id: user.id)
-              group_index = 9
-               while line[group_index]
-                  group = Group.where(name: line[group_index], organization_id: @current_organization.id).first
-                  begin
-                    GroupsUsers.create(group_id: group.id, user_id: user.id)
-                  rescue
-                    #rien
-                  end
-                 group_index += 1
-               end
             else
-              user_with_no_name << index_line
+              users_existing << line[4]
             end
-          else
-            users_existing << line[4]
           end
         end
       end
@@ -1289,7 +1289,7 @@ class OrganizationsController < ApplicationController
         final_error <<  I18n.t(:user_exist, parameter: users_existing.join(", "))
       end
       unless user_with_no_name.empty?
-        final_error << I18n.t(:user_with_no_name, paremeter: user_with_no_name.join(", "))
+        final_error << I18n.t(:user_with_no_name, parameter: user_with_no_name.join(", "))
       end
       unless final_error.empty?
         flash[:error] = final_error.join("<br/>").html_safe
