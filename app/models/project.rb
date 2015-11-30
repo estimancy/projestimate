@@ -166,7 +166,11 @@ class Project < ActiveRecord::Base
       if organization.nil?
         nil
       else
-        initial_status = organization.estimation_statuses.order(:status_number).first_or_create(organization_id: organization.id, status_number: 0, status_alias: 'preliminary', name: 'Préliminaire', status_color: 'F5FFFD')
+        initial_status = organization.estimation_statuses.first_or_create(organization_id: organization.id,
+                                                                                                status_number: 0,
+                                                                                                status_alias: 'preliminary',
+                                                                                                name: 'Préliminaire',
+                                                                                                status_color: 'F5FFFD')
         [[initial_status.name, initial_status.id]]
       end
       #nil
