@@ -157,7 +157,8 @@
                           label: I18n.t(:estimation_status),
                           as: :select, collection: @project.project_estimation_statuses,
                           disabled: !( can_alter_estimation?(@project) && can?(:alter_estimation_status, @project)) || @project.private,
-                          input_html: { :class => 'input-xlarge' }  %>
+                          input_html: { :class => 'input-xlarge' },
+                          include_blank: false %>
             </td>
             <% if can_alter_estimation?(@project) && can?(:alter_project_status_comment, @project) %>
               <td>

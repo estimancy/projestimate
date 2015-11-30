@@ -232,21 +232,23 @@ class Kb::KbModelsController < ApplicationController
     end
 
     @project_list.each do |kb_data|
-      s = Math.log10(kb_data.size.to_f)
-      s2 = s * s
+      unless kb_data.size.to_f == 0 || kb_data.size.to_f == 0
+        s = Math.log10(kb_data.size.to_f)
+        s2 = s * s
 
-      e = Math.log10(kb_data.effort.to_f)
-      e2 = e * e
+        e = Math.log10(kb_data.effort.to_f)
+        e2 = e * e
 
-      se = s * e
+        se = s * e
 
-      s_array << s
-      s_array2 << s2
+        s_array << s
+        s_array2 << s2
 
-      e_array << e
-      e_array2 << e2
+        e_array << e
+        e_array2 << e2
 
-      es_array << se
+        es_array << se
+      end
     end
 
     unless @project_list.empty?
