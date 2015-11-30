@@ -172,8 +172,6 @@ class PermissionsController < ApplicationController
                                         alias: row[2],
                                         object_type: row[3],
                                         category: row[4],
-                                        is_permission_project: row[5] == "true",
-                                        is_master_permission: row[6] == "true",
                                         object_associated: row[7]).first
 
           if permission.nil?
@@ -182,8 +180,6 @@ class PermissionsController < ApplicationController
                                           alias: row[2],
                                           object_type: row[3],
                                           category: row[4],
-                                          is_permission_project: row[5] == "true",
-                                          is_master_permission: row[6] == "true",
                                           object_associated: row[7])
           else
             del_array << permission

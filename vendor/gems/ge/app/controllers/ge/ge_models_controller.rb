@@ -100,9 +100,9 @@ class Ge::GeModelsController < ApplicationController
       ["low", "most_likely", "high"].each do |level|
 
         if @ge_model.three_points_estimation?
-          size = params[:"retained_size_#{level}"].to_f
+          size = params["retained_size_#{level}"].to_f
         else
-          size = params[:"retained_size_most_likely"].to_f
+          size = params["retained_size_most_likely"].to_f
         end
 
         if am.pe_attribute.alias == "effort"

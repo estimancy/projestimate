@@ -669,7 +669,7 @@ class Guw::GuwModelsController < ApplicationController
      I18n.t(:results), I18n.t(:retained_result),
      I18n.t(:pe_attribute_name), I18n.t(:low),
      I18n.t(:likely), I18n.t(:high)].each_with_index do |val, index|
-      worksheet.add_cell(index, 0, val)
+      worksheet.add_cell(0, index, val)
     end
 
     worksheet.change_row_bold(0,true)

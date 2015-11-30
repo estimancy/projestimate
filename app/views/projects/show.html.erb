@@ -233,6 +233,8 @@
     <div id="tabs-5">
       <div id="accordion-security">
         <h3><%= I18n.t(:model_securities) %></h3>
+        <% can_alter_project_securities = can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+
         <div id="accordion_model" class="accordion">
           <div class="accordion-group accordion-caret">
             <div class="accordion-heading">
@@ -266,7 +268,7 @@
                                                         is_estimation_permission: true).first
                           %>
                         <td style="text-align: center">
-                          <%= check_box_tag("group_securities[#{prj_level.id}][#{group.id}]", group.name, !ps.nil?) %>
+                          <%= check_box_tag("group_securities[#{prj_level.id}][#{group.id}]", group.name, !ps.nil?, disabled: !can_alter_project_securities) %>
                         </td>
                       <% end %>
                     </tr>
@@ -275,8 +277,10 @@
                   <%= render :partial => 'layouts/footer_table' %>
                 </table>
 
-                <%= submit_tag I18n.t('save'), :name => "model_group_security_levels", :class => 'btn' %>
-                <%= submit_tag I18n.t('apply'), :name => "model_group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
+                <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+                  <%= submit_tag I18n.t('save'), :name => "model_group_security_levels", :class => 'btn' %>
+                  <%= submit_tag I18n.t('apply'), :name => "model_group_security_levels", :class => 'btn', :anchor_value => params[:anchor_value] %>
+                <% end %>
                 <%= link_to I18n.t('back'), organization_setting_path(@organization, anchor: "tabs-estimation-models"), :class => 'btn' %>
               </div>
             </div>
@@ -326,7 +330,7 @@
                           %>
                           <% unless creator.nil? %>
                           <td style="text-align: center">
-                            <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{creator.id}]", creator.id, ps.nil? ? false : true) %>
+                            <%= check_box_tag("user_securities_from_model[#{prj_level.id}][#{creator.id}]", creator.id, ps.nil? ? false : true, disabled: !can_alter_project_securities) %>
                           </td>
                         <% end %>
                       <% end %>
@@ -345,7 +349,7 @@
                                                           is_estimation_permission: true).first
                             %>
                           <td style="text-align: center">
-                            <%= check_box_tag("user_securities[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true) %>
+                            <%= check_box_tag("user_securities[#{prj_level.id}][#{user.id}]", user.id, ps.nil? ? false : true, disabled: !can_alter_project_securities) %>
                           </td>
                         <% end %>
                       </tr>
@@ -353,9 +357,10 @@
                     </tbody>
                   <% end %>
                   </table>
-
-                <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                    <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <% end %>
                 <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
               </div>
             </div>
@@ -396,15 +401,17 @@
                                                           is_model_permission: true,
                                                           is_estimation_permission: false).first %>
                           <td style="text-align: center">
-                            <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?) %>
+                            <%= check_box_tag("group_securities_from_model[#{prj_level.id}][#{group.id}]", group.id, !ps.nil?, disabled: !can_alter_project_securities) %>
                           </td>
                         <% end %>
                       </tr>
                     <% end %>
                     </table>
 
-                  <%= submit_tag I18n.t('save'), :class => 'btn' %>
-                  <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <% if can_alter_estimation?(@project) && can?(:manage_project_security, @project) %>
+                    <%= submit_tag I18n.t('save'), :class => 'btn' %>
+                    <%= submit_tag I18n.t('apply'), :class => 'btn', :anchor_value => params[:anchor_value] %>
+                  <% end %>
                   <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
                 </div>
               </div>
