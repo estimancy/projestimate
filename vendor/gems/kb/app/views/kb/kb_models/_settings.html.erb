@@ -201,7 +201,7 @@
           },
           type: 'line',
           color: 'rgba(83, 223, 83, 1)',
-          data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j * 2.8).round(2)] }.sort %>
+          data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j * 1.8).round(2)] }.sort %>
         },{
           name: 'Courbe de régression linéaire - 80%',
           marker: {
@@ -209,7 +209,7 @@
           },
           type: 'line',
           color: 'rgba(83, 223, 255, 1)',
-          data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j / 2.8).round(2)] }.sort %>
+          data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j / 1.8).round(2)] }.sort %>
         },{
           name: 'Taille calculé',
           marker: {
