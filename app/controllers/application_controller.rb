@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
         begin
           redirect_to :back
         rescue
-          redirect_to root_path
+          redirect_to organization_estimations_path(@current_organization)
         end
       else
         UserMailer.crash_log(exception, current_user).deliver
