@@ -28,7 +28,7 @@ class EstimationStatusesController < ApplicationController
     @organization = Organization.find(params[:organization_id])
 
     if params[:commit] == I18n.t('cancel')
-      redirect_to edit_organization_path(:anchor => "tabs-estimations-statuses"), :notice => "#{I18n.t (:notice_estimation_status_successful_cancelled)}"
+      redirect_to :back
     else
       @organization.estimation_statuses.each do |status|
         if params[:status_workflow].nil?

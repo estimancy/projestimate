@@ -193,7 +193,7 @@ class Ability
 
       [status, global].inject(:&).each_with_index do |a, i|
         unless hash_project[a[1]].nil?
-          p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, #{hash_status[a[2]]}"
+          # p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, #{hash_status[a[2]]}"
           can hash_permission[a[0]], hash_project[a[1]], estimation_status_id: hash_status[a[2]]
           # p "#{hash_permission[a[0]]}, #{hash_project[a[1]]}, estimation_status_id: #{hash_status[a[2]]} => #{organization}"
         end
