@@ -346,27 +346,29 @@ class ViewsWidgetsController < ApplicationController
 
       ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: widget.module_project.id).first.wbs_activity_ratio
 
-      activity.wbs_activity_elements.each do |element|
-        my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
-        worksheet.change_column_width(4, my_len_2)
-        element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
-          ware.organization_profiles.each do |profil|
-            worksheet.add_cell(ind_y, 0, @project.title)
-            worksheet.add_cell(ind_y, 1, @project.version)
-            worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
-            worksheet.add_cell(ind_y, 3, current_component)
-            worksheet.add_cell(ind_y, 4, element.name)
-            worksheet.add_cell(ind_y, 5, profil.name)
-            my_len = profil.name.length < my_len ? my_len : profil.name.length
-            worksheet.change_column_width(5, my_len)
-            worksheet.add_cell(ind_y, 6, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
-            worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
-            ind_y += 1
-         end
+      unless ratio.nil?
+        activity.wbs_activity_elements.each do |element|
+          my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
+          worksheet.change_column_width(4, my_len_2)
+          element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
+            ware.organization_profiles.each do |profil|
+              worksheet.add_cell(ind_y, 0, @project.title)
+              worksheet.add_cell(ind_y, 1, @project.version)
+              worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
+              worksheet.add_cell(ind_y, 3, current_component)
+              worksheet.add_cell(ind_y, 4, element.name)
+              worksheet.add_cell(ind_y, 5, profil.name)
+              my_len = profil.name.length < my_len ? my_len : profil.name.length
+              worksheet.change_column_width(5, my_len)
+              worksheet.add_cell(ind_y, 6, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
+              worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+              ind_y += 1
+            end
+          end
         end
       end
     end
-    send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{activity.name}(#{current_module_project.position_x},#{current_module_project.position_y})-Effort-Phases-Profil-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{activity.name}(#{current_module_project.position_x},#{current_module_project.position_y})-Effort-Phases-Profils-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
 
   end
