@@ -134,7 +134,7 @@ class ViewsWidgetsController < ApplicationController
 
         unless params["field"].blank?
           ProjectField.create( project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
-                               value: get_view_widget_data(current_module_project, @views_widget.id)[:value_to_show])
+                               value: get_view_widget_data(@views_widget.module_project, @views_widget.id)[:value_to_show])
         end
 
         #flash[:notice] = "Widget ajouté avec succès"
@@ -366,7 +366,9 @@ class ViewsWidgetsController < ApplicationController
         end
       end
     end
-    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-Effort-Phases-Profil-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{activity.name}(#{current_module_project.position_x},#{current_module_project.position_y})-Effort-Phases-Profil-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+
+
   end
 
 end
