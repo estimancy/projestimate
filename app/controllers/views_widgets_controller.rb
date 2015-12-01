@@ -328,12 +328,12 @@ class ViewsWidgetsController < ApplicationController
       widget.module_project.wbs_activity.wbs_activity_elements.each  do |element|
         worksheet.add_cell(ind_y, 0, @project.title)
         worksheet.add_cell(ind_y, 1, @project.version)
-        worksheet.add_cell(ind_y, 2, @project.start_date)
+        worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
         worksheet.add_cell(ind_y, 3, current_component)
         worksheet.add_cell(ind_y, 4, element.name)
         my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
         worksheet.change_column_width(4, my_len_2)
-        worksheet.add_cell(ind_y, 5, convert(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+        worksheet.add_cell(ind_y, 5, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
         worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
         ind_y += 1
       end
@@ -351,20 +351,20 @@ class ViewsWidgetsController < ApplicationController
           ware.organization_profiles.each do |profil|
             worksheet.add_cell(ind_y, 0, @project.title)
             worksheet.add_cell(ind_y, 1, @project.version)
-            worksheet.add_cell(ind_y, 2, @project.start_date)
+            worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
             worksheet.add_cell(ind_y, 3, current_component)
             worksheet.add_cell(ind_y, 4, element.name)
             worksheet.add_cell(ind_y, 5, profil.name)
             my_len = profil.name.length < my_len ? my_len : profil.name.length
             worksheet.change_column_width(5, my_len)
-            worksheet.add_cell(ind_y, 6, convert(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], @current_organization))
+            worksheet.add_cell(ind_y, 6, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
             worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
             ind_y += 1
          end
         end
       end
     end
-    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-widget_#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-Effort-Phases-Profil-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
 end

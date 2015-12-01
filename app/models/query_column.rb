@@ -58,8 +58,16 @@ class QueryColumn
     name
   end
 
-  def convert_with_precision(value, precision)
-    "%.#{precision}f" % value
+  def convert_with_precision(value, precision, delimiter=false)
+    begin
+      v = ActiveSupport::NumberHelper::number_with_precision(value, precision: precision, locale: :fr, delimiter: delimiter ? ' ' : '')
+    rescue
+      begin
+        v = "%.#{precision}f" % value
+      rescue
+        v = 0
+      end
+    end
   end
 
 end
