@@ -220,7 +220,7 @@ class OrganizationsController < ApplicationController
             project.version,
             (project.application.nil? ? project.application_name : project.application.name),
             "#{Nokogiri::HTML.parse(ActionView::Base.full_sanitizer.sanitize(project.description)).text}",
-            project.start_date,
+            I18n.l(project.start_date),
             project.original_model,
             project.project_area,
             project.estimation_status,
