@@ -203,7 +203,7 @@ class OrganizationsController < ApplicationController
           I18n.t(:label_product_name),
           I18n.t(:description),
           I18n.t(:start_date),
-          "Modèle appliqué",
+          I18n.t(:applied_model),
           I18n.t(:project_area),
           I18n.t(:state),
           I18n.t(:creator),

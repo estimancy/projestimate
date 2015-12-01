@@ -303,10 +303,16 @@ class Guw::GuwModelsController < ApplicationController
   def exportxl
 
     workbook = RubyXL::Workbook.new
+=begin
+    worksheet = workbook[0]
+    tab = "2008-02-03"
+    tab_2 = tab.split("-")
+    worksheet.add_cell(0,0, '', "DATE(#{tab_2[0]},#{tab_2[1]},#{tab_2[2]})")
+    worksheet.add_cell(0,1,tab)
+=end
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_organisation = @guw_model.organization
     @guw_types = @guw_model.guw_types
-    border_tab =
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
                   [I18n.t(:weighting_factor_Name),  @guw_model.coefficient_label],
@@ -552,7 +558,7 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 5
     end
-    send_data(workbook.stream.string, filename: "#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@guw_model.name[0.4]}_ModuleUOmxt-#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show
@@ -649,7 +655,6 @@ class Guw::GuwModelsController < ApplicationController
                                                   guw_model_id: @guw_model.id)
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
-    # ind = 1
     tab_size = [I18n.t(:estimation).length, I18n.t(:version).length,
                 I18n.t(:group).length, I18n.t(:selected).length,
                 I18n.t(:name).length, I18n.t(:description).length,
