@@ -20,7 +20,7 @@
       <%= f.input :organization_id, as: :hidden, input_html: { value: @current_organization.id } %>
 
       <div class="form-inputs">
-        <%= f.input :name %>
+        <%= f.input :name, label: I18n.t(:name)  %>
         <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
         <%= f.input :enabled_input, label: I18n.t(:modification_of_the_input_value_allow) %>
         <%= f.input :standard_unit_coefficient, label: I18n.t(:standard_coef_conv) %>

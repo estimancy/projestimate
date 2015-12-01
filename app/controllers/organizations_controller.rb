@@ -590,34 +590,34 @@ class OrganizationsController < ApplicationController
     authorize! :manage, Organization
 
     case params[:action_name]
-      #Duplicate organization
-      when "copy_organization"
-        organization_image = Organization.find(params[:organization_id])
+    #Duplicate organization
+    when "copy_organization"
+      organization_image = Organization.find(params[:organization_id])
 
-      #Create the organization from image organization
-      when "new_organization_from_image"
-        organization_image_id = params[:organization_image]
-        if organization_image_id.nil?
-          flash[:warning] = "Veuillez sélectionner une organisation image pour continuer"
-        elsif params[:organization_name].empty?
-          flash[:error] = "Le nom de l'organisation ne peut pas être vide"
-          redirect_to :back and return
-        else
-          organization_image = Organization.find(organization_image_id)
-          @organization_name = params[:organization_name]
-          @firstname = params[:firstname]
-          @lastname = params[:lastname]
-          @email = params[:email]
-          @login_name = params[:identifiant]
-          @password = params[:password]
-          if @password.empty?
-            @password = SecureRandom.hex(8)
-          end
-          change_password_required = params[:change_password_required]
-        end
-      else
-        flash[:error] = "Aucune organization sélectionnée"
+    #Create the organization from image organization
+    when "new_organization_from_image"
+      organization_image_id = params[:organization_image]
+      if organization_image_id.nil?
+        flash[:warning] = "Veuillez sélectionner une organisation image pour continuer"
+      elsif params[:organization_name].empty?
+        flash[:error] = "Le nom de l'organisation ne peut pas être vide"
         redirect_to :back and return
+      else
+        organization_image = Organization.find(organization_image_id)
+        @organization_name = params[:organization_name]
+        @firstname = params[:firstname]
+        @lastname = params[:lastname]
+        @email = params[:email]
+        @login_name = params[:identifiant]
+        @password = params[:password]
+        if @password.empty?
+          @password = SecureRandom.hex(8)
+        end
+        change_password_required = params[:change_password_required]
+      end
+    else
+      flash[:error] = "Aucune organization sélectionnée"
+      redirect_to :back and return
     end
 
     if organization_image.nil?
@@ -685,6 +685,8 @@ class OrganizationsController < ApplicationController
               end
             end
           end
+
+          OrganizationsUsers.where(user_id: current_user.id, organization_id: new_organization.id).first_or_create!
 
           #Copy the organization referenced views and widgets
           #organization_image.views.referenced_views.each do |view|
@@ -864,78 +866,12 @@ class OrganizationsController < ApplicationController
           new_organization.guw_models.each do |guw_model|
 
             # Update all the new organization module_project's guw_model with the current guw_model
-            copy_id = guw_model.copy_id
-            new_organization.module_projects.where(guw_model_id: copy_id).update_all(guw_model_id: guw_model.id)
+            guw_model_copy_id = guw_model.copy_id
+            new_organization.module_projects.where(guw_model_id: guw_model_copy_id).update_all(guw_model_id: guw_model.id)
 
             ###### Replace the code below
 
             guw_model.terminate_guw_model_duplication
-
-            ###### End
-
-            #guw_model.guw_types.each do |guw_type|
-            #
-            #  # Copy the complexities technologies
-            #  guw_type.guw_complexities.each do |guw_complexity|
-            #    # Copy the complexities technologie
-            #    guw_complexity.guw_complexity_technologies.each do |guw_complexity_technology|
-            #      new_organization_technology = new_organization.organization_technologies.where(copy_id: guw_complexity_technology.organization_technology_id).first
-            #      unless new_organization_technology.nil?
-            #        guw_complexity_technology.update_attribute(:organization_technology_id, new_organization_technology.id)
-            #      end
-            #    end
-            #
-            #    # Copy the complexities units of works
-            #    guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
-            #      new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
-            #      unless new_guw_work_unit.nil?
-            #        guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
-            #      end
-            #    end
-            #  end
-            #
-            #  #Guw UnitOfWorkAttributes
-            #  guw_type.guw_unit_of_works.each do |guw_unit_of_work|
-            #    guw_unit_of_work.guw_unit_of_work_attributes.each do |guw_uow_attr|
-            #      new_guw_type = guw_model.guw_types.where(copy_id: guw_uow_attr.guw_type_id).first
-            #      new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
-            #
-            #      new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_uow_attr.guw_attribute_id).first
-            #      new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
-            #
-            #      guw_uow_attr.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
-            #
-            #    end
-            #  end
-            #
-            #  # Copy the GUW-attribute-complexity
-            #  #guw_type.guw_type_complexities.each do |guw_type_complexity|
-            #  #  guw_type_complexity.guw_attribute_complexities.each do |guw_attr_complexity|
-            #  #
-            #  #    new_guw_attribute = guw_model.guw_attributes.where(copy_id: guw_attr_complexity.guw_attribute_id).first
-            #  #    new_guw_attribute_id = new_guw_attribute.nil? ? nil : new_guw_attribute.id
-            #  #
-            #  #    new_guw_type = guw_model.guw_types.where(copy_id: guw_type_complexity.guw_type_id).first
-            #  #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
-            #  #
-            #  #    guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_attribute_id: new_guw_attribute_id)
-            #  #  end
-            #  #end
-            #end
-            #
-            #guw_model.guw_attributes.each do |guw_attribute|
-            #  guw_attribute.guw_attribute_complexities.each do |guw_attr_complexity|
-            #    new_guw_type = guw_model.guw_types.where(copy_id: guw_attr_complexity.guw_type_id).first
-            #    new_guw_type_id = new_guw_type.nil? ? nil : new_guw_type.id
-            #
-            #    unless new_guw_type.nil?
-            #      new_guw_type_complexity = new_guw_type.guw_type_complexities.where(copy_id: guw_attr_complexity.guw_type_complexity_id).first
-            #      new_guw_type_complexity_id = new_guw_type_complexity.nil? ? nil : new_guw_type_complexity.id
-            #
-            #      guw_attr_complexity.update_attributes(guw_type_id: new_guw_type_id, guw_type_complexity_id: new_guw_type_complexity_id )
-            #    end
-            #  end
-            #end
 
           end
 
@@ -1486,190 +1422,6 @@ class OrganizationsController < ApplicationController
     #  format.json { render json: selected_columns }
     #end
   end
-
-  #def import_abacus
-  #  authorize! :edit_organizations, Organization
-  #  @organization = Organization.find(params[:id])
-  #
-  #  file = params[:file]
-  #
-  #  case File.extname(file.original_filename)
-  #    when ".ods"
-  #      workbook = Roo::Spreadsheet.open(file.path, extension: :ods)
-  #    when ".xls"
-  #      workbook = Roo::Spreadsheet.open(file.path, extension: :xls)
-  #    when ".xlsx"
-  #      workbook = Roo::Spreadsheet.open(file.path, extension: :xlsx)
-  #    when ".xlsm"
-  #      workbook = Roo::Spreadsheet.open(file.path, extension: :xlsx)
-  #  end
-  #
-  #  workbook.sheets.each_with_index do |worksheet, k|
-  #    #if sheet name blank, we use sheetN as default name
-  #    name = worksheet
-  #    if name != 'ReadMe' #The ReadMe sheet is only for guidance and don't have to be proceed
-  #
-  #      @ot = OrganizationTechnology.find_or_create_by_name_and_alias_and_organization_id(:name => name,
-  #                                                                                        :alias => name,
-  #                                                                                        :organization_id => @organization.id)
-  #
-  #      workbook.default_sheet=workbook.sheets[k]
-  #      workbook.each_with_index do |row, i|
-  #        row.each_with_index do |cell, j|
-  #          unless row.nil?
-  #            unless workbook.cell(1,j+1) == "Abacus" or workbook.cell(i+1,1) == "Abacus"
-  #              if can? :manage, Organization
-  #                @ouc = OrganizationUowComplexity.find_or_create_by_name_and_organization_id(:name => workbook.cell(1,j+1), :organization_id => @organization.id)
-  #              end
-  #
-  #              if can? :manage, Organization
-  #                @uow = UnitOfWork.find_or_create_by_name_and_alias_and_organization_id(:name => workbook.cell(i+1,1), :alias => workbook.cell(i+1,1), :organization_id => @organization.id)
-  #                unless @uow.organization_technologies.map(&:id).include?(@ot.id)
-  #                  @uow.organization_technologies << @ot
-  #                end
-  #                @uow.save
-  #              end
-  #
-  #              ao = AbacusOrganization.find_by_unit_of_work_id_and_organization_uow_complexity_id_and_organization_technology_id_and_organization_id(
-  #                  @uow.id,
-  #                  @ouc.id,
-  #                  @ot.id,
-  #                  @organization.id
-  #              )
-  #
-  #              if ao.nil?
-  #                if can? :manage, Organization
-  #                  AbacusOrganization.create(
-  #                      :unit_of_work_id => @uow.id,
-  #                      :organization_uow_complexity_id => @ouc.id,
-  #                      :organization_technology_id => @ot.id,
-  #                      :organization_id => @organization.id,
-  #                      :value => workbook.cell(i+1, j+1))
-  #                end
-  #              else
-  #                ao.update_attribute(:value, workbook.cell(i+1, j+1))
-  #              end
-  #            end
-  #          end
-  #        end
-  #      end
-  #    end
-  #  end
-  #
-  #  redirect_to redirect_apply(edit_organization_path(@organization.id), nil, '/organizationals_params')
-  #end
-  #
-  #def export_abacus
-  #  authorize! :edit_organizations, Organization
-  #
-  #  @organization = Organization.find(params[:id])
-  #  p=Axlsx::Package.new
-  #  wb=p.workbook
-  #  @organization.organization_technologies.each_with_index do |ot|
-  #    wb.add_worksheet(:name => ot.name) do |sheet|
-  #      style_title = sheet.styles.add_style(:bg_color => 'B0E0E6', :sz => 14, :b => true, :alignment => {:horizontal => :center})
-  #      style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
-  #      style_title_red = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF0000', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
-  #      style_title_orange = sheet.styles.add_style(:bg_color => 'B0E0E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :center})
-  #      style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 14, :b => true, :alignment => {:horizontal => :right})
-  #      style_title_right_red = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
-  #      style_title_right_orange = sheet.styles.add_style(:bg_color => 'E6E6E6', :fg_color => 'FF8C00', :sz => 14, :b => true, :i => true, :alignment => {:horizontal => :right})
-  #      style_data = sheet.styles.add_style(:sz => 12, :alignment => {:horizontal => :center}, :locked => false)
-  #      style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS')
-  #      head = ['Abacus']
-  #      head_style = [style_title2]
-  #      @organization.organization_uow_complexities.each_with_index do |comp|
-  #        head.push(comp.name)
-  #        if comp.state == 'retired'
-  #          head_style.push(style_title_red)
-  #        elsif comp.state == 'draft'
-  #          head_style.push(style_title_orange)
-  #        else
-  #          head_style.push(style_title)
-  #        end
-  #      end
-  #      row=sheet.add_row(head, :style => head_style)
-  #      ot.unit_of_works.each_with_index do |uow|
-  #        uow_row = []
-  #        if uow.state == 'retired'
-  #          uow_row_style=[style_title_right_red]
-  #        elsif uow.state == 'draft'
-  #          uow_row_style=[style_title_right_orange]
-  #        else
-  #          uow_row_style=[style_title_right]
-  #        end
-  #        uow_row = [uow.name]
-  #
-  #        @organization.organization_uow_complexities.each_with_index do |comp2, i|
-  #          if AbacusOrganization.where(:unit_of_work_id => uow.id, :organization_uow_complexity_id => comp2.id, :organization_technology_id => ot.id, :organization_id => @organization.id).first.nil?
-  #            data = ''
-  #          else
-  #            data = AbacusOrganization.where(:unit_of_work_id => uow.id,
-  #                                            :organization_uow_complexity_id => comp2.id,
-  #                                            :organization_technology_id => ot.id, :organization_id => @organization.id).first.value
-  #          end
-  #          uow_row_style.push(style_data)
-  #          uow_row.push(data)
-  #        end
-  #        row=sheet.add_row(uow_row, :style => uow_row_style)
-  #      end
-  #      sheet.sheet_protection.delete_rows = true
-  #      sheet.sheet_protection.delete_columns = true
-  #      sheet.sheet_protection.format_cells = true
-  #      sheet.sheet_protection.insert_columns = false
-  #      sheet.sheet_protection.insert_rows = false
-  #      sheet.sheet_protection.select_locked_cells = false
-  #      sheet.sheet_protection.select_unlocked_cells = false
-  #      sheet.sheet_protection.objects = false
-  #      sheet.sheet_protection.sheet = true
-  #    end
-  #  end
-  #  wb.add_worksheet(:name => 'ReadMe') do |sheet|
-  #    style_title2 = sheet.styles.add_style(:sz => 14, :b => true, :alignment => {:horizontal => :center})
-  #    style_title_right = sheet.styles.add_style(:bg_color => 'E6E6E6', :sz => 13, :b => true, :alignment => {:horizontal => :right})
-  #    style_date = sheet.styles.add_style(:format_code => 'YYYY-MM-DD HH:MM:SS', :alignment => {:horizontal => :left})
-  #    style_text = sheet.styles.add_style(:alignment => {:wrapText => :true})
-  #    style_field = sheet.styles.add_style(:bg_color => 'F5F5F5', :sz => 12, :b => true)
-  #
-  #    sheet.add_row(['This File is an export of a ProjEstimate abacus'], :style => style_title2)
-  #    sheet.merge_cells 'A1:F1'
-  #    sheet.add_row(['Organization: ', "#{@organization.name} (#{@organization.id})", @organization.description], :style => [style_title_right, 0, style_text])
-  #    sheet.add_row(['Date: ', Time.now], :style => [style_title_right, style_date])
-  #    sheet.add_row([' '])
-  #    sheet.merge_cells 'A5:F5'
-  #    sheet.add_row(['There is one sheet by technology. Each sheet is organized with the complexity by column and the Unit Of work by row.'])
-  #    sheet.merge_cells 'A6:F6'
-  #    sheet.add_row(['For the complexity and the Unit Of Work state, we are using the following color code : Red=Retired, Orange=Draft).'])
-  #    sheet.merge_cells 'A7:F7'
-  #    sheet.add_row(['In order to allow this abacus to be re-imported into ProjEstimate and to prevent users from accidentally changing the structure of the sheets, workbooks have been protected.'])
-  #    sheet.merge_cells 'A8:F8'
-  #    sheet.add_row(['Advanced users can remove the protection (there is no password). For further information you can have a look on the ProjEstimate Help.'])
-  #    row=sheet.add_row(['For ProjEstimate Help, Click to go'])
-  #    sheet.add_hyperlink :location => 'http://forge.estimancy.com/projects/pe/wiki/Organizations', :ref => "A#{row.index+1}"
-  #    sheet.add_row([' '])
-  #    sheet.add_row([' '])
-  #    sheet.add_row(['Technologies'], :style => [style_title_right])
-  #    sheet.add_row(['Alias', 'Name', 'Description', 'State', 'Productivity Ratio'], :style => style_field)
-  #    @organization.organization_technologies.each_with_index do |ot|
-  #      sheet.add_row([ot.alias, ot.name, ot.description, ot.state, ot.productivity_ratio], :style => [0, 0, style_text])
-  #    end
-  #    sheet.add_row([' '])
-  #    sheet.add_row(['Complexities'], :style => [style_title_right])
-  #    sheet.add_row(['Display Order', 'Name', 'Description', 'State'], :style => style_field)
-  #    @organization.organization_uow_complexities.each_with_index do |comp|
-  #      sheet.add_row([comp.display_order, comp.name, comp.description, comp.state], :style => [0, 0, style_text])
-  #    end
-  #    sheet.add_row([' '])
-  #    sheet.add_row(['Units OF Works'], :style => [style_title_right])
-  #    sheet.add_row(['Alias', 'Name', 'Description', 'State'], :style => style_field)
-  #    @organization.unit_of_works.each_with_index do |uow|
-  #      sheet.add_row([uow.alias, uow.name, uow.description, uow.state], :style => [0, 0, style_text])
-  #    end
-  #    sheet.column_widths 20, 32, 80, 10, 18
-  #  end
-  #  send_data p.to_stream.read, :filename => @organization.name+'.xlsx'
-  #end
-
 
   # Duplicate the organization
   # Function de delete after => is replaced by the create_from_image fucntion

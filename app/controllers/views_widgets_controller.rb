@@ -364,7 +364,7 @@ class ViewsWidgetsController < ApplicationController
         end
       end
     end
-    send_data(workbook.stream.string, filename: "widget_#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-widget_#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
 end
