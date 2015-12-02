@@ -42,6 +42,7 @@ class Operation::OperationModelsController < ApplicationController
 
     @operation_model = Operation::OperationModel.find(params[:id])
     @organization = @operation_model.organization
+    set_page_title I18n.t(:new_instance_of_effort)
 
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
   end
