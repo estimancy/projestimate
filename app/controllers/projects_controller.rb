@@ -271,7 +271,7 @@ class ProjectsController < ApplicationController
     @is_model = params[:is_model]
     if @is_model
       authorize! :manage_estimation_models, Project
-      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@current_organization, anchor: "tabs-estimation-models")
+      set_breadcrumbs I18n.t(:estimation_models) => organization_setting_path(@current_organization, anchor: "tabs-estimation-models")
       set_page_title I18n.t(:new_estimation_model)
     else
       authorize! :create_project_from_scratch, Project
@@ -447,9 +447,9 @@ class ProjectsController < ApplicationController
     @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
-    #set_breadcrumbs "Estimations" => projects_path, @project => edit_project_path(@project)
+    #set_breadcrumbs  I18n.t(:estimate) => projects_path, @project => edit_project_path(@project)
     if @project.is_model
-      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+      set_breadcrumbs I18n.t(:estimation_models) => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
       if cannot?(:manage_estimation_models, Project)    # No write access to project
         if can_show_estimation?(@project)
@@ -460,7 +460,7 @@ class ProjectsController < ApplicationController
       end
 
     else
-      set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+      set_breadcrumbs  I18n.t(:estimate) => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
       if cannot?(:edit_project, @project)    # No write access to project
         redirect_to(:action => 'show') and return
@@ -526,7 +526,7 @@ class ProjectsController < ApplicationController
     @project_categories = @organization.project_categories
 
     if @project.is_model
-      set_breadcrumbs "#{I18n.t(:estimation_models)}" => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+      set_breadcrumbs I18n.t(:estimation_models) => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
       if cannot?(:manage_estimation_models, Project)    # No write access to project
         if can_show_estimation?(@project)
@@ -537,7 +537,7 @@ class ProjectsController < ApplicationController
       end
 
     else
-      set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+      set_breadcrumbs I18n.t(:estimate) => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
       # We need to verify user's groups rights on estimation according to the current estimation status
       if !can_modify_estimation?(@project) && !can_alter_estimation?(@project)
@@ -800,7 +800,7 @@ class ProjectsController < ApplicationController
 
     @organization = @project.organization
 
-    set_breadcrumbs "Estimations" => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
+    set_breadcrumbs  I18n.t(:estimate) => organization_estimations_path(@organization), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
 
     @project_areas = @organization.project_areas
     @platform_categories = @organization.platform_categories
