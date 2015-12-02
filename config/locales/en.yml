@@ -1630,7 +1630,7 @@ en:
   edit_project_element_name: "Editing %{parameter}"
   edit_estimation: "Edit estimation"
   Edit_Staffing: "Edit Staffing"
-  new_complexity: "New complexities"
+  new_complexity: "New complexity"
   import_from: "import UW data from a excel file"
   weighting_factor_Name: "Name of the weighting factor"
   Attributes_list: "Attributes list (criteria)"
@@ -1799,3 +1799,4 @@ en:
   error_impor_project_area: "The project areas has not been imported for the following row : %{parameter}"
   import_data_from: "Import data from excel file"
   applied_model: "Applied model"
+  uo_model: "UO model"

@@ -1819,3 +1819,4 @@ fr:
   error_impor_project_area: "Secteur de projets non importé pour les lignes : %{parameter}"
   import_data_from: "Importer des données depuis un document excel"
   applied_model: "Modèle appliqué"
+  uo_model: "Modèle d'UO"

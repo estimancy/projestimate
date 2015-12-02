@@ -567,7 +567,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     set_page_title @guw_model.name
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def new
@@ -575,7 +575,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
     set_page_title I18n.t(:new_UO_model)
   end
 
@@ -585,7 +585,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
     set_page_title I18n.t(:edit_project_element_name, parameter: @guw_model.name)
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def create

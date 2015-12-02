@@ -32,12 +32,12 @@ class SizeUnitsController < ApplicationController
 
   def new
     @size_unit = SizeUnit.new
-    set_breadcrumbs "Organizations" => "/organizationals_params"
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params"
   end
 
   def edit
     @size_unit = SizeUnit.find(params[:id])
-    set_breadcrumbs "Organizations" => "/organizationals_params", @size_unit.name => edit_size_unit_path(@size_unit)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @size_unit.name => edit_size_unit_path(@size_unit)
   end
 
   def create

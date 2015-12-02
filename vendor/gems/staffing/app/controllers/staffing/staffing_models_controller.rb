@@ -44,7 +44,7 @@
 
       @staffing_model = StaffingModel.find(params[:id])
 
-      set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'Équipe" => main_app.organization_module_estimation_path(@staffing_model.organization), @staffing_model.organization => ""
+      set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:team_model) => main_app.organization_module_estimation_path(@staffing_model.organization), @staffing_model.organization => ""
     end
 
     # GET /staffing_models/new
@@ -56,7 +56,7 @@
       @staffing_model = StaffingModel.new
 
       set_page_title I18n.t(:New_Team_module_instance)
-      set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'Équipe" => main_app.organization_module_estimation_path(params['organization_id']), @staffing_model.organization => ""
+      set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:team_model) => main_app.organization_module_estimation_path(params['organization_id']), @staffing_model.organization => ""
     end
   
     # GET /staffing_models/1/edit
@@ -67,7 +67,7 @@
       @organization = @staffing_model.organization
 
       set_page_title I18n.t(:Edit_Staffing)
-      set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'Équipe" => main_app.organization_module_estimation_path(@staffing_model.organization), @staffing_model.organization => ""
+      set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:team_model) => main_app.organization_module_estimation_path(@staffing_model.organization), @staffing_model.organization => ""
     end
   
     # POST /staffing_models

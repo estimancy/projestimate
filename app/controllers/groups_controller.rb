@@ -30,7 +30,7 @@ class GroupsController < ApplicationController
     @group = Group.new
     @organization = Organization.find_by_id(params[:organization_id])
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
 
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
@@ -43,8 +43,8 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @organization = @group.organization
     set_page_title I18n.t(:edit_group, value: @group.name)
-    #set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
-    set_breadcrumbs "Organizations" => "/organizationals_params", "#{@organization.to_s} / #{I18n.t(:groups)} / #{@group.to_s}" => edit_organization_path(@organization)
+    #set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => edit_organization_path(@organization)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", "#{@organization.to_s} / #{I18n.t(:groups)} / #{@group.to_s}" => edit_organization_path(@organization)
     @users = User.all
     @projects = Project.all.reject { |i| !i.is_childless? }
   end
