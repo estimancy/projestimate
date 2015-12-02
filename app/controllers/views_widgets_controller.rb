@@ -337,7 +337,7 @@ class ViewsWidgetsController < ApplicationController
           my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
           worksheet.change_column_width(4, my_len_2)
           worksheet.add_cell(ind_y, 5, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','), "CNUM")
-          worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+          worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
           ind_y += 1
         end
       end
@@ -365,14 +365,15 @@ class ViewsWidgetsController < ApplicationController
               my_len = profil.name.length < my_len ? my_len : profil.name.length
               worksheet.change_column_width(5, my_len)
               worksheet.add_cell(ind_y, 6, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','), "CNUM")
-              worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+              worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
               ind_y += 1
            end
           end
         end
       end
     end
-    send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{activity.name}(#{widget.module_project.position_x},#{widget.module_project.position_y})-Effort-Phases-Profils-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+
+    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-#{@project.title}-#{@project.version}-#{activity.name}(#{widget.module_project.position_x},#{widget.module_project.position_y})-Effort-Phases-Profils-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
   end
 
