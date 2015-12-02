@@ -43,7 +43,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     @organization = Organization.find(params[:organization_id])
 
     set_page_title I18n.t(:edit_complexity)
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization_uow_complexity.name => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization_uow_complexity.name => ""
   end
 
   def new
@@ -51,7 +51,7 @@ class OrganizationUowComplexitiesController < ApplicationController
     @organization = Organization.find_by_id(params[:organization_id])
     @organization_uow_complexity = OrganizationUowComplexity.new
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", "New Complexity" => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:new_complexity) => ""
     set_page_title I18n.t(:Complexity_values_used_within_Factor)
   end
 

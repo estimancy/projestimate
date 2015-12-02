@@ -22,7 +22,7 @@
 class CocomoExpert::InputCocomoController < ApplicationController
 
   def index
-    set_breadcrumbs "Cocomo Expert" => ""
+    set_breadcrumbs "" => ""
 
     @sf = []
     @em = []

@@ -55,7 +55,7 @@ public
     authorize! :manage, User
 
     set_page_title I18n.t(:new_user)
-    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @organization_id = params[:organization_id]
     unless @organization_id.nil? || @organization_id.empty?
@@ -123,7 +123,7 @@ public
 
   def edit
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @user = User.find(params[:id])
 

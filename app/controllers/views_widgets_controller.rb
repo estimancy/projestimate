@@ -323,30 +323,32 @@ class ViewsWidgetsController < ApplicationController
     worksheet.add_cell(0, 4, I18n.t(:phases))
 
     if widget.widget_type == "table_effort_per_phase"
-      worksheet.add_cell(0, 5, I18n.t(:effort_import))
-      worksheet.add_cell(0, 6, I18n.t(:unit_value))
-      widget.module_project.wbs_activity.wbs_activity_elements.each  do |element|
-        worksheet.add_cell(ind_y, 0, @project.title)
-        worksheet.add_cell(ind_y, 1, @project.version)
-        worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
-        worksheet.add_cell(ind_y, 3, current_component)
-        worksheet.add_cell(ind_y, 4, element.name)
-        my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
-        worksheet.change_column_width(4, my_len_2)
-        worksheet.add_cell(ind_y, 5, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
-        worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
-        ind_y += 1
+      unless widget.estimation_value.string_data_probable.empty?
+        worksheet.add_cell(0, 5, I18n.t(:effort_import))
+        worksheet.add_cell(0, 6, I18n.t(:unit_value))
+        widget.module_project.wbs_activity.wbs_activity_elements.each  do |element|
+          worksheet.add_cell(ind_y, 0, @project.title)
+          worksheet.add_cell(ind_y, 1, @project.version)
+          #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
+          tab_date = @project.start_date.to_s.split("-")
+          worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})")
+          worksheet.add_cell(ind_y, 3, current_component)
+          worksheet.add_cell(ind_y, 4, element.name)
+          my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
+          worksheet.change_column_width(4, my_len_2)
+          worksheet.add_cell(ind_y, 5, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
+          worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
+          ind_y += 1
+        end
       end
     elsif widget.widget_type == "effort_per_phases_profiles_table"
-      worksheet.add_cell(0, 5, I18n.t(:profile))
-      worksheet.add_cell(0, 6, I18n.t(:effort_import))
-      worksheet.add_cell(0, 7, I18n.t(:unit_value))
-      attribute = widget.pe_attribute
-      activity = widget.module_project.wbs_activity
-
-      ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: widget.module_project.id).first.wbs_activity_ratio
-
-      unless ratio.nil?
+      unless widget.estimation_value.string_data_probable.empty?
+        worksheet.add_cell(0, 5, I18n.t(:profile))
+        worksheet.add_cell(0, 6, I18n.t(:effort_import))
+        worksheet.add_cell(0, 7, I18n.t(:unit_value))
+        attribute = widget.pe_attribute
+        activity = widget.module_project.wbs_activity
+        ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: current_module_project.id).first.wbs_activity_ratio
         activity.wbs_activity_elements.each do |element|
           my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
           worksheet.change_column_width(4, my_len_2)
@@ -354,7 +356,9 @@ class ViewsWidgetsController < ApplicationController
             ware.organization_profiles.each do |profil|
               worksheet.add_cell(ind_y, 0, @project.title)
               worksheet.add_cell(ind_y, 1, @project.version)
-              worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
+              #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
+              tab_date = @project.start_date.to_s.split("-")
+              worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})")
               worksheet.add_cell(ind_y, 3, current_component)
               worksheet.add_cell(ind_y, 4, element.name)
               worksheet.add_cell(ind_y, 5, profil.name)
@@ -363,7 +367,7 @@ class ViewsWidgetsController < ApplicationController
               worksheet.add_cell(ind_y, 6, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
               worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @current_organization))
               ind_y += 1
-            end
+           end
           end
         end
       end

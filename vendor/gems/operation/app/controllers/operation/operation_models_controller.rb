@@ -26,7 +26,7 @@ class Operation::OperationModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @operation_model = Operation::OperationModel.find(params[:id])
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
   end
 
   def new
@@ -43,7 +43,7 @@ class Operation::OperationModelsController < ApplicationController
     @operation_model = Operation::OperationModel.find(params[:id])
     @organization = @operation_model.organization
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
   end
 
   def create
