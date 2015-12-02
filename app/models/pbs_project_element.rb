@@ -29,7 +29,7 @@ class PbsProjectElement < ActiveRecord::Base
   has_ancestry
 
   belongs_to :pe_wbs_project, :touch => true
-  belongs_to :work_element_type
+  # belongs_to :work_element_type
   belongs_to :wbs_activity
   belongs_to :wbs_activity_ratio
   belongs_to :organization_technology
@@ -40,7 +40,7 @@ class PbsProjectElement < ActiveRecord::Base
 
   has_and_belongs_to_many :module_projects
 
-  validates :name, :start_date, :work_element_type_id, presence: true
+  validates :name, :start_date, presence: true
   validates_presence_of :organization_technology_id
   #validates :wbs_activity_ratio_id, :uniqueness => { :scope => :wbs_activity_id }
 

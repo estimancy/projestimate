@@ -34,7 +34,7 @@ class OrganizationTechnology < ActiveRecord::Base
 
   has_and_belongs_to_many :unit_of_works
 
-  has_many :pbs_project_elements
+  # has_many :pbs_project_elements
   has_many :inputs, :foreign_key => :technology_id
   has_many :organization_uow_complexities
   has_many :guw_complexity_technologies, class_name: "Guw::GuwComplexityTechnology"

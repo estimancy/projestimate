@@ -26,7 +26,7 @@ class WorkElementType < ActiveRecord::Base
 
   #include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
-  has_many :pbs_project_elements, :dependent => :destroy
+  has_many :pbs_project_elements#, :dependent => :destroy
 
   #belongs_to :record_status
   #belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'

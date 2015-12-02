@@ -53,7 +53,7 @@ class Kb::KbModelsController < ApplicationController
       worksheet.add_cell(0, index, w_header).change_horizontal_alignment('center')
     end
 
-    send_data(workbook.stream.string, filename: "#{@kb_model.name.gsub(" ", "_")}_kb__data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@kb_model.organization.name[0..4]}-#{@kb_model.name.gsub(" ", "_")}_kb_data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show

@@ -303,13 +303,6 @@ class Guw::GuwModelsController < ApplicationController
   def exportxl
 
     workbook = RubyXL::Workbook.new
-=begin
-    worksheet = workbook[0]
-    tab = "2008-02-03"
-    tab_2 = tab.split("-")
-    worksheet.add_cell(0,0, '', "DATE(#{tab_2[0]},#{tab_2[1]},#{tab_2[2]})")
-    worksheet.add_cell(0,1,tab)
-=end
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_organisation = @guw_model.organization
     @guw_types = @guw_model.guw_types
@@ -749,7 +742,7 @@ class Guw::GuwModelsController < ApplicationController
         end
       end
     end
-  send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@guw_model.name}-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+  send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{@guw_model.name}(#{current_module_project.position_x},#{current_module_project.position_y})-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_verrif_tab_error(tab_error, indexing_field_error)
@@ -980,5 +973,24 @@ class Guw::GuwModelsController < ApplicationController
 
     redirect_to :back
   end
+
+  # def init_guw_type_weight
+  #   Guw::GuwComplexity.all.each do |i|
+  #     if i.weight.nil?
+  #       i.weight = 1
+  #       i.save
+  #     end
+  #   end
+  #
+  #
+  #   Guw::GuwTypeComplexity.all.each do |i|
+  #     i.guw_attribute_complexities.each do |j|
+  #       unless j.bottom_range.nil? && j.top_range.nil?
+  #         j.value = i.value
+  #         j.save
+  #       end
+  #     end
+  #   end
+  # end
 
 end
