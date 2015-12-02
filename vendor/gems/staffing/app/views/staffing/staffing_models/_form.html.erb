@@ -30,8 +30,8 @@
         <%= f.input :name, label: I18n.t(:name) %>
         <%= f.input :description, label: I18n.t(:description), :input_html => {:class => 'input-xxlarge', :rows => 5 } %>
         <%= f.input :staffing_method, as: :select, collection: [["Trapeze", "trapeze"], ["Rayleigh", "rayleigh"]], selected: @staffing_model.staffing_method, label: 'Méthode de staffing' %>
-        <%= f.input :mc_donell_coef, label: 'McDonell Coef' , input_html: { value: 6 } %>
-        <%= f.input :puissance_n, label: "Puissance N", input_html: { value: 0.33 }, hint: "(1/3 = 0.33)" %>
+        <%= f.input :mc_donell_coef, label: 'McDonell Coef' , input_html: { placeholder: "Valeur conseillé : 6" } %>
+        <%= f.input :puissance_n, label: "Puissance N", input_html: { placeholder: "Valeur conseillé : 0.33" } %>
         <div>
           <%= label_tag :trapeze_default_values, I18n.t(:def_default_value) %>
           <%= I18n.t(:what_to_do).html_safe %>
