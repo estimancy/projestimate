@@ -48,7 +48,7 @@ class Organization < ActiveRecord::Base
   has_many :organization_uow_complexities, :dependent => :destroy
   has_many :unit_of_works, :dependent => :destroy
   has_many :projects, :dependent => :destroy
-  has_many :module_projects, through: :projects
+  # has_many :module_projects, through: :projects
 
   has_many :organization_profiles, :dependent => :destroy
   has_many :size_unit_types, :dependent => :destroy

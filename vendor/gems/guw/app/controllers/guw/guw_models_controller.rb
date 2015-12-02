@@ -976,4 +976,23 @@ class Guw::GuwModelsController < ApplicationController
     redirect_to :back
   end
 
+  # def init_guw_type_weight
+  #   Guw::GuwComplexity.all.each do |i|
+  #     if i.weight.nil?
+  #       i.weight = 1
+  #       i.save
+  #     end
+  #   end
+  #
+  #
+  #   Guw::GuwTypeComplexity.all.each do |i|
+  #     i.guw_attribute_complexities.each do |j|
+  #       unless j.bottom_range.nil? && j.top_range.nil?
+  #         j.value = i.value
+  #         j.save
+  #       end
+  #     end
+  #   end
+  # end
+
 end
