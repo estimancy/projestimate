@@ -38,7 +38,7 @@ class PbsProjectElement < ActiveRecord::Base
   has_many :uow_inputs, dependent: :destroy
   has_many :views_widgets, dependent: :destroy
 
-  # has_and_belongs_to_many :module_projects
+  has_and_belongs_to_many :module_projects
 
   validates :name, :start_date, :work_element_type_id, presence: true
   validates_presence_of :organization_technology_id

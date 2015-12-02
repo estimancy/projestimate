@@ -42,7 +42,7 @@ class ModuleProject < ActiveRecord::Base
   has_many :organization_uow_complexities, :through => :factors
   has_many :views_widgets, dependent: :delete_all
 
-  # has_and_belongs_to_many :pbs_project_elements
+  has_and_belongs_to_many :pbs_project_elements
 
   has_many :first_module_projects, :class_name => 'AssociatedModuleProject', :foreign_key => 'module_project_id'
   has_many :associated_module_projects, :through => :first_module_projects
