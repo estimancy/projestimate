@@ -21,6 +21,7 @@
 
 
 module ProjectsHelper
+  include ActionView::Helpers::NumberHelper
 
   # This helper method will display Estimation Result according the estimation purpose (PBS and/or Activities)
   def display_results

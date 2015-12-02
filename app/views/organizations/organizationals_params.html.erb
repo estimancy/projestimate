@@ -41,15 +41,12 @@
             <td><%= i.description %></td>
             <td class="center">
               <% if can? :show_organizations, Organization %>
-                  <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
+                <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
 
-                  <% if can? :manage, Organization %>
-                    <%= link_to '', export_organization_path(i), :class => 'icon icon-signout', :title => I18n.t('export'), method: "POST" %>
-                    <!--The duplicate organization and the create from image organization are now using the same function -->
-                    <%#= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"), :class => 'icon icon-copy', :title => I18n.t('button_duplicate_organization') %>
-                    <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"),  { remote: true, class: "icon icon-copy", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
-                    <%= link_to('', confirm_organization_deletion_path(i.id), :class => 'icon icon-trash', :title => I18n.t('delete'))  %>
-                  <% end %>
+                <% if can? :manage, Organization %>
+                  <%= link_to '', create_organization_from_image_path(organization_id: i.id, action_name: "copy_organization"),  { remote: true, class: "icon icon-copy", 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+                  <%= link_to('', confirm_organization_deletion_path(i.id), :class => 'icon icon-trash', :title => I18n.t('delete'))  %>
+                <% end %>
               <% end %>
             </td>
           </tr>

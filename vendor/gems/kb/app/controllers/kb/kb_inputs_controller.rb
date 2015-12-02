@@ -86,7 +86,7 @@ class Kb::KbInputsController < ApplicationController
     @kb_model = Kb::KbModel.new(params[:kb_model])
     @kb_model.organization_id = params[:kb_model][:organization_id].to_i
     if @kb_model.save
-      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
     else
       render action: :new
     end
@@ -100,7 +100,7 @@ class Kb::KbInputsController < ApplicationController
     @organization = @kb_model.organization
 
     if @kb_model.update_attributes(params[:kb_model])
-      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
     else
       render action: :edit
     end

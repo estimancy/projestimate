@@ -27,7 +27,7 @@ class UserMailer < ActionMailer::Base
       @exception = exception
       @backtrace = exception.backtrace
       @user = user
-      mail(:to => "nicolas.renard@estimancy.com", :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] - Crash logs #{Time.now}")
+      mail(:to => ["no-reply@estimancy.com"], :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] - Crash logs #{Time.now}")
     end
   end
 

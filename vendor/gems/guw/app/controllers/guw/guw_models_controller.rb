@@ -749,7 +749,7 @@ class Guw::GuwModelsController < ApplicationController
         end
       end
     end
-  send_data(workbook.stream.string, filename: "export-uo-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+  send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@guw_model.name}-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_verrif_tab_error(tab_error, indexing_field_error)

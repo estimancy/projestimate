@@ -28,34 +28,29 @@ class ApplicationController < ActionController::Base
 
   require 'socket'
 
-  # rescue_from CanCan::AccessDenied do |exception|
-  #   flash[:error] = I18n.t(:error_access_denied)
-  #   begin
-  #     redirect_to :back
-  #   rescue
-  #     redirect_to root_path
-  #   end
-  # end
-  #
-  # rescue_from Errno::ECONNREFUSED do |error|
-  # end
-
   if Rails.env == "production"
-    rescue_from StandardError do |exception|
-      if exception.class == Errno::ECONNREFUSED
-        flash[:error] = I18n.t(:error_connection_refused)
-      elsif exception.class == CanCan::AccessDenied
-        flash[:error] = I18n.t(:error_access_denied)
-        begin
-          redirect_to :back
-        rescue
-          redirect_to root_path
-        end
-      else
-        UserMailer.crash_log(exception, current_user).deliver
-        render :template => "layouts/500.html", :status => 500
+
+    rescue_from CanCan::AccessDenied do |exception|
+      flash[:error] = I18n.t(:error_access_denied)
+      begin
+        redirect_to :back
+      rescue
+        redirect_to root_path
       end
     end
+
+    rescue_from StandardError do |exception|
+      UserMailer.crash_log(exception, current_user).deliver
+      render :template => "layouts/500.html", :status => 500
+    end
+
+      # elsif exception.class == CanCan::AccessDenied
+      #   flash[:error] = I18n.t(:error_access_denied)
+      #   begin
+      #     redirect_to :back
+      #   rescue
+      #     redirect_to organization_estimations_path(@current_organization)
+      #   end
   end
 
   helper_method :root_url

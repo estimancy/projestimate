@@ -26,6 +26,7 @@ class Kb::KbModelsController < ApplicationController
   require 'rubyXL'
 
   def data_export
+    authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
     workbook = RubyXL::Workbook.new
@@ -56,13 +57,15 @@ class Kb::KbModelsController < ApplicationController
   end
 
   def show
-    authorize! :manage_modules_instances, ModuleProject
+    authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
     set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
   end
 
   def duplicate
+    authorize! :manage_modules_instances, ModuleProject
+
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
     new_kb_model = @kb_model.amoeba_dup
 
@@ -97,7 +100,7 @@ class Kb::KbModelsController < ApplicationController
   end
 
   def edit
-    authorize! :manage_modules_instances, ModuleProject
+    authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
     @current_organization
@@ -157,7 +160,7 @@ class Kb::KbModelsController < ApplicationController
     @kb_model = Kb::KbModel.new(params[:kb_model])
     @kb_model.organization_id = params[:kb_model][:organization_id].to_i
     if @kb_model.save
-      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "kb")
+      redirect_to main_app.organization_module_estimation_path(@kb_model.organization_id, anchor: "effort")
     else
       render action: :new
     end
@@ -182,7 +185,7 @@ class Kb::KbModelsController < ApplicationController
     end
 
     if @kb_model.update_attributes(params[:kb_model])
-      redirect_to main_app.organization_module_estimation_path(@current_organization, anchor: "kb")
+      redirect_to main_app.organization_module_estimation_path(@current_organization, anchor: "effort")
     else
       render action: :edit
     end
@@ -347,7 +350,7 @@ class Kb::KbModelsController < ApplicationController
     eff = effort_current_ev.send("string_data_probable")[current_component.id].to_f
     @effort = eff.to_f / @kb_model.standard_unit_coefficient.to_i
 
-    redirect_to main_app.dashboard_path(@project, anchor: "kb")
+    redirect_to main_app.dashboard_path(@project, anchor: "effort")
 
   end
 
