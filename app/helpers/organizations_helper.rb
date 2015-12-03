@@ -95,7 +95,7 @@ module OrganizationsHelper
     if value.is_a?(Array)
       val = value.collect {|v| column_value(column, project, v)}.compact.join(', ')
       if val.nil?
-        '-'
+        ''
       else
         val.to_s.html_safe
       end
@@ -111,7 +111,7 @@ module OrganizationsHelper
           content_tag('td', project.application_name)
         else
           if project.application.nil?
-            content_tag('td', '-')
+            content_tag('td', '')
           else
             content_tag('td', project.application.name)
           end
