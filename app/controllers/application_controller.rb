@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 
   require 'socket'
 
-  # if Rails.env == "production"
+  if Rails.env == "production"
 
     # rescue_from CanCan::AccessDenied do |exception|
     #   flash[:error] = I18n.t(:error_access_denied)
@@ -38,18 +38,18 @@ class ApplicationController < ActionController::Base
     #     redirect_to root_path
     #   end
     # end
-
-  rescue_from StandardError do |exception|
-    if exception.class == CanCan::AccessDenied
-      flash[:error] = I18n.t(:error_access_denied)
-      unless @current_organization.nil?
-        redirect_to organization_estimations_path(@current_organization)
+    rescue_from StandardError do |exception|
+      if exception.class == CanCan::AccessDenied
+        flash[:error] = I18n.t(:error_access_denied)
+        unless @current_organization.nil?
+          redirect_to organization_estimations_path(@current_organization)
+        else
+          redirect_to root_path
+        end
       else
-        redirect_to root_path
+        UserMailer.crash_log(exception, current_user).deliver
+        render :template => "layouts/500.html", :status => 500
       end
-    else
-      UserMailer.crash_log(exception, current_user).deliver
-      render :template => "layouts/500.html", :status => 500
     end
   end
 
