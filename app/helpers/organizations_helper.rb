@@ -154,9 +154,9 @@ module OrganizationsHelper
         if column.field_id
           content_tag("td") do
             if is_number?(value)
-              value
-            else
               content_tag(:span, convert_with_precision(value, user_number_precision), class: "pull-right").to_s.html_safe
+            else
+              value
             end
           end
         else
