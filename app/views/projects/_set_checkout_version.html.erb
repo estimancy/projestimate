@@ -39,8 +39,8 @@
     <br>
     <div class="actions-tabs">
       <% if can? :create_project_from_template, Project %>
-          <%= f.submit I18n.t('save'), :id =>'checkout_project', :class => 'btn submit_project' %>
-          <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
+        <%= f.submit I18n.t('save'), :id =>'checkout_project', :class => 'btn submit_project' %>
+        <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
       <% end %>
     </div>
     </div>
