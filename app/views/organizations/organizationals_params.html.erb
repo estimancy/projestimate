@@ -25,7 +25,7 @@
       <tbody>
         <% @organizations.each do |i| %>
           <tr>
-            <td>
+            <td class="span2">
               <% if i.is_image_organization %>
                 <%= i.name %>
               <% else %>
@@ -33,12 +33,12 @@
               <% end %>
             </td>
             <% if current_user.super_admin? %>
-              <td class="center">
+              <td class="span1 center">
                 <%= i.is_image_organization ? I18n.t("simple_form.yes") : I18n.t("simple_form.no") %>
               </td>
             <% end %>
 
-            <td><%= i.description %></td>
+            <td class="span6"><%= i.description %></td>
             <td class="center">
               <% if can? :show_organizations, Organization %>
                 <%= link_to '', edit_organization_path(i), :class => 'icon icon-pencil', :title => I18n.t('edit') %>
