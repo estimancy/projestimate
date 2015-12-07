@@ -331,7 +331,7 @@ class ViewsWidgetsController < ApplicationController
           worksheet.add_cell(ind_y, 1, @project.version)
           #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
           tab_date = @project.start_date.to_s.split("-")
-          worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd-mm-yy'
+          worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd/mm/yy'
           worksheet.add_cell(ind_y, 3, current_component)
           worksheet.add_cell(ind_y, 4, element.name)
           my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
@@ -358,7 +358,7 @@ class ViewsWidgetsController < ApplicationController
               worksheet.add_cell(ind_y, 1, @project.version)
               #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
               tab_date = @project.start_date.to_s.split("-")
-              worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd-mm-yy'
+              worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd/mm/yy'
               worksheet.add_cell(ind_y, 3, current_component)
               worksheet.add_cell(ind_y, 4, element.name)
               worksheet.add_cell(ind_y, 5, profil.name)
