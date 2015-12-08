@@ -175,8 +175,9 @@ class Project < ActiveRecord::Base
       end
       #nil
     else
-      estimation_statuses = self.estimation_status.to_transition_statuses.uniq
-      # estimation_statuses << self.estimation_status
+      estimation_statuses = self.estimation_status.to_transition_statuses
+      estimation_statuses << self.estimation_status
+      estimation_statuses = estimation_statuses.uniq
       # estimation_statuses.uniq.sort{|s1, s2| s1 <=> s2 }
     end
   end
