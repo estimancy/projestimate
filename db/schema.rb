@@ -568,14 +568,14 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_technology_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.integer  "guw_model_id"
     t.integer  "copy_id"
     t.boolean  "allow_quantity"
-    t.boolean  "allow_retained"
+    t.boolean  "allow_retained",             :default => true
     t.boolean  "allow_complexity"
-    t.boolean  "allow_criteria"
+    t.boolean  "allow_criteria",             :default => true
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
@@ -1204,7 +1204,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.text     "status_comment"
     t.integer  "application_id"
     t.string   "application_name"
-    t.boolean  "private"
+    t.boolean  "private",                               :default => false
   end
 
   add_index "projects", ["ancestry"], :name => "index_projects_on_ancestry"
@@ -1468,7 +1468,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-09-23 10:15:10'
+    t.datetime "subscription_end_date",  :default => '2016-12-04 14:05:34'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

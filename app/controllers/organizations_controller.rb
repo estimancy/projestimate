@@ -66,7 +66,7 @@ class OrganizationsController < ApplicationController
       worksheet.add_cell(index + 1, 0, project_area.name)
       worksheet.add_cell(index + 1, 1, project_area.description)
     end
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_project_areas-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Project_Area-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def polyval_export
@@ -141,7 +141,7 @@ class OrganizationsController < ApplicationController
     organization_appli.each_with_index do |appli, index|
       worksheet.add_cell(index + 1, 0, appli.name)
     end
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def import_groups
@@ -184,7 +184,7 @@ class OrganizationsController < ApplicationController
       worksheet.add_cell(index + 1, 1, group.description)
     end
 
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_preparse(my_hash)
@@ -269,7 +269,7 @@ class OrganizationsController < ApplicationController
           if pf.nil?
             array_value << ''
           else
-            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision, true)
+            array_value << (pf.value.to_f / field.coefficient.to_f)
           end
         end
 
@@ -288,13 +288,21 @@ class OrganizationsController < ApplicationController
 
     tmp2.each_with_index do |r, i|
       tmp2[i].each_with_index do |r, j|
-        worksheet.add_cell(i, j, tmp2[i][j])
+        if is_number?(tmp2[i][j])
+          unless tmp2[i][j] == 0 || j == 1
+            worksheet.add_cell(i, j, tmp2[i][j].to_f).set_number_format('.##')
+          else
+            worksheet.add_cell(i, j, tmp2[i][j])
+          end
+        else
+          worksheet.add_cell(i, j, tmp2[i][j])
+        end
       end
     end
 
     worksheet.change_row_bold(0 , true)
 
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_Data_v2.0_-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Data-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
     # workbook.write("#{Rails.root}/public/#{filename}.xlsx")
     # redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
@@ -1175,7 +1183,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_users_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Users_List-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 =begin
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
@@ -1483,7 +1491,10 @@ class OrganizationsController < ApplicationController
   private
   def check_if_organization_is_image(organization)
     if organization.is_image_organization == true
-      redirect_to("/organizationals_params", flash: { error: "Vous ne pouvez pas accéder aux estimations d'une organization image"}) and return
+      redirect_to("/organizationals_params",
+                  flash: {
+                      error: "Vous ne pouvez pas accéder aux estimations d'une organization image"
+                  }) and return
     end
   end
 

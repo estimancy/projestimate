@@ -363,19 +363,19 @@ en:
   label_version: "Version"
 
   #Project areas
-  edit_project_area: "Edit the \"%{value}\" project area ..."
+  edit_project_area: "Edit the \"%{value}\" project area"
   new_project_area: "New project area"
 
   #Project categories
-  edit_project_category: "Edit the \"%{value}\" project category ..."
+  edit_project_category: "Edit the \"%{value}\" project category"
   new_project_category: "New project category"
 
   #Platform categories
-  edit_platform_category: "Edit the \"%{value}\" platform category ..."
+  edit_platform_category: "Edit the \"%{value}\" platform category"
   new_platform_category: "New platform category"
 
   #Acquisition categories
-  edit_acquisition_category: "Edit the \"%{value}\" acquisition category ..."
+  edit_acquisition_category: "Edit the \"%{value}\" acquisition category"
   new_acquisition_category: "New acquisition category"
   notice_acquisition_category_successful_created: "Acquisition category was successfully created."
   notice_acquisition_category_successful_destroyed: "Acquisition category was successfully deleted."
@@ -383,7 +383,7 @@ en:
   notice_acquisition_category_successful_updated: "Acquisition category was successfully updated."
 
   #Admin_settings
-  edit_admin_settings: "Edit the admin settings \"%{value}\" ..."
+  edit_admin_settings: "Edit the admin settings \"%{value}\""
   new_admin_settings: "New admin setting"
   key: "Key"
   value: "Value"
@@ -392,8 +392,8 @@ en:
   aggregation: "Aggregation"
   validation_options: "Validations and options"
   attributes_type: "Type"
-  edit_pe_attribute: "Edit the \"%{value}\" attribute ..."
-  edit_attribute_category: "Edit the \"%{value}\" category ..."
+  edit_pe_attribute: "Edit the \"%{value}\" attribute"
+  edit_attribute_category: "Edit the \"%{value}\" category"
   new_pe_attribute: "New attribute"
   new_attribute_category: "New attribute category"
   Edit_attribute: "Edit attribute"
@@ -442,15 +442,15 @@ en:
   #groups
   global: "Global"
   text_group_associated_users: "Users member of the \"%{value}\" group"
-  edit_group: "Edit the group \"%{value}\" ..."
+  edit_group: "Edit the group \"%{value}\""
   new_group: "New group"
 
   #Labor categories
-  edit_labor_category: "Edit the \"%{value}\" labour category ..."
+  edit_labor_category: "Edit the \"%{value}\" labour category"
   new_labor_category: "New labor category"
 
   #languages
-  edit_language: "Edit the \"%{value}\" language ..."
+  edit_language: "Edit the \"%{value}\" language"
   new_language: "New language"
   local: "Local"
 
@@ -463,7 +463,7 @@ en:
   new_estimation_value: "New module project attribute"
 
   #module_project
-  edit_module_project: "Edit the \"%{value}\" module project ..."
+  edit_module_project: "Edit the \"%{value}\" module project"
   new_module_project: "New module project"
   related_attributes: "Related attributes"
   module_ratio_settings: "Ratio settings"
@@ -489,12 +489,12 @@ en:
   currency: "Currency"
   hour_per_day: "Hour per day"
   days_per_year: "Days per year"
-  edit_organization_labor_category: "Edit the \"%{value}\" organization labour category ..."
+  edit_organization_labor_category: "Edit the \"%{value}\" organization labour category"
   new_organization_labor_category: "New organization labor category"
 
   #Organization
   organizations: "Organization"
-  edit_organization: "Edit the \"%{value}\" organization ..."
+  edit_organization: "Edit the \"%{value}\" organization"
   new_organization: "New organization"
   inflation: "Inflation"
   organizationals_labors_categories: "Organizational labors categories"
@@ -506,7 +506,7 @@ en:
   organization_subcontractor: "Subcontractors"
   text_organization_subcontractor: "Subcontractors of the organization"
   new_subcontractor: "New Subcontractor"
-  edit_subcontractor: "Edit the subcontractor \"%{value}\" ..."
+  edit_subcontractor: "Edit the subcontractor \"%{value}\""
   text_subcontractor: "Manage your organization's subcontractors"
   productivity_ratio: "Productivity ratio"
   new_uow_complexity: "Créer une complexité pour les unités d'oeuvres"
@@ -520,7 +520,7 @@ en:
   add_component: "Add a component"
 
   text_icon_message: "You can upload any PNG image file smaller than 10 kilobytes from your hard drive.We will automatically resize large images to 16x16 pixels."
-  edit_icon: "Edit the \"%{value}\" icon ..."
+  edit_icon: "Edit the \"%{value}\" icon"
   new_icon: "Add an icon"
   choose_icon: "Choose / Change icon"
   icons: "Icons"
@@ -536,14 +536,14 @@ en:
   pe_attribute_name: "Attribute name"
   attribute_category_name: "Category name"
   selected: "Selected"
-  edit_pemodule: "Edit the \"%{value}\" module ..."
+  edit_pemodule: "Edit the \"%{value}\" module"
   new_pemodule: "New module"
 
   #permissions
   is_permission_project: "Is a project permission"
   is_permission_master: "Is a global permission"
   label_associated_object: "Associated Object"
-  edit_permission: "Edit the \"%{value}\" permission ..."
+  edit_permission: "Edit the \"%{value}\" permission"
   new_permission: "New permission"
   permissions: "Permissions"
 
@@ -558,7 +558,7 @@ en:
   read_only: "Read only"
 
   #project_security_levels
-  edit_project_security_level: "Edit the \"%{value}\" project security level ..."
+  edit_project_security_level: "Edit the \"%{value}\" project security level"
   new_project_security_level: "New project security level"
 
   #projects
@@ -590,11 +590,11 @@ en:
   estimate: "Estimations"
 
   #Record_statuses
-  edit_record_status: "Edit the \"%{value}\" record status ..."
+  edit_record_status: "Edit the \"%{value}\" record status"
   new_record_status: "New record status"
 
   #Reference_value
-  edit_reference_value: "Edit the \"%{value}\" reference value ..."
+  edit_reference_value: "Edit the \"%{value}\" reference value"
   new_reference_value: "New reference_value"
 
   #searches
@@ -672,14 +672,14 @@ en:
   first_week: "First week of year"
   export_preferences: "Export preferences"
   execute_estimation: "Execute estimation process"
-  edit_user: "Edit user \"%{value}\" ..."
+  edit_user: "Edit user \"%{value}\""
   new_user: "New user"
   users: "Users"
   filters: "Filters"
 
   #wbs activities
   WBS_activities: "WBS activities"
-  edit_wbs_activity: "Editing the \"%{value}\" wbs activities ..."
+  edit_wbs_activity: "Editing the \"%{value}\" wbs activities"
   new_wbs_activity: "New wbs activities"
   import_wbs_activity: "New wbs activities from CSV file"
   guide_import_wbs_activity: "Create a new WBS-activities from a list of activities contained in a CSV file (<outline_number>;<element_name>;<element_description>)"
@@ -728,7 +728,7 @@ en:
   warning_caution: "Caution"
 
   #work element type
-  edit_work_element_type: "Edit the \"%{value}\" work element type ..."
+  edit_work_element_type: "Edit the \"%{value}\" work element type"
   new_work_element_type: "New work element type"
 
   #messages
@@ -777,7 +777,7 @@ en:
   text_latest_masterData_repository_update: "Latest MasterData Repository update"
   text_download_master_data: "Download and apply MasterData update"
   text_please_wait: "Please wait. It could take a while"
-  edit_project_element: "Edit the \"%{value}\" element of the WBS-Activity ..."
+  edit_project_element: "Edit the \"%{value}\" element of the WBS-Activity"
   warning_administration_setting_cant_be_edited: "This administration setting record can not be edited, previous changes have not yet been validated."
   notice_administration_setting_successful_created: "Admin setting was successfully created."
   notice_administration_setting_successful_updated: "Admin setting was successfully updated."
@@ -1212,9 +1212,9 @@ en:
   profile: "Profile"
   profiles: "Profiles"
   new_profile: "New profile"
-  edit_profile: "Edit the \"%{value}\" profile ..."
-  update_profile: "Update the \"%{value}\" profile ..."
-  delete_profile: "Delete the \"%{value}\" profile ..."
+  edit_profile: "Edit the \"%{value}\" profile"
+  update_profile: "Update the \"%{value}\" profile"
+  delete_profile: "Delete the \"%{value}\" profile"
 
   new_factor: "New factor"
   Edit_factor: "Edit factor"
@@ -1250,7 +1250,7 @@ en:
   new_size_unit_type: "New size unit type"
   type: "Type"
   new_technology: "New technology"
-  edit_technology: "Edit the \"%{value}\" technology ..."
+  edit_technology: "Edit the \"%{value}\" technology"
 
   factors: "Factors"
 
@@ -1289,7 +1289,7 @@ en:
   errors_when_copying_organization: "Errors when copying organization"
   profile_categories: "Profile categories"
   profile_category: "Profile category"
-  edit_profile_category: "Edit the \"%{value}\" profile category ..."
+  edit_profile_category: "Edit the \"%{value}\" profile category"
   new_profile_category: "New profile category"
   warning_profile_category_cant_be_edit: "This profile category can not be edited, previous changes have not yet been validated."
   notice_profile_category_successful_created: "Profile category was successfully created."
@@ -1303,7 +1303,7 @@ en:
   manage_estimations_statuses_workflow: "Manage estimations statuses workflow"
   manage_estimations_statuses_roles : "Manage roles according to the status of the estimate"
   new_estimation_status: "New estimation status"
-  edit_estimation_status: "Edit the \"%{value}\" estimation status ..."
+  edit_estimation_status: "Edit the \"%{value}\" estimation status"
   status_number: "Status number"
   notice_estimation_status_successful_updated: "Estimation status was successfully updated"
   notice_estimation_status_successful_created: "Estimation status was successfully created"
@@ -1330,12 +1330,12 @@ en:
   label_widget: "Widget"
   configure_views_widgets: "Configure views and widgets to display estimation results"
   new_view: "New view"
-  edit_view: "Edit the \"%{value}\" view ..."
+  edit_view: "Edit the \"%{value}\" view"
   edit_view_2: "Edit view"
   view_successfully_created: 'View was successfully created.'
   view_successfully_updated: 'View was successfully updated.'
   new_widget: "New widget"
-  edit_widget: "Edit the \"%{value}\" widget ..."
+  edit_widget: "Edit the \"%{value}\" widget"
   widget_successfully_created: 'Widget was successfully created.'
   widget_successfully_updated: 'Widget was successfully updated.'
   widgets: "Views"
@@ -1344,8 +1344,8 @@ en:
   selected_view: "Selected view"
   title_hide_results_view: "Hide the \"%{value}\" module results view"
   title_show_results_view: "Show the \"%{value}\" module results view"
-  delete_widget: "Delete the \"%{value}\" widget ..."
-  delete_view: "Delete the \"%{value}\" view ..."
+  delete_widget: "Delete the \"%{value}\" widget"
+  delete_view: "Delete the \"%{value}\" view"
   label_add_new_view_widget: "Add new widget"
   label_widget_type: "Widget type"
   associated_attribute: "Associated attribute"
@@ -1535,8 +1535,8 @@ en:
   List_of_Works_Units: "List of Works Units "
   List_of_Acquisitions_Types: "List of Acquisitions Types"
   Technology_warning: "For each technology, configure equivalents size (in percent) depending on size's type."
-  wait_for_complete_organization_delete: "Please wait , removing the organization and linked objects is in progress ..."
-  wait_for_new_organization_creation: "Please wait , the creation of the new organization is being ..."
+  wait_for_complete_organization_delete: "Please wait , removing the organization and linked objects is in progress"
+  wait_for_new_organization_creation: "Please wait , the creation of the new organization is being"
   Export_Users: "Export Users"
   Import_Users: "Import Users"
   line_format: "Format ( First Name, Last Name , Email, Login)"

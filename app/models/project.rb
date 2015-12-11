@@ -167,17 +167,18 @@ class Project < ActiveRecord::Base
         nil
       else
         initial_status = organization.estimation_statuses.first_or_create(organization_id: organization.id,
-                                                                                                status_number: 0,
-                                                                                                status_alias: 'preliminary',
-                                                                                                name: 'Préliminaire',
-                                                                                                status_color: 'F5FFFD')
+                                                                          status_number: 0,
+                                                                          status_alias: 'preliminary',
+                                                                          name: 'Préliminaire',
+                                                                          status_color: 'F5FFFD')
         [[initial_status.name, initial_status.id]]
       end
       #nil
     else
       estimation_statuses = self.estimation_status.to_transition_statuses
       estimation_statuses << self.estimation_status
-      estimation_statuses.uniq.sort{|s1, s2| s1 <=> s2 }
+      estimation_statuses = estimation_statuses.uniq
+      # estimation_statuses.uniq.sort{|s1, s2| s1 <=> s2 }
     end
   end
 

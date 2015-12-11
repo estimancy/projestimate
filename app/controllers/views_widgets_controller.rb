@@ -331,12 +331,12 @@ class ViewsWidgetsController < ApplicationController
           worksheet.add_cell(ind_y, 1, @project.version)
           #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
           tab_date = @project.start_date.to_s.split("-")
-          worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})")
+          worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd/mm/yy'
           worksheet.add_cell(ind_y, 3, current_component)
           worksheet.add_cell(ind_y, 4, element.name)
           my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
           worksheet.change_column_width(4, my_len_2)
-          worksheet.add_cell(ind_y, 5, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
+          worksheet.add_cell(ind_y, 5, widget.estimation_value.string_data_probable[current_component.id][element.id][:value].to_f).set_number_format('.##')
           worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
           ind_y += 1
         end
@@ -358,13 +358,13 @@ class ViewsWidgetsController < ApplicationController
               worksheet.add_cell(ind_y, 1, @project.version)
               #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
               tab_date = @project.start_date.to_s.split("-")
-              worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})")
+              worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd/mm/yy'
               worksheet.add_cell(ind_y, 3, current_component)
               worksheet.add_cell(ind_y, 4, element.name)
               worksheet.add_cell(ind_y, 5, profil.name)
               my_len = profil.name.length < my_len ? my_len : profil.name.length
               worksheet.change_column_width(5, my_len)
-              worksheet.add_cell(ind_y, 6, number_with_precision(widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value], precision: user_number_precision, locale: I18n.locale.to_sym, delimiter: ','))
+              worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value]).set_number_format('.##')
               worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
               ind_y += 1
            end
@@ -373,7 +373,7 @@ class ViewsWidgetsController < ApplicationController
       end
     end
 
-    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-#{@project.title}-#{@project.version}(#{widget.module_project.position_x},#{widget.module_project.position_y})-Effort-Phases-Profils-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-#{@project.title}-#{@project.version}(#{("A".."B").to_a[widget.module_project.position_x - 1]},#{widget.module_project.position_y})-Effort-Phases-Profils-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
   end
 

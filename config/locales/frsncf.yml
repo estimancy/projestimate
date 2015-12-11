@@ -485,7 +485,7 @@ frsncf:
 
   #Organization
   organizations: "Organisations"
-  edit_organization: "Editer l'organisation \"%{value}\" ..."
+  edit_organization: "Editer l'organisation \"%{value}\""
   new_organization: "Créer une organisation"
   inflation: "Inflation"
   organizationals_labors_categories: "Catégories de travailleurs des organisations"
@@ -497,7 +497,7 @@ frsncf:
   organization_subcontractor: "Sous-traitants"
   text_organization_subcontractor: "Sous-traitants de l'organisation"
   new_subcontractor: "Ajouter un sous-traitant"
-  edit_subcontractor: "Editer le sous-traitant \"%{value}\" ..."
+  edit_subcontractor: "Editer le sous-traitant \"%{value}\""
   text_subcontractor: "Gérer les sous-traitants de votre organisation"
   productivity_ratio: "Ratio de productivité"
   new_uow_complexity: "Créer une complexité pour les unités d'oeuvres"
@@ -511,9 +511,9 @@ frsncf:
   add_component: "Ajouter un composant"
 
   text_icon_message: "Vous pouvez télécharger tous les fichiers PNG de moins de 10 Kbytes depuis votre disque dur.Toutes vos images seront automatiquement redimensionnées en 16x16 pixels."
-  edit_icon: "Editer l'icône \"%{value}\" ..."
+  edit_icon: "Editer l'icône \"%{value}\""
   new_icon: "Ajouter un icône"
-  choose_icon: "Choisir / Changer l'icône ..."
+  choose_icon: "Choisir / Changer l'icône"
   icons: "Icônes"
   actions: "Actions"
 
@@ -527,14 +527,14 @@ frsncf:
   pe_attribute_name: "Nom de l'attribut"
   attribute_category_name: "Nom de la catégorie"
   selected: "Sélectionné"
-  edit_pemodule: "Editer le module \"%{value}\" ..."
+  edit_pemodule: "Editer le module \"%{value}\""
   new_pemodule: "Créer un module"
 
   #permissions
   is_permission_project: "Est une permission projet"
   is_permission_master: "Est une permission global"
   label_associated_object: "Objet associé"
-  edit_permission: "Editer la permission \"%{value}\" ..."
+  edit_permission: "Editer la permission \"%{value}\""
   new_permission: "Créer une nouvelle permission"
   permissions: "Permissions"
 
@@ -548,7 +548,7 @@ frsncf:
   read_only: "Lecture seule"
 
   #project_security_levels
-  edit_project_security_level: "Editer le niveau des sécurités \"%{value}\" ..."
+  edit_project_security_level: "Editer le niveau des sécurités \"%{value}\""
   new_project_security_level: "Créer un nouveau niveau de sécurité sur le projet"
 
   #projects
@@ -580,11 +580,11 @@ frsncf:
   estimate: "Estimations"
 
   #Record_statuses
-  edit_record_status: "Editer le statut d'enregistrement \"%{value}\" ..."
+  edit_record_status: "Editer le statut d'enregistrement \"%{value}\""
   new_record_status: "Créer un nouveau statut d'enregistrement"
 
   #Reference_value
-  edit_reference_value: "Editer la valeur de référence \"%{value}\" ..."
+  edit_reference_value: "Editer la valeur de référence \"%{value}\""
   new_reference_value: "Créer une valeur de référence"
 
   #searches
@@ -662,13 +662,13 @@ frsncf:
   first_week: "Première semaine de l'année"
   export_preferences: "Préférence d'exportation"
   execute_estimation: "Exécuter le processus d'estimation"
-  edit_user: "Editer l'utilisateur \"%{value}\" ..."
-  new_user: "Créer un nouvel utilisateur ..."
+  edit_user: "Editer l'utilisateur \"%{value}\""
+  new_user: "Créer un nouvel utilisateur"
   users: "Utilisateurs"
   filters: "Filtres"
 
   #wbs activities
-  edit_wbs_activity: "Editer le wbs activités \"%{value}\" ..."
+  edit_wbs_activity: "Editer le wbs activités \"%{value}\""
   new_wbs_activity: "Créer un nouveau wbs activités"
   import_wbs_activity: "Créer un nouveau wbs activities depuis un fichier CSV"
   guide_import_wbs_activity: "Créer un nouveau WBS-activités à partir d'une liste d'activités contenue dans un fichier CSV (Format: <numéro_hiérarchique>;<nom_élément>;<description_élément>)"
@@ -692,7 +692,7 @@ frsncf:
   change_ratio: "Changer le ratio"
 
   #wbs activity elements
-  edit_wbs_activity_element: "Editer l'élément \"%{value}\" du wbs activités ..."
+  edit_wbs_activity_element: "Editer l'élément \"%{value}\" du wbs activités"
   new_wbs_activity_element: "Créer un nouvel élément du wbs activités"
   parent: "Parent"
 
@@ -703,7 +703,7 @@ frsncf:
   set_of_reference_value: "Valeurs de références multiples"
 
   # wbs activity ratios
-  edit_wbs_activity_ratio: "Editer le ratio \"%{value}\" du wbs activités \"%{value2}\" ..."
+  edit_wbs_activity_ratio: "Editer le ratio \"%{value}\" du wbs activités \"%{value2}\""
   new_wbs_activity_ratio: "Créer un nouveau WBS activités ratio"
 
   #wbs project elements
@@ -717,7 +717,7 @@ frsncf:
   warning_caution: "Attention"
 
   #work element type
-  edit_work_element_type: "Edit le type d'élément de travail \"%{value}\" ..."
+  edit_work_element_type: "Edit le type d'élément de travail \"%{value}\""
   new_work_element_type: "Créer un nouveau type d'élément de travail"
 
   #messages
@@ -764,7 +764,7 @@ frsncf:
   text_latest_masterData_repository_update: "Dernière mise à jour de la base Master"
   text_download_master_data: "Téléchargez et appliquez les mise à jour de la table Master"
   text_please_wait: "Merci de bien vouloir patienter. Celà devrait prendre quelques minutes"
-  edit_project_element: "Editer l'élément \"%{value}\" du WBS-Activité ..."
+  edit_project_element: "Editer l'élément \"%{value}\" du WBS-Activité"
   warning_administration_setting_cant_be_edited: "Cette administration setting record ne peut pas être modifié, les modifications précédentes n'ont pas encore été validée"
   notice_administration_setting_successful_created: "Admin setting a été créé avec succès."
   notice_administration_setting_successful_updated: "Admin setting a été mis à jour avec succès."
@@ -873,8 +873,8 @@ frsncf:
   warning_session_account_not_active: "Ce compte n'est pas actif"
   error_account_ldap_association: "Votre compte est associé à un annuaire d'entreprise LDAP. Contacter votre administrateur système pour connaître vos identifiants."
   warning_session_bad_username: "Nous n'avons pas de compte utilisant ce nom de login ou ce courriel"
-  application: "Produit"
-  applications: "Produits"
+  application: "Application"
+  applications: "Applications"
   new_application: "Nouvelle application"
   notice_translation_successful_added: "Traduction ajoutée"
   notice_account_successful_created: "Votre compte a été créé avec succès"
@@ -1019,7 +1019,7 @@ frsncf:
   text_index_permissions_guidance: "Liste toutes les permissions globales et projets"
   notice_end_of_estimation_execution: "Fin de l'exécution des modules"
   label_project_name: "N° de la demande"
-  label_product_name: "Nom du produit"
+  label_product_name: "Nom de l'application"
   label_project_version: "Version"
   label_permission_access: "Accès"
   error_group_failed_update: "Une erreur s'est produite lors de la mise à jour."
@@ -1196,7 +1196,7 @@ frsncf:
   profile: "un profil"
   profiles: "Profils"
   new_profile: "Nouveau profil"
-  edit_profile: "Editer le profil \"%{value}\" ..."
+  edit_profile: "Editer le profil \"%{value}\""
   warning_profile_cant_be_edit: "Ce profil ne peut pas être modifié, les modifications précédentes n'ont pas encore été validé."
   notice_profile_successful_created: "Le profile a été créé avec succès."
   notice_profile_successful_updated: "Le profile a été mis à jour avec succès."
@@ -1222,7 +1222,7 @@ frsncf:
   new_size_unit_type: "Nouveau type d'unité de taille"
   type: "Type"
   new_technology: "Nouvelle technologie"
-  edit_technology: "Editer la technologie \"%{value}\" ..."
+  edit_technology: "Editer la technologie \"%{value}\""
 
   new_factor: "Nouveau facteur d'ajustement"
   new_factor_complexity: "Nouveau facteur d'ajustement"
@@ -1264,7 +1264,7 @@ frsncf:
   errors_when_copying_organization: "Une erreur s'est produite lors de la copie de l'organisation"
   profile_categories: "Catégories de profils"
   profile_category: "Catégorie de profil"
-  edit_profile_category: "Editer la catégorie de profil \"%{value}\" ..."
+  edit_profile_category: "Editer la catégorie de profil \"%{value}\""
   new_profile_category: "Créer une catégorie de profil"
   warning_profile_category_cant_be_edit: "Cette catégorie de travail ne peut pas être modifiée, les modifications précédentes n'ont pas encore été validé."
   notice_profile_category_successful_created: "Cette catégorie de profil a été créée avec succès."
@@ -1278,7 +1278,7 @@ frsncf:
   manage_estimations_statuses_workflow: "Gestion du workflow des statuts des estimations"
   manage_estimations_statuses_roles: "Gérer les rôles en fonction du statut de l'estimation"
   new_estimation_status: "Créer un nouvel status d'estimation"
-  edit_estimation_status: "Editer le statut de l'estimation \"%{value}\" ..."
+  edit_estimation_status: "Editer le statut de l'estimation \"%{value}\""
   status_number: "Numéro statut"
   notice_estimation_status_successful_updated: "Le statut de l'estimation a été mis à jour avec succès"
   notice_estimation_status_successful_created: "Le statut de l'estimation a été créé avec succès"
@@ -1305,7 +1305,7 @@ frsncf:
   label_widget: "Vignette"
   configure_views_widgets: "configurez les vues et les vignettes pour l'affichage des résultats des estimations"
   new_view: "Nouvelle vue"
-  edit_view: "Editer la vue \"%{value}\" ..."
+  edit_view: "Editer la vue \"%{value}\""
   view_successfully_created: 'La vue a été créée avec succès.'
   view_successfully_updated: 'La vue a été mise à jour avec succès.'
   new_widget: "Nouvelle vignette"
@@ -1318,8 +1318,8 @@ frsncf:
   selected_view: "Vue sélectionnée"
   title_hide_results_view: "Cacher/masquer la vue d'affichage des résultats du module \"%{value}\""
   title_show_results_view: "Afficher la vue d'affichage des résultats du module \"%{value}\""
-  delete_widget: "Supprimer la vignette \"%{value}\" ..."
-  delete_view: "Supprimer la vue \"%{value}\" ..."
+  delete_widget: "Supprimer la vignette \"%{value}\""
+  delete_view: "Supprimer la vue \"%{value}\""
   label_add_new_view_widget: "Add new widget"
   label_widget_type: "Type de vignette"
   associated_attribute: "Attribut associé"

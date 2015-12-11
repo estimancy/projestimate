@@ -359,19 +359,19 @@ fr:
   label_version: "Vers."
 
   #Project areas
-  edit_project_area: "Editer le secteur de projet \"%{value}\" ..."
+  edit_project_area: "Editer le secteur de projet \"%{value}\""
   new_project_area: "Créer un secteur de projet"
 
   #Project categories
-  edit_project_category: "Editer la catégorie de projet \"%{value}\" ..."
+  edit_project_category: "Editer la catégorie de projet \"%{value}\""
   new_project_category: "Créer une catégorie de projet"
 
   #Platform categories
-  edit_platform_category: "Editer la catégorie de plateforme \"%{value}\" ..."
+  edit_platform_category: "Editer la catégorie de plateforme \"%{value}\""
   new_platform_category: "Créer une catégorie de plateforme"
 
   #Acquisition categories
-  edit_acquisition_category: "Editer la catégorie d'acquisition \"%{value}\" ..."
+  edit_acquisition_category: "Editer la catégorie d'acquisition \"%{value}\""
   new_acquisition_category: "Créer une catégorie d'acquisition"
   notice_acquisition_category_successful_created: "Une nouvelle catégorie d'activité a été créée avec succès."
   notice_acquisition_category_successful_destroyed: "Cette catégorie d'activité a été supprimée avec succès"
@@ -379,7 +379,7 @@ fr:
   notice_acquisition_category_successful_updated: "Cette catégorie d'activité a été mise à jour avec succès"
 
   #Admin_settings
-  edit_admin_settings: "Editer le paramètre d'administrations \"%{value}\" ..."
+  edit_admin_settings: "Editer le paramètre d'administrations \"%{value}\""
   new_admin_settings: "Créer un nouveau paramètre d'administration"
   key: "Clé"
   value: "Valeur"
@@ -388,8 +388,8 @@ fr:
   aggregation: "Agrégation"
   validation_options: "Validations et options"
   attributes_type: "Type"
-  edit_pe_attribute: "Editer l'attribut \"%{value}\" ..."
-  edit_attribute_category: "Editer la catégorie \"%{value}\" ..."
+  edit_pe_attribute: "Editer l'attribut \"%{value}\""
+  edit_attribute_category: "Editer la catégorie \"%{value}\""
   new_pe_attribute: "Créer un nouvel attribut"
   new_attribute_category: "Créer une nouvelle catègorie d'attribut"
   Edit_attribute: "Editer l'attribut"
@@ -410,7 +410,7 @@ fr:
   email_attribute: "Courriel"
   initials_attribute: "Initiales"
   priority_order: "Priorité"
-  edit_auth_method: "Editer la  méthode d'authentification \"%{value}\" ..."
+  edit_auth_method: "Editer la  méthode d'authentification \"%{value}\""
   new_auth_method: "Créer une nouvelle méthode d'authentification"
   encryption: "Méthode d'encryption"
 
@@ -437,15 +437,15 @@ fr:
   #groups
   global: "Global"
   text_group_associated_users: "Utilisateurs membre du groupe \"%{value}\""
-  edit_group: "Editer le groupe \"%{value}\" ... "
-  new_group: "Créer un nouveau groupe ... "
+  edit_group: "Editer le groupe \"%{value}\" "
+  new_group: "Créer un nouveau groupe "
 
   #Labor categories
-  edit_labor_category: "Editer la catégorie de travail \"%{value}\" ..."
+  edit_labor_category: "Editer la catégorie de travail \"%{value}\""
   new_labor_category: "Créer une catégorie de travail"
 
   #languages
-  edit_language: "Editer le langage \"%{value}\" ..."
+  edit_language: "Editer le langage \"%{value}\""
   new_language: "Créer un nouveau langage"
   local: "Local"
 
@@ -458,7 +458,7 @@ fr:
   new_estimation_value: "Créer un nouvel attribut de module de projet"
 
   #module_project
-  edit_module_project: "Editer le module de projet \"%{value}\" ..."
+  edit_module_project: "Editer le module de projet \"%{value}\""
   new_module_project: "Créer un nouveau module de projet"
   related_attributes: "Attributs associés"
   module_ratio_settings: "Paramètrage Ratio"
@@ -483,12 +483,12 @@ fr:
   currency: "Devise"
   hour_per_day: "Heures par jour"
   days_per_year: "Jours par année"
-  edit_organization_labor_category: "Editer la catégorie de travailleurs organisationnelle \"%{value}\" ..."
+  edit_organization_labor_category: "Editer la catégorie de travailleurs organisationnelle \"%{value}\""
   new_organization_labor_category: "Créer une catégorie de travailleurs de l'organisation"
 
   #Organization
   organizations: "Organisations"
-  edit_organization: "Editer l'organisation \"%{value}\" ..."
+  edit_organization: "Editer l'organisation \"%{value}\""
   new_organization: "Créer une organisation"
   inflation: "Inflation"
   organizationals_labors_categories: "Catégories de travailleurs des organisations"
@@ -500,7 +500,7 @@ fr:
   organization_subcontractor: "Sous-traitants"
   text_organization_subcontractor: "Sous-traitants de l'organisation"
   new_subcontractor: "Ajouter un sous-traitant"
-  edit_subcontractor: "Editer le sous-traitant \"%{value}\" ..."
+  edit_subcontractor: "Editer le sous-traitant \"%{value}\""
   text_subcontractor: "Gérer les sous-traitants de votre organisation"
   productivity_ratio: "Ratio de productivité"
   new_uow_complexity: "Créer une complexité pour les unientés d'oeuvres"
@@ -514,9 +514,9 @@ fr:
   add_component: "Ajouter un composant"
 
   text_icon_message: "Vous pouvez télécharger tous les fichiers PNG de moins de 10 Kbytes depuis votre disque dur.Toutes vos images seront automatiquement redimensionnées en 16x16 pixels."
-  edit_icon: "Editer l'icône \"%{value}\" ..."
+  edit_icon: "Editer l'icône \"%{value}\""
   new_icon: "Ajouter un icône"
-  choose_icon: "Choisir / Changer l'icône ..."
+  choose_icon: "Choisir / Changer l'icône"
   icons: "Icônes"
   actions: "Actions"
 
@@ -530,14 +530,14 @@ fr:
   pe_attribute_name: "Nom de l'attribut"
   attribute_category_name: "Nom de la catégorie"
   selected: "Sélectionné"
-  edit_pemodule: "Editer le module \"%{value}\" ..."
+  edit_pemodule: "Editer le module \"%{value}\""
   new_pemodule: "Créer un module"
 
   #permissions
   is_permission_project: "Est une permission projet"
   is_permission_master: "Est une permission global"
   label_associated_object: "Objet associé"
-  edit_permission: "Editer la permission \"%{value}\" ..."
+  edit_permission: "Editer la permission \"%{value}\""
   new_permission: "Créer une nouvelle permission"
   permissions: "Permissions"
 
@@ -552,7 +552,7 @@ fr:
   read_only: "Lecture seule"
 
   #project_security_levels
-  edit_project_security_level: "Editer le niveau des sécurités \"%{value}\" ..."
+  edit_project_security_level: "Editer le niveau des sécurités \"%{value}\""
   new_project_security_level: "Créer un nouveau niveau de sécurité sur le projet"
 
   #projects
@@ -584,11 +584,11 @@ fr:
   estimate: "Estimations"
 
   #Record_statuses
-  edit_record_status: "Editer le statut d'enregistrement \"%{value}\" ..."
+  edit_record_status: "Editer le statut d'enregistrement \"%{value}\""
   new_record_status: "Créer un nouveau statut d'enregistrement"
 
   #Reference_value
-  edit_reference_value: "Editer la valeur de référence \"%{value}\" ..."
+  edit_reference_value: "Editer la valeur de référence \"%{value}\""
   new_reference_value: "Créer une valeur de référence"
 
   #searches
@@ -666,14 +666,14 @@ fr:
   first_week: "Première semaine de l'année"
   export_preferences: "Préférence d'exportation"
   execute_estimation: "Exécuter le processus d'estimation"
-  edit_user: "Editer l'utilisateur \"%{value}\" ..."
-  new_user: "Créer un nouvel utilisateur ..."
+  edit_user: "Editer l'utilisateur \"%{value}\""
+  new_user: "Créer un nouvel utilisateur"
   users: "Utilisateurs"
   filters: "Filtres"
 
   #wbs activities
   WBS_activities: "WBS activités"
-  edit_wbs_activity: "Editer le wbs activités \"%{value}\" ..."
+  edit_wbs_activity: "Editer le wbs activités \"%{value}\""
   new_wbs_activity: "Créer un nouveau wbs activités"
   import_wbs_activity: "Créer un nouveau wbs activities depuis un fichier CSV"
   guide_import_wbs_activity: "Créer un nouveau WBS-activités à partir d'une liste d'activités contenue dans un fichier CSV (Format: <numéro_hiérarchique>;<nom_élément>;<description_élément>)"
@@ -697,7 +697,7 @@ fr:
   change_ratio: "Changer le ratio"
 
   #wbs activity elements
-  edit_wbs_activity_element: "Editer l'élément \"%{value}\" du wbs activités ..."
+  edit_wbs_activity_element: "Editer l'élément \"%{value}\" du wbs activités"
   new_wbs_activity_element: "Créer un nouvel élément du wbs activités"
   parent: "Parent"
 
@@ -708,7 +708,7 @@ fr:
   set_of_reference_value: "Valeurs de références multiples"
 
   # wbs activity ratios
-  edit_wbs_activity_ratio: "Editer le ratio \"%{value}\" du wbs activités \"%{value2}\" ..."
+  edit_wbs_activity_ratio: "Editer le ratio \"%{value}\" du wbs activités \"%{value2}\""
   new_wbs_activity_ratio: "Créer un nouveau WBS activités ratio"
 
   #wbs project elements
@@ -722,7 +722,7 @@ fr:
   warning_caution: "Attention"
 
   #work element type
-  edit_work_element_type: "Edit le type d'élément de travail \"%{value}\" ..."
+  edit_work_element_type: "Edit le type d'élément de travail \"%{value}\""
   new_work_element_type: "Créer un nouveau type d'élément de travail"
 
   #messages
@@ -771,7 +771,7 @@ fr:
   text_latest_masterData_repository_update: "Dernière mise à jour de la base Master"
   text_download_master_data: "Téléchargez et appliquez les mise à jour de la table Master"
   text_please_wait: "Merci de bien vouloir patienter. Celà devrait prendre quelques minutes"
-  edit_project_element: "Editer l'élément \"%{value}\" du WBS-Activité ..."
+  edit_project_element: "Editer l'élément \"%{value}\" du WBS-Activité"
   warning_administration_setting_cant_be_edited: "Cette administration setting record ne peut pas être modifié, les modifications précédentes n'ont pas encore été validée"
   notice_administration_setting_successful_created: "Admin setting a été créé avec succès."
   notice_administration_setting_successful_updated: "Admin setting a été mis à jour avec succès."
@@ -1205,9 +1205,9 @@ fr:
   profile: "un profil"
   profiles: "Profils"
   new_profile: "Nouveau profil"
-  edit_profile: "Editer le profil \"%{value}\" ..."
-  update_profile: "Actualiser le profil \"%{value}\" profile ..."
-  delete_profile: "Supprimer le pofil \"%{value}\" ..."
+  edit_profile: "Editer le profil \"%{value}\""
+  update_profile: "Actualiser le profil \"%{value}\" profile"
+  delete_profile: "Supprimer le pofil \"%{value}\""
   warning_profile_cant_be_edit: "Ce profil ne peut pas être modifié, les modifications précédentes n'ont pas encore été validé."
   notice_profile_successful_created: "Le profile a été créé avec succès."
   notice_profile_successful_updated: "Le profile a été mis à jour avec succès."
@@ -1237,7 +1237,7 @@ fr:
   new_size_unit_type: "Nouveau type d'unité de taille"
   type: "Type"
   new_technology: "Nouvelle technologie"
-  edit_technology: "Editer la technologie \"%{value}\" ..."
+  edit_technology: "Editer la technologie \"%{value}\""
 
   new_factor: "Nouveau facteur d'ajustement"
   Edit_factor: "Editer facteur d'ajustement"
@@ -1281,7 +1281,7 @@ fr:
   errors_when_copying_organization: "Une erreur s'est produite lors de la copie de l'organisation"
   profile_categories: "Catégories de profils"
   profile_category: "Catégorie de profil"
-  edit_profile_category: "Editer la catégorie de profil \"%{value}\" ..."
+  edit_profile_category: "Editer la catégorie de profil \"%{value}\""
   new_profile_category: "Créer une catégorie de profil"
   warning_profile_category_cant_be_edit: "Cette catégorie de travail ne peut pas être modifiée, les modifications précédentes n'ont pas encore été validé."
   notice_profile_category_successful_created: "Cette catégorie de profil a été créée avec succès."
@@ -1295,7 +1295,7 @@ fr:
   manage_estimations_statuses_workflow: "Gestion du workflow des statuts des estimations"
   manage_estimations_statuses_roles: "Gérer les rôles en fonction du statut de l'estimation"
   new_estimation_status: "Créer un nouveau status d'estimation"
-  edit_estimation_status: "Editer le statut de l'estimation \"%{value}\" ..."
+  edit_estimation_status: "Editer le statut de l'estimation \"%{value}\""
   status_number: "Numéro statut"
   notice_estimation_status_successful_updated: "Le statut de l'estimation a été mis à jour avec succès"
   notice_estimation_status_successful_created: "Le statut de l'estimation a été créé avec succès"
@@ -1322,7 +1322,7 @@ fr:
   label_widget: "Vignette"
   configure_views_widgets: "configurez les vues et les vignettes pour l'affichage des résultats des estimations"
   new_view: "Nouvelle vue"
-  edit_view: "Editer la vue \"%{value}\" ..."
+  edit_view: "Editer la vue \"%{value}\""
   edit_view_2: "Editer la vue"
   view_successfully_created: 'La vue a été créée avec succès.'
   view_successfully_updated: 'La vue a été mise à jour avec succès.'
@@ -1336,8 +1336,8 @@ fr:
   selected_view: "Vue sélectionnée"
   title_hide_results_view: "Cacher/masquer la vue d'affichage des résultats du module \"%{value}\""
   title_show_results_view: "Afficher la vue d'affichage des résultats du module \"%{value}\""
-  delete_widget: "Supprimer la vignette \"%{value}\" ..."
-  delete_view: "Supprimer la vue \"%{value}\" ..."
+  delete_widget: "Supprimer la vignette \"%{value}\""
+  delete_view: "Supprimer la vue \"%{value}\""
   label_add_new_view_widget: "Add new widget"
   label_widget_type: "Type de vignette"
   associated_attribute: "Attribut associé"

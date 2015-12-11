@@ -138,7 +138,7 @@ class Ability
                       @array_groups << []
                     else
                       if permission.alias == "manage" and permission.category == "Project"
-                        can :manage, project.id, estimation_status_id: es.id
+                        can :manage, project, estimation_status_id: es.id
                       else
                         @array_groups << [permission.id, project.id, es.id]
                       end

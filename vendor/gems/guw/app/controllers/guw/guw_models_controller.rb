@@ -551,7 +551,7 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 5
     end
-    send_data(workbook.stream.string, filename: "#{@guw_model.name[0.4]}_ModuleUOmxt-#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@guw_model.name[0.4]}_ModuleUOMXT-#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show
@@ -737,12 +737,11 @@ class Guw::GuwModelsController < ApplicationController
             worksheet.add_cell(ind, 15, finder.low ? finder.low : "N/A")
             worksheet.add_cell(ind, 16, finder.most_likely ? finder.most_likely : "N/A")
             worksheet.add_cell(ind, 17, finder.high ? finder.high : "N/A")
-
           end
         end
       end
     end
-  send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{@guw_model.name}(#{current_module_project.position_x},#{current_module_project.position_y})-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{@guw_model.name}(#{("A".."Z").to_a[current_module_project.position_x.to_i]},#{current_module_project.position_y})-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_verrif_tab_error(tab_error, indexing_field_error)
