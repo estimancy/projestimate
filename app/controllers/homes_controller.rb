@@ -66,3 +66,4 @@ class HomesController < ApplicationController
     end
   end
 end
+=end
