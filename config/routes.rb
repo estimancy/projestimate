@@ -228,6 +228,8 @@ Projestimate::Application.routes.draw do
     post "import_appli" => 'organizations#import_appli'
     get "export_project_areas" => 'organizations#export_project_areas'
     post "import_project_areas" => 'organizations#import_project_areas'
+    get "polyval_export" => 'organizations#polyval_export'
+
   end
 
   get "export_permissions" => 'permissions#export_permissions'

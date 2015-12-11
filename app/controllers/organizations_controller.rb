@@ -69,6 +69,43 @@ class OrganizationsController < ApplicationController
     send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_project_areas-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
+  def polyval_export
+    @organization = Organization.find(params[:organization_id])
+=begin    polyval_var = (params[:MYonglet] == "ProjectCategory" ? ProjectCategory.where(organization_id: @organization.id) :
+                  params[:MYonglet] == "WorkElementType" ? WorkElementType.where(organization_id: @organization.id) :
+                  params[:MYonglet] == "OrganizationTechnology" ? OrganizationTechnology.where(organization_id: @organization.id) :
+                  params[:MYonglet] == "OrganizationProfile" ? OrganizationProfile.where(organization_id: @organization.id) : PlatformCategory.where(organization_id: @organization.id))
+=end
+    case params[:MYonglet]
+      when "ProjectCategory"
+        polyval_var = ProjectCategory.where(organization_id: @organization.id)
+      when "WorkElementType"
+        polyval_var = WorkElementType.where(organization_id: @organization.id)
+      when "OrganizationTechnology"
+        polyval_var = OrganizationTechnology.where(organization_id: @organization.id)
+      when "OrganizationProfile"
+        polyval_var = OrganizationProfile.where(organization_id: @organization.id)
+      else
+        polyval_var = PlatformCategory.where(organization_id: @organization.id)
+    end
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, I18n.t(:name))
+    worksheet.add_cell(0, 1, params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? I18n.t(:alias) : I18n.t(:description))
+    params[:MYonglet] == "OrganizationProfile" ? worksheet.add_cell(0, 2, I18n.t(:cost_per_hour)) : toto = 42
+    params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(0, 2,I18n.t(:description)) : toto = 42
+    params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(0, 3, I18n.t(:productivity_ratio)) : toto = 42
+    polyval_var.each_with_index do |var, index|
+      worksheet.add_cell(index + 1, 0,var.name)
+      worksheet.add_cell(index + 1, 1, params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? var.alias : var.description)
+      params[:MYonglet] == "OrganizationProfile" ? worksheet.add_cell(index + 1, 2, var.cost_per_hour) : toto = 42
+      params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(index + 1, 2, var.description) : toto = 42
+      params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(index + 1, 3, var.productivity_ratio) : toto = 42
+    end
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_#{params[:MYonglet]}-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
   def import_appli
     @organization = Organization.find(params[:organization_id])
     tab_error = []
