@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ########################################################################
-
+=begin
 class HomesController < ApplicationController
 
   def update_install

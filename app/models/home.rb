@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-
+=begin
 require 'open-uri'
 require 'mysql2'
 

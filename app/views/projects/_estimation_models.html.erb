@@ -66,11 +66,6 @@
     <% end %>
   </tbody>
   <tfoot>
-    <%#= render :partial => 'layouts/footer_table' %>
+    <%= render :partial => 'layouts/footer_table' %>
   </tfoot>
 </table>
-
-
-<script>
-    <%= render :partial => 'layouts/sort_date', :handlers => [:erb], :formats => [:js]%>
-</script>
