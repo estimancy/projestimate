@@ -105,7 +105,7 @@
             </div>
       <% end %>
 
-      <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
         <tr>
           <th><%= I18n.t('name') %></th>
@@ -430,7 +430,9 @@
     <% if can? :show_views, View %>
       <%= render partial: "views/views_and_widgets" %>
     <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_views_and_widgets) %></div>
+      <div class="red_color">
+        <%= I18n.t(:notice_cannot_view_views_and_widgets) %>
+      </div>
     <% end %>
   </div>
 
@@ -438,9 +440,9 @@
     <b><%= I18n.t(:select_columns_list) %></b>
     <br>
     <% if can? :show_projects_selected_columns, Organization %>
-        <%= render partial: "organizations/select_project_columns_to_display" %>
+      <%= render partial: "organizations/select_project_columns_to_display" %>
     <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_selected_columns_list) %></div>
+      <div class="red_color"><%= I18n.t(:notice_cannot_view_selected_columns_list) %></div>
     <% end %>
   </div>
 

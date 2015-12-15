@@ -336,7 +336,13 @@ class ViewsWidgetsController < ApplicationController
           worksheet.add_cell(ind_y, 4, element.name)
           my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
           worksheet.change_column_width(4, my_len_2)
-          worksheet.add_cell(ind_y, 5, widget.estimation_value.string_data_probable[current_component.id][element.id][:value].to_f).set_number_format('.##')
+
+          begin
+            worksheet.add_cell(ind_y, 5, widget.estimation_value.string_data_probable[current_component.id][element.id][:value].to_f).set_number_format('.##')
+          rescue
+            worksheet.add_cell(ind_y, 5, '').set_number_format('.##')
+          end
+
           worksheet.add_cell(ind_y, 6, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
           ind_y += 1
         end
@@ -364,8 +370,14 @@ class ViewsWidgetsController < ApplicationController
               worksheet.add_cell(ind_y, 5, profil.name)
               my_len = profil.name.length < my_len ? my_len : profil.name.length
               worksheet.change_column_width(5, my_len)
-              worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value]).set_number_format('.##')
-              worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
+
+              begin
+                worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value]).set_number_format('.##')
+                worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
+              rescue
+                worksheet.add_cell(ind_y, 6, "".set_number_format('.##'))
+                worksheet.add_cell(ind_y, 7, "")
+              end
               ind_y += 1
            end
           end
