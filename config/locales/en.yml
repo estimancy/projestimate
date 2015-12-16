@@ -1800,3 +1800,6 @@ en:
   import_data_from: "Import data from excel file"
   applied_model: "Applied model"
   uo_model: "UO model"
+  mail_body_befor_end_subscription: "<p> You subscription for the Estimancy service will end in %{parameter1} days, the %{parameter2}</p><p> for avoid a service suspension, you need to contact our team with the dedicate plateform.</p><p> We recommand you to reorder you subscription as soon of possible for continue to use our service in any tranquillity</p>"
+  subscription_end: "Subscription Expiration"
+  mail_body_subscription_end: "<p>Today Your reach to the end of you subsciption if you want to re-order a service pack contact us on our plateform by <a href="http://estimancy.com/page/subscription"> click here </a>.</p>"

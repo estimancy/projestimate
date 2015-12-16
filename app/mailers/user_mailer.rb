@@ -31,6 +31,17 @@ class UserMailer < ActionMailer::Base
     end
   end
 
+  def regular_end_sub_date_checker(email, date_end, day_prev_end, name)
+    @day_prev_end = day_prev_end
+    @date_end = date_end
+    @user_name = name
+    mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] #{I18n.t(:subscription_end)}")
+  end
+  def subscription_end(email, name)
+    @user_name = name
+    mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] #{I18n.t(:subscription_end)}")
+  end
+
   def maintenance(users, message, objet)
     @message = message
     unless Rails.env == "development"

@@ -1799,3 +1799,6 @@ frsncf:
   import_data_from: "Importer des données depuis un document excel"
   applied_model: "Modèle appliqué"
   uo_model: "Modèle d'UO"
+  mail_body_befor_end_subscription: "<p> Votre abonnement au service d'Estimency se termine dans %{parameter1} jours, le %{parameter2}</p><p> pour éviter la suspension de vos services, veuillez prendre contact avec notre équipe via notre plate-forme dediée.</p><p> Nous vous conseillons de renouveler votre abonnement au plus tôt afin de poursuivre l'utilisation de nos services en tout tranquillité</p>"
+  subscription_end: "Expiration d'abonnement"
+  mail_body_subscription_end: "<p>Votre abonnement a pris fin aujourd'hui si vous désirez resouscrire à un abonnement contacter nous par le biais de notre plate-forme en<a href="http://estimancy.com/page/subscription"> cliquant ici</a>.</p>"
