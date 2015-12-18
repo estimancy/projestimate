@@ -20,9 +20,7 @@
 #############################################################################
 
 class LanguagesController < ApplicationController
-  include DataValidationHelper #Module for master data changes validation
 
-  before_filter :get_record_statuses
   load_resource
 
   def index
@@ -91,17 +89,7 @@ class LanguagesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @language = Language.find(params[:id])
-    #if @language.is_defined? || @language.is_custom?
-    if @language.is_custom?
-      #logical deletion  delete don't have to suppress records anymore on Defined record
-      @language.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-      flash[:notice] = I18n.t (:notice_language_successful_deleted)
-    elsif @language.is_defined?
-      flash[:warning] = I18n.t(:defined_language_not_deletable)
-    else
-      @language.destroy
-      flash[:notice] = I18n.t (:notice_language_successful_deleted)
-    end
+    @language.destroy
 
     respond_to do |format|
       format.html { redirect_to languages_url }
