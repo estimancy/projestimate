@@ -25,6 +25,8 @@ Ge::Engine.routes.draw do
   resources :ge_models do
     post "save_efforts"
     post "duplicate"
+    post "import"
+    get "data_export"
   end
 
 end

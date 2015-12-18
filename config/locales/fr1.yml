@@ -1490,3 +1490,4 @@ fr1:
   warning_edit_instance_module: "Attention: Lorsque vous modifiez la configuration du module, toutes les estimations qui ont été construites avec le module sont susceptibles de recevoir les changements effectués dans le module, même si les estimations sont déjà réalisées et enregistrées."
   duplicate_module: "Dupliquer le module"
   staffing_duration: "Durée (%{unit})"
+  import_generic_effort_model: "Importer le modèle d'effort générique (fichier Excel)"

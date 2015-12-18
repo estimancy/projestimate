@@ -31,6 +31,10 @@ module Ge
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy
 
+    has_many :ge_factors, :dependent => :destroy
+    has_many :ge_factor_values, :through => :ge_factors, :dependent => :destroy
+    has_many :ge_inputs, :dependent => :destroy
+
     amoeba do
       enable
       exclude_association [:module_projects]

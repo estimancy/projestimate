@@ -156,8 +156,53 @@ class ProjectsController < ApplicationController
                                     organization_id: @project_organization.id,
                                     kb_model_id: @kb_model.id).first_or_create
       @project_list = []
+
     elsif @module_project.pemodule.alias == "ge"
       @ge_model = current_module_project.ge_model
+      @ge_input = Ge::GeInput.where(module_project_id: @module_project.id,
+                                    organization_id: @project_organization.id,
+                                    ge_model_id: @ge_model.id).first_or_create
+      @ge_input_values = @ge_input.values
+      @ge_factors = @ge_model.ge_factors
+
+      @ge_factors_values = @ge_model.ge_factor_values
+      if @ge_factors_values.length > 0
+        @ge_factors_groups = @ge_factors_values.group_by(&:factor_scale_prod) #@ge_factors_values.group_by { |f| f.factor_scale_prod }
+        @ge_scale_factors = @ge_factors_groups['S']
+        @ge_prod_factors = @ge_factors_groups['P']
+
+        @ge_factor_values_per_type = @ge_factors_values.group_by(&:factor_type)
+
+        @ge_scale_factors_per_type = @ge_scale_factors.group_by(&:factor_type)
+        @ge_prod_factors_per_type = @ge_prod_factors.group_by(&:factor_type)
+        @all_factors_values_hash = Hash.new
+        @all_factors_values_hash["S"] = Hash.new
+        @all_factors_values_hash["P"] = Hash.new
+
+        @ge_type_factors_per_scale_prod = Hash.new
+        @ge_type_factors_per_scale_prod["S"] = @ge_scale_factors_per_type
+        @ge_type_factors_per_scale_prod["P"] = @ge_prod_factors_per_type
+
+        @ge_type_factors_per_scale_prod.each do |scale_prod, factors_per_type|
+          factors_per_type.each do |type, factor_values_array|
+            @type_factors_values_hash = Hash.new
+            @ge_model.ge_factors.where(scale_prod: "#{scale_prod}").each do |f|
+              if f.factor_type == type
+                factors_array = Array.new
+                factor_values_array.each do |factor_value|
+                  if factor_value.factor_alias == f.alias
+                    factors_array << factor_value  #[factor_value.value_text, factor_value.id]
+                  end
+                end
+                @type_factors_values_hash["#{f.alias}"] = factors_array
+              end
+            end
+            @all_factors_values_hash["#{scale_prod}"]["#{type}"] = @type_factors_values_hash
+          end
+        end
+      end
+
+
     elsif @module_project.pemodule.alias == "operation"
       @operation_model = current_module_project.operation_model
     elsif @module_project.pemodule.alias == "guw"

@@ -1417,3 +1417,4 @@ it:
   warning_edit_instance_module: "Attention: When you change the module's configuration, all estimates which have been construct with the module are subject to get the change you do in the module, even if the estimates are already done and saved."
   duplicate_module: "Duplicate module"
   staffing_duration: "Duration (%{unit})"
+  import_generic_effort_model: "Import the generic effort model Excel file"

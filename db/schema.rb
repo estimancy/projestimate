@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151120102358) do
+ActiveRecord::Schema.define(:version => 20151207152152) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -326,36 +326,6 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
 
   add_index "estimation_values", ["links"], :name => "index_attribute_projects_on_links"
 
-  create_table "event_types", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.string   "icon_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-  end
-
-  add_index "event_types", ["record_status_id"], :name => "index_event_types_on_record_status_id"
-  add_index "event_types", ["reference_id"], :name => "index_event_types_on_parent_id"
-  add_index "event_types", ["uuid"], :name => "index_event_types_on_uuid", :unique => true
-
-  create_table "events", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.integer  "event_type_id"
-    t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "expert_judgement_instance_estimates", :force => true do |t|
     t.integer "pbs_project_element_id"
     t.integer "module_project_id"
@@ -426,6 +396,44 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.datetime "updated_at",      :null => false
     t.float    "coefficient"
     t.integer  "copy_id"
+  end
+
+  create_table "ge_ge_factor_values", :force => true do |t|
+    t.string   "factor_name"
+    t.string   "factor_alias"
+    t.string   "value_text"
+    t.float    "value_number"
+    t.string   "factor_scale_prod"
+    t.string   "factor_type"
+    t.integer  "ge_factor_id"
+    t.integer  "ge_model_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "ge_ge_factors", :force => true do |t|
+    t.integer  "ge_model_id"
+    t.string   "alias"
+    t.string   "scale_prod"
+    t.string   "factor_type"
+    t.string   "short_name"
+    t.string   "long_name"
+    t.text     "description"
+    t.string   "data_filename"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "ge_ge_inputs", :force => true do |t|
+    t.string   "formula"
+    t.float    "scale_factor_sum"
+    t.float    "prod_factor_product"
+    t.text     "values"
+    t.integer  "ge_model_id"
+    t.integer  "module_project_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "ge_ge_models", :force => true do |t|
@@ -568,14 +576,14 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_technology_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.integer  "guw_model_id"
     t.integer  "copy_id"
     t.boolean  "allow_quantity"
-    t.boolean  "allow_retained"
+    t.boolean  "allow_retained",             :default => true
     t.boolean  "allow_complexity"
-    t.boolean  "allow_criteria"
+    t.boolean  "allow_criteria",             :default => true
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
@@ -681,24 +689,6 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.integer "copy_id"
   end
 
-  create_table "labor_categories", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-  end
-
-  add_index "labor_categories", ["record_status_id"], :name => "index_labor_categories_on_record_status_id"
-  add_index "labor_categories", ["reference_id"], :name => "index_labor_categories_on_parent_id"
-  add_index "labor_categories", ["uuid"], :name => "index_labor_categories_on_uuid", :unique => true
-
   create_table "labor_categories_project_areas", :id => false, :force => true do |t|
     t.integer  "labor_category_id"
     t.integer  "project_area_id"
@@ -780,21 +770,6 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.string  "operation_type"
     t.integer "copy_id"
     t.integer "copy_number"
-  end
-
-  create_table "organization_labor_categories", :force => true do |t|
-    t.integer  "organization_id"
-    t.integer  "labor_category_id"
-    t.string   "level"
-    t.string   "name"
-    t.text     "description"
-    t.float    "cost_per_hour"
-    t.integer  "base_year"
-    t.integer  "currency_id"
-    t.float    "hour_per_day"
-    t.integer  "days_per_year"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "organization_profiles", :force => true do |t|
@@ -1044,21 +1019,6 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.datetime "updated_at"
   end
 
-  create_table "profile_categories", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "organization_id"
-    t.string   "uuid"
-    t.integer  "record_status_id"
-    t.string   "custom_value"
-    t.integer  "owner_id"
-    t.text     "change_comment"
-    t.integer  "reference_id"
-    t.string   "reference_uuid"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
   create_table "profiles", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -1204,7 +1164,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.text     "status_comment"
     t.integer  "application_id"
     t.string   "application_name"
-    t.boolean  "private"
+    t.boolean  "private",                               :default => false
   end
 
   add_index "projects", ["ancestry"], :name => "index_projects_on_ancestry"
@@ -1468,7 +1428,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-09-23 10:15:10'
+    t.datetime "subscription_end_date",  :default => '2016-11-30 16:49:55'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
