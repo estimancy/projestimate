@@ -1,11 +1,12 @@
     <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
       <thead>
         <tr>
-
-            <th class="action" style="width: 50px;" ALIGN="center" VALIGN="MIDDLE ">
-              <%= link_to "", "#!", onclick: "toggle_group();", class: "fa fa-check-square-o" , style: "float: left;color: black;position: absolute;bottom: 6px; left: 7px" %>
-              <%= link_to "" ,"#!" , onclick: "verif_checkbox();", class: "fa fa-trash", style: "color: black;position: absolute;bottom: 7px; left: 20px"%>
-            </th>
+          <th class="action" style="width: 25px;">
+            <%= link_to "", "#!",
+                        onclick: "toggle_group();",
+                        class: "fa fa-check-square-o" %>
+            <%# link_to "" ,"#!" , onclick: "verif_checkbox();", class: "fa fa-trash", style: "color: black;position: absolute;bottom: 7px; left: 20px"%>
+          </th>
           <% selected_inline_columns = update_selected_inline_columns(Project) %>
 
           <% selected_inline_columns.each do |column| %>
@@ -19,15 +20,14 @@
       <tbody>
         <% @projects.each_with_index  do |project, index| %>
           <% if can_see_estimation?(project) %>
+            <tr>
 
-              <tr>
+              <td>
+                <input type="checkbox"  class="myCHECK" id="<%= project.id %>">
+              </td>
 
-                <td>
-                  <input type="checkbox"  class="myCHECK" id="<%= project.id %>">
-                </td>
-
-                <% selected_inline_columns.each do |column| %>
-                  <%= column_content(column, project)%>
+              <% selected_inline_columns.each do |column| %>
+                <%= column_content(column, project)%>
               <% end %>
 
               <td style="min-width: 130px;">
