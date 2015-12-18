@@ -1828,3 +1828,4 @@ fr:
   regression_lineaire: "Courbe de régression linéaire"
   regression_lineaire_moins_80: "Courbe de régression linéaire - 80%"
   regression_lineaire_plus_80: "Courbe de régression linéaire + 80%"
+  import_generic_effort_model: "Importer le modèle d'effort générique (fichier Excel)"

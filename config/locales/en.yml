@@ -1808,3 +1808,4 @@ en:
   regression_lineaire: "Linear regression"
   regression_lineaire_moins_80: "+ 80% linear regression"
   regression_lineaire_plus_80: "- 80% linear regression"
+  import_generic_effort_model: "Import the generic effort model (Excel file)"
