@@ -33,14 +33,14 @@
     <div>
       <%= tinymce %>
       <label style="margin-top: 10px"><b><%= I18n.t('description') %></b></label>
-      <%= text_area_tag I18n.t(:description), @project.description, rows: 5, cols: 150, class: "input-xlarge tinymce" %>
+      <%= text_area_tag "description", @project.description, rows: 5, cols: 150, class: "input-xlarge tinymce" %>
     </div>
 
     <br>
     <div class="actions-tabs">
       <% if can? :create_project_from_template, Project %>
-          <%= f.submit I18n.t('save'), :id =>'checkout_project', :class => 'btn submit_project' %>
-          <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
+        <%= f.submit I18n.t('save'), :id =>'checkout_project', :class => 'btn submit_project' %>
+        <button class="btn" data-dismiss="modal" aria-hidden="true"><%= I18n.t(:cancel) %></button>
       <% end %>
     </div>
     </div>

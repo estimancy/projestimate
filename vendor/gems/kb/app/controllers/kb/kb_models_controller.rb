@@ -53,14 +53,14 @@ class Kb::KbModelsController < ApplicationController
       worksheet.add_cell(0, index, w_header).change_horizontal_alignment('center')
     end
 
-    send_data(workbook.stream.string, filename: "#{@kb_model.name.gsub(" ", "_")}_kb__data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@kb_model.organization.name[0..4]}-#{@kb_model.name.gsub(" ", "_")}_kb_data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show
     authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
   end
 
   def duplicate
@@ -105,7 +105,7 @@ class Kb::KbModelsController < ApplicationController
     @kb_model = Kb::KbModel.find(params[:id])
     @current_organization
     set_page_title I18n.t(:Edit_knowledge_base)
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@current_organization), @current_organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@current_organization), @current_organization => ""
   end
 
   def import
@@ -436,7 +436,7 @@ class Kb::KbModelsController < ApplicationController
     end
     worksheet.sheet_data[my_helper][4].change_border(:bottom, 'thin')
     worksheet.sheet_data[my_helper][3].change_border(:bottom, 'thin')
-    send_data(workbook.stream.string, filename: "#{my_kb_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-#{@project.title}-#{@project.version}-#{my_kb_model.name.gsub(" ", "_")}-(#{("A".."B").to_a[current_module_project.position_x - 1]},#{current_module_project.position_x})-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
 end

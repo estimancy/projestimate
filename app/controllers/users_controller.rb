@@ -55,7 +55,7 @@ public
     authorize! :manage, User
 
     set_page_title I18n.t(:new_user)
-    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @organization_id = params[:organization_id]
     unless @organization_id.nil? || @organization_id.empty?
@@ -123,7 +123,7 @@ public
 
   def edit
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @current_organization => "#!", I18n.t(:new_user) => ""
 
     @user = User.find(params[:id])
 
@@ -311,7 +311,7 @@ public
 
     @user = User.find(params[:id])
 
-    if @user.estimations.where(organization_id: params[:organization_id].to_i).nil?
+    if @user.estimations.where(organization_id: params[:organization_id].to_i).empty?
       @user.destroy
       if params[:organization_id]
         redirect_to organization_users_path(organization_id: params[:organization_id]) and return
@@ -320,6 +320,7 @@ public
       else
         redirect_to :back
       end
+      flash[:success] = "L'utilisateur a bien été supprimé"
     else
       flash[:error] = "L'utilisateur est propriétaire de plusieurs estimations privées et modèles d'estimations (#{@user.estimations.where(organization_id: params[:organization_id]).join(', ')})"
       if params[:organization_id]

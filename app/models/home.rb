@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-
+=begin
 require 'open-uri'
 require 'mysql2'
 
@@ -799,3 +799,4 @@ class Home < ActiveRecord::Base
   #
   #end
 end
+=end

@@ -33,6 +33,10 @@ every 1.day, :at => '4am' do
   rake "projestimate:purge_audit_history_data"
 end
 
+every 1.day, :at => '5:14 pm' do
+  rake "estimancy:check_subscription", environment: "development"
+end
+
 
 # Only for local test
 #every 5.minutes do

@@ -1,10 +1,10 @@
-<h4><%= I18n.t(:edit_organization, value: @organization ) %></h4>
+<h4><%= I18n.t(:edit_organization, value: @organization.to_s ) %></h4>
 
 <div class="tabs">
   <ul>
     <li>
       <a href="#tabs-1">
-        <%= @organization %>
+        <%= @organization.blank? ? "Nouvelle organisation" : "" %>
       </a>
     </li>
   </ul>
@@ -65,25 +65,25 @@
 
                     <tr>
                       <td class="center"><%= text_field_tag "", 0, disabled: true %></td>
-                      <td class="center"><%= text_field_tag "organization[limit1]", @organization.limit1  %></td>
+                      <td class="center"><%= text_field_tag "organization[limit1]", @organization.limit1.nil? ? 100000 : @organization.limit1 %></td>
                       <td class="center"><%= text_field_tag "organization[limit1_coef]", @organization.limit1_coef %></td>
                       <td class="center"><%= text_field_tag "organization[limit1_unit]", @organization.limit1_unit %></td>
                     </tr>
 
                     <tr>
-                      <td class="center"><%= text_field_tag "", @organization.limit1, disabled: true %></td>
+                      <td class="center"><%= text_field_tag "", @organization.limit1.nil? ? 100000 : @organization.limit1, disabled: true %></td>
                       <td class="center"><%= text_field_tag "organization[limit2]", @organization.limit2 %></td>
                       <td class="center"><%= text_field_tag "organization[limit2_coef]", @organization.limit2_coef %></td>
                       <td class="center"><%= text_field_tag "organization[limit2_unit]", @organization.limit2_unit %></td>
                     </tr>
                     <tr>
-                      <td class="center"><%= text_field_tag "", @organization.limit2, disabled: true %></td>
+                      <td class="center"><%= text_field_tag "", @organization.limit2.nil? ? 100000 : @organization.limit2, disabled: true %></td>
                       <td class="center"><%= text_field_tag "organization[limit3]", @organization.limit3 %></td>
                       <td class="center"><%= text_field_tag "organization[limit3_coef]", @organization.limit3_coef %></td>
                       <td class="center"><%= text_field_tag "organization[limit3_unit]", @organization.limit3_unit %></td>
                     </tr>
                     <tr>
-                      <td class="center"><%= text_field_tag "", @organization.limit3, disabled: true %></td>
+                      <td class="center"><%= text_field_tag "", @organization.limit3.nil? ? 100000 : @organization.limit3, disabled: true %></td>
                       <td class="center"><%= text_field_tag "organization[limit4]", @organization.limit4 %></td>
                       <td class="center"><%= text_field_tag "organization[limit4_coef]", @organization.limit4_coef %></td>
                       <td class="center"><%= text_field_tag "organization[limit4_unit]", @organization.limit4_unit %></td>

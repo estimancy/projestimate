@@ -33,8 +33,8 @@
       <% else %>
           <% @pemodules.each do |pemodule| %>
               <tr class="">
-                <td><%= pemodule.title %></td>
-                <td><%= pemodule.alias %></td>
+                <td class="span3"><%= pemodule.title %></td>
+                <td class="span3"><%= pemodule.alias %></td>
                 <td><%= pemodule.description %></td>
                 <td><%= pemodule.record_status.name unless pemodule.record_status.nil? %> <%= pemodule.show_custom_value %></td>
                 <td class="center">

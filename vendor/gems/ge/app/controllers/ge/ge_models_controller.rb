@@ -28,7 +28,7 @@ class Ge::GeModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @ge_model = Ge::GeModel.find(params[:id])
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
   end
 
   def new
@@ -46,7 +46,7 @@ class Ge::GeModelsController < ApplicationController
     @ge_model = Ge::GeModel.find(params[:id])
     @organization = @ge_model.organization
     set_page_title I18n.t(:Edit_instance_of_effort)
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
   end
 
   def create

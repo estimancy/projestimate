@@ -306,7 +306,6 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_organisation = @guw_model.organization
     @guw_types = @guw_model.guw_types
-    border_tab =
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
                   [I18n.t(:weighting_factor_Name),  @guw_model.coefficient_label],
@@ -552,7 +551,7 @@ class Guw::GuwModelsController < ApplicationController
       ind = 0
       ind3 = 5
     end
-    send_data(workbook.stream.string, filename: "#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@guw_model.name[0.4]}_ModuleUOMXT-#{@guw_model.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def show
@@ -561,7 +560,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     set_page_title @guw_model.name
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def new
@@ -569,7 +568,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
     set_page_title I18n.t(:new_UO_model)
   end
 
@@ -579,7 +578,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
     set_page_title I18n.t(:edit_project_element_name, parameter: @guw_model.name)
-    set_breadcrumbs "Organizations" => "/organizationals_params", "Modèle d'UO" => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   def create
@@ -649,7 +648,6 @@ class Guw::GuwModelsController < ApplicationController
                                                   guw_model_id: @guw_model.id)
     workbook = RubyXL::Workbook.new
     worksheet = workbook.worksheets[0]
-    # ind = 1
     tab_size = [I18n.t(:estimation).length, I18n.t(:version).length,
                 I18n.t(:group).length, I18n.t(:selected).length,
                 I18n.t(:name).length, I18n.t(:description).length,
@@ -739,12 +737,11 @@ class Guw::GuwModelsController < ApplicationController
             worksheet.add_cell(ind, 15, finder.low ? finder.low : "N/A")
             worksheet.add_cell(ind, 16, finder.most_likely ? finder.most_likely : "N/A")
             worksheet.add_cell(ind, 17, finder.high ? finder.high : "N/A")
-
           end
         end
       end
     end
-  send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@guw_model.name}-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{@guw_model.name}(#{("A".."Z").to_a[current_module_project.position_x.to_i]},#{current_module_project.position_y})-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_verrif_tab_error(tab_error, indexing_field_error)
@@ -975,5 +972,24 @@ class Guw::GuwModelsController < ApplicationController
 
     redirect_to :back
   end
+
+  # def init_guw_type_weight
+  #   Guw::GuwComplexity.all.each do |i|
+  #     if i.weight.nil?
+  #       i.weight = 1
+  #       i.save
+  #     end
+  #   end
+  #
+  #
+  #   Guw::GuwTypeComplexity.all.each do |i|
+  #     i.guw_attribute_complexities.each do |j|
+  #       unless j.bottom_range.nil? && j.top_range.nil?
+  #         j.value = i.value
+  #         j.save
+  #       end
+  #     end
+  #   end
+  # end
 
 end

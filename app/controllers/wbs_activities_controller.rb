@@ -63,6 +63,7 @@ class WbsActivitiesController < ApplicationController
   end
 
   def edit
+
     #no authorize required since everyone can show this object
 
     @wbs_activity = WbsActivity.find(params[:id])

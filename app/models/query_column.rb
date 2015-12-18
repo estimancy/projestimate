@@ -48,10 +48,22 @@ class QueryColumn
     value = '-'
     unless field.coefficient.nil?
       project_field = ProjectField.where(field_id: self.field_id, project_id: object.id).last
-      #value = project_field.nil? ? '-' : convert_with_precision(project_field.value.to_f / field.coefficient.to_f, user_number_precision)
-      value = project_field.nil? ? '-' : convert_with_precision(project_field.value.to_f / field.coefficient.to_f, 2)
+
+      if project_field.nil?
+        value = '-'
+      elsif is_number?(project_field.value)
+        value = convert_with_precision(project_field.value.to_f / field.coefficient.to_f, 2)
+      else
+        value = project_field.value
+      end
+
     end
+
     value
+  end
+
+  def is_number? string
+    true if Float(string) rescue false
   end
 
   def css_classes

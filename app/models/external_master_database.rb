@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-
+=begin
 
 module ExternalInclude
 
@@ -220,3 +220,4 @@ module ExternalMasterDatabase
     include ExternalInclude
   end
 end
+=end

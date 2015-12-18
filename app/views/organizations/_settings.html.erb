@@ -105,7 +105,7 @@
             </div>
       <% end %>
 
-      <table id="table_list_1" class="table tablesorterPager table-striped table-bordered table-condensed">
+      <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
         <thead>
         <tr>
           <th><%= I18n.t('name') %></th>
@@ -141,6 +141,7 @@
 
       <% if can? :manage, ProjectCategory %>
         <%= link_to I18n.t('new_project_category'), new_organization_project_category_path(@organization), :class => 'btn pull-right' %>
+        <%= link_to I18n.t('export'), organization_polyval_export_path(@organization, :MYonglet => "ProjectCategory"), :class => 'btn pull-right button_margin_right'%>
       <% end %>
 
       <table id="table_list_2" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -179,6 +180,7 @@
 
       <% if can? :manage, PlatformCategory %>
          <%= link_to I18n.t('new_platform_category'), new_organization_platform_category_path(@organization), :class => 'btn pull-right' %>
+         <%= link_to I18n.t('export'), organization_polyval_export_path(@organization, :MYonglet => "PlatformCategory"), :class => 'btn pull-right button_margin_right'%>
       <% end %>
 
       <table id="table_list_3" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -214,6 +216,7 @@
     <% if can? :show_work_element_types, WorkElementType %>
       <% if can? :manage, WorkElementType %>
          <%= link_to I18n.t(:new_work_element_type), new_organization_work_element_type_path(@organization), :class => 'btn pull-right' %>
+         <%= link_to I18n.t('export'), organization_polyval_export_path(@organization, :MYonglet => "WorkElementType"), :class => 'btn pull-right button_margin_right'%>
       <% end %>
 
       <table id="table_list_4" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -290,7 +293,8 @@
     <% if can? :show_organization_technologies, OrganizationTechnology %>
 
       <% if can? :manage, OrganizationTechnology %>
-        <%= link_to I18n.t('new_organization_technology'), new_organization_technology_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
+            <%= link_to I18n.t('new_organization_technology'), new_organization_technology_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
+            <%= link_to I18n.t('export'), organization_polyval_export_path(@organization, :MYonglet => "OrganizationTechnology"), :class => 'btn pull-right button_margin_right'%>
       <% end %>
 
       <table id="table_list_6" class="table tablesorterPager table-striped table-bordered table-condensed">
@@ -380,7 +384,7 @@
     <br>
     <% if can? :show_estimation_statuses, EstimationStatus %>
         <% if can? :manage, EstimationStatus %>
-          <%= link_to I18n.t('new_estimation_status'), new_estimation_status_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
+            <%= link_to I18n.t('new_estimation_status'), new_estimation_status_path(:organization_id => @organization.id), :class => 'btn pull-right' %>
         <% end %>
         <%= render "estimation_statuses/statuses_management", object: [@organization, @organization_group] %>
     <% else %>
@@ -426,7 +430,9 @@
     <% if can? :show_views, View %>
       <%= render partial: "views/views_and_widgets" %>
     <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_views_and_widgets) %></div>
+      <div class="red_color">
+        <%= I18n.t(:notice_cannot_view_views_and_widgets) %>
+      </div>
     <% end %>
   </div>
 
@@ -434,10 +440,57 @@
     <b><%= I18n.t(:select_columns_list) %></b>
     <br>
     <% if can? :show_projects_selected_columns, Organization %>
-        <%= render partial: "organizations/select_project_columns_to_display" %>
+      <%= render partial: "organizations/select_project_columns_to_display" %>
     <% else %>
-        <div class="red_color"><%= I18n.t(:notice_cannot_view_selected_columns_list) %></div>
+      <div class="red_color"><%= I18n.t(:notice_cannot_view_selected_columns_list) %></div>
     <% end %>
   </div>
 
 </div>
+
+<script>
+
+    function toggle_group(){
+        var number_of_checked = 0;
+        var number_of_line = 0;
+
+        $(".myCHECK").each(function() {
+            if (this.checked)
+                number_of_checked = number_of_checked + 1;
+            number_of_line = number_of_line + 1
+        });
+        if (number_of_checked < number_of_line){
+            $(".myCHECK").attr("checked", true);
+        }
+        else if (number_of_checked == number_of_line){
+            $(".myCHECK").attr("checked", false);
+        }
+    }
+
+    function verif_checkbox() {
+        var myConfirm = confirm("<%= I18n.t(:are_you_sure)%>");
+        if (myConfirm == true) {
+            $(".myCHECK").each(function () {
+
+                if (this.checked) {
+                    $.ajax({
+                        url: "/projects/" + this.id,
+                        type: "delete",
+                        datatype: "json",
+                        data: {
+                            "_method": "delete",
+                            "commit": "<%= I18n.t(:delete)%>",
+                            "yes_confirmation": "selected"
+                        },
+                        complete: function() {
+                            $(this).prop('checked', false);
+                            window.location.reload(true);
+                        }
+                    });
+
+                }
+            });
+        }
+    }
+
+</script>

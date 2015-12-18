@@ -35,9 +35,13 @@
                 <% wbs_profiles_value = nil %>
                 <td style="text-align: right">
 
-                  <% unless  (wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?) %>
+                  <% unless (wbs_estimation_profiles_values.nil? || wbs_estimation_profiles_values.empty?) %>
                     <% unless wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value].nil? %>
-                      <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value][wbs_project_elt.id][profile.id] %>
+                      <% begin %>
+                        <% wbs_profiles_value = wbs_estimation_profiles_values["profile_id_#{profile.id}"]["ratio_id_#{ratio_reference.id}"][:value][wbs_project_elt.id][profile.id] %>
+                      <% rescue %>
+                        <% wbs_profiles_value = nil %>
+                      <% end %>
                     <% end %>
                   <% end %>
 

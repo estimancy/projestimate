@@ -95,7 +95,7 @@ module OrganizationsHelper
     if value.is_a?(Array)
       val = value.collect {|v| column_value(column, project, v)}.compact.join(', ')
       if val.nil?
-        '-'
+        ''
       else
         val.to_s.html_safe
       end
@@ -111,7 +111,7 @@ module OrganizationsHelper
           content_tag('td', project.application_name)
         else
           if project.application.nil?
-            content_tag('td', '-')
+            content_tag('td', '')
           else
             content_tag('td', project.application.name)
           end
@@ -153,7 +153,11 @@ module OrganizationsHelper
       else
         if column.field_id
           content_tag("td") do
-            content_tag(:span, convert_with_precision(value, user_number_precision), class: "pull-right").to_s.html_safe
+            if is_number?(value)
+              content_tag(:span, convert_with_precision(value, user_number_precision), class: "pull-right").to_s.html_safe
+            else
+              value
+            end
           end
         else
           content_tag("td") do
@@ -161,6 +165,10 @@ module OrganizationsHelper
           end
         end
     end
+  end
+
+  def is_number? string
+    true if Float(string) rescue false
   end
 
 end

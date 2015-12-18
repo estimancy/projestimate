@@ -17,7 +17,7 @@
 
     <div class="pull-left">
       <span class="label label-success">
-      Total <%= @guw_model.retained_size_unit %> retenu :
+      Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:retained_result) %> :
         <span class="label label-success ajusted_effort">
           <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_effort.to_f }}.flatten.sum.to_f.round(3) %>
         </span>

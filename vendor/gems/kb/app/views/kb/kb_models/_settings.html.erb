@@ -164,7 +164,7 @@
         xAxis: {
           title: {
             enabled: true,
-            text: 'Taille',
+            text: '<%= I18n.t(:size) %>',
           },
           min: 0
         },
@@ -175,7 +175,7 @@
           min: 0
         },
         series: [{
-          name: 'Distribution Taille / Effort',
+          name: '<%= I18n.t("distribution_taille_effort") %>',
           marker: {
             radius: 3
           },
@@ -186,7 +186,7 @@
           },
           data: <%= @kb_input.values %>
         },{
-          name: 'Courbe de régression linéaire',
+          name: '<%= I18n.t("regression_lineaire") %>',
           marker: {
             radius: 0
           },
@@ -195,7 +195,7 @@
           data: <%= @kb_input.regression.map{|i, j| [i.round(2), j.round(2)] }.sort %>
 
         },{
-          name: 'Courbe de régression linéaire + 80%',
+          name: '<%= I18n.t("regression_lineaire_plus_80") %>',
           marker: {
             radius: 0
           },
@@ -203,7 +203,7 @@
           color: 'rgba(83, 223, 83, 1)',
           data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j * 1.8).round(2)] }.sort %>
         },{
-          name: 'Courbe de régression linéaire - 80%',
+          name: '<%= I18n.t("regression_lineaire_moins_80") %>',
           marker: {
             radius: 0
           },
@@ -211,7 +211,7 @@
           color: 'rgba(83, 223, 255, 1)',
           data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j / 1.8).round(2)] }.sort %>
         },{
-          name: 'Taille calculé',
+          name: '<%= I18n.t("effort_retained") %>',
           marker: {
             radius: 5
           },

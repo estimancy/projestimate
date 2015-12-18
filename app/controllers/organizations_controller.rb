@@ -66,7 +66,44 @@ class OrganizationsController < ApplicationController
       worksheet.add_cell(index + 1, 0, project_area.name)
       worksheet.add_cell(index + 1, 1, project_area.description)
     end
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_project_areas-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Project_Area-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
+  def polyval_export
+    @organization = Organization.find(params[:organization_id])
+=begin    polyval_var = (params[:MYonglet] == "ProjectCategory" ? ProjectCategory.where(organization_id: @organization.id) :
+                  params[:MYonglet] == "WorkElementType" ? WorkElementType.where(organization_id: @organization.id) :
+                  params[:MYonglet] == "OrganizationTechnology" ? OrganizationTechnology.where(organization_id: @organization.id) :
+                  params[:MYonglet] == "OrganizationProfile" ? OrganizationProfile.where(organization_id: @organization.id) : PlatformCategory.where(organization_id: @organization.id))
+=end
+    case params[:MYonglet]
+      when "ProjectCategory"
+        polyval_var = ProjectCategory.where(organization_id: @organization.id)
+      when "WorkElementType"
+        polyval_var = WorkElementType.where(organization_id: @organization.id)
+      when "OrganizationTechnology"
+        polyval_var = OrganizationTechnology.where(organization_id: @organization.id)
+      when "OrganizationProfile"
+        polyval_var = OrganizationProfile.where(organization_id: @organization.id)
+      else
+        polyval_var = PlatformCategory.where(organization_id: @organization.id)
+    end
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    worksheet.add_cell(0, 0, I18n.t(:name))
+    worksheet.add_cell(0, 1, params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? I18n.t(:alias) : I18n.t(:description))
+    params[:MYonglet] == "OrganizationProfile" ? worksheet.add_cell(0, 2, I18n.t(:cost_per_hour)) : toto = 42
+    params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(0, 2,I18n.t(:description)) : toto = 42
+    params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(0, 3, I18n.t(:productivity_ratio)) : toto = 42
+    polyval_var.each_with_index do |var, index|
+      worksheet.add_cell(index + 1, 0,var.name)
+      worksheet.add_cell(index + 1, 1, params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? var.alias : var.description)
+      params[:MYonglet] == "OrganizationProfile" ? worksheet.add_cell(index + 1, 2, var.cost_per_hour) : toto = 42
+      params[:MYonglet] == "WorkElementType" || params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(index + 1, 2, var.description) : toto = 42
+      params[:MYonglet] == "OrganizationTechnology" ? worksheet.add_cell(index + 1, 3, var.productivity_ratio) : toto = 42
+    end
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_#{params[:MYonglet]}-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def import_appli
@@ -104,7 +141,7 @@ class OrganizationsController < ApplicationController
     organization_appli.each_with_index do |appli, index|
       worksheet.add_cell(index + 1, 0, appli.name)
     end
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Applications-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def import_groups
@@ -147,7 +184,7 @@ class OrganizationsController < ApplicationController
       worksheet.add_cell(index + 1, 1, group.description)
     end
 
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Groups-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
 
   def my_preparse(my_hash)
@@ -203,7 +240,7 @@ class OrganizationsController < ApplicationController
           I18n.t(:label_product_name),
           I18n.t(:description),
           I18n.t(:start_date),
-          "Modèle appliqué",
+          I18n.t(:applied_model),
           I18n.t(:project_area),
           I18n.t(:state),
           I18n.t(:creator),
@@ -232,7 +269,7 @@ class OrganizationsController < ApplicationController
           if pf.nil?
             array_value << ''
           else
-            array_value << convert_with_precision(pf.value.to_f / field.coefficient.to_f, user_number_precision, true)
+            array_value << (pf.value.to_f / field.coefficient.to_f)
           end
         end
 
@@ -251,13 +288,21 @@ class OrganizationsController < ApplicationController
 
     tmp2.each_with_index do |r, i|
       tmp2[i].each_with_index do |r, j|
-        worksheet.add_cell(i, j, tmp2[i][j])
+        if is_number?(tmp2[i][j])
+          unless tmp2[i][j] == 0 || j == 1
+            worksheet.add_cell(i, j, tmp2[i][j].to_f).set_number_format('.##')
+          else
+            worksheet.add_cell(i, j, tmp2[i][j])
+          end
+        else
+          worksheet.add_cell(i, j, tmp2[i][j])
+        end
       end
     end
 
     worksheet.change_row_bold(0 , true)
 
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_Data_v2.0_-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Data-#{Time.now.strftime("%m-%d-%Y_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
     # workbook.write("#{Rails.root}/public/#{filename}.xlsx")
     # redirect_to "#{SETTINGS['HOST_URL']}/#{filename}.xlsx"
@@ -273,7 +318,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     check_if_organization_is_image(@organization)
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
     set_page_title I18n.t(:authorisation, parameter: @organization)
 
     @groups = @organization.groups
@@ -297,7 +342,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     check_if_organization_is_image(@organization)
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
     set_page_title I18n.t(:Parameter, parameter: @organization)
 
     @technologies = @organization.organization_technologies
@@ -315,7 +360,7 @@ class OrganizationsController < ApplicationController
 
     check_if_organization_is_image(@organization)
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
     set_page_title I18n.t(:module ,parameter: @organization)
 
     @guw_models = @organization.guw_models
@@ -329,7 +374,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     check_if_organization_is_image(@organization)
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
     set_page_title I18n.t(:spec_users, parameter: @organization)
   end
 
@@ -337,7 +382,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     check_if_organization_is_image(@organization)
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
     set_page_title I18n.t(:spec_estimations, parameter: @organization.to_s)
 
     if current_user.super_admin == true
@@ -905,7 +950,7 @@ class OrganizationsController < ApplicationController
     set_page_title I18n.t(:organizations)
     @organization = Organization.find(params[:id])
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
 
     @attributes = PeAttribute.defined.all
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
@@ -1102,7 +1147,7 @@ class OrganizationsController < ApplicationController
   def organizationals_params
     set_page_title I18n.t(:Organizational_Parameters)
 
-    set_breadcrumbs "Organizations" => "/organizationals_params", "#{I18n.t(:organizations)}" => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", "#{I18n.t(:organizations)}" => ""
 
     if current_user.super_admin?
       @organizations = Organization.all
@@ -1138,7 +1183,7 @@ class OrganizationsController < ApplicationController
       end
     end
 
-    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}_users_list-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+    send_data(workbook.stream.string, filename: "#{@organization.name[0..4]}-Users_List-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 =begin
     @organization = Organization.find(params[:organization_id])
     csv_string = CSV.generate(:col_sep => ",") do |csv|
@@ -1446,7 +1491,10 @@ class OrganizationsController < ApplicationController
   private
   def check_if_organization_is_image(organization)
     if organization.is_image_organization == true
-      redirect_to("/organizationals_params", flash: { error: "Vous ne pouvez pas accéder aux estimations d'une organization image"}) and return
+      redirect_to("/organizationals_params",
+                  flash: {
+                      error: "Vous ne pouvez pas accéder aux estimations d'une organization image"
+                  }) and return
     end
   end
 

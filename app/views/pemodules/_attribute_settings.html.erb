@@ -3,7 +3,6 @@
   <thead>
     <tr>
       <th class="span4"><%= I18n.t(:name) %></th>
-      <th><%= I18n.t(:description) %></th>
       <th><%= I18n.t(:low) %></th>
       <th><%= I18n.t(:likely) %></th>
       <th><%= I18n.t(:high) %></th>
@@ -17,12 +16,15 @@
     <% @attribute_settings.each_with_index do |ma, i| %>
         <%= hidden_field_tag 'attributes[]', ma.pe_attribute_id %>
         <tr class="">
-          <td><%= label_tag 'attribute_name', ma.pe_attribute.nil? ? '-' : ma.pe_attribute.name, :class => 'attribute_tooltip', :title => display_attribute_rule(ma.pe_attribute, ma) %></td>
-          <td><%= text_field_tag 'description[]', ma.description.blank? ? (ma.pe_attribute.nil? ? '-' : ma.pe_attribute.description) : ma.description %></td>
-          <td><%= text_field_tag 'default_low[]', ma.default_low, :class => "input-mini low #{ma.id} #{(ma.pe_attribute.attr_type == 'date') ? 'date-picker' : '' }" %></td>
-          <td><%= text_field_tag 'default_most_likely[]', ma.default_most_likely, :class => "input-mini ml #{ma.id}" %></td>
-          <td><%= text_field_tag 'default_high[]', ma.default_high, :class => "input-mini high #{ma.id}" %></td>
-          <td><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => ma.in_out), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small', :disabled => (@pemodule == @initialization_module) %> </td>
+          <td>
+            <span class="attribute_tooltip", title="<%= display_attribute_rule(ma.pe_attribute, ma) %>">
+              <%=  ma.pe_attribute.nil? ? '-' : ma.pe_attribute.name %>
+            </span>
+          </td>
+          <td class="center"><%= text_field_tag 'default_low[]', ma.default_low, :class => "input-mini low #{ma.id} #{(ma.pe_attribute.attr_type == 'date') ? 'date-picker' : '' }" %></td>
+          <td class="center"><%= text_field_tag 'default_most_likely[]', ma.default_most_likely, :class => "input-mini ml #{ma.id}" %></td>
+          <td class="center"><%= text_field_tag 'default_high[]', ma.default_high, :class => "input-mini high #{ma.id}" %></td>
+          <td class="center"><%= select_tag 'in_out[]', options_for_select([['input'], ['output'], ['both']], :selected => ma.in_out), :prompt => I18n.t('helpers.select.prompt'), :class => 'input-small', :disabled => (@pemodule == @initialization_module) %> </td>
           <td><%= ma.record_status %></td>
           <td>
             <%= link_to '', ma, confirm: I18n.t('are_you_sure'), method: :delete, :class => 'icon-trash pull-left', :style => 'color:red', :title => I18n.t('delete') %>
