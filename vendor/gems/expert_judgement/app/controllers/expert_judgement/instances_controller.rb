@@ -30,6 +30,8 @@ class ExpertJudgement::InstancesController < ApplicationController
   def show
     authorize! :show_modules_instances, ModuleProject
     @instance = ExpertJudgement::Instance.find(params[:id])
+    set_page_title @instance.name
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(@instance.organization, anchor: "expert"), @instance.organization => ""
   end
 
   def new
@@ -37,13 +39,15 @@ class ExpertJudgement::InstancesController < ApplicationController
 
     @instance = ExpertJudgement::Instance.new
     set_page_title I18n.t(:New_model_of_Judgment_Expert)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "expert"), @instance.organization => ""
   end
 
   def edit
     authorize! :show_modules_instances, ModuleProject
+    @instance = ExpertJudgement::Instance.find(params[:id])
 
     set_page_title I18n.t(:Edit_model_of_Judgment_Expert)
-    @instance = ExpertJudgement::Instance.find(params[:id])
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(@instance.organization, anchor: "expert"), @instance.organization => ""
   end
 
   def create

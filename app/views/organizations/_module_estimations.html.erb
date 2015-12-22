@@ -8,7 +8,7 @@
   </ul>
 
   <div id="taille">
-    <b><%= I18n.t("label_Guw::GuwModel") %></b>
+    <b><%= I18n.t(:label_Guw_model) %> <%#= I18n.t("label_Guw::GuwMod") %></b>
 
     <% if can? :show_modules_instances, ModuleProject %>
       <% if can? :manage_modules_instances, ModuleProject %>

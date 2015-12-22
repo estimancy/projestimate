@@ -28,7 +28,8 @@ class Ge::GeModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @ge_model = Ge::GeModel.find(params[:id])
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
+    set_page_title @ge_model.name
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:effort_modules) => main_app.organization_module_estimation_path(@ge_model.organization, anchor: "effort"), @ge_model.organization => ""
   end
 
   def new
@@ -37,7 +38,7 @@ class Ge::GeModelsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     @ge_model = Ge::GeModel.new
     set_page_title I18n.t(:new_instance_of_effort)
-
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:effort_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "effort"), @ge_model.organization => ""
   end
 
   def edit
@@ -46,7 +47,7 @@ class Ge::GeModelsController < ApplicationController
     @ge_model = Ge::GeModel.find(params[:id])
     @organization = @ge_model.organization
     set_page_title I18n.t(:Edit_instance_of_effort)
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@ge_model.organization), @ge_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:effort_modules) => main_app.organization_module_estimation_path(@ge_model.organization, anchor: "effort"), @ge_model.organization => ""
   end
 
   def create

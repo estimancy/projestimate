@@ -60,7 +60,7 @@ class Kb::KbModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @kb_model = Kb::KbModel.find(params[:id])
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@kb_model.organization), @kb_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:kb_modules) => main_app.organization_module_estimation_path(@kb_model.organization, anchor: "effort"), @kb_model.organization => ""
   end
 
   def duplicate
@@ -97,6 +97,7 @@ class Kb::KbModelsController < ApplicationController
     @organization = Organization.find(params[:organization_id])
     @kb_model = Kb::KbModel.new
     set_page_title I18n.t(:New_knowledge_base)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:kb_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "effort"), @kb_model.organization => ""
   end
 
   def edit
@@ -105,7 +106,7 @@ class Kb::KbModelsController < ApplicationController
     @kb_model = Kb::KbModel.find(params[:id])
     @current_organization
     set_page_title I18n.t(:Edit_knowledge_base)
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@current_organization), @current_organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:kb_modules) => main_app.organization_module_estimation_path(@current_organization, anchor: "effort"), @current_organization => ""
   end
 
   def import
