@@ -30,24 +30,29 @@ class ExpertJudgement::InstancesController < ApplicationController
   def show
     authorize! :show_modules_instances, ModuleProject
     @instance = ExpertJudgement::Instance.find(params[:id])
+    @organization = @instance.organization
+
     set_page_title @instance.name
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(@instance.organization, anchor: "expert"), @instance.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(@organization, anchor: "expert"), @instance.name => ""
   end
 
   def new
     authorize! :manage_modules_instances, ModuleProject
 
     @instance = ExpertJudgement::Instance.new
+    @organization = Organization.find(params['organization_id'])
+
     set_page_title I18n.t(:New_model_of_Judgment_Expert)
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "expert"), @instance.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "expert"), I18n.t(:new) => ""
   end
 
   def edit
     authorize! :show_modules_instances, ModuleProject
     @instance = ExpertJudgement::Instance.find(params[:id])
+    @organization = @instance.organization
 
     set_page_title I18n.t(:Edit_model_of_Judgment_Expert)
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(@instance.organization, anchor: "expert"), @instance.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params",  @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:expert_judgement_modules) => main_app.organization_module_estimation_path(@organization, anchor: "expert"), @instance.name => ""
   end
 
   def create

@@ -1769,3 +1769,5 @@ es:
   expert_judgement_modules: "Expert judgement modules"
   kb_modules: "Knowledge base modules"
   team_modules: "Team modules"
+  uo_modules: "UO modules"
+  operation_modules: "Operation Modules"
