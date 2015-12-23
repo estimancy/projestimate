@@ -555,12 +555,13 @@ class Guw::GuwModelsController < ApplicationController
   end
 
   def show
-
     authorize! :show_modules_instances, ModuleProject
 
     @guw_model = Guw::GuwModel.find(params[:id])
+    @organization = @guw_model.organization
+
     set_page_title @guw_model.name
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(@organization, anchor: "taille"), @guw_model.name => ""
   end
 
   def new
@@ -568,7 +569,7 @@ class Guw::GuwModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(params['organization_id']), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "taille"), I18n.t(:new) => ""
     set_page_title I18n.t(:new_UO_model)
   end
 
@@ -577,8 +578,9 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
+
     set_page_title I18n.t(:edit_project_element_name, parameter: @guw_model.name)
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.organization_module_estimation_path(@guw_model.organization), @guw_model.organization => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(@organization, anchor: "taille"), @guw_model.name => ""
   end
 
   def create
@@ -589,7 +591,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model.organization_id = params[:guw_model][:organization_id].to_i
 
     if @guw_model.save
-      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
     else
       render action: :new
     end
@@ -602,7 +604,7 @@ class Guw::GuwModelsController < ApplicationController
     @organization = @guw_model.organization
 
     if @guw_model.update_attributes(params[:guw_model])
-      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
     else
       render action: :edit
     end
@@ -617,7 +619,7 @@ class Guw::GuwModelsController < ApplicationController
       mp.destroy
     end
     @guw_model.delete
-    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id)
+    redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
   end
 
   def duplicate

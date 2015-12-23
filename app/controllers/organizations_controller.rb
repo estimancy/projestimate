@@ -360,7 +360,7 @@ class OrganizationsController < ApplicationController
 
     check_if_organization_is_image(@organization)
 
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), I18n.t(:label_estimation_modules) => ""
     set_page_title I18n.t(:module ,parameter: @organization)
 
     @guw_models = @organization.guw_models

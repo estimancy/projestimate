@@ -26,7 +26,10 @@ class Operation::OperationModelsController < ApplicationController
     authorize! :show_modules_instances, ModuleProject
 
     @operation_model = Operation::OperationModel.find(params[:id])
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
+    @organization = @operation_model.organization
+
+    set_page_title @operation_model.name
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:operation_modules) => main_app.organization_module_estimation_path(@organization, anchor: "effort"), @operation_model.name => ""
   end
 
   def new
@@ -34,7 +37,9 @@ class Operation::OperationModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @operation_model = Operation::OperationModel.new
+
     set_page_title I18n.t(:new_instance_of_effort)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:operation_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "effort"), I18n.t(:new) => ""
   end
 
   def edit
@@ -42,9 +47,9 @@ class Operation::OperationModelsController < ApplicationController
 
     @operation_model = Operation::OperationModel.find(params[:id])
     @organization = @operation_model.organization
-    set_page_title I18n.t(:new_instance_of_effort)
 
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@operation_model.organization), @operation_model.organization => ""
+    set_page_title I18n.t(:new_instance_of_effort)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:operation_modules) => main_app.organization_module_estimation_path(@organization, anchor: "effort"), @operation_model.name => ""
   end
 
   def create

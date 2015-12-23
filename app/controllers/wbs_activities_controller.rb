@@ -57,6 +57,7 @@ class WbsActivitiesController < ApplicationController
   def index
     #No authorize required since everyone can access the list of ABS
     set_page_title I18n.t(:WBS_activities)
+
     #@wbs_activities = WbsActivity.all
     # Need to show only wbs-activities of current_user's organizations
     @wbs_activities = WbsActivity.where('organization_id IN (?)', current_user.organizations)
@@ -68,7 +69,10 @@ class WbsActivitiesController < ApplicationController
 
     @wbs_activity = WbsActivity.find(params[:id])
     @organization_id = @wbs_activity.organization_id
+    @organization = @wbs_activity.organization
+
     set_page_title I18n.t(:edit_wbs_activity, value: @wbs_activity.name)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:wbs_modules) => main_app.organization_module_estimation_path(@organization, anchor: "activite"), @wbs_activity.name => ""
 
     @wbs_activity_elements_list = @wbs_activity.wbs_activity_elements
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
@@ -109,9 +113,11 @@ class WbsActivitiesController < ApplicationController
   end
 
   def new
-    set_page_title I18n.t(:new_wbs_activity)
     @wbs_activity = WbsActivity.new
     @organization_id = params['organization_id']
+    @organization = Organization.find(params[:organization_id])
+    set_page_title I18n.t(:new_wbs_activity)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:wbs_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "activite"), I18n.t(:new) => ""
   end
 
   def create

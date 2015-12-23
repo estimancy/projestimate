@@ -25,8 +25,9 @@ module Kb
     validates :standard_unit_coefficient, :presence => true
     validates :effort_unit, :presence => true
 
-    has_many :module_projects, :dependent => :destroy
+    belongs_to :organization
 
+    has_many :module_projects, :dependent => :destroy
     has_many :kb_datas, :dependent => :destroy
     has_many :kb_inputs, :dependent => :destroy
 
