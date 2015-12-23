@@ -156,7 +156,7 @@
     end
 
     def export_staffing
-      staffing = Staffing::StaffingCustomDatum.find(params[:staffing_model_id])
+      staffing_data = Staffing::StaffingCustomDatum.find(params[:staffing_model_id])
       workbook = RubyXL::Workbook.new
       number_of_people =  staffing.chart_actual_coordinates
       theoretical_trapeze_values = staffing.trapeze_chart_theoretical_coordinates
@@ -221,7 +221,7 @@
       worksheet.sheet_data[7][0].change_border(:right, 'thin')
       worksheet.sheet_data[7][1].change_border(:right, 'thin')
 
-      send_data(workbook.stream.string, filename: "#{staffing.name}-(#{current_module_project.position_x},#{current_module_project.position_y})-Export-Staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+      send_data(workbook.stream.string, filename: "#{staffing_data.staffing_model.name}-(#{current_module_project.position_x},#{current_module_project.position_y})-Export-Staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
     end
 
   end

@@ -98,14 +98,6 @@ class TranslationsController < ApplicationController
      flash[:error] = "YOU SHALL NOT PASS ! ! ! !"
    end
 
-=begin
-    authorize! :manage_master_data, :all
-
-    params[:translations].each do |elem|
-      I18n.backend.store_translations(:trol, { elem[0] => elem[1].first })
-    end
-    Translate::Storage.new(:trol).write_to_file
-=end
     redirect_to translations_url, :notice => "#{I18n.t(:notice_translation_successful_added)}"
 
   end
