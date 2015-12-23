@@ -219,7 +219,7 @@
       worksheet.sheet_data[7][0].change_border(:right, 'thin')
       worksheet.sheet_data[7][1].change_border(:right, 'thin')
 
-      send_data(workbook.stream.string, filename: "#{staffing.organization.name[0..4]}-#{staffing.name}-(#{current_module_project.position_x},#{current_module_project.position_y})-Export-Staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+      send_data(workbook.stream.string, filename: "#{staffing.name}-(#{current_module_project.position_x},#{current_module_project.position_y})-Export-Staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
     end
 
   end
