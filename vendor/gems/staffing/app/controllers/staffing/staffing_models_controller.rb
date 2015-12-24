@@ -156,10 +156,10 @@
     end
 
     def export_staffing
-      staffing = Staffing::StaffingCustomDatum.find(params[:staffing_model_id])
+      staffing_data = Staffing::StaffingCustomDatum.find(params[:staffing_model_id])
       workbook = RubyXL::Workbook.new
-      number_of_people =  staffing.chart_actual_coordinates
-      theoretical_trapeze_values = staffing.trapeze_chart_theoretical_coordinates
+      number_of_people =  staffing_data.chart_actual_coordinates
+      theoretical_trapeze_values = staffing_data.trapeze_chart_theoretical_coordinates
 
       worksheet = workbook[0]
 
@@ -192,7 +192,7 @@
       end
 
       worksheet.add_cell(4,0, I18n.t(:effort_week))
-      worksheet.add_cell(4,1, staffing.global_effort_value.round(2)).change_horizontal_alignment('center')
+      worksheet.add_cell(4,1, staffing_data.global_effort_value.round(2)).change_horizontal_alignment('center')
       worksheet.sheet_data[4][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[4][0].change_border(:right, 'thin')
       worksheet.sheet_data[4][0].change_border(:top, 'thin')
@@ -201,27 +201,27 @@
       worksheet.sheet_data[4][1].change_border(:right, 'thin')
 
       worksheet.add_cell(5,0, I18n.t(:duration_in_week))
-      worksheet.add_cell(5,1, staffing.duration.round(2)).change_horizontal_alignment('center')
+      worksheet.add_cell(5,1, staffing_data.duration.round(2)).change_horizontal_alignment('center')
       worksheet.sheet_data[5][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[5][0].change_border(:right, 'thin')
       worksheet.sheet_data[5][1].change_border(:bottom, 'thin')
       worksheet.sheet_data[5][1].change_border(:right, 'thin')
 
       worksheet.add_cell(6,0, I18n.t(:max_staff_trap))
-      worksheet.add_cell(6,1, staffing.max_staffing.round(2)).change_horizontal_alignment('center')
+      worksheet.add_cell(6,1, staffing_data.max_staffing.round(2)).change_horizontal_alignment('center')
       worksheet.sheet_data[6][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[6][0].change_border(:right, 'thin')
       worksheet.sheet_data[6][1].change_border(:bottom, 'thin')
       worksheet.sheet_data[6][1].change_border(:right, 'thin')
 
       worksheet.add_cell(7,0, I18n.t(:max_staff_rayl))
-      worksheet.add_cell(7,1, staffing.max_staffing_rayleigh.round(2)).change_horizontal_alignment('center')
+      worksheet.add_cell(7,1, staffing_data.max_staffing_rayleigh.round(2)).change_horizontal_alignment('center')
       worksheet.sheet_data[7][0].change_border(:bottom, 'thin')
       worksheet.sheet_data[7][1].change_border(:bottom, 'thin')
       worksheet.sheet_data[7][0].change_border(:right, 'thin')
       worksheet.sheet_data[7][1].change_border(:right, 'thin')
 
-      send_data(workbook.stream.string, filename: "#{staffing.organization.name[0..4]}-#{staffing.name}-(#{current_module_project.position_x},#{current_module_project.position_y})-Export-Staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
+      send_data(workbook.stream.string, filename: "#{staffing_data.staffing_model.name}-(#{current_module_project.position_x},#{current_module_project.position_y})-Export-Staffing-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
     end
 
   end
