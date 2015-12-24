@@ -1227,7 +1227,7 @@ fr:
   wbs_ratio_per_profile: "Ratio par profil"
   total_ratio_per_activity: "Sum des ratio par activité (%)"
   warning_sum_of_ratio_values_greater_than_100: "Attention : la somme des ratios de l'activité est supérieure à 100 !"
-  no_profiles_for_wbs_activity_organization: "Aucun profil dans l'organization du wbs-activity"
+  no_profiles_for_wbs_activity_organization: "Aucun profil séléctionné dans la WBS activité"
   display_results_with_profiles: "Afficher les résultats par profil"
   tooltip_results_with_profiles: "Afficher les résultats de l'estimation des Wbs-activités par profil"
   label_output_data_with_activities_profiles: "Résultat des estimations : activités par profil"
@@ -1837,3 +1837,4 @@ fr:
   operation_modules: "Modules d'opération"
   team_modules: "Modules d'équipe"
   uo_modules: "Modules d'UO"
+  select_wbs_activity_profiles: "Sélectionner les profils à prendre en compte dans la WBS activité"

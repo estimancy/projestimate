@@ -44,9 +44,11 @@ class WbsActivitiesController < ApplicationController
 
     @wbs_activity_ratio_elements = []
     @wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
+    @wbs_activity = @wbs_activity_ratio.wbs_activity
+    @wbs_activity_organization = @wbs_activity.organization
 
-    @wbs_activity_organization = @wbs_activity_ratio.wbs_activity.organization
-    @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity_organization.organization_profiles
+    #now only the selected profiles from the WBS'organization profiles list will be used
+    @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity.organization_profiles  #@wbs_activity_organization.organization_profiles
 
     wbs_activity_elements_list = WbsActivityElement.where(:wbs_activity_id => @wbs_activity_ratio.wbs_activity.id).all
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list)
@@ -81,7 +83,7 @@ class WbsActivitiesController < ApplicationController
     unless @wbs_activity_ratios.empty?
       @wbs_activity_organization = @wbs_activity_ratios.first.wbs_activity.organization
     end
-    @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity_organization.organization_profiles
+    @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity.organization_profiles #@wbs_activity_organization.organization_profiles
 
     @wbs_activity_ratio_elements = []
     unless @wbs_activity.wbs_activity_ratios.empty?
@@ -94,10 +96,12 @@ class WbsActivitiesController < ApplicationController
 
   def update
     @wbs_activity = WbsActivity.find(params[:id])
+    params[:wbs_activity][:organization_profile_ids] ||= []
+
     @wbs_activity_elements = @wbs_activity.wbs_activity_elements
     @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios
     @wbs_activity_organization = @wbs_activity.organization || Organization.find(params[:wbs_activity][:organization_id])
-    @wbs_organization_profiles =  @wbs_activity_organization.organization_profiles
+    @wbs_organization_profiles =  @wbs_activity.organization_profiles # @wbs_activity_organization.organization_profiles
     @organization_id = @wbs_activity_organization.id
 
     unless @wbs_activity.wbs_activity_ratios.empty?
@@ -319,7 +323,8 @@ class WbsActivitiesController < ApplicationController
           # get the wbs_project_elements that have at least one child
           wbs_activity_elements = @wbs_activity.wbs_activity_elements#.select{ |elt| elt.has_children? && !elt.is_root }.map(&:id)
 
-          @project.organization.organization_profiles.each do |profile|
+          #@project.organization.organization_profiles.each do |profile|
+          @wbs_activity.organization_profiles.each do |profile|
             profiles_probable_value["profile_id_#{profile.id}"] = Hash.new
             # Parent values are reset to zero
             wbs_activity_elements.each{ |elt| parent_profile_est_value["#{elt}"] = 0 }

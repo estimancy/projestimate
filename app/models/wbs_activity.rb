@@ -21,7 +21,8 @@
 
 class WbsActivity < ActiveRecord::Base
   attr_accessible :name, :description, :state, :record_status_id, :custom_value, :change_comment, :organization_id, :parent_id,
-                  :cost_unit, :cost_unit_coefficient, :effort_unit, :effort_unit_coefficient, :three_points_estimation, :enabled_input
+                  :cost_unit, :cost_unit_coefficient, :effort_unit, :effort_unit_coefficient, :three_points_estimation, :enabled_input,
+                  :organization_profile_ids
 
   include AASM
 
@@ -40,6 +41,8 @@ class WbsActivity < ActiveRecord::Base
   has_many :pe_wbs_projects
   has_many :pbs_project_elements
   has_many :module_projects
+
+  has_and_belongs_to_many :organization_profiles
 
   ###validates :organization_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :scope => :organization_id }
