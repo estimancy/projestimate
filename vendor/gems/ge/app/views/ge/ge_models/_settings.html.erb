@@ -52,10 +52,11 @@
 
                               var data_ids = <%= raw ids_list.to_json.html_safe %> ;
                               var data_text_hash = <%= raw js_factor_data.to_json.html_safe %>;
+                              var value_from = parseInt(<%= ids_list.index(selected_value) %>);
 
                               $('#<%= "factor_#{key}" %>').ionRangeSlider({
                                 values: data_ids, //Array of factor_values ids
-                                from: <%= ids_list.index(selected_value) %>,
+                                from: value_from,
                                 prettify: function (num) {
                                   return data_text_hash[num];
                                 }
