@@ -109,7 +109,7 @@ class Ge::GeModelsController < ApplicationController
     factors_list = Array.new
     factors_values = Array.new
     sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
-    sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value" }
+    sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value", :"3" => "default" }
 
     #if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
     if !params[:file].nil? && (File.extname(params[:file].original_filename).in? [".xlsx", ".Xlsx", ".xsl"])
@@ -171,8 +171,8 @@ class Ge::GeModelsController < ApplicationController
             factors = @ge_model.ge_factors.where(alias: factor_alias)
             unless factors.nil?
               factor = factors.first
-              factor_value = Ge::GeFactorValue.create(ge_model_id: @ge_model.id, ge_factor_id: factor.id, factor_alias: factor_alias, factor_scale_prod: factor.scale_prod,
-                                                      factor_type: factor.factor_type, factor_name: factor_name, value_text: row_factor["text"], value_number: row_factor["value"])
+              factor_value = Ge::GeFactorValue.create(ge_model_id: @ge_model.id, ge_factor_id: factor.id, factor_alias: factor_alias, factor_scale_prod: factor.scale_prod, factor_type: factor.factor_type,
+                                                      factor_name: factor_name, value_text: row_factor["text"], value_number: row_factor["value"], default: row_factor["default"])
             end
           end
         end
@@ -250,7 +250,7 @@ class Ge::GeModelsController < ApplicationController
           if scale_factor_sum == 0
             scale_factor_sum = 1
           end
-          effort = (prod_factor_product * (size ** scale_factor_sum)) #* @ge_model.standard_unit_coefficient
+          effort = (prod_factor_product * (size ** scale_factor_sum)) * @ge_model.standard_unit_coefficient
 
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save

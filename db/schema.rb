@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151223093914) do
+ActiveRecord::Schema.define(:version => 20151229084406) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -403,6 +403,7 @@ ActiveRecord::Schema.define(:version => 20151223093914) do
     t.string   "factor_alias"
     t.string   "value_text"
     t.float    "value_number"
+    t.string   "default"
     t.string   "factor_scale_prod"
     t.string   "factor_type"
     t.integer  "ge_factor_id"

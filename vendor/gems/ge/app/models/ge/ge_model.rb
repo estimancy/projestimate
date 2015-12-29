@@ -25,8 +25,7 @@ module Ge
     validates :name, :presence => true
     validates :standard_unit_coefficient, :presence => true
     validates :effort_unit, :presence => true
-    #validates :coeff_a, :presence => true
-    #validates :coeff_b, :presence => true
+    #validates :coeff_a, :coeff_b, :presence => true
 
     belongs_to :organization
     has_many :module_projects, :dependent => :destroy

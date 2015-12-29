@@ -1435,3 +1435,4 @@ de:
   uo_modules: "UO modules"
   operation_modules: "Operation Modules"
   select_wbs_activity_profiles: "Select profiles to be considered in the WBS activity"
+  select_factor_value: "Please select a value for each factor"

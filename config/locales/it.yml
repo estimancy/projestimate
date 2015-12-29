@@ -1425,3 +1425,4 @@ it:
   kb_modules: "Knowledge base modules"
   uo_modules: "UO modules"
   select_wbs_activity_profiles: "Select profiles to be considered in the WBS activity"
+  select_factor_value: "Please select a value for each factor"

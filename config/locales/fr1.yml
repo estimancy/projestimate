@@ -1500,3 +1500,4 @@ fr1:
   team_modules: "Modules d'équipe"
   uo_modules: "Modules d'UO"
   select_wbs_activity_profiles: "Sélectionner les profils à prendre en compte dans la WBS activité"
+  select_factor_value: "Veuillez sélectionner une valeur pour chaque facteur"

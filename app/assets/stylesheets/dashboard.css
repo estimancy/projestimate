@@ -1103,3 +1103,11 @@ li > a > .fa{
 .input-xsmall{
     width: 130px;
 }
+
+.row-fluid [class*="span"] .factor_group{
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 20px;
+    margin-bottom: 20px;
+}
+
