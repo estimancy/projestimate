@@ -164,11 +164,13 @@ class Ge::GeModelsController < ApplicationController
           row_factor = Hash.new
 
           row && row.cells.each do |cell|
+            puts index
             val = cell && cell.value
-
-            #add value to table
-            key_name = sheet1_order["#{cell.column}".to_sym]
-            row_factor["#{key_name}"] = val
+            unless cell.nil?
+              #add value to table
+              key_name = sheet1_order["#{cell.column}".to_sym]
+              row_factor["#{key_name}"] = val unless key_name.nil?
+            end
           end
 
           unless row_factor.empty?
