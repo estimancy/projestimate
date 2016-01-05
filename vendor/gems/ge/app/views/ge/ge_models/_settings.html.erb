@@ -35,8 +35,7 @@
 
                             <% if values.length == 1 %>
                               <%= hidden_field_tag("#{scale_prod}_factor[#{key}]", values.first.id) %>
-
-                            <% else %>
+                            <% elsif values.length > 1 %>
                               <div class="row-fluid">
                                 <% ge_factor = values[0].ge_factor %>
                                 <div class="span1 attribute_tooltip" title="<b><%= ge_factor.long_name %> : </b><br/> <%= ge_factor.description %>">

@@ -105,12 +105,21 @@ class Ge::GeModelsController < ApplicationController
 
     @ge_model = Kb::KbModel.find(params[:kb_model_id])
     workbook = RubyXL::Workbook.new
-    worksheet1 = workbook[0]
-    worksheet2 = workbook[1]
+    ge_model_worksheet = workbook[0]
+    worksheet1 = workbook[1]
+    worksheet2 = workbook[2]
 
     ge_model_factors = @ge_model.ge_factors    # ge_model_datas = @ge_model.ge_datas
     sheet1_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
     sheet2_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
+
+    first_page = [[I18n.t(:model_name),  @ge_model.name],
+                  [I18n.t(:model_description), @ge_model.description ],
+                  [I18n.t(:weighting_factor_Name),  @guw_model.coefficient_label],
+                  [I18n.t(:three_points_estimation), @ge_model.three_points_estimation ? 1 : 0],
+                  [I18n.t(:retained_size_unit), @ge_model.size_unit],
+                  [I18n.t(:hour_coefficient_conversion), @ge_model.standard_unit_coefficient],
+                  [I18n.t(:advice), ""]]
 
     if !kb_model_datas.nil? && !kb_model_datas.empty?
       kb_model_datas.each_with_index do |kb_data, index|
@@ -145,6 +154,7 @@ class Ge::GeModelsController < ApplicationController
 
     factors_list = Array.new
     factors_values = Array.new
+
     sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
     sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value", :"3" => "default" }
 
