@@ -98,6 +98,43 @@ class Ge::GeModelsController < ApplicationController
   end
 
 
+  # Data export
+  # if there is no data, a file with data format will be exported
+  def data_export_save
+    authorize! :show_modules_instances, ModuleProject
+
+    @ge_model = Kb::KbModel.find(params[:kb_model_id])
+    workbook = RubyXL::Workbook.new
+    worksheet1 = workbook[0]
+    worksheet2 = workbook[1]
+
+    ge_model_factors = @ge_model.ge_factors    # ge_model_datas = @ge_model.ge_datas
+    sheet1_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
+    sheet2_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
+
+    if !kb_model_datas.nil? && !kb_model_datas.empty?
+      kb_model_datas.each_with_index do |kb_data, index|
+        worksheet1.add_cell(index + 1, 0, kb_data.size).change_horizontal_alignment('center')
+        worksheet1.add_cell(index + 1, 1, kb_data.effort).change_horizontal_alignment('center')
+        kb_data.custom_attributes.each_with_index  do |(custom_attr_k, custom_attr_v),index_2|
+          worksheet1.add_cell(index + 1, index_2 + 2, custom_attr_v).change_horizontal_alignment('center')
+          if index_2 + 2 > 2
+            default_attributs.include?(custom_attr_k.to_s) ? default_attributs : default_attributs  << custom_attr_k.to_s
+          end
+        end
+      end
+    else
+      default_attributs << [ "#{I18n.t(:custom_attribute)}_1", "#{I18n.t(:custom_attribute)}_2", "ect..."]
+    end
+
+    default_attributs.flatten.each_with_index do |w_header, index|
+      worksheet1.add_cell(0, index, w_header).change_horizontal_alignment('center')
+    end
+
+    send_data(workbook.stream.string, filename: "#{@ge_model.organization.name[0..4]}-#{@ge_model.name.gsub(" ", "_")}_ge_data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
+  end
+
+
   # Import Data with Excel files
   def import
     authorize! :manage_modules_instances, ModuleProject
@@ -195,8 +232,11 @@ class Ge::GeModelsController < ApplicationController
     # GeInput "values" attribute is serialize as an Array of Hash  ==> [ { :ge_factor_value_id => id, :scale_prod => val, :factor_name =>, :value => val }, {...}, ... ]
     scale_factor_sum = 0.0
     prod_factor_product = 1.0
+    conversion_factor_product = 1.0
+
     scale_factors = params["S_factor"]
     prod_factors = params["P_factor"]
+    conversion_factors = params["C_factor"]
 
     @ge_input_values = Hash.new
     #Save Scale Factors data in GeInput table
@@ -210,7 +250,7 @@ class Ge::GeModelsController < ApplicationController
       end
     end
 
-    #Save Prod Factors data in GeInput table
+    #Save Prod Factors multiplier data in GeInput table
     prod_factors.each do |key, factor_value_id|
       factor_value = Ge::GeFactorValue.find(factor_value_id)
       unless factor_value.nil?
@@ -221,8 +261,19 @@ class Ge::GeModelsController < ApplicationController
       end
     end
 
+    #Save Conversion Factors data in GeInput table
+    conversion_factors.each do |key, factor_value_id|
+      factor_value = Ge::GeFactorValue.find(factor_value_id)
+      unless factor_value.nil?
+        factor_value_number = factor_value.value_number
+        conversion_factor_product *= factor_value_number
+        value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+        @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+      end
+    end
+
     #Update GeInput
-    @formula = "#{prod_factor_product.to_f} X ^ #{scale_factor_sum.to_f}"
+    @formula = "#{prod_factor_product.to_f} (X * #{conversion_factor_product})^ #{scale_factor_sum.to_f}"
     @ge_input.formula = @formula
     @ge_input.scale_factor_sum = scale_factor_sum
     @ge_input.prod_factor_product = prod_factor_product
@@ -250,7 +301,7 @@ class Ge::GeModelsController < ApplicationController
           if scale_factor_sum == 0
             scale_factor_sum = 1
           end
-          effort = (prod_factor_product * (size ** scale_factor_sum)) * @ge_model.standard_unit_coefficient
+          effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient
 
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save

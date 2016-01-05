@@ -170,18 +170,23 @@ class ProjectsController < ApplicationController
         @ge_factors_groups = @ge_factors_values.group_by(&:factor_scale_prod) #@ge_factors_values.group_by { |f| f.factor_scale_prod }
         @ge_scale_factors = @ge_factors_groups['S']
         @ge_prod_factors = @ge_factors_groups['P']
+        @ge_conversion_factors = @ge_factors_groups['C']
 
         @ge_factor_values_per_type = @ge_factors_values.group_by(&:factor_type)
 
         @ge_scale_factors_per_type = @ge_scale_factors.group_by(&:factor_type)
         @ge_prod_factors_per_type = @ge_prod_factors.group_by(&:factor_type)
+        @ge_conversion_factors_per_type = @ge_conversion_factors.group_by(&:factor_type)
+
         @all_factors_values_hash = Hash.new
         @all_factors_values_hash["S"] = Hash.new
         @all_factors_values_hash["P"] = Hash.new
+        @all_factors_values_hash["C"] = Hash.new
 
         @ge_type_factors_per_scale_prod = Hash.new
         @ge_type_factors_per_scale_prod["S"] = @ge_scale_factors_per_type
         @ge_type_factors_per_scale_prod["P"] = @ge_prod_factors_per_type
+        @ge_type_factors_per_scale_prod["C"] = @ge_conversion_factors_per_type
 
         @ge_type_factors_per_scale_prod.each do |scale_prod, factors_per_type|
           factors_per_type.each do |type, factor_values_array|
