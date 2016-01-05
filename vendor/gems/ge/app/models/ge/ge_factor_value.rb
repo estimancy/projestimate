@@ -21,7 +21,7 @@
 
 module Ge
   class GeFactorValue < ActiveRecord::Base
-    attr_accessible :factor_name, :factor_alias, :factor_scale_prod, :factor_type, :value_number, :value_text, :ge_factor_id, :ge_model_id
+    attr_accessible :factor_name, :factor_alias, :factor_scale_prod, :factor_type, :value_number, :default, :value_text, :ge_factor_id, :ge_model_id
 
     validates :factor_name, :factor_alias, :ge_factor_id, :ge_model_id, presence: true
 

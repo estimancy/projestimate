@@ -5,22 +5,22 @@
 <%= form_tag ge.ge_model_save_efforts_path(@ge_model) do %>
 
   <% if @ge_model.ge_factors.size > 0 %>
-      <h4><b> Veuillez sélectionner la valeur de chaque facteur </b></h4>
+      <h4><b> <%= I18n.t(:select_factor_value) %> </b></h4>
 
-      <div class="row-fluid">
+      <div class="row-fluid col-wrap">
         <div class="accordion" id="accordion_factor">
 
           <% @all_factors_values_hash.each do |scale_prod, factor_values_per_type| %>
             <% factor_values_per_type.each do |type, factor_values| %>
 
-              <% if factor_values.length == 1 %>
+              <% if (factor_values.length == 1) && (factor_values.first.last.length == 1) %>
                 <% factor_value = factor_values.first %>
                 <% value = factor_value.last[0] %>
                 <%= hidden_field_tag("#{scale_prod}_factor[#{value.factor_alias}]", value.id) %>
 
               <% else %>
                 <% factor_type = type.gsub(/( )/, '_').downcase %>
-                  <div class="span6">
+                  <div class="span6 factor_group">
                     <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_factor" href="#<%= factor_type %>">
@@ -32,37 +32,59 @@
                         <div class="accordion-inner">
 
                           <% factor_values.each do |key, values| %>
-                            <div class="row-fluid">
-                              <% ge_factor = values[0].ge_factor %>
-                              <div class="span1 attribute_tooltip" title="<b><%= ge_factor.long_name %> : </b><br/> <%= ge_factor.description %>">
-                                <%= key.humanize.upcase %>
-                              </div>
-                              <div class="span1"></div>
-                              <div class="span8">
-                                <%#= select_tag("#{scale_prod}_factor[#{key}]", options_for_select(values.map{ |f| [f.value_text, f.id]}, :selected => (@ge_input_values["#{key}"][:ge_factor_value_id] unless @ge_input_values["#{key}"].nil?)), { class: "slide input-xlarge" }) %>
-                                <% ids_list = values.map{ |f| f.id} %>
-                                <% js_factor_data = Hash.new %>
-                                <% values.map{ |f| js_factor_data["#{f.id}"] = f.value_text }  %>
-                                <% @ge_input_values["#{key}"].nil? ? (selected_value = 0) : (selected_value = @ge_input_values["#{key}"][:ge_factor_value_id]) %>
-                                <input type="text" name='<%= "#{scale_prod}_factor[#{key}]" %>' id='<%= "factor_#{key}" %>' class="factor-slider" value="" />
-                              </div>
-                            </div><br><br>
 
-                            <script>
+                            <% if values.length == 1 %>
+                              <%= hidden_field_tag("#{scale_prod}_factor[#{key}]", values.first.id) %>
 
-                              var data_ids = <%= raw ids_list.to_json.html_safe %> ;
-                              var data_text_hash = <%= raw js_factor_data.to_json.html_safe %>;
+                            <% else %>
+                              <div class="row-fluid">
+                                <% ge_factor = values[0].ge_factor %>
+                                <div class="span1 attribute_tooltip" title="<b><%= ge_factor.long_name %> : </b><br/> <%= ge_factor.description %>">
+                                  <%= key.humanize.upcase %>
+                                </div>
+                                <div class="span1"></div>
+                                <div class="span8">
+                                  <%#= select_tag("#{scale_prod}_factor[#{key}]", options_for_select(values.map{ |f| [f.value_text, f.id]}, :selected => (@ge_input_values["#{key}"][:ge_factor_value_id] unless @ge_input_values["#{key}"].nil?)), { class: "slide input-xlarge" }) %>
+                                  <% ids_list = values.map{ |f| f.id } %>
+                                  <% js_factor_data = Hash.new %>
+                                  <% values.map{ |f| js_factor_data["#{f.id}"] = f.value_text }  %>
+                                  <% @ge_input_values["#{key}"].nil? ? (selected_value = 0) : (selected_value = @ge_input_values["#{key}"][:ge_factor_value_id]) %>
 
-                              $('#<%= "factor_#{key}" %>').ionRangeSlider({
-                                values: data_ids, //Array of factor_values ids
-                                from: <%= ids_list.index(selected_value) %>,
-                                prettify: function (num) {
-                                  return data_text_hash[num];
+                                  <!-- Get the default value -->
+                                  <% default_value = 0 %>
+                                  <% default_array = values.select{ |v| v.default? } %>
+                                  <% unless default_array.empty? %>
+                                    <% default_value = default_array.first.id %>
+                                  <% end %>
+
+                                  <input type="text" name='<%= "#{scale_prod}_factor[#{key}]" %>' id='<%= "factor_#{key}" %>' class="factor-slider" value="" />
+                                </div>
+                              </div><br><br>
+
+                              <script>
+
+                                var data_ids = <%= raw ids_list.to_json.html_safe %> ;
+                                var data_text_hash = <%= raw js_factor_data.to_json.html_safe %>;
+                                var value_from = parseInt(<%= ids_list.index(selected_value) %>);
+                                var default_value = parseInt(<%= ids_list.index(default_value) %>);
+
+                                <!-- Get the default value if value_from is NaN -->
+                                if(isNaN(value_from)){
+                                  value_from = default_value;
                                 }
-                              });
 
-                            </script>
+                                $('#<%= "factor_#{key}" %>').ionRangeSlider({
+                                  values: data_ids, //Array of factor_values ids
+                                  from: value_from,
+                                  prettify: function (num) {
+                                    return data_text_hash[num];
+                                  }
+                                });
+
+                              </script>
+                            <% end %>
                           <% end %>
+
                         </div>
                       </div>
                     </div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151207152152) do
+ActiveRecord::Schema.define(:version => 20151229084406) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -403,6 +403,7 @@ ActiveRecord::Schema.define(:version => 20151207152152) do
     t.string   "factor_alias"
     t.string   "value_text"
     t.float    "value_number"
+    t.string   "default"
     t.string   "factor_scale_prod"
     t.string   "factor_type"
     t.integer  "ge_factor_id"
@@ -781,6 +782,15 @@ ActiveRecord::Schema.define(:version => 20151207152152) do
     t.datetime "updated_at",      :null => false
     t.integer  "copy_id"
   end
+
+  create_table "organization_profiles_wbs_activities", :id => false, :force => true do |t|
+    t.integer  "organization_profile_id"
+    t.integer  "wbs_activity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "organization_profiles_wbs_activities", ["organization_profile_id", "wbs_activity_id"], :name => "wbs_activity_profiles_index", :unique => true
 
   create_table "organization_technologies", :force => true do |t|
     t.integer  "organization_id"

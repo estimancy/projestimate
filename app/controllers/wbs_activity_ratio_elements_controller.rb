@@ -98,7 +98,7 @@ class WbsActivityRatioElementsController < ApplicationController
 
     @wbs_activity = WbsActivity.find(params[:wbs_activity_id])
     @wbs_activity_organization = @wbs_activity.organization
-    @wbs_organization_profiles = @wbs_activity_organization.organization_profiles
+    @wbs_organization_profiles = @wbs_activity.organization_profiles #@wbs_activity_organization.organization_profiles  #now only the selected profiles from the WBS'organization profiles list will be used
 
     #Select ratio and elements
     wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
