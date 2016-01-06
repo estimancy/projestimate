@@ -240,58 +240,63 @@ class Ge::GeModelsController < ApplicationController
     @ge_model = Ge::GeModel.find(params[:ge_model_id])
     @ge_input = @ge_model.ge_inputs.where(module_project_id: current_module_project.id).first_or_create
 
-    # Get factors values and save them in the GeInput table
-    # GeInput "values" attribute is serialize as an Array of Hash  ==> [ { :ge_factor_value_id => id, :scale_prod => val, :factor_name =>, :value => val }, {...}, ... ]
-    scale_factor_sum = 0.0
-    prod_factor_product = 1.0
-    conversion_factor_product = 1.0
+    if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
+      # Get factors values and save them in the GeInput table
+      # GeInput "values" attribute is serialize as an Array of Hash  ==> [ { :ge_factor_value_id => id, :scale_prod => val, :factor_name =>, :value => val }, {...}, ... ]
+      scale_factor_sum = 0.0
+      prod_factor_product = 1.0
+      conversion_factor_product = 1.0
 
-    scale_factors = params["S_factor"]
-    prod_factors = params["P_factor"]
-    conversion_factors = params["C_factor"]
+      scale_factors = params["S_factor"]
+      prod_factors = params["P_factor"]
+      conversion_factors = params["C_factor"]
 
-    @ge_input_values = Hash.new
-    #Save Scale Factors data in GeInput table
-    scale_factors.each do |key, factor_value_id|
-      factor_value = Ge::GeFactorValue.find(factor_value_id)
-      unless factor_value.nil?
-        factor_value_number = factor_value.value_number
-        scale_factor_sum += factor_value_number
-        value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
-        @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+      @ge_input_values = Hash.new
+      #Save Scale Factors data in GeInput table
+      scale_factors.each do |key, factor_value_id|
+        factor_value = Ge::GeFactorValue.find(factor_value_id)
+        unless factor_value.nil?
+          factor_value_number = factor_value.value_number
+          scale_factor_sum += factor_value_number
+          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+        end
       end
-    end
 
-    #Save Prod Factors multiplier data in GeInput table
-    prod_factors.each do |key, factor_value_id|
-      factor_value = Ge::GeFactorValue.find(factor_value_id)
-      unless factor_value.nil?
-        factor_value_number = factor_value.value_number
-        prod_factor_product *= factor_value_number
-        value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
-        @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+      #Save Prod Factors multiplier data in GeInput table
+      prod_factors.each do |key, factor_value_id|
+        factor_value = Ge::GeFactorValue.find(factor_value_id)
+        unless factor_value.nil?
+          factor_value_number = factor_value.value_number
+          prod_factor_product *= factor_value_number
+          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+        end
       end
-    end
 
-    #Save Conversion Factors data in GeInput table
-    conversion_factors.each do |key, factor_value_id|
-      factor_value = Ge::GeFactorValue.find(factor_value_id)
-      unless factor_value.nil?
-        factor_value_number = factor_value.value_number
-        conversion_factor_product *= factor_value_number
-        value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
-        @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+      #Save Conversion Factors data in GeInput table
+      conversion_factors.each do |key, factor_value_id|
+        factor_value = Ge::GeFactorValue.find(factor_value_id)
+        unless factor_value.nil?
+          factor_value_number = factor_value.value_number
+          conversion_factor_product *= factor_value_number
+          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+        end
       end
+
+
+      if scale_factor_sum == 0
+        scale_factor_sum = 1
+      end
+      #Update GeInput
+      @formula = "#{prod_factor_product.to_f} (X * #{conversion_factor_product})^ #{scale_factor_sum.to_f}"
+      @ge_input.formula = @formula
+      @ge_input.scale_factor_sum = scale_factor_sum
+      @ge_input.prod_factor_product = prod_factor_product
+      @ge_input.values = @ge_input_values
+      @ge_input.save
     end
-
-    #Update GeInput
-    @formula = "#{prod_factor_product.to_f} (X * #{conversion_factor_product})^ #{scale_factor_sum.to_f}"
-    @ge_input.formula = @formula
-    @ge_input.scale_factor_sum = scale_factor_sum
-    @ge_input.prod_factor_product = prod_factor_product
-    @ge_input.values = @ge_input_values
-    @ge_input.save
-
 
     current_module_project.pemodule.attribute_modules.each do |am|
       tmp_prbl = Array.new
@@ -306,18 +311,23 @@ class Ge::GeModelsController < ApplicationController
         end
 
         if am.pe_attribute.alias == "effort"
-          ###effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient
+          if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
+            ###effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient  #previous formula
+            effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @project.organization.number_hours_per_month.to_f  #previous formula
 
-          #The effort value will be calculated as : Effort = p * Taille^s
-          # with: s = sum of scale factors      and  p = multiply of prod factors
-          if scale_factor_sum == 0
-            scale_factor_sum = 1
+            @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
+            @ge_input.save
+          else
+            #The effort value will be calculated as : Effort = p * Taille^s
+            # with: s = sum of scale factors      and  p = multiply of prod factors
+            ###effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
+            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @project.organization.number_hours_per_month.to_f
           end
-          effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient
 
           ev.send("string_data_#{level}")[current_component.id] = effort
           ev.save
           tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+
         elsif am.pe_attribute.alias == "retained_size"
           ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
           ev.send("string_data_#{level}")[current_component.id] = size
