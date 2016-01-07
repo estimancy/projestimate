@@ -172,11 +172,11 @@ class ProjectsController < ApplicationController
         @ge_prod_factors = @ge_factors_groups['P']
         @ge_conversion_factors = @ge_factors_groups['C']
 
-        @ge_factor_values_per_type = @ge_factors_values.group_by(&:factor_type)
+        #@ge_factor_values_per_type = @ge_factors_values.group_by(&:factor_type)
 
-        @ge_scale_factors_per_type = @ge_scale_factors.group_by(&:factor_type)
-        @ge_prod_factors_per_type = @ge_prod_factors.group_by(&:factor_type)
-        @ge_conversion_factors_per_type = @ge_conversion_factors.group_by(&:factor_type)
+        @ge_scale_factors_per_type =  @ge_scale_factors.nil? ? {} : @ge_scale_factors.group_by(&:factor_type)
+        @ge_prod_factors_per_type = @ge_prod_factors.nil? ? {} : @ge_prod_factors.group_by(&:factor_type)
+        @ge_conversion_factors_per_type = @ge_conversion_factors.nil? ? {} : @ge_conversion_factors.group_by(&:factor_type)
 
         @all_factors_values_hash = Hash.new
         @all_factors_values_hash["S"] = Hash.new
