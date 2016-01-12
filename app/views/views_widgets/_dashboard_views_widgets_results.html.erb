@@ -121,7 +121,7 @@
                                       </span>
                                     </span>
                                   <% else %>
-                                    <div id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
+                                    <div contenteditable='true' id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text without_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em" >
                                       <%= value_to_show %>
                                     </div>
                                   <% end %>
