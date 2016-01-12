@@ -113,6 +113,7 @@
 }
 .irs-grid-pol.small {
     background: #999;
+    display: none;    /*  Modifié pour ne pas afficher les petits traits de la  grille */
 }
 
 .irs-grid-text {

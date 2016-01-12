@@ -1,6 +1,6 @@
 <h3><%= I18n.t(:cal_effort)%></h3>
 
-<%= form_tag ge.ge_model_save_efforts_path(@ge_model) do %>
+<%= form_tag ge.ge_model_save_efforts_path(@ge_model), id: 'ge_form' do %>
 
   <% if @ge_model.ge_factors.size > 0 %>
       <h4><b> <%= I18n.t(:select_factor_value) %> </b></h4>
@@ -41,6 +41,7 @@
 
                             <% if values.length == 1 %>
                               <%= hidden_field_tag("#{scale_prod}_factor[#{key}]", values.first.id) %>
+
                             <% elsif values.length > 1 %>
                               <div class="row-fluid">
                                 <% ge_factor = values[0].ge_factor %>
@@ -66,7 +67,7 @@
                                 </div>
                               </div>
 
-                              <script>
+                              <script type="text/javascript">
 
                                 var data_ids = <%= raw ids_list.to_json.html_safe %> ;
                                 var data_text_hash = <%= raw js_factor_data.to_json.html_safe %>;
@@ -81,54 +82,28 @@
                                 $('#<%= "factor_#{key}" %>').ionRangeSlider({
                                   values: data_ids, //Array of factor_values ids
                                   from: value_from,
+                                  grid: true,
+                                  hide_min_max: true,
                                   prettify: function (num) {
                                     return data_text_hash[num];
                                   },
 
-                                  //When value change, need to recalculate the Person Month effort value
-                                  onChange: function (data) {
-                                    //var $this = $(this), value = $this.prop("value");
-                                    //console.log("Value: " + this.value);
+                                  //When value change, need to calculate again the Person Month effort value
+                                  onFinish: function (data) {
+                                    //console.log("Action: " + $('form#ge_form').attr('action'));
+                                    //console.log("Params: " + $('form#ge_form').serialize());
 
-//                                    $('form').submit(function() {
-//                                      var valuesToSubmit = $(this).serialize();
-//                                      $.ajax({
-//                                        type: "POST",
-//                                        url: $(this).attr('action'), //sumbits it to the given url of the form
-//                                        data: valuesToSubmit,
-//                                        //dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
-//                                      }).success(function(json){
-//                                        console.log("success", json);
-//                                      });
-//                                      return false; // prevents normal behaviour
-//                                    });
-
-                                    //alert($(this).attr('action'));
-
-//                                    $.ajax({
-//                                      //url: $(this).parents('form')[0].action,
-//                                      url: $(this).parents('form').action,
-//                                      headers: {
-//                                        Accept : "text/javascript; charset=utf-8",
-//                                        "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8'
-//                                      },
-//                                      type: 'POST',
-//                                      data: {
-//                                        //'user_id': $(this).siblings('[id*=user_]').val(),
-//                                        //'authenticity_token': $(this).siblings('#authenticity_token').val()
-//                                      }
-//                                    });
-
-
-//                                    $.ajax({
-//                                      url: "/calculate_effort_person_month",
-//                                      method: "get",
-//                                      data: {
-//                                        pbs_project_element_id: $(this).val(),
-//                                        project_id: $("#project_id").val()
-//                                      }
-//                                    });
-
+                                    var valuesToSubmit = $('form#ge_form').serialize();
+                                    $.ajax({
+                                      type: "POST",
+                                      //url: $('form#ge_form').attr('action'), //given url of the form
+                                      url: '<%= "/ge/ge_models/#{@ge_model.id}/update_calculated_effort" %>',
+                                      data: valuesToSubmit,
+                                      dataType: "script",
+                                      format: "js",
+                                      cache: true
+                                    });
+                                    return false;
                                   }
                                 });
 
@@ -219,8 +194,8 @@
 
       <h4>
         <b>
-          <%#= I18n.t(:cal_effort_for, parameter: convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization))%>
-          <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
+          <%= I18n.t(:cal_effort_for, parameter: convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization))%>
+          <%#= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
         </b>
       </h4>
       <table class="table table-condensed table-striped">
@@ -238,9 +213,9 @@
             <td>
               <% unless (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
                 <%= hidden_field_tag "effort_low", (ev.nil? ? '' : ev.send("string_data_low")[component_id]) %>
-                <%= number_field_tag "", (ev.nil? ? '' : (ev.send("string_data_low")[component_id].to_f/ge_standard_unit_coefficient)), step: "any", class: "input-medium", disabled: true %>
+                <%= number_field_tag "", convert_with_specific_precision(ev.nil? ? '' : ev.send("string_data_low")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_low",  class: "input-medium", disabled: true %>
               <% else %>
-                <%= number_field_tag "effort_low", convert_with_specific_precision(ev.nil? ? '': (ev.send("string_data_low")[component_id].to_f/ge_standard_unit_coefficient), @project.organization, 3), step: "any", class: "input-medium" %>
+                <%= number_field_tag "effort_low", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_low", class: "input-medium" %>
               <% end %>
             </td>
           <% end %>
@@ -248,19 +223,20 @@
           <td>
             <% unless (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
               <%= hidden_field_tag "effort_most_likely", (ev.nil? ? '' : ev.send("string_data_most_likely")[component_id]) %>
-              <%= number_field_tag "", (ev.nil? ? '' : (ev.send("string_data_most_likely")[component_id].to_f/ge_standard_unit_coefficient)), step: "any", class: "input-medium", disabled: true %>
+              <%= number_field_tag "", convert_with_specific_precision(ev.nil? ? '' : ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_likely",  class: "input-medium", disabled: true %>
             <% else %>
-              <%= number_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': (ev.send("string_data_most_likely")[component_id].to_f/ge_standard_unit_coefficient), @project.organization, 3), step: "any", class: "input-medium" %>
+              <%= number_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_likely", class: "input-medium" %>
             <% end %>
           </td>
+
 
           <% if @ge_model.three_points_estimation == true %>
             <td>
               <% unless (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
                 <%= hidden_field_tag "effort_high", (ev.nil? ? '' : ev.send("string_data_high")[component_id]) %>
-                <%= number_field_tag "", (ev.nil? ? '' : (ev.send("string_data_high")[component_id]).to_f/ge_standard_unit_coefficient), step: "any", class: "input-medium", disabled: true %>
+                <%= number_field_tag "", convert_with_specific_precision(ev.nil? ? '' : ev.send("string_data_high")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium", disabled: true %>
               <% else %>
-                <%= number_field_tag "effort_high", convert_with_specific_precision(ev.nil? ? '': (ev.send("string_data_high")[component_id].to_f/ge_standard_unit_coefficient), @project.organization, 3), step: "any", class: "input-medium" %>
+                <%= number_field_tag "effort_high", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium" %>
               <% end %>
             </td>
           <% end %>

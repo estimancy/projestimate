@@ -1,0 +1,5 @@
+$("#number_effort_low").val(<%= convert_with_specific_precision(@calculated_effort["low"], @project.organization, user_number_precision) %>);
+$("#number_effort_most_likely").val(<%= convert_with_specific_precision(@calculated_effort["most_likely"], @project.organization, user_number_precision) %>);
+$("#number_effort_high").val(<%= convert_with_specific_precision(@calculated_effort["high"], @project.organization, user_number_precision) %>);
+
+//console.log("success");

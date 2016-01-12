@@ -100,7 +100,7 @@ class Ge::GeModelsController < ApplicationController
 
   # Data export
   # if there is no data, a file with data format will be exported
-  def data_export_save
+  def data_export
     authorize! :show_modules_instances, ModuleProject
 
     @ge_model = Kb::KbModel.find(params[:kb_model_id])
@@ -114,12 +114,19 @@ class Ge::GeModelsController < ApplicationController
     sheet2_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
 
     first_page = [[I18n.t(:model_name),  @ge_model.name],
-                  [I18n.t(:model_description), @ge_model.description ],
-                  [I18n.t(:weighting_factor_Name),  @guw_model.coefficient_label],
+                  #[I18n.t(:model_description), @ge_model.description ],
                   [I18n.t(:three_points_estimation), @ge_model.three_points_estimation ? 1 : 0],
+                  [I18n.t(:modification_entry_valur), @ge_model.enabled_input ],
+                  ["#{I18n.t(:label_Factor)} a", @ge_model.coeff_a ],
+                  ["#{I18n.t(:scale_factor)} : b", @ge_model.coeff_b ],
                   [I18n.t(:retained_size_unit), @ge_model.size_unit],
+                  [I18n.t(:Wording_of_the_module_unit_effort_2), @ge_model.effort_unit],
                   [I18n.t(:hour_coefficient_conversion), @ge_model.standard_unit_coefficient],
                   [I18n.t(:advice), ""]]
+
+    if !ge_model_factors.nil? && !ge_model_factors.empty?
+
+    end
 
     if !kb_model_datas.nil? && !kb_model_datas.empty?
       kb_model_datas.each_with_index do |kb_data, index|
@@ -234,6 +241,107 @@ class Ge::GeModelsController < ApplicationController
   end
 
 
+  #Update the calculated effort when changing slider value
+  def update_calculated_effort
+
+    authorize! :execute_estimation_plan, @project
+
+    @ge_model = Ge::GeModel.find(params[:ge_model_id])
+    @ge_input = @ge_model.ge_inputs.where(module_project_id: current_module_project.id).first_or_create
+    @calculated_effort = {}
+
+    if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
+      # Get factors values and save them in the GeInput table
+      # GeInput "values" attribute is serialize as an Array of Hash  ==> [ { :ge_factor_value_id => id, :scale_prod => val, :factor_name =>, :value => val }, {...}, ... ]
+      scale_factor_sum = 0.0
+      prod_factor_product = 1.0
+      conversion_factor_product = 1.0
+
+      scale_factors = params["S_factor"] || []
+      prod_factors = params["P_factor"]  || []
+      conversion_factors = params["C_factor"] || []
+
+      @ge_input_values = Hash.new
+      #Save Scale Factors data in GeInput table
+      scale_factors.each do |key, factor_value_id|
+        factor_value = Ge::GeFactorValue.find(factor_value_id)
+        unless factor_value.nil?
+          factor_value_number = factor_value.value_number
+          scale_factor_sum += factor_value_number
+          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+        end
+      end
+
+      #Save Prod Factors multiplier data in GeInput table
+      prod_factors.each do |key, factor_value_id|
+        factor_value = Ge::GeFactorValue.find(factor_value_id)
+        unless factor_value.nil?
+          factor_value_number = factor_value.value_number
+          prod_factor_product *= factor_value_number
+          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+        end
+      end
+
+      #Save Conversion Factors data in GeInput table
+      conversion_factors.each do |key, factor_value_id|
+        factor_value = Ge::GeFactorValue.find(factor_value_id)
+        unless factor_value.nil?
+          factor_value_number = factor_value.value_number
+          conversion_factor_product *= factor_value_number
+          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
+          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
+        end
+      end
+
+      if scale_factor_sum == 0
+        scale_factor_sum = 1
+      end
+    end
+
+    current_module_project.pemodule.attribute_modules.each do |am|
+      tmp_prbl = Array.new
+      ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+
+      ["low", "most_likely", "high"].each do |level|
+
+        if @ge_model.three_points_estimation?
+          size = params["retained_size_#{level}"].to_f
+        else
+          size = params["retained_size_most_likely"].to_f
+        end
+
+        if am.pe_attribute.alias == "effort"
+          #Only Xls file factors parameters will be taken in account
+          if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
+            #The effort value will be calculated as : Effort = p * (Taille * c)^s  # with: s = sum of scale factors ; p = multiply of prod factors and c = product of conversion factors
+            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
+          end
+
+          @calculated_effort["#{level}"] = effort
+          tmp_prbl << effort
+        end
+      end
+
+      # unless @ge_model.three_points_estimation?
+      #   tmp_prbl[0] = tmp_prbl[1]
+      #   tmp_prbl[2] = tmp_prbl[1]
+      #   #effort probable
+      #   @calculated_effort["probable"] = (tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6
+      # end
+
+    end
+
+
+    respond_to do |format|
+      format.html
+      format.js { render layout: false, content_type: 'text/javascript' }
+    end
+
+  end
+
+
   def save_efforts
     authorize! :execute_estimation_plan, @project
 
@@ -247,9 +355,9 @@ class Ge::GeModelsController < ApplicationController
       prod_factor_product = 1.0
       conversion_factor_product = 1.0
 
-      scale_factors = params["S_factor"]
-      prod_factors = params["P_factor"]
-      conversion_factors = params["C_factor"]
+      scale_factors = params["S_factor"] || []
+      prod_factors = params["P_factor"]  || []
+      conversion_factors = params["C_factor"] || []
 
       @ge_input_values = Hash.new
       #Save Scale Factors data in GeInput table
@@ -312,16 +420,13 @@ class Ge::GeModelsController < ApplicationController
 
         if am.pe_attribute.alias == "effort"
           if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-            ###effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient  #previous formula
-            effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @project.organization.number_hours_per_month.to_f  #previous formula
-
+            effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient  #Using "a" and "b"
             @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
             @ge_input.save
           else
             #The effort value will be calculated as : Effort = p * Taille^s
             # with: s = sum of scale factors      and  p = multiply of prod factors
-            ###effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
-            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @project.organization.number_hours_per_month.to_f
+            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
           end
 
           ev.send("string_data_#{level}")[current_component.id] = effort
