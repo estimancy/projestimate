@@ -1588,7 +1588,7 @@ frsncf:
   group: "Groupe"
   profile: "Profil"
   UO_type_complexity: "Seuils de complexité de lUO"
-  advice: "Attention: Ne pas modifier les cases contenant des caractères en gras, cela pourrait causer une incapacité à importer votre fichier depuis l'application.\npour plus de conseille d'utilisation: http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work"
+  advice: "Attention: Ne pas modifier les cases contenant des caractères en gras, cela pourrait causer une incapacité à importer votre fichier depuis l'application.\npour plus de conseils d'utilisation: http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work"
   Edit_Units_Of_Work: "Editer unité d'oeuvre"
   New_Units_Of_Work: "Nouvelle unité d'oeuvre"
   Unit_of_work: "Unité d'oeuvre"
