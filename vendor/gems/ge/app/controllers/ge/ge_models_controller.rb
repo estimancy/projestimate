@@ -103,15 +103,19 @@ class Ge::GeModelsController < ApplicationController
   def data_export
     authorize! :show_modules_instances, ModuleProject
 
-    @ge_model = Kb::KbModel.find(params[:kb_model_id])
+    @ge_model = Ge::GeModel.find(params[:ge_model_id])
     workbook = RubyXL::Workbook.new
-    ge_model_worksheet = workbook[0]
-    worksheet1 = workbook[1]
-    worksheet2 = workbook[2]
+    workbook.add_worksheet("Model attribute")
+    workbook.add_worksheet("Factors")
+
+    model_worksheet = workbook[0]
+    model_worksheet.sheet_name = "Model attribute"
+    factors_worksheet = workbook[1]
+    values_worksheet = workbook[2]
 
     ge_model_factors = @ge_model.ge_factors    # ge_model_datas = @ge_model.ge_datas
-    sheet1_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
-    sheet2_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
+    factors_sheet_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
+    values_sheet_default_attributs = [I18n.t(:size), I18n.t(:effort_import), I18n.t(:project_area)]
 
     first_page = [[I18n.t(:model_name),  @ge_model.name],
                   #[I18n.t(:model_description), @ge_model.description ],
@@ -124,28 +128,37 @@ class Ge::GeModelsController < ApplicationController
                   [I18n.t(:hour_coefficient_conversion), @ge_model.standard_unit_coefficient],
                   [I18n.t(:advice), ""]]
 
-    if !ge_model_factors.nil? && !ge_model_factors.empty?
-
-    end
-
-    if !kb_model_datas.nil? && !kb_model_datas.empty?
-      kb_model_datas.each_with_index do |kb_data, index|
-        worksheet1.add_cell(index + 1, 0, kb_data.size).change_horizontal_alignment('center')
-        worksheet1.add_cell(index + 1, 1, kb_data.effort).change_horizontal_alignment('center')
-        kb_data.custom_attributes.each_with_index  do |(custom_attr_k, custom_attr_v),index_2|
-          worksheet1.add_cell(index + 1, index_2 + 2, custom_attr_v).change_horizontal_alignment('center')
-          if index_2 + 2 > 2
-            default_attributs.include?(custom_attr_k.to_s) ? default_attributs : default_attributs  << custom_attr_k.to_s
-          end
-        end
+    first_page.each_with_index do |row, index|
+      model_worksheet.add_cell(index, 0, row[0])
+      model_worksheet.add_cell(index, 1, row[1]).change_horizontal_alignment('center')
+      ["bottom", "right"].each do |symbole|
+        model_worksheet[index][0].change_border(symbole.to_sym, 'thin')
+        model_worksheet[index][1].change_border(symbole.to_sym, 'thin')
       end
-    else
-      default_attributs << [ "#{I18n.t(:custom_attribute)}_1", "#{I18n.t(:custom_attribute)}_2", "ect..."]
     end
 
-    default_attributs.flatten.each_with_index do |w_header, index|
-      worksheet1.add_cell(0, index, w_header).change_horizontal_alignment('center')
-    end
+
+    # if !ge_model_factors.nil? && !ge_model_factors.empty?
+    # end
+    #
+    # if !kb_model_datas.nil? && !kb_model_datas.empty?
+    #   kb_model_datas.each_with_index do |kb_data, index|
+    #     worksheet1.add_cell(index + 1, 0, kb_data.size).change_horizontal_alignment('center')
+    #     worksheet1.add_cell(index + 1, 1, kb_data.effort).change_horizontal_alignment('center')
+    #     kb_data.custom_attributes.each_with_index  do |(custom_attr_k, custom_attr_v),index_2|
+    #       worksheet1.add_cell(index + 1, index_2 + 2, custom_attr_v).change_horizontal_alignment('center')
+    #       if index_2 + 2 > 2
+    #         default_attributs.include?(custom_attr_k.to_s) ? default_attributs : default_attributs  << custom_attr_k.to_s
+    #       end
+    #     end
+    #   end
+    # else
+    #   default_attributs << [ "#{I18n.t(:custom_attribute)}_1", "#{I18n.t(:custom_attribute)}_2", "ect..."]
+    # end
+    #
+    # default_attributs.flatten.each_with_index do |w_header, index|
+    #   worksheet1.add_cell(0, index, w_header).change_horizontal_alignment('center')
+    # end
 
     send_data(workbook.stream.string, filename: "#{@ge_model.organization.name[0..4]}-#{@ge_model.name.gsub(" ", "_")}_ge_data-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
   end
@@ -332,7 +345,6 @@ class Ge::GeModelsController < ApplicationController
       # end
 
     end
-
 
     respond_to do |format|
       format.html

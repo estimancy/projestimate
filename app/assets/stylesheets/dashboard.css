@@ -1111,3 +1111,14 @@ li > a > .fa{
     margin-bottom: 20px;
 }
 
+tr.product_factor, td.product_factor {
+    background-color: #bce8ff;   /* #FFFFE3; lightgoldenrodyellow*/
+}
+
+tr.scale_factor, td.scale_factor {
+    background: #d9edf7;  /* #FBFBFB; #bce8f1; */
+}
+
+tr.conversion_factor, td.conversion_factor {
+    background: lightcyan;
+}
