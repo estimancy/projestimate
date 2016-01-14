@@ -1,16 +1,16 @@
 <h3>
-<%= I18n.t(:calculate_duration_and_size) %>
+  <%= I18n.t(:calculate_duration_and_size) %>
 </h3>
 
 <%
- attribute = PeAttribute.find_by_alias("effort")
- unless current_module_project.previous.first.nil?
-  previous_activity = current_module_project.previous.first.wbs_activity
- end
+   attribute = PeAttribute.find_by_alias("effort")
+   unless current_module_project.previous.first.nil?
+     previous_activity = current_module_project.previous.first.wbs_activity
+   end
 
- effort_week_unit = @staffing_model.effort_week_unit.nil? ? 1 : @staffing_model.effort_week_unit
+   effort_week_unit = @staffing_model.effort_week_unit.nil? ? 1 : @staffing_model.effort_week_unit
 
- # unless previous_activity.nil?
+   # unless previous_activity.nil?
 
    ev = EstimationValue.where(:pe_attribute_id => attribute.id,
                               :module_project_id => current_module_project.id,
@@ -25,27 +25,27 @@
      effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / (@staffing_model.standard_unit_coefficient.nil? ? 1 : @staffing_model.standard_unit_coefficient.to_f)
    end
 
- @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient.to_f / effort_week_unit) ** @staffing_model.puissance_n
+   @md_duration = @staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient.to_f / effort_week_unit) ** @staffing_model.puissance_n
 
- # else
- #   ev = EstimationValue.where(:pe_attribute_id => attribute.id,
- #                              :module_project_id => current_module_project.id,
- #                              :in_out => "input").first
- #
- #   @staffing_model.standard_unit_coefficient.nil? ? (staffing_standard_unit_coefficient = 1) : (staffing_standard_unit_coefficient = @staffing_model.standard_unit_coefficient.to_f)
- #
- #   begin
- #     effort = ev.string_data_probable[current_component.id].to_f / staffing_standard_unit_coefficient
- #   rescue
- #     ev = EstimationValue.where(:pe_attribute_id => attribute.id,
- #                                :module_project_id => current_module_project.previous.first,
- #                                :in_out => "output").first
- #     previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
- #     effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / staffing_standard_unit_coefficient
- #   end
- #
- #   @md_duration = @staffing_model.mc_donell_coef.to_f * (effort.to_f * staffing_standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
- # end
+   # else
+   #   ev = EstimationValue.where(:pe_attribute_id => attribute.id,
+   #                              :module_project_id => current_module_project.id,
+   #                              :in_out => "input").first
+   #
+   #   @staffing_model.standard_unit_coefficient.nil? ? (staffing_standard_unit_coefficient = 1) : (staffing_standard_unit_coefficient = @staffing_model.standard_unit_coefficient.to_f)
+   #
+   #   begin
+   #     effort = ev.string_data_probable[current_component.id].to_f / staffing_standard_unit_coefficient
+   #   rescue
+   #     ev = EstimationValue.where(:pe_attribute_id => attribute.id,
+   #                                :module_project_id => current_module_project.previous.first,
+   #                                :in_out => "output").first
+   #     previous_activity_root = current_module_project.previous.first.wbs_activity.wbs_activity_elements.first.root
+   #     effort = ev.string_data_probable[current_component.id][previous_activity_root.id][:value] / staffing_standard_unit_coefficient
+   #   end
+   #
+   #   @md_duration = @staffing_model.mc_donell_coef.to_f * (effort.to_f * staffing_standard_unit_coefficient / effort_week_unit) ** @staffing_model.puissance_n
+   # end
 %>
 
   <%= simple_form_for @staffing_custom_data, url: staffing.staffing_custom_datum_save_staffing_custom_data_path(@staffing_custom_data), method: :post do |f| %>
@@ -160,28 +160,19 @@
                 <tr>
                   <td><%= I18n.t(:theoretical_trapeze) %></td>
 
-                  <% table_length = 1 + [@staffing_custom_data.duration.to_f, @staffing_custom_data.rayleigh_duration.to_f].max %>
-                  <% if trapeze_theoretical_coordinates.empty? %>
-                    <td colspan="<%= table_length %>"></td>
-                  <% else %>
-                    <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
-                      <% rounded_value = value.nil? ? 0 : value.round(1) %>
-                      <% trapeze_staffing_theorique += rounded_value %>
-                      <td><%= convert_with_precision(rounded_value, user_number_precision, true) %></td>
-                    <% end %>
+                  <% trapeze_theoretical_coordinates.each do |(coord,value)| %>
+                    <% rounded_value = value.nil? ? 0 : value.round(1) %>
+                    <% trapeze_staffing_theorique += rounded_value %>
+                    <td><%= convert_with_precision(rounded_value, user_number_precision, true) %></td>
                   <% end %>
                 </tr>
 
                 <tr>
                   <td><%= I18n.t(:theoretical_rayleigh) %></td>
-                  <% if rayleigh_theoretical_coordinates.empty? %>
-                      <td colspan="<%= table_length %>"></td>
-                  <% else %>
-                    <% rayleigh_theoretical_coordinates.each do |(coord,value)| %>
-                      <% rounded_value = value.nil? ? 0 : value.round(1) %>
-                      <% rayleigh_staffing_theorique += rounded_value %>
-                      <td><%= rounded_value %></td>
-                    <% end %>
+                  <% rayleigh_theoretical_coordinates.each do |(coord,value)| %>
+                    <% rounded_value = value.nil? ? 0 : value.round(1) %>
+                    <% rayleigh_staffing_theorique += rounded_value %>
+                    <td><%= rounded_value %></td>
                   <% end %>
                 </tr>
 
@@ -228,7 +219,7 @@
             </b>
           </td>
           <td>
-            <%= convert_with_precision(trapeze_staffing_theorique.to_f / @staffing_model.standard_unit_coefficient.to_f * effort_week_unit, user_number_precision)  %>
+            <%= convert_with_precision(trapeze_staffing_theorique.to_f / @staffing_model.standard_unit_coefficient * effort_week_unit, user_number_precision)  %>
           </td>
         </tr>
         <tr>
@@ -248,7 +239,7 @@
             </b>
           </td>
           <td>
-            <%= convert_with_precision(rayleigh_staffing_theorique.to_f / @staffing_model.standard_unit_coefficient.to_f * effort_week_unit, user_number_precision)  %>
+            <%= convert_with_precision(rayleigh_staffing_theorique.to_f / @staffing_model.standard_unit_coefficient * effort_week_unit, user_number_precision)  %>
           </td>
         </tr>
         <tr>
@@ -264,11 +255,11 @@
         <tr>
           <td>
             <b>
-              <%= I18n.t(:effort_retained) %>
+              Effort retenu
             </b>
           </td>
           <td>
-            <%= convert_with_precision(staffing_actuel / @staffing_model.standard_unit_coefficient.to_f * effort_week_unit , user_number_precision) %>
+            <%= convert_with_precision(staffing_actuel / @staffing_model.standard_unit_coefficient * effort_week_unit , user_number_precision) %>
           </td>
         </tr>
         <tr>
