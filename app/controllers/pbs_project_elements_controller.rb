@@ -55,7 +55,13 @@ class PbsProjectElementsController < ApplicationController
     @pbs_project_element.position = @pbs_project_element.siblings.length + 1
     @pbs_project_element.pe_wbs_project_id = @project.pe_wbs_projects.products_wbs.first.id
     #start_date = Datetime.strptime(params[:pbs_project_element][:start_date], I18n.t('date.formats.default'))
-    start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], '%m/%d/%Y')
+
+    begin
+      start_date = params[:pbs_project_element][:start_date].empty? ? nil : Date.strptime(params[:pbs_project_element][:start_date], '%m/%d/%Y')
+    rescue
+      start_date = Time.now
+    end
+
     @pbs_project_element.start_date = start_date
 
     if @pbs_project_element.save
@@ -64,7 +70,7 @@ class PbsProjectElementsController < ApplicationController
       else
         @pbs_project_element.update_attribute :parent, nil
       end
-      render :partial => "pbs_project_elements/refresh_tree"
+      redirect_to dashboard_path(@project)
     else
       flash.now[:error] = I18n.t (:error_pbs_project_element_failed_update)
 
@@ -78,7 +84,7 @@ class PbsProjectElementsController < ApplicationController
 
       @components = @project.pbs_project_elements
 
-      render :new
+      redirect_to dashboard_path(@project)
     end
 
 
@@ -104,13 +110,13 @@ class PbsProjectElementsController < ApplicationController
         @pbs_project_element.update_attribute :parent, nil
       end
 
-      render :partial => "pbs_project_elements/refresh_tree"
+      redirect_to dashboard_path(@project)
 
     else
       flash[:error] = I18n.t (:error_pbs_project_element_failed_update)
 
       @components = @project.pbs_project_elements
-      render :edit
+      redirect_to dashboard_path(@project)
     end
   end
 

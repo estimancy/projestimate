@@ -1,4 +1,4 @@
-  <%= simple_form_for(@pbs_project_element, :remote => true) do |f| %>
+  <%= simple_form_for(@pbs_project_element) do |f| %>
     <%= f.error_notification %>
     <%= hidden_field_tag :project_id, @project.id %>
 
