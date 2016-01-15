@@ -406,7 +406,7 @@ class ProjectsController < ApplicationController
     defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
     defaut_group = AdminSetting.where(key: "Groupe using estimation").first_or_create!(value: "*USER")
     defaut_group_ps = @project.project_securities.build
-    defaut_group_ps.group_id = Group.find_by_name(defaut_group.value).id
+    defaut_group_ps.group_id = Group.where(name: defaut_group.value, organization_id: @organization.id).first.id
     defaut_group_ps.project_security_level = full_control_security_level
     defaut_group_ps.is_model_permission = false
     defaut_group_ps.is_estimation_permission = true
