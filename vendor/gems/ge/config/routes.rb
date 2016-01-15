@@ -28,6 +28,7 @@ Ge::Engine.routes.draw do
     post "duplicate"
     post "import"
     get "data_export"
+    get "delete_all_factors_data"
   end
 
 end

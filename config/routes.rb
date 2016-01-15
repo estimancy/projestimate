@@ -359,5 +359,8 @@ Projestimate::Application.routes.draw do
   post 'update_selected_attribute_organizations' => 'attribute_organizations#update_selected_attribute_organizations'
   post 'save_cocomo_basic' => 'cocomo_basics#save_cocomo_basic', :as => 'EstimationControllers/save_cocomo_basic'
 
+  get "/404" => "errors#not_found"
+  get "/500" => "errors#internal_server_error"
+
   root :to => 'organizations#organizationals_params'
 end
