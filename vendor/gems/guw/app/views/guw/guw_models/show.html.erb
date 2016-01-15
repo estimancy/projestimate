@@ -179,7 +179,7 @@
               <% guw_type.guw_type_complexities.order("display_order ASC").each do |type_complexity| %>
                 <th>Prod.</th>
                 <th>
-                  [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; <%= I18n.t :weight %>
+                  [ &nbsp; ; &nbsp; [ &nbsp; / &nbsp; <%= I18n.t :weight %> (<%= type_complexity.value %>)
                 </th>
               <% end %>
             </tr>

@@ -497,6 +497,9 @@ class ProjectsController < ApplicationController
     @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
+    generate_dashboard
+
+
     #set_breadcrumbs  I18n.t(:estimate) => projects_path, @project => edit_project_path(@project)
     if @project.is_model
       set_breadcrumbs I18n.t(:estimation_models) => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)
@@ -2998,6 +3001,217 @@ public
       new_comments = "#{I18n.l(Time.now)} : #{I18n.t(:change_estimation_status_from_to, from_status: last_estimation_status_name, to_status: new_estimation_status_name, current_user_name: current_user.name)}. \r\n"
       new_comments << "___________________________________________________________________________\r\n"
       #new_comments << current_comments
+    end
+  end
+
+  private
+  def generate_dashboard
+    authorize! :show_project, @project
+
+    # return if user doesn't have the rigth to consult the estimation
+    if !can_show_estimation?(@project)
+      redirect_to(organization_estimations_path(@current_organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
+    end
+
+    if @current_organization.is_image_organization == true
+      redirect_to(root_url, flash: { error: "Vous ne pouvez pas accéder à une organization image"}) and return
+    end
+
+    set_page_title I18n.t(:spec_estimations, parameter: @current_organization)
+
+    @user = current_user
+    @pemodules ||= Pemodule.all
+    @module_project = current_module_project
+    @show_hidden = 'true'
+
+    status_comment_link = ""
+    if can_alter_estimation?(@project) && ( can?(:alter_estimation_status, @project) || can?(:alter_project_status_comment, @project))
+      status_comment_link = "#{main_app.add_comment_on_status_change_path(:project_id => @project.id)}"
+    end
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @current_organization.to_s => organization_estimations_path(@current_organization), "#{@project}" => "#{main_app.edit_project_path(@project)}", "<span class='badge' style='background-color: #{@project.status_background_color}'> #{@project.status_name}" => status_comment_link
+
+    @project_organization = @project.organization
+    @module_projects = @project.module_projects
+    #Get the initialization module_project
+    @initialization_module_project ||= ModuleProject.where('pemodule_id = ? AND project_id = ?', @initialization_module.id, @project.id).first unless @initialization_module.nil?
+
+    @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
+    @module_positions_x = @project.module_projects.order(:position_x).all.map(&:position_x).max
+
+    if @module_project.pemodule.alias == "expert_judgement"
+      if current_module_project.expert_judgement_instance.nil?
+        @expert_judgement_instance = ExpertJudgement::Instance.first
+      else
+        @expert_judgement_instance = current_module_project.expert_judgement_instance
+      end
+
+      array_attributes = Array.new
+
+      if @expert_judgement_instance.enabled_size?
+        array_attributes << "retained_size"
+      end
+
+      if @expert_judgement_instance.enabled_effort?
+        array_attributes << "effort"
+      end
+
+      if @expert_judgement_instance.enabled_cost?
+        array_attributes << "cost"
+      end
+
+      @expert_judgement_attributes = PeAttribute.where(alias: array_attributes)
+
+      array_attributes.each do |a|
+        ie = ExpertJudgement::InstanceEstimate.where(  pe_attribute_id: PeAttribute.find_by_alias(a).id,
+                                                       expert_judgement_instance_id: @expert_judgement_instance.id.to_i,
+                                                       module_project_id: current_module_project.id,
+                                                       pbs_project_element_id: current_component.id).first_or_create!
+      end
+
+    elsif @module_project.pemodule.alias == "kb"
+      @kb_model = current_module_project.kb_model
+      @kb_input = Kb::KbInput.where(module_project_id: @module_project.id,
+                                    organization_id: @project_organization.id,
+                                    kb_model_id: @kb_model.id).first_or_create
+      @project_list = []
+
+    elsif @module_project.pemodule.alias == "ge"
+      @ge_model = current_module_project.ge_model
+      @ge_input = Ge::GeInput.where(module_project_id: @module_project.id,
+                                    organization_id: @project_organization.id,
+                                    ge_model_id: @ge_model.id).first_or_create
+      @ge_input_values = @ge_input.values
+      @ge_factors = @ge_model.ge_factors
+
+      @ge_factors_values = @ge_model.ge_factor_values
+      if @ge_factors_values.length > 0
+        @ge_factors_groups = @ge_factors_values.group_by(&:factor_scale_prod) #@ge_factors_values.group_by { |f| f.factor_scale_prod }
+        @ge_scale_factors = @ge_factors_groups['S']
+        @ge_prod_factors = @ge_factors_groups['P']
+        @ge_conversion_factors = @ge_factors_groups['C']
+
+        #@ge_factor_values_per_type = @ge_factors_values.group_by(&:factor_type)
+
+        @ge_scale_factors_per_type =  @ge_scale_factors.nil? ? {} : @ge_scale_factors.group_by(&:factor_type)
+        @ge_prod_factors_per_type = @ge_prod_factors.nil? ? {} : @ge_prod_factors.group_by(&:factor_type)
+        @ge_conversion_factors_per_type = @ge_conversion_factors.nil? ? {} : @ge_conversion_factors.group_by(&:factor_type)
+
+        @all_factors_values_hash = Hash.new
+        @all_factors_values_hash["S"] = Hash.new
+        @all_factors_values_hash["P"] = Hash.new
+        @all_factors_values_hash["C"] = Hash.new
+
+        @ge_type_factors_per_scale_prod = Hash.new
+        @ge_type_factors_per_scale_prod["S"] = @ge_scale_factors_per_type
+        @ge_type_factors_per_scale_prod["P"] = @ge_prod_factors_per_type
+        @ge_type_factors_per_scale_prod["C"] = @ge_conversion_factors_per_type
+
+        @ge_type_factors_per_scale_prod.each do |scale_prod, factors_per_type|
+          factors_per_type.each do |type, factor_values_array|
+            @type_factors_values_hash = Hash.new
+            @ge_model.ge_factors.where(scale_prod: "#{scale_prod}").each do |f|
+              if f.factor_type == type
+                factors_array = Array.new
+                factor_values_array.each do |factor_value|
+                  if factor_value.factor_alias == f.alias
+                    factors_array << factor_value  #[factor_value.value_text, factor_value.id]
+                  end
+                end
+                @type_factors_values_hash["#{f.alias}"] = factors_array
+              end
+            end
+            @all_factors_values_hash["#{scale_prod}"]["#{type}"] = @type_factors_values_hash
+          end
+        end
+      end
+
+
+    elsif @module_project.pemodule.alias == "operation"
+      @operation_model = current_module_project.operation_model
+    elsif @module_project.pemodule.alias == "guw"
+
+      #if current_module_project.guw_model.nil?
+      #  @guw_model = Guw::GuwModel.first
+      #else
+      @guw_model = current_module_project.guw_model
+      #end
+      @unit_of_work_groups = Guw::GuwUnitOfWorkGroup.where(pbs_project_element_id: current_component.id, module_project_id: current_module_project.id).all
+
+    elsif @module_project.pemodule.alias == "staffing"
+      @staffing_model = current_module_project.staffing_model
+      trapeze_default_values = @staffing_model.trapeze_default_values
+      @staffing_custom_data = Staffing::StaffingCustomDatum.where(staffing_model_id: @staffing_model.id, module_project_id: @module_project.id, pbs_project_element_id: current_component.id).first
+      if @staffing_custom_data.nil?
+        @staffing_custom_data = Staffing::StaffingCustomDatum.create(staffing_model_id: @staffing_model.id, module_project_id: @module_project.id, pbs_project_element_id: current_component.id,
+                                                                     staffing_method: 'trapeze',
+                                                                     period_unit: 'week', global_effort_type: 'probable', mc_donell_coef: 6, puissance_n: 0.33,
+                                                                     trapeze_default_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] },
+                                                                     trapeze_parameter_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] } )
+      end
+
+    elsif @module_project.pemodule.alias == "uow"
+      @pbs = current_component
+
+      @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+      if @uow_inputs.empty?
+        @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: 0)
+        @input.save(validate: false)
+        @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
+      end
+
+      @organization_technologies = @project.organization.organization_technologies.map{|i| [i.name, i.id]}
+      @unit_of_works = @project.organization.unit_of_works.map{|i| [i.name, i.id]}
+      current_component_technology = current_component.organization_technology
+      @complexities = current_component_technology.nil? ? [] : current_component_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
+
+      @module_project.pemodule.attribute_modules.each do |am|
+        if am.pe_attribute.alias ==  "retained_size"
+          @size = EstimationValue.where(:module_project_id => @module_project.id,
+                                        :pe_attribute_id => am.pe_attribute.id,
+                                        :in_out => "input" ).first
+
+          @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+        end
+      end
+
+    elsif @module_project.pemodule.alias == "cocomo_advanced"
+
+      @aprod = Array.new
+      aliass = %w(rely data cplx ruse docu)
+      aliass.each do |a|
+        @aprod << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @aplat = Array.new
+      aliass = %w(time stor pvol)
+      aliass.each do |a|
+        @aplat << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @apers = Array.new
+      aliass = %w(acap aexp ltex pcap pexp pcon)
+      aliass.each do |a|
+        @apers << Factor.where(alias: a, factor_type: "advanced").first
+      end
+
+      @aproj = Array.new
+      aliass = %w(tool site sced)
+      aliass.each do |a|
+        @aproj << Factor.where(alias: a, factor_type: "advanced").first
+      end
+    else
+      @sf = []
+      @em = []
+
+      aliass = %w(pers rcpx ruse pdif prex fcil sced)
+      aliass.each do |a|
+        @em << Factor.where(alias: a).first
+      end
+
+      aliass = %w(prec flex resl team pmat)
+      aliass.each do |a|
+        @sf << Factor.where(alias: a).first
+      end
     end
   end
 end

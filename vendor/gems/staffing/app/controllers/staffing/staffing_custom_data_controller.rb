@@ -157,7 +157,7 @@ class Staffing::StaffingCustomDataController < ApplicationController
 
       elsif constraint == "duration_constraint"
 
-        @duration = @staffing_custom_data.duration
+        @duration = (@staffing_custom_data.duration == 0) ? (@staffing_model.mc_donell_coef * (effort * @staffing_model.standard_unit_coefficient.to_f / @staffing_model.effort_week_unit) ** @staffing_model.puissance_n) : @staffing_custom_data.duration
 
         @staffing_trapeze = 2 * (effort / (@duration.nil? ? 1 : @duration)) * ( 1 / (x3 + x2 - x1 - x0 + y0*(x1 - x2) + y3*(x3 - x2)))
 
