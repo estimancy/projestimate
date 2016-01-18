@@ -884,11 +884,13 @@ class Guw::GuwModelsController < ApplicationController
                     end
                     if !row[8].nil?
                       type.guw_complexity_technologies.each do |techno|
-                        if row[8] == techno.organization_technology.name
-                          guw_uow.organization_technology_id = techno.organization_technology.id
-                          ind += 1
-                          indexing_field_error[2][0] = true
-                          break
+                        unless techno.organization_technology.nil?
+                          if row[8] == techno.organization_technology.name
+                            guw_uow.organization_technology_id = techno.organization_technology.id
+                            ind += 1
+                            indexing_field_error[2][0] = true
+                            break
+                          end
                         end
                         indexing_field_error[2][0] = false
                       end
