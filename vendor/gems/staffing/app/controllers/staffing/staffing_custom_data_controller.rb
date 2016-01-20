@@ -113,7 +113,12 @@ class Staffing::StaffingCustomDataController < ApplicationController
     trapeze_default_values = @staffing_model.trapeze_default_values
 
     @staffing_custom_data = Staffing::StaffingCustomDatum.where(staffing_model_id: @staffing_model.id, module_project_id: @module_project.id, pbs_project_element_id: @component.id).first
-    @staffing_model.trapeze_default_values =  { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] }
+    @staffing_model.trapeze_default_values =  { :x0 => trapeze_default_values[:x0],
+                                                :y0 => trapeze_default_values[:y0],
+                                                :x1 => trapeze_default_values[:x1],
+                                                :x2 => trapeze_default_values[:x2],
+                                                :x3 => trapeze_default_values[:x3],
+                                                :y3 => trapeze_default_values[:y3] }
 
     if @staffing_custom_data.nil?
       @staffing_custom_data = Staffing::StaffingCustomDatum.create( staffing_model_id: @staffing_model.id,
