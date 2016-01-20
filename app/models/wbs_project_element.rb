@@ -107,18 +107,6 @@ class WbsProjectElement < ActiveRecord::Base
     false
   end
 
-  #Function that tell if a node has one or more children that are not from library
-  def has_new_complement_child?
-    has_new_additional_child = false
-    if self.has_children? && !self.is_root?
-      self.children.each do |child|
-        has_new_additional_child = child.wbs_activity_element.nil? && child.wbs_activity.nil?
-        break if has_new_additional_child
-      end
-    end
-    has_new_additional_child
-  end
-
   # This method return all complement child of given node
   def get_all_complement_children
     children_tab = []

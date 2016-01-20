@@ -116,7 +116,7 @@ class WbsActivityElementsController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
 
     @wbs_activity_element = WbsActivityElement.find(params[:id])
 
