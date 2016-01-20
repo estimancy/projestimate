@@ -126,8 +126,18 @@ class Staffing::StaffingCustomDataController < ApplicationController
                                                                     pbs_project_element_id: @component.id,
                                                                     mc_donell_coef: 6,
                                                                     puissance_n: 0.33,
-                                                                    trapeze_default_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] },
-                                                                    trapeze_parameter_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] } )
+                                                                    trapeze_default_values: { :x0 => trapeze_default_values[:x0],
+                                                                                              :y0 => trapeze_default_values[:y0],
+                                                                                              :x1 => trapeze_default_values[:x1],
+                                                                                              :x2 => trapeze_default_values[:x2],
+                                                                                              :x3 => trapeze_default_values[:x3],
+                                                                                              :y3 => trapeze_default_values[:y3] },
+                                                                    trapeze_parameter_values: { :x0 => trapeze_default_values[:x0],
+                                                                                                :y0 => trapeze_default_values[:y0],
+                                                                                                :x1 => trapeze_default_values[:x1],
+                                                                                                :x2 => trapeze_default_values[:x2],
+                                                                                                :x3 => trapeze_default_values[:x3],
+                                                                                                :y3 => trapeze_default_values[:y3] } )
     end
 
     if @staffing_custom_data.update_attributes(params[:staffing_custom_datum])
