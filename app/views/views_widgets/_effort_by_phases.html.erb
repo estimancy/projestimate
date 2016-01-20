@@ -34,9 +34,9 @@
 <table class='table table-condensed table-bordered table_effort_per_phase'>
   <tr>
     <th rowspan=""<%= rowspan %>">Phases</th>
-    <th colspan='#{colspan}'>
+    <th colspan=<%= colspan %>>
       <span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'>
-        <%= estimation_value.pe_attribute.name %> (<%= estimation_value.pe_attribute.alias == "cost" ? @project.organization.currency : '' %>)
+        <%= estimation_value.pe_attribute.name %> <%= estimation_value.pe_attribute.alias == "cost" ? "(#{@project.organization.currency})" : '' %>
       </span>
     </th>
   </tr>
@@ -57,8 +57,8 @@
             <% level_estimation_values = estimation_value.send("string_data_#{level}") %>
             <% pbs_estimation_values = level_estimation_values[pbs_project_element.id] %>
 
-            <% if wbs_activity_elt.is_root? %>
-              <%
+            <%=
+             if wbs_activity_elt.is_root?
                begin
                  if estimation_value.pe_attribute.alias == "cost"
                    @wbs_unit = get_attribute_unit(estimation_value.pe_attribute)
@@ -72,10 +72,9 @@
                    @wbs_unit = convert_label(pbs_estimation_values[wbs_activity_elt.id], @project.organization) unless pbs_estimation_values.nil?
                  end
                end
-              %>
-             <% end %>
+              end
 
-            <%= begin
+              begin
                  if estimation_value.pe_attribute.alias == "cost"
                    if pbs_estimation_values.nil?
                      "-"
@@ -83,7 +82,7 @@
                      "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id][:value], user_number_precision, true)} #{@wbs_unit}"
                    end
                  else
-                   "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), user_number_precision, true)} #{@wbs_unit}"
+                   text_field_tag("", convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id][:value], @project.organization), user_number_precision, true))
                  end
                rescue
                  if estimation_value.pe_attribute.alias == "cost"
@@ -93,9 +92,10 @@
                      "#{convert_with_precision(pbs_estimation_values[wbs_activity_elt.id], user_number_precision, true)} #{@wbs_unit}"
                    end
                  else
-                   "#{convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), user_number_precision, true) } #{@wbs_unit}" unless pbs_estimation_values.nil?
+                   text_field_tag("", convert_with_precision(convert(pbs_estimation_values[wbs_activity_elt.id], @project.organization), user_number_precision, true)) unless pbs_estimation_values.nil?
                  end
-               end %>
+               end
+              %>
           </span>
         </td>
       <% end %>

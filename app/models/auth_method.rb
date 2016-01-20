@@ -38,12 +38,9 @@ class AuthMethod < ActiveRecord::Base
 
   before_save :encrypt_password
 
-  #validates_presence_of :server_name, :port, :base_dn, :record_status, :user_name_attribute, :encryption
-  #validates :password, :presence => {:on => :create} , :if => :on_the_fly_user_creation
   validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false, :scope => :record_status_id}
   validates :custom_value, :presence => true, :if => :is_custom?
-  #validates :first_name_attribute, :last_name_attribute, :email_attribute, :presence => true, :if => :on_the_fly_user_creation
   validate :validate_if_fly_user_creation, :if => :on_the_fly_user_creation
 
   amoeba do
@@ -56,8 +53,6 @@ class AuthMethod < ActiveRecord::Base
       new_record.record_status = RecordStatus.find_by_name('Proposed')
     })
   end
-
-  KEY = '0123456789abcdef01234567890' # 24 characters
 
   def validate_if_fly_user_creation
     errors.add(:first_name_attribute, "#{I18n.t('warning_on_the_fly_user_creation')}") if first_name_attribute.blank?
