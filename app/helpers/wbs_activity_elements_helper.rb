@@ -44,7 +44,7 @@ module WbsActivityElementsHelper
           tree << "
                    <li style='margin-left:#{element.depth}px;' >
                     <div class='block_label'>
-                      #{show_element_name(e)}
+                      #{show_element_name(e)} - #{e.dotted_id}
                     </div>
                     <div class='block_link'>
                       #{ link_activity_element(e) }

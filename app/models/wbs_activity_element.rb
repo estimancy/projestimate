@@ -32,8 +32,7 @@ class WbsActivityElement < ActiveRecord::Base
 
   has_many :wbs_project_elements
 
-  #default_scope order("id asc")
-  default_scope order("dotted_id asc")
+  default_scope order("ABS(dotted_id) ASC")
   scope :is_ok_for_validation, lambda { |de, re| where('record_status_id <> ? and record_status_id <> ?', de, re) }
   scope :elements_root, where(:is_root => true)
 
@@ -60,7 +59,7 @@ class WbsActivityElement < ActiveRecord::Base
   end
 
   def to_s
-    self.wbs_activity.name
+    self.name
   end
 
   def self.import(file, sep)
