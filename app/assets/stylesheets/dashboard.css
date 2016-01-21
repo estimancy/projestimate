@@ -1122,3 +1122,12 @@ tr.scale_factor, td.scale_factor {
 tr.conversion_factor, td.conversion_factor {
     background: lightcyan;
 }
+
+.simple_form .hint {
+    clear: left;
+    /*margin-left: 100px;*/
+    font-size: 12px;
+    color: #555;
+    display: block;
+    font-style: italic;
+}

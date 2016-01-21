@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151229084406) do
+ActiveRecord::Schema.define(:version => 20160115144916) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -359,17 +359,6 @@ ActiveRecord::Schema.define(:version => 20151229084406) do
     t.integer "copy_id"
   end
 
-  create_table "factor_translations", :force => true do |t|
-    t.integer  "factor_id"
-    t.string   "locale",     :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.text     "helps"
-  end
-
-  add_index "factor_translations", ["factor_id"], :name => "index_factor_translations_on_factor_id"
-  add_index "factor_translations", ["locale"], :name => "index_factor_translations_on_locale"
-
   create_table "factors", :force => true do |t|
     t.string   "name"
     t.string   "alias"
@@ -439,6 +428,7 @@ ActiveRecord::Schema.define(:version => 20151229084406) do
 
   create_table "ge_ge_models", :force => true do |t|
     t.string  "name"
+    t.text    "description"
     t.float   "coeff_a"
     t.float   "coeff_b"
     t.integer "organization_id"
@@ -447,6 +437,7 @@ ActiveRecord::Schema.define(:version => 20151229084406) do
     t.float   "standard_unit_coefficient"
     t.string  "size_unit"
     t.boolean "enabled_input"
+    t.boolean "modify_theorical_effort"
     t.integer "copy_id"
     t.integer "copy_number",               :default => 0
   end
@@ -577,14 +568,14 @@ ActiveRecord::Schema.define(:version => 20151229084406) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_technology_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.integer  "guw_model_id"
     t.integer  "copy_id"
     t.boolean  "allow_quantity"
-    t.boolean  "allow_retained",             :default => true
+    t.boolean  "allow_retained"
     t.boolean  "allow_complexity"
-    t.boolean  "allow_criteria",             :default => true
+    t.boolean  "allow_criteria"
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
@@ -1438,7 +1429,7 @@ ActiveRecord::Schema.define(:version => 20151229084406) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-11-30 16:49:55'
+    t.datetime "subscription_end_date",  :default => '2016-09-23 10:15:10'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

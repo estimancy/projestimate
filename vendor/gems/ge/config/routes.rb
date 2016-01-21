@@ -31,4 +31,5 @@ Ge::Engine.routes.draw do
     get "delete_all_factors_data"
   end
 
+  match 'ge_models/import_ge_model_instance' => 'ge_models#import', as: "import_ge_model_instance"
 end
