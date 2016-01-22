@@ -355,6 +355,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         end
 
         guw_unit_of_work.effort = @weight_pert.sum * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f)
+      else
+        guw_unit_of_work.effort = @weight_pert.sum * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f)
       end
 
       if guw_unit_of_work.guw_type.allow_retained == false

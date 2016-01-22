@@ -321,7 +321,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet = workbook[0]
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
-    workbook.add_worksheet(I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.coefficient_label || I18n.t(:Type_acquisitions))
 
     first_page.each_with_index do |row, index|
       worksheet.add_cell(index, 0, row[0])
