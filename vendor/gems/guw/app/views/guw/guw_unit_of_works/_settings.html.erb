@@ -212,12 +212,15 @@
                   <span class="technology_<%= guow.id %>" >
                     <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
                     <% unless results.empty? %>
-                      <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
-                                                                                      selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
-                                     class: "guw_technology input-xsmall",
-                                     guw: guow.id,
-                                     required: true,
-                                     readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% begin %>
+                        <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
+                                                                                        selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
+                                       class: "guw_technology input-xsmall",
+                                       guw: guow.id,
+                                       required: true,
+                                       readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% rescue %>
+                      <% end %>
                     <% end %>
                   </span>
                 </td>

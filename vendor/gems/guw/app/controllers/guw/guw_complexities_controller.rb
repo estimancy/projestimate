@@ -31,12 +31,14 @@ class Guw::GuwComplexitiesController < ApplicationController
     set_page_title I18n.t(:new_complexity)
     @guw_complexity = Guw::GuwComplexity.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_type = Guw::GuwType.find(params[:guw_type_id])
   end
 
   def edit
     set_page_title I18n.t(:edit_complexity)
     @guw_complexity = Guw::GuwComplexity.find(params[:id])
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_type = Guw::GuwType.find(params[:guw_type_id])
   end
 
   def create
