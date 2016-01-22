@@ -42,7 +42,7 @@ class WbsActivitiesController < ApplicationController
 
   def refresh_ratio_elements
 
-    @wbs_activity_ratio_elements = []
+    # @wbs_activity_ratio_elements = []
     @wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
     @wbs_activity = @wbs_activity_ratio.wbs_activity
     @wbs_activity_organization = @wbs_activity.organization
@@ -52,7 +52,7 @@ class WbsActivitiesController < ApplicationController
 
     wbs_activity_elements_list = WbsActivityElement.where(:wbs_activity_id => @wbs_activity_ratio.wbs_activity.id).all
     @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list)
-    @wbs_activity_ratio_elements = @wbs_activity_ratio.wbs_activity_ratio_elements.all
+    @wbs_activity_ratio_elements = @wbs_activity_ratio.wbs_activity_ratio_elements.joins(:wbs_activity_element).order("abs(wbs_activity_elements.dotted_id) ASC").all
     @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
   end
 
@@ -87,7 +87,8 @@ class WbsActivitiesController < ApplicationController
 
     @wbs_activity_ratio_elements = []
     unless @wbs_activity.wbs_activity_ratios.empty?
-      @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements.all
+      @wbs_activity_ratio_elements = @wbs_activity_ratios.first.wbs_activity_ratio_elements.joins(:wbs_activity_element).order("abs(wbs_activity_elements.dotted_id) ASC").all
+
       @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
     else
       @total = 0

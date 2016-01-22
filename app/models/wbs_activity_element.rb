@@ -59,7 +59,7 @@ class WbsActivityElement < ActiveRecord::Base
   end
 
   def to_s
-    self.wbs_activity.name
+    self.name
   end
 
   def self.import(file, sep)
