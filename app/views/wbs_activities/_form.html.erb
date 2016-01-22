@@ -25,24 +25,24 @@
         <% end %>
 
         <div id="accordion_wbs_profile" class="accordion">
-            <div class="accordion-group accordion-caret">
-              <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_wbs_profile" href="#wbs_activity_organization_profiles">
-                  <i class="fa fa-caret-down"></i>
-                  <b><%= I18n.t(:profiles) %> : <%= I18n.t(:select_wbs_activity_profiles) %></b>
-                </a>
-              </div>
-              <div id="wbs_activity_organization_profiles" class="accordion-body in collapse">
-                <div class="accordion-inner">
-                  <% for profile in @organization.organization_profiles %>
-                      <div>
-                        <%= check_box_tag "wbs_activity[organization_profile_ids][]", profile.id, @wbs_activity.organization_profiles.include?(profile) %>
-                        <i class="profile_description_tooltip" title="<%= profile.description %>"><%= profile.name %></i>
-                      </div>
-                  <% end %>
-                </div>
+          <div class="accordion-group accordion-caret">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_wbs_profile" href="#wbs_activity_organization_profiles">
+                <i class="fa fa-caret-down"></i>
+                <b><%= I18n.t(:profiles) %> : <%= I18n.t(:select_wbs_activity_profiles) %></b>
+              </a>
+            </div>
+            <div id="wbs_activity_organization_profiles" class="accordion-body in collapse">
+              <div class="accordion-inner">
+                <% for profile in @organization.organization_profiles %>
+                  <div>
+                    <%= check_box_tag "wbs_activity[organization_profile_ids][]", profile.id, @wbs_activity.organization_profiles.include?(profile) %>
+                    <i class="profile_description_tooltip" title="<%= profile.description %>"><%= profile.name %></i>
+                  </div>
+                <% end %>
               </div>
             </div>
+          </div>
         </div>
 
         <% if can? :manage_modules_instances, ModuleProject %>
