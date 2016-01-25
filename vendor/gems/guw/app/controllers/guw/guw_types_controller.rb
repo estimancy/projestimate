@@ -22,6 +22,13 @@
 
 class Guw::GuwTypesController < ApplicationController
 
+  def show
+    @guw_type = Guw::GuwType.find(params[:id])
+    @guw_model = @guw_type.guw_model
+    set_page_title "#{@guw_type}"
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+  end
+
   def new
     @guw_type = Guw::GuwType.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
