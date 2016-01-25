@@ -6,7 +6,7 @@
 <% if can? :manage_modules_instances, ModuleProject %>
   <%= link_to I18n.t(:new_type_thresold), new_guw_model_guw_type_guw_complexity_path(@guw_model, @guw_type), class: "btn btn-mini pull-right button_margin_right" %>
 <% end %>
-<%= link_to "Retour à la liste", guw.guw_model_path(@guw_model), class: "btn btn-mini pull-right button_margin_right" %>
+<%= link_to "Retour à la liste", guw.guw_model_all_guw_types_path(@guw_model), class: "btn btn-mini pull-right button_margin_right" %>
 
 <%= simple_format(@guw_type.description) %>
 
