@@ -977,6 +977,13 @@ class Guw::GuwModelsController < ApplicationController
     redirect_to :back
   end
 
+  def all_guw_types
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_types = @guw_model.guw_types
+    set_page_title "Liste des unités d'oeuvres"
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
+  end
+
   # def init_guw_type_weight
   #   Guw::GuwComplexity.all.each do |i|
   #     if i.weight.nil?
