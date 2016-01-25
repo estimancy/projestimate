@@ -196,7 +196,8 @@
                 <td class="span2">
                   <span class="work_unit_<%= guow.id %>" >
                     <%# results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
-                    <% results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq %>
+                    <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq %>
+                    <% results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
                     <% unless results.empty? %>
                       <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                                      selected: guow.guw_work_unit_id),
