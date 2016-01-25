@@ -48,21 +48,36 @@ class Guw::GuwTypesController < ApplicationController
     @guw_type = Guw::GuwType.new(params[:guw_type])
     @guw_type.guw_model_id = params[:guw_type][:guw_model_id]
     @guw_type.save
+    @guw_model = @guw_type.guw_model
     set_page_title I18n.t(:new_complexity)
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_type.guw_model.organization), @guw_type.guw_model.organization => ""
-    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    if @guw_model.default_display == "list"
+      redirect_to guw.guw_type_path(@guw_type)
+    else
+      redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    end
   end
 
   def update
     @guw_type = Guw::GuwType.find(params[:id])
     @guw_type.update_attributes(params[:guw_type])
-    redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    @guw_model = @guw_type.guw_model
+    if @guw_model.default_display == "list"
+      redirect_to guw.guw_type_path(@guw_type)
+    else
+      redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    end
   end
 
   def destroy
     @guw_type = Guw::GuwType.find(params[:id])
     guw_model_id = @guw_type.guw_model.id
+    @guw_model = @guw_type.guw_model
     @guw_type.delete
-    redirect_to guw.guw_model_path(guw_model_id, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    if @guw_model.default_display == "list"
+      redirect_to guw.guw_type_path(@guw_type)
+    else
+      redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    end
   end
 end

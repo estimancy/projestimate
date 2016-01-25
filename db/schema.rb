@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151120102358) do
+ActiveRecord::Schema.define(:version => 20160125143157) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -428,6 +428,45 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.integer  "copy_id"
   end
 
+  create_table "ge_ge_factor_values", :force => true do |t|
+    t.string   "factor_name"
+    t.string   "factor_alias"
+    t.string   "value_text"
+    t.float    "value_number"
+    t.string   "default"
+    t.string   "factor_scale_prod"
+    t.string   "factor_type"
+    t.integer  "ge_factor_id"
+    t.integer  "ge_model_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "ge_ge_factors", :force => true do |t|
+    t.integer  "ge_model_id"
+    t.string   "alias"
+    t.string   "scale_prod"
+    t.string   "factor_type"
+    t.string   "short_name"
+    t.string   "long_name"
+    t.text     "description"
+    t.string   "data_filename"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "ge_ge_inputs", :force => true do |t|
+    t.string   "formula"
+    t.float    "scale_factor_sum"
+    t.float    "prod_factor_product"
+    t.text     "values"
+    t.integer  "ge_model_id"
+    t.integer  "module_project_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "ge_ge_models", :force => true do |t|
     t.string  "name"
     t.float   "coeff_a"
@@ -551,6 +590,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.integer  "copy_number",                 :default => 0
     t.string   "coefficient_label"
     t.float    "hour_coefficient_conversion"
+    t.string   "default_display"
   end
 
   create_table "guw_guw_type_complexities", :force => true do |t|
@@ -806,6 +846,15 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.datetime "updated_at",      :null => false
     t.integer  "copy_id"
   end
+
+  create_table "organization_profiles_wbs_activities", :id => false, :force => true do |t|
+    t.integer  "organization_profile_id"
+    t.integer  "wbs_activity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "organization_profiles_wbs_activities", ["organization_profile_id", "wbs_activity_id"], :name => "wbs_activity_profiles_index", :unique => true
 
   create_table "organization_technologies", :force => true do |t|
     t.integer  "organization_id"
@@ -1468,7 +1517,7 @@ ActiveRecord::Schema.define(:version => 20151120102358) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-12-04 14:05:34'
+    t.datetime "subscription_end_date",  :default => '2017-01-12 10:03:08'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

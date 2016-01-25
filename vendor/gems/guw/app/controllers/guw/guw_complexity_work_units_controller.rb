@@ -69,7 +69,12 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
     if @guw_type.nil?
       redirect_to :back
     else
-      redirect_to guw.guw_model_path(@guw_type.guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+      @guw_model = @guw_type.guw_model
+      if @guw_model.default_display == "list"
+        redirect_to guw.guw_type_path(@guw_type)
+      else
+        redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+      end
     end
   end
 end
