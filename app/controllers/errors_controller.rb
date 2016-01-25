@@ -1,4 +1,4 @@
-# encoding: UTF-8
+#encoding: utf-8
 #############################################################################
 #
 # Estimancy, Open Source project estimation web application
@@ -19,16 +19,15 @@
 #
 #############################################################################
 
-Ge::Engine.routes.draw do
-  root :to => 'ge#index'
-  resources :ge_models
-  resources :ge_models do
-    post "save_efforts"
-    post "update_calculated_effort"
-    post "duplicate"
-    post "import"
-    get "data_export"
-    get "delete_all_factors_data"
+#Class to handle errors messages
+class ErrorsController < ApplicationController
+  layout "application"
+
+  def not_found
+    render(status: 404)
   end
 
+  def internal_server_error
+    render(status: 500)
+  end
 end

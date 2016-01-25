@@ -114,6 +114,9 @@ module Projestimate
 
     I18n.config.enforce_available_locales = false
 
+    # Handle errors messages by estimancy routes
+    config.exceptions_app = self.routes
+
     #config.force_ssl = true
 
     # these lines go within the Application class definition
