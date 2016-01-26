@@ -10,11 +10,9 @@
       </a>
     <% end %>
     <%= link_to I18n.t(:export), guw.guw_model_export_path(@guw_model), class: "btn btn-mini input-small", method: "post" %>
-
   </div>
 
   <div class="pull-right">
-
     <div class="pull-left">
       <span class="label label-success">
       Total <%= @guw_model.retained_size_unit %> retenu :
@@ -77,9 +75,11 @@
     <% @unit_of_work_groups.each_with_index do |uowg, j| %>
       <div class="accordion-heading" style="padding:5px;">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>" id="accordion<%=uowg.id%>">
-          <span style="font-weight: bold; font-size: 20px;" title="<%= uowg.comments %>">
-            <%= uowg.name %>
-          </span>
+          <div class="span5">
+            <span style="font-weight: bold; font-size: 20px;" title="<%= uowg.comments %>">
+              <%= uowg.name %>
+            </span>
+          </div>
         </a>
         <%= link_to '', guw.edit_guw_model_guw_unit_of_work_group_path(@guw_model, uowg), class: "fa fa-pencil pull-right", style: "margin-top:3px;" %>
 
@@ -129,8 +129,8 @@
 
       </div>
 
-      <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
-        <div class="accordion-inner">
+      <div id="collapse<%= uowg.id %>" class="pull-left accordion-body collapse in">
+        <div class="accordion-inner span12">
           <table class="table table-striped">
             <tr>
               <th class=""></th>
