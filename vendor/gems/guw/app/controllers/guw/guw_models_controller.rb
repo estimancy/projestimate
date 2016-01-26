@@ -830,18 +830,17 @@ class Guw::GuwModelsController < ApplicationController
               end
             else
               guw_uow = Guw::GuwUnitOfWork.new(selected: row[3].to_i == 1,
-                                                 name: row[4],
-                                                 comments: row[5],
-                                                 guw_unit_of_work_group_id: guw_uow_group.id,
-                                                 module_project_id: current_module_project.id,
-                                                 pbs_project_element_id: @component.id,
-                                                 guw_model_id: @guw_model.id,
-                                                 display_order: my_order,
-                                                 tracking: row[10],
-                                                 quantity: row[9].nil? ? 1 : row[9],
-                                                 effort: row[12].nil? ? nil : row[12],
-                                                 ajusted_effort: row[13].nil? ? nil : row[13],
-                                                 quantity: 1)
+                                               name: row[4],
+                                               comments: row[5],
+                                               guw_unit_of_work_group_id: guw_uow_group.id,
+                                               module_project_id: current_module_project.id,
+                                               pbs_project_element_id: @component.id,
+                                               guw_model_id: @guw_model.id,
+                                               display_order: my_order,
+                                               tracking: row[10],
+                                               quantity: row[9].nil? ? 1 : row[9],
+                                               effort: row[12].nil? ? nil : row[12],
+                                               ajusted_effort: row[13].nil? ? nil : row[13])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
