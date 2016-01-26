@@ -17,7 +17,7 @@
       <tr>
         <th>Nom</th>
         <th>Description</th>
-        <th>Attributs</th>
+        <th>Dénombrement d'attributs</th>
         <th>Seuils</th>
         <th>Actions</th>
       </tr>
@@ -31,13 +31,13 @@
           <td>
             <%= guw_type.description.truncate(100) %>
           </td>
-          <td>
-            <%= guw_type.allow_criteria %>
+          <td class="span1">
+            <%= guw_type.allow_criteria == true ? "Oui" : "Non" %>
           </td>
-          <td>
+          <td class="span4">
             <%= guw_type.guw_complexities.map(&:name).join(", ") %>
           </td>
-          <td class="span2 center">
+          <td class="span1 center">
             <%= link_to "", guw.edit_guw_model_guw_type_path(@guw_model, guw_type), class: "fa fa-edit" %>
             <%= link_to "", guw_type, method: :delete, confirm: I18n.t(:are_you_sure), class: "fa fa-trash" %>
           </td>

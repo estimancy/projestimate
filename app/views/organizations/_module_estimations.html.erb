@@ -25,7 +25,11 @@
         <% @guw_models.each do |i| %>
           <tr>
             <td class="span5">
-              <%= link_to i.name, guw.guw_model_path(i), confirm: I18n.t(:warning_edit_instance_module) %>
+              <% if i.default_display == "list" %>
+                <%= link_to i.name, guw.guw_model_all_guw_types_path(i), confirm: I18n.t(:warning_edit_instance_module) %>
+              <% else %>
+                <%= link_to i.name, guw.guw_model_path(i), confirm: I18n.t(:warning_edit_instance_module) %>
+              <% end %>
             </td>
             <td class="align-center">
               <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
