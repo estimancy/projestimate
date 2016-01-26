@@ -18,4 +18,3 @@ Gemfile.local
 config/gemnasium.yml
 /config/license_finder.yml
 config/license_finder_SAVE.yml
-/config/locale/trol.yml
