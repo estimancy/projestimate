@@ -210,27 +210,27 @@
    project_organization_profiles = project_organization_profiles.uniq
 %>
 
-<div class="row-fluid">
-  <div class="span12">
-    <%= raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => {  project_wbs_activity_elements: wbs_activity.wbs_activity_elements,
-                                                                                        pe_attribute: cev.pe_attribute,
-                                                                                        module_project: module_project,
-                                                                                        project_organization_profiles: project_organization_profiles,
-                                                                                        estimation_pbs_probable_results: pbs_probable_est_value,
-                                                                                        ratio_reference: ratio_reference } ) %>
-  </div>
-</div>
+<!--<div class="row-fluid">-->
+  <!--<div class="span12">-->
+    <!--<%# raw(render :partial => 'views_widgets/effort_by_phases_profiles', :locals => {  project_wbs_activity_elements: wbs_activity.wbs_activity_elements,-->
+                                                                                        <!--pe_attribute: cev.pe_attribute,-->
+                                                                                        <!--module_project: module_project,-->
+                                                                                        <!--project_organization_profiles: project_organization_profiles,-->
+                                                                                        <!--estimation_pbs_probable_results: pbs_probable_est_value,-->
+                                                                                        <!--ratio_reference: ratio_reference } ) %>-->
+  <!--</div>-->
+<!--</div>-->
 
-<div class="row-fluid">
-  <div class="span12">
-    <%= raw(cev.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_element, module_project, cev_output, nil)) %>
-  </div>
-</div>
+<!--<div class="row-fluid">-->
+  <!--<div class="span12">-->
+    <!--<%# raw(cev.nil? ? "#{ content_tag(:div, I18n.t(:notice_no_estimation_saved), :class => 'no_estimation_value')}" : display_effort_or_cost_per_phase(pbs_project_element, module_project, cev_output, nil)) %>-->
+  <!--</div>-->
+<!--</div>-->
 
-<div class="row-fluid">
-  <div class="span12">
-    <%= raw(render :partial => 'views_widgets/effort_by_phases', :locals => { pbs_project_element: pbs_project_element,
-                                                                              module_project: module_project,
-                                                                              cev_output: cev_output } ) %>
-  </div>
-</div>
+<!--<div class="row-fluid">-->
+  <!--<div class="span12">-->
+    <!--<%# raw(render :partial => 'views_widgets/effort_by_phases', :locals => { pbs_project_element: pbs_project_element,-->
+                                                                              <!--module_project: module_project,-->
+                                                                              <!--cev_output: cev_output } ) %>-->
+  <!--</div>-->
+<!--</div>-->
