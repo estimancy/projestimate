@@ -644,7 +644,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    return compute_probable_value(uo_weight_low * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value), uo_weight_ml * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value), uo_weight_high * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value))[:value]
+    return compute_probable_value(uo_weight_low.to_f * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value), uo_weight_ml.to_f * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value), uo_weight_high.to_f * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value))[:value]
   end
 
 
