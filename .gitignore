@@ -6,7 +6,6 @@
 /log/*.pid
 /tmp/
 /.idea/
-/config/sensitive_settings.yml
 /db/schema.rb
 projestimate.iws
 Gemfile.local
