@@ -37,7 +37,7 @@ else
 end
 
 #For PostgreSQL database
-gem 'pg'
+# gem 'pg'
 
 #Permissions
 gem 'cancan'
