@@ -1,0 +1,7 @@
+production:
+  adapter: postgresql
+  database: estimancy_demo
+  pool: 5
+  username:
+  password:
+  host:
