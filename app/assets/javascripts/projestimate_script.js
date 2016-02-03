@@ -19,6 +19,29 @@
 
 $(document).ready(function() {
 
+
+    //====================================================
+
+    $(".module_project").draggable({
+        start: function(event, ui) {}, // console.log(event);console.log(ui)},
+        stop: function(event, ui) {}, // console.log(event);//console.log(ui)},
+        cursor:'move',
+        opacity: 0.5
+    });
+
+    $(".window").draggable({
+        //helper: 'clone',
+        // appendTo: 'body',
+        start: function(event, ui) {}, // console.log(event);console.log(ui)},
+        stop: function(event, ui) {}, // console.log(event);//console.log(ui)},
+        //revert: false,
+        cursor:'move',
+        opacity: 0.5,
+    });
+
+    //====================================================
+
+
     $(".modal").draggable({
         handle: ".modal-header"
     });

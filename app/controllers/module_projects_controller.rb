@@ -124,6 +124,27 @@ class ModuleProjectsController < ApplicationController
     redirect_to edit_project_path(@project.id, :anchor => 'tabs-4')
   end
 
+  #Update the module_project dynamic connexion (add or delete)
+  def update_module_project_dynamic_connections
+    if params['connect_or_detach_connection']
+      source_id = params['source_id'].to_i
+      target_id = params['target_id'].to_i
+
+      module_project = ModuleProject.find(source_id)
+      associated_module_project_ids = module_project.associated_module_project_ids
+
+      case params['connect_or_detach_connection']
+        when "connect"
+          associated_module_project_ids << target_id
+        when "detach"
+          associated_module_project_ids.delete(target_id)
+      end
+
+      #update associations
+      module_project.update_attribute('associated_module_project_ids', associated_module_project_ids.uniq)
+    end
+  end
+
 
   def destroy
     @module_project = ModuleProject.find(params[:id])

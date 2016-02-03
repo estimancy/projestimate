@@ -450,6 +450,10 @@ ul{
     max-width: 140px;
     margin-left:auto;
     margin-right:auto;
+
+    /* ajout pour jsplumb draggable*/
+    position: absolute;
+    /* fin ajout */
 }
 
 .dropdown-menu {
