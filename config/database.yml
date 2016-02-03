@@ -1,5 +1,5 @@
 production:
-  adapter: postgresql
+  adapter: postgres
   database: estimancy_demo
   pool: 5
   username:
