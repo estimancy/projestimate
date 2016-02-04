@@ -9,9 +9,12 @@
 /db/schema.rb
 projestimate.iws
 Gemfile.local
+Gemfile.lock
 /coverage
 /solr/*
 # Gemnasium gem configuration file
 config/gemnasium.yml
 /config/license_finder.yml
 config/license_finder_SAVE.yml
+/config/database.yml
+/config/sensitive_settings.yml

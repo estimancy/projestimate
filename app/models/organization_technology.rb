@@ -34,9 +34,7 @@ class OrganizationTechnology < ActiveRecord::Base
 
   has_and_belongs_to_many :unit_of_works
 
-  # has_many :pbs_project_elements
   has_many :inputs, :foreign_key => :technology_id
-  has_many :organization_uow_complexities
   has_many :guw_complexity_technologies, class_name: "Guw::GuwComplexityTechnology"
 
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
@@ -44,7 +42,7 @@ class OrganizationTechnology < ActiveRecord::Base
   # Add the amoeba gem for the copy
   amoeba do
     enable
-    exclude_association [:unit_of_works, :pbs_project_elements, :inputs, :organization_uow_complexities, :guw_complexity_technologies]
+    exclude_association [:unit_of_works, :pbs_project_elements, :inputs, :guw_complexity_technologies]
 
     customize(lambda { |original_organization_technology, new_organization_technology|
       new_organization_technology.copy_id = original_organization_technology.id

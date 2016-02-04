@@ -45,8 +45,6 @@ class Organization < ActiveRecord::Base
   has_many :pe_attributes, :source => :pe_attribute, :through => :attribute_organizations
 
   has_many :organization_technologies, :dependent => :destroy
-  has_many :organization_uow_complexities, :dependent => :destroy
-  has_many :unit_of_works, :dependent => :destroy
   has_many :projects, :dependent => :destroy
   has_many :module_projects, through: :projects
 
@@ -111,7 +109,7 @@ class Organization < ActiveRecord::Base
     include_association [:project_areas, :project_categories, :platform_categories, :acquisition_categories,
                          :work_element_types, :attribute_organizations, :organization_technologies,
                          :organization_profiles, :unit_of_works, :size_unit_types, :technology_size_types,
-                         :organization_uow_complexities, :fields, :groups, :project_security_levels,
+                         :fields, :groups, :project_security_levels,
                          :estimation_statuses, :guw_models, :operation_models, :kb_models, :ge_models,
                          :staffing_models, :expert_judgement_instances]
 

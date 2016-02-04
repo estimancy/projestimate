@@ -61,8 +61,6 @@ Projestimate::Application.routes.draw do
   resources :estimation_values
   get 'add_note_to_attribute' => 'estimation_values#add_note_to_attribute', :as => 'add_note_to_attribute'
 
-  resources :factors
-
   #devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks"}
   #devise_scope :user do
   #  get "help_login" => "registrations", :as => 'help_login'
@@ -112,20 +110,13 @@ Projestimate::Application.routes.draw do
   mount Operation::Engine, :at => '/operation'
   mount Kb::Engine, :at => '/kb'
   mount Staffing::Engine, :at => '/staffing'
-  mount Uow::Engine, :at => '/uow'
-  mount CocomoExpert::Engine, :at => '/cocomo_expert'
-  mount CocomoAdvanced::Engine, :at => '/cocomo_advanced'
   mount BalancingModule::Engine, at: '/balancing_module'
-  mount RealSize::Engine, at: '/inputs'
 
   post "save_effort_breakdown" => "wbs_activities#save_effort_breakdown"
 
   resources :organization_technologies
-  post '/set_technology_uow_synthesis' => 'organizations#set_technology_uow_synthesis', :as => 'set_technology_uow_synthesis'
   get 'change_abacus' => 'organization_technologies#change_abacus', :as => 'change_abacus'
 
-  resources :organization_uow_complexities
-  match 'organization_uow_complexities/set_default/:id' => 'organization_uow_complexities#set_default', :as => 'set_default'
 
   resources :unit_of_works
   resources :attribute_categories
@@ -236,8 +227,6 @@ Projestimate::Application.routes.draw do
   post "import_permissions" => 'permissions#import_permissions'
 
   get 'organizationals_params' => 'organizations#organizationals_params', :as => 'organizationals_params'
-  post '/set_technology_size_type_abacus' => 'organizations#set_technology_size_type_abacus', :as => 'set_technology_size_type_abacus'
-  post '/set_technology_size_unit_abacus' => 'organizations#set_technology_size_unit_abacus', :as => 'set_technology_size_unit_abacus'
   post '/organizations/:organization_id/export' => 'organizations#export', :as => 'export_organization'
   match 'organizations/:organization_id/duplicate_organization' => 'organizations#duplicate_organization', :as => :duplicate_organization
   get 'new_organization_from_image' => 'organizations#new_organization_from_image', as: 'new_organization_from_image'

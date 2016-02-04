@@ -365,7 +365,6 @@ class OrganizationsController < ApplicationController
 
     @guw_models = @organization.guw_models
     @wbs_activities = @organization.wbs_activities
-    @size_units = SizeUnit.all
     @technologies = @organization.organization_technologies
     @size_unit_types = @organization.size_unit_types
   end
@@ -586,11 +585,11 @@ class OrganizationsController < ApplicationController
         end
 
         # UOW-INPUTS
-        new_mp.uow_inputs.each do |uo|
-          new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
-          new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-          uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
-        end
+        # new_mp.uow_inputs.each do |uo|
+        #   new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+        #   new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+        #   uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+        # end
 
         #WBS-ACTIVITY-INPUTS
         new_mp.wbs_activity_inputs.each do |activity_input|
@@ -955,12 +954,7 @@ class OrganizationsController < ApplicationController
     @attributes = PeAttribute.defined.all
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
-    @complexities = @organization.organization_uow_complexities
-
-    @factors = Factor.order("factor_type")
-
     @ot = @organization.organization_technologies.first
-    @unitofworks = @organization.unit_of_works
 
     @users = @organization.users
     @fields = @organization.fields
@@ -971,7 +965,6 @@ class OrganizationsController < ApplicationController
   end
 
   def refresh_value_elements
-    @size_unit = SizeUnit.find(params[:size_unit_id])
     @technologies = OrganizationTechnology.all
   end
 
@@ -988,56 +981,6 @@ class OrganizationsController < ApplicationController
 
     #A la sauvegarde, on crée des sous traitants
     if @organization.save
-
-      #Create default the size unit type's
-      size_unit_types = [
-          ['New', 'new', ""],
-          ['Modified', 'new', ""],
-          ['Reused', 'new', ""],
-      ]
-      size_unit_types.each do |i|
-
-        sut = SizeUnitType.create(:name => i[0], :alias => i[1], :description => i[2], :organization_id => @organization.id)
-
-        @organization.organization_technologies.each do |ot|
-          SizeUnit.all.each do |su|
-            TechnologySizeType.create(organization_id: sut.organization_id, organization_technology_id: ot.id, size_unit_id: su.id, size_unit_type_id: sut.id, value: 1)
-          end
-        end
-      end
-
-      uow = [
-          ['Données', 'data', "Création, modification, suppression, duplication de composants d'une base de données (tables, fichiers). Une UO doit être comptée pour chaque entité métier. Seules les entités métier sont comptabilisées."],
-          ['Traitement', 'traitement', 'Création, modification, suppression, duplication de composants de visualisation, gestion de données, activation de fonctionnalités avec une interface de type Caractère (terminal passif).'],
-          ['Batch', 'batch', "Création, modification, suppression, duplication de composants d'extraction ou de MAJ de données d'une source de données persistante. Par convention, cette UO ne couvre pas les interfaces. Cette UO couvre le nettoyage et la purge des tables."],
-          ['Interfaces', 'interface', "Création, modification, suppression, duplication de composants d'interface de type : Médiation, Conversion, Transcodification, Transformation (les transformations sont implémentées en langage de programmation). Les 'Historisation avec clés techniques générée' sont à comptabiliser en 'Règle de gestion'"]
-      ]
-      uow.each do |i|
-        @organization.unit_of_works.create(:name => i[0], :alias => i[1], :description => i[2], :state => 'defined')
-      end
-
-      #A la création de l'organixation, on crée les complexités de facteurs à partir des defined ( les defined ont organization_id => nil)
-      OrganizationUowComplexity.where(organization_id: nil).each do |o|
-        ouc = OrganizationUowComplexity.new(name: o.name , organization_id: @organization.id, description: o.description, value: o.value, factor_id: o.factor_id, is_default: o.is_default, :state => 'defined')
-        ouc.save(validate: false)
-      end
-
-      #Et la, on crée les complexités des unités d'oeuvres par défaut
-      levels = [
-          ['Simple', 'simple', "Simple", 1, "defined"],
-          ['Moyen', 'moyen', "Moyen", 2, "defined"],
-          ['Complexe', 'complexe', "Complexe", 4, "defined"]
-      ]
-      levels.each do |i|
-        @organization.unit_of_works.each do |uow|
-          ouc = OrganizationUowComplexity.new(:name => i[0], :alias => i[1], :description => i[2], :state => i[4], :unit_of_work_id => uow.id, :organization_id => @organization.id)
-          ouc.save(validate: false)
-
-          @organization.size_unit_types.each do |sut|
-            SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id, value: i[3])
-          end
-        end
-      end
 
       # Add MasterData Profiles to Organization
       Profile.all.each do |profile|
@@ -1069,16 +1012,6 @@ class OrganizationsController < ApplicationController
 
     @organization = Organization.find(params[:id])
     if @organization.update_attributes(params[:organization])
-
-      OrganizationUowComplexity.where(organization_id: @organization.id).each do |ouc|
-        @organization.size_unit_types.each do |sut|
-          sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id).first
-          if sutc.nil?
-            SizeUnitTypeComplexity.create(size_unit_type_id: sut.id, organization_uow_complexity_id: ouc.id)
-          end
-        end
-      end
-
       flash[:notice] = I18n.t (:notice_organization_successful_updated)
       redirect_to redirect_apply(edit_organization_path(@organization), nil, '/organizationals_params')
     else
@@ -1086,17 +1019,13 @@ class OrganizationsController < ApplicationController
       @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
       @complexities = @organization.organization_uow_complexities
       @ot = @organization.organization_technologies.first
-      @unitofworks = @organization.unit_of_works
-      @factors = Factor.order("factor_type")
       @technologies = OrganizationTechnology.all
-      @size_unit_types = SizeUnitType.all
       @organization_profiles = @organization.organization_profiles
       @groups = @organization.groups
       @organization_group = @organization.groups
       @wbs_activities = @organization.wbs_activities
       @projects = @organization.projects
       @fields = @organization.fields
-      @size_units = SizeUnit.all
       @guw_models = @organization.guw_models
 
       render action: 'edit'
@@ -1156,9 +1085,6 @@ class OrganizationsController < ApplicationController
     else
       @organizations = current_user.organizations.all.reject{|org| org.is_image_organization}
     end
-
-    @size_units = SizeUnit.all
-    @factors = Factor.order("factor_type")
 
     if @organizations.size == 1
       redirect_to organization_estimations_path(@organizations.first)
@@ -1339,7 +1265,6 @@ class OrganizationsController < ApplicationController
 
     @technologies = @current_organization.organization_technologies
     @size_unit_types = @current_organization.size_unit_types
-    @size_units = SizeUnit.all
 
     @technologies.each do |technology|
       @size_unit_types.each do |sut|
@@ -1370,76 +1295,6 @@ class OrganizationsController < ApplicationController
     end
 
     redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'conversion'), nil, '/organizationals_params')
-  end
-
-  def set_technology_size_unit_abacus
-    authorize! :edit_organizations, Organization
-
-    @technologies = @current_organization.organization_technologies
-    @size_units = SizeUnit.all
-
-    @technologies.each do |technology|
-      @size_units.each do |size_unit|
-        value = params[:technology_size_units_abacus]["#{size_unit.id}"]["#{technology.id}"].to_f
-
-        unless value.nil?
-          t = TechnologySizeUnit.where( organization_id: @current_organization.id,
-                                        organization_technology_id: technology.id,
-                                        size_unit_id: size_unit.id).first
-
-          if t.nil?
-            TechnologySizeUnit.create(organization_id: @current_organization.id,
-                                      organization_technology_id: technology.id,
-                                      size_unit_id: size_unit.id,
-                                      value: value)
-          else
-            t.update_attributes(value: value)
-          end
-        end
-      end
-    end
-
-    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'conversion'), nil, '/organizationals_params')
-
-  end
-
-  def set_abacus
-    authorize! :edit_organizations, Organization
-
-    @ot = OrganizationTechnology.find_by_id(params[:technology])
-    @complexities = @ot.organization.organization_uow_complexities
-    @unitofworks = @ot.unit_of_works
-
-    @unitofworks.each do |uow|
-      @complexities.each do |c|
-        a = AbacusOrganization.find_or_create_by_unit_of_work_id_and_organization_uow_complexity_id_and_organization_technology_id_and_organization_id(uow.id, c.id, @ot.id, params[:id])
-        begin
-          a.update_attribute(:value, params['abacus']["#{uow.id}"]["#{c.id}"])
-        rescue
-          # :()
-        end
-      end
-    end
-    redirect_to redirect_apply(edit_organization_path(@ot.organization_id, :anchor => 'tabs-abacus-tsu'), nil, '/organizationals_params')
-  end
-
-  def set_technology_uow_synthesis
-    authorize! :manage_modules_instances, ModuleProject
-
-    #@organization = Organization.find(params[:organization])
-    params[:abacus].each do |sut|
-      sut.last.each do |ot|
-        ot.last.each do |uow|
-          uow.last.each do |cplx|
-            sutc = SizeUnitTypeComplexity.where(size_unit_type_id: sut.first.to_i, organization_uow_complexity_id: cplx.first.to_i).first_or_create
-            sutc.value = cplx.last
-            sutc.save
-          end
-        end
-      end
-    end
-
-    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'taille'), nil, '/organizationals_params')
   end
 
   # Update the organization's projects available inline columns

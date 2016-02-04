@@ -5,18 +5,6 @@ PATH
       rails (~> 3.2.21)
 
 PATH
-  remote: vendor/gems/cocomo_advanced
-  specs:
-    cocomo_advanced (0.0.1)
-      rails (~> 3.2.21)
-
-PATH
-  remote: vendor/gems/cocomo_expert
-  specs:
-    cocomo_expert (0.0.1)
-      rails (~> 3.2.21)
-
-PATH
   remote: vendor/gems/expert_judgement
   specs:
     expert_judgement (0.1.0)
@@ -47,21 +35,9 @@ PATH
       rails (~> 3.2.21)
 
 PATH
-  remote: vendor/gems/real_size
-  specs:
-    real_size (0.0.1)
-      rails (~> 3.2.21)
-
-PATH
   remote: vendor/gems/staffing
   specs:
     staffing (0.0.1)
-      rails (~> 3.2.21)
-
-PATH
-  remote: vendor/gems/uow
-  specs:
-    uow (0.0.1)
       rails (~> 3.2.21)
 
 GEM
@@ -280,6 +256,7 @@ GEM
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    mysql2 (0.3.20)
     nenv (0.2.0)
     net-ldap (0.3.1)
     netrc (0.10.3)
@@ -500,8 +477,6 @@ DEPENDENCIES
   cancan
   capybara
   chartkick
-  cocomo_advanced!
-  cocomo_expert!
   codeclimate-test-reporter
   coffee-rails
   cookies_eu
@@ -526,6 +501,7 @@ DEPENDENCIES
   kb!
   license_finder
   meta_request
+  mysql2 (~> 0.3.11)
   net-ldap (~> 0.3.1)
   newrelic_rpm
   nokogiri
@@ -538,7 +514,6 @@ DEPENDENCIES
   pg
   rails (= 3.2.22)
   rb-readline
-  real_size!
   remotipart (~> 1.2)
   roo (~> 2.1.0)
   roo-xls
@@ -559,7 +534,6 @@ DEPENDENCIES
   time_diff (~> 0.3.0)
   tinymce-rails
   uglifier (>= 1.0.3)
-  uow!
   useragent
   uuidtools
   warden

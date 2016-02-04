@@ -38,16 +38,11 @@ module Projestimate
 
     config.reload_plugins = true
 
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/cocomo_basic/lib"]
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/cocomo_advanced/lib"]
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/cocomo_expert/lib"]
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/uow/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/guw/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/ge/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/operation/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/kb/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/staffing/lib"]
-    config.autoload_paths += Dir["#{config.root}/vendor/gems/real_size/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/expert_judgement/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/effort_breakdown/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/wbs_activity_completion/lib"]
@@ -56,23 +51,17 @@ module Projestimate
     config.autoload_paths += Dir["#{config.root}/vendor/gems/effort_balancing/lib"]
     config.autoload_paths += Dir["#{config.root}/vendor/gems/initialization/lib"]
 
-    config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_basic/lib)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_advanced/lib)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/cocomo_expert/lib)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/uow/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/guw/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/operation/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/ge/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/kb/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/staffing/lib)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/real_size/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/expert_judgement/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/effort_breakdown/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/wbs_activity_completion/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/sample_model/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/sandbox/lib)
     config.autoload_paths += %W(#{config.root}/vendor/gems/effort_balancing/lib)
-    config.autoload_paths += %W(#{config.root}/vendor/gems/effort_balancing/app)
     config.autoload_paths += %W(#{config.root}/vendor/gems/initialization/lib)
 
     # Settings in config/environments/* take precedence over those specified here.

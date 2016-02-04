@@ -228,11 +228,11 @@ class OrganizationDuplicateProjectWorker
         end
 
         # UOW-INPUTS
-        new_mp.uow_inputs.each do |uo|
-          new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
-          new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-          uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
-        end
+        # new_mp.uow_inputs.each do |uo|
+        #   new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+        #   new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+        #   uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+        # end
 
         #WBS-ACTIVITY-INPUTS
         new_mp.wbs_activity_inputs.each do |activity_input|

@@ -37,13 +37,10 @@ class ModuleProject < ActiveRecord::Base
 
   has_many :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWorkGroup", dependent: :destroy
   has_many :guw_unit_of_works, :through => :guw_unit_of_work_groups, class_name: "Guw::GuwUnitOfWork", dependent: :destroy
-  has_many :uow_inputs, :dependent => :destroy
   has_many :staffing_custom_data, class_name: "Staffing::StaffingCustomDatum", dependent: :destroy
 
   has_many :estimation_values, :dependent => :destroy
   has_many :input_cocomos
-  has_many :factors, :through => :input_cocomos
-  has_many :organization_uow_complexities, :through => :factors
   has_many :views_widgets, dependent: :delete_all
 
   has_and_belongs_to_many :pbs_project_elements
@@ -61,7 +58,7 @@ class ModuleProject < ActiveRecord::Base
   amoeba do
     enable
     ###include_field [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :guw_unit_of_works, :views_widgets]
-    include_association [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :uow_inputs, :wbs_activity_inputs]
+    include_association [:estimation_values, :pbs_project_elements, :guw_unit_of_work_groups, :wbs_activity_inputs]
 
     customize(lambda { |original_module_project, new_module_project|
       new_module_project.copy_id = original_module_project.id

@@ -31,7 +31,7 @@ class SearchesController < ApplicationController
     else
       classes = [Project, ProjectArea, PlatformCategory, ProjectCategory, AcquisitionCategory, WbsActivity, Pemodule, PeAttribute, WorkElementType,
                  Organization, User, Group, OrganizationProfile, Field, ProjectField, EstimationStatus, OrganizationTechnology,
-                 Factor, SizeUnit, SizeUnitType, Guw::GuwModel, Staffing::StaffingModel]
+                 Factor, Guw::GuwModel, Staffing::StaffingModel]
     end
 
     # Get the current_user Organization

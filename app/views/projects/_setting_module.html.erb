@@ -9,8 +9,6 @@
     <%= render partial: "operation/operation_models/settings" %>
   <% elsif current_module_project.pemodule.alias == "expert_judgement" %>
     <%= render partial: "expert_judgement/instances/settings" %>
-  <% elsif current_module_project.pemodule.alias == "uow" %>
-    <%= render partial: "uow/uow_inputs/settings" %>
   <% elsif current_module_project.pemodule.alias == "cocomo_advanced" %>
     <%= render partial: "cocomo_advanced/input_cocomo/settings" %>
   <% elsif current_module_project.pemodule.alias == "cocomo_expert" %>
