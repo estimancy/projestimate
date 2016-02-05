@@ -1,6 +1,6 @@
 <h4>
   <strong>
-    <%= @guw_model %>
+    <%= link_to @guw_model, guw.edit_guw_model_path(@guw_model, organization_id: @organization.id) %>
   </strong>
   <% if can? :manage_modules_instances, ModuleProject %>
     <%= link_to I18n.t(:new_uw_type), guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
@@ -108,7 +108,7 @@
             <tr>
               <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
                 <b class="pull-left">
-                  <%= @guw_model.coefficient_label %>
+                  <%= @guw_model.coefficient_label.blank? ? "Facteurs sans nom" : @guw_model.coefficient_label %>
                 </b>
               </th>
             </tr>
@@ -133,7 +133,7 @@
             <tr>
               <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
                 <b class="pull-left">
-                  <%= @guw_model.weightings_label %>
+                  <%= @guw_model.weightings_label.blank? ? "Facteurs sans nom" : @guw_model.weightings_label %>
                 </b>
               </th>
             </tr>
@@ -158,7 +158,7 @@
             <tr>
               <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
                 <b class="pull-left">
-                  <%= @guw_model.factors_label %>
+                  <%= @guw_model.factors_label.blank? ? "Facteurs sans nom" : @guw_model.factors_label %>
                 </b>
               </th>
             </tr>
