@@ -43,18 +43,18 @@ class Guw::GuwWeightingsController < ApplicationController
   def create
     @guw_weighting = Guw::GuwWeighting.new(params[:guw_weighting])
     @guw_weighting.save
-    redirect_to guw.guw_model_guw_work_units_path(@guw_weighting.guw_model)
+    redirect_to guw.edit_guw_model_path(@guw_weighting.guw_model, organization_id: @guw_weighting.guw_model.organization.id)
   end
 
   def update
     @guw_weighting = Guw::GuwWeighting.find(params[:id])
     @guw_weighting.update_attributes(params[:guw_weighting])
     set_page_title I18n.t(:Edit_Units_Of_Work)
-    redirect_to guw.guw_model_guw_work_units_path(@guw_weighting.guw_model)
+    redirect_to guw.edit_guw_model_path(@guw_weighting.guw_model, organization_id: @guw_weighting.guw_model.organization.id)
   end
 
   def destroy
-    @guw_weighting = Guw::GuwWorkUnit.find(params[:id])
+    @guw_weighting = Guw::GuwWeighting.find(params[:id])
     @guw_model = @guw_weighting.guw_model
     @guw_weighting.delete
     if @guw_model.default_display == "list"

@@ -569,6 +569,12 @@ class Guw::GuwModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
+    @guw_types = @guw_model.guw_types
+    @guw_attributes = @guw_model.guw_attributes.order("name ASC")
+    @guw_work_units = @guw_model.guw_work_units
+    @guw_weightings = @guw_model.guw_weightings
+    @guw_factors = @guw_model.guw_factors
+
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "taille"), I18n.t(:new) => ""
     set_page_title I18n.t(:new_UO_model)
   end
@@ -578,6 +584,11 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
+    @guw_types = @guw_model.guw_types
+    @guw_attributes = @guw_model.guw_attributes.order("name ASC")
+    @guw_work_units = @guw_model.guw_work_units
+    @guw_weightings = @guw_model.guw_weightings
+    @guw_factors = @guw_model.guw_factors
 
     set_page_title I18n.t(:edit_project_element_name, parameter: @guw_model.name)
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(@organization, anchor: "taille"), @guw_model.name => ""
@@ -604,6 +615,11 @@ class Guw::GuwModelsController < ApplicationController
     @organization = @guw_model.organization
 
     if @guw_model.update_attributes(params[:guw_model])
+      if @guw_model.default_display == "list"
+        redirect_to guw.guw_model_all_guw_types_path(@guw_model) and return
+      else
+        redirect_to guw.guw_model_path(@guw_model) and return
+      end
       redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
     else
       render action: :edit
@@ -981,13 +997,6 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     set_page_title "Liste des unités d'oeuvres"
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
-  end
-
-  def scale_module_attributes
-    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_types = @guw_model.guw_types
-    set_page_title @guw_model.name
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
   end
 
   def save_scale_module_attributes

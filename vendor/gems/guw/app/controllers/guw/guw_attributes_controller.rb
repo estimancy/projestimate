@@ -22,13 +22,6 @@
 
 class Guw::GuwAttributesController < ApplicationController
 
-  def index
-    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_attributes = @guw_model.guw_attributes.order("name ASC")
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
-    set_page_title I18n.t(:pe_attributes)
-  end
-
   def new
     @guw_attribute = Guw::GuwAttribute.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
@@ -45,13 +38,13 @@ class Guw::GuwAttributesController < ApplicationController
   def create
     @guw_attribute = Guw::GuwAttribute.new(params[:guw_attribute])
     @guw_attribute.save
-    redirect_to guw.guw_model_guw_attributes_path(@guw_attribute.guw_model)
+    redirect_to guw.edit_guw_model_path(@guw_attribute.guw_model, organization_id: @guw_attribute.guw_model.organization.id)
   end
 
   def update
     @guw_attribute = Guw::GuwAttribute.find(params[:id])
     @guw_attribute.update_attributes(params[:guw_attribute])
-    redirect_to guw.guw_model_guw_attributes_path(@guw_attribute.guw_model)
+    redirect_to guw.edit_guw_model_path(@guw_attribute.guw_model, organization_id: @guw_attribute.guw_model.organization.id)
   end
 
   def destroy
