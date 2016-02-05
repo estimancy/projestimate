@@ -308,7 +308,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
-                  [I18n.t(:weighting_factor_Name),  @guw_model.coefficient_label],
+                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label],
                   [I18n.t(:three_points_estimation), @guw_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:retained_size_unit), @guw_model.retained_size_unit],
                   [I18n.t(:hour_coefficient_conversion), @guw_model.hour_coefficient_conversion],

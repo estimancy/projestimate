@@ -7,7 +7,7 @@
   <% end %>
   <%= link_to I18n.t(:manage_the_scale_factor) , guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to I18n.t(:manage_the_attribute), guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to "Gérer la relation avec les attributs de sorties", guw.guw_model_scale_module_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to "Matrice des attributs / facteurs", guw.guw_model_scale_module_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "Afficher sous forme d'un tableau", guw.guw_model_all_guw_types_path(@guw_model), class: "btn btn-mini pull-right button_margin_right" %>
 </h4>
