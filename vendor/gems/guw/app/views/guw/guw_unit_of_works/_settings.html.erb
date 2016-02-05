@@ -197,8 +197,8 @@
 
                 <td class="span2">
                   <span class="work_unit_<%= guow.id %>" >
-                    <% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
-                    <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq %>
+                    <%# results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
+                    <% results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.flatten.compact.uniq %>
                     <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
                     <% unless results.empty? %>
                       <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
@@ -213,8 +213,8 @@
 
                 <td class="span2">
                   <span class="weighting_<%= guow.id %>" >
-                    <% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
-                    <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
+                    <%# results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
+                    <% results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
                     <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_weighting }.uniq %>
                     <% unless results.empty? %>
                       <%= select_tag "guw_weighting[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
@@ -229,8 +229,8 @@
 
                 <td class="span2">
                   <span class="factor_<%= guow.id %>" >
-                    <% results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
-                    <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq %>
+                    <%# results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
+                    <% results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq %>
                     <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_factor }.uniq %>
                     <% unless results.empty? %>
                       <%= select_tag "guw_factor[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
