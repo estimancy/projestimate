@@ -33,11 +33,11 @@
               </b>
             </td>
             <% ["size", "effort", "cost"].each do |ta| %>
-            <td>
+            <td class="center">
               <% gsma = Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model.id,
                                                            type_attribute: ta,
                                                            type_scale: ts[1]).first %>
-              <%= check_box_tag "yolo[#{ts}][#{ta}]", "enable", !gsma.nil?, class: "input-xmini" %>
+              <%= check_box_tag "yolo[#{ts[1]}][#{ta}]", "enable", !gsma.nil?, class: "input-xmini" %>
             </td>
             <% end %>
           </tr>

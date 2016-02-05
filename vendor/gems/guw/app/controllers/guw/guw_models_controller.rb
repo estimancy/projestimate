@@ -986,6 +986,8 @@ class Guw::GuwModelsController < ApplicationController
   def scale_module_attributes
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_types = @guw_model.guw_types
+    set_page_title @guw_model.name
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
   end
 
   def save_scale_module_attributes
@@ -1001,8 +1003,6 @@ class Guw::GuwModelsController < ApplicationController
       end
     end
 
-    set_page_title @guw_model.name
-    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(@organization, anchor: "taille"), @guw_model.name => ""
     redirect_to :back
   end
 

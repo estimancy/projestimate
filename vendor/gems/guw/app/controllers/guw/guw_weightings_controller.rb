@@ -43,14 +43,14 @@ class Guw::GuwWeightingsController < ApplicationController
   def create
     @guw_weighting = Guw::GuwWeighting.new(params[:guw_weighting])
     @guw_weighting.save
-    redirect_to guw.guw_model_guw_weightings_path(@guw_weighting.guw_model)
+    redirect_to guw.guw_model_guw_work_units_path(@guw_weighting.guw_model)
   end
 
   def update
     @guw_weighting = Guw::GuwWeighting.find(params[:id])
     @guw_weighting.update_attributes(params[:guw_weighting])
     set_page_title I18n.t(:Edit_Units_Of_Work)
-    redirect_to guw.guw_model_guw_weightings_path(@guw_weighting.guw_model)
+    redirect_to guw.guw_model_guw_work_units_path(@guw_weighting.guw_model)
   end
 
   def destroy
