@@ -27,6 +27,8 @@ module Guw
     has_many :guw_attributes, dependent: :destroy
     has_many :guw_work_units, dependent: :destroy
     has_many :module_projects, dependent: :destroy
+    has_many :guw_weightings, dependent: :destroy
+    has_many :guw_factors, dependent: :destroy
 
     belongs_to :organization
 

@@ -5,8 +5,9 @@
   <% if can? :manage_modules_instances, ModuleProject %>
     <%= link_to I18n.t(:new_uw_type), guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
   <% end %>
-  <%= link_to I18n.t(:manage_the , parameter: @guw_model.coefficient_label.to_s.underscore) , guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to I18n.t(:manage_the_scale_factor) , guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to I18n.t(:manage_the_attribute), guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+  <%= link_to "Gérer la relation avec les attributs de sorties", guw.guw_model_scale_module_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
   <%= link_to "Afficher sous forme d'un tableau", guw.guw_model_all_guw_types_path(@guw_model), class: "btn btn-mini pull-right button_margin_right" %>
 </h4>
@@ -57,7 +58,7 @@
         </h4>
 
         <%= form_tag guw_complexity_work_units_save_complexity_work_units_path do %>
-          <table class="table table-bordered">
+          <table class="table table-bordered table-condensed">
             <tr>
               <th></th>
               <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
@@ -105,11 +106,11 @@
             </tr>
 
             <tr>
-              <td colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
-                <b>
+              <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
+                <b class="pull-left">
                   <%= @guw_model.coefficient_label %>
                 </b>
-              </td>
+              </th>
             </tr>
 
             <% @guw_model.guw_work_units.order("display_order ASC").each do |work_unit| %>
@@ -130,11 +131,61 @@
             <% end %>
 
             <tr>
-              <td colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
-                <b>
+              <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
+                <b class="pull-left">
+                  <%= @guw_model.weightings_label %>
+                </b>
+              </th>
+            </tr>
+
+            <% @guw_model.guw_weightings.order("display_order ASC").each do |guw_weighting| %>
+              <tr>
+                <td>
+                  <%= guw_weighting.name %>
+                </td>
+
+                <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
+                  <td colspan="2" class="align-center">
+                    <% cwe = Guw::GuwComplexityWeighting.where(guw_complexity_id: guw_cplx.id,
+                                                               guw_weighting_id: guw_weighting.id).first %>
+                    <%= text_field_tag "weightings_value[#{guw_cplx.id}][#{guw_weighting.id}]", cwe.nil? ? '' : cwe.value, class: "input-mini" %>
+                  </td>
+                <% end %>
+                </td>
+              </tr>
+            <% end %>
+
+            <tr>
+              <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
+                <b class="pull-left">
+                  <%= @guw_model.factors_label %>
+                </b>
+              </th>
+            </tr>
+
+            <% @guw_model.guw_factors.order("display_order ASC").each do |guw_factor| %>
+              <tr>
+                <td>
+                  <%= guw_factor.name %>
+                </td>
+
+                <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
+                  <td colspan="2" class="align-center">
+                    <% cf = Guw::GuwComplexityFactor.where(guw_complexity_id: guw_cplx.id,
+                                                               guw_factor_id: guw_factor.id).first %>
+                    <%= text_field_tag "factors_value[#{guw_cplx.id}][#{guw_factor.id}]", cf.nil? ? '' : cf.value, class: "input-mini" %>
+                  </td>
+                <% end %>
+                </td>
+              </tr>
+            <% end %>
+
+            <tr>
+              <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
+                <b class="pull-left">
                   <%= I18n.t :technology %>
                 </b>
-              </td>
+              </th>
             </tr>
 
             <% @guw_model.organization.organization_technologies.each do |technology| %>

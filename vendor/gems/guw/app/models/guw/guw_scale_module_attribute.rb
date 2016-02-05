@@ -19,4 +19,7 @@
 #
 #############################################################################
 
-VERSION = "1.11"
+module Guw
+  class GuwScaleModuleAttribute < ActiveRecord::Base
+  end
+end

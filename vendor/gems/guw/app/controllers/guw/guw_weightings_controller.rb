@@ -20,45 +20,43 @@
 #############################################################################
 
 
-class Guw::GuwWorkUnitsController < ApplicationController
+class Guw::GuwWeightingsController < ApplicationController
 
   def index
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_work_units = @guw_model.guw_work_units
     @guw_weightings = @guw_model.guw_weightings
-    @guw_factors = @guw_model.guw_factors
     set_page_title I18n.t(:Work_Unit)
   end
 
   def new
-    @guw_work_unit = Guw::GuwWorkUnit.new
+    @guw_weighting = Guw::GuwWeighting.new
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     set_page_title I18n.t(:Create_a_new_Work_Unit)
   end
 
   def edit
-    @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
+    @guw_weighting = Guw::GuwWeighting.find(params[:id])
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     set_page_title I18n.t(:Edit_a_new_Work_Unit)
   end
 
   def create
-    @guw_work_unit = Guw::GuwWorkUnit.new(params[:guw_work_unit])
-    @guw_work_unit.save
-    redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
+    @guw_weighting = Guw::GuwWeighting.new(params[:guw_weighting])
+    @guw_weighting.save
+    redirect_to guw.guw_model_guw_weightings_path(@guw_weighting.guw_model)
   end
 
   def update
-    @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
-    @guw_work_unit.update_attributes(params[:guw_work_unit])
+    @guw_weighting = Guw::GuwWeighting.find(params[:id])
+    @guw_weighting.update_attributes(params[:guw_weighting])
     set_page_title I18n.t(:Edit_Units_Of_Work)
-    redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
+    redirect_to guw.guw_model_guw_weightings_path(@guw_weighting.guw_model)
   end
 
   def destroy
-    @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
-    @guw_model = @guw_work_unit.guw_model
-    @guw_work_unit.delete
+    @guw_weighting = Guw::GuwWorkUnit.find(params[:id])
+    @guw_model = @guw_weighting.guw_model
+    @guw_weighting.delete
     @guw_model = @guw_type.guw_model
     if @guw_model.default_display == "list"
       redirect_to guw.guw_model_all_guw_types_path(@guw_model)

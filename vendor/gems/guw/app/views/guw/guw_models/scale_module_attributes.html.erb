@@ -1,0 +1,50 @@
+<h4>
+  <strong>
+    <%= @guw_model %> : matrice des attributs de sorties en fonction des facteurs d'ajustements
+  </strong>
+</h4>
+
+<div class="tabs">
+
+  <ul>
+    <li>
+      <a href="#tabs-1">
+        <%= I18n.t :unit_of_work %>
+      </a>
+    </li>
+  </ul>
+
+  <%= form_tag guw.guw_model_save_scale_module_attributes_path, method: "post" do %>
+    <div id="tabs-1">
+      <table class="table table-bordered">
+        <tr>
+          <th></th>
+          <% ["Attribut de taille", "Attribut d'effort", "Attribut de coût"].each do |ta| %>
+            <th><%= ta %></th>
+          <% end %>
+        </tr>
+
+
+        <% [[@guw_model.coefficient_label, "work_unit"], [@guw_model.weightings_label, "weighting"], [@guw_model.factors_label, "factor"]].each do |ts| %>
+          <tr>
+            <td>
+              <b>
+                <%= ts[0].to_s.humanize %>
+              </b>
+            </td>
+            <% ["size", "effort", "cost"].each do |ta| %>
+            <td>
+              <% gsma = Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model.id,
+                                                           type_attribute: ta,
+                                                           type_scale: ts[1]).first %>
+              <%= check_box_tag "yolo[#{ts}][#{ta}]", "enable", !gsma.nil?, class: "input-xmini" %>
+            </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </table>
+      <%= submit_tag I18n.t(:save), class: "btn btn-mini pull-right" %>
+      <%= link_to I18n.t(:back), :back, :class => 'btn btn-mini pull-right button_margin_right' %>
+    </div>
+  <% end %>
+</div>

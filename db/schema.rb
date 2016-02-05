@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160125143157) do
+ActiveRecord::Schema.define(:version => 20160205090236) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -559,6 +559,15 @@ ActiveRecord::Schema.define(:version => 20160125143157) do
     t.integer  "display_order", :default => 0
   end
 
+  create_table "guw_guw_complexity_factors", :force => true do |t|
+    t.integer  "guw_complexity_id"
+    t.integer  "guw_factor_id"
+    t.float    "value"
+    t.integer  "guw_type_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "guw_guw_complexity_technologies", :force => true do |t|
     t.integer  "guw_complexity_id"
     t.integer  "organization_technology_id"
@@ -568,6 +577,15 @@ ActiveRecord::Schema.define(:version => 20160125143157) do
     t.integer  "guw_type_id"
   end
 
+  create_table "guw_guw_complexity_weightings", :force => true do |t|
+    t.integer  "guw_complexity_id"
+    t.integer  "guw_weighting_id"
+    t.float    "value"
+    t.integer  "guw_type_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "guw_guw_complexity_work_units", :force => true do |t|
     t.integer  "guw_complexity_id"
     t.integer  "guw_work_unit_id"
@@ -575,6 +593,16 @@ ActiveRecord::Schema.define(:version => 20160125143157) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "guw_type_id"
+  end
+
+  create_table "guw_guw_factors", :force => true do |t|
+    t.integer  "guw_model_id"
+    t.integer  "copy_id"
+    t.string   "name"
+    t.float    "value"
+    t.integer  "display_order"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "guw_guw_models", :force => true do |t|
@@ -591,6 +619,16 @@ ActiveRecord::Schema.define(:version => 20160125143157) do
     t.string   "coefficient_label"
     t.float    "hour_coefficient_conversion"
     t.string   "default_display"
+    t.string   "weightings_label"
+    t.string   "factors_label"
+  end
+
+  create_table "guw_guw_scale_module_attributes", :force => true do |t|
+    t.integer  "guw_model_id"
+    t.string   "type_attribute"
+    t.string   "type_scale"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "guw_guw_type_complexities", :force => true do |t|
@@ -652,7 +690,7 @@ ActiveRecord::Schema.define(:version => 20160125143157) do
     t.datetime "updated_at",                 :null => false
     t.integer  "guw_complexity_id"
     t.float    "effort"
-    t.float    "ajusted_effort"
+    t.float    "ajusted_size"
     t.integer  "guw_model_id"
     t.integer  "module_project_id"
     t.integer  "pbs_project_element_id"
@@ -666,6 +704,20 @@ ActiveRecord::Schema.define(:version => 20160125143157) do
     t.integer  "organization_technology_id"
     t.boolean  "off_line_uo"
     t.float    "quantity"
+    t.integer  "guw_weighting_id"
+    t.integer  "guw_factor_id"
+    t.float    "size"
+    t.float    "cost"
+  end
+
+  create_table "guw_guw_weightings", :force => true do |t|
+    t.integer  "guw_model_id"
+    t.integer  "copy_id"
+    t.string   "name"
+    t.float    "value"
+    t.integer  "display_order"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "guw_guw_work_units", :force => true do |t|

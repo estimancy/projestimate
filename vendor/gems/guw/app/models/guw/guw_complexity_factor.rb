@@ -19,4 +19,9 @@
 #
 #############################################################################
 
-VERSION = "1.11"
+module Guw
+  class GuwComplexityFactor< ActiveRecord::Base
+    belongs_to :guw_factor
+    belongs_to :guw_complexity
+  end
+end

@@ -43,12 +43,18 @@ Guw::Engine.routes.draw do
     post "create_notes"
   end
 
+  resources :guw_weightings
+
+  resources :guw_factors
+
   resources :guw_types
   resources :guw_attribute_complexities
 
   resources :guw_models do
     resources :guw_attributes
     resources :guw_unit_of_works
+    resources :guw_weightings
+    resources :guw_factors
     resources :guw_work_units
     resources :guw_unit_of_work_groups
     resources :guw_types do
@@ -62,6 +68,9 @@ Guw::Engine.routes.draw do
     post "export"
     post "exportxl"
     get "all_guw_types"
+
+    get "scale_module_attributes"
+    post "save_scale_module_attributes"
   end
 
   post "importxl" => "guw_models#importxl"

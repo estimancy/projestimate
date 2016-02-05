@@ -2,14 +2,14 @@
 
   <ul>
     <li>
-      <a href="#tabs-work-unit">
-        <%= @guw_model.coefficient_label %>
+      <a href="#tabs-1">
+        <%= @guw_model.factors_label %>
       </a>
     </li>
   </ul>
 
-  <div id="tabs-work-unit">
-    <%= simple_form_for(@guw_work_unit) do |f| %>
+  <div id="tabs-1">
+    <%= simple_form_for(@guw_factor) do |f| %>
       <%= f.error_notification %>
 
       <%= f.input :guw_model_id, as: :hidden, input_html: { value: params[:guw_model_id] } %>

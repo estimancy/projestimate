@@ -725,7 +725,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.change_column_width(11, tab_size[11])
       worksheet.add_cell(ind, 12, guow.effort)
 
-      worksheet.add_cell(ind, 13, guow.ajusted_effort)
+      worksheet.add_cell(ind, 13, guow.ajusted_size)
 
       @guw_model.guw_attributes.each do |gac|
         finder = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: gac.id, guw_type_id: guow.guw_type.id).first
@@ -842,7 +842,7 @@ class Guw::GuwModelsController < ApplicationController
                                                tracking: row[10],
                                                quantity: row[9].nil? ? 1 : row[9],
                                                effort: row[12].nil? ? nil : row[12],
-                                               ajusted_effort: row[13].nil? ? nil : row[13])
+                                               ajusted_size: row[13].nil? ? nil : row[13])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
@@ -983,23 +983,27 @@ class Guw::GuwModelsController < ApplicationController
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
-  # def init_guw_type_weight
-  #   Guw::GuwComplexity.all.each do |i|
-  #     if i.weight.nil?
-  #       i.weight = 1
-  #       i.save
-  #     end
-  #   end
-  #
-  #
-  #   Guw::GuwTypeComplexity.all.each do |i|
-  #     i.guw_attribute_complexities.each do |j|
-  #       unless j.bottom_range.nil? && j.top_range.nil?
-  #         j.value = i.value
-  #         j.save
-  #       end
-  #     end
-  #   end
-  # end
+  def scale_module_attributes
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_types = @guw_model.guw_types
+  end
+
+  def save_scale_module_attributes
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+
+    Guw::GuwScaleModuleAttribute.destroy_all(guw_model_id: @guw_model)
+
+    params['yolo'].each_with_index do |i, j|
+      i[1].each do |k|
+        Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
+                                           type_attribute: k[0],
+                                           type_scale: i[0])
+      end
+    end
+
+    set_page_title @guw_model.name
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(@organization, anchor: "taille"), @guw_model.name => ""
+    redirect_to :back
+  end
 
 end

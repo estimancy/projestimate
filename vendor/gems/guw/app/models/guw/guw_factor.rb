@@ -19,4 +19,24 @@
 #
 #############################################################################
 
-VERSION = "1.11"
+module Guw
+  class GuwFactor < ActiveRecord::Base
+    belongs_to :guw_model
+    has_many :guw_complexity_factors, dependent: :destroy
+
+    validates_presence_of :name, :value
+
+    amoeba do
+      enable
+      exclude_association [:guw_complexity_factors]
+
+      customize(lambda { |original_guw_factor, new_guw_factor|
+                  new_guw_factor.copy_id = original_guw_factor.id
+      })
+    end
+
+    def to_s
+      name
+    end
+  end
+end

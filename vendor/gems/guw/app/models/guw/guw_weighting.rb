@@ -19,4 +19,24 @@
 #
 #############################################################################
 
-VERSION = "1.11"
+module Guw
+  class GuwWeighting < ActiveRecord::Base
+    belongs_to :guw_model
+    has_many :guw_complexity_weightings, dependent: :destroy
+
+    validates_presence_of :name, :value
+
+    amoeba do
+      enable
+      exclude_association [:guw_complexity_weightings]
+
+      customize(lambda { |original_guw_weighting, new_guw_weighting|
+                  new_guw_weighting.copy_id = original_guw_weighting.id
+      })
+    end
+
+    def to_s
+      name
+    end
+  end
+end

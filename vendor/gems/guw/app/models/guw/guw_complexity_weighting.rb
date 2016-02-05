@@ -19,4 +19,9 @@
 #
 #############################################################################
 
-VERSION = "1.11"
+module Guw
+  class GuwComplexityWeighting < ActiveRecord::Base
+    belongs_to :guw_weighting
+    belongs_to :guw_complexity
+  end
+end

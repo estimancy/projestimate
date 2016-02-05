@@ -1624,7 +1624,7 @@ frsncf:
   UO_type_complexity_of: "Seuils de complexité de %{parameter}"
   new_complexity_for: "Créer une nouvelle complexité pour %{parameter}"
   new_uw_type: "Créer un nouveau type d'UO"
-  manage_the: "Gérer les types de %{parameter}"
+  manage_the_scale_factor: "Gérer les facteurs d'ajustements"
   manage_the_groups: "Gérer les groupes"
   manage_the_attribute: "Gérer les attributs"
   new_type_thresold: "Créer un seuil de type d'UO"

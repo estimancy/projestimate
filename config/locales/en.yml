@@ -1641,7 +1641,7 @@ en:
   bot_range: "Bottom range"
   top_range: "Top range"
   new_uw_type: "Create a new unit of work type"
-  manage_the: "Manage the %{parameter}"
+  manage_the_scale_factor: "Scale factors management"
   manage_the_attribute: "Manage the attribute"
   new_type_thresold: "Create a new unit of work type threshold"
   new_attribute_thresold: "New attribute threshold"
