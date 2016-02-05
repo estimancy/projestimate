@@ -57,11 +57,10 @@ class Guw::GuwFactorsController < ApplicationController
     @guw_factor = Guw::GuwWorkUnit.find(params[:id])
     @guw_model = @guw_factor.guw_model
     @guw_factor.delete
-    @guw_model = @guw_type.guw_model
     if @guw_model.default_display == "list"
       redirect_to guw.guw_model_all_guw_types_path(@guw_model)
     else
-      redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+      redirect_to guw.guw_model_path(@guw_model)
     end
   end
 end
