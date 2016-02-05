@@ -49,8 +49,6 @@ class Organization < ActiveRecord::Base
   has_many :module_projects, through: :projects
 
   has_many :organization_profiles, :dependent => :destroy
-  has_many :size_unit_types, :dependent => :destroy
-  has_many :technology_size_types, :through => :size_unit_types
 
   #Estimations statuses
   has_many :estimation_statuses, :dependent => :destroy
@@ -108,7 +106,7 @@ class Organization < ActiveRecord::Base
     enable
     include_association [:project_areas, :project_categories, :platform_categories, :acquisition_categories,
                          :work_element_types, :attribute_organizations, :organization_technologies,
-                         :organization_profiles, :unit_of_works, :size_unit_types, :technology_size_types,
+                         :organization_profiles, :unit_of_works, :technology_size_types,
                          :fields, :groups, :project_security_levels,
                          :estimation_statuses, :guw_models, :operation_models, :kb_models, :ge_models,
                          :staffing_models, :expert_judgement_instances]

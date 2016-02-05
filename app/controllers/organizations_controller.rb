@@ -366,7 +366,6 @@ class OrganizationsController < ApplicationController
     @guw_models = @organization.guw_models
     @wbs_activities = @organization.wbs_activities
     @technologies = @organization.organization_technologies
-    @size_unit_types = @organization.size_unit_types
   end
 
   def users
@@ -1258,43 +1257,6 @@ class OrganizationsController < ApplicationController
     #  flash[:error] = "Une erreur est survenue durant l'import du fichier. Vérifier l'encodage du fichier (ISO-8859-1 pour Windows, utf-8 pour Mac) ou le caractère de séparateur du fichier"
     #end
 =end
-  end
-
-  def set_technology_size_type_abacus
-    authorize! :edit_organizations, Organization
-
-    @technologies = @current_organization.organization_technologies
-    @size_unit_types = @current_organization.size_unit_types
-
-    @technologies.each do |technology|
-      @size_unit_types.each do |sut|
-        @size_units.each do |size_unit|
-
-          #size_unit = params[:size_unit]["#{su.id}"].to_i
-
-          value = params[:abacus]["#{size_unit.id}"]["#{technology.id}"]["#{sut.id}"].to_f
-
-          unless value.nil?
-            t = TechnologySizeType.where( organization_id: @current_organization.id,
-                                          organization_technology_id: technology.id,
-                                          size_unit_id: size_unit.id,
-                                          size_unit_type_id: sut.id).first
-
-            if t.nil?
-              TechnologySizeType.create(organization_id: @current_organization.id,
-                                        organization_technology_id: technology.id,
-                                        size_unit_id: size_unit.id,
-                                        size_unit_type_id: sut.id,
-                                        value: value)
-            else
-              t.update_attributes(value: value)
-            end
-          end
-        end
-      end
-    end
-
-    redirect_to redirect_apply(organization_module_estimation_path(@current_organization, :anchor => 'conversion'), nil, '/organizationals_params')
   end
 
   # Update the organization's projects available inline columns
