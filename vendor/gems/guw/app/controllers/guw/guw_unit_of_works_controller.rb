@@ -439,13 +439,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       type_attribute_array.each do |taa|
         cts = eval("complexity_#{taa.type_scale}")
-        if taa.type_attribute == "effort"
-          effort_array_value << ((cts.nil? || cts.value.nil?) ? 1 : cts.value)
-        elsif taa.type_attribute == "cost"
-          cost_array_value << ((cts.nil? || cts.value.nil?) ? 1 : cts.value)
-        elsif taa.type_attribute == "size"
-          size_array_value << ((cts.nil? || cts.value.nil?) ? 1 : cts.value)
-        end
+        eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
       end
 
       if guw_unit_of_work.guw_complexity.nil?

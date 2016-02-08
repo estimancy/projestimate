@@ -112,7 +112,7 @@
             <% @guw_model.guw_work_units.order("display_order ASC").each do |work_unit| %>
               <tr>
                 <td>
-                  <%= work_unit.name %> (<%= work_unit.value %>)
+                  <%= link_to work_unit.name, guw.edit_guw_model_guw_work_unit_path(@guw_model, work_unit) %> (<%= work_unit.value %>)
                 </td>
 
                 <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
@@ -137,7 +137,7 @@
             <% @guw_model.guw_weightings.order("display_order ASC").each do |guw_weighting| %>
               <tr>
                 <td>
-                  <%= guw_weighting.name %> (<%= guw_weighting.value %>)
+                  <%= link_to guw_weighting.name, guw.edit_guw_model_guw_weighting_path(@guw_model, guw_weighting) %> (<%= guw_weighting.value %>)
                 </td>
 
                 <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
@@ -162,7 +162,7 @@
             <% @guw_model.guw_factors.order("display_order ASC").each do |guw_factor| %>
               <tr>
                 <td>
-                  <%= guw_factor.name %> (<%= guw_factor.value %>)
+                  <%= link_to guw_factor.name, guw.edit_guw_model_guw_factor_path(@guw_model, guw_factor) %> (<%= guw_factor.value %>)
                 </td>
 
                 <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>

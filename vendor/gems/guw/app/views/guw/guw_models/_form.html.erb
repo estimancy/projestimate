@@ -111,7 +111,7 @@
                   <% gsma = Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model.id,
                                                                type_attribute: ta,
                                                                type_scale: ts[1]).first %>
-                  <%= check_box_tag "yolo[#{ts[1]}][#{ta}]", "enable", !gsma.nil?, class: "input-xmini" %>
+                  <%= check_box_tag "attributes_matrix[#{ts[1]}][#{ta}]", "enable", !gsma.nil?, class: "input-xmini" %>
                 </td>
               <% end %>
             </tr>

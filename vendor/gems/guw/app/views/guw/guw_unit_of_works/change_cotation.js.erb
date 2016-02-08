@@ -19,7 +19,7 @@ $(".technology_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_technol
 <% end %>
 
 
-<% results = Guw::GuwComplexityWorkUnit.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq %>
+<% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq}.flatten.compact %>
 <% unless results.empty? %>
   $(".work_unit_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_work_unit[#{@guw_unit_of_work.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                  selected: @guw_unit_of_work.guw_work_unit_id),
@@ -31,7 +31,7 @@ $(".technology_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_technol
   $(".work_unit_<%= @guw_unit_of_work.id %>").html("")
 <% end %>
 
-<% results = Guw::GuwComplexityWeighting.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
+<% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq }.flatten.compact %>
 <% unless results.empty? %>
   $(".weighting_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_weighting_[#{@guw_unit_of_work.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                  selected: @guw_unit_of_work.guw_weighting_id),
@@ -43,7 +43,7 @@ $(".technology_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_technol
   $(".weighting_<%= @guw_unit_of_work.id %>").html("")
 <% end %>
 
-<% results = Guw::GuwComplexityFactor.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq %>
+<% results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: @guw_unit_of_work.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq }.flatten.compact %>
 <% unless results.empty? %>
   $(".factor_<%= @guw_unit_of_work.id %>").html("<%= j(select_tag "guw_factor_[#{@guw_unit_of_work.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                  selected: @guw_unit_of_work.guw_factor_id),

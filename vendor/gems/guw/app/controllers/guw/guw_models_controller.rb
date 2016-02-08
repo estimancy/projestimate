@@ -309,6 +309,8 @@ class Guw::GuwModelsController < ApplicationController
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
                   [I18n.t(:work_unit_label),  @guw_model.coefficient_label],
+                  [I18n.t(:work_unit_label),  @guw_model.weightings_label],
+                  [I18n.t(:work_unit_label),  @guw_model.factors_label],
                   [I18n.t(:three_points_estimation), @guw_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:retained_size_unit), @guw_model.retained_size_unit],
                   [I18n.t(:hour_coefficient_conversion), @guw_model.hour_coefficient_conversion],
@@ -322,6 +324,8 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
     workbook.add_worksheet(@guw_model.coefficient_label || I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.weightings_label || I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.factors_label || I18n.t(:Type_acquisitions))
 
     first_page.each_with_index do |row, index|
       worksheet.add_cell(index, 0, row[0])
@@ -371,7 +375,6 @@ class Guw::GuwModelsController < ApplicationController
     ind2 = 6
 
     worksheet = workbook[2]
-
     counter_line = 1
     page = [I18n.t(:name), I18n.t(:value), I18n.t(:display_order)]
     worksheet.change_row_bold(0,true)
@@ -397,7 +400,62 @@ class Guw::GuwModelsController < ApplicationController
         worksheet[indx][1].change_border(symbole.to_sym, 'thin')
         worksheet[indx][2].change_border(symbole.to_sym, 'thin')
       end
+    end
 
+    worksheet = workbook[3]
+    counter_line = 1
+    page = [I18n.t(:name), I18n.t(:value), I18n.t(:display_order)]
+    worksheet.change_row_bold(0,true)
+    page.each_with_index do |cell_name, index|
+      worksheet.add_cell(0, index, cell_name)
+      worksheet.change_column_horizontal_alignment(index, 'center')
+    end
+
+    worksheet.change_column_width(2, I18n.t(:display_order).size)
+    @guw_model.guw_weightings.each_with_index do |aquisitions_type,indx|
+      worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
+      worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      if ind < aquisitions_type.name.size
+        worksheet.change_column_width(0, aquisitions_type.name.size)
+        ind = aquisitions_type.name.size
+      end
+      counter_line += 1
+    end
+    counter_line.times do |indx|
+      ["bottom", "right"].each do |symbole|
+        worksheet[indx][0].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][1].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][2].change_border(symbole.to_sym, 'thin')
+      end
+    end
+
+    worksheet = workbook[4]
+    counter_line = 1
+    page = [I18n.t(:name), I18n.t(:value), I18n.t(:display_order)]
+    worksheet.change_row_bold(0,true)
+    page.each_with_index do |cell_name, index|
+      worksheet.add_cell(0, index, cell_name)
+      worksheet.change_column_horizontal_alignment(index, 'center')
+    end
+
+    worksheet.change_column_width(2, I18n.t(:display_order).size)
+    @guw_model.guw_factors.each_with_index do |aquisitions_type,indx|
+      worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
+      worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      if ind < aquisitions_type.name.size
+        worksheet.change_column_width(0, aquisitions_type.name.size)
+        ind = aquisitions_type.name.size
+      end
+      counter_line += 1
+    end
+    counter_line.times do |indx|
+      ["bottom", "right"].each do |symbole|
+        worksheet[indx][0].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][1].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][2].change_border(symbole.to_sym, 'thin')
+      end
     end
 
     ind = 0
@@ -1003,7 +1061,7 @@ class Guw::GuwModelsController < ApplicationController
 
     Guw::GuwScaleModuleAttribute.destroy_all(guw_model_id: @guw_model)
 
-    params['yolo'].each_with_index do |i, j|
+    params['attributes_matrix'].each_with_index do |i, j|
       i[1].each do |k|
         Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
                                            type_attribute: k[0],
