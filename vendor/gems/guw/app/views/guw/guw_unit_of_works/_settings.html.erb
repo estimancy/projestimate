@@ -197,7 +197,7 @@
 
                 <td class="span2">
                   <span class="work_unit_<%= guow.id %>" >
-                    <% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq}.flatten.compact %>
+                    <% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq}.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
                     <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.flatten.compact.uniq %>
                     <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
                     <% unless results.empty? %>
@@ -213,7 +213,7 @@
 
                 <td class="span2">
                   <span class="weighting_<%= guow.id %>" >
-                    <% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq }.flatten.compact %>
+                    <% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
                     <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
                     <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_weighting }.uniq %>
                     <% unless results.empty? %>
@@ -229,7 +229,7 @@
 
                 <td class="span2">
                   <span class="factor_<%= guow.id %>" >
-                    <% results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq }.flatten.compact %>
+                    <% results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
                     <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq %>
                     <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_factor }.uniq %>
                     <% unless results.empty? %>
@@ -245,7 +245,7 @@
 
                 <td class="span2 ">
                   <span class="technology_<%= guow.id %>" >
-                    <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
+                    <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.sort! { |a, b|  a.display_order <=> b.display_order } %>
                     <% unless results.empty? %>
                       <% begin %>
                         <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
