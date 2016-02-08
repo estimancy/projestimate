@@ -1616,6 +1616,7 @@ frsncf:
   edit_project_element_name: "Edition %{parameter}"
   Edit_Staffing: "Editer Staffing"
   import_from: "import de donnée d'UO depuis un fichier excel"
+
   Attributes_list: "Liste des attributs (critères)"
   Product: "Produit"
   low_border_include: "Borne basse (comprises)"
@@ -1701,7 +1702,7 @@ frsncf:
   threshold_min_value: "Valeur min. du seuil"
   threshold_max_value: "Valeur max. du seuil"
   convertion_coef_stand: "Coefficient de conversion standard (heure)"
-  effort_unit: "Unité de l'effort"
+  effort_unit: "Libellé de l'unité de l'unité de l'effort"
   module_effort_generique: "Module d'Effort Générique"
   knowledge_base: "Base de connaissance"
   team_module: "Module d'Équipe"
