@@ -527,6 +527,38 @@ class Guw::GuwModelsController < ApplicationController
           ind2 += 1
         end
 
+        guw_complexity.guw_complexity_weightings.each do |guw_complexity_weighting|
+          @guw_weighting = guw_complexity_weighting.guw_weighting
+          cu = Guw::GuwComplexityWeighting.where(guw_complexity_id: guw_complexity.id, guw_weighting_id: @guw_weighting.id).first
+          worksheet.add_cell(ind2 + 4, 0, @guw_weighting.name)
+          worksheet[ind2 + 4][0].change_border(:right, 'thin')
+
+          ["","","",cu.value].each_with_index do |val, index|
+            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
+          end
+          4.times.each do |index|
+            worksheet[10][ind + index + 1].change_border(:top, 'thin')
+          end
+          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
+          ind2 += 1
+        end
+
+        guw_complexity.guw_complexity_factors.each do |guw_complexity_factor|
+          @guw_factor = guw_complexity_factor.guw_factor
+          cu = Guw::GuwComplexityFactor.where(guw_complexity_id: guw_complexity.id, guw_factor_id: @guw_factor.id).first
+          worksheet.add_cell(ind2 + 4, 0, @guw_factor.name)
+          worksheet[ind2 + 4][0].change_border(:right, 'thin')
+
+          ["","","",cu.value].each_with_index do |val, index|
+            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
+          end
+          4.times.each do |index|
+            worksheet[10][ind + index + 1].change_border(:top, 'thin')
+          end
+          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
+          ind2 += 1
+        end
+
         worksheet[ind2 + 3][0].change_border(:bottom, 'thin')
         5.times.each do |index|
           worksheet[ind2 + 3][ind + index].change_border(:bottom, 'thin')

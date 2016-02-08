@@ -222,9 +222,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
       if guw_unit_of_work.guw_complexity.nil?
-        array_pert << (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        array_pert << 0
       else
-        array_pert << (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+        array_pert << (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
       end
       guw_unit_of_work.save
     else
@@ -698,7 +698,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_c.enable_value == false
         uo_weight_low = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       else
-        uo_weight_low = guw_unit_of_work.result_low.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_low = guw_unit_of_work.result_low.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
@@ -722,7 +722,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       end
     end
 
-    return compute_probable_value(uo_weight_low.to_f * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value), uo_weight_ml.to_f * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value), uo_weight_high.to_f * (guw_work_unit.value.nil? ? 1 : guw_work_unit.value))[:value]
+    return compute_probable_value(uo_weight_low.to_f, uo_weight_ml.to_f, uo_weight_high.to_f)[:value]
   end
 
 
@@ -850,14 +850,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def calculate_attributes(guw_unit_of_work, guw_factor, guw_weighting, guw_work_unit, tcplx, final_value)
 
-    # if guw_unit_of_work.guw_complexity.nil?
-    #   final_value = 0
-    # else
-    #   tmp1 = (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
-    #   tmp2 = (guw_unit_of_work.off_line? ? nil : (array_pert.empty? ? 0 : array_pert.sum)).to_f.round(3)
-    #   final_value = tmp1 + tmp2
-    # end
-
     complexity_work_unit = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_unit_of_work.guw_complexity,
                                                             guw_work_unit_id: guw_work_unit).first
 
@@ -880,35 +872,28 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     type_attribute_array.each do |taa|
       cts = eval("complexity_#{taa.type_scale}")
-      eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
+      sv = eval("guw_#{taa.type_scale}")
+
+      eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value)) * sv.value.to_f
     end
 
     guw_unit_of_work.effort = final_value *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
-        (guw_factor.nil? ? 1 : guw_factor.value) *
-        (guw_weighting.nil? ? 1 : guw_weighting.value) *
-        (guw_work_unit.nil? ? 1 : guw_work_unit.value) *
         (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
 
     guw_unit_of_work.cost = final_value *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
-        (guw_factor.nil? ? 1 : guw_factor.value) *
-        (guw_weighting.nil? ? 1 : guw_weighting.value) *
-        (guw_work_unit.nil? ? 1 : guw_work_unit.value) *
         (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
 
 
     guw_unit_of_work.size = final_value *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
-        (guw_factor.nil? ? 1 : guw_factor.value) *
-        (guw_weighting.nil? ? 1 : guw_weighting.value) *
-        (guw_work_unit.nil? ? 1 : guw_work_unit.value) *
         (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
 
-    return guw_unit_of_work
+    guw_unit_of_work.save
   end
 
 end
