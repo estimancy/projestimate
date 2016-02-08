@@ -26,7 +26,7 @@ class OrganizationProfile < ActiveRecord::Base
 
   has_many :wbs_activity_ratio_profiles, :dependent => :delete_all
 
-  has_and_belongs_to_many :wbs_activities
+  has_and_belongs_to_many :wbs_activities   #has_many :organization_profiles_wbs_activities    #has_many :wbs_activities, through: :organization_profiles_wbs_activities
 
   #validates :organization_id, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id

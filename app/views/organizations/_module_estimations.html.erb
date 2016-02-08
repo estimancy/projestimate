@@ -184,7 +184,7 @@
 
           <% @wbs_activities.each do |wbs_activity| %>
             <tr>
-              <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-2'), confirm: I18n.t(:warning_edit_instance_module)) %></td>
+              <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), confirm: I18n.t(:warning_edit_instance_module)) %></td>
               <td><%= wbs_activity.description %></td>
               <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
               <td class="center">

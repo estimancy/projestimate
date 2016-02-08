@@ -4,8 +4,11 @@
 
              divsWithModuleProjectClass = jsPlumb.getSelector(".module_box .module_project");
 
+
             <% pmod.associated_module_projects.each do |amp| %>
                 <% if pmod.associated_module_projects.map(&:id).include?(amp.id) %>
+
+                    //jsPlumb.setRenderMode(jsPlumb.SVG);
 
                     jsPlumb.importDefaults({
                         Connector:"Straight",
@@ -43,13 +46,13 @@
                         connector:["Straight"]
                     });
 
-//                    jsPlumb.repaint($(".<%#= amp.pemodule.alias %>_<%#= amp.position_x %>_<%#= amp.position_y %>"));
-//                    jsPlumb.repaint($(".<%#= pmod.pemodule.alias %>_<%#= pmod.position_x %>_<%#= pmod.position_y %>"));
+                    jsPlumb.repaint($(".<%= amp.pemodule.alias %>_<%= amp.position_x %>_<%= amp.position_y %>"));
+                    jsPlumb.repaint($(".<%= pmod.pemodule.alias %>_<%= pmod.position_x %>_<%= pmod.position_y %>"));
 
                 <% end %>
             <% end %>
 
-             jsPlumb.draggable(divsWithModuleProjectClass);
+             //jsPlumb.draggable(divsWithModuleProjectClass);
         });
 
         e0 = null;

@@ -21,7 +21,7 @@
 
 module Ge
   class GeFactor < ActiveRecord::Base
-    attr_accessible :alias, :description, :factor_type, :ge_model_id, :long_name, :scale_prod, :short_name, :data_filename
+    attr_accessible :alias, :description, :factor_type, :ge_model_id, :long_name, :scale_prod, :short_name, :data_filename, :copy_id
 
     validates :scale_prod, presence: true
     validates :short_name, :alias, presence: true, uniqueness: { :scope => :ge_model_id, :case_sensitive => false }
@@ -29,6 +29,17 @@ module Ge
     belongs_to :ge_model
 
     has_many :ge_factor_values, :dependent => :destroy
+
+    #=============
+    amoeba do
+      enable
+      exclude_association [:ge_factor_values]
+
+      customize(lambda { |original_ge_factor, new_ge_factor|
+          new_ge_factor.copy_id = original_ge_factor.id
+      })
+    end
+    #=============
 
   end
 end

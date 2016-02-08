@@ -4,7 +4,7 @@
 
 <% unless module_projects.empty? %>
 
-  <table class="table table-striped table-condensed table-estimation" >
+  <table class="table table-striped table-condensed table-estimation">
     <theader>
     <tr>
       <td class="center">
@@ -73,14 +73,14 @@
                     <% end %>
                 </div>
 
-                <%#= render :partial => 'module_projects/estimation_paths', :locals => { :pmod => pmod } %>
+                <%= render :partial => 'module_projects/estimation_paths', :locals => { :pmod => pmod } %>
 
               <% end %>
             </td>
           <% end %>
         </tr>
       <% end %>
-      <%= render :partial => 'module_projects/dynamic_test_paths_real', :locals => { :pmod => pmod, :module_projects => module_projects } %>
+    <%#= render :partial => 'module_projects/dynamic_test_paths_real', :locals => { :pmod => pmod, :module_projects => module_projects } %>
   </table>
 <% else %>
   <%= content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info') %>

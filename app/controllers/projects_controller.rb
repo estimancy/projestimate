@@ -168,6 +168,7 @@ class ProjectsController < ApplicationController
                                     ge_model_id: @ge_model.id).first_or_create
       @ge_input_values = @ge_input.values
       @ge_factors = @ge_model.ge_factors
+      @all_factors_values_hash = Hash.new #hash that contained factor values
 
       @ge_factors_values = @ge_model.ge_factor_values
       if @ge_factors_values.length > 0
@@ -182,7 +183,6 @@ class ProjectsController < ApplicationController
         @ge_prod_factors_per_type = @ge_prod_factors.nil? ? {} : @ge_prod_factors.group_by(&:factor_type)
         @ge_conversion_factors_per_type = @ge_conversion_factors.nil? ? {} : @ge_conversion_factors.group_by(&:factor_type)
 
-        @all_factors_values_hash = Hash.new
         @all_factors_values_hash["S"] = Hash.new
         @all_factors_values_hash["P"] = Hash.new
         @all_factors_values_hash["C"] = Hash.new

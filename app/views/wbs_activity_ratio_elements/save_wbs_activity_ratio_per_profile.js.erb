@@ -3,3 +3,6 @@ $("#activities_ratio_per_profile").html("<%= j(render(:partial => 'wbs_activitie
 
 //Update the total ratio value per activity when activity's profile ratio has changed
 update_wbs_activity_ratio_profiles();
+
+//Redirect to the correct URL (Apply or SAVE)
+window.location.replace("<%= @redirect_url_apply_or_save_path %>");

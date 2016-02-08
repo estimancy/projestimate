@@ -1600,6 +1600,7 @@ en:
   route_flag_error_14: "The acquisisin type given in the file cannot be found in the data base for the following line(s): %{mess_error}"
   route_flag_error_15: "The technology given in the file cannot be found in the data base for the following line(s): %{mess_error}"
   route_flag_error_16: "The complexity given in the file cannot be found in the data base for the following line(s): %{mess_error}"
+  route_flag_error_17: "Error: no file selected."
   attribute_description: "Attribut description"
   export_vignette: "Export widget \"%{value}\""
   effort_import: "Effort"
@@ -1841,3 +1842,5 @@ en:
   factors_setting: "Factors setting"
   import_factors_setting: "Import the factors for configuration"
   import_instance_model: "Import an instance of the model"
+  warning_update_wbs_organization_profile: "You have changed the profile list, verify the contribution of profiles per phase in (tab \"Ratio elements\")"
+  total_per_phase: "Total per phase"

@@ -1486,3 +1486,5 @@ en-gb:
   factors_setting: "Factors setting"
   import_factors_setting: "Import the factors for configuration"
   import_ge_instance_model: "Import an instance of the model"
+  warning_update_wbs_organization_profile: "You have changed the profile list, verify the contribution of profiles per phase in (tab \"Ratio elements\")"
+  total_per_phase: "Total per phase"

@@ -1599,6 +1599,7 @@ fr:
   route_flag_error_14: "Le type d'Acquisition renseigner n'est pas reconnue pour la/les ligne(s) suivante: %{mess_error}"
   route_flag_error_15: "La Technologie renseigner n'est pas reconnue pour la/les ligne(s) suivante: %{mess_error}"
   route_flag_error_16: "La complexité renseigner n'est pas reconnue pour la/les ligne(s) suivante: %{mess_error}"
+  route_flag_error_17: "Erreur: aucun fichier sélectionné."
   attribute_description: "Attribut description"
   export_vignette: "Exporter la vignette \"%{value}\""
   effort_import: "Effort"
@@ -1861,3 +1862,5 @@ fr:
   factors_setting: "Paramétrage des facteurs"
   import_factors_setting: "Importer les facteurs pour la configuration"
   import_instance_model: "Importer une instance du modèle"
+  warning_update_wbs_organization_profile: "Vous avez modifié la liste des profils, vérifier la contribution des profils par phase (onglet \"Elements des Ratios\")."
+  total_per_phase: "Total par phase"
