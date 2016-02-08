@@ -55,8 +55,13 @@ class Guw::GuwWorkUnitsController < ApplicationController
 
   def destroy
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
-    guw_model_id = @guw_work_unit.guw_model.id
+    @guw_model = @guw_work_unit.guw_model
     @guw_work_unit.delete
-    redirect_to guw.guw_model_path(guw_model_id)
+    @guw_model = @guw_type.guw_model
+    if @guw_model.default_display == "list"
+      redirect_to guw.guw_model_all_guw_types_path(@guw_model)
+    else
+      redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+    end
   end
 end

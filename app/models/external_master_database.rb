@@ -44,17 +44,6 @@ end
 
 module ExternalMasterDatabase
 
-  HOST = {
-      :adapter => 'mysql2',
-      :database => 'projestimate_dev',
-      :reconnect => false,
-      :host => 'dev.estimancy.com',
-      :port => 3306,
-      :username => 'master',
-      :password => 'masterdata',
-      :encoding => 'utf8'
-  }
-
   class ExternalWbsActivityRatioElement < ActiveRecord::Base
     attr_accessible
     establish_connection HOST

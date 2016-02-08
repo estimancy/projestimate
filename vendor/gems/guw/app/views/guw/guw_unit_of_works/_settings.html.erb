@@ -10,11 +10,9 @@
       </a>
     <% end %>
     <%= link_to I18n.t(:export), guw.guw_model_export_path(@guw_model), class: "btn btn-mini input-small", method: "post" %>
-
   </div>
 
   <div class="pull-right">
-
     <div class="pull-left">
       <span class="label label-success">
       Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:retained_result) %> :
@@ -77,9 +75,11 @@
     <% @unit_of_work_groups.each_with_index do |uowg, j| %>
       <div class="accordion-heading" style="padding:5px;">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%=uowg.id%>" id="accordion<%=uowg.id%>">
-          <span style="font-weight: bold; font-size: 20px;" title="<%= uowg.comments %>">
-            <%= uowg.name %>
-          </span>
+          <div class="span5">
+            <span style="font-weight: bold; font-size: 20px;" title="<%= uowg.comments %>">
+              <%= uowg.name %>
+            </span>
+          </div>
         </a>
         <%= link_to '', guw.edit_guw_model_guw_unit_of_work_group_path(@guw_model, uowg), class: "fa fa-pencil pull-right", style: "margin-top:3px;" %>
 
@@ -129,8 +129,8 @@
 
       </div>
 
-      <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
-        <div class="accordion-inner">
+      <div id="collapse<%= uowg.id %>" class="pull-left accordion-body collapse in">
+        <div class="accordion-inner span12">
           <table class="table table-striped">
             <tr>
               <th class=""></th>
@@ -141,7 +141,7 @@
               </th>
               <th class="">#</th>
               <th class="text_left"><%= I18n.t :name %></th>
-              <th class="text_left"><%= I18n.t :description %></th>
+              <!--<th class="text_left"><%# I18n.t :description %></th>-->
               <th class=""><%= I18n.t :type %></th>
               <th class=""><%= @guw_model.coefficient_label.to_s.humanize %></th>
               <th class=""><%= I18n.t :technology %></th>
@@ -172,17 +172,17 @@
 
                 <td class="text_field_text_overflow">
                   <span class="pull-left">
-                    <%= link_to (guow.name.nil? || guow.name.blank?) ? '-' : guow.name, guw.guw_unit_of_work_load_name_path(guow), title: guow.name, method: "post", remote: true %>
+                    <%= link_to (guow.name.nil? || guow.name.blank?) ? '-' : guow.name, guw.guw_unit_of_work_load_comments_path(guow), title: guow.name, method: "post", remote: true %>
                   </span>
                 </td>
 
-                <td style="max-width: 100px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                  <span class="pull-left">
-                    <%= link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25),
+                <!--<td style="max-width: 100px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">-->
+                  <!--<span class="pull-left">-->
+                    <%# link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25),
                                 guw.guw_unit_of_work_load_comments_path(guow),
                                 title: "#{guow.comments}\n#{guow.tracking}", method: "post", remote: true %>
-                  </span>
-                </td>
+                  <!--</span>-->
+                <!--</td>-->
 
                 <td class="span2 ">
                   <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
@@ -197,6 +197,7 @@
                   <span class="work_unit_<%= guow.id %>" >
                     <%# results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).map(&:value) }.flatten.compact %>
                     <% results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq %>
+                    <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
                     <% unless results.empty? %>
                       <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                                      selected: guow.guw_work_unit_id),
@@ -212,12 +213,16 @@
                   <span class="technology_<%= guow.id %>" >
                     <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
                     <% unless results.empty? %>
-                      <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
-                                                                                      selected: guow.organization_technology.nil? ? uowg.organization_technology_id : guow.organization_technology_id),
-                                     class: "guw_technology input-xsmall",
-                                     guw: guow.id,
-                                     required: true,
-                                     readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% begin %>
+                        <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
+                                                                                        selected: guow.organization_technology.nil? ?
+                                                                                                uowg.organization_technology_id : guow.organization_technology.id),
+                                       class: "guw_technology input-xsmall",
+                                       guw: guow.id,
+                                       required: true,
+                                       readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% rescue %>
+                      <% end %>
                     <% end %>
                   </span>
                 </td>

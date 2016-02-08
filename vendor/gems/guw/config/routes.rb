@@ -61,6 +61,7 @@ Guw::Engine.routes.draw do
     post "duplicate"
     post "export"
     post "exportxl"
+    get "all_guw_types"
   end
 
   post "importxl" => "guw_models#importxl"

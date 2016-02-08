@@ -33,8 +33,6 @@ class UnitOfWork < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :organization_technologies
 
-  has_many :organization_uow_complexities, :dependent => :destroy
-
   validates :name, :alias, :presence => true
 
   default_scope { order('display_order ASC') }

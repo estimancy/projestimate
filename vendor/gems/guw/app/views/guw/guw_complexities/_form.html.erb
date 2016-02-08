@@ -3,7 +3,7 @@
   <ul>
     <li>
       <a href="#tabs-1">
-        <%= I18n.t(:complexity).pluralize %>
+        <%= I18n.t(:complexity).pluralize %> de <%= @guw_type %>
       </a>
     </li>
   </ul>
@@ -17,9 +17,11 @@
         <%= f.input :guw_type_id, as: :hidden, input_html: { value: params[:guw_type_id] } %>
 
         <%= f.input :name %>
-        <%= f.input :bottom_range, label: I18n.t(:low_border_include) %>
-        <%= f.input :top_range, label: I18n.t(:high_border_include) %>
-        <%= f.input :enable_value, label: I18n.t(:Product) + " ?" %>
+        <% if @guw_type.allow_criteria == true %>
+          <%= f.input :bottom_range, label: I18n.t(:low_border_include) %>
+          <%= f.input :top_range, label: I18n.t(:high_border_include) %>
+          <%= f.input :enable_value, label: I18n.t(:Product) + " ?" %>
+      <% end %>
         <%= f.input :weight, label: I18n.t(:weight) %>
         <%= f.input :display_order, label: I18n.t(:display_order) %>
       </div>

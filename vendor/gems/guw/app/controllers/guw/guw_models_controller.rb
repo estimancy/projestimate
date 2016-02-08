@@ -321,7 +321,7 @@ class Guw::GuwModelsController < ApplicationController
     worksheet = workbook[0]
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
-    workbook.add_worksheet(I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.coefficient_label || I18n.t(:Type_acquisitions))
 
     first_page.each_with_index do |row, index|
       worksheet.add_cell(index, 0, row[0])
@@ -832,18 +832,17 @@ class Guw::GuwModelsController < ApplicationController
               end
             else
               guw_uow = Guw::GuwUnitOfWork.new(selected: row[3].to_i == 1,
-                                                 name: row[4],
-                                                 comments: row[5],
-                                                 guw_unit_of_work_group_id: guw_uow_group.id,
-                                                 module_project_id: current_module_project.id,
-                                                 pbs_project_element_id: @component.id,
-                                                 guw_model_id: @guw_model.id,
-                                                 display_order: my_order,
-                                                 tracking: row[10],
-                                                 quantity: row[9].nil? ? 1 : row[9],
-                                                 effort: row[12].nil? ? nil : row[12],
-                                                 ajusted_effort: row[13].nil? ? nil : row[13],
-                                                 quantity: 1)
+                                               name: row[4],
+                                               comments: row[5],
+                                               guw_unit_of_work_group_id: guw_uow_group.id,
+                                               module_project_id: current_module_project.id,
+                                               pbs_project_element_id: @component.id,
+                                               guw_model_id: @guw_model.id,
+                                               display_order: my_order,
+                                               tracking: row[10],
+                                               quantity: row[9].nil? ? 1 : row[9],
+                                               effort: row[12].nil? ? nil : row[12],
+                                               ajusted_effort: row[13].nil? ? nil : row[13])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
@@ -886,11 +885,13 @@ class Guw::GuwModelsController < ApplicationController
                     end
                     if !row[8].nil?
                       type.guw_complexity_technologies.each do |techno|
-                        if row[8] == techno.organization_technology.name
-                          guw_uow.organization_technology_id = techno.organization_technology.id
-                          ind += 1
-                          indexing_field_error[2][0] = true
-                          break
+                        unless techno.organization_technology.nil?
+                          if row[8] == techno.organization_technology.name
+                            guw_uow.organization_technology_id = techno.organization_technology.id
+                            ind += 1
+                            indexing_field_error[2][0] = true
+                            break
+                          end
                         end
                         indexing_field_error[2][0] = false
                       end
@@ -973,6 +974,13 @@ class Guw::GuwModelsController < ApplicationController
     end
 
     redirect_to :back
+  end
+
+  def all_guw_types
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+    @guw_types = @guw_model.guw_types
+    set_page_title "Liste des unités d'oeuvres"
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
   # def init_guw_type_weight

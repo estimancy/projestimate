@@ -517,7 +517,9 @@ module ViewsWidgetsHelper
   #The view to display result with ACTIVITIES : EFFORT PER PHASE AND COST PER PHASE TABLE
   def display_effort_or_cost_per_phase(pbs_project_element, module_project_id, estimation_value, view_widget_id)
     res = String.new
-    view_widget = ViewsWidget.find(view_widget_id)
+    unless view_widget_id.nil?
+      view_widget = ViewsWidget.find(view_widget_id)
+    end
 
     module_project = ModuleProject.find(module_project_id)
     pemodule = module_project.pemodule
@@ -531,10 +533,16 @@ module ViewsWidgetsHelper
     wbs_activity = module_project.wbs_activity
     wbs_activity_elements = wbs_activity.wbs_activity_elements
 
-    if view_widget.show_min_max
-      levels = ['low', 'most_likely', 'high', 'probable']
-      colspan = 4
-      rowspan = 2
+    unless view_widget.nil?
+      if view_widget.show_min_max
+        levels = ['low', 'most_likely', 'high', 'probable']
+        colspan = 4
+        rowspan = 2
+      else
+        levels = ['probable']
+        colspan = 1
+        rowspan = 1
+      end
     else
       levels = ['probable']
       colspan = 1
@@ -564,13 +572,15 @@ module ViewsWidgetsHelper
     end
     res << '</tr>'
 
-    # We are showing for each PBS and/or ACTIVITY the (low, most_likely, high) values
-    if view_widget.show_min_max
-      res << '<tr>'
-      levels.each do |level|
-        res << "<th>#{level.humanize}</th>"
+    unless view_widget.nil?
+      # We are showing for each PBS and/or ACTIVITY the (low, most_likely, high) values
+      if view_widget.show_min_max
+        res << '<tr>'
+        levels.each do |level|
+          res << "<th>#{level.humanize}</th>"
+        end
+        res << '</tr>'
       end
-      res << '</tr>'
     end
 
     module_project.wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|

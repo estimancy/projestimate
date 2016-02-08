@@ -10,7 +10,6 @@
     <li><a href="#tabs-estimations-statuses"><%= I18n.t(:estimations_statuses) %> </a></li>
     <li><a href="#tabs-profile"><%= I18n.t(:profiles) %></a></li>
     <li><a href="#tabs-fields"><%= I18n.t(:fields) %></a></li>
-    <li><a href="#tabs-size_unit"><%= I18n.t(:size_unit) %></a></li>
     <li><a href="#tabs-estimation-models"><%= I18n.t(:estimation_models) %></a></li>
     <li><a href="#tabs-views"><%= I18n.t(:views) %></a></li>
     <li><a href="#tabs-select-columns-list"><%= I18n.t(:select_columns_list) %></a></li>
@@ -390,34 +389,6 @@
     <% else %>
         <div class="red_color"><%= I18n.t(:notice_cannot_view_estimation_statuses) %></div>
     <% end %>
-  </div>
-
-  <div id="tabs-size_unit">
-    <b><%= I18n.t(:size_unit) %></b>
-    <br>
-    <table class="table table-bordered">
-      <tr>
-        <th><%= I18n.t(:name)%></th>
-        <th><%= I18n.t(:alias)%></th>
-        <th><%= I18n.t(:description)%></th>
-        <th></th>
-        <th></th>
-      </tr>
-
-      <% @organization.size_unit_types.each do |size_unit_type| %>
-        <tr>
-          <td><%= size_unit_type.name %></td>
-          <td><%= size_unit_type.alias %></td>
-          <td><%= size_unit_type.description %></td>
-          <td><%= link_to I18n.t('Edit'), edit_size_unit_type_path(size_unit_type, organization_id: @organization.id) %></td>
-          <td><%= link_to I18n.t('Destroy'), size_unit_type, method: :delete, data: { confirm: I18n.t(:are_you_sure) } %></td>
-        </tr>
-      <% end %>
-    </table>
-
-    <br />
-
-    <%= link_to I18n.t(:new_size_unit_type), new_size_unit_type_path(organization_id: @organization.id) %>
   </div>
 
   <div id="tabs-estimation-models">

@@ -119,7 +119,7 @@ class WbsActivityRatiosController < ApplicationController
   end
 
   def destroy
-    authorize! :manage, WbsActivity
+    authorize! :manage_modules_instances, ModuleProject
     @wbs_activity_ratio = WbsActivityRatio.find(params[:id])
 
     #if is_master_instance?

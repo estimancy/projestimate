@@ -23,8 +23,8 @@ if File.exist?(database_file)
       case adapter
         when 'mysql2'
           gem 'mysql2', '~> 0.3.11'
-        when /postgresql/
-          gem 'pg'
+        # when /postgres/
+          # gem 'pg'
         else
           warn("Unknown database adapter `#{adapter}` found in config/database.yml, use Gemfile.local to load your own database gems")
       end
@@ -37,7 +37,9 @@ else
 end
 
 #For PostgreSQL database
+# gem 'pg'
 gem 'pg'
+gem 'thin'
 
 #Permissions
 gem 'cancan'
@@ -101,10 +103,6 @@ gem 'rubyXL'
 gem 'nokogiri'
 
 # Including
-gem 'cocomo_advanced', :path => "vendor/gems/cocomo_advanced"
-gem 'cocomo_expert', :path => "vendor/gems/cocomo_expert"
-gem 'real_size', :path => "vendor/gems/real_size"
-gem 'uow', :path => 'vendor/gems/uow'
 gem 'guw', :path => 'vendor/gems/guw'
 gem 'ge', :path => 'vendor/gems/ge'
 gem 'operation', :path => 'vendor/gems/operation'

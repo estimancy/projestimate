@@ -29,8 +29,8 @@ module Guw
 
     validates_presence_of :name#, :guw_type_id#, :bottom_range, :top_range,
 
-    validates :bottom_range, numericality: { only_integer: true }
-    validates :top_range, numericality: { only_integer: true }
+    validates :bottom_range, numericality: { only_integer: true, allow_nil: true }
+    validates :top_range, numericality: { only_integer: true, allow_nil: true }
 
     amoeba do
       enable

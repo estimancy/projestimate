@@ -33,7 +33,7 @@ jQuery ->
         $(".total-ratio").html data
 
       error: (XMLHttpRequest, testStatus, errorThrown) ->
-        alert "Error!"
+#        alert "Error!"
 
 
   $(".select_size_unit").change ->

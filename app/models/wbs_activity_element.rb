@@ -33,8 +33,7 @@ class WbsActivityElement < ActiveRecord::Base
   has_many :wbs_project_elements
 
   #default_scope order("id asc")
-  #default_scope order("dotted_id asc")
-  scope :is_ok_for_validation, lambda { |de, re| where('record_status_id <> ? and record_status_id <> ?', de, re) }
+  default_scope order("dotted_id asc")
   scope :elements_root, where(:is_root => true)
 
   validates :name, :presence => true, :uniqueness => {:scope => [:wbs_activity_id, :ancestry], :case_sensitive => false}
@@ -60,7 +59,7 @@ class WbsActivityElement < ActiveRecord::Base
   end
 
   def to_s
-    self.wbs_activity.name
+    self.name
   end
 
   def self.import(file, sep)
@@ -124,5 +123,17 @@ class WbsActivityElement < ActiveRecord::Base
         end
       end
     end
+  end
+
+  #Function that tell if a node has one or more children that are not from library
+  def has_new_complement_child?
+    has_new_additional_child = false
+    if self.has_children? && !self.is_root?
+      self.children.each do |child|
+        has_new_additional_child = child.nil? && child.wbs_activity.nil?
+        break if has_new_additional_child
+      end
+    end
+    has_new_additional_child
   end
 end

@@ -64,7 +64,11 @@ class ProjectsController < ApplicationController
   def load_data
     #No authorize required since this method protected and is used to load data and shared by the other one.
     if params[:id]
-      @project = Project.find(params[:id])
+      begin
+        @project = Project.find(params[:id])
+      rescue
+        redirect_to root_url and return
+      end
     else
       @project = Project.new :state => 'preliminary'
     end
@@ -231,69 +235,8 @@ class ProjectsController < ApplicationController
                                 trapeze_parameter_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] } )
       end
 
-    elsif @module_project.pemodule.alias == "uow"
-      @pbs = current_component
-
-      @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
-      if @uow_inputs.empty?
-        @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: 0)
-        @input.save(validate: false)
-        @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
-      end
-
-      @organization_technologies = @project.organization.organization_technologies.map{|i| [i.name, i.id]}
-      @unit_of_works = @project.organization.unit_of_works.map{|i| [i.name, i.id]}
-      current_component_technology = current_component.organization_technology
-      @complexities = current_component_technology.nil? ? [] : current_component_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
-
-      @module_project.pemodule.attribute_modules.each do |am|
-        if am.pe_attribute.alias ==  "retained_size"
-          @size = EstimationValue.where(:module_project_id => @module_project.id,
-                                        :pe_attribute_id => am.pe_attribute.id,
-                                        :in_out => "input" ).first
-
-          @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-        end
-      end
-
-    elsif @module_project.pemodule.alias == "cocomo_advanced"
-
-      @aprod = Array.new
-      aliass = %w(rely data cplx ruse docu)
-      aliass.each do |a|
-        @aprod << Factor.where(alias: a, factor_type: "advanced").first
-      end
-
-      @aplat = Array.new
-      aliass = %w(time stor pvol)
-      aliass.each do |a|
-        @aplat << Factor.where(alias: a, factor_type: "advanced").first
-      end
-
-      @apers = Array.new
-      aliass = %w(acap aexp ltex pcap pexp pcon)
-      aliass.each do |a|
-        @apers << Factor.where(alias: a, factor_type: "advanced").first
-      end
-
-      @aproj = Array.new
-      aliass = %w(tool site sced)
-      aliass.each do |a|
-        @aproj << Factor.where(alias: a, factor_type: "advanced").first
-      end
     else
-      @sf = []
-      @em = []
 
-      aliass = %w(pers rcpx ruse pdif prex fcil sced)
-      aliass.each do |a|
-        @em << Factor.where(alias: a).first
-      end
-
-      aliass = %w(prec flex resl team pmat)
-      aliass.each do |a|
-        @sf << Factor.where(alias: a).first
-      end
     end
   end
 
@@ -406,7 +349,7 @@ class ProjectsController < ApplicationController
     defaut_psl = AdminSetting.where(key: "Secure Level Creator").first.value
     defaut_group = AdminSetting.where(key: "Groupe using estimation").first_or_create!(value: "*USER")
     defaut_group_ps = @project.project_securities.build
-    defaut_group_ps.group_id = Group.find_by_name(defaut_group.value).id
+    defaut_group_ps.group_id = Group.where(name: defaut_group.value, organization_id: @organization.id).first.id
     defaut_group_ps.project_security_level = full_control_security_level
     defaut_group_ps.is_model_permission = false
     defaut_group_ps.is_estimation_permission = true
@@ -1867,12 +1810,12 @@ public
           end
         end
 
-        new_mp.uow_inputs.each do |uo|
-          new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
-          new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-
-          uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
-        end
+        # new_mp.uow_inputs.each do |uo|
+        #   new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+        #   new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+        #
+        #   uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+        # end
 
         ["input", "output"].each do |io|
           new_mp.pemodule.pe_attributes.each do |attr|
@@ -2252,12 +2195,12 @@ public
               end
             end
 
-            new_mp.uow_inputs.each do |uo|
-              new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
-              new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
-
-              uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
-            end
+            # new_mp.uow_inputs.each do |uo|
+            #   new_pbs_project_element = new_prj_components.find_by_copy_id(uo.pbs_project_element_id)
+            #   new_pbs_project_element_id = new_pbs_project_element.nil? ? nil : new_pbs_project_element.id
+            #
+            #   uo.update_attribute(:pbs_project_element_id, new_pbs_project_element_id)
+            # end
 
             ["input", "output"].each do |io|
               new_mp.pemodule.pe_attributes.each do |attr|
@@ -3148,70 +3091,7 @@ public
                                                                      trapeze_default_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] },
                                                                      trapeze_parameter_values: { :x0 => trapeze_default_values['x0'], :y0 => trapeze_default_values['y0'], :x1 => trapeze_default_values['x1'], :x2 => trapeze_default_values['x2'], :x3 => trapeze_default_values['x3'], :y3 => trapeze_default_values['y3'] } )
       end
-
-    elsif @module_project.pemodule.alias == "uow"
-      @pbs = current_component
-
-      @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
-      if @uow_inputs.empty?
-        @input = UowInput.new(module_project_id: @module_project.id, pbs_project_element_id: @pbs.id, display_order: 0)
-        @input.save(validate: false)
-        @uow_inputs = UowInput.where(module_project_id: @module_project, pbs_project_element_id: @pbs.id).order("display_order ASC").all
-      end
-
-      @organization_technologies = @project.organization.organization_technologies.map{|i| [i.name, i.id]}
-      @unit_of_works = @project.organization.unit_of_works.map{|i| [i.name, i.id]}
-      current_component_technology = current_component.organization_technology
-      @complexities = current_component_technology.nil? ? [] : current_component_technology.organization_uow_complexities.map{|i| [i.name, i.id]}
-
-      @module_project.pemodule.attribute_modules.each do |am|
-        if am.pe_attribute.alias ==  "retained_size"
-          @size = EstimationValue.where(:module_project_id => @module_project.id,
-                                        :pe_attribute_id => am.pe_attribute.id,
-                                        :in_out => "input" ).first
-
-          @gross_size = EstimationValue.where(:module_project_id => @module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-        end
-      end
-
-    elsif @module_project.pemodule.alias == "cocomo_advanced"
-
-      @aprod = Array.new
-      aliass = %w(rely data cplx ruse docu)
-      aliass.each do |a|
-        @aprod << Factor.where(alias: a, factor_type: "advanced").first
-      end
-
-      @aplat = Array.new
-      aliass = %w(time stor pvol)
-      aliass.each do |a|
-        @aplat << Factor.where(alias: a, factor_type: "advanced").first
-      end
-
-      @apers = Array.new
-      aliass = %w(acap aexp ltex pcap pexp pcon)
-      aliass.each do |a|
-        @apers << Factor.where(alias: a, factor_type: "advanced").first
-      end
-
-      @aproj = Array.new
-      aliass = %w(tool site sced)
-      aliass.each do |a|
-        @aproj << Factor.where(alias: a, factor_type: "advanced").first
-      end
     else
-      @sf = []
-      @em = []
-
-      aliass = %w(pers rcpx ruse pdif prex fcil sced)
-      aliass.each do |a|
-        @em << Factor.where(alias: a).first
-      end
-
-      aliass = %w(prec flex resl team pmat)
-      aliass.each do |a|
-        @sf << Factor.where(alias: a).first
-      end
     end
   end
 end
