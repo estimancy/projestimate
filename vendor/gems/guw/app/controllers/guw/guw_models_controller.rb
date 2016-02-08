@@ -915,7 +915,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet =workbook[0]
       tab = worksheet.extract_data
 
-      worksheet.each_with_index  do |row, index|
+      tab.each_with_index  do |row, index|
         if index > 0
           if row[4] && row[2] && row[6]  && !row[4].empty? &&  !row[2].empty? && !row[6].empty?
             guw_uow_group = Guw::GuwUnitOfWorkGroup.where(name: row[2],
