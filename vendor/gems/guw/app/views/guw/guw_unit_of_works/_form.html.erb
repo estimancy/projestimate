@@ -26,7 +26,9 @@
             <%= f.input :name, label: I18n.t(:uw_name), input_html: { class: "input-xxlarge" } %>
             <%= f.input :comments, input_html: { rows: "5" }, label: I18n.t(:description), input_html: { class: "input-xxlarge" }  %>
             <%= f.input :guw_type_id, as: :select, collection: @guw_model.guw_types.map{|i| [i.name, i.id]}, label: I18n.t(:work_unit_type), include_blank: false, input_html: { class: "input-xxlarge" }  %>
-            <%= f.input :guw_work_unit_id, as: :select, collection: @guw_model.guw_work_units, label: I18n.t(:Opération), include_blank: false, input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :guw_work_unit_id, as: :select, collection: @guw_model.guw_work_units, label: @guw_model.coefficient_label.to_s.humanize, include_blank: false, input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :guw_weighting_id, as: :select, collection: @guw_model.guw_weightings, label: @guw_model.weightings_label.to_s.humanize, include_blank: false, input_html: { class: "input-xxlarge" }  %>
+            <%= f.input :guw_factor_id, as: :select, collection: @guw_model.guw_factors, label: @guw_model.factors_label.to_s.humanize, include_blank: false, input_html: { class: "input-xxlarge" }  %>
             <% default_technology = Guw::GuwUnitOfWorkGroup.find(params[:g]).organization_technology %>
             <%= f.input :organization_technology_id,
                         as: :select,
