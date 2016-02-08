@@ -154,7 +154,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @lows = Array.new
     @mls = Array.new
     @highs = Array.new
-    @weight_pert = Array.new
+    array_pert = Array.new
 
     guw_unit_of_work.off_line = false
     guw_unit_of_work.off_line_uo = false
@@ -208,17 +208,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.guw_factor_id = guw_factor.nil? ? nil : guw_factor.id
     guw_unit_of_work.save
 
-    type_attribute_array = []
-    effort_array_value = []
-    cost_array_value = []
-    size_array_value = []
-
-    ["effort", "size", "cost"].each do |ta|
-      Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model, type_attribute: ta).each do |gsma|
-        type_attribute_array << gsma
-      end
-    end
-
     unless params["guw_complexity_#{guw_unit_of_work.id}"].nil?
       guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
       guw_unit_of_work.guw_complexity_id = guw_complexity_id
@@ -227,24 +216,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_complexity_id = guw_unit_of_work.guw_complexity_id
     end
 
-    complexity_work_unit = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity_id,
-                                                            guw_work_unit_id: guw_work_unit).first
-
-    complexity_weighting = Guw::GuwComplexityWeighting.where(guw_complexity_id: guw_complexity_id,
-                                                             guw_weighting_id: guw_weighting).first
-
-    complexity_factor = Guw::GuwComplexityFactor.where(guw_complexity_id: guw_complexity_id,
-                                                       guw_factor_id: guw_factor).first
-
     if guw_unit_of_work.guw_type.allow_complexity == true && guw_unit_of_work.guw_type.allow_criteria == false
 
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
 
       if guw_unit_of_work.guw_complexity.nil?
-        @weight_pert << (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        array_pert << (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
       else
-        @weight_pert << (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+        array_pert << (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
       end
       guw_unit_of_work.save
     else
@@ -258,11 +238,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         elsif (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
           guw_unit_of_work.off_line_uo = true
           guw_unit_of_work.guw_complexity_id = guw_type.guw_complexities.last.id
-          @weight_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert, guw_work_unit)
+          array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert, guw_work_unit)
         else
           guw_type.guw_complexities.each do |guw_c|
             guw_work_unit = Guw::GuwWorkUnit.find(params["guw_work_unit_id"])
-            @weight_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
+            array_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
           end
         end
       end
@@ -271,23 +251,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.quantity = params["hidden_quantity"]["#{guw_unit_of_work.id}"].blank? ? 1 : params["hidden_quantity"]["#{guw_unit_of_work.id}"].to_f
     guw_unit_of_work.save
 
-    type_attribute_array.each do |taa|
-      cts = eval("complexity_#{taa.type_scale}")
-      eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
-    end
-
-    guw_unit_of_work.effort = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) *
-                              (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
-                              (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*))
-
-    guw_unit_of_work.cost = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) *
-                            (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
-                            (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*))
-
-    guw_unit_of_work.size = (guw_unit_of_work.off_line? ? nil : @weight_pert.sum).to_f.round(3) *
-                            (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
-                            (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*))
-
+    final_value = (guw_unit_of_work.off_line? ? nil : array_pert.empty? ? nil : array_pert.sum.to_f.round(3))
+    calculate_attributes(guw_unit_of_work, guw_factor, guw_weighting, guw_work_unit, tcplx, final_value)
 
     if guw_unit_of_work.guw_type.allow_retained == false
       guw_unit_of_work.size == guw_unit_of_work.ajusted_size
@@ -295,8 +260,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     end
 
     if params["hidden_ajusted_size"]["#{guw_unit_of_work.id}"].blank?
-      guw_unit_of_work.ajusted_size = (guw_unit_of_work.off_line? ? nil : @weight_pert.empty? ? nil : @weight_pert.sum.to_f.round(3))
-    elsif params["hidden_ajusted_size"]["#{guw_unit_of_work.id}"] != @weight_pert.sum
+      guw_unit_of_work.ajusted_size = final_value
+    elsif params["hidden_ajusted_size"]["#{guw_unit_of_work.id}"] != array_pert.sum
       guw_unit_of_work.ajusted_size = params["hidden_ajusted_size"]["#{guw_unit_of_work.id}"].to_f.round(3)
     end
 
@@ -349,7 +314,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                                                   guw_model_id: @guw_model.id)
 
     @guw_unit_of_works.each_with_index do |guw_unit_of_work, i|
-      @weight_pert = Array.new
+      array_pert = Array.new
       if !params[:selected].nil? && params[:selected].join(",").include?(guw_unit_of_work.id.to_s)
         guw_unit_of_work.selected = true
       else
@@ -423,34 +388,42 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         guw_unit_of_work.save
       end
 
-      type_attribute_array = []
-      effort_array_value = []
-      cost_array_value = []
-      size_array_value = []
-
-      ["effort", "size", "cost"].each do |ta|
-        Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model, type_attribute: ta).each do |gsma|
-          type_attribute_array << gsma
-        end
-      end
-
-      type_attribute_array.map(&:type_attribute)
-      type_attribute_array.map(&:type_scale)
-
-      type_attribute_array.each do |taa|
-        cts = eval("complexity_#{taa.type_scale}")
-        eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
-      end
-
       if guw_unit_of_work.guw_complexity.nil?
-        @weight_pert = 0
+        final_value = 0
       else
-        @weight_pert = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+        final_value = (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
       end
 
-      guw_unit_of_work.effort = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*))
-      guw_unit_of_work.cost = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*))
-      guw_unit_of_work.size = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*))
+      calculate_attributes(guw_unit_of_work, guw_factor, guw_weighting, guw_work_unit, tcplx, final_value)
+
+      # type_attribute_array = []
+      # effort_array_value = []
+      # cost_array_value = []
+      # size_array_value = []
+      #
+      # ["effort", "size", "cost"].each do |ta|
+      #   Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model, type_attribute: ta).each do |gsma|
+      #     type_attribute_array << gsma
+      #   end
+      # end
+      #
+      # type_attribute_array.map(&:type_attribute)
+      # type_attribute_array.map(&:type_scale)
+      #
+      # type_attribute_array.each do |taa|
+      #   cts = eval("complexity_#{taa.type_scale}")
+      #   eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
+      # end
+      #
+      # if guw_unit_of_work.guw_complexity.nil?
+      #   @weight_pert = 0
+      # else
+      #   @weight_pert = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+      # end
+      #
+      # guw_unit_of_work.effort = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*))
+      # guw_unit_of_work.cost = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*))
+      # guw_unit_of_work.size = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*))
 
       if guw_unit_of_work.guw_type.allow_retained == false
         guw_unit_of_work.ajusted_size = guw_unit_of_work.size
@@ -873,6 +846,69 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @module_project.views_widgets.each do |vw|
       ViewsWidget::update_field(vw, @current_organization, @module_project.project, current_component)
     end
+  end
+
+  def calculate_attributes(guw_unit_of_work, guw_factor, guw_weighting, guw_work_unit, tcplx, final_value)
+
+    # if guw_unit_of_work.guw_complexity.nil?
+    #   final_value = 0
+    # else
+    #   tmp1 = (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+    #   tmp2 = (guw_unit_of_work.off_line? ? nil : (array_pert.empty? ? 0 : array_pert.sum)).to_f.round(3)
+    #   final_value = tmp1 + tmp2
+    # end
+
+    complexity_work_unit = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_unit_of_work.guw_complexity,
+                                                            guw_work_unit_id: guw_work_unit).first
+
+    complexity_weighting = Guw::GuwComplexityWeighting.where(guw_complexity_id: guw_unit_of_work.guw_complexity,
+                                                             guw_weighting_id: guw_weighting).first
+
+    complexity_factor = Guw::GuwComplexityFactor.where(guw_complexity_id: guw_unit_of_work.guw_complexity,
+                                                       guw_factor_id: guw_factor).first
+
+    type_attribute_array = []
+    effort_array_value = []
+    cost_array_value = []
+    size_array_value = []
+
+    ["effort", "size", "cost"].each do |ta|
+      Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model, type_attribute: ta).each do |gsma|
+        type_attribute_array << gsma
+      end
+    end
+
+    type_attribute_array.each do |taa|
+      cts = eval("complexity_#{taa.type_scale}")
+      eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
+    end
+
+    guw_unit_of_work.effort = final_value *
+        (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
+        (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
+        (guw_factor.nil? ? 1 : guw_factor.value) *
+        (guw_weighting.nil? ? 1 : guw_weighting.value) *
+        (guw_work_unit.nil? ? 1 : guw_work_unit.value) *
+        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+
+    guw_unit_of_work.cost = final_value *
+        (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
+        (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
+        (guw_factor.nil? ? 1 : guw_factor.value) *
+        (guw_weighting.nil? ? 1 : guw_weighting.value) *
+        (guw_work_unit.nil? ? 1 : guw_work_unit.value) *
+        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+
+
+    guw_unit_of_work.size = final_value *
+        (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
+        (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
+        (guw_factor.nil? ? 1 : guw_factor.value) *
+        (guw_weighting.nil? ? 1 : guw_weighting.value) *
+        (guw_work_unit.nil? ? 1 : guw_work_unit.value) *
+        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+
+    return guw_unit_of_work
   end
 
 end
