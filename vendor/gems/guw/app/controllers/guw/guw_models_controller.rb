@@ -117,12 +117,12 @@ class Guw::GuwModelsController < ApplicationController
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
-                                                three_points_estimation: tab[3][1].to_i == 1,
-                                                retained_size_unit: tab[4][1],
                                                 coefficient_label: tab[2][1],
                                                 weightings_label: tab[3][1],
                                                 factors_label: tab[4][1],
-                                                hour_coefficient_conversion: tab[5][1],
+                                                three_points_estimation: tab[5][1].to_i == 1,
+                                                retained_size_unit: tab[6][1],
+                                                hour_coefficient_conversion: tab[7][1],
                                                 organization_id: @current_organization.id)
               critical_flag = false
             else
@@ -194,6 +194,7 @@ class Guw::GuwModelsController < ApplicationController
                                                 allow_complexity: tab[3][1] == 1,
                                                 allow_criteria: tab[4][1] == 1,
                                                 guw_model_id: @guw_model.id)
+
                 if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty?# && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
                   while !tab[6][ind].nil?
                     @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
@@ -208,7 +209,10 @@ class Guw::GuwModelsController < ApplicationController
                         ind2 += 1
                       end
                       if !tab[ind2].nil?# && tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind + 3])
+                        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id,
+                                                          guw_work_unit_id: wu.id,
+                                                          value: tab[ind2][ind + 3],
+                                                          guw_type_id: @guw_type)
                       end
                       # elsif tab[ind2].nil?
                       #   route_flag = 3
@@ -223,7 +227,10 @@ class Guw::GuwModelsController < ApplicationController
                         ind2 += 1
                       end
                       if !tab[ind2].nil? #&& tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id, guw_weighting_id: we.id, value: tab[ind2][ind + 3])
+                        Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id,
+                                                           guw_weighting_id: we.id,
+                                                           value: tab[ind2][ind + 3],
+                                                           guw_type_id: @guw_type)
                       end
                       # elsif tab[ind2].nil?
                       #   route_flag = 3
@@ -238,7 +245,10 @@ class Guw::GuwModelsController < ApplicationController
                         ind2 += 1
                       end
                       if !tab[ind2].nil? #&& tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id, guw_factor_id: fa.id, value: tab[ind2][ind + 3])
+                        Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id,
+                                                        guw_factor_id: fa.id,
+                                                        value: tab[ind2][ind + 3],
+                                                        guw_type_id: @guw_type)
                       end
                       # elsif tab[ind2].nil?
                       #   route_flag = 3
