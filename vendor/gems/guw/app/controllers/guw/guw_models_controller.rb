@@ -121,7 +121,7 @@ class Guw::GuwModelsController < ApplicationController
                                                 retained_size_unit: tab[4][1],
                                                 coefficient_label: tab[2][1],
                                                 weightings_label: tab[3][1],
-                                                factor_label: tab[4][1],
+                                                factors_label: tab[4][1],
                                                 hour_coefficient_conversion: tab[5][1],
                                                 organization_id: @current_organization.id)
               critical_flag = false
@@ -185,7 +185,7 @@ class Guw::GuwModelsController < ApplicationController
               route_flag = 5
               break
             end
-            if worksheet.sheet_name != I18n.t(:is_model) && worksheet.sheet_name != I18n.t(:attribute_description) && worksheet.sheet_name != I18n.t(:Type_acquisitions)
+            if worksheet.sheet_name != I18n.t(:is_model) && worksheet.sheet_name != I18n.t(:attribute_description)# && worksheet.sheet_name != I18n.t(:Type_acquisitions)
               if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
                 @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
                                                 description: tab[0][0],
@@ -194,7 +194,7 @@ class Guw::GuwModelsController < ApplicationController
                                                 allow_complexity: tab[3][1] == 1,
                                                 allow_criteria: tab[4][1] == 1,
                                                 guw_model_id: @guw_model.id)
-                if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty? && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
+                if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty?# && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
                   while !tab[6][ind].nil?
                     @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
                                                                name: tab[6][ind],
@@ -204,51 +204,54 @@ class Guw::GuwModelsController < ApplicationController
                                                                weight:  tab[8][ind + 3] ? tab[8][ind + 3] : 1)
 
                     @guw_model.guw_work_units.each do |wu|
-                      while !tab[ind2].nil? && tab[ind2][0] != wu.name && tab[ind2][0] != I18n.t(:organization_technology)
+                      while !tab[ind2].nil? && tab[ind2][0] != wu.name #&& tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
                       if !tab[ind2].nil?# && tab[ind2][0] != I18n.t(:organization_technology)
                         Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind + 3])
-                      elsif tab[ind2].nil?
-                        route_flag = 3
-                        break
                       end
+                      # elsif tab[ind2].nil?
+                      #   route_flag = 3
+                      #   break
+                      # end
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
 
                     @guw_model.guw_weightings.each do |we|
-                      while !tab[ind2].nil? && tab[ind2][0] != wu.name# && tab[ind2][0] != I18n.t(:organization_technology)
+                      while !tab[ind2].nil? && tab[ind2][0] != we.name# && tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
-                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
+                      if !tab[ind2].nil? #&& tab[ind2][0] != I18n.t(:organization_technology)
                         Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id, guw_weighting_id: we.id, value: tab[ind2][ind + 3])
-                      elsif tab[ind2].nil?
-                        route_flag = 3
-                        break
                       end
+                      # elsif tab[ind2].nil?
+                      #   route_flag = 3
+                      #   break
+                      # end
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
 
                     @guw_model.guw_factors.each do |fa|
-                      while !tab[ind2].nil? && tab[ind2][0] != wu.name# && tab[ind2][0] != I18n.t(:organization_technology)
+                      while !tab[ind2].nil? && tab[ind2][0] != fa.name# && tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
-                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
+                      if !tab[ind2].nil? #&& tab[ind2][0] != I18n.t(:organization_technology)
                         Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id, guw_factor_id: fa.id, value: tab[ind2][ind + 3])
-                      elsif tab[ind2].nil?
-                        route_flag = 3
-                        break
                       end
+                      # elsif tab[ind2].nil?
+                      #   route_flag = 3
+                      #   break
+                      # end
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
 
-                    if tab[ind2].nil? || route_flag == 3
-                      route_flag = 3
-                      break
-                    end
+                    # if tab[ind2].nil? || route_flag == 3
+                    #   route_flag = 3
+                    #   break
+                    # end
                     while !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
                       ind2 += 1
                     end
@@ -276,23 +279,23 @@ class Guw::GuwModelsController < ApplicationController
                   end
                   ind = 1
                 end
-                if !tab[save_position].nil? && tab[save_position][0] == I18n.t(:complexity_threshold) && tab[save_position + 1][0] == I18n.t(:pe_attributes)
+                if !tab[save_position - 4].nil?# && tab[save_position][0] == I18n.t(:complexity_threshold) && tab[save_position + 1][0] == I18n.t(:pe_attributes)
                   ind3 = save_position + 2
                   ind = 1
-                  while !tab[save_position][ind].nil?
-                   @guw_att_complexity =  Guw::GuwTypeComplexity.create(guw_type_id: @guw_type.id, name: tab[save_position][ind], value: 4)
+                  while !tab[save_position - 4][ind].nil?
+                   @guw_att_complexity =  Guw::GuwTypeComplexity.create(guw_type_id: @guw_type.id, name: tab[save_position - 6][ind], value: 4)
                     @guw_model.guw_attributes.each do |att|
                       while !tab[ind3].nil? && tab[ind3][0] != att.name
                         ind3 += 1
                       end
                       if !tab[ind3].nil?
-                        toto = Guw::GuwAttributeComplexity.create(guw_type_complexity_id: @guw_att_complexity.id,
-                                                           guw_attribute_id: att.id,
-                                                           guw_type_id: @guw_type.id,
-                                                           enable_value: tab[ind3][ind] == 1,
-                                                           bottom_range: tab[ind3][ind + 1],
-                                                           top_range: tab[ind3][ind + 2],
-                                                           value: tab[ind3][ind + 3] ? tab[ind3][ind + 3] : (tab[ind3][ind + 2] && tab[ind3][ind + 1] ? 1 : nil))
+                        toto = Guw::GuwAttributeComplexity.create(  guw_type_complexity_id: @guw_att_complexity.id,
+                                                                   guw_attribute_id: att.id,
+                                                                   guw_type_id: @guw_type.id,
+                                                                   enable_value: tab[ind3][ind] == 1,
+                                                                   bottom_range: tab[ind3][ind + 1],
+                                                                   top_range: tab[ind3][ind + 2],
+                                                                   value: tab[ind3][ind + 3] ? tab[ind3][ind + 3] : (tab[ind3][ind + 2] && tab[ind3][ind + 1] ? 1 : nil))
                       end
                       ind3 = save_position + 2
                     end
