@@ -120,6 +120,8 @@ class Guw::GuwModelsController < ApplicationController
                                                 three_points_estimation: tab[3][1].to_i == 1,
                                                 retained_size_unit: tab[4][1],
                                                 coefficient_label: tab[2][1],
+                                                weightings_label: tab[3][1],
+                                                factor_label: tab[4][1],
                                                 hour_coefficient_conversion: tab[5][1],
                                                 organization_id: @current_organization.id)
               critical_flag = false
@@ -140,7 +142,7 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 2
-            if critical_flag || worksheet.sheet_name != I18n.t(:Type_acquisitions)
+            if critical_flag || worksheet.sheet_name != @guw_model.coefficient_label
               route_flag = 5
               break
             end
@@ -150,6 +152,32 @@ class Guw::GuwModelsController < ApplicationController
                                          value: row[1],
                                          display_order: row[2],
                                          guw_model_id: @guw_model.id)
+              end
+            end
+          elsif index == 3
+            if critical_flag || worksheet.sheet_name != @guw_model.weightings_label
+              route_flag = 5
+              break
+            end
+            tab.each_with_index do |row, index|
+              if index != 0 && !row.nil?
+                Guw::GuwWeighting.create(name:row[0],
+                                        value: row[1],
+                                        display_order: row[2],
+                                        guw_model_id: @guw_model.id)
+              end
+            end
+          elsif index == 4
+            if critical_flag || worksheet.sheet_name != @guw_model.factors_label
+              route_flag = 5
+              break
+            end
+            tab.each_with_index do |row, index|
+              if index != 0 && !row.nil?
+                Guw::GuwFactor.create(name:row[0],
+                                      value: row[1],
+                                      display_order: row[2],
+                                      guw_model_id: @guw_model.id)
               end
             end
           else
@@ -174,11 +202,12 @@ class Guw::GuwModelsController < ApplicationController
                                                                bottom_range: tab[8][ind + 1],
                                                                top_range: tab[8][ind + 2],
                                                                weight:  tab[8][ind + 3] ? tab[8][ind + 3] : 1)
+
                     @guw_model.guw_work_units.each do |wu|
                       while !tab[ind2].nil? && tab[ind2][0] != wu.name && tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
-                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
+                      if !tab[ind2].nil?# && tab[ind2][0] != I18n.t(:organization_technology)
                         Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind + 3])
                       elsif tab[ind2].nil?
                         route_flag = 3
@@ -187,6 +216,35 @@ class Guw::GuwModelsController < ApplicationController
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
+
+                    @guw_model.guw_weightings.each do |we|
+                      while !tab[ind2].nil? && tab[ind2][0] != wu.name# && tab[ind2][0] != I18n.t(:organization_technology)
+                        ind2 += 1
+                      end
+                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
+                        Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id, guw_weighting_id: we.id, value: tab[ind2][ind + 3])
+                      elsif tab[ind2].nil?
+                        route_flag = 3
+                        break
+                      end
+                      ind2 = 10
+                      action_type_aquisition_flag = true
+                    end
+
+                    @guw_model.guw_factors.each do |fa|
+                      while !tab[ind2].nil? && tab[ind2][0] != wu.name# && tab[ind2][0] != I18n.t(:organization_technology)
+                        ind2 += 1
+                      end
+                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
+                        Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id, guw_factor_id: fa.id, value: tab[ind2][ind + 3])
+                      elsif tab[ind2].nil?
+                        route_flag = 3
+                        break
+                      end
+                      ind2 = 10
+                      action_type_aquisition_flag = true
+                    end
+
                     if tab[ind2].nil? || route_flag == 3
                       route_flag = 3
                       break
@@ -513,55 +571,25 @@ class Guw::GuwModelsController < ApplicationController
 
         guw_complexity.guw_complexity_work_units.each do |guw_complexity_work_unit|
           @guw_work_unit = guw_complexity_work_unit.guw_work_unit
-          cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
-          worksheet.add_cell(ind2 + 4, 0, @guw_work_unit.name)
-          worksheet[ind2 + 4][0].change_border(:right, 'thin')
+          unless @guw_work_unit.nil?
+            cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
+            worksheet.add_cell(ind2 + 4, 0, @guw_work_unit.name)
+            worksheet[ind2 + 4][0].change_border(:right, 'thin')
 
-          ["","","",cu.value].each_with_index do |val, index|
-            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
+            ["","","",cu.value].each_with_index do |val, index|
+              worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
+            end
+            4.times.each do |index|
+              worksheet[10][ind + index + 1].change_border(:top, 'thin')
+            end
+            worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
+            ind2 += 1
           end
-          4.times.each do |index|
-            worksheet[10][ind + index + 1].change_border(:top, 'thin')
-          end
-          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
-          ind2 += 1
-        end
-
-        guw_complexity.guw_complexity_weightings.each do |guw_complexity_weighting|
-          @guw_weighting = guw_complexity_weighting.guw_weighting
-          cu = Guw::GuwComplexityWeighting.where(guw_complexity_id: guw_complexity.id, guw_weighting_id: @guw_weighting.id).first
-          worksheet.add_cell(ind2 + 4, 0, @guw_weighting.name)
-          worksheet[ind2 + 4][0].change_border(:right, 'thin')
-
-          ["","","",cu.value].each_with_index do |val, index|
-            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
-          end
-          4.times.each do |index|
-            worksheet[10][ind + index + 1].change_border(:top, 'thin')
-          end
-          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
-          ind2 += 1
-        end
-
-        guw_complexity.guw_complexity_factors.each do |guw_complexity_factor|
-          @guw_factor = guw_complexity_factor.guw_factor
-          cu = Guw::GuwComplexityFactor.where(guw_complexity_id: guw_complexity.id, guw_factor_id: @guw_factor.id).first
-          worksheet.add_cell(ind2 + 4, 0, @guw_factor.name)
-          worksheet[ind2 + 4][0].change_border(:right, 'thin')
-
-          ["","","",cu.value].each_with_index do |val, index|
-            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
-          end
-          4.times.each do |index|
-            worksheet[10][ind + index + 1].change_border(:top, 'thin')
-          end
-          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
-          ind2 += 1
         end
 
         worksheet[ind2 + 3][0].change_border(:bottom, 'thin')
         5.times.each do |index|
-          worksheet[ind2 + 3][ind + index].change_border(:bottom, 'thin')
+          # worksheet[ind2 + 3][ind + index].change_border(:bottom, 'thin')
         end
 
         worksheet.change_row_bold(ind2 + 4,true)
@@ -1084,6 +1112,7 @@ class Guw::GuwModelsController < ApplicationController
   def all_guw_types
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
     @guw_types = @guw_model.guw_types
+    @organization = @current_organization
     set_page_title "Liste des unités d'oeuvres"
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end

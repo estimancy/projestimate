@@ -1,14 +1,11 @@
 <h4>
   <strong>
-    <%= @guw_model %>
+    <%= link_to @guw_model, guw.edit_guw_model_path(@guw_model, organization_id: @organization.id) %>
   </strong>
   <% if can? :manage_modules_instances, ModuleProject %>
     <%= link_to I18n.t(:new_uw_type), guw.new_guw_model_guw_type_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right'%>
   <% end %>
-  <%= link_to I18n.t(:manage_the , parameter: @guw_model.coefficient_label.to_s.underscore) , guw.guw_model_guw_work_units_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to I18n.t(:manage_the_attribute), guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
-  <%= link_to "Afficher avec des onglets", guw.guw_model_path(@guw_model), class: "btn btn-mini pull-right button_margin_right" %>
+  <%= link_to "Afficher sous forme d'onglet", guw.guw_model_path(@guw_model), class: "btn btn-mini pull-right button_margin_right" %>
 </h4>
 
 <div class="row-fluid">
@@ -16,6 +13,10 @@
     <thead>
       <tr>
         <th>Nom</th>
+        <th>Description</th>
+        <th>Description</th>
+        <th>Description</th>
+        <th>Description</th>
         <th>Description</th>
         <th>Dénombrement d'attributs</th>
         <th>Seuils</th>
@@ -25,7 +26,7 @@
     <tbody>
       <% @guw_types.each do |guw_type| %>
         <tr>
-          <td>
+          <td class="span2">
             <%= link_to(guw_type.name, guw_type) %>
           </td>
           <td>
@@ -33,6 +34,18 @@
           </td>
           <td class="span1">
             <%= guw_type.allow_criteria == true ? "Oui" : "Non" %>
+          </td>
+          <td class="span3">
+            <%= @guw_model.guw_work_units.map(&:name).join(", ") %>
+          </td>
+          <td class="span3">
+            <%= @guw_model.guw_weightings.map(&:name).join(", ") %>
+          </td>
+          <td class="span3">
+            <%= @guw_model.guw_factors.map(&:name).join(", ") %>
+          </td>
+          <td class="span3">
+            <%= @organization.organization_technologies.map(&:name).join(", ") %>
           </td>
           <td class="span4">
             <%= guw_type.guw_complexities.map(&:name).join(", ") %>
