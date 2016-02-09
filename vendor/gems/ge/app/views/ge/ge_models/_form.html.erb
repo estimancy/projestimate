@@ -7,12 +7,30 @@
     </li>
     <li>
       <a href="#tabs-2">
-        <%= I18n.t(:data) %>
+        <%= I18n.t(:factors_setting) %>
       </a>
     </li>
   </ul>
 
   <div id="tabs-1">
+
+    <% if controller.action_name == "new" %>
+        <div class="pull-right" style="margin-top: 100px;">
+          <%#= link_to I18n.t(:import_instance_model), ge.ge_model_import_path(15), :class => 'btn btn-info pull-right', title: I18n.t(:import_instance_model) %>
+          <%= form_tag import_ge_model_instance_path, :multipart => true, method: "post", :class => 'simple_form' do %>
+              <div>
+                <label style="color: #808080"><%= I18n.t(:import_generic_effort_model) %> </label> <br>
+                <%= hidden_field_tag :organization_id, @organization.id %>
+                <%= file_field_tag :file %>
+                <%= hidden_field_tag :ge_model_id, nil %>
+
+                <%= submit_tag I18n.t(:import_instance_model), :class => 'btn btn-info' %>
+              </div><hr>
+          <% end %>
+        </div>
+    <% end %>
+
+
     <%= simple_form_for(@ge_model) do |f| %>
 
       <div class="alert alert-info">
@@ -20,22 +38,33 @@
       </div>
       <%= f.error_notification %>
 
-      <%#= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
-      <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
-
       <div class="form-inputs">
+        <%#= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
+        <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
+
         <%= f.input :name %>
+        <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
         <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
-        <%= f.input :enabled_input, label: I18n.t(:modification_entry_valur) %>
-        <%= f.input :coeff_a, label: "#{I18n.t(:label_Factor)} a", hint: I18n.t(:leave_blank_if_use_factor_data) %>
-        <%= f.input :coeff_b, label: "#{I18n.t(:scale_factor)} : b", hint: I18n.t(:leave_blank_if_use_factor_data) %>
-        <%= f.input :size_unit, label: I18n.t(:retained_size_unit_2) %>
-        <%= f.input :effort_unit, label: I18n.t(:Wording_of_the_module_unit_effort_2) %>
+        <div class="row-fluid">
+          <div class="span3"><%= f.input :enabled_input, label: I18n.t(:modification_entry_valur) %></div>
+          <div class="span4"><%= f.input :modify_theorical_effort, label: I18n.t(:enabled_theorical_effort_modification) %></div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span3"><%= f.input :coeff_a, label: "#{I18n.t(:label_Factor)} a", hint: I18n.t(:leave_blank_if_use_factor_data) %></div>
+          <div class="span4"><%= f.input :coeff_b, label: "#{I18n.t(:scale_factor)} : b", hint: I18n.t(:leave_blank_if_use_factor_data) %></div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span3"> <%= f.input :size_unit, label: I18n.t(:retained_size_unit_2) %></div>
+          <div class="span4"> <%= f.input :effort_unit, label: I18n.t(:Wording_of_the_module_unit_effort_2) %></div>
+        </div>
+
         <%= f.input :standard_unit_coefficient, label: I18n.t(:standard_coef_conv) %>
       </div>
 
       <% if can? :manage_modules_instances, ModuleProject %>
-         <%= f.button :submit, I18n.t('save') %>
+         <%= f.button :submit, I18n.t('save'), class: "btn-primary" %>
       <% end %>
       <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "effort"), class: "btn" %>
     <% end %>
@@ -51,12 +80,13 @@
 
               <div class="form-inputs">
                 <label style="color: #808080"><%= I18n.t(:import_generic_effort_model) %> </label> <br>
+                <%= hidden_field_tag :organization_id,  @organization.id %>
                 <%= file_field_tag :file %>
                 <%= hidden_field_tag :ge_model_id, @ge_model.id %>
 
-                <%= submit_tag I18n.t(:import), :class => 'btn btn-primary' %>
+                <%= submit_tag I18n.t(:import_factors_setting), :class => 'btn btn-primary' %>
               </div>
-              <hr>
+              <!--<hr>-->
             <% end %>
           </div>
           <div class="span6">
@@ -67,11 +97,12 @@
               <% else %>
                 <%= I18n.t(:any_factor) %>
               <% end %>
-            </label> <br>
+            </label>
             <%= link_to I18n.t(:export), ge.ge_model_data_export_path(@ge_model), :class => 'btn', title: I18n.t(:export_generic_effort_model) %>
-            <hr>
+            <!--<hr>-->
           </div>
         </div>
+        <hr>
       <% end %>
     </div>
 

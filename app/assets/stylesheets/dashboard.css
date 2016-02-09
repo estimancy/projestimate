@@ -414,6 +414,7 @@ ul{
     border: none;
 }
 
+
 .ui-widget-content a.a_white{
     color: #f5f5f5;
     font-size: 15px;
@@ -450,6 +451,10 @@ ul{
     max-width: 140px;
     margin-left:auto;
     margin-right:auto;
+
+    /* ajout pour jsplumb draggable*/
+    position: absolute;
+    /* fin ajout */
 }
 
 .dropdown-menu {
@@ -1121,4 +1126,19 @@ tr.scale_factor, td.scale_factor {
 
 tr.conversion_factor, td.conversion_factor {
     background: lightcyan;
+}
+
+.simple_form .hint {
+    clear: left;
+    /*margin-left: 100px;*/
+    font-size: 12px;
+    color: #555;
+    display: block;
+    font-style: italic;
+}
+
+/* For the dynamic estimation plan table */
+
+.table-estimation tr [colspan="3"] {
+    text-align: center;
 }

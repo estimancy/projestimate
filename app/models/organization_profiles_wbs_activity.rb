@@ -1,4 +1,4 @@
-# encoding: UTF-8
+#encoding: utf-8
 #############################################################################
 #
 # Estimancy, Open Source project estimation web application
@@ -19,17 +19,7 @@
 #
 #############################################################################
 
-Ge::Engine.routes.draw do
-  root :to => 'ge#index'
-  resources :ge_models
-  resources :ge_models do
-    post "save_efforts"
-    post "update_calculated_effort"
-    post "duplicate"
-    post "import"
-    get "data_export"
-    get "delete_all_factors_data"
-  end
-
-  match 'ge_models/import_ge_model_instance' => 'ge_models#import', as: "import_ge_model_instance"
+class OrganizationProfilesWbsActivity < ActiveRecord::Base
+  belongs_to :organization_profile
+  belongs_to :wbs_activity
 end

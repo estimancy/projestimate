@@ -171,6 +171,7 @@ Projestimate::Application.routes.draw do
   get 'edit_module_project_view_config' => 'module_projects#edit_module_project_view_config', as: 'edit_module_project_view_config'
   match 'update_module_project_view_config' => 'module_projects#update_module_project_view_config', as: 'update_module_project_view_config'
   post 'module_projects_reassign' => 'module_projects#module_projects_reassign', as: 'module_projects_reassign'
+  get 'update_module_project_dynamic_connections' => 'module_projects#update_module_project_dynamic_connections', as: 'update_module_project_dynamic_connections'
 
   resources :languages
 

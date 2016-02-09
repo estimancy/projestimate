@@ -93,7 +93,7 @@ class Ge::GeModelsController < ApplicationController
       mp.destroy
     end
 
-    @ge_model.delete
+    @ge_model.destroy
     redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
   end
 
@@ -104,7 +104,11 @@ class Ge::GeModelsController < ApplicationController
     #ge_factor_values = @ge_model.ge_factor_values
 
     unless ge_model_factors.nil?
-      ge_model_factors.destroy_all
+      begin
+        ge_model_factors.destroy_all
+      rescue
+        flash[:error] = I18n.t(:error_failed_to_delete_factors)
+      end
     end
     redirect_to ge.edit_ge_model_path(@ge_model, anchor: "tabs-2")
   end
@@ -129,12 +133,13 @@ class Ge::GeModelsController < ApplicationController
     values_worksheet = workbook[2]
     help_worksheet = workbook[3]
 
-    model_worksheet.sheet_name = "Model attribute"
+    model_worksheet.sheet_name = "Model"
 
     first_page = [[I18n.t(:model_name),  @ge_model.name],
-                  #[I18n.t(:model_description), @ge_model.description ],
+                  [I18n.t(:model_description), @ge_model.description ],
                   [I18n.t(:three_points_estimation), @ge_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:modification_entry_valur), @ge_model.enabled_input ],
+                  [I18n.t(:enabled_theorical_effort_modification), @ge_model.modify_theorical_effort],
                   ["#{I18n.t(:label_Factor)} a", @ge_model.coeff_a ],
                   ["#{I18n.t(:scale_factor)} : b", @ge_model.coeff_b ],
                   [I18n.t(:retained_size_unit), @ge_model.size_unit],
@@ -151,8 +156,10 @@ class Ge::GeModelsController < ApplicationController
       end
     end
     model_worksheet.change_column_bold(0,true)
-    model_worksheet.change_column_width(0, 38)
+    model_worksheet.change_column_width(0, 45)
+    model_worksheet.sheet_data[1][1].change_horizontal_alignment('left')
 
+    # factors and values worksheet headers
     factors_default_attributs = ["Scale-Prod", I18n.t(:factor_type), I18n.t(:short_name), I18n.t(:long_name), I18n.t(:description)]
     values_default_attributs = [I18n.t(:factors), I18n.t(:value_text), I18n.t(:value_number), I18n.t(:default_value)]
 
@@ -175,7 +182,8 @@ class Ge::GeModelsController < ApplicationController
     help_worksheet.change_row_bold(0,true)
     help_worksheet.add_cell(1, 0, "Un attribut ayant une seule valeur n'est pas affiché")
     help_worksheet.add_cell(2, 0, I18n.t(:scale_prod_help))
-    help_worksheet.change_row_height(2, 40)
+    help_worksheet.change_row_height(0, 30)
+    help_worksheet.change_row_height(2, 60)
 
     #fill data if worksheets
     if ge_model_factors.nil? || ge_model_factors.empty?
@@ -188,9 +196,9 @@ class Ge::GeModelsController < ApplicationController
       help_worksheet.add_cell(4, 0, "Il n'existe pas de donnée de facteurs pour ce module. \nPour vous aider à constituer et à créer vos facteurs et les valeurs associées à ces facteurs, nous avons ajoué 2 onglets pour exemple.")
       help_worksheet.add_cell(5, 0, "L'onglet \"Factors exemples\" contient des exemples de facteurs pour remplir l'onglet \"Factors\". \n")
       help_worksheet.add_cell(6, 0, "L'onglet \"Values exemples\" contient des exemples de valeurs des facteurs pour remplir l'onglet \"Values\". \n")
-      help_worksheet.add_cell(8, 0, "Seuls les onglets \"Model attribute\", \"Factors\" et \"Values\" seront pris en compte lors d'un inport depuis l'application. \n Les autres onglets servent d'exemples ou de remarques.")
+      help_worksheet.add_cell(8, 0, "Seuls les 3 premiers onglets (\"Model attribute\", \"Factors\" et \"Values\") seront pris en compte lors d'un import depuis l'application. \n Les autres onglets servent d'exemples ou de remarques.")
       help_worksheet.change_row_font_color(8, 'FF0000') #change_row_fill(8, 'FF0000')
-      help_worksheet.change_row_height(8, 30)
+      help_worksheet.change_row_height(8, 50)
 
       factors_exple_counter_line = 1
       factors_default_attributs.flatten.each_with_index do |w_header, index|
@@ -381,89 +389,133 @@ class Ge::GeModelsController < ApplicationController
   def import
     authorize! :manage_modules_instances, ModuleProject
 
-    @ge_model = Ge::GeModel.find(params[:ge_model_id])
+    @organization = Organization.find(params[:organization_id])
+    tab_error = []
 
-    Ge::GeFactor.destroy_all("ge_model_id = #{@ge_model.id}")
+    if params[:file]
+      if !params[:file].nil? && (File.extname(params[:file].original_filename).to_s.downcase == ".xlsx")
 
-    factors_list = Array.new
-    factors_values = Array.new
+        #get the file data
+        workbook = RubyXL::Parser.parse(params[:file].path)
 
-    sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
-    sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value", :"3" => "default" }
+        sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
+        sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value", :"3" => "default" }
 
-    #if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
-    if !params[:file].nil? && (File.extname(params[:file].original_filename).in? [".xlsx", ".Xlsx", ".xsl"])
-      workbook = RubyXL::Parser.parse(params[:file].path)
-      #tab1 = workbook[0].extract_data
+        #if a model exists, only factors data will be imported
+        if !params[:ge_model_id].nil? && !params[:ge_model_id].empty?
 
-      # We must have 2 sheets in this file
-      filename = params[:file].original_filename
-      worksheet1 = workbook['Factors']  # workbook[0]    # Sheet of the list of Factors
-      worksheet2 = workbook['Values']    # Sheet of the factors values
+          @ge_model = Ge::GeModel.find(params[:ge_model_id])
+          Ge::GeFactor.destroy_all("ge_model_id = #{@ge_model.id}")
 
-      # feuille1 : worksheet1.dimension.ref.row_range
-      worksheet1.each_with_index do |row, index|
-        if index > 0
-          row_factor = Hash.new
+        else
+          #there is no model, we will create new model from the model attributes data of the file to import
+          model_sheet_order = { :"0" => "name", :"1" => "description", :"2" => "three_points_estimation", :"3" => "enabled_input", :"4" => "modify_theorical_effort", :"5" => "coeff_a", :"6" => "coeff_b", :"7" => "size_unit", :"8" => "effort_unit", :"9" => "standard_unit_coefficient" }
+          model_worksheet = workbook['Model']
 
-          row && row.cells.each do |cell|
-            puts index
-            val = cell && cell.value
-            unless cell.nil?
-              #add value to table
-              key_name = sheet1_order["#{cell.column}".to_sym]
-              row_factor["#{key_name}"] = val unless key_name.nil?
+          if !model_worksheet.nil?
+            @ge_model = Ge::GeModel.new
+            @ge_model.organization = @organization
+
+            model_worksheet.each_with_index do | row, index |
+              row && row.cells.each do |cell|
+
+                if cell.column == 1 && !cell.nil?
+                  val = cell && cell.value
+                  attr_name = model_sheet_order["#{index}".to_sym]
+                  @ge_model["#{attr_name}"] = val unless attr_name.nil?
+                end
+              end
+            end
+            #save the model
+            if @ge_model.save
+              flash[:notice] = "Modèle créé avec succès"
+            else
+              tab_error << "Erreur lors de la sauvegarde du modèle"
+            end
+
+          else
+            tab_error << "Les attributs du modèle ne sont pas définis dans le fichier importé"
+          end
+        end
+
+        # si pas d'erreur lors de la création du modèle
+        if tab_error.empty?
+          # We must have 2 sheets in this file
+          filename = params[:file].original_filename
+          worksheet1 = workbook['Factors']  # workbook[0]    # Sheet of the list of Factors
+          worksheet2 = workbook['Values']    # Sheet of the factors values
+
+          # feuille1 : worksheet1.dimension.ref.row_range
+          worksheet1.each_with_index do |row, index|
+            if index > 0
+              row_factor = Hash.new
+
+              row && row.cells.each do |cell|
+                unless cell.nil?
+                  val = cell && cell.value
+                  #add value to table
+                  key_name = sheet1_order["#{cell.column}".to_sym]
+                  row_factor["#{key_name}"] = val unless key_name.nil?
+                end
+              end
+
+              unless row_factor.empty?
+                #Create data in factors table
+                #sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
+                short_name_factor = row_factor["short_name_factor"]
+                factor_alias = short_name_factor.nil? ? "" : short_name_factor.gsub(/( )/, '_').downcase
+                Ge::GeFactor.create(ge_model_id: @ge_model.id, short_name: short_name_factor, long_name: row_factor["long_name_factor"], factor_type: row_factor["type"],
+                                         scale_prod: row_factor["scale_prod"],  data_filename: filename, description: row_factor["description"], alias: factor_alias)
+              end
             end
           end
 
-          unless row_factor.empty?
-            #factors_list << row_factor
+          # feuille2
+          worksheet2.each_with_index do |row, index|
+            if index > 0
+              row_factor = Hash.new
 
-            #Create data in factors table
-            #sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
-            short_name_factor = row_factor["short_name_factor"]
-            factor_alias = short_name_factor.nil? ? "" : short_name_factor.gsub(/( )/, '_').downcase
-            Ge::GeFactor.create(ge_model_id: @ge_model.id, short_name: short_name_factor, long_name: row_factor["long_name_factor"], factor_type: row_factor["type"],
-                                     scale_prod: row_factor["scale_prod"],  data_filename: filename, description: row_factor["description"], alias: factor_alias)
-          end
-        end
-      end
+              row && row.cells.each do |cell|
+                val = cell && cell.value
 
-      # feuille2
-      worksheet2.each_with_index do |row, index|
-        if index > 0
-          row_factor = Hash.new
+                #add value to table
+                key_name = sheet2_order["#{cell.column}".to_sym]
+                row_factor["#{key_name}"] = val unless key_name.nil?
+              end
 
-          row && row.cells.each do |cell|
-            val = cell && cell.value
-
-            #add value to table
-            key_name = sheet2_order["#{cell.column}".to_sym]
-            row_factor["#{key_name}"] = val unless key_name.nil?
-          end
-
-          unless row_factor.empty?
-            #factors_values << row_factor
-
-            #Create data in factors values table
-            #sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value" }
-            #FactorValues ==> :name, :alias, :value_number, :value_text, :ge_factor_id, :ge_model_id
-            factor_name = row_factor["factor"]
-            factor_alias = factor_name.gsub(/( )/, '_').downcase
-            factors = @ge_model.ge_factors.where(alias: factor_alias)
-            unless factors.nil?
-              factor = factors.first
-              factor_value = Ge::GeFactorValue.create(ge_model_id: @ge_model.id, ge_factor_id: factor.id, factor_alias: factor_alias, factor_scale_prod: factor.scale_prod, factor_type: factor.factor_type,
-                                                      factor_name: factor_name, value_text: row_factor["text"], value_number: row_factor["value"], default: row_factor["default"])
+              unless row_factor.empty?
+                #Create data in factors values table
+                #sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value" }
+                #FactorValues ==> :name, :alias, :value_number, :value_text, :ge_factor_id, :ge_model_id
+                factor_name = row_factor["factor"]
+                factor_alias = factor_name.gsub(/( )/, '_').downcase
+                factors = @ge_model.ge_factors.where(alias: factor_alias)
+                unless factors.nil?
+                  factor = factors.first
+                  factor_value = Ge::GeFactorValue.create(ge_model_id: @ge_model.id, ge_factor_id: factor.id, factor_alias: factor_alias, factor_scale_prod: factor.scale_prod, factor_type: factor.factor_type,
+                                                          factor_name: factor_name, value_text: row_factor["text"], value_number: row_factor["value"], default: row_factor["default"])
+                end
+              end
             end
           end
+          flash[:notice] = "Les facteurs ont été importés avec succès"
+        else
+          flash[:error] = tab_error.join(" , ")
         end
+
+      else
+        flash[:error] =  I18n.t(:route_flag_error_4)
       end
     else
-      flash[:error] =  I18n.t(:route_flag_error_4)
+      flash[:error] =  I18n.t(:route_flag_error_17)
     end
 
-    redirect_to ge.edit_ge_model_path(@ge_model, anchor: "tabs-2")
+    if @ge_model
+      redirect_to ge.edit_ge_model_path(@ge_model, anchor: "tabs-2")
+    else
+      redirect_to request.referer + "#tabs-2" #redirect_to :back
+    end
+
   end
 
 
@@ -708,6 +760,24 @@ class Ge::GeModelsController < ApplicationController
     new_ge_model.transaction do
       if new_ge_model.save
         @ge_model.save
+
+        #Then copy the factor values
+        new_ge_model.ge_factors.each do |factor|
+          #get the factor values for each factor of new model
+
+          # get the original factor from copy_id
+          parent_factor = Ge::GeFactor.find(factor.copy_id)
+
+          if parent_factor
+            parent_factor.ge_factor_values.each do |parent_factor_value|
+              new_factor_value =  parent_factor_value.dup
+              new_factor_value.ge_model_id = new_ge_model.id
+              new_factor_value.ge_factor_id = factor.id
+              new_factor_value.save
+            end
+          end
+        end
+
         flash[:notice] = "Modèle copié avec succès"
       else
         flash[:error] = "Erreur lors de la copie du modèle"

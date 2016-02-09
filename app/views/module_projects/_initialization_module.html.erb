@@ -5,7 +5,7 @@
       <h4 class="text-center">0</h4>
     </td>
     <td colspan="<%= @module_positions_x %>" class="module_bloc_size">
-      <div class="<%=  %> module_project <%= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center">
+      <div class="<%=  %> module_project <%= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" id="<%= "mp_#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %>" data-module_project_id="<%= pmod.id %>">
         <%= link_to pmod, "#", class: "a_white" %>
 
         <% unless @project.locked? %>

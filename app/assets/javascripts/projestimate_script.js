@@ -19,6 +19,29 @@
 
 $(document).ready(function() {
 
+
+    //====================================================
+
+    $(".module_project1").draggable({
+        start: function(event, ui) {}, // console.log(event);console.log(ui)},
+        stop: function(event, ui) {}, // console.log(event);//console.log(ui)},
+        cursor:'move',
+        opacity: 0.5
+    });
+
+    $(".window1").draggable({
+        //helper: 'clone',
+        // appendTo: 'body',
+        start: function(event, ui) {}, // console.log(event);console.log(ui)},
+        stop: function(event, ui) {}, // console.log(event);//console.log(ui)},
+        //revert: false,
+        cursor:'move',
+        opacity: 0.5,
+    });
+
+    //====================================================
+
+
     $(".modal").draggable({
         handle: ".modal-header"
     });
@@ -930,9 +953,9 @@ function update_wbs_activity_ratio_profiles(){
             });
             $('td#total_ratio_activity_'+activity_id).text(sum_of_wbs_ratio + ' %');
 
-            if(sum_of_wbs_ratio > 100){
+            if(sum_of_wbs_ratio != 100){
                 $('td#total_ratio_activity_'+activity_id).addClass('red_color');
-                alert("Warning : sum of activity's ratio values is greater than 100 !");
+                alert("Attention : le pourcentage de contribution des profils par phase n'est pas à 100%"); //alert("Warning : sum of activity's ratio values is greater than 100 !");
             }
             else {
                 $('td#total_ratio_activity_'+activity_id).removeClass('red_color');

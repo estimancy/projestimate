@@ -42,7 +42,11 @@ class WbsActivity < ActiveRecord::Base
   has_many :pbs_project_elements
   has_many :module_projects
 
-  has_and_belongs_to_many :organization_profiles
+  has_and_belongs_to_many :organization_profiles    #has_many :organization_profiles_wbs_activities    #has_many :organization_profiles, through: :organization_profiles_wbs_activities
+
+  #Relation needed to delete wbs_activity_ratio_profiles when organization_profiles is unselected on WBS
+  has_many :wbs_activity_ratio_elements, through: :wbs_activity_ratios
+  has_many :wbs_activity_ratio_profiles, through: :wbs_activity_ratio_elements, dependent: :destroy
 
   ###validates :organization_id, :presence => true
   validates :name, :presence => true, :uniqueness => { :scope => :organization_id }
@@ -79,5 +83,14 @@ class WbsActivity < ActiveRecord::Base
   def root_element
     self.wbs_activity_elements.select{|i| i.is_root == true }.first
   end
+
+  #Moulinette de mise à jour des profils de l'organisation dans les instances de Wbs-activity
+  # WbsActivity.all.each do |wbs_activity|
+  #   organization_profiles = wbs_activity.organization.organization_profiles
+  #   organization_profiles_ids = organization_profiles.map(&:id)
+  #   all_organization_profile_ids = wbs_activity.organization_profile_ids + organization_profiles_ids
+  #   wbs_activity.organization_profile_ids = all_organization_profile_ids.uniq
+  #   wbs_activity.save
+  # end
 
 end

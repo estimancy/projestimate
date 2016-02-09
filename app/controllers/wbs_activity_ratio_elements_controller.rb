@@ -52,6 +52,8 @@ class WbsActivityRatioElementsController < ApplicationController
       w.save(:validate => false)
     end
 
+    @wbs_activity = WbsActivity.find(params[:wbs_activity_id])
+
     #Select ratio and elements
     wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
 
@@ -88,7 +90,9 @@ class WbsActivityRatioElementsController < ApplicationController
     end
 
     respond_to do |format|
-      format.js
+      @redirect_url_apply_or_save_path = redirect_apply(main_app.edit_organization_wbs_activity_path(@wbs_activity.organization_id, @wbs_activity.id, anchor: "tabs-4"), nil, main_app.organization_module_estimation_path(@wbs_activity.organization_id, anchor: "activite"))
+
+      format.js { }
     end
   end
 
@@ -123,7 +127,9 @@ class WbsActivityRatioElementsController < ApplicationController
 
     #redirect_to edit_wbs_activity_path(@wbs_activity, :anchor => 'tabs-4')
     respond_to do |format|
-      format.js
+      @redirect_url_apply_or_save_path = redirect_apply(main_app.edit_organization_wbs_activity_path(@wbs_activity.organization_id, @wbs_activity.id, anchor: "tabs-4"), nil, main_app.organization_module_estimation_path(@wbs_activity.organization_id, anchor: "activite"))
+
+      format.js { }
     end
   end
 

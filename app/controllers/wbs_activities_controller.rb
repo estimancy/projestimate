@@ -108,9 +108,30 @@ class WbsActivitiesController < ApplicationController
       @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements
     end
 
+    #check if wbs selected profiles has changed
+    wbs_old_organization_profile_ids = @wbs_activity.organization_profile_ids
+    wbs_new_organization_profile_ids_params = params['wbs_activity']['organization_profile_ids']
+    wbs_new_organization_profile_ids = wbs_new_organization_profile_ids_params.map{ |val| val.to_i }
+    unchecked_profiles  = wbs_old_organization_profile_ids - wbs_new_organization_profile_ids
+
     if @wbs_activity.update_attributes(params[:wbs_activity])
+
+      #Lorsque la liste des profils actifs a changé, on envoie un message d'avertissement
+      if wbs_old_organization_profile_ids != wbs_new_organization_profile_ids
+        flash[:warning] = 'Vous avez modifié la liste des profils, vérifier la contribution des profils par phase (onglet "Elements des Ratios").'
+      end
+
+      #remove all wbs_activity_ratio_profiles
+      unless unchecked_profiles.empty?
+        activity_ratio_profiles_to_delete = @wbs_activity.wbs_activity_ratio_profiles.where(organization_profile_id: unchecked_profiles)
+        activity_ratio_profiles_to_delete.each do |ratio_profile|
+          ratio_profile.delete
+        end
+      end
+
       #redirect_to redirect(wbs_activities_path), :notice => "#{I18n.t(:notice_wbs_activity_successful_updated)}"
-      redirect_to main_app.organization_module_estimation_path(@organization_id, anchor: "activite")
+      ###redirect_to main_app.organization_module_estimation_path(@organization_id, anchor: "activite")
+      redirect_to redirect_apply(main_app.edit_organization_wbs_activity_path(@organization_id, @wbs_activity.id), nil, main_app.organization_module_estimation_path(@organization_id, anchor: "activite"))
     else
       render :edit
     end

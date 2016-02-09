@@ -1,9 +1,15 @@
 <script>
     $(document).ready(function() {
          jsPlumb.ready(function() {
+
+             divsWithModuleProjectClass = jsPlumb.getSelector(".module_box .module_project");
+
+
             <% pmod.associated_module_projects.each do |amp| %>
                 <% if pmod.associated_module_projects.map(&:id).include?(amp.id) %>
-                    jsPlumb.setRenderMode(jsPlumb.SVG);
+
+                    //jsPlumb.setRenderMode(jsPlumb.SVG);
+
                     jsPlumb.importDefaults({
                         Connector:"Straight",
                         PaintStyle:{ lineWidth:2, strokeStyle:"#ffa500", "dashstyle":"2 4"  }, //PaintStyle:{ lineWidth:3, strokeStyle:"#ffa500", "dashstyle":"2 4"  },
@@ -45,6 +51,8 @@
 
                 <% end %>
             <% end %>
+
+             //jsPlumb.draggable(divsWithModuleProjectClass);
         });
 
         e0 = null;

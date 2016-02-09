@@ -27,6 +27,7 @@ module Ge
 
     belongs_to :ge_factor
     belongs_to :ge_model
+
   end
 
 end
