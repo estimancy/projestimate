@@ -1003,9 +1003,9 @@ class Guw::GuwModelsController < ApplicationController
                     indexing_field_error[1][0] = false
                   end
                 else
-                  first_work_unit = @guw_model.guw_work_units.first
+                  first_work_unit = @guw_model.guw_work_units.order("display_order ASC").first
                   unless first_work_unit.nil?
-                    guw_uow.guw_work_unit_id = @guw_model.guw_work_units.first.id
+                    guw_uow.guw_work_unit_id = @guw_model.guw_work_units.order("display_order ASC").first.id
                   else
                     guw_uow.guw_work_unit_id = nil
                   end
