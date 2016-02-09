@@ -279,23 +279,23 @@ class Guw::GuwModelsController < ApplicationController
                   end
                   ind = 1
                 end
-                if !tab[save_position - 4].nil?# && tab[save_position][0] == I18n.t(:complexity_threshold) && tab[save_position + 1][0] == I18n.t(:pe_attributes)
+                if !tab[save_position].nil?# && tab[save_position][0] == I18n.t(:complexity_threshold) && tab[save_position + 1][0] == I18n.t(:pe_attributes)
                   ind3 = save_position + 2
                   ind = 1
-                  while !tab[save_position - 4][ind].nil?
-                   @guw_att_complexity =  Guw::GuwTypeComplexity.create(guw_type_id: @guw_type.id, name: tab[save_position - 6][ind], value: 4)
+                  while !tab[save_position][ind].nil?
+                   @guw_att_complexity =  Guw::GuwTypeComplexity.create(guw_type_id: @guw_type.id, name: tab[save_position][ind], value: 4)
                     @guw_model.guw_attributes.each do |att|
                       while !tab[ind3].nil? && tab[ind3][0] != att.name
                         ind3 += 1
                       end
                       if !tab[ind3].nil?
-                        toto = Guw::GuwAttributeComplexity.create(  guw_type_complexity_id: @guw_att_complexity.id,
-                                                                   guw_attribute_id: att.id,
-                                                                   guw_type_id: @guw_type.id,
-                                                                   enable_value: tab[ind3][ind] == 1,
-                                                                   bottom_range: tab[ind3][ind + 1],
-                                                                   top_range: tab[ind3][ind + 2],
-                                                                   value: tab[ind3][ind + 3] ? tab[ind3][ind + 3] : (tab[ind3][ind + 2] && tab[ind3][ind + 1] ? 1 : nil))
+                        toto = Guw::GuwAttributeComplexity.create(guw_type_complexity_id: @guw_att_complexity.id,
+                                                           guw_attribute_id: att.id,
+                                                           guw_type_id: @guw_type.id,
+                                                           enable_value: tab[ind3][ind] == 1,
+                                                           bottom_range: tab[ind3][ind + 1],
+                                                           top_range: tab[ind3][ind + 2],
+                                                           value: tab[ind3][ind + 3] ? tab[ind3][ind + 3] : (tab[ind3][ind + 2] && tab[ind3][ind + 1] ? 1 : nil))
                       end
                       ind3 = save_position + 2
                     end
