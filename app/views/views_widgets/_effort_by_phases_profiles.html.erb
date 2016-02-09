@@ -27,11 +27,9 @@
 
           <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
             <% effort_per_phase = nil %>
-
             <% unless wbs_activity_elt.is_root? %>
               <% wbs_activity_elt_id = wbs_activity_elt.id %>
                 <% profile_ratio_percentage = "" %>
-
                 <% wbs_probable_value = estimation_pbs_probable_results[wbs_activity_elt.id] %>
                 <% unless wbs_probable_value.nil? %>
                   <!-- Get the profile ratio percentage -->
@@ -40,7 +38,6 @@
                   end %>
                   <% wbs_estimation_profiles_values = wbs_probable_value["profiles"] %>
                   <tr>
-
                     <td>
                       <span style="float: left; margin-left:<%=wbs_activity_elt.depth%>em">
                         <%= wbs_activity_elt.name %>
@@ -54,7 +51,6 @@
                         <% if !wbs_activity_ratio_elt.nil?
                              # get the wbs_activity_ratio_profile
                              corresponding_ratio_profile = referenced_wbs_activity_ratio_profiles.where('wbs_activity_ratio_element_id = ? AND organization_profile_id = ?', wbs_activity_ratio_elt.id, profile.id).first
-
                              # Get current profile ratio value for the referenced ratio
                              profile_ratio_percentage = corresponding_ratio_profile.nil? ? nil : "#{corresponding_ratio_profile.ratio_value}%"
                         end %>
@@ -76,13 +72,11 @@
                             </td>
                           <% else %>
                             <td style="text-align: right">
-                              <%# array_root[profile.id] << convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision, true) %>
                               <% array_root[profile.id] << wbs_profiles_value %>
                               <% effort_per_phase.nil? ? (effort_per_phase = effort_per_phase.to_f) : (effort_per_phase = effort_per_phase) %>
                               <% effort_per_phase +=  wbs_profiles_value %>
 
                               <%= convert_with_precision(convert(wbs_profiles_value, @current_organization), user_number_precision, true) %>
-
                             </td>
                           <% end %>
                       <% end %>
@@ -99,7 +93,6 @@
             <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
               <% if wbs_activity_elt.is_root? %>
                 <% root_effort_per_phase = nil %>
-
                 <td style="text-align: left">
                   <br />
                   <strong><%= wbs_activity_elt.name %></strong>
@@ -107,12 +100,10 @@
                 <% project_organization_profiles.each do |profile| %>
                   <td style="text-align: right">
                     <% root_effort_per_profile = array_root[profile.id].map(&:to_f).sum.to_f %>
-                    <%#= convert_with_precision(array_root[profile.id].map(&:to_f).sum.to_f.round(2), user_number_precision, true) %>
                     <% root_effort_per_phase.nil? ? (root_effort_per_phase = root_effort_per_phase.to_f) : (root_effort_per_phase = root_effort_per_phase) %>
                     <% root_effort_per_phase +=  root_effort_per_profile %>
                     <br />
                     <%= convert_with_precision(convert(root_effort_per_profile, @current_organization), user_number_precision, true) %>
-
                   </td>
                 <% end %>
 
@@ -121,7 +112,6 @@
                   <br />
                   <div class="pull-left"><strong><%= root_effort_per_phase.nil? ? "-" : convert_with_precision(convert(root_effort_per_phase, @current_organization), user_number_precision, true) %></strong></div>
                 </td>
-
               <% end %>
             <% end %>
           </tr>

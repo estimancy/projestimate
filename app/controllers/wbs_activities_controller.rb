@@ -231,6 +231,7 @@ class WbsActivitiesController < ApplicationController
       end
 
       #redirect_to('/wbs_activities', :notice  =>  "#{I18n.t(:notice_wbs_activity_successful_duplicated)}") and return
+      flash[:notice] = I18n.t(:notice_wbs_activity_successful_duplicated)
       redirect_to main_app.organization_module_estimation_path(new_wbs_activity.organization_id, anchor: "activite") and return
 
     rescue ActiveRecord::RecordNotSaved => e

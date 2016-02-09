@@ -1136,9 +1136,3 @@ tr.conversion_factor, td.conversion_factor {
     display: block;
     font-style: italic;
 }
-
-/* For the dynamic estimation plan table */
-
-.table-estimation tr [colspan="3"] {
-    text-align: center;
-}
