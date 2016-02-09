@@ -24,7 +24,6 @@ class Guw::GuwWorkUnitsController < ApplicationController
 
   def index
     @guw_model = Guw::GuwModel.find(params[:guw_model_id])
-    @guw_work_units = @guw_model.guw_work_units
     set_page_title I18n.t(:Work_Unit)
   end
 
@@ -43,25 +42,24 @@ class Guw::GuwWorkUnitsController < ApplicationController
   def create
     @guw_work_unit = Guw::GuwWorkUnit.new(params[:guw_work_unit])
     @guw_work_unit.save
-    redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
+    redirect_to guw.edit_guw_model_path(@guw_work_unit.guw_model, organization_id: @guw_work_unit.guw_model.organization.id)
   end
 
   def update
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     @guw_work_unit.update_attributes(params[:guw_work_unit])
     set_page_title I18n.t(:Edit_Units_Of_Work)
-    redirect_to guw.guw_model_guw_work_units_path(@guw_work_unit.guw_model)
+    redirect_to guw.edit_guw_model_path(@guw_work_unit.guw_model, organization_id: @guw_work_unit.guw_model.organization.id)
   end
 
   def destroy
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     @guw_model = @guw_work_unit.guw_model
     @guw_work_unit.delete
-    @guw_model = @guw_type.guw_model
     if @guw_model.default_display == "list"
       redirect_to guw.guw_model_all_guw_types_path(@guw_model)
     else
-      redirect_to guw.guw_model_path(@guw_model, anchor: "tabs-#{@guw_type.name.gsub(" ", "-")}")
+      redirect_to guw.guw_model_path(@guw_model)
     end
   end
 end

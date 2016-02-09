@@ -35,18 +35,18 @@ module Guw
     end
 
     def get_defects(*args)
-      size = args[0]
-      @defects = size*0.08*100
+      # size = args[0]
+      # @defects = size*0.08*100
     end
 
     def get_delay(*args)
-      size = args[0]
-      @delay = (2.5 * (size**0.32 )).to_f * @project.organization.number_hours_per_month.to_f
+      # size = args[0]
+      # @delay = (2.5 * (size**0.32 )).to_f * @project.organization.number_hours_per_month.to_f
     end
 
     def get_cost(*args)
-      size = args[0]
-      @cost = size * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
+      # size = args[0]
+      # @cost = size * @project.organization.number_hours_per_month.to_f * @project.organization.cost_per_hour.to_f
     end
 
     def get_retained_size(*args)

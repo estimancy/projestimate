@@ -27,6 +27,8 @@ module Guw
     has_many :guw_attributes, dependent: :destroy
     has_many :guw_work_units, dependent: :destroy
     has_many :module_projects, dependent: :destroy
+    has_many :guw_weightings, dependent: :destroy
+    has_many :guw_factors, dependent: :destroy
 
     belongs_to :organization
 
@@ -39,7 +41,7 @@ module Guw
 
     amoeba do
       enable
-      include_association [:guw_types, :guw_attributes, :guw_work_units]
+      include_association [:guw_types, :guw_attributes, :guw_work_units, :guw_weightings, :guw_factors]
 
       customize(lambda { |original_guw_model, new_guw_model|
         new_guw_model.copy_id = original_guw_model.id
@@ -79,6 +81,22 @@ module Guw
             new_guw_work_unit = guw_model.guw_work_units.where(copy_id: guw_complexity_work_unit.guw_work_unit_id).first
             unless new_guw_work_unit.nil?
               guw_complexity_work_unit.update_attribute(:guw_work_unit_id, new_guw_work_unit.id)
+            end
+          end
+
+          # Copy the complexities units of works
+          guw_complexity.guw_complexity_weightings.each do |guw_complexity_weighting|
+            new_guw_weighting = guw_model.guw_weightings.where(copy_id: guw_complexity_weighting.guw_weighting_id).first
+            unless new_guw_weighting.nil?
+              guw_complexity_weighting.update_attribute(:guw_weighting_id, new_guw_weighting.id)
+            end
+          end
+
+          # Copy the complexities units of works
+          guw_complexity.guw_complexity_factors.each do |guw_complexity_factor|
+            new_guw_factor = guw_model.guw_factors.where(copy_id: guw_complexity_factor.guw_factor_id).first
+            unless new_guw_factor.nil?
+              guw_complexity_factor.update_attribute(:guw_factor_id, new_guw_factor.id)
             end
           end
         end

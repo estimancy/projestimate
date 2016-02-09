@@ -24,7 +24,5 @@ class TechnologySizeType < ActiveRecord::Base
 
   belongs_to :organization
   belongs_to :organization_technology
-  belongs_to :size_unit
-  belongs_to :size_unit_type
 
 end

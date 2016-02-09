@@ -308,7 +308,9 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
-                  [I18n.t(:weighting_factor_Name),  @guw_model.coefficient_label],
+                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label],
+                  [I18n.t(:work_unit_label),  @guw_model.weightings_label],
+                  [I18n.t(:work_unit_label),  @guw_model.factors_label],
                   [I18n.t(:three_points_estimation), @guw_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:retained_size_unit), @guw_model.retained_size_unit],
                   [I18n.t(:hour_coefficient_conversion), @guw_model.hour_coefficient_conversion],
@@ -322,6 +324,8 @@ class Guw::GuwModelsController < ApplicationController
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
     workbook.add_worksheet(@guw_model.coefficient_label || I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.weightings_label || I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.factors_label || I18n.t(:Type_acquisitions))
 
     first_page.each_with_index do |row, index|
       worksheet.add_cell(index, 0, row[0])
@@ -371,7 +375,6 @@ class Guw::GuwModelsController < ApplicationController
     ind2 = 6
 
     worksheet = workbook[2]
-
     counter_line = 1
     page = [I18n.t(:name), I18n.t(:value), I18n.t(:display_order)]
     worksheet.change_row_bold(0,true)
@@ -397,7 +400,62 @@ class Guw::GuwModelsController < ApplicationController
         worksheet[indx][1].change_border(symbole.to_sym, 'thin')
         worksheet[indx][2].change_border(symbole.to_sym, 'thin')
       end
+    end
 
+    worksheet = workbook[3]
+    counter_line = 1
+    page = [I18n.t(:name), I18n.t(:value), I18n.t(:display_order)]
+    worksheet.change_row_bold(0,true)
+    page.each_with_index do |cell_name, index|
+      worksheet.add_cell(0, index, cell_name)
+      worksheet.change_column_horizontal_alignment(index, 'center')
+    end
+
+    worksheet.change_column_width(2, I18n.t(:display_order).size)
+    @guw_model.guw_weightings.each_with_index do |aquisitions_type,indx|
+      worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
+      worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      if ind < aquisitions_type.name.size
+        worksheet.change_column_width(0, aquisitions_type.name.size)
+        ind = aquisitions_type.name.size
+      end
+      counter_line += 1
+    end
+    counter_line.times do |indx|
+      ["bottom", "right"].each do |symbole|
+        worksheet[indx][0].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][1].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][2].change_border(symbole.to_sym, 'thin')
+      end
+    end
+
+    worksheet = workbook[4]
+    counter_line = 1
+    page = [I18n.t(:name), I18n.t(:value), I18n.t(:display_order)]
+    worksheet.change_row_bold(0,true)
+    page.each_with_index do |cell_name, index|
+      worksheet.add_cell(0, index, cell_name)
+      worksheet.change_column_horizontal_alignment(index, 'center')
+    end
+
+    worksheet.change_column_width(2, I18n.t(:display_order).size)
+    @guw_model.guw_factors.each_with_index do |aquisitions_type,indx|
+      worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
+      worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      if ind < aquisitions_type.name.size
+        worksheet.change_column_width(0, aquisitions_type.name.size)
+        ind = aquisitions_type.name.size
+      end
+      counter_line += 1
+    end
+    counter_line.times do |indx|
+      ["bottom", "right"].each do |symbole|
+        worksheet[indx][0].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][1].change_border(symbole.to_sym, 'thin')
+        worksheet[indx][2].change_border(symbole.to_sym, 'thin')
+      end
     end
 
     ind = 0
@@ -457,6 +515,38 @@ class Guw::GuwModelsController < ApplicationController
           @guw_work_unit = guw_complexity_work_unit.guw_work_unit
           cu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_complexity.id, guw_work_unit_id: @guw_work_unit.id).first
           worksheet.add_cell(ind2 + 4, 0, @guw_work_unit.name)
+          worksheet[ind2 + 4][0].change_border(:right, 'thin')
+
+          ["","","",cu.value].each_with_index do |val, index|
+            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
+          end
+          4.times.each do |index|
+            worksheet[10][ind + index + 1].change_border(:top, 'thin')
+          end
+          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
+          ind2 += 1
+        end
+
+        guw_complexity.guw_complexity_weightings.each do |guw_complexity_weighting|
+          @guw_weighting = guw_complexity_weighting.guw_weighting
+          cu = Guw::GuwComplexityWeighting.where(guw_complexity_id: guw_complexity.id, guw_weighting_id: @guw_weighting.id).first
+          worksheet.add_cell(ind2 + 4, 0, @guw_weighting.name)
+          worksheet[ind2 + 4][0].change_border(:right, 'thin')
+
+          ["","","",cu.value].each_with_index do |val, index|
+            worksheet.add_cell(ind2 + 4, ind + index + 1, val).change_horizontal_alignment('center')
+          end
+          4.times.each do |index|
+            worksheet[10][ind + index + 1].change_border(:top, 'thin')
+          end
+          worksheet[ind2 + 4][ind + 4].change_border(:right, 'thin')
+          ind2 += 1
+        end
+
+        guw_complexity.guw_complexity_factors.each do |guw_complexity_factor|
+          @guw_factor = guw_complexity_factor.guw_factor
+          cu = Guw::GuwComplexityFactor.where(guw_complexity_id: guw_complexity.id, guw_factor_id: @guw_factor.id).first
+          worksheet.add_cell(ind2 + 4, 0, @guw_factor.name)
           worksheet[ind2 + 4][0].change_border(:right, 'thin')
 
           ["","","",cu.value].each_with_index do |val, index|
@@ -569,6 +659,12 @@ class Guw::GuwModelsController < ApplicationController
 
     @organization = Organization.find(params[:organization_id])
     @guw_model = Guw::GuwModel.new
+    @guw_types = @guw_model.guw_types
+    @guw_attributes = @guw_model.guw_attributes.order("name ASC")
+    @guw_work_units = @guw_model.guw_work_units
+    @guw_weightings = @guw_model.guw_weightings
+    @guw_factors = @guw_model.guw_factors
+
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(params['organization_id'], anchor: "taille"), I18n.t(:new) => ""
     set_page_title I18n.t(:new_UO_model)
   end
@@ -578,6 +674,11 @@ class Guw::GuwModelsController < ApplicationController
 
     @guw_model = Guw::GuwModel.find(params[:id])
     @organization = @guw_model.organization
+    @guw_types = @guw_model.guw_types
+    @guw_attributes = @guw_model.guw_attributes.order("name ASC")
+    @guw_work_units = @guw_model.guw_work_units
+    @guw_weightings = @guw_model.guw_weightings
+    @guw_factors = @guw_model.guw_factors
 
     set_page_title I18n.t(:edit_project_element_name, parameter: @guw_model.name)
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:uo_modules) => main_app.organization_module_estimation_path(@organization, anchor: "taille"), @guw_model.name => ""
@@ -591,7 +692,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model.organization_id = params[:guw_model][:organization_id].to_i
 
     if @guw_model.save
-      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
+      redirect_to redirect_apply(guw.edit_guw_model_path(@guw_model, organization_id: @organization.id), guw.guw_model_path(@guw_model))
     else
       render action: :new
     end
@@ -604,7 +705,11 @@ class Guw::GuwModelsController < ApplicationController
     @organization = @guw_model.organization
 
     if @guw_model.update_attributes(params[:guw_model])
-      redirect_to main_app.organization_module_estimation_path(@guw_model.organization_id, anchor: "taille")
+      if @guw_model.default_display == "list"
+        redirect_to redirect_apply(guw.edit_guw_model_path(@guw_model, organization_id: @organization.id), guw.guw_model_all_guw_types_path(@guw_model)) and return
+      else
+        redirect_to redirect_apply(guw.edit_guw_model_path(@guw_model, organization_id: @organization.id), nil ,guw.guw_model_path(@guw_model)) and return
+      end
     else
       render action: :edit
     end
@@ -725,7 +830,7 @@ class Guw::GuwModelsController < ApplicationController
       worksheet.change_column_width(11, tab_size[11])
       worksheet.add_cell(ind, 12, guow.effort)
 
-      worksheet.add_cell(ind, 13, guow.ajusted_effort)
+      worksheet.add_cell(ind, 13, guow.ajusted_size)
 
       @guw_model.guw_attributes.each do |gac|
         finder = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: gac.id, guw_type_id: guow.guw_type.id).first
@@ -842,7 +947,7 @@ class Guw::GuwModelsController < ApplicationController
                                                tracking: row[10],
                                                quantity: row[9].nil? ? 1 : row[9],
                                                effort: row[12].nil? ? nil : row[12],
-                                               ajusted_effort: row[13].nil? ? nil : row[13])
+                                               ajusted_size: row[13].nil? ? nil : row[13])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
@@ -983,23 +1088,20 @@ class Guw::GuwModelsController < ApplicationController
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", I18n.t(:uo_model) => main_app.edit_organization_path(@guw_model.organization), @guw_model.organization => ""
   end
 
-  # def init_guw_type_weight
-  #   Guw::GuwComplexity.all.each do |i|
-  #     if i.weight.nil?
-  #       i.weight = 1
-  #       i.save
-  #     end
-  #   end
-  #
-  #
-  #   Guw::GuwTypeComplexity.all.each do |i|
-  #     i.guw_attribute_complexities.each do |j|
-  #       unless j.bottom_range.nil? && j.top_range.nil?
-  #         j.value = i.value
-  #         j.save
-  #       end
-  #     end
-  #   end
-  # end
+  def save_scale_module_attributes
+    @guw_model = Guw::GuwModel.find(params[:guw_model_id])
+
+    Guw::GuwScaleModuleAttribute.destroy_all(guw_model_id: @guw_model)
+
+    params['attributes_matrix'].each_with_index do |i, j|
+      i[1].each do |k|
+        Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
+                                           type_attribute: k[0],
+                                           type_scale: i[0])
+      end
+    end
+
+    redirect_to :back
+  end
 
 end

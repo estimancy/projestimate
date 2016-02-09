@@ -43,6 +43,46 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
       end
     end
 
+    unless params[:weightings_value].nil?
+      params[:weightings_value].each do |i|
+        i.last.each do |j|
+          we = Guw::GuwWeighting.find(j.first.to_i)
+          cplx = Guw::GuwComplexity.find(i.first.to_i)
+          @guw_type = cplx.guw_type
+
+          cwe = Guw::GuwComplexityWeighting.where(guw_complexity_id: cplx.id, guw_weighting_id: we.id).first
+          if cwe.nil?
+            Guw::GuwComplexityWeighting.create(guw_complexity_id: cplx.id, guw_weighting_id: we.id, value: params[:weightings_value]["#{cplx.id}"]["#{we.id}"])
+          else
+            cwe.value = params[:weightings_value]["#{cplx.id}"]["#{we.id}"]
+            cwe.guw_type_id = @guw_type.id
+            cwe.save
+          end
+
+        end
+      end
+    end
+
+    unless params[:factors_value].nil?
+      params[:factors_value].each do |i|
+        i.last.each do |j|
+          fa = Guw::GuwFactor.find(j.first.to_i)
+          cplx = Guw::GuwComplexity.find(i.first.to_i)
+          @guw_type = cplx.guw_type
+
+          cfa = Guw::GuwComplexityFactor.where(guw_complexity_id: cplx.id, guw_factor_id: fa.id).first
+          if cfa.nil?
+            Guw::GuwComplexityFactor.create(guw_complexity_id: cplx.id, guw_factor_id: fa.id, value: params[:factors_value]["#{cplx.id}"]["#{fa.id}"])
+          else
+            cfa.value = params[:factors_value]["#{cplx.id}"]["#{fa.id}"]
+            cfa.guw_type_id = @guw_type.id
+            cfa.save
+          end
+
+        end
+      end
+    end
+
     unless params[:coefficient].nil?
       params[:coefficient].each do |i|
         i.last.each do |j|

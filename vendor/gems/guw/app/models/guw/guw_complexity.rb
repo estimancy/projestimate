@@ -26,6 +26,8 @@ module Guw
     ### added for copy
     has_many :guw_complexity_technologies, dependent: :destroy
     has_many :guw_complexity_work_units, dependent: :destroy
+    has_many :guw_complexity_weightings, dependent: :destroy
+    has_many :guw_complexity_factors, dependent: :destroy
 
     validates_presence_of :name#, :guw_type_id#, :bottom_range, :top_range,
 
