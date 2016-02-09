@@ -453,7 +453,7 @@ ul{
     margin-right:auto;
 
     /* ajout pour jsplumb draggable*/
-    position: absolute;
+    /*position: absolute;*/
     /* fin ajout */
 }
 
