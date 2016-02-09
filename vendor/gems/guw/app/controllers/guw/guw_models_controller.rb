@@ -212,7 +212,7 @@ class Guw::GuwModelsController < ApplicationController
                         Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id,
                                                           guw_work_unit_id: wu.id,
                                                           value: tab[ind2][ind + 3],
-                                                          guw_type_id: @guw_type)
+                                                          guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                       end
                       # elsif tab[ind2].nil?
                       #   route_flag = 3
@@ -230,7 +230,7 @@ class Guw::GuwModelsController < ApplicationController
                         Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id,
                                                            guw_weighting_id: we.id,
                                                            value: tab[ind2][ind + 3],
-                                                           guw_type_id: @guw_type)
+                                                           guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                       end
                       # elsif tab[ind2].nil?
                       #   route_flag = 3
@@ -248,7 +248,7 @@ class Guw::GuwModelsController < ApplicationController
                         Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id,
                                                         guw_factor_id: fa.id,
                                                         value: tab[ind2][ind + 3],
-                                                        guw_type_id: @guw_type)
+                                                        guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                       end
                       # elsif tab[ind2].nil?
                       #   route_flag = 3
@@ -272,7 +272,10 @@ class Guw::GuwModelsController < ApplicationController
                          ind2 += 1
                        end
                        if !tab[ind2].nil?
-                         Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id, organization_technology_id: techno.id, coefficient: tab[ind2][ind + 3])
+                         Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id,
+                                                             organization_technology_id: techno.id,
+                                                             coefficient: tab[ind2][ind + 3],
+                                                             guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                        end
                        ind2 = ind3
                       end
