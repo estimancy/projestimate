@@ -461,7 +461,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model.guw_work_units.each_with_index do |aquisitions_type,indx|
       worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
       worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
-      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order)
       if ind < aquisitions_type.name.size
         worksheet.change_column_width(0, aquisitions_type.name.size)
         ind = aquisitions_type.name.size
