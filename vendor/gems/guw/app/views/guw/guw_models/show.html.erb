@@ -119,7 +119,7 @@
                   <td colspan="2" class="align-center">
                     <% cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_cplx.id,
                                                               guw_work_unit_id: work_unit.id).first %>
-                    <%= text_field_tag "value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
+                    <%= text_field_tag "work_unit_value[#{guw_cplx.id}][#{work_unit.id}]", cwu.nil? ? '' : cwu.value, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>
@@ -194,7 +194,7 @@
                   <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
                                                                 organization_technology_id: technology.id).first %>
                   <td colspan="2" class="align-center">
-                    <%= text_field_tag "coefficient[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
+                    <%= text_field_tag "technology_value[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
                   </td>
                 <% end %>
                 </td>

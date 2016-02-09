@@ -874,7 +874,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       cts = eval("complexity_#{taa.type_scale}")
       sv = eval("guw_#{taa.type_scale}")
 
-      eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value)) * sv.value.to_f
+      eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value)) * (sv.nil? ? 1 : (sv.value.nil? ? 1 : sv.value))
     end
 
     guw_unit_of_work.effort = final_value *
