@@ -34,7 +34,8 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           if cwu.nil?
             Guw::GuwComplexityWorkUnit.create(guw_complexity_id: cplx.id,
                                               guw_work_unit_id: wu.id,
-                                              value: params[:value]["#{cplx.id}"]["#{wu.id}"])
+                                              value: params[:work_unit_value]["#{cplx.id}"]["#{wu.id}"],
+                                              guw_type_id: @guw_type.id)
           else
             cwu.value = params[:work_unit_value]["#{cplx.id}"]["#{wu.id}"]
             cwu.guw_type_id = @guw_type.id
@@ -56,7 +57,8 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           if cwe.nil?
             Guw::GuwComplexityWeighting.create(guw_complexity_id: cplx.id,
                                                guw_weighting_id: we.id,
-                                               value: params[:weightings_value]["#{cplx.id}"]["#{we.id}"])
+                                               value: params[:weightings_value]["#{cplx.id}"]["#{we.id}"],
+                                               guw_type_id: @guw_type.id)
           else
             cwe.value = params[:weightings_value]["#{cplx.id}"]["#{we.id}"]
             cwe.guw_type_id = @guw_type.id
@@ -78,7 +80,8 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
           if cfa.nil?
             Guw::GuwComplexityFactor.create(guw_complexity_id: cplx.id,
                                             guw_factor_id: fa.id,
-                                            value: params[:factors_value]["#{cplx.id}"]["#{fa.id}"])
+                                            value: params[:factors_value]["#{cplx.id}"]["#{fa.id}"],
+                                            guw_type_id: @guw_type.id)
           else
             cfa.value = params[:factors_value]["#{cplx.id}"]["#{fa.id}"]
             cfa.guw_type_id = @guw_type.id
