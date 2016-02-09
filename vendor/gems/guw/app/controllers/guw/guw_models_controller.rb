@@ -142,10 +142,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 2
-            if critical_flag || worksheet.sheet_name != @guw_model.coefficient_label
-              route_flag = 5
-              break
-            end
+            # if critical_flag || worksheet.sheet_name != @guw_model.coefficient_label
+            #   route_flag = 5
+            #   break
+            # end
             tab.each_with_index do |row, index|
               if index != 0 && !row.nil?
                  Guw::GuwWorkUnit.create(name:row[0],
@@ -155,10 +155,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 3
-            if critical_flag || worksheet.sheet_name != @guw_model.weightings_label
-              route_flag = 5
-              break
-            end
+            # if critical_flag || worksheet.sheet_name != @guw_model.weightings_label
+            #   route_flag = 5
+            #   break
+            # end
             tab.each_with_index do |row, index|
               if index != 0 && !row.nil?
                 Guw::GuwWeighting.create(name:row[0],
@@ -168,10 +168,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 4
-            if critical_flag || worksheet.sheet_name != @guw_model.factors_label
-              route_flag = 5
-              break
-            end
+            # if critical_flag || worksheet.sheet_name != @guw_model.factors_label
+            #   route_flag = 5
+            #   break
+            # end
             tab.each_with_index do |row, index|
               if index != 0 && !row.nil?
                 Guw::GuwFactor.create(name:row[0],
@@ -181,10 +181,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           else
-            if critical_flag
-              route_flag = 5
-              break
-            end
+            # if critical_flag
+            #   route_flag = 5
+            #   break
+            # end
             if worksheet.sheet_name != I18n.t(:is_model) && worksheet.sheet_name != I18n.t(:attribute_description)# && worksheet.sheet_name != I18n.t(:Type_acquisitions)
               if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
                 @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
