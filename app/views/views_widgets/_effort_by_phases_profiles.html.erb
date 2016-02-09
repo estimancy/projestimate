@@ -4,7 +4,7 @@
       <tr>
         <th><%= I18n.t(:phases) %></th>
         <th colspan="<%= project_organization_profiles.length %>"><%= I18n.t(:profiles) %></th>
-        <!--<th><%#= I18n.t(:total_per_phase) %></th>-->
+        <th><%= I18n.t(:total_per_phase) %></th>
       </tr>
       <tr>
         <th>
@@ -24,6 +24,7 @@
 
           <% array_root = Hash.new {|h,k| h[k]=[]} %>
           <% project_wbs_activity_elements.each do |wbs_activity_elt| %>
+            <% effort_per_phase = nil %>
             <% unless wbs_activity_elt.is_root? %>
               <% wbs_activity_elt_id = wbs_activity_elt.id %>
                 <% profile_ratio_percentage = "" %>
