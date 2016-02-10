@@ -263,7 +263,7 @@
                     <td class="align-center">
                       <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
                       <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini" %>
-                      <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? type_complexity.value : ac.value, class: "input-mini" %>
+                      <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.value, class: "input-mini" %>
                     </td>
                   <% end %>
                 </tr>
