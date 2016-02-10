@@ -216,7 +216,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_complexity_id = guw_unit_of_work.guw_complexity_id
     end
 
-    if guw_unit_of_work.guw_type.allow_complexity == true && guw_unit_of_work.guw_type.allow_criteria == false
+    if (guw_unit_of_work.guw_type.allow_complexity == true && guw_unit_of_work.guw_type.allow_criteria == false)
 
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
@@ -238,11 +238,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         elsif (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
           guw_unit_of_work.off_line_uo = true
           guw_unit_of_work.guw_complexity_id = guw_type.guw_complexities.last.id
-          array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert, guw_work_unit)
+          array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert)
         else
           guw_type.guw_complexities.each do |guw_c|
-            guw_work_unit = Guw::GuwWorkUnit.find(params["guw_work_unit_id"])
-            array_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
+            array_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert)
           end
         end
       end
@@ -681,7 +680,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guowa.save
   end
 
-  def calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
+  def calculate_seuil(guw_unit_of_work, guw_c, value_pert)
 
     if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
       guw_unit_of_work.guw_complexity_id = guw_c.id
@@ -690,13 +689,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.save
 
     #Save effective size (or weight) of uo
-    guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+    # guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
     if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
       # cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      # tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
-        uo_weight_low = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_low = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
         uo_weight_low = guw_unit_of_work.result_low.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
@@ -704,19 +703,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
       # cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      # tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
-        uo_weight_ml = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_ml = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
         uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
     if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      # tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       # cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
       if guw_c.enable_value == false
-        uo_weight_high = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_high = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
         uo_weight_high = guw_unit_of_work.result_high.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
