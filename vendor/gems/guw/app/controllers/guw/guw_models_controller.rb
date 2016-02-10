@@ -1138,11 +1138,13 @@ class Guw::GuwModelsController < ApplicationController
 
     Guw::GuwScaleModuleAttribute.destroy_all(guw_model_id: @guw_model)
 
-    params['attributes_matrix'].each_with_index do |i, j|
-      i[1].each do |k|
-        Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
-                                           type_attribute: k[0],
-                                           type_scale: i[0])
+    unless params['attributes_matrix'].nil?
+      params['attributes_matrix'].each_with_index do |i, j|
+        i[1].each do |k|
+          Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
+                                             type_attribute: k[0],
+                                             type_scale: i[0])
+        end
       end
     end
 
