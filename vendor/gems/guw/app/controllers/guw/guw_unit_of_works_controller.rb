@@ -877,21 +877,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value)) * (sv.nil? ? 1 : (sv.value.nil? ? 1 : sv.value))
     end
 
-    guw_unit_of_work.effort = final_value *
+    guw_unit_of_work.effort = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f))
 
-    guw_unit_of_work.cost = final_value *
+    guw_unit_of_work.cost = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f))
 
 
-    guw_unit_of_work.size = final_value *
+    guw_unit_of_work.size = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f))
 
     guw_unit_of_work.save
   end
