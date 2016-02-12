@@ -16,7 +16,6 @@
 
     <% if controller.action_name == "new" %>
         <div class="pull-right" style="margin-top: 100px;">
-          <%#= link_to I18n.t(:import_instance_model), ge.ge_model_import_path(15), :class => 'btn btn-info pull-right', title: I18n.t(:import_instance_model) %>
           <%= form_tag import_ge_model_instance_path, :multipart => true, method: "post", :class => 'simple_form' do %>
               <div>
                 <label style="color: #808080"><%= I18n.t(:import_generic_effort_model) %> </label> <br>
@@ -42,8 +41,8 @@
         <%#= f.input :organization_id, as: :hidden, input_html: { value: params[:organization_id] } %>
         <%= f.input :organization_id, as: :hidden, input_html: { value: @organization.id } %>
 
-        <%= f.input :name %>
-        <%= f.input :description, input_html: { class: "input-xxlarge", rows: "5"} %>
+        <%= f.input :name, label: I18n.t(:name) %>
+        <%= f.input :description, label: I18n.t(:description), input_html: { class: "input-xxlarge", rows: "5"} %>
         <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
         <div class="row-fluid">
           <div class="span3"><%= f.input :enabled_input, label: I18n.t(:modification_entry_valur) %></div>
@@ -65,6 +64,9 @@
 
       <% if can? :manage_modules_instances, ModuleProject %>
          <%= f.button :submit, I18n.t('save'), class: "btn-primary" %>
+         <% if action_name.in?(%w(edit update)) %>
+            <%= f.button :submit, I18n.t('apply') %>
+         <% end %>
       <% end %>
       <%= link_to I18n.t(:back), main_app.organization_module_estimation_path(@current_organization, anchor: "effort"), class: "btn" %>
     <% end %>
@@ -72,7 +74,7 @@
 
   <div id="tabs-2">
     <div>
-      <% unless controller.action_name == "new" %>
+      <% if action_name.in?(%w(edit update)) %>
 
         <div class="row-fluid">
           <div class="span6">

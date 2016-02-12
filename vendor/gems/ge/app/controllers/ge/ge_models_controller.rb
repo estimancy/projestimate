@@ -64,6 +64,7 @@ class Ge::GeModelsController < ApplicationController
     @ge_model.organization_id = params[:ge_model][:organization_id].to_i
     if @ge_model.save
       redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+      #redirect_to redirect_apply(ge.edit_ge_model_path(@ge_model, organization_id: @organization.id), main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort"))
     else
       render action: :new
     end
@@ -77,7 +78,8 @@ class Ge::GeModelsController < ApplicationController
     @organization = @ge_model.organization
 
     if @ge_model.update_attributes(params[:ge_model])
-      redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+      #redirect_to main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort")
+      redirect_to redirect_apply(ge.edit_ge_model_path(@ge_model, organization_id: @organization.id), nil ,main_app.organization_module_estimation_path(@ge_model.organization_id, anchor: "effort"))
     else
       render action: :edit
     end
@@ -418,7 +420,6 @@ class Ge::GeModelsController < ApplicationController
 
             model_worksheet.each_with_index do | row, index |
               row && row.cells.each do |cell|
-
                 if cell.column == 1 && !cell.nil?
                   val = cell && cell.value
                   attr_name = model_sheet_order["#{index}".to_sym]
@@ -432,7 +433,6 @@ class Ge::GeModelsController < ApplicationController
             else
               tab_error << "Erreur lors de la sauvegarde du modèle"
             end
-
           else
             tab_error << "Les attributs du modèle ne sont pas définis dans le fichier importé"
           end
@@ -459,13 +459,14 @@ class Ge::GeModelsController < ApplicationController
                 end
               end
 
+
               unless row_factor.empty?
                 #Create data in factors table
                 #sheet1_order = { :"0" => "scale_prod", :"1" => "type", :"2" => "short_name_factor", :"3" => "long_name_factor", :"4" => "description" }
                 short_name_factor = row_factor["short_name_factor"]
                 factor_alias = short_name_factor.nil? ? "" : short_name_factor.gsub(/( )/, '_').downcase
                 Ge::GeFactor.create(ge_model_id: @ge_model.id, short_name: short_name_factor, long_name: row_factor["long_name_factor"], factor_type: row_factor["type"],
-                                         scale_prod: row_factor["scale_prod"],  data_filename: filename, description: row_factor["description"], alias: factor_alias)
+                                    scale_prod: row_factor["scale_prod"],  data_filename: filename, description: row_factor["description"], alias: factor_alias)
               end
             end
           end
@@ -476,11 +477,12 @@ class Ge::GeModelsController < ApplicationController
               row_factor = Hash.new
 
               row && row.cells.each do |cell|
-                val = cell && cell.value
-
-                #add value to table
-                key_name = sheet2_order["#{cell.column}".to_sym]
-                row_factor["#{key_name}"] = val unless key_name.nil?
+                unless cell.nil?
+                  val = cell && cell.value
+                  #add value to table
+                  key_name = sheet2_order["#{cell.column}".to_sym]
+                  row_factor["#{key_name}"] = val unless key_name.nil?
+                end
               end
 
               unless row_factor.empty?
@@ -488,12 +490,14 @@ class Ge::GeModelsController < ApplicationController
                 #sheet2_order = { :"0" => "factor", :"1" => "text", :"2" => "value" }
                 #FactorValues ==> :name, :alias, :value_number, :value_text, :ge_factor_id, :ge_model_id
                 factor_name = row_factor["factor"]
-                factor_alias = factor_name.gsub(/( )/, '_').downcase
-                factors = @ge_model.ge_factors.where(alias: factor_alias)
-                unless factors.nil?
-                  factor = factors.first
-                  factor_value = Ge::GeFactorValue.create(ge_model_id: @ge_model.id, ge_factor_id: factor.id, factor_alias: factor_alias, factor_scale_prod: factor.scale_prod, factor_type: factor.factor_type,
-                                                          factor_name: factor_name, value_text: row_factor["text"], value_number: row_factor["value"], default: row_factor["default"])
+                if !factor_name.nil? && !factor_name.empty?
+                  factor_alias = factor_name.gsub(/( )/, '_').downcase
+                  factors = @ge_model.ge_factors.where(alias: factor_alias)
+                  unless factors.nil?
+                    factor = factors.first
+                    factor_value = Ge::GeFactorValue.create(ge_model_id: @ge_model.id, ge_factor_id: factor.id, factor_alias: factor_alias, factor_scale_prod: factor.scale_prod, factor_type: factor.factor_type,
+                                                            factor_name: factor_name, value_text: row_factor["text"], value_number: row_factor["value"], default: row_factor["default"])
+                  end
                 end
               end
             end

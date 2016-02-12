@@ -792,6 +792,16 @@ class OrganizationsController < ApplicationController
                   ratio.save
                 end
 
+                # Update the new WBS organization_profiles association
+                # The WBS module's organization_profiles are copied from Amoeba in include_association
+                new_wbs_profiles = []
+                OrganizationProfilesWbsActivity.where(wbs_activity_id: new_wbs_activity.id).all.each do |wbs_profile|
+                  new_organization_profile = new_organization.organization_profiles.where(copy_id: wbs_profile.organization_profile_id).last
+                  new_wbs_profiles << new_organization_profile.id
+                end
+                new_wbs_activity.organization_profile_ids = new_wbs_profiles
+                new_wbs_activity.save
+
                 #get new WBS Ratio elements
                 new_wbs_activity_ratio_elts = []
                 new_wbs_activity.wbs_activity_ratios.each do |ratio|

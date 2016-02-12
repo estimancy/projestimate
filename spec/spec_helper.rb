@@ -110,6 +110,7 @@ Spork.each_run do
     config.include Devise::TestHelpers, :type => :controller
     config.include Warden::Test::Helpers
     config.include ControllerHelpers, :type => :controller
+    Warden.test_mode! #Verifier si ca resoud l'erreur Warden
 
     ##For taking in account the Permissions with the CanCan gem
     #config.extend(ControllerSpecs::CanCan, type: :controller)

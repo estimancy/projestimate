@@ -43,6 +43,9 @@ class WbsActivity < ActiveRecord::Base
   has_many :module_projects
 
   has_and_belongs_to_many :organization_profiles    #has_many :organization_profiles_wbs_activities    #has_many :organization_profiles, through: :organization_profiles_wbs_activities
+  #=== test
+  #has_and_belongs_to_many :wbs_organization_profiles, :class_name=>'OrganizationProfile', :join_table => "organization_profiles_wbs_activities"
+  #=== test
 
   #Relation needed to delete wbs_activity_ratio_profiles when organization_profiles is unselected on WBS
   has_many :wbs_activity_ratio_elements, through: :wbs_activity_ratios
@@ -54,6 +57,9 @@ class WbsActivity < ActiveRecord::Base
   #Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do
     enable
+    #include_association [:wbs_activity_ratios]  # avant crash
+    #include_association [:wbs_activity_ratios, :organization_profiles] #crash
+
     include_association [:wbs_activity_ratios, :organization_profiles]
 
     customize(lambda { |original_wbs_activity, new_wbs_activity|
