@@ -216,7 +216,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_complexity_id = guw_unit_of_work.guw_complexity_id
     end
 
-    if guw_unit_of_work.guw_type.allow_complexity == true && guw_unit_of_work.guw_type.allow_criteria == false
+    if (guw_unit_of_work.guw_type.allow_complexity == true && guw_unit_of_work.guw_type.allow_criteria == false)
 
       tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity_id,
                                                  organization_technology_id: guw_unit_of_work.organization_technology_id).first
@@ -238,11 +238,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         elsif (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
           guw_unit_of_work.off_line_uo = true
           guw_unit_of_work.guw_complexity_id = guw_type.guw_complexities.last.id
-          array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert, guw_work_unit)
+          array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert)
         else
           guw_type.guw_complexities.each do |guw_c|
-            guw_work_unit = Guw::GuwWorkUnit.find(params["guw_work_unit_id"])
-            array_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
+            array_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert)
           end
         end
       end
@@ -626,9 +625,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
                 if (low >= guw_ac.bottom_range) and (low < guw_ac.top_range)
                   if guw_ac.enable_value == true
-                    @lows << guw_ac.value.to_f * low
+                    @lows << guw_ac.value.to_f * low * guw_ac.guw_type_complexity.value.to_f
                   else
-                    @lows << guw_ac.value.to_f
+                    @lows << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                   end
                 end
               end
@@ -644,9 +643,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
               if (most_likely >= guw_ac.bottom_range) and (most_likely < guw_ac.top_range)
                 if guw_ac.enable_value == true
-                  @mls << guw_ac.value.to_f * most_likely
+                  @mls << guw_ac.value.to_f * most_likely * guw_ac.guw_type_complexity.value.to_f
                 else
-                  @mls << guw_ac.value.to_f
+                  @mls << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                 end
               end
             end
@@ -661,9 +660,9 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             unless guw_ac.bottom_range.nil? || guw_ac.top_range.nil?
               if (high >= guw_ac.bottom_range) and (high < guw_ac.top_range)
                 if guw_ac.enable_value == true
-                  @highs << guw_ac.value.to_f * high
+                  @highs << guw_ac.value.to_f * high * guw_ac.guw_type_complexity.value.to_f
                 else
-                  @highs << guw_ac.value.to_f
+                  @highs << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                 end
               end
             end
@@ -681,7 +680,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guowa.save
   end
 
-  def calculate_seuil(guw_unit_of_work, guw_c, value_pert, guw_work_unit)
+  def calculate_seuil(guw_unit_of_work, guw_c, value_pert)
 
     if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
       guw_unit_of_work.guw_complexity_id = guw_c.id
@@ -690,13 +689,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.save
 
     #Save effective size (or weight) of uo
-    guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
+    # guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
     if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
       # cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      # tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
-        uo_weight_low = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_low = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
         uo_weight_low = guw_unit_of_work.result_low.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
@@ -704,21 +703,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
       # cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      # tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       if guw_c.enable_value == false
-        uo_weight_ml = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_ml = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
-        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
     if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
-      tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
+      # tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_c.id, organization_technology_id: guw_unit_of_work.organization_technology_id).first
       # cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_c.id, guw_work_unit_id: guw_work_unit).first
       if guw_c.enable_value == false
-        uo_weight_high = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_high = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
-        uo_weight_high = guw_unit_of_work.result_high.to_i * (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_high = guw_unit_of_work.result_high.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
@@ -877,21 +876,21 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value)) * (sv.nil? ? 1 : (sv.value.nil? ? 1 : sv.value))
     end
 
-    guw_unit_of_work.effort = final_value *
+    guw_unit_of_work.effort = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f))
 
-    guw_unit_of_work.cost = final_value *
+    guw_unit_of_work.cost = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f))
 
 
-    guw_unit_of_work.size = final_value *
+    guw_unit_of_work.size = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : tcplx.coefficient.to_f)
+        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f))
 
     guw_unit_of_work.save
   end

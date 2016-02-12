@@ -117,12 +117,12 @@ class Guw::GuwModelsController < ApplicationController
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
-                                                three_points_estimation: tab[3][1].to_i == 1,
-                                                retained_size_unit: tab[4][1],
                                                 coefficient_label: tab[2][1],
                                                 weightings_label: tab[3][1],
-                                                factor_label: tab[4][1],
-                                                hour_coefficient_conversion: tab[5][1],
+                                                factors_label: tab[4][1],
+                                                three_points_estimation: tab[5][1].to_i == 1,
+                                                retained_size_unit: tab[6][1],
+                                                hour_coefficient_conversion: tab[7][1],
                                                 organization_id: @current_organization.id)
               critical_flag = false
             else
@@ -142,10 +142,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 2
-            if critical_flag || worksheet.sheet_name != @guw_model.coefficient_label
-              route_flag = 5
-              break
-            end
+            # if critical_flag || worksheet.sheet_name != @guw_model.coefficient_label
+            #   route_flag = 5
+            #   break
+            # end
             tab.each_with_index do |row, index|
               if index != 0 && !row.nil?
                  Guw::GuwWorkUnit.create(name:row[0],
@@ -155,10 +155,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 3
-            if critical_flag || worksheet.sheet_name != @guw_model.weightings_label
-              route_flag = 5
-              break
-            end
+            # if critical_flag || worksheet.sheet_name != @guw_model.weightings_label
+            #   route_flag = 5
+            #   break
+            # end
             tab.each_with_index do |row, index|
               if index != 0 && !row.nil?
                 Guw::GuwWeighting.create(name:row[0],
@@ -168,10 +168,10 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           elsif index == 4
-            if critical_flag || worksheet.sheet_name != @guw_model.factors_label
-              route_flag = 5
-              break
-            end
+            # if critical_flag || worksheet.sheet_name != @guw_model.factors_label
+            #   route_flag = 5
+            #   break
+            # end
             tab.each_with_index do |row, index|
               if index != 0 && !row.nil?
                 Guw::GuwFactor.create(name:row[0],
@@ -181,11 +181,11 @@ class Guw::GuwModelsController < ApplicationController
               end
             end
           else
-            if critical_flag
-              route_flag = 5
-              break
-            end
-            if worksheet.sheet_name != I18n.t(:is_model) && worksheet.sheet_name != I18n.t(:attribute_description) && worksheet.sheet_name != I18n.t(:Type_acquisitions)
+            # if critical_flag
+            #   route_flag = 5
+            #   break
+            # end
+            if worksheet.sheet_name != I18n.t(:is_model) && worksheet.sheet_name != I18n.t(:attribute_description)# && worksheet.sheet_name != I18n.t(:Type_acquisitions)
               if !tab[0].nil? && !tab[2].nil? && !tab[3].nil? && !tab[1].nil? && !tab[4].nil?
                 @guw_type = Guw::GuwType.create(name: worksheet.sheet_name,
                                                 description: tab[0][0],
@@ -194,7 +194,8 @@ class Guw::GuwModelsController < ApplicationController
                                                 allow_complexity: tab[3][1] == 1,
                                                 allow_criteria: tab[4][1] == 1,
                                                 guw_model_id: @guw_model.id)
-                if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty? && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
+
+                if !tab[8].nil? && !tab[9].nil? && tab[8][0] == I18n.t(:threshold) && !tab[6].empty?# && tab[9][0] == I18n.t(:Coefficient_of_acquisiton)
                   while !tab[6][ind].nil?
                     @guw_complexity = Guw::GuwComplexity.create(guw_type_id: @guw_type.id,
                                                                name: tab[6][ind],
@@ -204,51 +205,63 @@ class Guw::GuwModelsController < ApplicationController
                                                                weight:  tab[8][ind + 3] ? tab[8][ind + 3] : 1)
 
                     @guw_model.guw_work_units.each do |wu|
-                      while !tab[ind2].nil? && tab[ind2][0] != wu.name && tab[ind2][0] != I18n.t(:organization_technology)
+                      while !tab[ind2].nil? && tab[ind2][0] != wu.name #&& tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
                       if !tab[ind2].nil?# && tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id, guw_work_unit_id: wu.id, value: tab[ind2][ind + 3])
-                      elsif tab[ind2].nil?
-                        route_flag = 3
-                        break
+                        Guw::GuwComplexityWorkUnit.create(guw_complexity_id: @guw_complexity.id,
+                                                          guw_work_unit_id: wu.id,
+                                                          value: tab[ind2][ind + 3],
+                                                          guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                       end
+                      # elsif tab[ind2].nil?
+                      #   route_flag = 3
+                      #   break
+                      # end
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
 
                     @guw_model.guw_weightings.each do |we|
-                      while !tab[ind2].nil? && tab[ind2][0] != wu.name# && tab[ind2][0] != I18n.t(:organization_technology)
+                      while !tab[ind2].nil? && tab[ind2][0] != we.name# && tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
-                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id, guw_weighting_id: we.id, value: tab[ind2][ind + 3])
-                      elsif tab[ind2].nil?
-                        route_flag = 3
-                        break
+                      if !tab[ind2].nil? #&& tab[ind2][0] != I18n.t(:organization_technology)
+                        Guw::GuwComplexityWeighting.create(guw_complexity_id: @guw_complexity.id,
+                                                           guw_weighting_id: we.id,
+                                                           value: tab[ind2][ind + 3],
+                                                           guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                       end
+                      # elsif tab[ind2].nil?
+                      #   route_flag = 3
+                      #   break
+                      # end
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
 
                     @guw_model.guw_factors.each do |fa|
-                      while !tab[ind2].nil? && tab[ind2][0] != wu.name# && tab[ind2][0] != I18n.t(:organization_technology)
+                      while !tab[ind2].nil? && tab[ind2][0] != fa.name# && tab[ind2][0] != I18n.t(:organization_technology)
                         ind2 += 1
                       end
-                      if !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
-                        Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id, guw_factor_id: fa.id, value: tab[ind2][ind + 3])
-                      elsif tab[ind2].nil?
-                        route_flag = 3
-                        break
+                      if !tab[ind2].nil? #&& tab[ind2][0] != I18n.t(:organization_technology)
+                        Guw::GuwComplexityFactor.create(guw_complexity_id: @guw_complexity.id,
+                                                        guw_factor_id: fa.id,
+                                                        value: tab[ind2][ind + 3],
+                                                        guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                       end
+                      # elsif tab[ind2].nil?
+                      #   route_flag = 3
+                      #   break
+                      # end
                       ind2 = 10
                       action_type_aquisition_flag = true
                     end
 
-                    if tab[ind2].nil? || route_flag == 3
-                      route_flag = 3
-                      break
-                    end
+                    # if tab[ind2].nil? || route_flag == 3
+                    #   route_flag = 3
+                    #   break
+                    # end
                     while !tab[ind2].nil? && tab[ind2][0] != I18n.t(:organization_technology)
                       ind2 += 1
                     end
@@ -259,7 +272,10 @@ class Guw::GuwModelsController < ApplicationController
                          ind2 += 1
                        end
                        if !tab[ind2].nil?
-                         Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id, organization_technology_id: techno.id, coefficient: tab[ind2][ind + 3])
+                         Guw::GuwComplexityTechnology.create(guw_complexity_id: @guw_complexity.id,
+                                                             organization_technology_id: techno.id,
+                                                             coefficient: tab[ind2][ind + 3],
+                                                             guw_type_id: @guw_type.nil? ? nil : @guw_type.id)
                        end
                        ind2 = ind3
                       end
@@ -276,7 +292,7 @@ class Guw::GuwModelsController < ApplicationController
                   end
                   ind = 1
                 end
-                if !tab[save_position].nil? && tab[save_position][0] == I18n.t(:complexity_threshold) && tab[save_position + 1][0] == I18n.t(:pe_attributes)
+                if !tab[save_position].nil?# && tab[save_position][0] == I18n.t(:complexity_threshold) && tab[save_position + 1][0] == I18n.t(:pe_attributes)
                   ind3 = save_position + 2
                   ind = 1
                   while !tab[save_position][ind].nil?
@@ -445,7 +461,7 @@ class Guw::GuwModelsController < ApplicationController
     @guw_model.guw_work_units.each_with_index do |aquisitions_type,indx|
       worksheet.add_cell(indx + 1, 0, aquisitions_type.name)
       worksheet.add_cell(indx + 1, 1, aquisitions_type.value)
-      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order == 0 ? indx : aquisitions_type.display_order)
+      worksheet.add_cell(indx + 1, 2, aquisitions_type.display_order)
       if ind < aquisitions_type.name.size
         worksheet.change_column_width(0, aquisitions_type.name.size)
         ind = aquisitions_type.name.size
@@ -987,9 +1003,9 @@ class Guw::GuwModelsController < ApplicationController
                     indexing_field_error[1][0] = false
                   end
                 else
-                  first_work_unit = @guw_model.guw_work_units.first
+                  first_work_unit = @guw_model.guw_work_units.order("display_order ASC").first
                   unless first_work_unit.nil?
-                    guw_uow.guw_work_unit_id = @guw_model.guw_work_units.first.id
+                    guw_uow.guw_work_unit_id = @guw_model.guw_work_units.order("display_order ASC").first.id
                   else
                     guw_uow.guw_work_unit_id = nil
                   end
@@ -1122,11 +1138,13 @@ class Guw::GuwModelsController < ApplicationController
 
     Guw::GuwScaleModuleAttribute.destroy_all(guw_model_id: @guw_model)
 
-    params['attributes_matrix'].each_with_index do |i, j|
-      i[1].each do |k|
-        Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
-                                           type_attribute: k[0],
-                                           type_scale: i[0])
+    unless params['attributes_matrix'].nil?
+      params['attributes_matrix'].each_with_index do |i, j|
+        i[1].each do |k|
+          Guw::GuwScaleModuleAttribute.create(guw_model_id: @guw_model.id,
+                                             type_attribute: k[0],
+                                             type_scale: i[0])
+        end
       end
     end
 

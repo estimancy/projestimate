@@ -442,7 +442,6 @@ class ProjectsController < ApplicationController
 
     generate_dashboard
 
-
     #set_breadcrumbs  I18n.t(:estimate) => projects_path, @project => edit_project_path(@project)
     if @project.is_model
       set_breadcrumbs I18n.t(:estimation_models) => organization_setting_path(@organization, anchor: "tabs-estimation-models"), "#{@project} <span class='badge' style='background-color: #{@project.status_background_color}'>#{@project.status_name}</span>" => edit_project_path(@project)

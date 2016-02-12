@@ -153,8 +153,12 @@ module OrganizationsHelper
       else
         if column.field_id
           content_tag("td") do
-            if is_number?(value)
-              content_tag(:span, convert_with_precision(value, user_number_precision), class: "pull-right").to_s.html_safe
+            if value == "-" or is_number?(value)
+              if is_number?(value)
+                content_tag(:span, convert_with_precision(value, user_number_precision), class: "pull-right").to_s.html_safe
+              else
+                content_tag(:span, value, class: "pull-right").to_s.html_safe
+              end
             else
               value
             end

@@ -143,9 +143,15 @@
               <th class="text_left"><%= I18n.t :name %></th>
               <!--<th class="text_left"><%# I18n.t :description %></th>-->
               <th class=""><%= I18n.t :type %></th>
-              <th class=""><%= @guw_model.coefficient_label.to_s.humanize %></th>
-              <th class=""><%= @guw_model.weightings_label.to_s.humanize %></th>
-              <th class=""><%= @guw_model.factors_label.to_s.humanize %></th>
+              <% unless @guw_model.coefficient_label.blank? %>
+                <th class=""><%= @guw_model.coefficient_label.to_s.humanize %></th>
+              <% end %>
+              <% unless @guw_model.weightings_label.blank? %>
+                <th class=""><%= @guw_model.weightings_label.to_s.humanize %></th>
+              <% end %>
+              <% unless @guw_model.factors_label.blank? %>
+                <th class=""><%= @guw_model.factors_label.to_s.humanize %></th>
+              <% end %>
               <th class=""><%= I18n.t :technology %></th>
               <th class=""><%= I18n.t :quantity %></th>
               <th class=""><%= I18n.t :complexity %></th>
@@ -195,53 +201,59 @@
                                  readonly: !can?(:execute_estimation_plan, @project) %>
                 </td>
 
-                <td class="span2">
-                  <span class="work_unit_<%= guow.id %>" >
-                    <% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq}.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
-                    <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.flatten.compact.uniq %>
-                    <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
-                    <% unless results.empty? %>
-                      <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
-                                                                                     selected: guow.guw_work_unit_id),
-                                     class: "guw_work_unit input-xsmall",
-                                     guw: guow.id,
-                                     required: true,
-                                     readonly: !can?(:execute_estimation_plan, @project) %>
-                    <% end %>
-                  </span>
-                </td>
+                <% unless @guw_model.coefficient_label.blank? %>
+                  <td class="span2">
+                    <span class="work_unit_<%= guow.id %>" >
+                      <% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq}.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
+                      <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.flatten.compact.uniq %>
+                      <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
+                      <% unless results.empty? %>
+                        <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
+                                                                                       selected: guow.guw_work_unit_id),
+                                       class: "guw_work_unit input-xsmall",
+                                       guw: guow.id,
+                                       required: true,
+                                       readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% end %>
+                    </span>
+                  </td>
+                <% end %>
 
-                <td class="span2">
-                  <span class="weighting_<%= guow.id %>" >
-                    <% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
-                    <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
-                    <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_weighting }.uniq %>
-                    <% unless results.empty? %>
-                      <%= select_tag "guw_weighting[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
-                                                                                     selected: guow.guw_weighting_id),
-                                     class: "guw_weighting input-xsmall",
-                                     guw: guow.id,
-                                     required: true,
-                                     readonly: !can?(:execute_estimation_plan, @project) %>
-                    <% end %>
-                  </span>
-                </td>
+                <% unless @guw_model.weightings_label.blank? %>
+                  <td class="span2">
+                    <span class="weighting_<%= guow.id %>" >
+                      <% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
+                      <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
+                      <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_weighting }.uniq %>
+                      <% unless results.empty? %>
+                        <%= select_tag "guw_weighting[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
+                                                                                       selected: guow.guw_weighting_id),
+                                       class: "guw_weighting input-xsmall",
+                                       guw: guow.id,
+                                       required: true,
+                                       readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% end %>
+                    </span>
+                  </td>
+                <% end %>
 
-                <td class="span2">
-                  <span class="factor_<%= guow.id %>" >
-                    <% results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
-                    <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq %>
-                    <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_factor }.uniq %>
-                    <% unless results.empty? %>
-                      <%= select_tag "guw_factor[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
-                                                                                     selected: guow.guw_factor_id),
-                                     class: "guw_factor input-xsmall",
-                                     guw: guow.id,
-                                     required: true,
-                                     readonly: !can?(:execute_estimation_plan, @project) %>
-                    <% end %>
-                  </span>
-                </td>
+                <% unless @guw_model.factors_label.blank? %>
+                  <td class="span2">
+                    <span class="factor_<%= guow.id %>" >
+                      <% results = @guw_model.guw_factors.map{|i| i.guw_complexity_factors.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
+                      <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_factor }.uniq %>
+                      <%# results = Guw::GuwComplexityFactor.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_factor }.uniq %>
+                      <% unless results.empty? %>
+                        <%= select_tag "guw_factor[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
+                                                                                       selected: guow.guw_factor_id),
+                                       class: "guw_factor input-xsmall",
+                                       guw: guow.id,
+                                       required: true,
+                                       readonly: !can?(:execute_estimation_plan, @project) %>
+                      <% end %>
+                    </span>
+                  </td>
+                <% end %>
 
                 <td class="span2 ">
                   <span class="technology_<%= guow.id %>" >

@@ -59,37 +59,40 @@
         <div class="span6">
           <%= link_to I18n.t(:manage_the_attribute), guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
           <%= link_to "Matrice des attributs / facteurs", guw.guw_model_scale_module_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-          <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="<%= I18n.t(:import_uo_from_excel)%>" data-toggle="modal">
-            <%= I18n.t(:import) %>
-          </a>
           <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
           <%= link_to "Voir le modèle", guw.guw_model_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-          <div id="import" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <%= form_tag guw.importxl_path, :method => 'post', :multipart => true, :class => 'simple_form' do %>
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                  <h3 id="myModalLabel"> <%= I18n.t(:import_from) %></h3>
-                </div>
-                <div class="modal-body">
-                  <%= file_field_tag :file %>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                  <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
-                </div>
-                <div class="loading span11 hide">
-                  <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %></h4>
-                </div>
-            <% end %>
-          </div>
+        </div>
+      <% else %>
+        <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="<%= I18n.t(:import_uo_from_excel)%>" data-toggle="modal">
+          <%= I18n.t(:import) %>
+        </a>
+
+        <div id="import" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <%= form_tag guw.importxl_path, :method => 'post', :multipart => true, :class => 'simple_form' do %>
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel"> <%= I18n.t(:import_from) %></h3>
+            </div>
+            <div class="modal-body">
+              <%= file_field_tag :file %>
+            </div>
+            <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+              <%= submit_tag I18n.t(:import), :class => 'btn btn-primary', :onclick => "$('.loading').show();" %>
+            </div>
+            <div class="loading span11 hide">
+              <h4><%= I18n.t(:please_wait_import) %><%= image_tag 'ajax-loader.gif' %></h4>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
   </div>
 
   <% unless @guw_model.new_record? %>
-    <div id="tabs-matrix">
-      <%= form_tag guw.guw_model_save_scale_module_attributes_path(@guw_model), method: "post" do %>
+    <%= form_tag guw.guw_model_save_scale_module_attributes_path(@guw_model), method: "post" do %>
+
+      <div id="tabs-matrix">
         <table class="table table-bordered">
           <tr>
             <th></th>
@@ -119,8 +122,8 @@
         </table>
         <%= submit_tag I18n.t(:save), class: "btn btn-mini pull-right" %>
         <%= link_to I18n.t(:back), :back, :class => 'btn btn-mini pull-right button_margin_right' %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <div id="tabs-attributs">
       <table class="table table-bordered">
