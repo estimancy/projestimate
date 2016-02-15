@@ -191,7 +191,7 @@
       <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id).first %>
 
       <% theorical_effort_attr = PeAttribute.find_by_alias("theoretical_effort") %>
-      <% theorical_ev = EstimationValue.where(pe_attribute_id: theorical_effort_attr.id, module_project_id: current_module_project.id).first %>
+      <% theorical_ev = EstimationValue.where(pe_attribute_id: theorical_effort_attr.id, module_project_id: current_module_project.id).last %>
 
       <% component_id = current_component.id %>
       <% ge_standard_unit_coefficient = @ge_model.standard_unit_coefficient.to_f %>
@@ -226,6 +226,10 @@
 
           <td>
             <% if (@ge_model.modify_theorical_effort && can?(:alter_estimation_plan, @project)) %>
+                <!-- show the Theorical effort -->
+                <%#= label_tag "Théorique" %>
+                <%#= number_field_tag "theorical_effort_most_likely", convert_with_specific_precision(theorical_ev.nil? ? '': theorical_ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_theorical_effort_most_likely", class: "input-medium" %>
+                <%#= label_tag "retenu" %>
                 <%= number_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_likely", class: "input-medium" %>
             <% else %>
               <%= hidden_field_tag "effort_most_likely", (ev.nil? ? '' : ev.send("string_data_most_likely")[component_id]) %>

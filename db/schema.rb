@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160208094846) do
+ActiveRecord::Schema.define(:version => 20160212130857) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -482,6 +482,9 @@ ActiveRecord::Schema.define(:version => 20160208094846) do
     t.boolean "modify_theorical_effort"
     t.integer "copy_id"
     t.integer "copy_number",               :default => 0
+    t.string  "p_calculation_method"
+    t.string  "s_calculation_method"
+    t.string  "c_calculation_method"
   end
 
   create_table "groups", :force => true do |t|

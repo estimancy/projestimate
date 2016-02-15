@@ -1851,3 +1851,5 @@ en:
   retained_size_unit_2: "Size unit label"
   Wording_of_the_module_unit_effort_2: "Effort unit label"
   enabled_theorical_effort_modification: "Allow editing the theoretical calculated effort"
+  sum: "Sum"
+  product: "Product"
