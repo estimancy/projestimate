@@ -42,14 +42,14 @@ class Guw::GuwWorkUnitsController < ApplicationController
   def create
     @guw_work_unit = Guw::GuwWorkUnit.new(params[:guw_work_unit])
     @guw_work_unit.save
-    redirect_to guw.edit_guw_model_path(@guw_work_unit.guw_model, organization_id: @guw_work_unit.guw_model.organization.id)
+    redirect_to guw.edit_guw_model_path(@guw_work_unit.guw_model, organization_id: @guw_work_unit.guw_model.organization.id, anchor: "tabs-factors")
   end
 
   def update
     @guw_work_unit = Guw::GuwWorkUnit.find(params[:id])
     @guw_work_unit.update_attributes(params[:guw_work_unit])
     set_page_title I18n.t(:Edit_Units_Of_Work)
-    redirect_to guw.edit_guw_model_path(@guw_work_unit.guw_model, organization_id: @guw_work_unit.guw_model.organization.id)
+    redirect_to guw.edit_guw_model_path(@guw_work_unit.guw_model, organization_id: @guw_work_unit.guw_model.organization.id, anchor: "tabs-factors")
   end
 
   def destroy
