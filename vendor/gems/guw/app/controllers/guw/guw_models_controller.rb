@@ -382,9 +382,9 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
-                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label],
-                  [I18n.t(:work_unit_label),  @guw_model.weightings_label],
-                  [I18n.t(:work_unit_label),  @guw_model.factors_label],
+                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label.blank? ? 'Facteur sans nom' : @guw_model.coefficient_label],
+                  [I18n.t(:work_unit_label),  @guw_model.weightings_label.blank? ? 'Facteur sans nom' : @guw_model.weightings_label],
+                  [I18n.t(:work_unit_label),  @guw_model.factors_label.blank? ? 'Facteur sans nom' : @guw_model.factors_label],
                   [I18n.t(:three_points_estimation), @guw_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:retained_size_unit), @guw_model.retained_size_unit],
                   [I18n.t(:hour_coefficient_conversion), @guw_model.hour_coefficient_conversion],
@@ -616,17 +616,19 @@ class Guw::GuwModelsController < ApplicationController
 
         guw_complexity.guw_complexity_technologies.each do |complexity_technology|
           @guw_organisation_technology = complexity_technology.organization_technology
-          ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
-          worksheet.add_cell(ind2 + 5, 0, @guw_organisation_technology.name)
-          worksheet[ind2 + 5][0].change_border(:right, 'thin')
+          unless @guw_organisation_technology.nil?
+            ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_complexity.id, organization_technology_id: @guw_organisation_technology.id).first
+            worksheet.add_cell(ind2 + 5, 0, @guw_organisation_technology.name)
+            worksheet[ind2 + 5][0].change_border(:right, 'thin')
 
-          ["", "", "", ct.coefficient].each_with_index do |val, index|
-            worksheet.add_cell(ind2 + 5, ind + index + 1, val).change_horizontal_alignment('center')
-            worksheet[block_it][ind + index + 1].change_border(:top, 'thin')
+            ["", "", "", ct.coefficient].each_with_index do |val, index|
+              worksheet.add_cell(ind2 + 5, ind + index + 1, val).change_horizontal_alignment('center')
+              worksheet[block_it][ind + index + 1].change_border(:top, 'thin')
 
+            end
+            worksheet[ind2 + 5][ind + 4].change_border(:right, 'thin')
+            ind2 += 1
           end
-          worksheet[ind2 + 5][ind + 4].change_border(:right, 'thin')
-          ind2 += 1
         end
         worksheet[ind2 + 4][0].change_border(:bottom, 'thin')
         unless guw_complexity.guw_complexity_technologies.empty?
@@ -802,7 +804,9 @@ class Guw::GuwModelsController < ApplicationController
     tab_size = [I18n.t(:estimation).length, I18n.t(:version).length,
                 I18n.t(:group).length, I18n.t(:selected).length,
                 I18n.t(:name).length, I18n.t(:description).length,
-                I18n.t(:work_unit_type).length, @guw_model.coefficient_label.to_s.length,
+                20, @guw_model.coefficient_label.to_s.length,
+                20, @guw_model.weightings_label.blank? ? 'Facteur sans nom' : @guw_model.weightings_label,
+                20, @guw_model.factors_label.blank? ? 'Facteur sans nom' : @guw_model.factors_label,
                 I18n.t(:organization_technology).length, I18n.t(:quantity).length,
                 I18n.t(:tracability).length, I18n.t(:cotation).length,
                 I18n.t(:results).length, I18n.t(:retained_result).length,

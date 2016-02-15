@@ -8,7 +8,7 @@
         <li class="tabs_4_with_estimation_plan"><a href="#tabs-4"><%= I18n.t(:estimation_plan) %></a></li>
         <li><a href="#tabs-5"><%= I18n.t(:securities) %></a></li>
         <li><a href="#tabs-history"><%= I18n.t(:label_project_history) %> </a></li>
-        <!--<li><a href="#tabs-6"> Tableau de bord </a></li>-->
+        <li><a href="#tabs-6"> Tableau de bord </a></li>
       <% end %>
     </ul>
 
@@ -135,9 +135,10 @@
           <td>
             <%= f.input :creator_id,
                         as: :select,
-                        collection: @organization.users.where(locked_at: nil).map{|i| [i.name, i.id]},
+                        collection: @organization.users.where(locked_at: nil).map{ |i| [i.name, i.id] },
                         label: I18n.t('creator'),
-                        input_html: { :class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
+                        selected: current_user.id,
+                        input_html: { selected: current_user.id,:class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
           </td>
         </tr>
 
@@ -202,7 +203,7 @@
             <%= link_to I18n.t('back'), organization_estimations_path(@organization), :class => 'btn' %>
         <% end %>
       </div>
-  </div>
+    </div>
 
     <% if action_name.in?(%w(edit update)) %>
       <div id="tabs-2">
@@ -273,7 +274,6 @@
       </div>
 
       <div id="tabs-5">
-
         <% if @project.is_model == true && current_user.super_admin == true %>
           <div class="row">
             <%= link_to "Copier les sécurités", copy_security_path(@project), class: "btn btn-mini pull-right", method: "post" %>
@@ -458,20 +458,21 @@
             </div>
           </div>
         <% end %>
-
-        <div id="tabs-history">
-          <%= hidden_field_tag "current_showed_project_id", @project.id %>
-          <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
-          <%= render :partial => "show_project_tree_history", :object => [@projects_json_tree] %>
-        </div>
-      <% end %>
-    </div>
-
-    <div id="tabs-6">
-      <div id="main">
-        <%# render 'dashboard_inner' %>
       </div>
-    </div>
+
+      <div id="tabs-history">
+        <%= hidden_field_tag "current_showed_project_id", @project.id %>
+        <div id="project_tree_id" data-project_tree="<%= @projects_json_tree %>"></div>
+        <%= render :partial => "show_project_tree_history", :object => [@projects_json_tree] %>
+      </div>
+
+      <div id="tabs-6">
+        <div id="main">
+          <%= render 'dashboard_inner' %>
+        </div>
+      </div>
+    <% end %>
+
 
   </div>
 <% end %>

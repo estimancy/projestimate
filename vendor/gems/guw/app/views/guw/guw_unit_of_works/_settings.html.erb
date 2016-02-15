@@ -129,9 +129,9 @@
 
       </div>
 
-      <div id="collapse<%= uowg.id %>" class="pull-left accordion-body collapse in">
+      <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
         <div class="accordion-inner span12">
-          <table class="table table-striped">
+          <table class="table table-striped span12">
             <tr>
               <th class=""></th>
               <th class="">
@@ -342,16 +342,15 @@
               </tr>
             <% end %>
           </table>
-        </div>
-
-        <% if can? :execute_estimation_plan, @project %>
-          <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini input-medium pull-left button_margin_right" %>
-          <% unless @unit_of_work_groups.empty? %>
-            <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini input-medium pull-left button_margin_right" %>
+          <% if can? :execute_estimation_plan, @project %>
+            <%= link_to I18n.t('add_new_unit_of_work_group'), guw.new_guw_unit_of_work_group_path, class: "btn btn-mini input-medium pull-left button_margin_right" %>
+            <% unless @unit_of_work_groups.empty? %>
+              <%= link_to I18n.t('new_unit_of_work'), guw.new_guw_model_guw_unit_of_work_path(@guw_model, g: uowg), class: "btn btn-mini input-medium pull-left button_margin_right" %>
+            <% end %>
+            <button type="submit" class="btn btn-default btn-mini input-small pull-right"><%= I18n.t(:save) %></button>
+            <%= link_to "RAZ", "#!", class: "btn btn-mini input-small reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
           <% end %>
-          <button type="submit" class="btn btn-default btn-mini input-small pull-right"><%= I18n.t(:save) %></button>
-          <%= link_to "RAZ", "#!", class: "btn btn-mini input-small reset_retained button_margin_right pull-right", onclick: "raz(#{uowg.id})" %>
-        <% end %>
+        </div>
       </div>
 
       <br>
