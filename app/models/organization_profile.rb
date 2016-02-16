@@ -20,13 +20,16 @@
 #############################################################################
 
 class OrganizationProfile < ActiveRecord::Base
-  attr_accessible :cost_per_hour, :description, :name, :organization_id, :profile_id, :wbs_activity_ids
+  attr_accessible :cost_per_hour, :description, :name, :organization_id, :profile_id, :wbs_activity_ids, :copy_id
 
   belongs_to :organization
 
   has_many :wbs_activity_ratio_profiles, :dependent => :delete_all
 
   has_and_belongs_to_many :wbs_activities   #has_many :organization_profiles_wbs_activities    #has_many :wbs_activities, through: :organization_profiles_wbs_activities
+  #=== test
+  ####has_and_belongs_to_many :wbs_activities_model, :class_name=>'WbsActivity', :join_table => "organization_profiles_wbs_activities"
+  #=== test
 
   #validates :organization_id, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id
@@ -35,7 +38,9 @@ class OrganizationProfile < ActiveRecord::Base
   # Add the amoeba gem for the copy
   amoeba do
     enable
-    exclude_association [:wbs_activity_ratio_profiles]
+    ###exclude_association [:wbs_activity_ratio_profiles, :wbs_activities]
+    exclude_association [:wbs_activity_ratio_profiles, :wbs_activities]
+
     customize(lambda { |original_organization_profile, new_organization_profile|
       new_organization_profile.copy_id = original_organization_profile.id
     })

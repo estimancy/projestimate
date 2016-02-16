@@ -102,14 +102,18 @@ class Organization < ActiveRecord::Base
   #end
 
   # Add the amoeba gem for the copy
+  # La copie des modules WBS-Activité, des Applications est gérée dans la fonction de copie
   amoeba do
     enable
-    include_association [:project_areas, :project_categories, :platform_categories, :acquisition_categories,
-                         :work_element_types, :attribute_organizations, :organization_technologies,
-                         :organization_profiles, :unit_of_works, :technology_size_types,
-                         :fields, :groups, :project_security_levels,
-                         :estimation_statuses, :guw_models, :operation_models, :kb_models, :ge_models,
-                         :staffing_models, :expert_judgement_instances]
+    # include_association [:project_areas, :project_categories, :platform_categories, :acquisition_categories,
+    #                      :work_element_types, :attribute_organizations, :organization_technologies,
+    #                      :organization_profiles, :unit_of_works, :technology_size_types,
+    #                      :fields, :groups, :project_security_levels,
+    #                      :estimation_statuses, :guw_models, :operation_models, :kb_models, :ge_models,
+    #                      :staffing_models, :expert_judgement_instances]
+
+    exclude_association [:organizations_users, :users, :wbs_activities, :pe_attributes, :projects,
+                         :module_projects, :status_transitions, :estimation_status_group_roles, :views]
 
     customize(lambda { |original_organization, new_organization|
       new_copy_number = original_organization.copy_number.to_i+1

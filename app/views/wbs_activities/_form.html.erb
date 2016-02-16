@@ -34,6 +34,7 @@
             </div>
             <div id="wbs_activity_organization_profiles" class="accordion-body in collapse">
               <div class="accordion-inner">
+                <%= hidden_field_tag "wbs_activity[organization_profile_ids][]", nil %>
                 <% for profile in @organization.organization_profiles %>
                   <div>
                     <%= check_box_tag "wbs_activity[organization_profile_ids][]", profile.id, @wbs_activity.organization_profiles.include?(profile) %>
