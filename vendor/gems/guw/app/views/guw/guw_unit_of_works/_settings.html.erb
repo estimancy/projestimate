@@ -280,7 +280,7 @@
                 </td>
 
                 <td>
-                  <span class="span2 cotation_label_<%= guow.id %>">
+                  <span class="cotation_label_<%= guow.id %>">
                     <% begin %>
                       <% if guow.off_line == true %>
                         <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT", disabled: !guow.guw_type.allow_complexity %>
