@@ -819,9 +819,7 @@ class Guw::GuwModelsController < ApplicationController
      I18n.t(:work_unit_type), @guw_model.coefficient_label,
      I18n.t(:organization_technology),I18n.t(:quantity),
      I18n.t(:tracability), I18n.t(:cotation),
-     I18n.t(:results), I18n.t(:retained_result),
-     I18n.t(:pe_attribute_name), I18n.t(:low),
-     I18n.t(:likely), I18n.t(:high)].each_with_index do |val, index|
+     I18n.t(:results), I18n.t(:retained_result)].each_with_index do |val, index|
       worksheet.add_cell(0, index, val)
     end
 
@@ -872,30 +870,34 @@ class Guw::GuwModelsController < ApplicationController
 
       worksheet.add_cell(ind, 10, guow.tracking)
 
-      worksheet.add_cell(ind, 11, cplx)
-      tab_size[11] = tab_size[11] < cplx.length ? cplx.length : tab_size[11]
+      worksheet.add_cell(ind, 13, cplx)
+      tab_size[13] = tab_size[13] < cplx.length ? cplx.length : tab_size[13]
 
-      worksheet.change_column_width(11, tab_size[11])
-      worksheet.add_cell(ind, 12, guow.effort)
+      worksheet.add_cell(ind, 14, guow.size)
 
-      worksheet.add_cell(ind, 13, guow.ajusted_size)
+      worksheet.add_cell(ind, 15, guow.ajusted_size)
 
-      @guw_model.guw_attributes.each do |gac|
-        finder = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: gac.id, guw_type_id: guow.guw_type.id).first
-        unless finder.nil?
-          sum_range = gac.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
-          unless sum_range.nil? || sum_range.blank? || sum_range == 0
+      @guw_model.guw_attributes.each_with_index do |guw_attribute, i|
+        guowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: guw_attribute.id, guw_type_id: guow.guw_type.id).first
+        # unless finder.nil?
+        # sum_range = gac.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
+        # unless sum_range.nil? || sum_range.blank? || sum_range == 0
 
-            worksheet.add_cell(ind, 14, finder.guw_attribute.name)
-            tab_size[14] = tab_size[14] < finder.guw_attribute.name.length ? finder.guw_attribute.name.length : tab_size[14]
-            worksheet.change_column_width(14, tab_size[14])
-            worksheet.add_cell(ind, 15, finder.low ? finder.low : "N/A")
-            worksheet.add_cell(ind, 16, finder.most_likely ? finder.most_likely : "N/A")
-            worksheet.add_cell(ind, 17, finder.high ? finder.high : "N/A")
-          end
-        end
+        # worksheet.add_cell(0, 14 + i, guw_attribute.name)
+        # worksheet.change_column_width(14, tab_size[14])
+        worksheet.add_cell(ind, 16, guowa.low.nil? ? "N/A" : guowa.low)
+        worksheet.add_cell(ind, 17, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
+        worksheet.add_cell(ind, 18, guowa.high.nil? ? "N/A" : guowa.high)
+        # end
+        # end
       end
+
     end
+
+    @guw_model.guw_attributes.each_with_index do |guw_attribute, i|
+      worksheet.add_cell(0, 16 + i, guw_attribute.name)
+    end
+
     send_data(workbook.stream.string, filename: "#{@current_organization.name[0..4]}-#{@project.title}-#{@project.version}-#{@guw_model.name}(#{("A".."Z").to_a[current_module_project.position_x.to_i]},#{current_module_project.position_y})-Export_UO-#{Time.now.strftime('%Y-%m-%d_%H-%M')}.xlsx", type: "application/vnd.ms-excel")
   end
 

@@ -129,9 +129,9 @@
 
       </div>
 
-      <div id="collapse<%= uowg.id %>" class="accordion-body collapse in">
-        <div class="accordion-inner span12">
-          <table class="table table-striped span12">
+      <div id="collapse<%= uowg.id %>" class="accordion-body collapse in pull-left span12">
+        <div class="accordion-inner">
+          <table class="table table-striped">
             <tr>
               <th class=""></th>
               <th class="">
@@ -152,8 +152,11 @@
               <% unless @guw_model.factors_label.blank? %>
                 <th class=""><%= @guw_model.factors_label.to_s.humanize %></th>
               <% end %>
-              <th class=""><%= I18n.t :technology %></th>
+              <% if @guw_model.allow_technology == true %>
+                <th class=""><%= I18n.t :technology %></th>
+              <% end %>
               <th class=""><%= I18n.t :quantity %></th>
+
               <th class=""><%= I18n.t :complexity %></th>
               <th class=""><%= I18n.t :criteria %></th>
               <th class=""><%= I18n.t :results %></th>
@@ -192,7 +195,7 @@
                   <!--</span>-->
                 <!--</td>-->
 
-                <td class="span2 ">
+                <td class="span2">
                   <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
                                                                              selected: guow.guw_type_id),
                                  class: "guw_type input-xsmall",
@@ -255,23 +258,25 @@
                   </td>
                 <% end %>
 
-                <td class="span2 ">
-                  <span class="technology_<%= guow.id %>" >
-                    <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.sort! { |a, b|  a.display_order <=> b.display_order } %>
-                    <% unless results.empty? %>
-                      <% begin %>
-                        <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
-                                                                                        selected: guow.organization_technology.nil? ?
-                                                                                                uowg.organization_technology_id : guow.organization_technology.id),
-                                       class: "guw_technology input-xsmall",
-                                       guw: guow.id,
-                                       required: true,
-                                       readonly: !can?(:execute_estimation_plan, @project) %>
-                      <% rescue %>
+                <% if @guw_model.allow_technology == true %>
+                  <td class="span2">
+                    <span class="technology_<%= guow.id %>" >
+                      <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.sort! { |a, b|  a.display_order <=> b.display_order } %>
+                      <% unless results.empty? %>
+                        <% begin %>
+                          <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
+                                                                                          selected: guow.organization_technology.nil? ?
+                                                                                                  uowg.organization_technology_id : guow.organization_technology.id),
+                                         class: "guw_technology input-xsmall",
+                                         guw: guow.id,
+                                         required: true,
+                                         readonly: !can?(:execute_estimation_plan, @project) %>
+                        <% rescue %>
+                        <% end %>
                       <% end %>
-                    <% end %>
-                  </span>
-                </td>
+                    </span>
+                  </td>
+                <% end %>
 
                 <td class="span2 quantity_label_<%= guow.id %>">
                   <% unless guow.guw_type.nil? %>
@@ -282,7 +287,7 @@
                 </td>
 
                 <td>
-                  <span class=" cotation_label_<%= guow.id %>">
+                  <span class="span2 cotation_label_<%= guow.id %>">
                     <% begin %>
                       <% if guow.off_line == true %>
                         <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT", disabled: !guow.guw_type.allow_complexity %>
