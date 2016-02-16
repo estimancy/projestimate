@@ -108,6 +108,8 @@ class WbsActivityRatiosController < ApplicationController
                                            :wbs_activity_ratio_id => @wbs_activity_ratio.id,
                                            :wbs_activity_element_id => wbs_activity_element.id,
                                            :record_status_id => @wbs_activity_ratio.record_status_id)
+                                           ###:dotted_id => wbs_activity_element.dotted_id)
+
         ware.uuid = UUIDTools::UUID.random_create.to_s
         ware.save(:validate => false)
       end

@@ -78,6 +78,7 @@ class WbsActivityElementsController < ApplicationController
         @wbs_activity_ratio_element = WbsActivityRatioElement.new(:ratio_value => nil,
                                                                   :wbs_activity_ratio_id => wbs_activity_ratio.id,
                                                                   :wbs_activity_element_id => @wbs_activity_element.id)
+                                                                  ###:dotted_id => @wbs_activity_element.dotted_id)
 
         @wbs_activity_ratio_element.save(:validate => false)
       end
