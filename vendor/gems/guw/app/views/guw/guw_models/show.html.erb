@@ -176,29 +176,33 @@
               </tr>
             <% end %>
 
-            <tr>
-              <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
-                <b class="pull-left">
-                  <%= I18n.t :technology %>
-                </b>
-              </th>
-            </tr>
-
-            <% @guw_model.organization.organization_technologies.each do |technology| %>
+            <% if @guw_model.allow_technology == true %>
               <tr>
-                <td>
-                  <%= technology.name %>
-                </td>
-
-                <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
-                  <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
-                                                                organization_technology_id: technology.id).first %>
-                  <td colspan="2" class="align-center">
-                    <%= text_field_tag "technology_value[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
-                  </td>
-                <% end %>
-                </td>
+                <th colspan="<%= guw_type.guw_complexities.size * 2 + 1 %>">
+                  <b class="pull-left">
+                    <%= I18n.t :technology %>
+                  </b>
+                </th>
               </tr>
+            <% end %>
+
+            <% if @guw_model.allow_technology == true %>
+              <% @guw_model.organization.organization_technologies.each do |technology| %>
+                <tr>
+                  <td>
+                    <%= technology.name %>
+                  </td>
+
+                  <% guw_type.guw_complexities.order("display_order DESC").each do |guw_cplx| %>
+                    <% tcplx = Guw::GuwComplexityTechnology.where(guw_complexity_id: guw_cplx.id,
+                                                                  organization_technology_id: technology.id).first %>
+                    <td colspan="2" class="align-center">
+                      <%= text_field_tag "technology_value[#{guw_cplx.id}][#{technology.id}]", tcplx.nil? ? '' : tcplx.coefficient, class: "input-mini" %>
+                    </td>
+                  <% end %>
+                  </td>
+                </tr>
+              <% end %>
             <% end %>
 
           </table>

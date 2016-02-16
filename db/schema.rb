@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160208094846) do
+ActiveRecord::Schema.define(:version => 20160216095512) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -626,6 +626,7 @@ ActiveRecord::Schema.define(:version => 20160208094846) do
     t.string   "factors_label"
     t.string   "effort_unit"
     t.string   "cost_unit"
+    t.boolean  "allow_technology"
   end
 
   create_table "guw_guw_scale_module_attributes", :force => true do |t|
