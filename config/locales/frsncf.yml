@@ -1561,7 +1561,7 @@ frsncf:
   my_display: "Poids"
   complexity_threshold: "Seuils de complexité"
   importation_success: "Modèle importé avec succès."
-  importation_sucess_uo: "Unité d'oeuvre importé avec succés."
+  importation_sucess_uo: "Unités d'oeuvres importées avec succés."
   error_warning: "une erreur dans le fichier a causé l'impossibilité d'importer les valeurs dans les onglets suivant merci de vous référer au wiki pour plus d'infomation (http://forge.estimancy.com/projects/pe/wiki/Importation_unit_of_work): <br/> %{parameter}"
   route_flag_error_1: "Impossible de créer ce modèle, modèle déjà existant."
   route_flag_error_2: "Nom du modèle invalide merci de vérifier le classeur importé."

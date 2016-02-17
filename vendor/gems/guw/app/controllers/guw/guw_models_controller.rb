@@ -1007,10 +1007,10 @@ class Guw::GuwModelsController < ApplicationController
                                                pbs_project_element_id: @component.id,
                                                guw_model_id: @guw_model.id,
                                                display_order: my_order,
-                                               tracking: row[10],
-                                               quantity: row[9].nil? ? 1 : row[9],
-                                               effort: row[12].nil? ? nil : row[12],
-                                               ajusted_size: row[13].nil? ? nil : row[13])
+                                               tracking: row[13],
+                                               quantity: row[12].nil? ? 1 : row[12],
+                                               size: row[15].nil? ? nil : row[15],
+                                               ajusted_size: row[16].nil? ? nil : row[16])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
