@@ -1051,28 +1051,30 @@ class Guw::GuwModelsController < ApplicationController
                         indexing_field_error[3] << index
                       end
                     end
-                    if !row[10].nil?
-                      type.guw_complexity_technologies.each do |techno|
-                        unless techno.organization_technology.nil?
-                          if row[10] == techno.organization_technology.name
-                            guw_uow.organization_technology_id = techno.organization_technology.id
-                            ind += 1
-                            indexing_field_error[2][0] = true
-                            break
+                    if @guw_model.allow_technology == true
+                      if !row[10].nil?
+                        type.guw_complexity_technologies.each do |techno|
+                          unless techno.organization_technology.nil?
+                            if row[10] == techno.organization_technology.name
+                              guw_uow.organization_technology_id = techno.organization_technology.id
+                              ind += 1
+                              indexing_field_error[2][0] = true
+                              break
+                            end
                           end
+                          indexing_field_error[2][0] = false
                         end
-                        indexing_field_error[2][0] = false
-                      end
-                    else
-                      guw_ct = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first
-                      unless guw_ct.nil?
-                        guw_uow.organization_technology_id = guw_ct.organization_technology.id
                       else
-                        guw_uow.organization_technology_id = nil
-                      end
+                        guw_ct = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first
+                        unless guw_ct.nil?
+                          guw_uow.organization_technology_id = guw_ct.organization_technology.id
+                        else
+                          guw_uow.organization_technology_id = nil
+                        end
 
-                      ind += 1
-                      indexing_field_error[2][0] = true
+                        ind += 1
+                        indexing_field_error[2][0] = true
+                      end
                     end
 
                     unless indexing_field_error[2][0]
@@ -1084,10 +1086,10 @@ class Guw::GuwModelsController < ApplicationController
                       finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type.id,
                                                                  guw_unit_of_work_id: guw_uow.id,
                                                                  guw_attribute_id: gac.id).first_or_create
-                      guw_uow_save = guw_uow.id
-                      finder.low = row[15] == "N/A" ? nil : row[15]
-                      finder.most_likely = row[16] == "N/A" ? nil : row[16]
-                      finder.high = row[17] == "N/A" ? nil : row[17]
+                      # guw_uow_save = guw_uow.id
+                      # finder.low = row[15] == "N/A" ? nil : row[15]
+                      # finder.most_likely = row[16] == "N/A" ? nil : row[16]
+                      # finder.high = row[17] == "N/A" ? nil : row[17]
                       finder.save
                     end
 

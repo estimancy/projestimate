@@ -876,6 +876,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       tcplx_value = 1
     end
 
+
+
     guw_unit_of_work.effort = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
