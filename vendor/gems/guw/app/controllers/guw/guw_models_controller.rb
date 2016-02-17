@@ -985,15 +985,15 @@ class Guw::GuwModelsController < ApplicationController
                                                           module_project_id: current_module_project.id,
                                                           pbs_project_element_id: @component.id,).first_or_create
             my_order = Guw::GuwUnitOfWork.count('id' , :conditions => "module_project_id = #{current_module_project.id} AND pbs_project_element_id = #{@component.id} AND guw_unit_of_work_group_id = #{guw_uow_group.id}  AND guw_model_id = #{@guw_model.id}")
-            if already_exist.join(",").include?(row[0..13].join(","))
+            if already_exist.join(",").include?(row[0..16].join(","))
               @guw_model.guw_attributes.all.each do |gac|
-                if gac.name == row[14]
+                if gac.name == row[16]
                   finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
                                                              guw_unit_of_work_id: guw_uow_save,
                                                              guw_attribute_id: gac.id).first_or_create
-                  finder.low = row[15] == "N/A" ? nil : row[15]
-                  finder.most_likely = row[16] == "N/A" ? nil : row[16]
-                  finder.high = row[17] == "N/A" ? nil : row[17]
+                  finder.low = row[17] == "N/A" ? nil : row[17]
+                  finder.most_likely = row[18] == "N/A" ? nil : row[18]
+                  finder.high = row[19] == "N/A" ? nil : row[19]
                   finder.save
                   break
                 end
@@ -1007,10 +1007,10 @@ class Guw::GuwModelsController < ApplicationController
                                                pbs_project_element_id: @component.id,
                                                guw_model_id: @guw_model.id,
                                                display_order: my_order,
-                                               tracking: row[13],
-                                               quantity: row[12].nil? ? 1 : row[12],
-                                               size: row[15].nil? ? nil : row[15],
-                                               ajusted_size: row[16].nil? ? nil : row[16])
+                                               tracking: row[12],
+                                               quantity: row[11].nil? ? 1 : row[11],
+                                               size: row[14].nil? ? nil : row[14],
+                                               ajusted_size: row[15].nil? ? nil : row[15])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
@@ -1038,9 +1038,9 @@ class Guw::GuwModelsController < ApplicationController
                   if row[6] == type.name
                     guw_uow.guw_type_id = type.id
                     indexing_field_error[0][0] = true
-                    if !row[11].nil? && row[11] != "-"
+                    if !row[13].nil? && row[13] != "-"
                       type.guw_complexities.each do |complexity|
-                        if row[11] == complexity.name
+                        if row[13] == complexity.name
                           guw_uow.guw_complexity_id = complexity.id
                           indexing_field_error[3][0] = true
                           break
@@ -1051,10 +1051,10 @@ class Guw::GuwModelsController < ApplicationController
                         indexing_field_error[3] << index
                       end
                     end
-                    if !row[8].nil?
+                    if !row[10].nil?
                       type.guw_complexity_technologies.each do |techno|
                         unless techno.organization_technology.nil?
-                          if row[8] == techno.organization_technology.name
+                          if row[10] == techno.organization_technology.name
                             guw_uow.organization_technology_id = techno.organization_technology.id
                             ind += 1
                             indexing_field_error[2][0] = true
