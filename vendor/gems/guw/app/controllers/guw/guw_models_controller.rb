@@ -1034,6 +1034,43 @@ class Guw::GuwModelsController < ApplicationController
                 unless indexing_field_error[1][0]
                   indexing_field_error[1] << index
                 end
+
+                if !row[8].nil?
+                  @guw_model.guw_weightings.each do |wu|
+                    if wu.name == row[8]
+                      guw_uow.guw_weighting_id = wu.id
+                      ind += 1
+                      break
+                    end
+                  end
+                else
+                  first_weighting = @guw_model.guw_weightings.order("display_order ASC").first
+                  unless first_weighting.nil?
+                    guw_uow.guw_weighting_id = @guw_model.guw_weightings.order("display_order ASC").first.id
+                  else
+                    guw_uow.guw_weighting_id = nil
+                  end
+                  ind += 1
+                end
+
+                if !row[9].nil?
+                  @guw_model.guw_factors.each do |wu|
+                    if wu.name == row[9]
+                      guw_uow.guw_factor_id = wu.id
+                      ind += 1
+                      break
+                    end
+                  end
+                else
+                  first_factor = @guw_model.guw_factors.order("display_order ASC").first
+                  unless first_factor.nil?
+                    guw_uow.guw_factor_id = @guw_model.guw_factors.order("display_order ASC").first.id
+                  else
+                    guw_uow.guw_factor_id = nil
+                  end
+                  ind += 1
+                end
+
                 @guw_model.guw_types.each do |type|
                   if row[6] == type.name
                     guw_uow.guw_type_id = type.id
