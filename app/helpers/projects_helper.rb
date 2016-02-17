@@ -161,6 +161,16 @@ module ProjectsHelper
     end
   end
 
+  # Convert effort value according to the effort unit in the Effort instance module
+  def convert_with_standard_unit_coefficient(v, standard_unit_coefficient, precision)
+    unless v.class == Hash
+      value = v.to_f
+      (value / standard_unit_coefficient.to_f).round(precision)
+    else
+      0
+    end
+  end
+
 
   # Methdods that display estimation results
   def display_results_without_activities(module_project)

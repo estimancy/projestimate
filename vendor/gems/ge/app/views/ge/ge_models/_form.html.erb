@@ -57,7 +57,7 @@
           <label class="hint">Sinon, Sélectionner le mode de calcul des paramètres <b>P</b>, <b>C</b> et <b>S</b> dans la formule Effort E = P * (C * Taille)**S pour déterminer <b>a</b> et <b>b</b></label>
           <div class="span1"><%= f.input :p_calculation_method, label: "P", as: :select, collection: [[I18n.t(:product), "product"], [I18n.t(:sum), "sum"]], include_blank: false, input_html: { class: "input-small"} %></div>
           <div class="span1"><%= f.input :c_calculation_method, label: "C", as: :select, collection: [[I18n.t(:product), "product"], [I18n.t(:sum), "sum"]], include_blank: false, input_html: { class: "input-small"} %></div>
-          <div class="span1"><%= f.input :s_calculation_method, label: "S", as: :select, collection: [[I18n.t(:product), "product"], [I18n.t(:sum), "sum"]], include_blank: false, input_html: { class: "input-small"} %></div>
+          <div class="span1"><%= f.input :s_calculation_method, label: "S", as: :select, collection: [[I18n.t(:product), "product"], [I18n.t(:sum), "sum"]], selected: (@ge_model.s_calculation_method.nil? ? "sum" : @ge_model.s_calculation_method), include_blank: false, input_html: { class: "input-small"} %></div>
         </div>
 
         <div class="row-fluid">

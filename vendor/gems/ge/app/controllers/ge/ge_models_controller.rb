@@ -534,9 +534,52 @@ class Ge::GeModelsController < ApplicationController
     if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
       # Get factors values and save them in the GeInput table
       # GeInput "values" attribute is serialize as an Array of Hash  ==> [ { :ge_factor_value_id => id, :scale_prod => val, :factor_name =>, :value => val }, {...}, ... ]
-      scale_factor_sum = 0.0
-      prod_factor_product = 1.0
-      conversion_factor_product = 1.0
+      #scale_factor_sum = 0.0
+      #prod_factor_product = 1.0
+      #conversion_factor_product = 1.0
+
+      #======= Calculate coefficients according to the select operation method
+      #default calculations methods operators for each type of factor
+      p_calculation_operator = "*"
+      c_calculation_operator = "*"
+      s_calculation_operator = "+"
+
+      # For P_calculation_method
+      case @ge_model.p_calculation_method
+        when "sum"
+          prod_factor_product = 0.0
+          p_calculation_operator = "+"
+        when "product"
+          prod_factor_product = 1.0
+          p_calculation_operator = "*"
+        else
+          prod_factor_product = 1.0
+      end
+
+      # For C_calculation_method for conversion
+      case @ge_model.c_calculation_method
+        when "sum"
+          conversion_factor_product = 0.0
+          c_calculation_operator = "+"
+        when "product"
+          conversion_factor_product = 1.0
+          c_calculation_operator = "*"
+        else
+          conversion_factor_product = 1.0
+      end
+
+      # For S_calculation_method
+      case @ge_model.s_calculation_method
+        when "sum"
+          scale_factor_sum = 0.0
+          s_calculation_operator = "+"
+        when "product"
+          scale_factor_sum = 1.0
+          s_calculation_operator = "*"
+        else
+          scale_factor_sum = 0.0
+      end
+      #===
 
       scale_factors = params["S_factor"] || []
       prod_factors = params["P_factor"]  || []
@@ -548,7 +591,8 @@ class Ge::GeModelsController < ApplicationController
         factor_value = Ge::GeFactorValue.find(factor_value_id)
         unless factor_value.nil?
           factor_value_number = factor_value.value_number
-          scale_factor_sum += factor_value_number
+          ###scale_factor_sum += factor_value_number
+          scale_factor_sum = scale_factor_sum.send(s_calculation_operator, factor_value_number)
           value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
           @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
         end
@@ -559,7 +603,8 @@ class Ge::GeModelsController < ApplicationController
         factor_value = Ge::GeFactorValue.find(factor_value_id)
         unless factor_value.nil?
           factor_value_number = factor_value.value_number
-          prod_factor_product *= factor_value_number
+          ###prod_factor_product *= factor_value_number
+          prod_factor_product = prod_factor_product.send(p_calculation_operator, factor_value_number)
           value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
           @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
         end
@@ -570,14 +615,11 @@ class Ge::GeModelsController < ApplicationController
         factor_value = Ge::GeFactorValue.find(factor_value_id)
         unless factor_value.nil?
           factor_value_number = factor_value.value_number
-          conversion_factor_product *= factor_value_number
+          ###conversion_factor_product *= factor_value_number
+          conversion_factor_product = conversion_factor_product.send(c_calculation_operator, factor_value_number)
           value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
           @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
         end
-      end
-
-      if scale_factor_sum == 0
-        scale_factor_sum = 1
       end
     end
 
@@ -634,8 +676,7 @@ class Ge::GeModelsController < ApplicationController
       ###prod_factor_product = 1.0
       ###conversion_factor_product = 1.0
 
-      #=======
-
+      #======= Calculate coefficients according to the select operation method
       #default calculations methods operators for each type of factor
       p_calculation_operator = "*"
       c_calculation_operator = "*"
@@ -676,7 +717,6 @@ class Ge::GeModelsController < ApplicationController
         else
           scale_factor_sum = 0.0
       end
-      #=======
 
       scale_factors = params["S_factor"] || []
       prod_factors = params["P_factor"]  || []
@@ -702,7 +742,6 @@ class Ge::GeModelsController < ApplicationController
           factor_value_number = factor_value.value_number
           ###prod_factor_product *= factor_value_number
           prod_factor_product = prod_factor_product.send(p_calculation_operator, factor_value_number)
-
           value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
           @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
         end
@@ -715,16 +754,11 @@ class Ge::GeModelsController < ApplicationController
           factor_value_number = factor_value.value_number
           ###conversion_factor_product *= factor_value_number
           conversion_factor_product = conversion_factor_product.send(c_calculation_operator, factor_value_number)
-
           value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
           @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
         end
       end
 
-
-      if scale_factor_sum == 0
-        scale_factor_sum = 1
-      end
       #Update GeInput
       @formula = "#{prod_factor_product.to_f} (X * #{conversion_factor_product})^ #{scale_factor_sum.to_f}"
       @ge_input.formula = @formula
@@ -749,7 +783,7 @@ class Ge::GeModelsController < ApplicationController
 
           if am.pe_attribute.alias == "effort"
             if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-              effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient  #Using "a" and "b"
+              effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
               @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
               @ge_input.save
             else

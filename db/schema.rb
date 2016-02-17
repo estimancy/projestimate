@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160212130857) do
+ActiveRecord::Schema.define(:version => 20160216105138) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -1704,8 +1704,12 @@ ActiveRecord::Schema.define(:version => 20160212130857) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.boolean  "multiple_references"
+    t.string   "dotted_id"
+    t.string   "ancestry"
+    t.string   "ancestry_depth"
   end
 
+  add_index "wbs_activity_ratio_elements", ["ancestry"], :name => "index_wbs_activity_ratio_elements_on_ancestry"
   add_index "wbs_activity_ratio_elements", ["owner_id"], :name => "index_wbs_activity_ratio_elements_on_owner_id"
 
   create_table "wbs_activity_ratio_profiles", :force => true do |t|
@@ -1714,7 +1718,12 @@ ActiveRecord::Schema.define(:version => 20160212130857) do
     t.float    "ratio_value"
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.string   "dotted_id"
+    t.string   "ancestry"
+    t.string   "ancestry_depth"
   end
+
+  add_index "wbs_activity_ratio_profiles", ["ancestry"], :name => "index_wbs_activity_ratio_profiles_on_ancestry"
 
   create_table "wbs_activity_ratios", :force => true do |t|
     t.string   "uuid"
