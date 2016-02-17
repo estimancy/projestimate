@@ -557,17 +557,17 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     @number_of_unit_of_works = Guw::GuwUnitOfWork.where(pbs_project_element_id: current_component.id,
                                                         module_project_id: current_module_project.id,
-                                                        guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                        guw_model_id: @guw_unit_of_work.guw_model.id).map(&:quantity).sum
 
     @selected_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
                                                           pbs_project_element_id: current_component.id,
                                                           module_project_id: current_module_project.id,
-                                                          guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                          guw_model_id: @guw_unit_of_work.guw_model.id).map(&:quantity).sum
 
     @flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
                                                       pbs_project_element_id: current_component.id,
                                                       module_project_id: current_module_project.id,
-                                                      guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                      guw_model_id: @guw_unit_of_work.guw_model.id).map(&:quantity).sum
 
     update_estimation_values
     update_view_widgets_and_project_fields
