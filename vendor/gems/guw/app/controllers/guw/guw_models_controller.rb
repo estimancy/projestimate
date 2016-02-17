@@ -1075,10 +1075,10 @@ class Guw::GuwModelsController < ApplicationController
                         ind += 1
                         indexing_field_error[2][0] = true
                       end
-                    end
 
-                    unless indexing_field_error[2][0]
-                      indexing_field_error[2] << index
+                      unless indexing_field_error[2][0]
+                        indexing_field_error[2] << index
+                      end
                     end
 
                     @guw_model.guw_attributes.all.each do |gac|
