@@ -382,9 +382,9 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
-                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label.blank? ? 'Facteur sans nom' : @guw_model.coefficient_label],
-                  [I18n.t(:work_unit_label),  @guw_model.weightings_label.blank? ? 'Facteur sans nom' : @guw_model.weightings_label],
-                  [I18n.t(:work_unit_label),  @guw_model.factors_label.blank? ? 'Facteur sans nom' : @guw_model.factors_label],
+                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label.blank? ? 'Facteur sans nom 1' : @guw_model.coefficient_label],
+                  [I18n.t(:weightings_label),  @guw_model.weightings_label.blank? ? 'Facteur sans nom 2' : @guw_model.weightings_label],
+                  [I18n.t(:factors_label),  @guw_model.factors_label.blank? ? 'Facteur sans nom 3' : @guw_model.factors_label],
                   [I18n.t(:three_points_estimation), @guw_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:retained_size_unit), @guw_model.retained_size_unit],
                   [I18n.t(:hour_coefficient_conversion), @guw_model.hour_coefficient_conversion],
@@ -397,9 +397,9 @@ class Guw::GuwModelsController < ApplicationController
     worksheet = workbook[0]
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
-    workbook.add_worksheet(@guw_model.coefficient_label || I18n.t(:Type_acquisitions))
-    workbook.add_worksheet(@guw_model.weightings_label || I18n.t(:Type_acquisitions))
-    workbook.add_worksheet(@guw_model.factors_label || I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.coefficient_label.blank? ? 'Facteur sans nom 1' : @guw_model.coefficient_label)
+    workbook.add_worksheet(@guw_model.weightings_label.blank? ? 'Facteur sans nom 2' : @guw_model.weightings_label)
+    workbook.add_worksheet(@guw_model.factors_label.blank? ? 'Facteur sans nom 3' : @guw_model.factors_label)
 
     first_page.each_with_index do |row, index|
       worksheet.add_cell(index, 0, row[0])
