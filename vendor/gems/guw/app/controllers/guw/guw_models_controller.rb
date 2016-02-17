@@ -804,22 +804,31 @@ class Guw::GuwModelsController < ApplicationController
     tab_size = [I18n.t(:estimation).length, I18n.t(:version).length,
                 I18n.t(:group).length, I18n.t(:selected).length,
                 I18n.t(:name).length, I18n.t(:description).length,
-                20, @guw_model.coefficient_label.to_s.length,
-                20, @guw_model.weightings_label.blank? ? 'Facteur sans nom' : @guw_model.weightings_label,
-                20, @guw_model.factors_label.blank? ? 'Facteur sans nom' : @guw_model.factors_label,
+                 20,
+                 20,
+                 20,
                 I18n.t(:organization_technology).length, I18n.t(:quantity).length,
                 I18n.t(:tracability).length, I18n.t(:cotation).length,
                 I18n.t(:results).length, I18n.t(:retained_result).length,
                 I18n.t(:pe_attribute_name).length, I18n.t(:low).length,
                 I18n.t(:likely).length, I18n.t(:high).length]
 
-    [I18n.t(:estimation),I18n.t(:version),
-     I18n.t(:group), I18n.t(:selected),
-     I18n.t(:name),I18n.t(:description),
-     I18n.t(:work_unit_type), @guw_model.coefficient_label,
-     I18n.t(:organization_technology),I18n.t(:quantity),
-     I18n.t(:tracability), I18n.t(:cotation),
-     I18n.t(:results), I18n.t(:retained_result)].each_with_index do |val, index|
+    [I18n.t(:estimation),
+     I18n.t(:version),
+     I18n.t(:group),
+     I18n.t(:selected),
+     I18n.t(:name),
+     I18n.t(:description),
+     "Type",
+     @guw_model.coefficient_label.blank? ? 'Facteur sans nom 1' : @guw_model.coefficient_label.to_s,
+     @guw_model.weightings_label.blank? ? 'Facteur sans nom 2' : @guw_model.weightings_label,
+     @guw_model.factors_label.blank? ? 'Facteur sans nom 3' : @guw_model.factors_label,
+     I18n.t(:organization_technology),
+     I18n.t(:quantity),
+     I18n.t(:tracability),
+     I18n.t(:cotation),
+     I18n.t(:results),
+     I18n.t(:retained_result)].each_with_index do |val, index|
       worksheet.add_cell(0, index, val)
     end
 
@@ -854,21 +863,25 @@ class Guw::GuwModelsController < ApplicationController
       tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
       worksheet.change_column_width(4, tab_size[4])
 
-      worksheet.add_cell(ind, 5, guow.comments)
-
       worksheet.add_cell(ind, 6, guow.guw_type.name)
       tab_size[6] = tab_size[6] < guow.guw_type.name.to_s.length ? guow.guw_type.name.to_s.length : tab_size[6]
       worksheet.change_column_width(6, tab_size[6])
 
+      worksheet.add_cell(ind, 5, guow.comments)
+
       worksheet.add_cell(ind, 7, guow.guw_work_unit)
 
-      worksheet.add_cell(ind, 8, guow.organization_technology)
-      tab_size[8] = tab_size[8] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[8]
-      worksheet.change_column_width(8, tab_size[8])
+      worksheet.add_cell(ind, 8, guow.guw_weighting)
 
-      worksheet.add_cell(ind, 9, guow.quantity)
+      worksheet.add_cell(ind, 9, guow.guw_factor)
 
-      worksheet.add_cell(ind, 10, guow.tracking)
+      worksheet.add_cell(ind, 10, guow.organization_technology)
+      tab_size[10] = tab_size[10] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[10]
+      worksheet.change_column_width(8, tab_size[10])
+
+      worksheet.add_cell(ind, 11, guow.quantity)
+
+      worksheet.add_cell(ind, 12, guow.tracking)
 
       worksheet.add_cell(ind, 13, cplx)
       tab_size[13] = tab_size[13] < cplx.length ? cplx.length : tab_size[13]
