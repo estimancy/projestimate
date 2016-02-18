@@ -898,9 +898,9 @@ class Guw::GuwModelsController < ApplicationController
 
         # worksheet.add_cell(0, 14 + i, guw_attribute.name)
         # worksheet.change_column_width(14, tab_size[14])
-        worksheet.add_cell(ind, 16, guowa.low.nil? ? "N/A" : guowa.low)
-        worksheet.add_cell(ind, 17, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
-        worksheet.add_cell(ind, 18, guowa.high.nil? ? "N/A" : guowa.high)
+        # worksheet.add_cell(ind, 15 + i, guowa.low.nil? ? "N/A" : guowa.low)
+        worksheet.add_cell(ind, 16, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
+        # worksheet.add_cell(ind, 17 + i, guowa.high.nil? ? "N/A" : guowa.high)
         # end
         # end
       end
