@@ -254,7 +254,7 @@
                 <% if @guw_model.allow_technology == true %>
                   <td class="span2">
                     <span class="technology_<%= guow.id %>" >
-                      <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq.sort! { |a, b|  a.display_order <=> b.display_order } %>
+                      <% results = Guw::GuwComplexityTechnology.where(guw_type_id: guow.guw_type_id).select{|ct| ct.coefficient != nil }.map{|i| i.organization_technology }.uniq %>
                       <% unless results.empty? %>
                         <% begin %>
                           <%= select_tag "guw_technology[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
