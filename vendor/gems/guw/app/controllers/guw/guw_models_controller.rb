@@ -999,18 +999,18 @@ class Guw::GuwModelsController < ApplicationController
                 end
               end
             else
-              guw_uow = Guw::GuwUnitOfWork.new(selected: row[3].to_i == 1,
-                                               name: row[4],
-                                               comments: row[5],
-                                               guw_unit_of_work_group_id: guw_uow_group.id,
-                                               module_project_id: current_module_project.id,
-                                               pbs_project_element_id: @component.id,
-                                               guw_model_id: @guw_model.id,
-                                               display_order: my_order,
-                                               tracking: row[12],
-                                               quantity: row[11].nil? ? 1 : row[11],
-                                               size: row[14].nil? ? nil : row[14],
-                                               ajusted_size: row[15].nil? ? nil : row[15])
+              guw_uow = Guw::GuwUnitOfWork.create(selected: row[3].to_i == 1,
+                                                   name: row[4],
+                                                   comments: row[5],
+                                                   guw_unit_of_work_group_id: guw_uow_group.id,
+                                                   module_project_id: current_module_project.id,
+                                                   pbs_project_element_id: @component.id,
+                                                   guw_model_id: @guw_model.id,
+                                                   display_order: my_order,
+                                                   tracking: row[12],
+                                                   quantity: row[11].nil? ? 1 : row[11],
+                                                   size: row[14].nil? ? nil : row[14],
+                                                   ajusted_size: row[15].nil? ? nil : row[15])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
@@ -1028,12 +1028,12 @@ class Guw::GuwModelsController < ApplicationController
                   else
                     guw_uow.guw_work_unit_id = nil
                   end
-                  ind += 1
-                  indexing_field_error[1][0] = true
+                  # ind += 1
+                  # indexing_field_error[1][0] = true
                 end
-                unless indexing_field_error[1][0]
-                  indexing_field_error[1] << index
-                end
+                # unless indexing_field_error[1][0]
+                #   indexing_field_error[1] << index
+                # end
 
                 if !row[8].nil?
                   @guw_model.guw_weightings.each do |wu|
@@ -1138,6 +1138,7 @@ class Guw::GuwModelsController < ApplicationController
                 unless indexing_field_error[0][0]
                   indexing_field_error[0] << index
                 end
+                guw_uow.save
                 if ind == 3
                   guw_uow.save
                 else
