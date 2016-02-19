@@ -388,7 +388,8 @@ module ViewsWidgetsHelper
     end
 
     project_organization = module_project.project.organization
-    wbs_activity_elements = wbs_activity.wbs_activity_elements
+    ###wbs_activity_elements = wbs_activity.wbs_activity_elements
+    wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity.wbs_activity_elements.arrange(:order => :position))
 
     # We don't want to show element with nil ratio value
     project_organization_profiles = []
@@ -583,7 +584,9 @@ module ViewsWidgetsHelper
       end
     end
 
-    module_project.wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
+    ###module_project.wbs_activity.wbs_activity_elements.each do |wbs_activity_elt|
+    current_wbs_activity_elements = module_project.wbs_activity.wbs_activity_elements.arrange(:order => :position)
+    WbsActivityElement.sort_by_ancestry(current_wbs_activity_elements).each do |wbs_activity_elt|
       #For wbs-activity-completion node consistency
       completion_consistency = ""
       title = ""

@@ -1869,3 +1869,5 @@ fr:
   factors_label: "Nom du coefficient de pondération 3"
   sum: "Somme"
   product: "Produit"
+  order: "Ordre"
+  widget_type: "Type de vignette"

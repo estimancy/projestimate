@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160216105138) do
+ActiveRecord::Schema.define(:version => 20160217153243) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -458,14 +458,15 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
 
   create_table "ge_ge_inputs", :force => true do |t|
     t.string   "formula"
-    t.float    "scale_factor_sum"
-    t.float    "prod_factor_product"
+    t.float    "s_factors_value"
+    t.float    "p_factors_value"
+    t.float    "c_factors_value"
     t.text     "values"
     t.integer  "ge_model_id"
     t.integer  "module_project_id"
     t.integer  "organization_id"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "ge_ge_models", :force => true do |t|
@@ -615,8 +616,8 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_id"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.boolean  "three_points_estimation"
     t.string   "retained_size_unit"
     t.boolean  "one_level_model"
@@ -629,6 +630,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.string   "factors_label"
     t.string   "effort_unit"
     t.string   "cost_unit"
+    t.boolean  "allow_technology",            :default => true
   end
 
   create_table "guw_guw_scale_module_attributes", :force => true do |t|
@@ -1675,6 +1677,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.integer  "copy_id"
     t.boolean  "is_root"
     t.string   "master_ancestry"
+    t.float    "position"
   end
 
   add_index "wbs_activity_elements", ["ancestry"], :name => "index_wbs_activity_elements_on_ancestry"
@@ -1704,9 +1707,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.boolean  "multiple_references"
-    t.string   "dotted_id"
     t.string   "ancestry"
-    t.string   "ancestry_depth"
   end
 
   add_index "wbs_activity_ratio_elements", ["ancestry"], :name => "index_wbs_activity_ratio_elements_on_ancestry"
@@ -1718,9 +1719,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.float    "ratio_value"
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
-    t.string   "dotted_id"
     t.string   "ancestry"
-    t.string   "ancestry_depth"
   end
 
   add_index "wbs_activity_ratio_profiles", ["ancestry"], :name => "index_wbs_activity_ratio_profiles_on_ancestry"
