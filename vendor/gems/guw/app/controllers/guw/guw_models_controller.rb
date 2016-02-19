@@ -382,9 +382,9 @@ class Guw::GuwModelsController < ApplicationController
     @guw_types = @guw_model.guw_types
     first_page = [[I18n.t(:model_name),  @guw_model.name],
                   [I18n.t(:model_description), @guw_model.description ],
-                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label.blank? ? 'Facteur sans nom' : @guw_model.coefficient_label],
-                  [I18n.t(:work_unit_label),  @guw_model.weightings_label.blank? ? 'Facteur sans nom' : @guw_model.weightings_label],
-                  [I18n.t(:work_unit_label),  @guw_model.factors_label.blank? ? 'Facteur sans nom' : @guw_model.factors_label],
+                  [I18n.t(:work_unit_label),  @guw_model.coefficient_label.blank? ? 'Facteur sans nom 1' : @guw_model.coefficient_label],
+                  [I18n.t(:weightings_label),  @guw_model.weightings_label.blank? ? 'Facteur sans nom 2' : @guw_model.weightings_label],
+                  [I18n.t(:factors_label),  @guw_model.factors_label.blank? ? 'Facteur sans nom 3' : @guw_model.factors_label],
                   [I18n.t(:three_points_estimation), @guw_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:retained_size_unit), @guw_model.retained_size_unit],
                   [I18n.t(:hour_coefficient_conversion), @guw_model.hour_coefficient_conversion],
@@ -397,9 +397,9 @@ class Guw::GuwModelsController < ApplicationController
     worksheet = workbook[0]
     worksheet.sheet_name = I18n.t(:is_model)
     workbook.add_worksheet(I18n.t(:attribute_description))
-    workbook.add_worksheet(@guw_model.coefficient_label || I18n.t(:Type_acquisitions))
-    workbook.add_worksheet(@guw_model.weightings_label || I18n.t(:Type_acquisitions))
-    workbook.add_worksheet(@guw_model.factors_label || I18n.t(:Type_acquisitions))
+    workbook.add_worksheet(@guw_model.coefficient_label.blank? ? 'Facteur sans nom 1' : @guw_model.coefficient_label)
+    workbook.add_worksheet(@guw_model.weightings_label.blank? ? 'Facteur sans nom 2' : @guw_model.weightings_label)
+    workbook.add_worksheet(@guw_model.factors_label.blank? ? 'Facteur sans nom 3' : @guw_model.factors_label)
 
     first_page.each_with_index do |row, index|
       worksheet.add_cell(index, 0, row[0])
@@ -804,22 +804,31 @@ class Guw::GuwModelsController < ApplicationController
     tab_size = [I18n.t(:estimation).length, I18n.t(:version).length,
                 I18n.t(:group).length, I18n.t(:selected).length,
                 I18n.t(:name).length, I18n.t(:description).length,
-                20, @guw_model.coefficient_label.to_s.length,
-                20, @guw_model.weightings_label.blank? ? 'Facteur sans nom' : @guw_model.weightings_label,
-                20, @guw_model.factors_label.blank? ? 'Facteur sans nom' : @guw_model.factors_label,
+                 20,
+                 20,
+                 20,
                 I18n.t(:organization_technology).length, I18n.t(:quantity).length,
                 I18n.t(:tracability).length, I18n.t(:cotation).length,
                 I18n.t(:results).length, I18n.t(:retained_result).length,
                 I18n.t(:pe_attribute_name).length, I18n.t(:low).length,
                 I18n.t(:likely).length, I18n.t(:high).length]
 
-    [I18n.t(:estimation),I18n.t(:version),
-     I18n.t(:group), I18n.t(:selected),
-     I18n.t(:name),I18n.t(:description),
-     I18n.t(:work_unit_type), @guw_model.coefficient_label,
-     I18n.t(:organization_technology),I18n.t(:quantity),
-     I18n.t(:tracability), I18n.t(:cotation),
-     I18n.t(:results), I18n.t(:retained_result)].each_with_index do |val, index|
+    [I18n.t(:estimation),
+     I18n.t(:version),
+     I18n.t(:group),
+     I18n.t(:selected),
+     I18n.t(:name),
+     I18n.t(:description),
+     "Type",
+     @guw_model.coefficient_label.blank? ? 'Facteur sans nom 1' : @guw_model.coefficient_label.to_s,
+     @guw_model.weightings_label.blank? ? 'Facteur sans nom 2' : @guw_model.weightings_label,
+     @guw_model.factors_label.blank? ? 'Facteur sans nom 3' : @guw_model.factors_label,
+     I18n.t(:organization_technology),
+     I18n.t(:quantity),
+     I18n.t(:tracability),
+     I18n.t(:cotation),
+     I18n.t(:results),
+     I18n.t(:retained_result)].each_with_index do |val, index|
       worksheet.add_cell(0, index, val)
     end
 
@@ -854,21 +863,25 @@ class Guw::GuwModelsController < ApplicationController
       tab_size[4] = tab_size[4] < guow.name.length ? guow.name.length : tab_size[4]
       worksheet.change_column_width(4, tab_size[4])
 
-      worksheet.add_cell(ind, 5, guow.comments)
-
       worksheet.add_cell(ind, 6, guow.guw_type.name)
       tab_size[6] = tab_size[6] < guow.guw_type.name.to_s.length ? guow.guw_type.name.to_s.length : tab_size[6]
       worksheet.change_column_width(6, tab_size[6])
 
+      worksheet.add_cell(ind, 5, guow.comments)
+
       worksheet.add_cell(ind, 7, guow.guw_work_unit)
 
-      worksheet.add_cell(ind, 8, guow.organization_technology)
-      tab_size[8] = tab_size[8] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[8]
-      worksheet.change_column_width(8, tab_size[8])
+      worksheet.add_cell(ind, 8, guow.guw_weighting)
 
-      worksheet.add_cell(ind, 9, guow.quantity)
+      worksheet.add_cell(ind, 9, guow.guw_factor)
 
-      worksheet.add_cell(ind, 10, guow.tracking)
+      worksheet.add_cell(ind, 10, guow.organization_technology)
+      tab_size[10] = tab_size[10] < guow.organization_technology.to_s.length ? guow.organization_technology.to_s.length : tab_size[10]
+      worksheet.change_column_width(8, tab_size[10])
+
+      worksheet.add_cell(ind, 11, guow.quantity)
+
+      worksheet.add_cell(ind, 12, guow.tracking)
 
       worksheet.add_cell(ind, 13, cplx)
       tab_size[13] = tab_size[13] < cplx.length ? cplx.length : tab_size[13]
@@ -885,9 +898,9 @@ class Guw::GuwModelsController < ApplicationController
 
         # worksheet.add_cell(0, 14 + i, guw_attribute.name)
         # worksheet.change_column_width(14, tab_size[14])
-        worksheet.add_cell(ind, 16, guowa.low.nil? ? "N/A" : guowa.low)
-        worksheet.add_cell(ind, 17, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
-        worksheet.add_cell(ind, 18, guowa.high.nil? ? "N/A" : guowa.high)
+        # worksheet.add_cell(ind, 15 + i, guowa.low.nil? ? "N/A" : guowa.low)
+        worksheet.add_cell(ind, 16, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
+        # worksheet.add_cell(ind, 17 + i, guowa.high.nil? ? "N/A" : guowa.high)
         # end
         # end
       end
@@ -972,15 +985,15 @@ class Guw::GuwModelsController < ApplicationController
                                                           module_project_id: current_module_project.id,
                                                           pbs_project_element_id: @component.id,).first_or_create
             my_order = Guw::GuwUnitOfWork.count('id' , :conditions => "module_project_id = #{current_module_project.id} AND pbs_project_element_id = #{@component.id} AND guw_unit_of_work_group_id = #{guw_uow_group.id}  AND guw_model_id = #{@guw_model.id}")
-            if already_exist.join(",").include?(row[0..13].join(","))
+            if already_exist.join(",").include?(row[0..16].join(","))
               @guw_model.guw_attributes.all.each do |gac|
-                if gac.name == row[14]
+                if gac.name == row[16]
                   finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type_save,
                                                              guw_unit_of_work_id: guw_uow_save,
                                                              guw_attribute_id: gac.id).first_or_create
-                  finder.low = row[15] == "N/A" ? nil : row[15]
-                  finder.most_likely = row[16] == "N/A" ? nil : row[16]
-                  finder.high = row[17] == "N/A" ? nil : row[17]
+                  finder.low = row[17] == "N/A" ? nil : row[17]
+                  finder.most_likely = row[18] == "N/A" ? nil : row[18]
+                  finder.high = row[19] == "N/A" ? nil : row[19]
                   finder.save
                   break
                 end
@@ -994,10 +1007,10 @@ class Guw::GuwModelsController < ApplicationController
                                                pbs_project_element_id: @component.id,
                                                guw_model_id: @guw_model.id,
                                                display_order: my_order,
-                                               tracking: row[10],
-                                               quantity: row[9].nil? ? 1 : row[9],
-                                               effort: row[12].nil? ? nil : row[12],
-                                               ajusted_size: row[13].nil? ? nil : row[13])
+                                               tracking: row[12],
+                                               quantity: row[11].nil? ? 1 : row[11],
+                                               size: row[14].nil? ? nil : row[14],
+                                               ajusted_size: row[15].nil? ? nil : row[15])
                 if !row[7].nil?
                   @guw_model.guw_work_units.each do |wu|
                     if wu.name == row[7]
@@ -1021,13 +1034,50 @@ class Guw::GuwModelsController < ApplicationController
                 unless indexing_field_error[1][0]
                   indexing_field_error[1] << index
                 end
+
+                if !row[8].nil?
+                  @guw_model.guw_weightings.each do |wu|
+                    if wu.name == row[8]
+                      guw_uow.guw_weighting_id = wu.id
+                      ind += 1
+                      break
+                    end
+                  end
+                else
+                  first_weighting = @guw_model.guw_weightings.order("display_order ASC").first
+                  unless first_weighting.nil?
+                    guw_uow.guw_weighting_id = @guw_model.guw_weightings.order("display_order ASC").first.id
+                  else
+                    guw_uow.guw_weighting_id = nil
+                  end
+                  ind += 1
+                end
+
+                if !row[9].nil?
+                  @guw_model.guw_factors.each do |wu|
+                    if wu.name == row[9]
+                      guw_uow.guw_factor_id = wu.id
+                      ind += 1
+                      break
+                    end
+                  end
+                else
+                  first_factor = @guw_model.guw_factors.order("display_order ASC").first
+                  unless first_factor.nil?
+                    guw_uow.guw_factor_id = @guw_model.guw_factors.order("display_order ASC").first.id
+                  else
+                    guw_uow.guw_factor_id = nil
+                  end
+                  ind += 1
+                end
+
                 @guw_model.guw_types.each do |type|
                   if row[6] == type.name
                     guw_uow.guw_type_id = type.id
                     indexing_field_error[0][0] = true
-                    if !row[11].nil? && row[11] != "-"
+                    if !row[13].nil? && row[13] != "-"
                       type.guw_complexities.each do |complexity|
-                        if row[11] == complexity.name
+                        if row[13] == complexity.name
                           guw_uow.guw_complexity_id = complexity.id
                           indexing_field_error[3][0] = true
                           break
@@ -1038,32 +1088,34 @@ class Guw::GuwModelsController < ApplicationController
                         indexing_field_error[3] << index
                       end
                     end
-                    if !row[8].nil?
-                      type.guw_complexity_technologies.each do |techno|
-                        unless techno.organization_technology.nil?
-                          if row[8] == techno.organization_technology.name
-                            guw_uow.organization_technology_id = techno.organization_technology.id
-                            ind += 1
-                            indexing_field_error[2][0] = true
-                            break
+                    if @guw_model.allow_technology == true
+                      if !row[10].nil?
+                        type.guw_complexity_technologies.each do |techno|
+                          unless techno.organization_technology.nil?
+                            if row[10] == techno.organization_technology.name
+                              guw_uow.organization_technology_id = techno.organization_technology.id
+                              ind += 1
+                              indexing_field_error[2][0] = true
+                              break
+                            end
                           end
+                          indexing_field_error[2][0] = false
                         end
-                        indexing_field_error[2][0] = false
-                      end
-                    else
-                      guw_ct = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first
-                      unless guw_ct.nil?
-                        guw_uow.organization_technology_id = guw_ct.organization_technology.id
                       else
-                        guw_uow.organization_technology_id = nil
+                        guw_ct = type.guw_complexity_technologies.select{ |i| i.coefficient != nil }.first
+                        unless guw_ct.nil?
+                          guw_uow.organization_technology_id = guw_ct.organization_technology.id
+                        else
+                          guw_uow.organization_technology_id = nil
+                        end
+
+                        ind += 1
+                        indexing_field_error[2][0] = true
                       end
 
-                      ind += 1
-                      indexing_field_error[2][0] = true
-                    end
-
-                    unless indexing_field_error[2][0]
-                      indexing_field_error[2] << index
+                      unless indexing_field_error[2][0]
+                        indexing_field_error[2] << index
+                      end
                     end
 
                     @guw_model.guw_attributes.all.each do |gac|
@@ -1071,10 +1123,10 @@ class Guw::GuwModelsController < ApplicationController
                       finder = Guw::GuwUnitOfWorkAttribute.where(guw_type_id: type.id,
                                                                  guw_unit_of_work_id: guw_uow.id,
                                                                  guw_attribute_id: gac.id).first_or_create
-                      guw_uow_save = guw_uow.id
-                      finder.low = row[15] == "N/A" ? nil : row[15]
-                      finder.most_likely = row[16] == "N/A" ? nil : row[16]
-                      finder.high = row[17] == "N/A" ? nil : row[17]
+                      # guw_uow_save = guw_uow.id
+                      # finder.low = row[15] == "N/A" ? nil : row[15]
+                      # finder.most_likely = row[16] == "N/A" ? nil : row[16]
+                      # finder.high = row[17] == "N/A" ? nil : row[17]
                       finder.save
                     end
 
