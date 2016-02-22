@@ -482,7 +482,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.size = final_value.to_f *
           (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
           (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
-          (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
           tcplx_value
 
       # type_attribute_array = []
@@ -528,12 +527,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.effort =  guw_unit_of_work.ajusted_size *
           (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
-          (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
           tcplx_value
 
       guw_unit_of_work.cost = guw_unit_of_work.ajusted_size *
           (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
-          (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
           tcplx_value
 
       if guw_unit_of_work.off_line == true || guw_unit_of_work.off_line_uo == true
