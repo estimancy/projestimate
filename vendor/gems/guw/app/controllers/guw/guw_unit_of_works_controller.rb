@@ -321,12 +321,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       guw_unit_of_work.flagged = false
     end
 
-    guw_unit_of_work.effort =  guw_unit_of_work.ajusted_size *
+    guw_unit_of_work.effort =  guw_unit_of_work.ajusted_size.nil? ? 1 : guw_unit_of_work.ajusted_size *
         (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
         (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
         tcplx_value
 
-    guw_unit_of_work.cost = guw_unit_of_work.ajusted_size *
+    guw_unit_of_work.cost = guw_unit_of_work.ajusted_size.ajusted_size.nil? ? 1 : guw_unit_of_work.ajusted_size *
         (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
         (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
         tcplx_value
