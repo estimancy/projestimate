@@ -65,7 +65,7 @@
               <th class="action"><%= I18n.t(:actions) %></th>
             </tr>
 
-            <% @organization.operation_models.each do |i| %>
+            <% @organization.operation_models.order("name asc").each do |i| %>
               <tr>
                 <td class="span5">
                   <%= link_to i.name, operation.edit_operation_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
@@ -101,7 +101,7 @@
               <th class="action"><%= I18n.t(:actions) %></th>
             </tr>
 
-            <% @organization.ge_models.each do |i| %>
+            <% @organization.ge_models.order("name asc").each do |i| %>
               <tr>
                 <td class="span5">
                   <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
@@ -138,7 +138,7 @@
               <th class="action"><%= I18n.t(:actions) %></th>
             </tr>
 
-            <% @organization.kb_models.each do |i| %>
+            <% @organization.kb_models.order("name asc").each do |i| %>
               <tr>
                 <td class="span5">
                   <%= link_to i.name, kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
@@ -182,7 +182,7 @@
             <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
           </tr>
 
-          <% @wbs_activities.each do |wbs_activity| %>
+          <% @wbs_activities.order("name asc").each do |wbs_activity| %>
             <tr>
               <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), confirm: I18n.t(:warning_edit_instance_module)) %></td>
               <td><%= wbs_activity.description %></td>
@@ -244,7 +244,7 @@
             <th class="action"><%= I18n.t(:actions) %></th>
           </tr>
 
-          <% @organization.staffing_models.each do |i| %>
+          <% @organization.staffing_models.order("name asc").each do |i| %>
               <tr>
                 <td class="span5">
                   <%= link_to i.name, staffing.edit_staffing_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
@@ -292,7 +292,7 @@
             <th class="action"><%= I18n.t(:actions) %></th>
           </tr>
 
-          <% @organization.expert_judgement_instances.each do |i| %>
+          <% @organization.expert_judgement_instances.order("name asc").each do |i| %>
             <tr>
               <td class="span5">
                 <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>

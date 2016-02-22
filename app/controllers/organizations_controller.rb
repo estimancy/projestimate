@@ -363,9 +363,9 @@ class OrganizationsController < ApplicationController
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), I18n.t(:label_estimation_modules) => ""
     set_page_title I18n.t(:module ,parameter: @organization)
 
-    @guw_models = @organization.guw_models
-    @wbs_activities = @organization.wbs_activities
-    @technologies = @organization.organization_technologies
+    @guw_models = @organization.guw_models.order("name asc")
+    @wbs_activities = @organization.wbs_activities.order("name asc")
+    @technologies = @organization.organization_technologies.order("name asc")
   end
 
   def users
