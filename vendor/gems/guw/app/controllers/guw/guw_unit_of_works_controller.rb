@@ -234,12 +234,17 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       else
         #Save if uo is simple/ml/high
         value_pert = compute_probable_value(guw_unit_of_work.result_low, guw_unit_of_work.result_most_likely, guw_unit_of_work.result_high)[:value]
-        if (value_pert < guw_type.guw_complexities.map(&:bottom_range).min)
+        if (value_pert < guw_type.guw_complexities.map(&:bottom_range).min.to_f)
           guw_unit_of_work.off_line_uo = true
-        elsif (value_pert >= guw_type.guw_complexities.map(&:top_range).max)
+        elsif (value_pert >= guw_type.guw_complexities.map(&:top_range).max.to_f)
           guw_unit_of_work.off_line_uo = true
-          guw_unit_of_work.guw_complexity_id = guw_type.guw_complexities.last.id
-          array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert)
+          cplx = guw_type.guw_complexities.last
+          if cplx.nil?
+            guw_unit_of_work.guw_complexity_id = nil
+          else
+            guw_unit_of_work.guw_complexity_id = cplx.id
+            array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert)
+          end
         else
           guw_type.guw_complexities.each do |guw_c|
             array_pert << calculate_seuil(guw_unit_of_work, guw_c, value_pert)
