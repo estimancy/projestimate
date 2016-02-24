@@ -12,7 +12,7 @@
         <%= I18n.t(:name) %>
       </b>
     </label>
-    <%= text_area_tag "name[#{@guw_unit_of_work.id}]", @guw_unit_of_work.name, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>
+    <%= text_area_tag "name[#{guow.id}]", guow.name, class: "attribute_note_area", readonly: !can?(:execute_estimation_plan, @project) %>
 
     <label>
       <b>

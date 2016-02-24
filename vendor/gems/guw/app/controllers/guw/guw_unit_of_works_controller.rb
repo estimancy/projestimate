@@ -134,6 +134,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def save_comments
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:comments].keys.first)
+    @guw_unit_of_work.name = params[:name].values.first
     @guw_unit_of_work.comments = params[:comments].values.first
     @guw_unit_of_work.tracking = params[:trackings].values.first
     @guw_unit_of_work.save

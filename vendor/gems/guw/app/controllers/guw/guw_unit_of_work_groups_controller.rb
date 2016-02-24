@@ -28,6 +28,7 @@ class Guw::GuwUnitOfWorkGroupsController < ApplicationController
 
   def new
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.new
+    @guw_model = current_module_project.guw_model
     set_page_title I18n.t(:new_group)
   end
 
