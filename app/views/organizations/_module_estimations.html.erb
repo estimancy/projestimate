@@ -33,7 +33,7 @@
               <% end %>
             </td>
             <td class="span2 align-center">
-              <%= I18n.l(i.created_at) %>
+              <%= i.created_at.nil? ? '-' : I18n.l(i.created_at) %>
             </td>
             <td class="align-center">
               <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -116,7 +116,7 @@
                   <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
                 </td>
                 <td class="span2 align-center">
-                  <%= I18n.l(i.created_at) %>
+                  <%= i.created_at.nil? ? '-' : I18n.l(i.created_at) %>
                 </td>
                 <td class="align-center">
                   <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -157,7 +157,7 @@
                   <%= link_to i.name, kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
                 </td>
                 <td class="span2 align-center">
-                  <%= I18n.l(i.created_at) %>
+                  <%= i.created_at.nil? ? '-' : I18n.l(i.created_at) %>
                 </td>
                 <td class="align-center">
                   <%= link_to '', kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -203,7 +203,7 @@
               <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), confirm: I18n.t(:warning_edit_instance_module)) %></td>
               <td><%= wbs_activity.description %></td>
               <td class="span2 align-center">
-                <%= I18n.l(wbs_activity.created_at) %>
+                <%= wbs_activity.created_at.nil? ? '-' : I18n.l(wbs_activity.created_at) %>
               </td>
               <td class="center">
                 <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), confirm: I18n.t(:warning_edit_instance_module), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
