@@ -1371,7 +1371,7 @@ fr1:
   cotation: "Cotation"
   technology: "Technologie"
   tracability: "Tracabilité"
-  results: "Résultats"
+  results: "Calculé"
   retained_result: "Retenu"
   actions: "Actions"
   work_unit_type: "Type d'unité d'oeuvres"
