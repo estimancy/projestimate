@@ -25,10 +25,12 @@ module Ge
     validates :name, :presence => true
     validates :standard_unit_coefficient, :presence => true
     validates :effort_unit, :presence => true
-    #validates :coeff_a, :coeff_b, :presence => true
     validates :coeff_a, :coeff_b, :numericality => {:allow_nil => true}
 
     belongs_to :organization
+    belongs_to :input_pe_attribute, class_name: PeAttribute, foreign_key: :input_pe_attribute_id
+    belongs_to :output_pe_attribute, class_name: PeAttribute, foreign_key: :output_pe_attribute_id
+
     has_many :module_projects, :dependent => :destroy
 
     has_many :ge_factors, :dependent => :destroy
@@ -54,15 +56,21 @@ module Ge
     end
 
     def self.display_size(p, c, level, component_id)
-      if c.send("string_data_#{level}")[component_id].nil?
-        begin
-          p.send("string_data_#{level}")[component_id]
-        rescue
-          nil
+      #begin
+        if c.send("string_data_#{level}")[component_id].nil?
+          begin
+            p.send("string_data_#{level}")[component_id]
+          rescue
+            nil
+          end
+        else
+          c.send("string_data_#{level}")[component_id]
         end
-      else
-        c.send("string_data_#{level}")[component_id]
-      end
+
+      # rescue
+      #   nil
+      # end
+
     end
   end
 end

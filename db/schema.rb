@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160217153243) do
+ActiveRecord::Schema.define(:version => 20160219161628) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -486,6 +486,8 @@ ActiveRecord::Schema.define(:version => 20160217153243) do
     t.string  "p_calculation_method"
     t.string  "s_calculation_method"
     t.string  "c_calculation_method"
+    t.integer "input_pe_attribute_id"
+    t.integer "output_pe_attribute_id"
   end
 
   create_table "groups", :force => true do |t|

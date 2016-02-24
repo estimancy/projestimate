@@ -132,13 +132,44 @@
       </h4>
 
       <% attr = PeAttribute.find_by_alias("retained_size") %>
+      <% unless @ge_model.input_pe_attribute.nil? %>
+        <% attr = @ge_model.input_pe_attribute %>
+      <% end %>
+
+      <!-- Find all previous MP that has the attribute -->
+      <% possible_module_projects = [] %>
+      <% current_module_project.previous.each do |previous_mp| %>
+        <% if previous_mp.pemodule.attribute_modules.where(:pe_attribute_id => attr.id, in_out: ["output", "both"]).length >= 1 %>
+            <% possible_module_projects << previous_mp %>
+        <% end %>
+      <% end %>
+
       <% previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
+                                             :module_project_id => possible_module_projects.last,
+                                             :in_out => "output").first %>
+
+      <% if previous_ev.nil? && !possible_module_projects.last.nil? %>
+        <% previous_ev = EstimationValue.create(:pe_attribute_id => attr.id,
+                                              :module_project_id => possible_module_projects.last.id,
+                                              :in_out => "output") %>
+      <% end %>
+      <!-- Fin -->
+
+
+      <%# previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
                                              :module_project_id => current_module_project.previous.first,
                                              :in_out => "output").first %>
 
       <% current_ev = EstimationValue.where(:pe_attribute_id => attr.id,
                                              :module_project_id => current_module_project.id,
                                              :in_out => "input").first %>
+
+      <!-- Test -->
+      <%# my_module_project.pemodule.attribute_modules.each do |am| %>
+      <%# if current_ev.nil? %>
+        <%# current_ev = EstimationValue.create(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id, :in_out => "output") %>
+      <%# end %>
+      <!-- End Test -->
 
       <% component_id = current_component.id %>
       <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
@@ -188,6 +219,10 @@
 
     <div class="span6">
       <% attr = PeAttribute.find_by_alias("effort") %>
+      <% unless @ge_model.output_pe_attribute.nil? %>
+          <% attr = @ge_model.output_pe_attribute %>
+      <% end %>
+
       <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id).first %>
 
       <% theorical_effort_attr = PeAttribute.find_by_alias("theoretical_effort") %>

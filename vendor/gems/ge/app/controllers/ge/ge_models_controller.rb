@@ -768,10 +768,94 @@ class Ge::GeModelsController < ApplicationController
       @ge_input.save
     end
 
+    #===== TEST =================
+
+   #attribut d'entrée
+    input_pe_attribute = @ge_model.input_pe_attribute
+    if input_pe_attribute.nil?
+      input_pe_attribute = PeAttribute.where(alias: "retained_size").first
+    end
+    #attribut de sortie
+    output_pe_attribute = @ge_model.output_pe_attribute
+    if output_pe_attribute.nil?
+      output_pe_attribute = PeAttribute.where(alias: "effort").first
+    end
+
+
+    # Gestion des entrées
+    input_am = current_module_project.pemodule.attribute_modules
+    output_am = current_module_project.pemodule.attribute_modules
+
+    unless input_am.nil?
+      tmp_prbl = Array.new
+
+      input_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "input").first
+      unless input_ev.nil?
+        ["low", "most_likely", "high"].each do |level|
+          if @ge_model.three_points_estimation?
+            size = params["retained_size_#{level}"].to_f
+          else
+            size = params["retained_size_most_likely"].to_f
+          end
+
+          input_ev.send("string_data_#{level}")[current_component.id] = size
+          input_ev.save
+          tmp_prbl << input_ev.send("string_data_#{level}")[current_component.id]
+        end
+
+        unless @ge_model.three_points_estimation?
+          tmp_prbl[0] = tmp_prbl[1]
+          tmp_prbl[2] = tmp_prbl[1]
+        end
+        input_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      end
+    end
+
+
+    # Gestion des sorties
+    unless output_am.nil?
+      tmp_prbl = Array.new
+
+      output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => output_pe_attribute.id, in_out: "output").first
+      unless output_ev.nil?
+        ["low", "most_likely", "high"].each do |level|
+          if @ge_model.three_points_estimation?
+            size = params["retained_size_#{level}"].to_f
+          else
+            size = params["retained_size_most_likely"].to_f
+          end
+
+          if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
+            effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
+            @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
+            @ge_input.save
+          else
+            #The effort value will be calculated as : Effort = p * Taille^s
+            # with: s = sum of scale factors      and  p = multiply of prod factors
+            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
+          end
+
+          output_ev.send("string_data_#{level}")[current_component.id] = effort
+          output_ev.save
+          tmp_prbl << output_ev.send("string_data_#{level}")[current_component.id]
+        end
+
+        unless @ge_model.three_points_estimation?
+          tmp_prbl[0] = tmp_prbl[1]
+          tmp_prbl[2] = tmp_prbl[1]
+        end
+        output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      end
+    end
+
+    #==========  FIN TEST  ============
+
+
     current_module_project.pemodule.attribute_modules.each do |am|
       tmp_prbl = Array.new
 
       ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+
       unless ev.nil?
         ["low", "most_likely", "high"].each do |level|
 
@@ -782,6 +866,7 @@ class Ge::GeModelsController < ApplicationController
           end
 
           if am.pe_attribute.alias == "effort"
+
             if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
               effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
               @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
@@ -812,6 +897,7 @@ class Ge::GeModelsController < ApplicationController
         ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
+
 
     current_module_project.nexts.each do |n|
       ModuleProject::common_attributes(current_module_project, n).each do |ca|
