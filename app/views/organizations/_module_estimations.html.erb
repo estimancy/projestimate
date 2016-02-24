@@ -19,17 +19,21 @@
       <table class="table table-bordered">
         <tr>
           <th><%= I18n.t(:name) %></th>
+          <th>Date de création</th>
           <th class="action"><%= I18n.t(:actions) %></th>
         </tr>
 
         <% @guw_models.each do |i| %>
           <tr>
-            <td class="span5">
+            <td class="span7">
               <% if i.default_display == "list" %>
                 <%= link_to i.name, guw.guw_model_all_guw_types_path(i), confirm: I18n.t(:warning_edit_instance_module) %>
               <% else %>
                 <%= link_to i.name, guw.guw_model_path(i), confirm: I18n.t(:warning_edit_instance_module) %>
               <% end %>
+            </td>
+            <td class="span2 align-center">
+              <%= I18n.l(i.created_at) %>
             </td>
             <td class="align-center">
               <%= link_to '', guw.edit_guw_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -62,6 +66,7 @@
           <table class="table table-bordered">
             <tr>
               <th><%= I18n.t(:name) %></th>
+              <th>Date de création</th>
               <th class="action"><%= I18n.t(:actions) %></th>
             </tr>
 
@@ -69,6 +74,9 @@
               <tr>
                 <td class="span5">
                   <%= link_to i.name, operation.edit_operation_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="span2 align-center">
+                  <%= I18n.l(i.created_at) %>
                 </td>
                 <td class="align-center">
                   <%= link_to '', operation.edit_operation_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -98,6 +106,7 @@
           <table class="table table-bordered">
             <tr>
               <th><%= I18n.t(:name) %></th>
+              <th>Date de création</th>
               <th class="action"><%= I18n.t(:actions) %></th>
             </tr>
 
@@ -105,6 +114,9 @@
               <tr>
                 <td class="span5">
                   <%= link_to i.name, ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="span2 align-center">
+                  <%= I18n.l(i.created_at) %>
                 </td>
                 <td class="align-center">
                   <%= link_to '', ge.edit_ge_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -135,6 +147,7 @@
           <table class="table table-bordered">
             <tr>
               <th><%= I18n.t(:name) %></th>
+              <th>Date de création</th>
               <th class="action"><%= I18n.t(:actions) %></th>
             </tr>
 
@@ -142,6 +155,9 @@
               <tr>
                 <td class="span5">
                   <%= link_to i.name, kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+                </td>
+                <td class="span2 align-center">
+                  <%= I18n.l(i.created_at) %>
                 </td>
                 <td class="align-center">
                   <%= link_to '', kb.edit_kb_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
@@ -178,7 +194,7 @@
           <tr>
             <th><%= I18n.t(:name) %></th>
             <th><%= I18n.t(:description) %></th>
-            <th><%= I18n.t(:organizations) %></th>
+            <th>Date de création</th>
             <th class="action" style="width: 160px"><%= I18n.t(:actions) %></th>
           </tr>
 
@@ -186,7 +202,9 @@
             <tr>
               <td><%= link_to(wbs_activity.name, edit_wbs_activity_path(wbs_activity, :anchor => 'tabs-1'), confirm: I18n.t(:warning_edit_instance_module)) %></td>
               <td><%= wbs_activity.description %></td>
-              <td><%= wbs_activity.organization unless wbs_activity.organization.nil? %></td>
+              <td class="span2 align-center">
+                <%= I18n.l(wbs_activity.created_at) %>
+              </td>
               <td class="center">
                 <%= link_to '', edit_organization_wbs_activity_path(@organization, wbs_activity, :anchor => 'tabs-1'), confirm: I18n.t(:warning_edit_instance_module), :class => 'button_attribute_tooltip icon-pencil', :title => I18n.t(:edit) %>
                 <% if can? :manage_modules_instances, ModuleProject %>
@@ -241,6 +259,7 @@
         <table class="table table-bordered">
           <tr>
             <th><%= I18n.t(:name) %></th>
+            <th>Date de création</th>
             <th class="action"><%= I18n.t(:actions) %></th>
           </tr>
 
@@ -249,12 +268,15 @@
                 <td class="span5">
                   <%= link_to i.name, staffing.edit_staffing_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
                 </td>
+                <td class="span2 align-center">
+                  <%= I18n.l(i.created_at) %>
+                </td>
                 <td class="align-center">
                   <%= link_to '', staffing.edit_staffing_model_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>
                   <%= link_to '', staffing.staffing_model_duplicate_path(i, organization_id: @organization.id), :class => 'fa fa-copy', :title => I18n.t(:duplicate_module), method: "post" %>
                   <% if can? :manage_modules_instances, ModuleProject %>
-                      <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'staffing_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
-                      <%= link_to '', staffing.staffing_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
+                    <%= link_to('', {:controller => 'pemodules', :action => 'find_use_pemodule', :instance_model_name => 'staffing_model_id', :instance_model_id => i.id}, :remote => true, :class => 'fa fa-map-marker', :title => I18n.t('button_find_use')) %>
+                    <%= link_to '', staffing.staffing_model_path(i), confirm: I18n.t('are_you_sure'), method: "DELETE",  :class => 'fa fa-trash', :title => I18n.t('delete') %>
                   <% end %>
                 </td>
               </tr>
@@ -289,6 +311,7 @@
       <table class="table table-bordered">
           <tr>
             <th><%= I18n.t(:name) %></th>
+            <th>Date de création</th>
             <th class="action"><%= I18n.t(:actions) %></th>
           </tr>
 
@@ -296,6 +319,9 @@
             <tr>
               <td class="span5">
                 <%= link_to i.name, expert_judgement.edit_instance_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module) %>
+              </td>
+              <td class="span2 align-center">
+                <%= I18n.l(i.created_at) %>
               </td>
               <td class="align-center">
                 <%= link_to '', expert_judgement.edit_instance_path(i, organization_id: @organization.id), confirm: I18n.t(:warning_edit_instance_module), :class => 'fa fa-pencil', :title => I18n.t(:edit) %>

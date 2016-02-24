@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160216105138) do
+ActiveRecord::Schema.define(:version => 20160224101048) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -615,8 +615,8 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_id"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.boolean  "three_points_estimation"
     t.string   "retained_size_unit"
     t.boolean  "one_level_model"
@@ -629,6 +629,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.string   "factors_label"
     t.string   "effort_unit"
     t.string   "cost_unit"
+    t.boolean  "allow_technology",            :default => true
   end
 
   create_table "guw_guw_scale_module_attributes", :force => true do |t|
@@ -770,15 +771,17 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
   end
 
   create_table "kb_kb_models", :force => true do |t|
-    t.string  "name"
-    t.boolean "three_points_estimation"
-    t.boolean "enabled_input"
-    t.integer "organization_id"
-    t.float   "standard_unit_coefficient"
-    t.string  "effort_unit"
-    t.text    "selected_attributes"
-    t.integer "copy_number"
-    t.integer "copy_id"
+    t.string   "name"
+    t.boolean  "three_points_estimation"
+    t.boolean  "enabled_input"
+    t.integer  "organization_id"
+    t.float    "standard_unit_coefficient"
+    t.string   "effort_unit"
+    t.text     "selected_attributes"
+    t.integer  "copy_number"
+    t.integer  "copy_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "labor_categories", :force => true do |t|
@@ -1577,7 +1580,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2017-01-12 10:03:08'
+    t.datetime "subscription_end_date",  :default => '2016-12-04 14:05:34'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
@@ -1704,12 +1707,8 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.boolean  "multiple_references"
-    t.string   "dotted_id"
-    t.string   "ancestry"
-    t.string   "ancestry_depth"
   end
 
-  add_index "wbs_activity_ratio_elements", ["ancestry"], :name => "index_wbs_activity_ratio_elements_on_ancestry"
   add_index "wbs_activity_ratio_elements", ["owner_id"], :name => "index_wbs_activity_ratio_elements_on_owner_id"
 
   create_table "wbs_activity_ratio_profiles", :force => true do |t|
@@ -1718,12 +1717,7 @@ ActiveRecord::Schema.define(:version => 20160216105138) do
     t.float    "ratio_value"
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
-    t.string   "dotted_id"
-    t.string   "ancestry"
-    t.string   "ancestry_depth"
   end
-
-  add_index "wbs_activity_ratio_profiles", ["ancestry"], :name => "index_wbs_activity_ratio_profiles_on_ancestry"
 
   create_table "wbs_activity_ratios", :force => true do |t|
     t.string   "uuid"
