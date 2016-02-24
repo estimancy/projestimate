@@ -23,12 +23,15 @@
 class Guw::GuwComplexityWorkUnitsController < ApplicationController
 
   def save_complexity_work_units
+    @guw_type = Guw::GuwType.find(params[:guw_type_id])
+    @guw_model = @guw_type.guw_model
+
     unless params[:work_unit_value].nil?
       params[:work_unit_value].each do |i|
         i.last.each do |j|
           wu = Guw::GuwWorkUnit.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
-          @guw_type = cplx.guw_type
+          # @guw_type = cplx.guw_type
 
           cwu = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: cplx.id, guw_work_unit_id: wu.id).first
           if cwu.nil?
@@ -41,7 +44,6 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
             cwu.guw_type_id = @guw_type.id
             cwu.save
           end
-
         end
       end
     end
@@ -51,7 +53,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
         i.last.each do |j|
           we = Guw::GuwWeighting.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
-          @guw_type = cplx.guw_type
+          # @guw_type = cplx.guw_type
 
           cwe = Guw::GuwComplexityWeighting.where(guw_complexity_id: cplx.id, guw_weighting_id: we.id).first
           if cwe.nil?
@@ -74,7 +76,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
         i.last.each do |j|
           fa = Guw::GuwFactor.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
-          @guw_type = cplx.guw_type
+          # @guw_type = cplx.guw_type
 
           cfa = Guw::GuwComplexityFactor.where(guw_complexity_id: cplx.id, guw_factor_id: fa.id).first
           if cfa.nil?
@@ -97,14 +99,7 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
         i.last.each do |j|
           ot = OrganizationTechnology.find(j.first.to_i)
           cplx = Guw::GuwComplexity.find(i.first.to_i)
-          @guw_type = cplx.guw_type
-
-          if params['enable_value'].present?
-            cplx.enable_value = params['enable_value']["#{cplx.guw_type.id}"]["#{cplx.id}"].nil? ? false : true
-          else
-            cplx.enable_value = false
-          end
-          cplx.save
+          # @guw_type = cplx.guw_type
 
           ct = Guw::GuwComplexityTechnology.where(guw_complexity_id: cplx.id, organization_technology_id: ot.id).first_or_create
           ct.coefficient = params[:technology_value]["#{cplx.id}"]["#{ot.id}"]
@@ -115,10 +110,18 @@ class Guw::GuwComplexityWorkUnitsController < ApplicationController
       end
     end
 
+    @guw_type.guw_complexities.each do |cplx|
+      if params['enable_value'].present?
+        cplx.enable_value = params['enable_value']["#{cplx.guw_type.id}"]["#{cplx.id}"].nil? ? false : true
+      else
+        cplx.enable_value = false
+      end
+      cplx.save
+    end
+
     if @guw_type.nil?
       redirect_to :back
     else
-      @guw_model = @guw_type.guw_model
       if @guw_model.default_display == "list"
         redirect_to guw.guw_type_path(@guw_type)
       else
