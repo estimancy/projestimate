@@ -7,11 +7,6 @@
     </li>
     <% unless @guw_model.new_record? %>
       <li>
-        <a href="#tabs-matrix">
-          Matrice des attributs / facteurs
-        </a>
-      </li>
-      <li>
         <a href="#tabs-attributs">
           Gérer les attributs
         </a>
@@ -19,6 +14,11 @@
       <li>
         <a href="#tabs-factors">
           Gérer les facteurs d'ajustements
+        </a>
+      </li>
+      <li>
+        <a href="#tabs-matrix">
+          Matrice des sorties / facteurs
         </a>
       </li>
     <% end %>
@@ -97,7 +97,7 @@
         <table class="table table-bordered">
           <tr>
             <th></th>
-            <% ["Attribut de taille", "Attribut d'effort", "Attribut de coût"].each do |ta| %>
+            <% ["Sortie de taille", "Sortie d'effort", "Sortie de coût"].each do |ta| %>
               <th><%= ta %></th>
             <% end %>
           </tr>
