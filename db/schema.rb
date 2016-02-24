@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160224101048) do
+ActiveRecord::Schema.define(:version => 20160224104508) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -469,22 +469,24 @@ ActiveRecord::Schema.define(:version => 20160224101048) do
   end
 
   create_table "ge_ge_models", :force => true do |t|
-    t.string  "name"
-    t.text    "description"
-    t.float   "coeff_a"
-    t.float   "coeff_b"
-    t.integer "organization_id"
-    t.string  "effort_unit"
-    t.boolean "three_points_estimation"
-    t.float   "standard_unit_coefficient"
-    t.string  "size_unit"
-    t.boolean "enabled_input"
-    t.boolean "modify_theorical_effort"
-    t.integer "copy_id"
-    t.integer "copy_number",               :default => 0
-    t.string  "p_calculation_method"
-    t.string  "s_calculation_method"
-    t.string  "c_calculation_method"
+    t.string   "name"
+    t.text     "description"
+    t.float    "coeff_a"
+    t.float    "coeff_b"
+    t.integer  "organization_id"
+    t.string   "effort_unit"
+    t.boolean  "three_points_estimation"
+    t.float    "standard_unit_coefficient"
+    t.string   "size_unit"
+    t.boolean  "enabled_input"
+    t.boolean  "modify_theorical_effort"
+    t.integer  "copy_id"
+    t.integer  "copy_number",               :default => 0
+    t.string   "p_calculation_method"
+    t.string   "s_calculation_method"
+    t.string   "c_calculation_method"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "groups", :force => true do |t|
@@ -874,15 +876,17 @@ ActiveRecord::Schema.define(:version => 20160224101048) do
   end
 
   create_table "operation_operation_models", :force => true do |t|
-    t.string  "name"
-    t.boolean "three_points_estimation"
-    t.boolean "enabled_input"
-    t.integer "organization_id"
-    t.string  "effort_unit"
-    t.integer "standard_unit_coefficient"
-    t.string  "operation_type"
-    t.integer "copy_id"
-    t.integer "copy_number"
+    t.string   "name"
+    t.boolean  "three_points_estimation"
+    t.boolean  "enabled_input"
+    t.integer  "organization_id"
+    t.string   "effort_unit"
+    t.integer  "standard_unit_coefficient"
+    t.string   "operation_type"
+    t.integer  "copy_id"
+    t.integer  "copy_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "organization_labor_categories", :force => true do |t|
