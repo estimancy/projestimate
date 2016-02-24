@@ -55,21 +55,32 @@ module Ge
       end
     end
 
-    def self.display_size(p, c, level, component_id)
-      #begin
+    def self.display_size(p, c, level, component_id, ge_model)
+      begin
         if c.send("string_data_#{level}")[component_id].nil?
           begin
-            p.send("string_data_#{level}")[component_id]
+            #p.send("string_data_#{level}")[component_id]
+            case p.pe_attribute.alias
+              when "effort"
+                p.send("string_data_#{level}")[component_id].to_f / ge_model.standard_unit_coefficient.to_f
+              when "retained_size"
+                p.send("string_data_#{level}")[component_id]
+            end
           rescue
             nil
           end
         else
-          c.send("string_data_#{level}")[component_id]
+          #c.send("string_data_#{level}")[component_id]
+          case c.pe_attribute.alias
+            when "effort"
+              c.send("string_data_#{level}")[component_id].to_f / ge_model.standard_unit_coefficient.to_f
+            when "retained_size"
+              c.send("string_data_#{level}")[component_id]
+          end
         end
-
-      # rescue
-      #   nil
-      # end
+      rescue
+        nil
+      end
 
     end
   end

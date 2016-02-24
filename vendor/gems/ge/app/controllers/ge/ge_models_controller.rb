@@ -826,16 +826,25 @@ class Ge::GeModelsController < ApplicationController
           end
 
           if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-            effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
+            taille = @ge_model.coeff_a * size ** @ge_model.coeff_b
+            effort = taille * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
             @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
             @ge_input.save
           else
             #The effort value will be calculated as : Effort = p * Taille^s
-            # with: s = sum of scale factors      and  p = multiply of prod factors
-            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
+            # with: s = sum of scale factors and  p = multiply of prod factors
+            taille = prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)
+            effort = taille * @ge_model.standard_unit_coefficient.to_f
           end
 
-          output_ev.send("string_data_#{level}")[current_component.id] = effort
+          output_calculated_value = effort
+          case output_ev.pe_attribute.alias
+            when "effort"
+              output_calculated_value = effort
+            when "retained_size"
+              output_calculated_value = taille
+          end
+          output_ev.send("string_data_#{level}")[current_component.id] = output_calculated_value
           output_ev.save
           tmp_prbl << output_ev.send("string_data_#{level}")[current_component.id]
         end
@@ -851,52 +860,52 @@ class Ge::GeModelsController < ApplicationController
     #==========  FIN TEST  ============
 
 
-    current_module_project.pemodule.attribute_modules.each do |am|
-      tmp_prbl = Array.new
-
-      ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-
-      unless ev.nil?
-        ["low", "most_likely", "high"].each do |level|
-
-          if @ge_model.three_points_estimation?
-            size = params["retained_size_#{level}"].to_f
-          else
-            size = params["retained_size_most_likely"].to_f
-          end
-
-          if am.pe_attribute.alias == "effort"
-
-            if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-              effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
-              @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
-              @ge_input.save
-            else
-              #The effort value will be calculated as : Effort = p * Taille^s
-              # with: s = sum of scale factors      and  p = multiply of prod factors
-              effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
-            end
-
-            ev.send("string_data_#{level}")[current_component.id] = effort
-            ev.save
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-
-          elsif am.pe_attribute.alias == "retained_size"
-            ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-            ev.send("string_data_#{level}")[current_component.id] = size
-            ev.save
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-          end
-        end
-
-        unless @ge_model.three_points_estimation?
-          tmp_prbl[0] = tmp_prbl[1]
-          tmp_prbl[2] = tmp_prbl[1]
-        end
-
-        ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-      end
-    end
+    # current_module_project.pemodule.attribute_modules.each do |am|
+    #   tmp_prbl = Array.new
+    #
+    #   ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+    #
+    #   unless ev.nil?
+    #     ["low", "most_likely", "high"].each do |level|
+    #
+    #       if @ge_model.three_points_estimation?
+    #         size = params["retained_size_#{level}"].to_f
+    #       else
+    #         size = params["retained_size_most_likely"].to_f
+    #       end
+    #
+    #       if am.pe_attribute.alias == "effort"
+    #
+    #         if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
+    #           effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
+    #           @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
+    #           @ge_input.save
+    #         else
+    #           #The effort value will be calculated as : Effort = p * Taille^s
+    #           # with: s = sum of scale factors      and  p = multiply of prod factors
+    #           effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
+    #         end
+    #
+    #         ev.send("string_data_#{level}")[current_component.id] = effort
+    #         ev.save
+    #         tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+    #
+    #       elsif am.pe_attribute.alias == "retained_size"
+    #         ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+    #         ev.send("string_data_#{level}")[current_component.id] = size
+    #         ev.save
+    #         tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+    #       end
+    #     end
+    #
+    #     unless @ge_model.three_points_estimation?
+    #       tmp_prbl[0] = tmp_prbl[1]
+    #       tmp_prbl[2] = tmp_prbl[1]
+    #     end
+    #
+    #     ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+    #   end
+    # end
 
 
     current_module_project.nexts.each do |n|

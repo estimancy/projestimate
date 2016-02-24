@@ -148,11 +148,13 @@
                                              :module_project_id => possible_module_projects.last,
                                              :in_out => "output").first %>
 
-      <% if previous_ev.nil? && !possible_module_projects.last.nil? %>
-        <% previous_ev = EstimationValue.create(:pe_attribute_id => attr.id,
+      <!-- A revoir -->
+      <%# if previous_ev.nil? && !possible_module_projects.last.nil? %>
+        <%# previous_ev = EstimationValue.create(:pe_attribute_id => attr.id,
                                               :module_project_id => possible_module_projects.last.id,
                                               :in_out => "output") %>
-      <% end %>
+      <%# end %>
+
       <!-- Fin -->
 
 
@@ -163,13 +165,6 @@
       <% current_ev = EstimationValue.where(:pe_attribute_id => attr.id,
                                              :module_project_id => current_module_project.id,
                                              :in_out => "input").first %>
-
-      <!-- Test -->
-      <%# my_module_project.pemodule.attribute_modules.each do |am| %>
-      <%# if current_ev.nil? %>
-        <%# current_ev = EstimationValue.create(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id, :in_out => "output") %>
-      <%# end %>
-      <!-- End Test -->
 
       <% component_id = current_component.id %>
       <% precision = attr.precision.nil? ? user_number_precision : attr.precision %>
@@ -188,28 +183,28 @@
           <% if @ge_model.three_points_estimation == true %>
             <td>
               <% if (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
-                <%= hidden_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id), step: "any", class: "input-medium" %>
-                <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
+                <%= hidden_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id, @ge_model), step: "any", class: "input-medium" %>
+                <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
               <% else %>
-                <%= number_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id), step: "any", class: "input-medium" %>
+                <%= number_field_tag "retained_size_low", Ge::GeModel::display_size(previous_ev, current_ev, "low", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium" %>
               <% end %>
             </td>
           <% end %>
           <td>
             <% if (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
-              <%= hidden_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id), step: "any", class: "input-medium" %>
-              <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
+              <%= hidden_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id, @ge_model), step: "any", class: "input-medium" %>
+              <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
             <% else %>
-              <%= number_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id), step: "any", class: "input-medium" %>
+              <%= number_field_tag "retained_size_most_likely", Ge::GeModel::display_size(previous_ev, current_ev, "most_likely", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium" %>
             <% end %>
           </td>
           <% if @ge_model.three_points_estimation == true %>
             <td>
               <% if (!@ge_model.enabled_input || cannot?(:alter_estimation_plan, @project)) %>
-                <%= hidden_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id), step: "any", class: "input-medium" %>
-                <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
+                <%= hidden_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model), step: "any", class: "input-medium" %>
+                <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
               <% else %>
-                <%= number_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id), step: "any", class: "input-medium" %>
+                <%= number_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model), step: "any", class: "input-medium" %>
               <% end %>
             </td>
           <% end %>
@@ -223,10 +218,10 @@
           <% attr = @ge_model.output_pe_attribute %>
       <% end %>
 
-      <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id).first %>
+      <% ev = EstimationValue.where(:pe_attribute_id => attr.id, :module_project_id => current_module_project.id, in_out: "output").first %>
 
       <% theorical_effort_attr = PeAttribute.find_by_alias("theoretical_effort") %>
-      <% theorical_ev = EstimationValue.where(pe_attribute_id: theorical_effort_attr.id, module_project_id: current_module_project.id).last %>
+      <% theorical_ev = EstimationValue.where(pe_attribute_id: theorical_effort_attr.id, module_project_id: current_module_project.id, in_out: "output").last %>
 
       <% component_id = current_component.id %>
       <% ge_standard_unit_coefficient = @ge_model.standard_unit_coefficient.to_f %>
@@ -252,11 +247,11 @@
             <td>
               <% if (@ge_model.modify_theorical_effort && can?(:alter_estimation_plan, @project)) %>
                 <%###= number_field_tag "effort_low", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_low")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_low", class: "input-medium" %>
-                <%= number_field_tag "effort_low", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev.send("string_data_low")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_low", class: "input-medium" %>
+                <%= number_field_tag "effort_low", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev, ev.send("string_data_low")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_low", class: "input-medium" %>
               <% else %>
                 <%= hidden_field_tag "effort_low", (ev.nil? ? '' : ev.send("string_data_low")[component_id]) %>
                 <%###= number_field_tag "", convert_with_specific_precision(ev.nil? ? '' : ev.send("string_data_low")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_low",  class: "input-medium", disabled: true %>
-                <%= number_field_tag "", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev.send("string_data_low")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_low",  class: "input-medium", disabled: true %>
+                <%= number_field_tag "", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev, ev.send("string_data_low")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_low",  class: "input-medium", disabled: true %>
               <% end %>
             </td>
           <% end %>
@@ -268,11 +263,11 @@
                 <%#= number_field_tag "theorical_effort_most_likely", convert_with_specific_precision(theorical_ev.nil? ? '': theorical_ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_theorical_effort_most_likely", class: "input-medium" %>
                 <%#= label_tag "retenu" %>
                 <%####= number_field_tag "effort_most_likely", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_likely", class: "input-medium" %>
-                <%= number_field_tag "effort_most_likely", ev.nil? ? '': convert_with_standard_unit_coefficient(ev.send("string_data_most_likely")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_likely", class: "input-medium" %>
+                <%= number_field_tag "effort_most_likely", ev.nil? ? '': convert_with_standard_unit_coefficient(ev, ev.send("string_data_most_likely")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_likely", class: "input-medium" %>
             <% else %>
               <%= hidden_field_tag "effort_most_likely", (ev.nil? ? '' : ev.send("string_data_most_likely")[component_id]) %>
               <%###= number_field_tag "", convert_with_specific_precision(ev.nil? ? '' : ev.send("string_data_most_likely")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_likely",  class: "input-medium", disabled: true %>
-              <%= number_field_tag "", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev.send("string_data_most_likely")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_likely",  class: "input-medium", disabled: true %>
+              <%= number_field_tag "", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev, ev.send("string_data_most_likely")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_likely",  class: "input-medium", disabled: true %>
             <% end %>
           </td>
 
@@ -280,11 +275,11 @@
             <td>
               <% if (@ge_model.modify_theorical_effort && can?(:alter_estimation_plan, @project)) %>
                 <%#= number_field_tag "effort_high", convert_with_specific_precision(ev.nil? ? '': ev.send("string_data_high")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium" %>
-                <%= number_field_tag "effort_high", ev.nil? ? '': convert_with_standard_unit_coefficient(ev.send("string_data_high")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium" %>
+                <%= number_field_tag "effort_high", ev.nil? ? '': convert_with_standard_unit_coefficient(ev, ev.send("string_data_high")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium" %>
               <% else %>
                 <%= hidden_field_tag "effort_high", (ev.nil? ? '' : ev.send("string_data_high")[component_id]) %>
                 <%###= number_field_tag "", convert_with_specific_precision(ev.nil? ? '' : ev.send("string_data_high")[component_id], @project.organization, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium", disabled: true %>
-                <%= number_field_tag "", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev.send("string_data_high")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium", disabled: true %>
+                <%= number_field_tag "", ev.nil? ? '' : convert_with_standard_unit_coefficient(ev, ev.send("string_data_high")[component_id], @ge_model.standard_unit_coefficient, user_number_precision), step: "any", id: "number_effort_most_high",  class: "input-medium", disabled: true %>
               <% end %>
             </td>
           <% end %>
