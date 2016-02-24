@@ -74,9 +74,9 @@ class Guw::GuwComplexitiesController < ApplicationController
 
   def destroy
     @guw_complexity = Guw::GuwComplexity.find(params[:id])
-    @guw_model = @guw_complexity.guw_type.guw_model
+    @guw_type = @guw_complexity.guw_type
+    @guw_model = @guw_type.guw_model
     @guw_complexity.delete
-    redirect_to guw.guw_model_path(@guw_model)
 
     if @guw_model.default_display == "list"
       redirect_to guw.guw_type_path(@guw_type)
