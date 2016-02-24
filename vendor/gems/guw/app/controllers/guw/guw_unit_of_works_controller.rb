@@ -295,10 +295,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     guw_unit_of_work.size = final_value.to_f *
         (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
         (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
         tcplx_value
-
-    # guw_unit_of_work.save
 
     if guw_unit_of_work.guw_type.allow_retained == false
       guw_unit_of_work.size == guw_unit_of_work.ajusted_size
@@ -329,12 +326,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     guw_unit_of_work.effort =  guw_unit_of_work.ajusted_size.nil? ? 1 : guw_unit_of_work.ajusted_size *
         (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
         tcplx_value
 
     guw_unit_of_work.cost = guw_unit_of_work.ajusted_size.nil? ? 1 : guw_unit_of_work.ajusted_size *
         (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*)) *
-        (tcplx.nil? ? 1 : (tcplx.coefficient.nil? ? 1 : tcplx.coefficient.to_f)) *
         tcplx_value
 
     guw_unit_of_work.save
@@ -447,10 +442,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
       if guw_unit_of_work.guw_complexity.nil?
         final_value = 0
       else
-        final_value = (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+        weight = (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
+        if guw_unit_of_work.guw_complexity.enable_value == false
+          final_value = weight
+        else
+          final_value = ((guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely +  guw_unit_of_work.result_high) / 6) * weight
+        end
       end
-
-      # calculate_attributes(guw_unit_of_work, guw_factor, guw_weighting, guw_work_unit, tcplx, final_value, @guw_model)
 
       complexity_work_unit = Guw::GuwComplexityWorkUnit.where(guw_complexity_id: guw_unit_of_work.guw_complexity,
                                                               guw_work_unit_id: guw_work_unit).first
@@ -489,35 +487,6 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) *
           (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*)) *
           tcplx_value
-
-      # type_attribute_array = []
-      # effort_array_value = []
-      # cost_array_value = []
-      # size_array_value = []
-      #
-      # ["effort", "size", "cost"].each do |ta|
-      #   Guw::GuwScaleModuleAttribute.where(guw_model_id: @guw_model, type_attribute: ta).each do |gsma|
-      #     type_attribute_array << gsma
-      #   end
-      # end
-      #
-      # type_attribute_array.map(&:type_attribute)
-      # type_attribute_array.map(&:type_scale)
-      #
-      # type_attribute_array.each do |taa|
-      #   cts = eval("complexity_#{taa.type_scale}")
-      #   eval("#{taa.type_attribute}_array_value") << (cts.nil? ? 1 : (cts.value.nil? ? 1 : cts.value))
-      # end
-      #
-      # if guw_unit_of_work.guw_complexity.nil?
-      #   @weight_pert = 0
-      # else
-      #   @weight_pert = (tcplx.nil? ? 1 : tcplx.coefficient.to_f) * (guw_unit_of_work.guw_complexity.weight.nil? ? 1 : guw_unit_of_work.guw_complexity.weight.to_f)
-      # end
-      #
-      # guw_unit_of_work.effort = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*))
-      # guw_unit_of_work.cost = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (cost_array_value.inject(&:*).nil? ? 1 : cost_array_value.inject(&:*))
-      # guw_unit_of_work.size = @weight_pert * (guw_unit_of_work.quantity.nil? ? 1 : guw_unit_of_work.quantity.to_f) * (size_array_value.inject(&:*).nil? ? 1 : size_array_value.inject(&:*))
 
       if guw_unit_of_work.guw_type.allow_retained == false
         guw_unit_of_work.ajusted_size = guw_unit_of_work.size
@@ -570,25 +539,25 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.save
   end
 
-  def change_operation
-    @guw_model = current_module_project.guw_model
-    @guw_work_unit = Guw::GuwWorkUnit.find(params[:guw_work_unit_id])
-    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
-    @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
-    @guw_unit_of_work.effort = nil
-    @guw_unit_of_work.guw_complexity_id = nil
-    @guw_unit_of_work.save
-  end
-
-  def change_technology
-    @guw_model = current_module_project.guw_model
-    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
-    @organization_technology = OrganizationTechnology.find(params[:guw_technology_id])
-    @guw_unit_of_work.organization_technology_id = @organization_technology.id
-    @guw_unit_of_work.effort = nil
-    @guw_unit_of_work.guw_complexity_id = nil
-    @guw_unit_of_work.save
-  end
+  # def change_operation
+  #   @guw_model = current_module_project.guw_model
+  #   @guw_work_unit = Guw::GuwWorkUnit.find(params[:guw_work_unit_id])
+  #   @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+  #   @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
+  #   # @guw_unit_of_work.effort = nil
+  #   # @guw_unit_of_work.guw_complexity_id = nil
+  #   @guw_unit_of_work.save
+  # end
+  #
+  # def change_technology
+  #   @guw_model = current_module_project.guw_model
+  #   @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+  #   @organization_technology = OrganizationTechnology.find(params[:guw_technology_id])
+  #   @guw_unit_of_work.organization_technology_id = @organization_technology.id
+  #   @guw_unit_of_work.effort = nil
+  #   @guw_unit_of_work.guw_complexity_id = nil
+  #   @guw_unit_of_work.save
+  # end
 
   def change_technology_form
     @guw_model = current_module_project.guw_model
