@@ -55,6 +55,7 @@ module Ge
       end
     end
 
+    # display input size or effort according to pe_attribute
     def self.display_size(p, c, level, component_id, ge_model)
       begin
         if c.send("string_data_#{level}")[component_id].nil?

@@ -1456,3 +1456,7 @@ it:
   product: "Product"
   order: "Order"
   widget_type: "Widget type"
+  enter_size_in: "Input size (%{parameter})"
+  enter_effort_in: "Input effort (%{parameter})"
+  cal_size_for: "Calculated size (%{parameter})"
+  cal_effort_for: "Calculated effort (%{parameter})"

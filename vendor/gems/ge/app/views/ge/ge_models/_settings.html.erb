@@ -125,16 +125,24 @@
   <br>
   <div class="row-fluid">
     <div class="span6">
-      <h4>
-        <b>
-          <%= I18n.t :enter_size_in, parameter: @ge_model.size_unit %>
-        </b>
-      </h4>
 
       <% attr = PeAttribute.find_by_alias("retained_size") %>
       <% unless @ge_model.input_pe_attribute.nil? %>
-        <% attr = @ge_model.input_pe_attribute %>
+          <% attr = @ge_model.input_pe_attribute %>
       <% end %>
+
+      <h4>
+        <b>
+          <% case attr.alias %>
+            <% when "retained_size" %>
+              <%= I18n.t :enter_size_in, parameter: @ge_model.size_unit %>
+            <% when "effort" %>
+              <%= I18n.t :enter_effort_in, parameter: @ge_model.effort_unit %>
+            <% else %>
+              <%= I18n.t :enter_size_in, parameter: @ge_model.size_unit %>
+          <% end %>
+        </b>
+      </h4>
 
       <!-- Find all previous MP that has the attribute -->
       <% possible_module_projects = [] %>
@@ -154,7 +162,6 @@
                                               :module_project_id => possible_module_projects.last.id,
                                               :in_out => "output") %>
       <%# end %>
-
       <!-- Fin -->
 
 
@@ -229,7 +236,14 @@
       <h4>
         <b>
           <%#= I18n.t(:cal_effort_for, parameter: convert_label(ev.nil? ? '': ev.send("string_data_probable")[component_id], @project.organization))%>
-          <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
+          <% case attr.alias %>
+          <% when "retained_size" %>
+              <%= I18n.t(:cal_size_for, parameter: @ge_model.size_unit)%>
+          <% when "effort" %>
+              <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
+          <% else %>
+              <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
+          <% end %>
         </b>
       </h4>
       <table class="table table-condensed table-striped">

@@ -1871,3 +1871,5 @@ fr:
   product: "Produit"
   order: "Ordre"
   widget_type: "Type de vignette"
+  enter_effort_in: "Effort en entrée (en %{parameter})"
+  cal_size_for: "Taille calculée (en %{parameter})"
