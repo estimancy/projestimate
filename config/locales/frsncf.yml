@@ -1636,7 +1636,7 @@ frsncf:
   thresold_name: "Nom du seuil"
   default_value: "Valeur par défaut"
   complexity_threshold_of: "Seuils de complexité de %{parameter}"
-  Changing_of_the_size_enter: "Modification de la taille calculé (retenu)"
+  Changing_of_the_size_enter: "Modification de la taille calculée (retenue)"
   Changing_of_the_effort_enter: "Modification de l'effort autorisée"
   Changing_the_quantity_enter: "Activation de la quantité d'UO"
   Changing_the_complexity_enter: "Modification manuelle de la complexité de l'UO"
