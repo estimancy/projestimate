@@ -7,11 +7,6 @@
     </li>
     <% unless @guw_model.new_record? %>
       <li>
-        <a href="#tabs-matrix">
-          Matrice des attributs / facteurs
-        </a>
-      </li>
-      <li>
         <a href="#tabs-attributs">
           Gérer les attributs
         </a>
@@ -19,6 +14,11 @@
       <li>
         <a href="#tabs-factors">
           Gérer les facteurs d'ajustements
+        </a>
+      </li>
+      <li>
+        <a href="#tabs-matrix">
+          Matrice des sorties / facteurs
         </a>
       </li>
     <% end %>
@@ -58,8 +58,6 @@
 
       <% unless @guw_model.new_record? %>
         <div class="span6">
-          <%= link_to I18n.t(:manage_the_attribute), guw.guw_model_guw_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
-          <%= link_to "Matrice des attributs / facteurs", guw.guw_model_scale_module_attributes_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
           <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
           <%= link_to "Voir le modèle", guw.guw_model_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
         </div>
@@ -97,7 +95,7 @@
         <table class="table table-bordered">
           <tr>
             <th></th>
-            <% ["Attribut de taille", "Attribut d'effort", "Attribut de coût"].each do |ta| %>
+            <% ["Sortie de taille", "Sortie d'effort", "Sortie de coût"].each do |ta| %>
               <th><%= ta %></th>
             <% end %>
           </tr>
@@ -107,7 +105,7 @@
             <tr>
               <td>
                 <b>
-                  <%= ts[0].to_s.humanize %>
+                  <%= ts[0].to_s %>
                 </b>
               </td>
               <% ["size", "effort", "cost"].each do |ta| %>

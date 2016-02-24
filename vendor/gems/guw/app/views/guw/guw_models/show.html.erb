@@ -54,6 +54,7 @@
         </h4>
 
         <%= form_tag guw_complexity_work_units_save_complexity_work_units_path do %>
+          <%= hidden_field_tag :guw_type_id, guw_type.id %>
           <table class="table table-bordered table-condensed">
             <tr>
               <th></th>
@@ -267,7 +268,7 @@
                     <td class="align-center">
                       <%= text_field_tag "bottom[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.bottom_range, class: "input-mini" %>
                       <%= text_field_tag "top[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.top_range, class: "input-mini" %>
-                      <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.value, class: "input-mini" %>
+                      <%= text_field_tag "coefficient[#{guw_attribute.id}][#{type_complexity.id}]", ac.nil? ? '' : ac.value, class: "input-mini" %>
                     </td>
                   <% end %>
                 </tr>

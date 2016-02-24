@@ -134,6 +134,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
   def save_comments
     @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:comments].keys.first)
+    @guw_unit_of_work.name = params[:name].values.first
     @guw_unit_of_work.comments = params[:comments].values.first
     @guw_unit_of_work.tracking = params[:trackings].values.first
     @guw_unit_of_work.save
@@ -618,19 +619,19 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @group_number_of_unit_of_works = Guw::GuwUnitOfWork.where(guw_unit_of_work_group_id: @group.id,
                                                               pbs_project_element_id: current_component.id,
                                                               module_project_id: current_module_project.id,
-                                                              guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                              guw_model_id: @guw_unit_of_work.guw_model.id).map(&:quantity).compact.sum
 
     @group_selected_of_unit_of_works = Guw::GuwUnitOfWork.where(selected: true,
                                                                 guw_unit_of_work_group_id: @group.id,
                                                                 pbs_project_element_id: current_component.id,
                                                                 module_project_id: current_module_project.id,
-                                                                guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                                guw_model_id: @guw_unit_of_work.guw_model.id).map(&:quantity).compact.sum
 
     @group_flagged_unit_of_works = Guw::GuwUnitOfWork.where(flagged: true,
                                                             guw_unit_of_work_group_id: @group.id,
                                                             pbs_project_element_id: current_component.id,
                                                             module_project_id: current_module_project.id,
-                                                            guw_model_id: @guw_unit_of_work.guw_model.id).size
+                                                            guw_model_id: @guw_unit_of_work.guw_model.id).map(&:quantity).compact.sum
 
 
     #For all unit of work

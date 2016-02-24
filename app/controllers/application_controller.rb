@@ -30,14 +30,6 @@ class ApplicationController < ActionController::Base
 
   if Rails.env == "production"
 
-    # rescue_from CanCan::AccessDenied do |exception|
-    #   flash[:error] = I18n.t(:error_access_denied)
-    #   begin
-    #     redirect_to :back
-    #   rescue
-    #     redirect_to root_path
-    #   end
-    # end
     rescue_from StandardError do |exception|
       if exception.class == CanCan::AccessDenied
         flash[:error] = I18n.t(:error_access_denied)
