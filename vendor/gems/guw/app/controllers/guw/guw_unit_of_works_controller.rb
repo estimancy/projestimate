@@ -765,27 +765,27 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     #Save effective size (or weight) of uo
     # guw_unit_of_work.guw_work_unit_id = guw_work_unit.id
 
-    if (guw_unit_of_work.result_low.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
+    if (guw_unit_of_work.result_low.to_f >= guw_c.bottom_range) and (guw_unit_of_work.result_low.to_i < guw_c.top_range)
       if guw_c.enable_value == false
         uo_weight_low = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
-        uo_weight_low = guw_unit_of_work.result_low.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_low = guw_unit_of_work.result_low.to_f * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
-    if (guw_unit_of_work.result_most_likely.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
+    if (guw_unit_of_work.result_most_likely.to_f >= guw_c.bottom_range) and (guw_unit_of_work.result_most_likely.to_i < guw_c.top_range)
       if guw_c.enable_value == false
         uo_weight_ml = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
-        uo_weight_ml = guw_unit_of_work.result_most_likely.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_ml = guw_unit_of_work.result_most_likely.to_f * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
-    if (guw_unit_of_work.result_high.to_i >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
+    if (guw_unit_of_work.result_high.to_f >= guw_c.bottom_range) and (guw_unit_of_work.result_high.to_i < guw_c.top_range)
       if guw_c.enable_value == false
         uo_weight_high = guw_c.weight.nil? ? 1 : guw_c.weight.to_f
       else
-        uo_weight_high = guw_unit_of_work.result_high.to_i * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
+        uo_weight_high = guw_unit_of_work.result_high.to_f * (guw_c.weight.nil? ? 1 : guw_c.weight.to_f)
       end
     end
 
