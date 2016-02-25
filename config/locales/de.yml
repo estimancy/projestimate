@@ -1462,3 +1462,7 @@ de:
   enter_effort_in: "Input effort (%{parameter})"
   cal_size_for: "Calculated size (%{parameter})"
   cal_effort_for: "Calculated effort (%{parameter})"
+  label_add_new_widget_comment: "Add new comment"
+  widget_comment: "Comment"
+  new_widget_comment: "New comment"
+  update_widget_comment: "Update comment"

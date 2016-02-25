@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160219161628) do
+ActiveRecord::Schema.define(:version => 20160225125011) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -470,24 +470,26 @@ ActiveRecord::Schema.define(:version => 20160219161628) do
   end
 
   create_table "ge_ge_models", :force => true do |t|
-    t.string  "name"
-    t.text    "description"
-    t.float   "coeff_a"
-    t.float   "coeff_b"
-    t.integer "organization_id"
-    t.string  "effort_unit"
-    t.boolean "three_points_estimation"
-    t.float   "standard_unit_coefficient"
-    t.string  "size_unit"
-    t.boolean "enabled_input"
-    t.boolean "modify_theorical_effort"
-    t.integer "copy_id"
-    t.integer "copy_number",               :default => 0
-    t.string  "p_calculation_method"
-    t.string  "s_calculation_method"
-    t.string  "c_calculation_method"
-    t.integer "input_pe_attribute_id"
-    t.integer "output_pe_attribute_id"
+    t.string   "name"
+    t.text     "description"
+    t.float    "coeff_a"
+    t.float    "coeff_b"
+    t.integer  "organization_id"
+    t.string   "effort_unit"
+    t.boolean  "three_points_estimation"
+    t.float    "standard_unit_coefficient"
+    t.string   "size_unit"
+    t.boolean  "enabled_input"
+    t.boolean  "modify_theorical_effort"
+    t.integer  "copy_id"
+    t.integer  "copy_number",               :default => 0
+    t.string   "p_calculation_method"
+    t.string   "s_calculation_method"
+    t.string   "c_calculation_method"
+    t.integer  "input_pe_attribute_id"
+    t.integer  "output_pe_attribute_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "groups", :force => true do |t|
@@ -774,15 +776,17 @@ ActiveRecord::Schema.define(:version => 20160219161628) do
   end
 
   create_table "kb_kb_models", :force => true do |t|
-    t.string  "name"
-    t.boolean "three_points_estimation"
-    t.boolean "enabled_input"
-    t.integer "organization_id"
-    t.float   "standard_unit_coefficient"
-    t.string  "effort_unit"
-    t.text    "selected_attributes"
-    t.integer "copy_number"
-    t.integer "copy_id"
+    t.string   "name"
+    t.boolean  "three_points_estimation"
+    t.boolean  "enabled_input"
+    t.integer  "organization_id"
+    t.float    "standard_unit_coefficient"
+    t.string   "effort_unit"
+    t.text     "selected_attributes"
+    t.integer  "copy_number"
+    t.integer  "copy_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "labor_categories", :force => true do |t|
@@ -875,15 +879,17 @@ ActiveRecord::Schema.define(:version => 20160219161628) do
   end
 
   create_table "operation_operation_models", :force => true do |t|
-    t.string  "name"
-    t.boolean "three_points_estimation"
-    t.boolean "enabled_input"
-    t.integer "organization_id"
-    t.string  "effort_unit"
-    t.integer "standard_unit_coefficient"
-    t.string  "operation_type"
-    t.integer "copy_id"
-    t.integer "copy_number"
+    t.string   "name"
+    t.boolean  "three_points_estimation"
+    t.boolean  "enabled_input"
+    t.integer  "organization_id"
+    t.string   "effort_unit"
+    t.integer  "standard_unit_coefficient"
+    t.string   "operation_type"
+    t.integer  "copy_id"
+    t.integer  "copy_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "organization_labor_categories", :force => true do |t|
@@ -1632,6 +1638,7 @@ ActiveRecord::Schema.define(:version => 20160219161628) do
     t.boolean  "show_wbs_activity_ratio"
     t.boolean  "from_initial_view"
     t.boolean  "is_label_widget"
+    t.text     "comment"
   end
 
   create_table "wbs_activities", :force => true do |t|

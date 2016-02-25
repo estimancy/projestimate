@@ -2,12 +2,12 @@
     <% when 'filter_projects_version' %>
         $("#projects").html("<%=raw j(render :partial => 'projects/projects', :object => [@organization, @projects]) %>");
     <% when 'filter_organization_projects_version' %>
-        $("#organization_projects").html("<%=raw j(render :partial => 'organizations/organization_projects', object: [@organization, @projects] ) %>");
+        $("#organization_projects").html("<%=raw j(render :partial => 'organizations/organization_projects', object: [@organization, @projects]) %>");
     <% when 'filter_user_projects_version' %>
         $("#user_projects").html("<%=raw j(render :partial => 'users/user_projects', :locals => {:projects => @projects, :project_users => current_user.projects}) %>");
     <% when 'filter_group_projects_version' %>
         <% @group = Group.find(params[:group_id])  %>
-        $("#group_projects").html("<%=raw j(render :partial => 'groups/group_projects', :locals => {:projects => @projects, :group => @group} ) %>");
+        $("#group_projects").html("<%=raw j(render :partial => 'groups/group_projects', :locals => {:projects => @projects, :group => @group}) %>");
 <% end %>
 
 

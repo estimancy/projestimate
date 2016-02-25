@@ -1,4 +1,9 @@
 <h4 class="ui-widget">&nbsp;<i class="icon-plus icon-large"></i>&nbsp;<b><%= I18n.t(:add_widget_on_view) %> </b></h4>
 <div>
-  <%= render 'form' %>
+  <% if params[:is_label_widget] == "true"  %>
+    <%= render 'comment_form' %>
+  <% else %>
+    <%= render 'form' %>
+  <% end %>
+
 </div>
