@@ -17,14 +17,14 @@
           <!--<tr><td><%#= f.association :widget, label: I18n.t(:label_widget) %></td></tr>-->
           <tr>
             <td><%= f.input :name, label: I18n.t(:name) %></td>
-          </tr>
-          <tr>
             <td>
-              <!--<label class="checkbox"></label>-->
+              <label class="checkbox"></label>
               <%= f.input :show_name, label: I18n.t(:show_name) %>
             </td>
-              <td><%= f.input :is_label_widget, label: I18n.t(:Is_it_of_a_title_thumbnail), disabled: !@views_widget.new_record? %></td>
           </tr>
+          <!--<tr>-->
+              <!--<td><%#= f.input :is_label_widget, label: I18n.t(:Is_it_of_a_title_thumbnail), disabled: !@views_widget.new_record? %></td>-->
+          <!--</tr>-->
           <tr>
             <td><%= f.association :pbs_project_element, label: I18n.t(:associate_pbs_element), collection: @project_pbs_project_elements, selected: @pbs_project_element_id, include_blank: false, input_html:{class: "inline_attr"}  %></td>
             <td>
@@ -36,7 +36,7 @@
             </td>
           </tr>
           <tr>
-            <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, include_blank: false, input_html:{class: "inline_attr"} %></td>
+            <td><%= f.input :widget_type, collection: @views_widget_types, as: :grouped_select, group_method: :last, :group_label_method => :first, :label => I18n.t(:widget_type), include_blank: false, input_html:{class: "inline_attr"} %></td>
             <td><%= f.input :estimation_value_id, collection: @module_project_attributes, as: :grouped_select, group_method: :last, group_label_method: :first, label: I18n.t(:associated_attribute), input_html:{class: "inline_attr"}, include_blank: false %></td>
           </tr>
           <tr>

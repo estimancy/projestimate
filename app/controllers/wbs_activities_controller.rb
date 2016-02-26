@@ -50,9 +50,14 @@ class WbsActivitiesController < ApplicationController
     #now only the selected profiles from the WBS'organization profiles list will be used
     @wbs_organization_profiles = @wbs_activity_organization.nil? ? [] : @wbs_activity.organization_profiles  #@wbs_activity_organization.organization_profiles
 
-    wbs_activity_elements_list = WbsActivityElement.where(:wbs_activity_id => @wbs_activity_ratio.wbs_activity.id).all
-    @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list)
-    @wbs_activity_ratio_elements = @wbs_activity_ratio.wbs_activity_ratio_elements.all#.joins(:wbs_activity_element).order("abs(wbs_activity_elements.dotted_id) ASC").all
+    @wbs_activity_elements_list = WbsActivityElement.where(:wbs_activity_id => @wbs_activity_ratio.wbs_activity.id).all
+    ###@wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list)
+    ###@wbs_activity_elements = WbsActivityElement.sort_by_ancestry(wbs_activity_elements_list.arrange(order: :position))
+    @wbs_activity_elements = @wbs_activity_elements_list.first.root.descendants.arrange(:order => :position)
+
+    ###@wbs_activity_ratio_elements = @wbs_activity_ratio.wbs_activity_ratio_elements.all#.joins(:wbs_activity_element).order("abs(wbs_activity_elements.dotted_id) ASC").all
+    ratio_elements = @wbs_activity_ratio.wbs_activity_ratio_elements.joins(:wbs_activity_element).arrange(order: 'position')
+    @wbs_activity_ratio_elements = WbsActivityRatioElement.sort_by_ancestry(ratio_elements)
 
     @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
   end
@@ -78,10 +83,16 @@ class WbsActivitiesController < ApplicationController
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => main_app.organization_estimations_path(@organization), I18n.t(:wbs_modules) => main_app.organization_module_estimation_path(@organization, anchor: "activite"), @wbs_activity.name => ""
 
     @wbs_activity_elements_list = @wbs_activity.wbs_activity_elements
-    @wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
-    #====
-    #@wbs_activity_elements = @wbs_activity_elements_list.first.root.descendants.arrange(:order => :dotted_id)  #WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
-    #====
+    #@wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list)
+    @wbs_activity_elements = @wbs_activity_elements_list.first.root.descendants.arrange(:order => :position)
+
+    #==== Test
+    #@wbs_activity_elements = @wbs_activity_elements_list.first.root.descendants.arrange(:order => :dotted_id)
+    #@wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list.arrange(:order => :dotted_id))
+    #@wbs_activity_elements  = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list.arrange(:order => :dotted_id)).sort { |x,y| x.dotted_id.to_i <=> y.dotted_id.to_i }
+    #@wbs_activity_elements = WbsActivityElement.sort_by_ancestry(@wbs_activity_elements_list.arrange(order: :position))
+    #==== Fin test
+
     @wbs_activity_ratios = @wbs_activity.wbs_activity_ratios
 
     unless @wbs_activity_ratios.empty?
@@ -91,7 +102,9 @@ class WbsActivitiesController < ApplicationController
 
     @wbs_activity_ratio_elements = []
     unless @wbs_activity.wbs_activity_ratios.empty?
-      @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements.all
+      ###@wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements.all
+      ratio_elements = @wbs_activity_ratios.first.wbs_activity_ratio_elements.joins(:wbs_activity_element).arrange(order: 'position')
+      @wbs_activity_ratio_elements = WbsActivityRatioElement.sort_by_ancestry(ratio_elements)
 
       @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
     else
@@ -110,7 +123,9 @@ class WbsActivitiesController < ApplicationController
     @organization_id = @wbs_activity_organization.id
 
     unless @wbs_activity.wbs_activity_ratios.empty?
-      @wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements
+      ###@wbs_activity_ratio_elements = @wbs_activity.wbs_activity_ratios.first.wbs_activity_ratio_elements
+      ratio_elements = @wbs_activity_ratios.first.wbs_activity_ratio_elements.joins(:wbs_activity_element).arrange(order: 'position')
+      @wbs_activity_ratio_elements = WbsActivityRatioElement.sort_by_ancestry(ratio_elements)
     end
 
     #check if wbs selected profiles has changed

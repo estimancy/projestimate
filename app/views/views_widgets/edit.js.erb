@@ -1,5 +1,9 @@
 $("#notifications").html("");
-$(".modal-body-inner").html("<%= j render(:partial => "views_widgets/form") %>");
+<% if @views_widget.is_label_widget? %>
+    $(".modal-body-inner").html("<%= j render(:partial => "views_widgets/comment_form") %>");
+<% else %>
+    $(".modal-body-inner").html("<%= j render(:partial => "views_widgets/form") %>");
+<% end %>
 
 $("#myModalLabel").css('font-size', 'larger');
 $("#myModalLabel").html('<%= "#{@views_widget.view.name} : #{I18n.t(:edit_widget, value: @views_widget.name)}" %>');

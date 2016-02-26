@@ -62,17 +62,6 @@ class WbsActivityElementsController < ApplicationController
     @wbs_activity = @wbs_activity_element.wbs_activity
     @potential_parents = @wbs_activity.wbs_activity_elements
 
-    #If we are on local instance, Status is set to "Local"
-    #if @wbs_activity_element.is_root
-    #  if is_master_instance?   #so not on master
-    #    @wbs_activity_element.record_status = @proposed_status
-    #  else
-    #    @wbs_activity_element.record_status = @local_status
-    #  end
-    #else
-    #  @wbs_activity_element.record_status = @wbs_activity_element.parent.record_status
-    #end
-
     if @wbs_activity_element.save
       @wbs_activity.wbs_activity_ratios.each do |wbs_activity_ratio|
         @wbs_activity_ratio_element = WbsActivityRatioElement.new(:ratio_value => nil,

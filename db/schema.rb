@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160224104508) do
+ActiveRecord::Schema.define(:version => 20160225125011) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -458,14 +458,15 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
 
   create_table "ge_ge_inputs", :force => true do |t|
     t.string   "formula"
-    t.float    "scale_factor_sum"
-    t.float    "prod_factor_product"
+    t.float    "s_factors_value"
+    t.float    "p_factors_value"
+    t.float    "c_factors_value"
     t.text     "values"
     t.integer  "ge_model_id"
     t.integer  "module_project_id"
     t.integer  "organization_id"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "ge_ge_models", :force => true do |t|
@@ -485,6 +486,8 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.string   "p_calculation_method"
     t.string   "s_calculation_method"
     t.string   "c_calculation_method"
+    t.integer  "input_pe_attribute_id"
+    t.integer  "output_pe_attribute_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -657,14 +660,14 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_technology_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.integer  "guw_model_id"
     t.integer  "copy_id"
     t.boolean  "allow_quantity"
-    t.boolean  "allow_retained"
+    t.boolean  "allow_retained",             :default => true
     t.boolean  "allow_complexity"
-    t.boolean  "allow_criteria"
+    t.boolean  "allow_criteria",             :default => true
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
@@ -1584,7 +1587,7 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2016-11-25 14:37:58'
+    t.datetime "subscription_end_date",  :default => '2017-01-12 10:03:08'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
@@ -1635,6 +1638,7 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.boolean  "show_wbs_activity_ratio"
     t.boolean  "from_initial_view"
     t.boolean  "is_label_widget"
+    t.text     "comment"
   end
 
   create_table "wbs_activities", :force => true do |t|
@@ -1682,6 +1686,7 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.integer  "copy_id"
     t.boolean  "is_root"
     t.string   "master_ancestry"
+    t.float    "position"
   end
 
   add_index "wbs_activity_elements", ["ancestry"], :name => "index_wbs_activity_elements_on_ancestry"
@@ -1711,8 +1716,10 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.boolean  "multiple_references"
+    t.string   "ancestry"
   end
 
+  add_index "wbs_activity_ratio_elements", ["ancestry"], :name => "index_wbs_activity_ratio_elements_on_ancestry"
   add_index "wbs_activity_ratio_elements", ["owner_id"], :name => "index_wbs_activity_ratio_elements_on_owner_id"
 
   create_table "wbs_activity_ratio_profiles", :force => true do |t|
@@ -1721,7 +1728,10 @@ ActiveRecord::Schema.define(:version => 20160224104508) do
     t.float    "ratio_value"
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.string   "ancestry"
   end
+
+  add_index "wbs_activity_ratio_profiles", ["ancestry"], :name => "index_wbs_activity_ratio_profiles_on_ancestry"
 
   create_table "wbs_activity_ratios", :force => true do |t|
     t.string   "uuid"

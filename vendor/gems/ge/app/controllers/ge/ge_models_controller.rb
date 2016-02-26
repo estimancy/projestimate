@@ -538,7 +538,7 @@ class Ge::GeModelsController < ApplicationController
       #prod_factor_product = 1.0
       #conversion_factor_product = 1.0
 
-      #======= Calculate coefficients according to the select operation method
+      #= Calculate coefficients according to the select operation method
       #default calculations methods operators for each type of factor
       p_calculation_operator = "*"
       c_calculation_operator = "*"
@@ -579,7 +579,6 @@ class Ge::GeModelsController < ApplicationController
         else
           scale_factor_sum = 0.0
       end
-      #===
 
       scale_factors = params["S_factor"] || []
       prod_factors = params["P_factor"]  || []
@@ -762,56 +761,152 @@ class Ge::GeModelsController < ApplicationController
       #Update GeInput
       @formula = "#{prod_factor_product.to_f} (X * #{conversion_factor_product})^ #{scale_factor_sum.to_f}"
       @ge_input.formula = @formula
-      @ge_input.scale_factor_sum = scale_factor_sum
-      @ge_input.prod_factor_product = prod_factor_product
+      @ge_input.s_factors_value = scale_factor_sum
+      @ge_input.p_factors_value = prod_factor_product
+      @ge_input.c_factors_value = conversion_factor_product
       @ge_input.values = @ge_input_values
       @ge_input.save
     end
 
-    current_module_project.pemodule.attribute_modules.each do |am|
+    #===== TEST =================
+
+   #attribut d'entrée
+    input_pe_attribute = @ge_model.input_pe_attribute
+    if input_pe_attribute.nil?
+      input_pe_attribute = PeAttribute.where(alias: "retained_size").first
+    end
+    #attribut de sortie
+    output_pe_attribute = @ge_model.output_pe_attribute
+    if output_pe_attribute.nil?
+      output_pe_attribute = PeAttribute.where(alias: "effort").first
+    end
+
+
+    # Gestion des entrées
+    input_am = current_module_project.pemodule.attribute_modules
+    output_am = current_module_project.pemodule.attribute_modules
+
+    unless input_am.nil?
       tmp_prbl = Array.new
 
-      ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-      unless ev.nil?
+      input_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "input").first
+      unless input_ev.nil?
         ["low", "most_likely", "high"].each do |level|
-
           if @ge_model.three_points_estimation?
             size = params["retained_size_#{level}"].to_f
           else
             size = params["retained_size_most_likely"].to_f
           end
 
-          if am.pe_attribute.alias == "effort"
-            if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-              effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
-              @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
-              @ge_input.save
-            else
-              #The effort value will be calculated as : Effort = p * Taille^s
-              # with: s = sum of scale factors      and  p = multiply of prod factors
-              effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
-            end
-
-            ev.send("string_data_#{level}")[current_component.id] = effort
-            ev.save
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-
-          elsif am.pe_attribute.alias == "retained_size"
-            ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-            ev.send("string_data_#{level}")[current_component.id] = size
-            ev.save
-            tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-          end
+          input_ev.send("string_data_#{level}")[current_component.id] = size
+          input_ev.save
+          tmp_prbl << input_ev.send("string_data_#{level}")[current_component.id]
         end
 
         unless @ge_model.three_points_estimation?
           tmp_prbl[0] = tmp_prbl[1]
           tmp_prbl[2] = tmp_prbl[1]
         end
-
-        ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        input_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
+
+
+    # Gestion des sorties
+    unless output_am.nil?
+      tmp_prbl = Array.new
+
+      output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => output_pe_attribute.id, in_out: "output").first
+      unless output_ev.nil?
+        ["low", "most_likely", "high"].each do |level|
+          if @ge_model.three_points_estimation?
+            size = params["retained_size_#{level}"].to_f
+          else
+            size = params["retained_size_most_likely"].to_f
+          end
+
+          if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
+            taille = @ge_model.coeff_a * size ** @ge_model.coeff_b
+            effort = taille * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
+            @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
+            @ge_input.save
+          else
+            #The effort value will be calculated as : Effort = p * Taille^s
+            # with: s = sum of scale factors and  p = multiply of prod factors
+            taille = prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)
+            effort = taille * @ge_model.standard_unit_coefficient.to_f
+          end
+
+          output_calculated_value = effort
+          case output_ev.pe_attribute.alias
+            when "effort"
+              output_calculated_value = effort
+            when "retained_size"
+              output_calculated_value = taille
+          end
+          output_ev.send("string_data_#{level}")[current_component.id] = output_calculated_value
+          output_ev.save
+          tmp_prbl << output_ev.send("string_data_#{level}")[current_component.id]
+        end
+
+        unless @ge_model.three_points_estimation?
+          tmp_prbl[0] = tmp_prbl[1]
+          tmp_prbl[2] = tmp_prbl[1]
+        end
+        output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      end
+    end
+
+    #==========  FIN TEST  ============
+
+
+    # current_module_project.pemodule.attribute_modules.each do |am|
+    #   tmp_prbl = Array.new
+    #
+    #   ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+    #
+    #   unless ev.nil?
+    #     ["low", "most_likely", "high"].each do |level|
+    #
+    #       if @ge_model.three_points_estimation?
+    #         size = params["retained_size_#{level}"].to_f
+    #       else
+    #         size = params["retained_size_most_likely"].to_f
+    #       end
+    #
+    #       if am.pe_attribute.alias == "effort"
+    #
+    #         if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
+    #           effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
+    #           @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
+    #           @ge_input.save
+    #         else
+    #           #The effort value will be calculated as : Effort = p * Taille^s
+    #           # with: s = sum of scale factors      and  p = multiply of prod factors
+    #           effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
+    #         end
+    #
+    #         ev.send("string_data_#{level}")[current_component.id] = effort
+    #         ev.save
+    #         tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+    #
+    #       elsif am.pe_attribute.alias == "retained_size"
+    #         ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
+    #         ev.send("string_data_#{level}")[current_component.id] = size
+    #         ev.save
+    #         tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
+    #       end
+    #     end
+    #
+    #     unless @ge_model.three_points_estimation?
+    #       tmp_prbl[0] = tmp_prbl[1]
+    #       tmp_prbl[2] = tmp_prbl[1]
+    #     end
+    #
+    #     ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+    #   end
+    # end
+
 
     current_module_project.nexts.each do |n|
       ModuleProject::common_attributes(current_module_project, n).each do |ca|
@@ -826,134 +921,6 @@ class Ge::GeModelsController < ApplicationController
     current_module_project.views_widgets.each do |vw|
       ViewsWidget::update_field(vw, @current_organization, current_module_project.project, current_component)
     end
-    #end
-
-    redirect_to main_app.dashboard_path(@project)
-  end
-
-
-  #Save effort according to the selected factors values
-  def save_efforts_save
-    authorize! :execute_estimation_plan, @project
-
-    @ge_model = Ge::GeModel.find(params[:ge_model_id])
-    @ge_input = @ge_model.ge_inputs.where(module_project_id: current_module_project.id).first_or_create
-
-    if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
-      # Get factors values and save them in the GeInput table
-      # GeInput "values" attribute is serialize as an Array of Hash  ==> [ { :ge_factor_value_id => id, :scale_prod => val, :factor_name =>, :value => val }, {...}, ... ]
-      scale_factor_sum = 0.0
-      prod_factor_product = 1.0
-      conversion_factor_product = 1.0
-
-      scale_factors = params["S_factor"] || []
-      prod_factors = params["P_factor"]  || []
-      conversion_factors = params["C_factor"] || []
-
-      @ge_input_values = Hash.new
-      #Save Scale Factors data in GeInput table
-      scale_factors.each do |key, factor_value_id|
-        factor_value = Ge::GeFactorValue.find(factor_value_id)
-        unless factor_value.nil?
-          factor_value_number = factor_value.value_number
-          scale_factor_sum += factor_value_number
-          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
-          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
-        end
-      end
-
-      #Save Prod Factors multiplier data in GeInput table
-      prod_factors.each do |key, factor_value_id|
-        factor_value = Ge::GeFactorValue.find(factor_value_id)
-        unless factor_value.nil?
-          factor_value_number = factor_value.value_number
-          prod_factor_product *= factor_value_number
-          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
-          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
-        end
-      end
-
-      #Save Conversion Factors data in GeInput table
-      conversion_factors.each do |key, factor_value_id|
-        factor_value = Ge::GeFactorValue.find(factor_value_id)
-        unless factor_value.nil?
-          factor_value_number = factor_value.value_number
-          conversion_factor_product *= factor_value_number
-          value_per_factor = { :ge_factor_value_id => factor_value.id, :scale_prod => factor_value.factor_scale_prod, :factor_name => factor_value.factor_name, :value => factor_value_number }
-          @ge_input_values["#{factor_value.factor_alias}"] = value_per_factor
-        end
-      end
-
-
-      if scale_factor_sum == 0
-        scale_factor_sum = 1
-      end
-      #Update GeInput
-      @formula = "#{prod_factor_product.to_f} (X * #{conversion_factor_product})^ #{scale_factor_sum.to_f}"
-      @ge_input.formula = @formula
-      @ge_input.scale_factor_sum = scale_factor_sum
-      @ge_input.prod_factor_product = prod_factor_product
-      @ge_input.values = @ge_input_values
-      @ge_input.save
-    end
-
-    current_module_project.pemodule.attribute_modules.each do |am|
-      tmp_prbl = Array.new
-
-      ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-      ["low", "most_likely", "high"].each do |level|
-
-        if @ge_model.three_points_estimation?
-          size = params["retained_size_#{level}"].to_f
-        else
-          size = params["retained_size_most_likely"].to_f
-        end
-
-        if am.pe_attribute.alias == "effort"
-          if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-            effort = (@ge_model.coeff_a * size ** @ge_model.coeff_b) * @ge_model.standard_unit_coefficient  #Using "a" and "b"
-            @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
-            @ge_input.save
-          else
-            #The effort value will be calculated as : Effort = p * Taille^s
-            # with: s = sum of scale factors      and  p = multiply of prod factors
-            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
-          end
-
-          ev.send("string_data_#{level}")[current_component.id] = effort
-          ev.save
-          tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-
-        elsif am.pe_attribute.alias == "retained_size"
-          ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
-          ev.send("string_data_#{level}")[current_component.id] = size
-          ev.save
-          tmp_prbl << ev.send("string_data_#{level}")[current_component.id]
-        end
-      end
-
-      unless @ge_model.three_points_estimation?
-        tmp_prbl[0] = tmp_prbl[1]
-        tmp_prbl[2] = tmp_prbl[1]
-      end
-
-      ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-
-    end
-
-    current_module_project.nexts.each do |n|
-      ModuleProject::common_attributes(current_module_project, n).each do |ca|
-        ["low", "most_likely", "high"].each do |level|
-          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_#{level}", { current_component.id => nil } )
-          EstimationValue.where(:module_project_id => n.id, :pe_attribute_id => ca.id).first.update_attribute(:"string_data_probable", { current_component.id => nil } )
-        end
-      end
-    end
-
-    #@current_organization.fields.each do |field|
-      current_module_project.views_widgets.each do |vw|
-        ViewsWidget::update_field(vw, @current_organization, current_module_project.project, current_component)
-      end
     #end
 
     redirect_to main_app.dashboard_path(@project)

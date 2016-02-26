@@ -19,7 +19,6 @@
 
 $(document).ready(function() {
 
-
     //====================================================
 
     $(".module_project11").draggable({

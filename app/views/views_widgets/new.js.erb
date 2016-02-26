@@ -1,9 +1,17 @@
 
 $("#notifications").html("");
-$(".modal-body-inner").html("<%= j render(:partial => "views_widgets/form") %>");
 
-$("#myModalLabel").css('font-size', 'larger');
-$("#myModalLabel").html('<%= I18n.t(:new_widget) %>');
+<% if params[:is_label_widget] == "true" %>
+    $(".modal-body-inner").html("<%= j render(:partial => "views_widgets/comment_form") %>");
+    $("#myModalLabel").css('font-size', 'larger');
+    $("#myModalLabel").html('<%= I18n.t(:new_widget_comment) %>');
+
+<% else %>
+    $(".modal-body-inner").html("<%= j render(:partial => "views_widgets/form") %>");
+    $("#myModalLabel").css('font-size', 'larger');
+    $("#myModalLabel").html('<%= I18n.t(:new_widget) %>');
+<% end %>
+
 
 $("#edit_component").modal({
   keyboard: false,

@@ -21,6 +21,52 @@
 
 module WbsActivityElementsHelper
 
+  #Generate wbs activity tree with subtree
+  # element : is the root element or the subtree parent or simple wbs_activity_element
+  # activity_tree_hash: is an ordered hash
+  def generate_activity_as_subtree(element, activity_tree_hash, tree)
+    #Root is always display
+    tree ||= String.new
+    unless element.nil?
+      if element.is_root?
+        tree << "<ul style='margin-left:1px;' id='tree'>
+                   <li style='margin-left:-1px;'>
+                    <div class='block_label'>
+                        #{show_element_name(element)}
+                    </div>
+                    <div class='block_link'>
+                      #{ link_activity_element(element) }
+                    </div>
+                  </li>"
+      end
+
+      if element.has_children?
+        tree << "<ul class='sortable'>"
+        ###element.children.order("dotted_id ASC").each do |e|
+        #element.children.order("position ASC").each do |e|
+        unless activity_tree_hash.nil?
+          activity_tree_hash.each do |e, children|
+            tree << "
+                     <li style='margin-left:#{element.depth}px;' >
+                      <div class='block_label'>
+                        #{show_element_name(e)}
+                      </div>
+                      <div class='block_link'>
+                        #{ link_activity_element(e) }
+                      </div>
+                    </li>"
+
+            ###generate_activity_element_tree(e, tree)
+            generate_activity_as_subtree(e, children, tree)
+          end
+        end
+        tree << '</ul>'
+      end
+    end
+    tree
+  end
+
+
   #Generate tree of Activity Element (wbs_activities/:id/edit)
   def generate_activity_element_tree(element, tree)
     #Root is always display

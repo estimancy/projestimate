@@ -15,6 +15,7 @@
     <div id="tabs-1">
       <table>
         <%= f.input :title, :label => I18n.t(:label_project_name), :input_html => {:class => 'input-xxlarge', :autofocus => (controller.action_name == 'new')} %>
+        <%= f.input :version, :label => I18n.t('label_project_version'), :input_html => { :class => 'input-large' } %>
         <%= f.input :private, :label => I18n.t(:private_estimation) %>
         <tr>
           <% if action_name.in?(['new', 'create']) %>
@@ -65,7 +66,6 @@
             <% end %>
           </td>
 
-          <td><%= f.input :version, :label => I18n.t('label_project_version'), :input_html => { :class => 'input-large' } %></td>
         </tr>
 
         <tr>

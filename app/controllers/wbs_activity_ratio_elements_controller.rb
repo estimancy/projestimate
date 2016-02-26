@@ -77,7 +77,9 @@ class WbsActivityRatioElementsController < ApplicationController
     #keep current ratio
     @selected_ratio = wbs_activity_ratio
     # @wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements.all
-    @wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements.joins(:wbs_activity_element).order("abs(wbs_activity_elements.dotted_id) ASC").all
+    ###@wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements.joins(:wbs_activity_element).order("abs(wbs_activity_elements.dotted_id) ASC").all
+    ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements.joins(:wbs_activity_element).arrange(order: 'position')
+    @wbs_activity_ratio_elements = WbsActivityRatioElement.sort_by_ancestry(ratio_elements)
 
     #sum total ratio_value
     @total = @wbs_activity_ratio_elements.reject{|i| i.ratio_value.nil? or i.ratio_value.blank? }.compact.sum(&:ratio_value)
@@ -107,7 +109,9 @@ class WbsActivityRatioElementsController < ApplicationController
 
     #Select ratio and elements
     wbs_activity_ratio = WbsActivityRatio.find(params[:wbs_activity_ratio_id])
-    @wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements
+    ###@wbs_activity_ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements
+    ratio_elements = wbs_activity_ratio.wbs_activity_ratio_elements.joins(:wbs_activity_element).arrange(order: 'position')
+    @wbs_activity_ratio_elements = WbsActivityRatioElement.sort_by_ancestry(ratio_elements)
 
     @wbs_activity_ratio_elements.each do |activity|
       @wbs_organization_profiles.each do |profile|
