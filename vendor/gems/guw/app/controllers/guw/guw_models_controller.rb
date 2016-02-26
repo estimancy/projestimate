@@ -892,17 +892,7 @@ class Guw::GuwModelsController < ApplicationController
 
       @guw_model.guw_attributes.each_with_index do |guw_attribute, i|
         guowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: guw_attribute.id, guw_type_id: guow.guw_type.id).first
-        # unless finder.nil?
-        # sum_range = gac.guw_attribute_complexities.where(guw_type_id: guow.guw_type.id).map{|i| [i.bottom_range, i.top_range]}.flatten.compact
-        # unless sum_range.nil? || sum_range.blank? || sum_range == 0
-
-        # worksheet.add_cell(0, 14 + i, guw_attribute.name)
-        # worksheet.change_column_width(14, tab_size[14])
-        # worksheet.add_cell(ind, 15 + i, guowa.low.nil? ? "N/A" : guowa.low)
         worksheet.add_cell(ind, 16 + i, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
-        # worksheet.add_cell(ind, 17 + i, guowa.high.nil? ? "N/A" : guowa.high)
-        # end
-        # end
       end
 
     end
