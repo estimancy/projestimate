@@ -29,6 +29,7 @@ module Guw
     has_many :module_projects, dependent: :destroy
     has_many :guw_weightings, dependent: :destroy
     has_many :guw_factors, dependent: :destroy
+    has_many :guw_scale_module_attributes, dependent: :destroy
 
     belongs_to :organization
 
@@ -41,7 +42,7 @@ module Guw
 
     amoeba do
       enable
-      include_association [:guw_types, :guw_attributes, :guw_work_units, :guw_weightings, :guw_factors]
+      include_association [:guw_types, :guw_attributes, :guw_work_units, :guw_weightings, :guw_factors, :guw_scale_module_attributes]
 
       customize(lambda { |original_guw_model, new_guw_model|
         new_guw_model.copy_id = original_guw_model.id

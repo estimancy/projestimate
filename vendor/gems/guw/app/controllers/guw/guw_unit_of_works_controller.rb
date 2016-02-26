@@ -539,15 +539,13 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.save
   end
 
-  # def change_operation
-  #   @guw_model = current_module_project.guw_model
-  #   @guw_work_unit = Guw::GuwWorkUnit.find(params[:guw_work_unit_id])
-  #   @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
-  #   @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
-  #   # @guw_unit_of_work.effort = nil
-  #   # @guw_unit_of_work.guw_complexity_id = nil
-  #   @guw_unit_of_work.save
-  # end
+  def change_work_unit
+    @guw_model = current_module_project.guw_model
+    @guw_work_unit = Guw::GuwWorkUnit.find(params[:guw_work_unit_id])
+    @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+    @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
+    @guw_unit_of_work.save
+  end
   #
   # def change_technology
   #   @guw_model = current_module_project.guw_model

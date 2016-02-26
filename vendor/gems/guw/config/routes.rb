@@ -81,7 +81,7 @@ Guw::Engine.routes.draw do
 
   get "change_selected_state" => "guw_unit_of_works#change_selected_state", as: "change_selected_state"
   get "change_cotation" => "guw_unit_of_works#change_cotation", as: "change_cotation"
-  get "change_operation" => "guw_unit_of_works#change_operation", as: "change_operation"
+  get "change_work_unit" => "guw_unit_of_works#change_work_unit", as: "change_work_unit"
   get "change_technology" => "guw_unit_of_works#change_technology", as: "change_technology"
   get "change_technology_form" => "guw_unit_of_works#change_technology_form", as: "change_technology_form"
   post "save_name" => "guw_unit_of_works#save_name", as: "save_name"

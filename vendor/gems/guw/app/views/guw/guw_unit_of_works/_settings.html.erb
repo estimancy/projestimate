@@ -417,12 +417,12 @@
       });
     });
 
-//    $('.guw_work_unit').change(function(){
-//      $.ajax({
-//        url: "<%#= guw.change_operation_path %>",
-//        data: "guw_work_unit_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
-//      });
-//    });
+    $('.guw_work_unit').change(function(){
+      $.ajax({
+        url: "<%= guw.change_work_unit_path %>",
+        data: "guw_work_unit_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
+      });
+    });
 //
 //    $('.guw_technology').change(function(){
 //      $.ajax({
