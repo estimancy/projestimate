@@ -778,8 +778,6 @@ class Ge::GeModelsController < ApplicationController
       @ge_input.save
     end
 
-    #===== TEST =================
-
    #attribut d'entrée
     input_pe_attribute = @ge_model.input_pe_attribute
     if input_pe_attribute.nil?
@@ -836,8 +834,8 @@ class Ge::GeModelsController < ApplicationController
           end
 
           if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
-            taille = @ge_model.coeff_a * size ** @ge_model.coeff_b
-            effort = taille * @ge_model.standard_unit_coefficient.to_f  #Using "a" and "b"
+            taille = @ge_model.coeff_a * size ** @ge_model.coeff_b   #Using "a" and "b" coefficients
+            effort = taille * @ge_model.standard_unit_coefficient.to_f
             @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
             @ge_input.save
           else
@@ -866,6 +864,12 @@ class Ge::GeModelsController < ApplicationController
         output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
     end
+
+    #==========  DEBUT TEST  ============
+    # Transporter les entrées qui ne sont pas touchées par la configuration de l'instance
+    #if input_pe_attribute != output_pe_attribute
+    #end
+
 
     #==========  FIN TEST  ============
 
