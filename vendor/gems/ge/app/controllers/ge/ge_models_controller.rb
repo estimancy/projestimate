@@ -867,8 +867,8 @@ class Ge::GeModelsController < ApplicationController
 
     #==========  DEBUT TEST  ============
     # Transporter les entrées qui ne sont pas touchées par la configuration de l'instance
-    #if input_pe_attribute != output_pe_attribute
-    #end
+    if input_pe_attribute != output_pe_attribute
+    end
 
 
     #==========  FIN TEST  ============
