@@ -203,7 +203,7 @@ module ProjectsHelper
         if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id].blank?
           res << '-'
         else
-          res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val)}"
+          res << "#{display_value(level_estimation_values[pbs_project_element.id], est_val, module_project.id)}"
         end
         res << '</td>'
       end
@@ -300,7 +300,7 @@ module ProjectsHelper
             if level_estimation_values.nil? || level_estimation_values[pbs_project_element.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id].nil? || level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value].nil?
               res << ' - '
             else
-              res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], est_val)}"
+              res << "#{display_value(level_estimation_values[pbs_project_element.id][wbs_project_elt.id][:value], est_val, module_project.id)}"
             end
           end
         end
@@ -326,7 +326,7 @@ module ProjectsHelper
         if level_probable_value.nil? || level_probable_value[pbs_project_element.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id].nil? || level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value].nil?
           res << '-'
         else
-          res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], est_val)}</strong></div>"
+          res << "<div align='center'><strong>#{display_value(level_probable_value[pbs_project_element.id][project_wbs_project_elt_root.id][:value], est_val, module_project.id)}</strong></div>"
         end
         res << '</td>'
       end
@@ -369,7 +369,7 @@ module ProjectsHelper
         level_estimation_values = Hash.new
         level_estimation_values = est_val.send("string_data_probable")
         if !level_estimation_values[pbs_project_element.id].nil? && !level_estimation_values[pbs_project_element.id].blank?
-          res << "#{ display_value(level_estimation_values[pbs_project_element.id], est_val) }"
+          res << "#{ display_value(level_estimation_values[pbs_project_element.id], est_val, module_project.id) }"
         else
           res << "-"
         end
@@ -594,7 +594,7 @@ module ProjectsHelper
             level_estimation_values = corresponding_est_val.send("string_data_probable")
             if level_estimation_values[pbs_project_element.id]
               begin
-                res << text_field_tag("", display_value(level_estimation_values[pbs_project_element.id], corresponding_est_val),
+                res << text_field_tag("", display_value(level_estimation_values[pbs_project_element.id], corresponding_est_val, mp.id),
                                       :readonly => true, :class => "input-small #{level} #{corresponding_est_val.id}",
                                       "data-est_val_id" => corresponding_est_val.id)
               rescue
@@ -976,10 +976,23 @@ module ProjectsHelper
     module_project = ModuleProject.find(mp_id)
     est_val_pe_attribute = est_val.pe_attribute
     precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
+
     if est_val_pe_attribute.alias == "retained_size" || est_val_pe_attribute.alias == "theorical_size"
-      "#{convert_with_precision(value.to_f, precision, true)} #{module_project.size}"
+      if module_project.pemodule.alias == "ge"
+        ge_model = module_project.ge_model
+        "#{convert_with_standard_unit_coefficient(est_val, value.to_f, ge_model.standard_unit_coefficient, precision)} #{ge_model.size_unit}"
+      else
+        "#{convert_with_precision(value.to_f, precision, true)} #{module_project.size}"
+      end
+
     elsif est_val_pe_attribute.alias == "effort"
-      "#{convert_with_precision(convert(value, @project.organization), precision, true)} #{convert_label(value, @project.organization)}"
+      if module_project.pemodule.alias == "ge"
+        ge_model = module_project.ge_model
+        "#{convert_with_standard_unit_coefficient(est_val, value, ge_model.standard_unit_coefficient, precision)} #{ge_model.effort_unit}"
+      else
+        "#{convert_with_precision(convert(value, @project.organization), precision, true)} #{convert_label(value, @project.organization)}"
+      end
+
     elsif est_val_pe_attribute.alias == "staffing" || est_val_pe_attribute.alias == "duration"
       "#{convert_with_precision(value, precision, true)}"
     elsif est_val_pe_attribute.alias == "cost"

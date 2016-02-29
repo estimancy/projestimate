@@ -156,15 +156,6 @@
                                              :module_project_id => possible_module_projects.last,
                                              :in_out => "output").first %>
 
-      <!-- A revoir -->
-      <%# if previous_ev.nil? && !possible_module_projects.last.nil? %>
-        <%# previous_ev = EstimationValue.create(:pe_attribute_id => attr.id,
-                                              :module_project_id => possible_module_projects.last.id,
-                                              :in_out => "output") %>
-      <%# end %>
-      <!-- Fin -->
-
-
       <%# previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
                                              :module_project_id => current_module_project.previous.first,
                                              :in_out => "output").first %>
