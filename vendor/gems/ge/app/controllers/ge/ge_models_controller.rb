@@ -863,6 +863,26 @@ class Ge::GeModelsController < ApplicationController
         end
         output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
+
+
+      #Ajout de Nicolas - à intégrer dans le reste du code ci-dessus
+      defect_attribute = PeAttribute.find_by_alias("defects")
+      output_ev = EstimationValue.where(module_project_id: current_module_project.id,
+                                        pe_attribute_id: defect_attribute.id,
+                                        in_out: "output").first
+      total_defects = params["retained_size_most_likely"].to_f * prod_factor_product * scale_factor_sum
+      ["low", "most_likely", "high"].each do |level|
+        output_ev.send("string_data_#{level}")[current_component.id] = total_defects
+        output_ev.save
+        tmp_prbl << output_ev.send("string_data_#{level}")[current_component.id]
+      end
+      unless @ge_model.three_points_estimation?
+        tmp_prbl[0] = tmp_prbl[1]
+        tmp_prbl[2] = tmp_prbl[1]
+      end
+      output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+
+
     end
 
     #==========  DEBUT TEST  ============
