@@ -862,36 +862,55 @@ class Ge::GeModelsController < ApplicationController
           tmp_prbl[2] = tmp_prbl[1]
         end
         output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+
+
+        #==========  DEBUT TEST  ============
+        # Transporter les entrées qui ne sont pas touchées par la configuration de l'instance
+        if input_pe_attribute == output_pe_attribute  #Input attribute is the same as the output attribute
+          case input_pe_attribute.alias
+            when "effort"
+              #effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+            when "retained_size"
+              #effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+          end
+
+        else #Input attribute is different to the output attribute
+          effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+          unless effort_or_size_output_ev.nil?
+            ["low", "most_likely", "high"].each do |level|
+              effort_or_size_output_ev.send("string_data_#{level}")[current_component.id] = input_ev.send("string_data_#{level}")[current_component.id]
+            end
+            effort_or_size_output_ev.send("string_data_probable")[current_component.id] = input_ev.send("string_data_probable")[current_component.id]
+            effort_or_size_output_ev.save
+          end
+        end
+
+
+        #==========  FIN TEST  ============
       end
 
 
       #Ajout de Nicolas - à intégrer dans le reste du code ci-dessus
       defect_attribute = PeAttribute.find_by_alias("defects")
-      output_ev = EstimationValue.where(module_project_id: current_module_project.id,
+      defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
                                         pe_attribute_id: defect_attribute.id,
                                         in_out: "output").first
-      total_defects = params["retained_size_most_likely"].to_f * prod_factor_product * scale_factor_sum
-      ["low", "most_likely", "high"].each do |level|
-        output_ev.send("string_data_#{level}")[current_component.id] = total_defects
-        output_ev.save
-        tmp_prbl << output_ev.send("string_data_#{level}")[current_component.id]
+      unless defect_output_ev.nil?
+        total_defects = params["retained_size_most_likely"].to_f * prod_factor_product * scale_factor_sum
+        ["low", "most_likely", "high"].each do |level|
+          defect_output_ev.send("string_data_#{level}")[current_component.id] = total_defects
+          defect_output_ev.save
+          tmp_prbl << defect_output_ev.send("string_data_#{level}")[current_component.id]
+        end
+        unless @ge_model.three_points_estimation?
+          tmp_prbl[0] = tmp_prbl[1]
+          tmp_prbl[2] = tmp_prbl[1]
+        end
+        defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
-      unless @ge_model.three_points_estimation?
-        tmp_prbl[0] = tmp_prbl[1]
-        tmp_prbl[2] = tmp_prbl[1]
-      end
-      output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
-
 
     end
 
-    #==========  DEBUT TEST  ============
-    # Transporter les entrées qui ne sont pas touchées par la configuration de l'instance
-    if input_pe_attribute != output_pe_attribute
-    end
-
-
-    #==========  FIN TEST  ============
 
 
     # current_module_project.pemodule.attribute_modules.each do |am|

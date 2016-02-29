@@ -202,7 +202,7 @@
                 <%= hidden_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model), step: "any", class: "input-medium" %>
                 <%= number_field_tag "", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium", disabled: true %>
               <% else %>
-                <%= number_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model), step: "any", class: "input-medium" %>
+                <%= number_field_tag "retained_size_high", Ge::GeModel::display_size(previous_ev, current_ev, "high", component_id, @ge_model).to_f.round(user_number_precision), step: "any", class: "input-medium" %>
               <% end %>
             </td>
           <% end %>
