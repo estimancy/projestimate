@@ -162,15 +162,19 @@ module ProjectsHelper
   end
 
   # Convert effort value according to the effort unit in the Effort instance module
-  def convert_with_standard_unit_coefficient(estimation_value, v, standard_unit_coefficient, precision)
+  def convert_with_standard_unit_coefficient(estimation_value=nil, v, standard_unit_coefficient, precision)
     unless v.class == Hash
       value = v.to_f
       #(value / standard_unit_coefficient.to_f).round(precision)
-      case estimation_value.pe_attribute.alias
-        when "effort"
-          (value / standard_unit_coefficient.to_f).round(precision)
-        when "retained_size"
-          value.round(precision)
+      if estimation_value.nil?
+        value.round(precision)
+      else
+        case estimation_value.pe_attribute.alias
+          when "effort"
+            (value / standard_unit_coefficient.to_f).round(precision)
+          when "retained_size"
+            value.round(precision)
+        end
       end
     else
       0

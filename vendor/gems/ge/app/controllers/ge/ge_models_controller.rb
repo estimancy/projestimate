@@ -622,36 +622,46 @@ class Ge::GeModelsController < ApplicationController
       end
     end
 
+    #attribut d'entrée
+    input_pe_attribute = @ge_model.input_pe_attribute
+    if input_pe_attribute.nil?
+      input_pe_attribute = PeAttribute.where(alias: "retained_size").first
+    end
+    #attribut de sortie
+    output_pe_attribute = @ge_model.output_pe_attribute
+    if output_pe_attribute.nil?
+      output_pe_attribute = PeAttribute.where(alias: "effort").first
+    end
+
     current_module_project.pemodule.attribute_modules.each do |am|
       tmp_prbl = Array.new
       ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => am.pe_attribute.id).first
 
       ["low", "most_likely", "high"].each do |level|
 
+        # Gestion des entrées
         if @ge_model.three_points_estimation?
           size = params["retained_size_#{level}"].to_f
         else
           size = params["retained_size_most_likely"].to_f
         end
 
-        if am.pe_attribute.alias == "effort"
-          #Only Xls file factors parameters will be taken in account
-          if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
-            #The effort value will be calculated as : Effort = p * (Taille * c)^s  # with: s = sum of scale factors ; p = multiply of prod factors and c = product of conversion factors
-            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)) * @ge_model.standard_unit_coefficient.to_f
-          end
+        # Gestion des sorties
+        if am.pe_attribute.alias == output_pe_attribute.alias
+          #The effort value will be calculated as : Effort = p * (Taille * c)^s  # with: s = sum of scale factors ; p = multiply of prod factors and c = product of conversion factors
+          effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum))
 
           @calculated_effort["#{level}"] = effort
           tmp_prbl << effort
         end
       end
 
-      # unless @ge_model.three_points_estimation?
-      #   tmp_prbl[0] = tmp_prbl[1]
-      #   tmp_prbl[2] = tmp_prbl[1]
-      #   #effort probable
-      #   @calculated_effort["probable"] = (tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6
-      # end
+      unless @ge_model.three_points_estimation?
+        tmp_prbl[0] = tmp_prbl[1]
+        tmp_prbl[2] = tmp_prbl[1]
+        #effort probable
+        @calculated_effort["probable"] = (tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6
+      end
     end
 
     respond_to do |format|
