@@ -174,6 +174,8 @@ module ProjectsHelper
             (value / standard_unit_coefficient.to_f).round(precision)
           when "retained_size"
             value.round(precision)
+          when "defects"
+            value.round(precision)
         end
       end
     else

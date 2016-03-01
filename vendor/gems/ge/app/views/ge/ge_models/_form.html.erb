@@ -47,7 +47,7 @@
         <%= f.input :enabled_input, label: I18n.t(:modification_entry_valur) %>
         <%= f.input :modify_theorical_effort, label: I18n.t(:enabled_theorical_effort_modification) %>
         <%= f.association :input_pe_attribute, collection: PeAttribute.where(alias: ["retained_size", "effort"]).order("name desc"), label: "Sélectionner l'attribut en entrée du module", include_blank: false %>
-        <%= f.association :output_pe_attribute, collection: PeAttribute.where(alias: ["retained_size", "effort"]), label: "Sélectionner l'attribut de sortie du module", include_blank: false %>
+        <%= f.association :output_pe_attribute, collection: PeAttribute.where(alias: ["retained_size", "effort", "defects"]), label: "Sélectionner l'attribut de sortie du module", include_blank: false %>
 
         <div class="row-fluid">
           <label class="hint">Renseigner directement les valeurs des coefficients <b>a</b> et <b>b</b> dans la formule </label>
