@@ -17,14 +17,15 @@
     <% if controller.action_name == "new" %>
         <div class="pull-right" style="margin-top: 100px;">
           <%= form_tag import_ge_model_instance_path, :multipart => true, method: "post", :class => 'simple_form' do %>
-              <div>
-                <label style="color: #808080"><%= I18n.t(:import_generic_effort_model) %> </label> <br>
-                <%= hidden_field_tag :organization_id, @organization.id %>
-                <%= file_field_tag :file %>
-                <%= hidden_field_tag :ge_model_id, nil %>
+            <div>
+              <label style="color: #808080"><%= I18n.t(:import_generic_effort_model) %> </label> <br>
+              <%= hidden_field_tag :organization_id, @organization.id %>
+              <%= file_field_tag :file %>
+              <%= hidden_field_tag :ge_model_id, nil %>
 
-                <%= submit_tag I18n.t(:import_instance_model), :class => 'btn btn-info' %>
-              </div><hr>
+              <%= submit_tag I18n.t(:import_instance_model), :class => 'btn btn-info' %>
+            </div>
+            <hr>
           <% end %>
         </div>
     <% end %>
@@ -47,7 +48,7 @@
         <%= f.input :enabled_input, label: I18n.t(:modification_entry_valur) %>
         <%= f.input :modify_theorical_effort, label: I18n.t(:enabled_theorical_effort_modification) %>
         <%= f.association :input_pe_attribute, collection: PeAttribute.where(alias: ["retained_size", "effort"]).order("name desc"), label: "Sélectionner l'attribut en entrée du module", include_blank: false %>
-        <%= f.association :output_pe_attribute, collection: PeAttribute.where(alias: ["retained_size", "effort"]), label: "Sélectionner l'attribut de sortie du module", include_blank: false %>
+        <%= f.association :output_pe_attribute, collection: PeAttribute.where(alias: ["retained_size", "effort", "introduced_defects"]), label: "Sélectionner l'attribut de sortie du module", include_blank: false %>
 
         <div class="row-fluid">
           <label class="hint">Renseigner directement les valeurs des coefficients <b>a</b> et <b>b</b> dans la formule </label>

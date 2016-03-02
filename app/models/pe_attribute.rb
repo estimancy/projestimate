@@ -25,8 +25,6 @@
 class PeAttribute < ActiveRecord::Base
   attr_accessible :name, :alias, :aggregation, :attr_type, :options, :precision, :description, :record_status_id, :custom_value, :change_comment, :single_entry_attribute
 
-  include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
-
   serialize :options, Array
 
   has_many :attribute_organizations, :dependent => :destroy
@@ -40,11 +38,8 @@ class PeAttribute < ActiveRecord::Base
   belongs_to :record_status
   belongs_to :owner_of_change, :class_name => 'User', :foreign_key => 'owner_id'
 
-  validates_presence_of :description, :attr_type, :record_status
-  validates :uuid, :presence => true, :uniqueness => {:case_sensitive => false}
-  validates :name, :alias, :presence => true, :uniqueness => {:scope => :record_status_id, :case_sensitive => false}
-  validates :custom_value, :presence => true, :if => :is_custom?
-  validates :precision, numericality: { only_integer: true, :allow_blank => true }
+  validates_presence_of :description
+  validates :name, :alias, :presence => true
 
   ##Enable the amoeba gem for deep copy/clone (dup with associations)
   amoeba do

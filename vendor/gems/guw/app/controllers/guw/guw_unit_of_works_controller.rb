@@ -863,7 +863,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           if am.pe_attribute.alias == "cost"
             ev.send("string_data_#{level}")[@component.id] = cost
             tmp_prbl << ev.send("string_data_#{level}")[@component.id]
-          elsif am.pe_attribute.alias == "defects"
+          elsif am.pe_attribute.alias == "introduced_defects"
             ev.send("string_data_#{level}")[@component.id] = guw.get_defects(retained_size, current_component, current_module_project)
             tmp_prbl << ev.send("string_data_#{level}")[@component.id]
           elsif am.pe_attribute.alias == "number_of_unit_of_work"

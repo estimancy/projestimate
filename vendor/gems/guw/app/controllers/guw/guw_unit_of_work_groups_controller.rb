@@ -34,6 +34,7 @@ class Guw::GuwUnitOfWorkGroupsController < ApplicationController
 
   def edit
     @guw_unit_of_work_group = Guw::GuwUnitOfWorkGroup.find(params[:id])
+    @guw_model = current_module_project.guw_model
     set_page_title I18n.t(:edit_group, value: @guw_unit_of_work_group.name)
   end
 

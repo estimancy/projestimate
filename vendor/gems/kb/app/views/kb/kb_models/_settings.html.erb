@@ -12,7 +12,7 @@
         <div class="span3">
           <h5>
             <strong>
-               <%= I18n.t(:project_number)%>
+               <%= I18n.t(:project_number) %>
               <span class="project_numbers">
                 <%= @kb_input.values.size %>
               </span>
@@ -28,11 +28,11 @@
                 <div class="input string required project_title">
                   <% if @kb_model.selected_attributes.include?(key.to_s) %>
                     <% if i == 0 %>
-                      <label class="string required control-label">
+                      <h5>
                         <strong>
                           <%= I18n.t(:project_area) %>
                         </strong>
-                      </label>
+                      </h5>
                       <%= select_tag "filters[#{key}]",
                                      options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
                                                         selected: @filters.nil? ? @project.project_area : @filters[key]),
@@ -64,8 +64,6 @@
             </p>
           <% end %>
 
-          <hr>
-
           <h5>
             <strong>
               <%= I18n.t(:equation) %>
@@ -90,28 +88,38 @@
                 <%= I18n.t(:size)%>
               </strong>
             </h5>
-            <% size_attr = PeAttribute.find_by_alias("retained_size") %>
-            <% size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+
+            <%
+             size_attr = PeAttribute.find_by_alias("retained_size")
+             size_previous_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
                                                         :module_project_id => current_module_project.previous.first.id,
-                                                        :in_out => "output").first %>
+                                                        :in_out => "output").first
 
-            <% size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
+             size_current_ev = EstimationValue.where(:pe_attribute_id => size_attr.id,
                                                        :module_project_id => current_module_project.id,
-                                                       :in_out => "input").first %>
+                                                       :in_out => "input").first
+             @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, level, current_component.id)
 
-            <% @size = Kb::KbModel::display_size(size_previous_ev, size_current_ev, level, current_component.id) %>
+
+             effort_attr = PeAttribute.find_by_alias("effort")
+             if current_module_project.previous.size > 1
+               @previous_effort = EstimationValue.where(pe_attribute_id: effort_attr.id,
+                                                        module_project_id: current_module_project.previous.last.id,
+                                                        in_out: "output").first.send("string_data_probable")[current_component.id].to_f / (@kb_model.standard_unit_coefficient.nil? ? 1 : @kb_model.standard_unit_coefficient)
+             end %>
+
             <% unless @kb_model.enabled_input %>
-              <%= hidden_field_tag "size", @size %>
-              <%= text_field_tag "", convert_with_precision(@size, user_number_precision, true),
+               <%= hidden_field_tag "size", @size %>
+               <%= text_field_tag "", convert_with_precision(@size, user_number_precision, true),
                                  class: "string required input-xlarge",
-                                 disabled: true %>
+                                 disabled: true  %>
             <% else %>
               <%= number_field_tag "size", @size, class: "string required input-xlarge", step: "any" %>
             <% end %>
 
             <h5>
               <strong>
-                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>) <%# level.humanize %>
+                Effort (<%= @kb_model.effort_unit.blank? ? 'h.h' : @kb_model.effort_unit %>)
               </strong>
             </h5>
             <% effort_attr = PeAttribute.find_by_alias("effort") %>
@@ -133,6 +141,30 @@
                                    class: "string required input-xlarge", step: "any" %>
             <% end %>
           <% end %>
+          <hr>
+
+          <% if current_module_project.previous.size > 1 %>
+            <h5>
+              <strong>
+                Benchmark
+              </strong>
+            </h5>
+
+            <h5>
+              <strong>
+                Effort (<%= current_module_project.previous.last %>)
+              </strong>
+            </h5>
+            <%= @previous_effort.round(2) %> j.h.
+
+            <h5>
+              <strong>
+                Ecart
+              </strong>
+            </h5>
+            <%= (@previous_effort / @effort).round(2) %>
+          <% end %>
+
 
         </div>
         <div class="span9">
@@ -212,6 +244,19 @@
           data: <%= @kb_input.regression.map{|i, j| [i.round(2), (j / 1.8).round(2)] }.sort %>
         },{
           name: '<%= I18n.t("effort_retained") %>',
+          marker: {
+            radius: 5
+          },
+          type: 'scatter',
+          color: 'rgba(0, 0, 0, 1)',
+          data: <%= [
+                      [
+                        @previous_effort.nil? ? 0 : @size,
+                        @previous_effort.nil? ? 0 : @previous_effort.round(2)
+                      ]
+                    ] %>
+        },{
+          name: 'Effort précédent',
           marker: {
             radius: 5
           },

@@ -232,8 +232,10 @@
               <%= I18n.t(:cal_size_for, parameter: @ge_model.size_unit)%>
           <% when "effort" %>
               <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
+          <% when "introduced_defects" %>
+            <%= I18n.t :cal_defect_for %>
           <% else %>
-              <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
+            <%= I18n.t(:cal_effort_for, parameter: @ge_model.effort_unit)%>
           <% end %>
         </b>
       </h4>

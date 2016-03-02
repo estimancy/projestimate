@@ -892,7 +892,9 @@ class Guw::GuwModelsController < ApplicationController
 
       @guw_model.guw_attributes.each_with_index do |guw_attribute, i|
         guowa = Guw::GuwUnitOfWorkAttribute.where(guw_unit_of_work_id: guow.id, guw_attribute_id: guw_attribute.id, guw_type_id: guow.guw_type.id).first
-        worksheet.add_cell(ind, 16 + i, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
+        unless guowa.nil?
+          worksheet.add_cell(ind, 16 + i, guowa.most_likely.nil? ? "N/A" : guowa.most_likely)
+        end
       end
 
     end

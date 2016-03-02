@@ -1747,6 +1747,7 @@ fr:
   effort_formula: "Formule de calcul de l'effort = ax^b ou <b>a</b> = %{parameter_1} et <b>b</b> = %{parameter_2}"
   enter_size_in: "Taille en entrée (en %{parameter})"
   cal_effort_for: "Effort calculé (en %{parameter})"
+  cal_defect_for: "Nombre de défaut calculé"
   Generic_Model_Effort: "Modèle d'éffort générique"
   simple_text_mess_1: "La méthode générique d'éffort correspond à une méthode de calcul de l'éffort selon la formule a*x^b ou <b>a</b> correspond au facteur d'ajustement et <b>b</b> au facteur d'échelle.<br>Les coefficients <b>a</b> et <b>b</b> peuvent être saisis directement dans le modèle ou être calculés avec les facteurs importés d'un fichier Excel.<br>L'effort E est généré dans l'unité propre au modèle (h.j, h.m, ...). L'utilisateur doit définir le coefficient de conversion en unité standard (des heures)."
   retained_size_unit_2: "Libellé de l'unité de taille"

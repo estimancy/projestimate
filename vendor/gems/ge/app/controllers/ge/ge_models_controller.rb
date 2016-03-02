@@ -529,7 +529,7 @@ class Ge::GeModelsController < ApplicationController
 
     @ge_model = Ge::GeModel.find(params[:ge_model_id])
     @ge_input = @ge_model.ge_inputs.where(module_project_id: current_module_project.id).first_or_create
-    @calculated_effort = {}
+    @calculated = {}
 
     if @ge_model.coeff_a.blank? || @ge_model.coeff_b.blank?
       # Get factors values and save them in the GeInput table
@@ -648,11 +648,16 @@ class Ge::GeModelsController < ApplicationController
 
         # Gestion des sorties
         if am.pe_attribute.alias == output_pe_attribute.alias
-          #The effort value will be calculated as : Effort = p * (Taille * c)^s  # with: s = sum of scale factors ; p = multiply of prod factors and c = product of conversion factors
-          effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum))
-
-          @calculated_effort["#{level}"] = effort
-          tmp_prbl << effort
+          if output_pe_attribute.alias == "introduced_defects"
+            defect = (size * prod_factor_product * conversion_factor_product * scale_factor_sum)
+            @calculated["#{level}"] = defect
+            tmp_prbl << defect
+          else
+            #The effort value will be calculated as : Effort = p * (Taille * c)^s  # with: s = sum of scale factors ; p = multiply of prod factors and c = product of conversion factors
+            effort = (prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum))
+            @calculated["#{level}"] = effort
+            tmp_prbl << effort
+          end
         end
       end
 
@@ -660,7 +665,7 @@ class Ge::GeModelsController < ApplicationController
         tmp_prbl[0] = tmp_prbl[1]
         tmp_prbl[2] = tmp_prbl[1]
         #effort probable
-        @calculated_effort["probable"] = (tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6
+        @calculated["probable"] = (tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6
       end
     end
 
@@ -890,28 +895,47 @@ class Ge::GeModelsController < ApplicationController
       end
 
 
-      #Ajout de Nicolas - à intégrer dans le reste du code ci-dessus
-      defect_attribute = PeAttribute.find_by_alias("defects")
-      defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
-                                        pe_attribute_id: defect_attribute.id,
+      #Introduced defects
+      introduced_defect_attribute = PeAttribute.find_by_alias("introduced_defects")
+      introduced_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
+                                        pe_attribute_id: introduced_defect_attribute.id,
                                         in_out: "output").first
-      unless defect_output_ev.nil?
+      unless introduced_defect_output_ev.nil?
+        tmp_prbl = Array.new
         total_defects = params["retained_size_most_likely"].to_f * prod_factor_product * scale_factor_sum
         ["low", "most_likely", "high"].each do |level|
-          defect_output_ev.send("string_data_#{level}")[current_component.id] = total_defects
-          defect_output_ev.save
-          tmp_prbl << defect_output_ev.send("string_data_#{level}")[current_component.id]
+          introduced_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_defects
+          introduced_defect_output_ev.save
+          tmp_prbl << introduced_defect_output_ev.send("string_data_#{level}")[current_component.id]
         end
         unless @ge_model.three_points_estimation?
           tmp_prbl[0] = tmp_prbl[1]
           tmp_prbl[2] = tmp_prbl[1]
         end
-        defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+        introduced_defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      end
+
+      #Remaining defects
+      remaining_defect_attribute = PeAttribute.find_by_alias("remaining_defects")
+      remaining_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
+                                        pe_attribute_id: introduced_defect_attribute.id,
+                                        in_out: "output").first
+      unless introduced_defect_output_ev.nil?
+        tmp_prbl = Array.new
+        total_remaining_defects = total_defects * 0.57
+        ["low", "most_likely", "high"].each do |level|
+          remaining_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_remaining_defects
+          remaining_defect_output_ev.save
+          tmp_prbl << remaining_defect_output_ev.send("string_data_#{level}")[current_component.id]
+        end
+        unless @ge_model.three_points_estimation?
+          tmp_prbl[0] = tmp_prbl[1]
+          tmp_prbl[2] = tmp_prbl[1]
+        end
+        remaining_defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
 
     end
-
-
 
     # current_module_project.pemodule.attribute_modules.each do |am|
     #   tmp_prbl = Array.new

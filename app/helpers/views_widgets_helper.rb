@@ -66,7 +66,7 @@ module ViewsWidgetsHelper
     widget_data[:icon_font_size] = icon_font_size
     widget_data[:text_size] = text_size
     widget_data[:ft_maxFontSize_without_mm] = ft_maxFontSize_without_mm
-    widget_data[:value_to_show] = simple_format(view_widget.comment.html_safe) ###view_widget.name
+    widget_data[:value_to_show] = simple_format(view_widget.comment.to_s.html_safe) ###view_widget.name
 
     widget_data
   end
