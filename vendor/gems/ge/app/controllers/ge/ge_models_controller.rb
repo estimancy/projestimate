@@ -869,10 +869,11 @@ class Ge::GeModelsController < ApplicationController
         if input_pe_attribute == output_pe_attribute  #Input attribute is the same as the output attribute
           case input_pe_attribute.alias
             when "effort"
-              #effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+              other_attribute = PeAttribute.where(alias: "retained_size").first
             when "retained_size"
-              #effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+              other_attribute = PeAttribute.where(alias: "effort").first
           end
+          effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
 
         else #Input attribute is different to the output attribute
           effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
@@ -884,7 +885,6 @@ class Ge::GeModelsController < ApplicationController
             effort_or_size_output_ev.save
           end
         end
-
 
         #==========  FIN TEST  ============
       end

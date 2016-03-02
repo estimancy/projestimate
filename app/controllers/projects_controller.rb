@@ -440,7 +440,7 @@ class ProjectsController < ApplicationController
     @acquisition_categories = @organization.acquisition_categories
     @project_categories = @organization.project_categories
 
-    generate_dashboard
+    #generate_dashboard
 
     #set_breadcrumbs  I18n.t(:estimate) => projects_path, @project => edit_project_path(@project)
     if @project.is_model

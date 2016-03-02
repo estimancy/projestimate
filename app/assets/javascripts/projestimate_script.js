@@ -80,7 +80,7 @@ $(document).ready(function() {
             gridster[++iteration] = $("#"+container_id+ " ul").gridster({
                 namespace: '#'+container_id,
                 widget_margins: [5, 5],
-                widget_base_dimensions: [60, 60],
+                widget_base_dimensions: [60, 60], //widget_base_dimensions: [60, 60],
                 widget_selector: "li",
                 extra_rows: 0,
                 extra_cols: 0,
