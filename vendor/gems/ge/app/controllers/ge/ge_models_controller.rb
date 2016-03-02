@@ -922,7 +922,7 @@ class Ge::GeModelsController < ApplicationController
                                         in_out: "output").first
       unless remaining_defect_output_ev.nil?
         tmp_prbl = Array.new
-        total_remaining_defects = total_defects * (1-prod_factor_product)
+        total_remaining_defects = total_defects * prod_factor_product
         ["low", "most_likely", "high"].each do |level|
           remaining_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_remaining_defects
           remaining_defect_output_ev.save
