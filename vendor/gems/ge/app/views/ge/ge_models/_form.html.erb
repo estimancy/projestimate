@@ -151,8 +151,6 @@
                 </tr>
             <% end %>
             </tbody>
-
-            <%#= render :partial => 'layouts/footer_table' %>
           </table>
         </div>
 
@@ -188,7 +186,9 @@
                   <td class='<%= tr_class %>'><%= ge_factor_value.factor_name %></td>
                   <td><%= ge_factor_value.value_text %></td>
                   <td><%= ge_factor_value.value_number %></td>
-                  <td class="align-center"><%#= ge_factor_value.default %> <%= check_box_tag("default_value[#{ge_factor_value.id}]", ge_factor_value.id, ge_factor_value.default?, :disabled => true) %></td>
+                  <td class="align-center">
+                    <%= check_box_tag("default_value[#{ge_factor_value.id}]", ge_factor_value.id, ge_factor_value.default?, :disabled => true) %>
+                  </td>
                 </tr>
               <% end %>
               </tbody>
