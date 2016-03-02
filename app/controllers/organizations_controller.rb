@@ -311,6 +311,7 @@ class OrganizationsController < ApplicationController
   def report
     @organization = Organization.find(params[:organization_id])
     set_page_title I18n.t(:report, parameter: @organization)
+    set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => organization_estimations_path(@organization), I18n.t(:report) => ""
     check_if_organization_is_image(@organization)
   end
 
@@ -960,7 +961,7 @@ class OrganizationsController < ApplicationController
 
     set_breadcrumbs I18n.t(:organizations) => "/organizationals_params", @organization.to_s => ""
 
-    @attributes = PeAttribute.defined.all
+    @attributes = PeAttribute.all
     @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
 
     @ot = @organization.organization_technologies.first
@@ -1024,7 +1025,7 @@ class OrganizationsController < ApplicationController
       flash[:notice] = I18n.t (:notice_organization_successful_updated)
       redirect_to redirect_apply(edit_organization_path(@organization), nil, '/organizationals_params')
     else
-      @attributes = PeAttribute.defined.all
+      @attributes = PeAttribute.all
       @attribute_settings = AttributeOrganization.all(:conditions => {:organization_id => @organization.id})
       @complexities = @organization.organization_uow_complexities
       @ot = @organization.organization_technologies.first

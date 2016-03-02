@@ -21,9 +21,6 @@
 
 class PeAttributesController < ApplicationController
   load_resource :except => [:find_use_attribute, :check_attribute]
-  include DataValidationHelper #Module for master data changes validation
-
-  before_filter :get_record_statuses
 
   def index
     authorize! :manage_master_data, :all
@@ -77,13 +74,7 @@ class PeAttributesController < ApplicationController
     set_page_title I18n.t(:pe_attributes)
 
     @attribute = nil
-    current_attribute = PeAttribute.find(params[:id])
-    if current_attribute.is_defined?
-      @attribute = current_attribute.amoeba_dup
-      @attribute.owner_id = current_user.id
-    else
-      @attribute = current_attribute
-    end
+    @attribute = PeAttribute.find(params[:id])
 
     if @attribute.update_attributes(params[:pe_attribute]) and @attribute.update_attribute('options', params[:options])
       @attribute.attr_type = params[:options][0]
@@ -102,12 +93,7 @@ class PeAttributesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @attribute = PeAttribute.find(params[:id])
-    if @attribute.is_defined? || @attribute.is_custom?
-      #logical deletion: delete don't have to suppress cds anymore on defined record
-      @attribute.update_attributes(:record_status_id => @retired_status.id, :owner_id => current_user.id)
-    else
-      @attribute.destroy
-    end
+    @attribute.destroy
     redirect_to pe_attributes_path
   end
 

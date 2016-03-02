@@ -31,7 +31,7 @@ class PemodulesController < ApplicationController
 
     set_page_title I18n.t(:projestimate_module)
     @pemodules = Pemodule.all
-    @attributes = PeAttribute.defined.all
+    @attributes = PeAttribute.all
   end
 
   def new
@@ -40,7 +40,7 @@ class PemodulesController < ApplicationController
     set_page_title I18n.t(:projestimate_module_new)
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @pemodule = Pemodule.new
-    @attributes = PeAttribute.defined.all
+    @attributes = PeAttribute.all
     @attribute_settings = []
   end
 
@@ -50,7 +50,7 @@ class PemodulesController < ApplicationController
     set_page_title I18n.t(:projestimate_module_edit)
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
     @pemodule = Pemodule.find(params[:id])
-    @attributes = PeAttribute.defined.all
+    @attributes = PeAttribute.all
     @attribute_settings = AttributeModule.all(:conditions => {:pemodule_id => @pemodule.id})
 
     unless @pemodule.child_reference.nil?
@@ -65,7 +65,7 @@ class PemodulesController < ApplicationController
     authorize! :manage_master_data, :all
 
     @wets = WorkElementType.all.reject{|i| i.alias == 'link' || i.alias == 'folder'}
-    @attributes = PeAttribute.defined.all
+    @attributes = PeAttribute.all
 
     @pemodule = nil
     current_pemodule = Pemodule.find(params[:id])
@@ -100,7 +100,7 @@ class PemodulesController < ApplicationController
     @pemodule.compliant_component_type = params[:compliant_wet]
     @wets = WorkElementType.all.reject{|i| i.alias == 'link'
     }
-    @attributes = PeAttribute.defined.all
+    @attributes = PeAttribute.all
     @attribute_settings = []
 
     if @pemodule.save

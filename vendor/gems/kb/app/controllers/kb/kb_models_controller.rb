@@ -293,8 +293,10 @@ class Kb::KbModelsController < ApplicationController
     current_module_project.pemodule.attribute_modules.each do |am|
       tmp_prbl = Array.new
 
-      ev = EstimationValue.where(:module_project_id => current_module_project.id,
-                                 :pe_attribute_id => am.pe_attribute.id).first
+      ev = EstimationValue.where(module_project_id: current_module_project.id,
+                                 pe_attribute_id: am.pe_attribute.id,
+                                 in_out: "output").first
+
       ["low", "most_likely", "high"].each do |level|
 
         if @kb_model.three_points_estimation?
