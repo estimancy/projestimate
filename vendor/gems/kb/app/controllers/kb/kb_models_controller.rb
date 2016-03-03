@@ -323,7 +323,9 @@ class Kb::KbModelsController < ApplicationController
         tmp_prbl[2] = tmp_prbl[1]
       end
 
-      ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      unless ev.nil?
+        ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
+      end
     end
 
     current_module_project.nexts.each do |n|
