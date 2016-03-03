@@ -649,7 +649,7 @@ class Ge::GeModelsController < ApplicationController
         # Gestion des sorties
         if am.pe_attribute.alias == output_pe_attribute.alias
           if output_pe_attribute.alias == "introduced_defects"
-            defect = (size * prod_factor_product * conversion_factor_product * scale_factor_sum)
+            defect = (size * scale_factor_sum * conversion_factor_product)
             @calculated["#{level}"] = defect
             tmp_prbl << defect
           else
@@ -902,7 +902,7 @@ class Ge::GeModelsController < ApplicationController
                                         in_out: "output").first
       unless introduced_defect_output_ev.nil?
         tmp_prbl = Array.new
-        total_defects = params["retained_size_most_likely"].to_f * prod_factor_product * scale_factor_sum
+        total_defects = params["retained_size_most_likely"].to_f * scale_factor_sum * conversion_factor_product
         ["low", "most_likely", "high"].each do |level|
           introduced_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_defects
           introduced_defect_output_ev.save
@@ -918,11 +918,12 @@ class Ge::GeModelsController < ApplicationController
       #Remaining defects
       remaining_defect_attribute = PeAttribute.find_by_alias("remaining_defects")
       remaining_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
-                                        pe_attribute_id: introduced_defect_attribute.id,
+                                        pe_attribute_id: remaining_defect_attribute.id,
                                         in_out: "output").first
-      unless introduced_defect_output_ev.nil?
+      unless remaining_defect_output_ev.nil?
         tmp_prbl = Array.new
-        total_remaining_defects = total_defects * 0.57
+        # total_remaining_defects = total_defects - (total_defects * prod_factor_product)
+        total_remaining_defects = total_defects * prod_factor_product
         ["low", "most_likely", "high"].each do |level|
           remaining_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_remaining_defects
           remaining_defect_output_ev.save

@@ -174,7 +174,9 @@ module ProjectsHelper
             (value / standard_unit_coefficient.to_f).round(precision)
           when "retained_size"
             value.round(precision)
-          when "defects"
+          when "introduced_defects"
+            value.round(precision)
+          when "remaining_defects"
             value.round(precision)
         end
       end
@@ -1004,6 +1006,10 @@ module ProjectsHelper
     elsif est_val_pe_attribute.alias == "cost"
       unless value.class == Hash
         "#{convert_with_precision(value, 2, true)} #{get_attribute_unit(est_val_pe_attribute)}"
+        end
+    elsif est_val_pe_attribute.alias == "remaining_defects" || est_val_pe_attribute.alias == "introduced_defects"
+      unless value.class == Hash
+        "#{convert_with_precision(value, 2, true)}"
       end
     else
       case est_val_pe_attribute

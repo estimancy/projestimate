@@ -1,5 +1,3 @@
-<h3><%= I18n.t(:cal_effort)%></h3>
-
 <%= form_tag ge.ge_model_save_efforts_path(@ge_model), id: 'ge_form' do %>
 
   <% if @ge_model.ge_factors.size > 0 %>
@@ -30,7 +28,6 @@
                     <div class="accordion-group">
                       <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_factor" href="#<%= factor_type %>">
-                          <i class="fa fa-caret-down"></i>
                           <b><%= type %></b>
                         </a>
                       </div>
@@ -43,28 +40,27 @@
                               <%= hidden_field_tag("#{scale_prod}_factor[#{key}]", values.first.id) %>
 
                             <% elsif values.length > 1 %>
-                              <div class="row-fluid">
-                                <% ge_factor = values[0].ge_factor %>
-                                <div class="span1 attribute_tooltip" title="<b><%= ge_factor.long_name %> : </b><br/> <%= ge_factor.description %>">
+                              <% ge_factor = values[0].ge_factor %>
+                              <div class="span12">
+                                <span class="attribute_tooltip" title="<b><%= ge_factor.long_name %> : </b><br/> <%= ge_factor.description %>">
                                   <%= key.humanize.upcase %>
-                                </div>
-                                <div class="span1"></div>
-                                <div class="span8">
-                                  <%#= select_tag("#{scale_prod}_factor[#{key}]", options_for_select(values.map{ |f| [f.value_text, f.id]}, :selected => (@ge_input_values["#{key}"][:ge_factor_value_id] unless @ge_input_values["#{key}"].nil?)), { class: "slide input-xlarge" }) %>
-                                  <% ids_list = values.map{ |f| f.id } %>
-                                  <% js_factor_data = Hash.new %>
-                                  <% values.map{ |f| js_factor_data["#{f.id}"] = f.value_text }  %>
-                                  <% @ge_input_values["#{key}"].nil? ? (selected_value = 0) : (selected_value = @ge_input_values["#{key}"][:ge_factor_value_id]) %>
+                                </span>
+                                <%#= select_tag("#{scale_prod}_factor[#{key}]", options_for_select(values.map{ |f| [f.value_text, f.id]}, :selected => (@ge_input_values["#{key}"][:ge_factor_value_id] unless @ge_input_values["#{key}"].nil?)), { class: "slide input-xlarge" }) %>
+                                <% ids_list = values.map{ |f| f.id } %>
+                                <% js_factor_data = Hash.new %>
+                                <% values.map{ |f| js_factor_data["#{f.id}"] = f.value_text }  %>
+                                <% @ge_input_values["#{key}"].nil? ? (selected_value = 0) : (selected_value = @ge_input_values["#{key}"][:ge_factor_value_id]) %>
 
-                                  <!-- Get the default value -->
-                                  <% default_value = 0 %>
-                                  <% default_array = values.select{ |v| v.default? } %>
-                                  <% unless default_array.empty? %>
-                                    <% default_value = default_array.first.id %>
-                                  <% end %>
+                                <!-- Get the default value -->
+                                <% default_value = 0 %>
+                                <% default_array = values.select{ |v| v.default? } %>
+                                <% unless default_array.empty? %>
+                                  <% default_value = default_array.first.id %>
+                                <% end %>
 
-                                  <input type="text" name='<%= "#{scale_prod}_factor[#{key}]" %>' id='<%= "factor_#{key}" %>' class="factor-slider" value="" />
-                                </div>
+                                <input type="text" name='<%= "#{scale_prod}_factor[#{key}]" %>' id='<%= "factor_#{key}" %>' class="factor-slider" value="" />
+                                <hr>
+
                               </div>
 
                               <script type="text/javascript">
