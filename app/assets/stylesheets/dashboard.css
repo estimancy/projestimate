@@ -1140,3 +1140,15 @@ tr.conversion_factor, td.conversion_factor {
     display: block;
     font-style: italic;
 }
+
+.sp-palette {
+    max-width: 200px;
+}
+
+.sp-preview{
+   width: 200px;
+}
+
+.mycolorpicker{
+    width: 200px;
+}
