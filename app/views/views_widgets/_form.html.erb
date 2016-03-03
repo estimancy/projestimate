@@ -42,9 +42,7 @@
           <tr>
             <td>
               <!-- Color is using the JS Spectrum library -->
-              <%= hidden_field_tag "widget_current_color", (@views_widget.new_record? ? "lightblue" : @views_widget.color) %>
               <%= f.input :color, label: I18n.t(:status_color) %>
-
               <%# if @views_widget.new_record? %>
                 <%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color', value: '#99ccff'} %>
                 <%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "input-xxlarge"} %>
@@ -92,7 +90,10 @@
         preferredFormat: "hex",
         replacerClassName: 'mycolorpicker',
         //color: 'blanchedalmond',
-        color: $("#widget_current_color").value,
+        <% if @views_widget.new_record? %>
+          color: 'blanchedalmond',
+        <% end %>
+
         palette: [
             ['#E9ABBE', '#AA8AB8', "#FFD8BB", '#DAD5DC', '#E5D4DA'],
             ['#F3CFDA', '#E8B189', '#F4EBEE', '#D3CCC6', '#BDB1B5'],
