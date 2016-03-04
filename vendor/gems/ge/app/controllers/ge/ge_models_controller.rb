@@ -879,6 +879,9 @@ class Ge::GeModelsController < ApplicationController
               other_attribute = PeAttribute.where(alias: "effort").first
           end
           effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+          unless effort_or_size_output_ev.nil?
+
+          end
 
         else #Input attribute is different to the output attribute
           effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
