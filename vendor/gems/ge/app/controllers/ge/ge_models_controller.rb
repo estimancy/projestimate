@@ -897,43 +897,48 @@ class Ge::GeModelsController < ApplicationController
 
       #Introduced defects
       introduced_defect_attribute = PeAttribute.find_by_alias("introduced_defects")
-      introduced_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
-                                        pe_attribute_id: introduced_defect_attribute.id,
-                                        in_out: "output").first
-      unless introduced_defect_output_ev.nil?
-        tmp_prbl = Array.new
-        total_defects = params["retained_size_most_likely"].to_f * scale_factor_sum * conversion_factor_product
-        ["low", "most_likely", "high"].each do |level|
-          introduced_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_defects
-          introduced_defect_output_ev.save
-          tmp_prbl << introduced_defect_output_ev.send("string_data_#{level}")[current_component.id]
+
+      unless introduced_defect_attribute.nil?
+        introduced_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
+                                          pe_attribute_id: introduced_defect_attribute.id,
+                                          in_out: "output").first
+        unless introduced_defect_output_ev.nil?
+          tmp_prbl = Array.new
+          total_defects = params["retained_size_most_likely"].to_f * scale_factor_sum * conversion_factor_product
+          ["low", "most_likely", "high"].each do |level|
+            introduced_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_defects
+            introduced_defect_output_ev.save
+            tmp_prbl << introduced_defect_output_ev.send("string_data_#{level}")[current_component.id]
+          end
+          unless @ge_model.three_points_estimation?
+            tmp_prbl[0] = tmp_prbl[1]
+            tmp_prbl[2] = tmp_prbl[1]
+          end
+          introduced_defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
-        unless @ge_model.three_points_estimation?
-          tmp_prbl[0] = tmp_prbl[1]
-          tmp_prbl[2] = tmp_prbl[1]
-        end
-        introduced_defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
 
       #Remaining defects
       remaining_defect_attribute = PeAttribute.find_by_alias("remaining_defects")
-      remaining_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
+      unless remaining_defect_attribute.nil?
+        remaining_defect_output_ev = EstimationValue.where(module_project_id: current_module_project.id,
                                         pe_attribute_id: remaining_defect_attribute.id,
                                         in_out: "output").first
-      unless remaining_defect_output_ev.nil?
-        tmp_prbl = Array.new
-        # total_remaining_defects = total_defects - (total_defects * prod_factor_product)
-        total_remaining_defects = total_defects * prod_factor_product
-        ["low", "most_likely", "high"].each do |level|
-          remaining_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_remaining_defects
-          remaining_defect_output_ev.save
-          tmp_prbl << remaining_defect_output_ev.send("string_data_#{level}")[current_component.id]
+        unless remaining_defect_output_ev.nil?
+          tmp_prbl = Array.new
+          # total_remaining_defects = total_defects - (total_defects * prod_factor_product)
+          total_remaining_defects = total_defects * prod_factor_product
+          ["low", "most_likely", "high"].each do |level|
+            remaining_defect_output_ev.send("string_data_#{level}")[current_component.id] = total_remaining_defects
+            remaining_defect_output_ev.save
+            tmp_prbl << remaining_defect_output_ev.send("string_data_#{level}")[current_component.id]
+          end
+          unless @ge_model.three_points_estimation?
+            tmp_prbl[0] = tmp_prbl[1]
+            tmp_prbl[2] = tmp_prbl[1]
+          end
+          remaining_defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
         end
-        unless @ge_model.three_points_estimation?
-          tmp_prbl[0] = tmp_prbl[1]
-          tmp_prbl[2] = tmp_prbl[1]
-        end
-        remaining_defect_output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
       end
 
     end
