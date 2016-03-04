@@ -142,8 +142,13 @@ class Ge::GeModelsController < ApplicationController
                   [I18n.t(:three_points_estimation), @ge_model.three_points_estimation ? 1 : 0],
                   [I18n.t(:modification_entry_valur), @ge_model.enabled_input ],
                   [I18n.t(:enabled_theorical_effort_modification), @ge_model.modify_theorical_effort],
+                  [I18n.t(:module_input_attribute), @ge_model.input_pe_attribute.alias],
+                  [I18n.t(:module_output_attribute), @ge_model.output_pe_attribute.alias],
                   ["#{I18n.t(:label_Factor)} a", @ge_model.coeff_a ],
                   ["#{I18n.t(:scale_factor)} : b", @ge_model.coeff_b ],
+                  [I18n.t(:p_factors_calculation_method), @ge_model.p_calculation_method],
+                  [I18n.t(:c_factors_calculation_method), @ge_model.c_calculation_method],
+                  [I18n.t(:s_factors_calculation_method), @ge_model.s_calculation_method],
                   [I18n.t(:retained_size_unit), @ge_model.size_unit],
                   [I18n.t(:Wording_of_the_module_unit_effort_2), @ge_model.effort_unit],
                   [I18n.t(:hour_coefficient_conversion), @ge_model.standard_unit_coefficient],
@@ -411,7 +416,9 @@ class Ge::GeModelsController < ApplicationController
 
         else
           #there is no model, we will create new model from the model attributes data of the file to import
-          model_sheet_order = { :"0" => "name", :"1" => "description", :"2" => "three_points_estimation", :"3" => "enabled_input", :"4" => "modify_theorical_effort", :"5" => "coeff_a", :"6" => "coeff_b", :"7" => "size_unit", :"8" => "effort_unit", :"9" => "standard_unit_coefficient" }
+          model_sheet_order = { :"0" => "name", :"1" => "description", :"2" => "three_points_estimation", :"3" => "enabled_input", :"4" => "modify_theorical_effort",
+                                :"5" =>"input_pe_attribute_id", :"6" => "output_pe_attribute_id", :"7" => "coeff_a", :"8" => "coeff_b", :"9" => "p_calculation_method",
+                                :"10" => "c_calculation_method", :"11" => "s_calculation_method", :"12" => "size_unit", :"13" => "effort_unit", :"14" => "standard_unit_coefficient" }
           model_worksheet = workbook['Model']
 
           if !model_worksheet.nil?
@@ -423,6 +430,14 @@ class Ge::GeModelsController < ApplicationController
                 if cell.column == 1 && !cell.nil?
                   val = cell && cell.value
                   attr_name = model_sheet_order["#{index}".to_sym]
+                  if attr_name.in?(["input_pe_attribute_id", "output_pe_attribute_id"])
+                    val_attr = PeAttribute.find_by_alias(val)
+                    if val_attr.nil?
+                      val = nil
+                    else
+                      val = val_attr.id
+                    end
+                  end
                   @ge_model["#{attr_name}"] = val unless attr_name.nil?
                 end
               end
@@ -868,8 +883,7 @@ class Ge::GeModelsController < ApplicationController
         end
         output_ev.update_attribute(:"string_data_probable", { current_component.id => ((tmp_prbl[0].to_f + 4 * tmp_prbl[1].to_f + tmp_prbl[2].to_f)/6) } )
 
-
-        #==========  DEBUT TEST  ============
+        #==========  DEBUT Transporter les entrées qui ne sont pas touchées par la configurations de l'instance  ============
         # Transporter les entrées qui ne sont pas touchées par la configuration de l'instance
         if input_pe_attribute == output_pe_attribute  #Input attribute is the same as the output attribute
           case input_pe_attribute.alias
@@ -913,7 +927,7 @@ class Ge::GeModelsController < ApplicationController
           end
         end
 
-        #==========  FIN TEST  ============
+        #==========  FIN Transporter les entrées qui ne sont pas touchées par la configurations de l'instance  ============
       end
 
 
