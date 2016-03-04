@@ -878,8 +878,8 @@ class Ge::GeModelsController < ApplicationController
             when "retained_size"
               other_attribute = PeAttribute.where(alias: "effort").first
           end
-          effort_or_size_input_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "input").first
-          effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+          effort_or_size_input_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => other_attribute.id, in_out: "input").first
+          effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => other_attribute.id, in_out: "output").first
 
           unless effort_or_size_input_ev.nil? || effort_or_size_output_ev.nil?
             # get possible module_project for this attribute
@@ -895,6 +895,8 @@ class Ge::GeModelsController < ApplicationController
               component_probable_value = previous_ev.send("string_data_probable")[current_component.id]
               effort_or_size_input_ev.send("string_data_probable")[current_component.id] = component_probable_value
               effort_or_size_output_ev.send("string_data_probable")[current_component.id] = component_probable_value
+
+              effort_or_size_input_ev.save
               effort_or_size_output_ev.save
             end
           end
