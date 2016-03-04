@@ -136,6 +136,17 @@ class ModuleProject < ActiveRecord::Base
     results
   end
 
+  #Return the previous module_project where their output attributes can be the input of the current module_project
+  def possible_previous_mp_for_attribute(pe_attribute)
+    possible_module_projects = []
+    self.previous.each do |previous_mp|
+      if previous_mp.pemodule.attribute_modules.where(:pe_attribute_id => pe_attribute.id, in_out: ["output", "both"]).length >= 1
+        possible_module_projects << previous_mp
+      end
+    end
+    possible_module_projects
+  end
+
   def links
     self.associated_module_project_ids
   end

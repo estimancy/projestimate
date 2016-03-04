@@ -878,13 +878,30 @@ class Ge::GeModelsController < ApplicationController
             when "retained_size"
               other_attribute = PeAttribute.where(alias: "effort").first
           end
+          effort_or_size_input_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "input").first
           effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
-          unless effort_or_size_output_ev.nil?
 
+          unless effort_or_size_input_ev.nil? || effort_or_size_output_ev.nil?
+            # get possible module_project for this attribute
+            possible_module_projects = current_module_project.possible_previous_mp_for_attribute(other_attribute)
+            previous_ev = EstimationValue.where(:pe_attribute_id => other_attribute.id, :module_project_id => possible_module_projects.last, :in_out => "output").first
+
+            unless previous_ev.nil?
+              ["low", "most_likely", "high"].each do |level|
+                component_value = previous_ev.send("string_data_#{level}")[current_component.id]
+                effort_or_size_input_ev.send("string_data_#{level}")[current_component.id] = component_value
+                effort_or_size_output_ev.send("string_data_#{level}")[current_component.id] = component_value
+              end
+              component_probable_value = previous_ev.send("string_data_probable")[current_component.id]
+              effort_or_size_input_ev.send("string_data_probable")[current_component.id] = component_probable_value
+              effort_or_size_output_ev.send("string_data_probable")[current_component.id] = component_probable_value
+              effort_or_size_output_ev.save
+            end
           end
 
         else #Input attribute is different to the output attribute
           effort_or_size_output_ev = EstimationValue.where(:module_project_id => current_module_project.id, :pe_attribute_id => input_pe_attribute.id, in_out: "output").first
+
           unless effort_or_size_output_ev.nil?
             ["low", "most_likely", "high"].each do |level|
               effort_or_size_output_ev.send("string_data_#{level}")[current_component.id] = input_ev.send("string_data_#{level}")[current_component.id]
