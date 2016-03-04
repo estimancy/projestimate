@@ -42,13 +42,12 @@
           <tr>
             <td>
               <!-- Color is using the JS Spectrum library -->
-              <%= f.input :color, label: I18n.t(:status_color) %>
-              <%# if @views_widget.new_record? %>
+              <% if @views_widget.new_record? %>
                 <%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color', value: '#99ccff'} %>
-                <%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "input-xxlarge"} %>
-              <%# else %>
-                <%#= f.input :color, label: I18n.t(:status_color), input_html: {} %>
-              <%# end %>
+                <%= f.input :color, label: I18n.t(:status_color), input_html: {value: "blanchedalmond"} %>
+              <% else %>
+                <%= f.input :color, label: I18n.t(:status_color) %>
+              <% end %>
             </td>
             <td><%= f.input :icon_class, as: :select, collection: Projestimate::Application::ICON_CLASSES.sort() , label: I18n.t(:icon) %></td>
             <td><div id="view_icon_class_image"></div></td>
