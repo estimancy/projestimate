@@ -6,7 +6,7 @@ require 'effort_balancing/version'
 Gem::Specification.new do |gem|
   gem.name = 'effort_balancing'
   gem.version = EffortBalancing::VERSION
-  gem.authors = 'Spirula'
+  gem.authors = 'Estimancy'
   gem.email = 'contact@estimancy.com'
   gem.description = %q{TODO: Write a gem description}
   gem.summary = %q{TODO: Write a gem summary}

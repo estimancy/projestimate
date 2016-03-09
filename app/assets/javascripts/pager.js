@@ -3,6 +3,29 @@ $(document).ready(function() {
 
 $(function table_sorter_filter() {
 
+    <!-- Adding tablesorter filter save on page reload -->
+    $('table')
+        .bind('filterInit', function() {
+            // check that storage ulility is loaded
+            if ($.tablesorter.storage) {
+                // get saved filters
+                var f = $.tablesorter.storage(this, 'tablesorter-filters') || [];
+                $(this).trigger('search', [f]);
+            }
+        })
+        .bind('filterEnd', function(){
+            if ($.tablesorter.storage) {
+                // save current filters
+                var f = $(this).find('.tablesorter-filter').map(function(){
+                    return $(this).val() || '';
+                }).get();
+                $.tablesorter.storage(this, 'tablesorter-filters', f);
+            }
+        });
+
+    <!-- Adding tablesorter filter save -->
+
+
     var pagerOptions = {
 
         // target the pager markup - see the HTML block below
@@ -32,6 +55,10 @@ $(function table_sorter_filter() {
 
         // starting page of the pager (zero based index)
         page: 0,
+
+        // reset pager after filtering; set to desired page #
+        // set to false to not change page at filter start
+        pageReset: 0,
 
         // Number of visible rows - default is 10
         size: 10,
@@ -103,7 +130,6 @@ $(function table_sorter_filter() {
                 // jQuery selector string of an element used to reset the filters
                 filter_reset : '.reset',
                 filter_functions : {
-
                 }
             }
 
@@ -175,7 +201,6 @@ $(function table_sorter_filter() {
                         // jQuery selector string of an element used to reset the filters
                         filter_reset : '.reset',
                         filter_functions : {
-
                         }
                     }
 
@@ -198,6 +223,7 @@ $(function table_sorter_filter() {
     });
 
 });
+
 
 // ################################# TABLE SORTER #################################
 
