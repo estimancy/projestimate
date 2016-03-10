@@ -49,16 +49,16 @@
                             <% view_widget_min_max_size = view_widget_data[:min_max_size] %>
                             <% min_without_min_max = '12px' ; one_height = ""
                                min_with_min_max = '9px'
-                               max_without_min_max = '60px'
-                               max_with_min_max = '50px'
+                               max_without_min_max = '30px' #'50px'
+                               max_with_min_max = '20px' #'40px'
                                ft_minMax_minFontSize = '12px'
                                ft_minMax_maxFontSize = '15px'
                                if view_widget.widget_type == "text" || view_widget.widget_type==""
                                  font_weight = "bold_font_weight"
 
                                  if view_widget.height.to_i == 1
-                                    max_with_min_max = '30px'
-                                    max_without_min_max = '30px'
+                                    max_with_min_max = '15px' #'30px'
+                                    max_without_min_max = '20px' #'30px'
                                     ft_minMax_minFontSize = '6px'
                                     ft_minMax_maxFontSize = '10px'
                                     if view_widget.width.to_i <= 1
@@ -112,7 +112,8 @@
                                   <% if view_widget.show_min_max && effort_per_phase_class.empty? %>
                                     <% one_height = "one_height" %>
                                     <span class="row-fluid">
-                                      <span id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em; margin-bottom: <%= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">
+                                      <!--<span id="<%#= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%#= font_weight%>" style="font-size: <%#=view_widget_text_size%>em; margin-bottom: <%#= view_widget.height.to_i < 3 ? (view_widget_height-90) : 90 %>px">-->
+                                      <span id="<%= "widget_text_#{view_widget.id}" %>" class="widget_text with_min_max <%= font_weight%>" style="font-size: <%=view_widget_text_size%>em;">
                                         <%= value_to_show %>
                                       </span>
 
@@ -135,13 +136,23 @@
                               <!--script-->
                               <script type="text/javascript">
 
-                                $("#fittext1").fitText();
-                                $("li.without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%= max_without_min_max %>' });
-                                $("li.with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%= max_with_min_max %>' });
-                                $("li.no_estimation_value").fitText(2, { minFontSize: '12px', maxFontSize: '12px' });
-                                $(".widget_name").fitText(0.8, { minFontSize: '12px', maxFontSize: '20px' });
+//                                $("#fittext1").fitText();
+//                                $("li.without_min_max").fitText(0.6, { minFontSize: '5px', maxFontSize: '<%#= max_without_min_max %>' });
+//                                $("li.with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '<%#= max_with_min_max %>' });
+//                                $("li.no_estimation_value").fitText(2, { minFontSize: '12px', maxFontSize: '12px' });
+//                                $(".widget_name").fitText(0.8, { minFontSize: '12px', maxFontSize: '20px' });
+//                                $("li.min_max").fitText(1, { minFontSize: '<%#= ft_minMax_minFontSize %>', maxFontSize: '<%#= ft_minMax_maxFontSize %>' });
 
-                                $("li.min_max").fitText(1, { minFontSize: '<%= ft_minMax_minFontSize %>', maxFontSize: '<%= ft_minMax_maxFontSize %>' });
+                                  // DEBUT TEST
+                                    //$("li.without_min_max").fitText(0.7, { minFontSize: '5px', maxFontSize: '30px' });
+//                                    $("li.with_min_max").fitText(0.7, { minFontSize: '9px', maxFontSize: '20px' });
+//                                    $("li.no_estimation_value").fitText(2, { minFontSize: '12px', maxFontSize: '12px' });
+                                    $(".widget_name").fitText(0.8, { minFontSize: '12px', maxFontSize: '15px' });
+                                    $("li.widget_text").fitText(1.2, { minFontSize: '12px', maxFontSize: '20px' });
+//                                    $(".min_max").fitText(1.2, { minFontSize: '<%#= ft_minMax_minFontSize %>', maxFontSize: '<%#= ft_minMax_maxFontSize %>' });
+
+                                  // FIN TEST
+
                               </script>
                           <% end %>
                       <% end %>

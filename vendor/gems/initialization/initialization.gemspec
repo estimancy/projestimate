@@ -6,7 +6,7 @@ require 'initialization/version'
 Gem::Specification.new do |gem|
   gem.name = 'initialization'
   gem.version = Initialization::VERSION
-  gem.authors = 'Spirula'
+  gem.authors = 'Estimancy'
   gem.email = 'contact@estimancy.com'
   gem.description = 'As project owner I need to enter organizational and project data (data my organization OR my project expect to capitalize and initialization on, independently from the estimation modules).'
   gem.summary = 'Initialization'

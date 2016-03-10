@@ -140,14 +140,14 @@
         </b>
       </h4>
 
-      <!-- Find all previous MP that has the attribute -->
-      <% possible_module_projects = [] %>
-      <% current_module_project.previous.each do |previous_mp| %>
-        <% if previous_mp.pemodule.attribute_modules.where(:pe_attribute_id => attr.id, in_out: ["output", "both"]).length >= 1 %>
-            <% possible_module_projects << previous_mp %>
-        <% end %>
-      <% end %>
-
+      <!-- Find all previous MP that has the attribute for output -->
+      <%# possible_module_projects = [] %>
+      <%# current_module_project.previous.each do |previous_mp| %>
+        <%# if previous_mp.pemodule.attribute_modules.where(:pe_attribute_id => attr.id, in_out: ["output", "both"]).length >= 1 %>
+            <%# possible_module_projects << previous_mp %>
+        <%# end %>
+      <%# end %>
+      <% possible_module_projects = current_module_project.possible_previous_mp_for_attribute(attr) %>
       <% previous_ev = EstimationValue.where(:pe_attribute_id => attr.id,
                                              :module_project_id => possible_module_projects.last,
                                              :in_out => "output").first %>

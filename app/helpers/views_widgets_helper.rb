@@ -28,8 +28,8 @@ module ViewsWidgetsHelper
     initial_width = 60;  initial_height = 60
     value_to_show = nil # according to the widget type
     ############################ Get the view_widget size  ############################
-    ft_maxFontSize_without_mm = 75
-    icon_font_size = 2
+    ft_maxFontSize_without_mm = 50 #75
+    icon_font_size = 1.7 ###2
 
     # The widget size with : margin-right = 10px
     height = (initial_height*view_widget.height.to_i) + 5*(view_widget.height.to_i - 1)   #margin is now 5 unless of 10
@@ -40,19 +40,19 @@ module ViewsWidgetsHelper
 
     case view_widget.height.to_i
       when 1..2
-        icon_font_size = 2
+        icon_font_size = 1.2 ###2
         if view_widget.height.to_i == 3
-          icon_font_size = 3
+          icon_font_size = 2.6 ###3
         end
-        ft_maxFontSize_without_mm = 20
+        ft_maxFontSize_without_mm = 10###20
         if view_widget.width.to_i <= 1
-          ft_minMax_minFontSize = 3.5
+          ft_minMax_minFontSize = 3###3.5
         else
-          ft_minMax_minFontSize = 6.5
+          ft_minMax_minFontSize = 5###6.5
         end
       when 3
         icon_font_size = 2.5
-        ft_maxFontSize_without_mm = 20
+        ft_maxFontSize_without_mm = 10###20
       else
         icon_font_size = ((height+width)/2) * 0.025
         if icon_font_size > 3 && icon_font_size < 6
@@ -90,10 +90,10 @@ module ViewsWidgetsHelper
     widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable }
 
     ############################ Get the view_widget size  ############################
-    ft_maxFontSize_without_mm = 75
-    ft_maxFontSize_with_mm = 60
-    ft_minMax_maxFontSize = 20
-    icon_font_size = 2
+    ft_maxFontSize_without_mm = 50###75
+    ft_maxFontSize_with_mm = 45###60
+    ft_minMax_maxFontSize = 15###20
+    icon_font_size = 1.6###2
 
     # The widget size with : margin-right = 10px
     height = (initial_height*view_widget.height.to_i) + 5*(view_widget.height.to_i - 1)   #margin is now 5 unless of 10
@@ -104,25 +104,25 @@ module ViewsWidgetsHelper
 
     case view_widget.height.to_i
       when 1..2
-        icon_font_size = 2
+        icon_font_size = 1.7###2
         if view_widget.height.to_i == 3
-          icon_font_size = 3
+          icon_font_size = 2.5###3
         end
-        ft_maxFontSize_without_mm = 30
-        ft_maxFontSize_with_mm = 30
-        ft_minMax_minFontSize = 6
-        ft_minMax_maxFontSize = 12
+        ft_maxFontSize_without_mm = 20###30
+        ft_maxFontSize_with_mm = 15###30
+        ft_minMax_minFontSize = 5###6
+        ft_minMax_maxFontSize = 10###12
 
         if view_widget.width.to_i <= 1
-          ft_minMax_minFontSize = 4.5
+          ft_minMax_minFontSize = 4###4.5
         else
-          ft_minMax_minFontSize = 7.5
+          ft_minMax_minFontSize = 5###7.5
         end
       when 3
-        icon_font_size = 2.5 #3
-        ft_maxFontSize_without_mm = 30
-        ft_maxFontSize_with_mm = 30
-        ft_minMax_maxFontSize = 12
+        icon_font_size = 2###2.5 #3
+        ft_maxFontSize_without_mm = 20###30
+        ft_maxFontSize_with_mm = 15###30
+        ft_minMax_maxFontSize = 10###12
       else
         icon_font_size = ((height+width)/2) * 0.025
         if icon_font_size > 3 && icon_font_size < 6
@@ -131,8 +131,8 @@ module ViewsWidgetsHelper
           icon_font_size = 4 #5
         end
     end
-    text_size = ((height+width)/2) * 0.015
-    min_max_size = ((height+width)/2) * 0.009
+    text_size = ((height+width)/2) * 0.011  #((height+width)/2) * 0.015
+    min_max_size = ((height+width)/2) * 0.005   #((height+width)/2) * 0.009
 
     # get the fitText minFontSize and maxFontSize
     widget_data[:icon_font_size] = icon_font_size

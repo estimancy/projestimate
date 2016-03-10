@@ -60,6 +60,7 @@ class ModuleProjectsController < ApplicationController
     redirect_to :back
   end
 
+
   def edit
     @module_project = ModuleProject.find(params[:id])
     @project = @module_project.project
