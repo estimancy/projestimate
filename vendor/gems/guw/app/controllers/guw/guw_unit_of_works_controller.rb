@@ -713,6 +713,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                   else
                     @lows << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                   end
+                  guw_unit_of_work.missing_value = false
                 end
               end
             else
@@ -720,6 +721,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               guw_unit_of_work.flagged = true
             end
           end
+        else
+          guw_unit_of_work.missing_value = false
         end
 
         unless most_likely.nil?
@@ -731,12 +734,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                 else
                   @mls << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                 end
+                guw_unit_of_work.missing_value = false
               end
             end
           else
             guw_unit_of_work.off_line = true
             guw_unit_of_work.flagged = true
           end
+        else
+          guw_unit_of_work.missing_value = false
         end
 
         unless high.nil?
@@ -748,12 +754,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                 else
                   @highs << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                 end
+                guw_unit_of_work.missing_value = false
               end
             end
           else
             guw_unit_of_work.off_line = true
             guw_unit_of_work.flagged = true
           end
+        else
+          guw_unit_of_work.missing_value = false
         end
       end
     end

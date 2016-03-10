@@ -290,9 +290,9 @@
                       <span class="text-center criteria_label_<%= guow.id %>">
                         <% counting = guow.guw_unit_of_work_attributes.where(guw_type_id: guow.guw_type_id).map(&:most_likely).compact %>
                         <% if counting.empty? %>
-                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears #{guow.guw_complexity_id !=  guow.guw_original_complexity_id ? 'green' : '' }" %>
+                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears #{guow.missing_value == true ? (guow.guw_complexity_id !=  guow.guw_original_complexity_id ? 'blue' : '') : 'red' }" %>
                         <% else %>
-                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears #{guow.guw_complexity_id !=  guow.guw_original_complexity_id ? 'green' : 'blue' }" %>
+                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears #{guow.missing_value == true ? (guow.guw_complexity_id !=  guow.guw_original_complexity_id ? 'blue' : 'green') : 'red' }" %>
                         <% end %>
                       </span>
                     <% end %>

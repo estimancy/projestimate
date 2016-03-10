@@ -561,6 +561,7 @@ fr:
   new_project_from: "Créer une estimation à partir d'un modèle"
   wbs_product: "PBS-Projets"
   wbs_activity: "WBS-Activités"
+  activity: "Activités"
   available_wbs_activity: "WBS-Activité disponibles dans la bibliothèque, avec leurs tables de ratio associées\n(La table de ratio selectionnée sera utilisée comme table de ratio par défaut)"
   button_add: "Ajouter"
   label_wbs_activity_ratio: "Table des ratios"

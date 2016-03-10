@@ -556,6 +556,7 @@ en-gb:
   new_project_from: "New estimation from template"
   wbs_product: "WBS Projects"
   wbs_activity: "WBS Activity"
+  activity: "Activity"
   available_wbs_activity: "Available WBS-Activities from the library, with their associated ratio tables\n(Selected ratio table will be used as default ratio table)"
   button_add: "Add"
   label_wbs_activity_ratio: "Ratio table"

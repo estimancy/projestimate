@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160309105430) do
+ActiveRecord::Schema.define(:version => 20160310093243) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -700,8 +700,8 @@ ActiveRecord::Schema.define(:version => 20160309105430) do
     t.float    "result_most_likely"
     t.float    "result_high"
     t.integer  "guw_type_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.integer  "guw_complexity_id"
     t.float    "effort"
     t.float    "ajusted_size"
@@ -723,6 +723,7 @@ ActiveRecord::Schema.define(:version => 20160309105430) do
     t.float    "size"
     t.float    "cost"
     t.integer  "guw_original_complexity_id"
+    t.boolean  "missing_value",              :default => false
   end
 
   create_table "guw_guw_weightings", :force => true do |t|
