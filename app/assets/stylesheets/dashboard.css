@@ -639,6 +639,13 @@ input[type="color"],
     color: green;
 }
 
+.green{
+    color: green;
+}
+
+.blue{
+    color: #0088cc;
+}
 
 .attribute_tooltip{
     cursor: help;
@@ -889,11 +896,6 @@ span.error{
 .modal .modal-body {
     max-height: 600px;
     overflow-y: auto;
-}
-
-.blue{
-    /*color: blue;*/
-    color: #0073ea;
 }
 
 .darkseagreen{
