@@ -2,6 +2,7 @@
   <div class="project_history">
     <h4>
       <%= hidden_field_tag :select_at_least_one_project, I18n.t(:select_at_least_one_project) %>
+      <%= hidden_field_tag "checked_nodes", [] %>
 
       <span style="color:#23A4FF; float: left; margin-left: 0px; margin-right: 10px;">
         Estimation Actions
@@ -61,6 +62,7 @@
       // FOr ex. var json = {"id":"301","name":"ggg","title":"ggg","version":"1.0","data":{},"children":[{"id":"305","name":"ggg","title":"ggg","version":"1.0-1.0","data":{},"children":[]},{"id":"304","name":"ggg","title":"ggg","version":"1.1","data":{},"children":[{"id":"306","name":"ggg","title":"ggg","version":"1.2","data":{},"children":[{"id":"30","name":"moi","title":"moi","version":"1.2","data":{},"children":[]}]}]}]};
        var json = $("#project_tree_id").data("project_tree");
         //end
+       //console.log(json);
 
         //init Spacetree
         //Create a new ST instance
@@ -175,6 +177,10 @@
 
                 //Enable/disable some actions according to the checked node
                 label.onclick = function(){
+
+                    all_checked_node_ids = new Array();
+                    var checked_node_ids_counter = 0;
+
                     var counter = 0,
                         checkout_counter = 0,
                         i = 0;
@@ -183,6 +189,24 @@
                     var checkbox_objects = document.getElementsByClassName('tree_node_checkbox');
                     // loop through all collected checkbox objects
                     for (i = 0; i < checkbox_objects.length; i++) {
+
+                        //========== TEST =======
+
+                        //update the hidden field value for all checked node
+                        //console.log("avant : "+all_checked_node_ids);
+                        if (checkbox_objects[i].checked === true) {
+                            checked_node_ids_counter++;
+                            all_checked_node_ids.push(checkbox_objects[i].value);
+                        }else{
+                            node_index = all_checked_node_ids.indexOf(checkbox_objects[i].value);
+                            if(node_index > -1)
+                                all_checked_node_ids.splice(checkbox_objects[i].value,1);
+                        }
+                        $('#checked_nodes').val(all_checked_node_ids);
+                        //console.log("après : "+all_checked_node_ids);
+
+                        //========== TEST =======
+
                         // if input object is checkbox and checkbox is checked then ... for promote
                         if (checkbox_objects[i].dataset['node_state'] in states_to_confirm && checkbox_objects[i].checked === true) {
                             // ... increase counter
@@ -206,7 +230,8 @@
                     }
 
                     //Get checkout link_to
-                    var checkout_button = document.getElementById('checkout_node_path');
+                    //var checkout_button = document.getElementById('checkout_node_path');
+                    var checkout_button = document.getElementById('set_checkout_version_path');
                     if(checkout_counter > 0){
                         checkout_button.disabled = true;
                         $('#checkout_node_path').removeClass('icon-step-forward');
@@ -344,7 +369,7 @@
             }
         };
 
-        top.onchange = left.onchange = bottom.onchange = right.onchange = changeHandler;
+        //top.onchange = left.onchange = bottom.onchange = right.onchange = changeHandler;
         //end
 
 //    };  // END init

@@ -2410,6 +2410,9 @@ public
         @string_url = session[:return_to]
       end
     end
+    respond_to do |format|
+     format.js
+    end
   end
 
   #Function for collapsing project version
