@@ -166,6 +166,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if @lows.empty?
       guw_unit_of_work.guw_complexity_id = nil
+      guw_unit_of_work.guw_original_complexity_id = nil
       guw_unit_of_work.result_low = nil
     else
       guw_unit_of_work.result_low = @lows.sum
@@ -173,6 +174,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if @mls.empty?
       guw_unit_of_work.guw_complexity_id = nil
+      guw_unit_of_work.guw_original_complexity_id = nil
       guw_unit_of_work.result_most_likely = nil
     else
       guw_unit_of_work.result_most_likely = @mls.sum
@@ -180,6 +182,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if @highs.empty?
       guw_unit_of_work.guw_complexity_id = nil
+      guw_unit_of_work.guw_original_complexity_id = nil
       guw_unit_of_work.result_high = nil
     else
       guw_unit_of_work.result_high = @highs.sum
@@ -212,6 +215,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     unless params["guw_complexity_#{guw_unit_of_work.id}"].nil?
       guw_complexity_id = params["guw_complexity_#{guw_unit_of_work.id}"].to_i
       guw_unit_of_work.guw_complexity_id = guw_complexity_id
+      guw_unit_of_work.guw_original_complexity_id = guw_complexity_id
       guw_unit_of_work.save
     else
       guw_complexity_id = guw_unit_of_work.guw_complexity_id
@@ -241,8 +245,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           cplx = guw_type.guw_complexities.last
           if cplx.nil?
             guw_unit_of_work.guw_complexity_id = nil
+            guw_unit_of_work.guw_original_complexity_id = nil
           else
             guw_unit_of_work.guw_complexity_id = cplx.id
+            guw_unit_of_work.guw_original_complexity_id = cplx.id
             array_pert << calculate_seuil(guw_unit_of_work, guw_type.guw_complexities.last, value_pert)
           end
         else
@@ -546,6 +552,12 @@ class Guw::GuwUnitOfWorksController < ApplicationController
     @guw_unit_of_work.guw_work_unit_id = @guw_work_unit.id
     @guw_unit_of_work.save
   end
+
+  # def change_complexity
+  #   @guw_model = current_module_project.guw_model
+  #   @guw_unit_of_work = Guw::GuwUnitOfWork.find(params[:guw_unit_of_work_id])
+  #   @guw_unit_of_work.save
+  # end
   #
   # def change_technology
   #   @guw_model = current_module_project.guw_model
@@ -701,6 +713,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                   else
                     @lows << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                   end
+                  guw_unit_of_work.missing_value = false
                 end
               end
             else
@@ -708,6 +721,8 @@ class Guw::GuwUnitOfWorksController < ApplicationController
               guw_unit_of_work.flagged = true
             end
           end
+        else
+          guw_unit_of_work.missing_value = true
         end
 
         unless most_likely.nil?
@@ -719,12 +734,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                 else
                   @mls << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                 end
+                guw_unit_of_work.missing_value = false
               end
             end
           else
             guw_unit_of_work.off_line = true
             guw_unit_of_work.flagged = true
           end
+        else
+          guw_unit_of_work.missing_value = true
         end
 
         unless high.nil?
@@ -736,12 +754,15 @@ class Guw::GuwUnitOfWorksController < ApplicationController
                 else
                   @highs << guw_ac.value.to_f * guw_ac.guw_type_complexity.value.to_f
                 end
+                guw_unit_of_work.missing_value = false
               end
             end
           else
             guw_unit_of_work.off_line = true
             guw_unit_of_work.flagged = true
           end
+        else
+          guw_unit_of_work.missing_value = true
         end
       end
     end
@@ -756,6 +777,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
     if (value_pert >= guw_c.bottom_range) and (value_pert < guw_c.top_range)
       guw_unit_of_work.guw_complexity_id = guw_c.id
+      guw_unit_of_work.guw_original_complexity_id = guw_c.id
     end
 
     guw_unit_of_work.save

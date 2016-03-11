@@ -50,7 +50,7 @@
       </span>
 
       <span class="label label-info">
-        &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.C. :
+        &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.S. :
         <span class="label label-info off_line_unit_of_work">
           <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(off_line: true)}.flatten.size %>
         </span>
@@ -113,7 +113,7 @@
               </span>
             </span>
             <span class="label label-info">
-              Nombre d'U.O. H.C. :
+              Nombre d'U.O. H.S. :
               <span class="<%= uowg.id %>_off_line">
                 <%= uowg.guw_unit_of_works.where(off_line: true).map(&:quantity).compact.sum %>
               </span>
@@ -180,14 +180,6 @@
                   </span>
                 </td>
 
-                <!--<td style="max-width: 100px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">-->
-                  <!--<span class="pull-left">-->
-                    <%# link_to (guow.comments.nil? || guow.comments.blank?) ? '-' : guow.comments.truncate(25),
-                                guw.guw_unit_of_work_load_comments_path(guow),
-                                title: "#{guow.comments}\n#{guow.tracking}", method: "post", remote: true %>
-                  <!--</span>-->
-                <!--</td>-->
-
                 <td class="span2">
                   <%= select_tag "guw_type[#{guow.id}]", options_for_select( @guw_model.guw_types.map{|i| [i.name, i.id]},
                                                                              selected: guow.guw_type_id),
@@ -201,8 +193,6 @@
                   <td class="span2">
                     <span class="work_unit_<%= guow.id %>" >
                       <% results = @guw_model.guw_work_units.map{|i| i.guw_complexity_work_units.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
-                      <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_work_unit }.flatten.compact.uniq %>
-                      <%# results = Guw::GuwComplexityWorkUnit.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_work_unit }.uniq %>
                       <% unless results.empty? %>
                         <%= select_tag "guw_work_unit[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                                        selected: guow.guw_work_unit_id),
@@ -219,8 +209,6 @@
                   <td class="span2">
                     <span class="weighting_<%= guow.id %>" >
                       <% results = @guw_model.guw_weightings.map{|i| i.guw_complexity_weightings.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq }.flatten.compact.sort! { |a, b|  a.display_order <=> b.display_order } %>
-                      <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).select{|ct| ct.value != nil }.map{|i| i.guw_weighting }.uniq %>
-                      <%# results = Guw::GuwComplexityWeighting.where(guw_type_id: guow.guw_type_id).map{|i| i.guw_weighting }.uniq %>
                       <% unless results.empty? %>
                         <%= select_tag "guw_weighting[#{guow.id}]", options_for_select(results.map{|i| [i.name, i.id]},
                                                                                        selected: guow.guw_weighting_id),
@@ -283,13 +271,13 @@
                   <span class="cotation_label_<%= guow.id %>">
                     <% begin %>
                       <% if guow.off_line == true %>
-                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSAT", disabled: !guow.guw_type.allow_complexity %>
+                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: nil), guw: guow.id, class: "input-small guw_complexity", prompt: "HSAT", disabled: !guow.guw_type.allow_complexity %>
                       <% elsif guow.off_line_uo == true %>
-                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: nil), class: "input-small", prompt: "HSUO", disabled: !guow.guw_type.allow_complexity %>
+                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: nil), guw: guow.id, class: "input-small guw_complexity", prompt: "HSUO", disabled: !guow.guw_type.allow_complexity %>
                       <% elsif guow.guw_complexity.nil? %>
-                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true, disabled: !guow.guw_type.allow_complexity %>
+                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), guw: guow.id, class: "input-small guw_complexity", include_blank: true, disabled: !guow.guw_type.allow_complexity %>
                       <% else %>
-                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), class: "input-small", include_blank: true, disabled: !guow.guw_type.allow_complexity %>
+                        <%= select_tag "guw_complexity_#{guow.id}", options_for_select(guow.guw_type.guw_complexities.order("display_order ASC").map{|i| [i.name, i.id] }, selected: guow.guw_complexity_id), guw: guow.id, class: "input-small guw_complexity", include_blank: true, disabled: !guow.guw_type.allow_complexity %>
                       <% end %>
                     <% rescue %>
                     <% end %>
@@ -302,9 +290,9 @@
                       <span class="text-center criteria_label_<%= guow.id %>">
                         <% counting = guow.guw_unit_of_work_attributes.where(guw_type_id: guow.guw_type_id).map(&:most_likely).compact %>
                         <% if counting.empty? %>
-                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: black" %>
+                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears #{guow.missing_value == true ? 'red' : (guow.guw_complexity_id !=  guow.guw_original_complexity_id ? 'blue' : '') }" %>
                         <% else %>
-                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears", style: "color: #0088cc" %>
+                          <%= link_to "", guw.guw_unit_of_work_load_cotations_path(guow), method: "post", remote: true, class: "fa fa-gears #{guow.missing_value == true ? 'red' : (guow.guw_complexity_id !=  guow.guw_original_complexity_id ? 'blue' : 'green')}" %>
                         <% end %>
                       </span>
                     <% end %>
@@ -423,6 +411,12 @@
         data: "guw_work_unit_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
       });
     });
+//    $('.guw_complexity').change(function(){
+//      $.ajax({
+//        url: "<%# guw.change_complexity_path %>",
+//        data: "guw_complexity_id=" + this.value + "&guw_unit_of_work_id=" + $(this).attr("guw")
+//      });
+//    });
 //
 //    $('.guw_technology').change(function(){
 //      $.ajax({
