@@ -722,7 +722,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             end
           end
         else
-          guw_unit_of_work.missing_value = false
+          guw_unit_of_work.missing_value = true
         end
 
         unless most_likely.nil?
@@ -742,7 +742,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             guw_unit_of_work.flagged = true
           end
         else
-          guw_unit_of_work.missing_value = false
+          guw_unit_of_work.missing_value = true
         end
 
         unless high.nil?
@@ -762,7 +762,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
             guw_unit_of_work.flagged = true
           end
         else
-          guw_unit_of_work.missing_value = false
+          guw_unit_of_work.missing_value = true
         end
       end
     end
