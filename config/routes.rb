@@ -23,6 +23,9 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
+  resources :machine_learnings
+
+
   resources :applications
   resources :fields
   resources :views_widgets

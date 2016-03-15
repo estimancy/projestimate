@@ -721,10 +721,11 @@ $(document).ready(function() {
 
 
     //Handler Action link_to event for project history tree view
-    $('.node_link_to').on('click', 'a', function(){
+    $('.node_link_to').on('click', function(){
         var counter = 0,
             i = 0,
             node_ids = new Array();
+
         var get_function_url = "/show_project_history";
 
         $('.infovis_project_history input:checked').each(function() {
@@ -736,21 +737,19 @@ $(document).ready(function() {
         if($(this).attr('id') === "find_use_projects_from_history"){
             get_function_url = "/find_use_project";
         }
-
-        // if there is no selected project
-        if(node_ids[0] == null)
-            return alert($('#select_at_least_one_project').val()) ;
         // if set_checkout_version_path
         else if ($(this).attr('id') === "set_checkout_version_path"){
-            return $.ajax({
-                url: "/set_checkout_version",
-                data: {
-                    project_id: node_ids[0]
-                }
-            })
+            get_function_url = "/set_checkout_version";
+        }
+
+        // if there is no selected project
+        if(node_ids[0] == null){
+            console.log("get_function_url 1 : "+ get_function_url);
+            alert($('#select_at_least_one_project').val()) ;
+            return false;
         }
         else{
-            return $.ajax({
+            $.ajax({
                 url: get_function_url,
                 data: {
                     checked_node_ids: node_ids,
@@ -758,9 +757,11 @@ $(document).ready(function() {
                     action_id: $(this).attr('id'),
                     project_id: node_ids[0],
                     project_ids: node_ids,
-                    current_showed_project_id: $('#current_showed_project_id').val()
+                    current_showed_project_id: $('#current_showed_project_id').val(),
+                    from_tree_history_view: true
                 }
             })
+            return false;
         }
     });
 
