@@ -133,11 +133,9 @@
 
         <tr>
           <td>
-            <%= f.input :creator_id,
-                        as: :select,
+            <%= f.input :creator_id, as: :select,
                         collection: @organization.users.where(locked_at: nil).map{ |i| [i.name, i.id] },
-                        label: I18n.t('creator'),
-                        selected: current_user.id,
+                        label: I18n.t('creator'), selected: current_user.id,
                         input_html: { selected: current_user.id,:class => 'input-large', disabled: !can?(:alter_creator, @project) } %>
           </td>
         </tr>
