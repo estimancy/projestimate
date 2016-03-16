@@ -219,10 +219,10 @@ module ViewsWidgetsHelper
         #According to the widget type, we will show simple text, charts, timeline, etc
         #get  rounded values before use
         user_precision = user_number_precision
-        data_low = data_low.is_a?(Hash) ? data_low.map{|key,value| value.round(user_precision)}.first : data_low
-        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.map{|key,value| value.round(user_precision)} .first : data_most_likely
-        data_high = data_high.is_a?(Hash) ? data_high.map{|key,value| value.round(user_precision) }.first : data_high
-        data_probable = data_probable.is_a?(Hash) ? data_probable.map{|key,value| value.round(user_precision)}.first : data_probable
+        data_low = data_low.is_a?(Hash) ? data_low.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_low
+        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) } .first : data_most_likely
+        data_high = data_high.is_a?(Hash) ? data_high.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_high
+        data_probable = data_probable.is_a?(Hash) ? data_probable.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_probable
 
         chart_level_values = []
         chart_level_values << [I18n.t(:low), data_low]
