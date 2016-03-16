@@ -86,7 +86,10 @@
             <tr>
               <th></th>
               <th></th>
-              <th><%= I18n.t(:project_area) %></th>
+              <th>
+                <%# I18n.t(:project_area) %>
+                <%= select_tag "", options_for_select([I18n.t(:project_area), I18n.t(:acquisition_category), I18n.t(:project_category), I18n.t(:platform_category)]), style: "margin-top: -3px;" %>
+              </th>
             </tr>
             <tbody>
               <% @kb_model.kb_datas.each do |kb_data| %>

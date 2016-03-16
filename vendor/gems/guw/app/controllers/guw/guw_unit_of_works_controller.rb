@@ -452,7 +452,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         if guw_unit_of_work.guw_complexity.enable_value == false
           final_value = weight
         else
-          final_value = ((guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely +  guw_unit_of_work.result_high) / 6) * weight
+          result_low = guw_unit_of_work.result_low.nil? ? 1 : guw_unit_of_work.result_low
+          result_most_likely = guw_unit_of_work.result_most_likely.nil? ? 1 : guw_unit_of_work.result_most_likely
+          result_high = guw_unit_of_work.result_high.nil? ? 1 : guw_unit_of_work.result_high
+
+          final_value = ((result_low + 4 * result_most_likely +  result_high) / 6) * (weight.nil? ? 1 : weight.to_f)
         end
       end
 
