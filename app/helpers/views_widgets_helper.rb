@@ -220,7 +220,7 @@ module ViewsWidgetsHelper
         #get  rounded values before use
         user_precision = user_number_precision
         data_low = data_low.is_a?(Hash) ? data_low.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_low
-        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) } .first : data_most_likely
+        data_most_likely = data_most_likely.is_a?(Hash) ? data_most_likely.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_most_likely
         data_high = data_high.is_a?(Hash) ? data_high.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_high
         data_probable = data_probable.is_a?(Hash) ? data_probable.map{|key,value| value.nil? ? value.to_f : value.round(user_precision) }.first : data_probable
 
