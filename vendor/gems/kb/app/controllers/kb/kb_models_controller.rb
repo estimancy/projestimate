@@ -131,11 +131,12 @@ class Kb::KbModelsController < ApplicationController
       Kb::KbData.delete_all("kb_model_id = #{@kb_model.id}")
 
       ((file.first_row + 1)..file.last_row).each do |line|
-        attr_one   = file.cell(line, 'A')
-        attr_two   = file.cell(line, 'B')
+        size   = file.cell(line, 'A')
+        effort   = file.cell(line, 'B')
+        pd   = file.cell(line, 'C')
 
         h = Hash.new
-        ('C'..'ZZ').each_with_index do |letter, i|
+        ('D'..'ZZ').each_with_index do |letter, i|
           if i < file.last_column
             begin
               h[file.cell(1, letter.to_s).to_sym] = file.cell(line, letter.to_s)
@@ -144,14 +145,23 @@ class Kb::KbModelsController < ApplicationController
           end
         end
 
-        Kb::KbData.create(size: attr_one,
-                          effort: attr_two,
+        Kb::KbData.create(size: size,
+                          effort: effort,
+                          project_date: pd,
                           unit: "UF",
                           custom_attributes: h,
                           kb_model_id: @kb_model.id)
       end
     end
 
+    redirect_to kb.edit_kb_model_path(@kb_model)
+  end
+
+  def save_filters
+    @kb_model = Kb::KbModel.find(params[:kb_model_id])
+    @kb_model.filter_a = params["filter_a"]
+    @kb_model.filter_b = params["filter_b"]
+    @kb_model.save
     redirect_to kb.edit_kb_model_path(@kb_model)
   end
 
@@ -188,7 +198,7 @@ class Kb::KbModelsController < ApplicationController
     end
 
     if @kb_model.update_attributes(params[:kb_model])
-      redirect_to main_app.organization_module_estimation_path(@current_organization, anchor: "effort")
+      redirect_to kb.edit_kb_model_path(@kb_model)
     else
       render action: :edit
     end
@@ -213,6 +223,7 @@ class Kb::KbModelsController < ApplicationController
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
     @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first_or_create
+    @kb_datas = @kb_model.kb_datas.where("project_date >= ? AND project_date <= ?", @kb_model.date_min.to_s, @kb_model.date_max.to_s).take(@kb_model.n_max.to_i)
 
     @project_list = Array.new
     e_array = Array.new
@@ -225,7 +236,7 @@ class Kb::KbModelsController < ApplicationController
 
     @kb_input.filters = params["filters"]
 
-    @kb_model.kb_datas.each do |i|
+    @kb_datas.each do |i|
       params["filters"].each do |f|
         if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
           @project_list << i
@@ -234,7 +245,7 @@ class Kb::KbModelsController < ApplicationController
     end
 
     if @project_list.blank?
-      @project_list = @kb_model.kb_datas
+      @project_list = @kb_datas
     end
 
     @project_list.each do |kb_data|

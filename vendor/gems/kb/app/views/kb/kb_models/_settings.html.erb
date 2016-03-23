@@ -22,73 +22,24 @@
       </div>
       <div class="row-fluid">
         <div class="span12">
-          <h5>
-            <strong>
-              Date min.
-            </strong>
-          </h5>
-          <%= text_field_tag "date_min", "", class: "date-picker input-xlarge", disabled: !@kb_model.enabled_input %>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span12">
-          <h5>
-            <strong>
-              Date max.
-            </strong>
-          </h5>
-          <%= text_field_tag "date_max", "", class: "date-picker input-xlarge", disabled: !@kb_model.enabled_input %>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span12">
-          <h5>
-            <strong>
-              Nombre de projets max.
-            </strong>
-          </h5>
-          <%= text_field_tag "n_max", "", class: "input-xlarge", disabled: !@kb_model.enabled_input %>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span12">
           <% unless @kb_model.kb_datas.empty? %>
             <p>
+              <% arr = ["a", "b", "c", "d"] %>
               <% @kb_model.kb_datas.map(&:custom_attributes).first.keys.each_with_index do |key, i| %>
                 <div class="input string required project_title">
-                  <% if @kb_model.selected_attributes.include?(key.to_s) %>
-                    <% if i == 0 %>
-                      <h5>
-                        <strong>
-                          <%= I18n.t(:project_area) %>
-                        </strong>
-                      </h5>
-                      <%= select_tag "filters[#{key}]",
-                                     options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
-                                                        selected: @filters.nil? ? @project.project_area : @filters[key]),
+                  <label class="string required control-label">
+                    <strong>
+                      <%= @kb_model.send("filter_#{arr[i]}") %>
+                    </strong>
+                  </label>
+                  <%= select_tag "filters[#{key}]",
+                                 options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
+                                                    selected: @filters.nil? ? convert_project_category(@project, @kb_model.send("filter_#{arr[i]}")) : @filters[key]),
+                                 class: "string required input-xlarge filters",
+                                 prompt: I18n.t(:Indifferent),
+                                 disabled: !@kb_model.enabled_input %>
 
-                                     class: "string required input-xlarge filters",
-                                     prompt: I18n.t(:Indifferent),
-                                     disabled: !@kb_model.enabled_input %>
-                      <% unless @kb_model.enabled_input %>
-                        <input type="hidden" name="filters[<%= key %>]" value="<%= @project.project_area %>" />
-                      <% end %>
-                    <% else %>
-                      <label class="string required control-label">
-                        <strong>
-                          <%= key %>
-                        </strong>
-                      </label>
-                      <%= select_tag "filters[#{key}]",
-                                     options_for_select(@kb_model.kb_datas.map(&:custom_attributes).map{|ca| ca[key] }.uniq,
-                                                        selected: @filters.nil? ? (@kb_input.filters[key]) : @filters[key]),
-
-                                     class: "string required input-xlarge filters",
-                                     prompt: I18n.t(:Indifferent),
-                                     disabled: !@kb_model.enabled_input %>
-                      <input type="hidden" name="filters[<%= key %>]" value="<%= @filters.nil? ? (@kb_input.filters[key]) : @filters[key] %>" />
-                    <% end %>
-                  <% end %>
+                  <input type="hidden" name="filters[<%= key %>]" value="<%= @filters.nil? ? (@kb_input.filters[key]) : @filters[key] %>" />
                 </div>
               <% end %>
             </p>
@@ -115,7 +66,7 @@
 
             <h5>
               <strong>
-                <%= I18n.t(:size)%>
+                <%= I18n.t(:size) %>
               </strong>
             </h5>
 
