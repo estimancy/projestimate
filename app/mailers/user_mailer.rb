@@ -37,6 +37,7 @@ class UserMailer < ActionMailer::Base
     @user_name = name
     mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] #{I18n.t(:subscription_end)}")
   end
+
   def subscription_end(email, name)
     @user_name = name
     mail(:to => email, :from => "Estimancy <no-reply@estimancy.com>", :subject => "[ESTIMANCY] #{I18n.t(:subscription_end)}")
