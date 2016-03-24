@@ -223,7 +223,11 @@ class Kb::KbModelsController < ApplicationController
 
     @kb_model = Kb::KbModel.find(params[:kb_model_id])
     @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first_or_create
-    @kb_datas = @kb_model.kb_datas.where("project_date >= ? AND project_date <= ?", @kb_model.date_min.to_s, @kb_model.date_max.to_s).take(@kb_model.n_max.to_i)
+    if @kb_model.n_max.nil?
+      @kb_datas = @kb_model.kb_datas.where("project_date >= ? AND project_date <= ?", @kb_model.date_min.to_s, @kb_model.date_max.to_s)
+    else
+      @kb_datas = @kb_model.kb_datas.where("project_date >= ? AND project_date <= ?", @kb_model.date_min.to_s, @kb_model.date_max.to_s).take(@kb_model.n_max.to_i)
+    end
 
     @project_list = Array.new
     e_array = Array.new
