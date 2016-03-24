@@ -38,6 +38,8 @@ class ApplicationController < ActionController::Base
         else
           redirect_to root_path
         end
+      elsif exception.class == ActiveRecord::RecordNotFound
+        redirect_to organization_estimations_path(@current_organization) and return
       else
         UserMailer.crash_log(exception, current_user).deliver
         render :template => "layouts/500.html", :status => 500

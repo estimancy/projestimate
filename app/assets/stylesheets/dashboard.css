@@ -1158,3 +1158,7 @@ tr.conversion_factor, td.conversion_factor {
 .mycolorpicker{
     width: 200px;
 }
+
+#organization_projects{
+    margin-top: 10px;
+}

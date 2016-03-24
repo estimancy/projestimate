@@ -95,7 +95,7 @@ class ProjectsController < ApplicationController
     authorize! :show_project, @project
 
     if @project.nil?
-      redirect_to "/organizationals_params", :notice and return
+      redirect_to organization_estimations_path(@current_organization) and return
     end
 
     # return if user doesn't have the rigth to consult the estimation
