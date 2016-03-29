@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160309103246) do
+ActiveRecord::Schema.define(:version => 20160323111858) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -486,10 +486,10 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.string   "p_calculation_method"
     t.string   "s_calculation_method"
     t.string   "c_calculation_method"
-    t.integer  "input_pe_attribute_id"
-    t.integer  "output_pe_attribute_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "input_pe_attribute_id"
+    t.integer  "output_pe_attribute_id"
   end
 
   create_table "groups", :force => true do |t|
@@ -620,8 +620,8 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_id"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.boolean  "three_points_estimation"
     t.string   "retained_size_unit"
     t.boolean  "one_level_model"
@@ -634,7 +634,7 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.string   "factors_label"
     t.string   "effort_unit"
     t.string   "cost_unit"
-    t.boolean  "allow_technology",            :default => true
+    t.boolean  "allow_technology"
   end
 
   create_table "guw_guw_scale_module_attributes", :force => true do |t|
@@ -660,14 +660,14 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_technology_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.integer  "guw_model_id"
     t.integer  "copy_id"
     t.boolean  "allow_quantity"
-    t.boolean  "allow_retained",             :default => true
+    t.boolean  "allow_retained"
     t.boolean  "allow_complexity"
-    t.boolean  "allow_criteria",             :default => true
+    t.boolean  "allow_criteria"
   end
 
   create_table "guw_guw_unit_of_work_attributes", :force => true do |t|
@@ -700,8 +700,8 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.float    "result_most_likely"
     t.float    "result_high"
     t.integer  "guw_type_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.integer  "guw_complexity_id"
     t.float    "effort"
     t.float    "ajusted_size"
@@ -722,6 +722,8 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.integer  "guw_factor_id"
     t.float    "size"
     t.float    "cost"
+    t.integer  "guw_original_complexity_id"
+    t.boolean  "missing_value",              :default => false
   end
 
   create_table "guw_guw_weightings", :force => true do |t|
@@ -763,6 +765,7 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.string  "unit"
     t.text    "custom_attributes"
     t.integer "kb_model_id"
+    t.date    "project_date"
   end
 
   create_table "kb_kb_inputs", :force => true do |t|
@@ -787,6 +790,13 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.integer  "copy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "n_max"
+    t.date     "date_max"
+    t.date     "date_min"
+    t.string   "filter_a"
+    t.string   "filter_b"
+    t.string   "filter_c"
+    t.string   "filter_d"
   end
 
   create_table "labor_categories", :force => true do |t|
@@ -831,12 +841,6 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
   add_index "languages", ["record_status_id"], :name => "index_languages_on_record_status_id"
   add_index "languages", ["reference_id"], :name => "index_languages_on_parent_id"
   add_index "languages", ["uuid"], :name => "index_languages_on_uuid", :unique => true
-
-  create_table "machine_learnings", :force => true do |t|
-    t.string   "username"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
 
   create_table "master_settings", :force => true do |t|
     t.string   "key"
@@ -1593,7 +1597,7 @@ ActiveRecord::Schema.define(:version => 20160309103246) do
     t.boolean  "super_admin",            :default => false
     t.boolean  "password_changed"
     t.text     "description"
-    t.datetime "subscription_end_date",  :default => '2017-01-12 10:03:08'
+    t.datetime "subscription_end_date",  :default => '2016-11-25 14:37:58'
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
