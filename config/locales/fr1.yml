@@ -265,7 +265,7 @@ fr1:
   all_permissions: "Permissions"
   project_permissions: "Permissions des estimations"
   master_permissions: "Permissions master"
-  auth_methods: "Authentifications"
+  auth_methods: "Méthodes d'authentifications"
   events: "Evènements"
 
   master: "Paramètres master"

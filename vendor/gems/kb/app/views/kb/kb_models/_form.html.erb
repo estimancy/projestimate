@@ -5,11 +5,13 @@
         <%= I18n.t(:knowledge_base) %>
       </a>
     </li>
-    <li>
-      <a href="#tabs-2">
-        <%= I18n.t(:data) %>
-      </a>
-    </li>
+    <% if action_name.in?(%w(edit update)) %>
+      <li>
+        <a href="#tabs-2">
+          <%= I18n.t(:data) %>
+        </a>
+      </li>
+    <% end %>
   </ul>
 
   <div id="tabs-1">
@@ -23,6 +25,24 @@
         <%= f.input :name, label: I18n.t(:name)  %>
         <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
         <%= f.input :enabled_input, label: I18n.t(:modification_of_the_input_value_allow) %>
+
+        <%= f.input :date_min, label: I18n.t(:start_date) do %>
+          <% if @kb_model.date_min.nil? %>
+            <%= text_field_tag "kb_model[date_min]", "", class: "date-picker" %>
+          <% else %>
+            <%= text_field_tag "kb_model[date_min]", I18n.l(@kb_model.date_min), class: "date-picker" %>
+          <% end %>
+        <% end %>
+
+        <%= f.input :date_max, label: I18n.t(:end_date) do %>
+          <% if @kb_model.date_max.nil? %>
+            <%= text_field_tag "kb_model[date_max]", "", class: "date-picker" %>
+          <% else %>
+            <%= text_field_tag "kb_model[date_max]", I18n.l(@kb_model.date_max), class: "date-picker" %>
+          <% end %>
+        <% end %>
+
+        <%= f.input :n_max, label: "N derniers projets" %>
         <%= f.input :standard_unit_coefficient, label: I18n.t(:standard_coef_conv) %>
         <%= f.input :effort_unit, label: I18n.t(:effort_unit) %>
       </div>
@@ -47,11 +67,11 @@
     <% end %>
   </div>
 
-  <div id="tabs-2">
-    <div class="row-fluid">
-      <div class="span4">
+  <% if action_name.in?(%w(edit update)) %>
 
-        <% if action_name.in?(%w(edit update)) %>
+    <div id="tabs-2">
+      <div class="row-fluid">
+        <div class="span4">
 
           <%= form_tag kb.kb_model_import_path(@kb_model.id), :multipart => true, method: "post", :class => 'simple_form' do %>
 
@@ -67,46 +87,71 @@
           <% end %>
 
           <%= link_to I18n.t(:export), kb.kb_model_data_export_path(@kb_model), :class => 'btn' %>
-      <% end %>
-      </div>
-      <div class="span8">
-        <% unless @kb_model.kb_datas.empty? %>
-          <table class="table table-bordered tablesorterPager">
-            <thead>
-              <tr>
-                <th><%= I18n.t(:size) %></th>
-                <th>Effort</th>
-                <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
-                  <th>
-                    <%= k %>
-                  </th>
-                <% end %>
-              </tr>
-            </thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th><%= I18n.t(:project_area) %></th>
-            </tr>
-            <tbody>
-              <% @kb_model.kb_datas.each do |kb_data| %>
-                <tr>
-                  <td><%= kb_data.size %></td>
-                  <td><%= kb_data.effort %></td>
-                    <% kb_data.custom_attributes.values.each do |v| %>
-                      <td>
-                        <%= v %>
-                      </td>
+        </div>
+        <div class="span8">
+          <%= form_tag kb.kb_model_save_filters_path(@kb_model) do %>
+            <% unless @kb_model.kb_datas.empty? %>
+              <table class="table table-bordered tablesorterPager">
+                <thead>
+                  <tr>
+                    <th><%= I18n.t(:size) %></th>
+                    <th>Effort</th>
+                    <th>Date</th>
+                    <% @kb_model.kb_datas.first.custom_attributes.keys.each do |k| %>
+                      <th>
+                        <%= k %>
+                      </th>
                     <% end %>
+                  </tr>
+                </thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <% arr = ["a", "b", "c", "d"] %>
+                  <% @kb_model.kb_datas.first.custom_attributes.keys.each_with_index do |j, i| %>
+                    <th>
+                      <%= select_tag "filter_#{arr[i]}",
+                                     options_for_select([I18n.t(:project_area), I18n.t(:acquisition_category), I18n.t(:project_category), I18n.t(:platform_category)], @kb_model.send("filter_#{arr[i]}")),
+                                     style: "margin-top: -3px;",
+                                     class: "span12" %>
+                    </th>
+                  <% end %>
                 </tr>
-              <% end %>
-            </tbody>
+                <tbody>
+                  <% @kb_model.kb_datas.each do |kb_data| %>
+                    <tr>
+                      <td><%= kb_data.size %></td>
+                      <td><%= kb_data.effort %></td>
+                      <td><%= kb_data.project_date %></td>
+                        <% kb_data.custom_attributes.values.each do |v| %>
+                          <td>
+                            <%= v %>
+                          </td>
+                        <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
 
-            <%= render :partial => 'layouts/footer_table' %>
+                <%= render :partial => 'layouts/footer_table' %>
 
-          </table>
-        <% end %>
+              </table>
+            <% end %>
+            <%= submit_tag "Save Filters", class: "btn btn-info pull-right" %>
+          <% end %>
+          </div>
       </div>
     </div>
-  </div>
+  <% end %>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $(".date-picker").datepicker({
+      language: '<%= set_user_language %>',
+      autoclose: true,
+      todayHighlight: true,
+      todayBtn: true
+    });
+  });
+</script>

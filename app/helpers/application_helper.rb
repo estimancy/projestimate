@@ -24,4 +24,19 @@ module ApplicationHelper
   def is_number?(v)
     true if Float(v) rescue false
   end
+
+  def convert_project_category(project, value)
+    case value
+      when I18n.t(:project_area)
+        tmp = "project_area"
+      when I18n.t(:project_category)
+        tmp = "project_category"
+      when I18n.t(:platform_category)
+        tmp = "platform_category"
+      when I18n.t(:acquisition_category)
+        tmp = "acquisition_category"
+    end
+
+    project.send(tmp)
+  end
 end

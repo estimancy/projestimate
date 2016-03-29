@@ -452,7 +452,11 @@ class Guw::GuwUnitOfWorksController < ApplicationController
         if guw_unit_of_work.guw_complexity.enable_value == false
           final_value = weight
         else
-          final_value = ((guw_unit_of_work.result_low + 4 * guw_unit_of_work.result_most_likely +  guw_unit_of_work.result_high) / 6) * weight
+          result_low = guw_unit_of_work.result_low.nil? ? 1 : guw_unit_of_work.result_low
+          result_most_likely = guw_unit_of_work.result_most_likely.nil? ? 1 : guw_unit_of_work.result_most_likely
+          result_high = guw_unit_of_work.result_high.nil? ? 1 : guw_unit_of_work.result_high
+
+          final_value = ((result_low + 4 * result_most_likely +  result_high) / 6) * (weight.nil? ? 1 : weight.to_f)
         end
       end
 
@@ -495,10 +499,10 @@ class Guw::GuwUnitOfWorksController < ApplicationController
           tcplx_value
 
       if guw_unit_of_work.guw_type.allow_retained == false
-        guw_unit_of_work.ajusted_size = guw_unit_of_work.size
+        guw_unit_of_work.ajusted_size = guw_unit_of_work.size.round(3)
       else
         if params["ajusted_size"]["#{guw_unit_of_work.id}"].blank?
-          guw_unit_of_work.ajusted_size = guw_unit_of_work.size
+          guw_unit_of_work.ajusted_size = guw_unit_of_work.size.round(3)
         else
           guw_unit_of_work.ajusted_size = params["ajusted_size"]["#{guw_unit_of_work.id}"].to_f.round(3)
         end
@@ -516,7 +520,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       if guw_unit_of_work.off_line == true || guw_unit_of_work.off_line_uo == true
         guw_unit_of_work.flagged = true
-      elsif guw_unit_of_work.size != guw_unit_of_work.ajusted_size
+      elsif guw_unit_of_work.size.round(3) != guw_unit_of_work.ajusted_size.round(3)
         guw_unit_of_work.flagged = true
       else
         guw_unit_of_work.flagged = false

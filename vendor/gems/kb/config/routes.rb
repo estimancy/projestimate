@@ -28,6 +28,6 @@ Kb::Engine.routes.draw do
     get "data_export"
     post "duplicate"
     post "dot_export"
+    post "save_filters"
   end
-
 end

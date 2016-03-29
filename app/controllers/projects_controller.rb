@@ -94,6 +94,10 @@ class ProjectsController < ApplicationController
   def dashboard
     authorize! :show_project, @project
 
+    if @project.nil?
+      redirect_to organization_estimations_path(@current_organization) and return
+    end
+
     # return if user doesn't have the rigth to consult the estimation
     if !can_show_estimation?(@project)
       redirect_to(organization_estimations_path(@current_organization), flash: { warning: I18n.t(:warning_no_show_permission_on_project_status)}) and return
