@@ -826,6 +826,11 @@ class Ge::GeModelsController < ApplicationController
             size = params["retained_size_most_likely"].to_f
           end
 
+          # if input attribute is an effort, we should multiply with the standard_unit_coeff before saving the value in DB
+          if input_pe_attribute.alias == "effort"
+            size = size * @ge_model.standard_unit_coefficient.to_f
+          end
+
           input_ev.send("string_data_#{level}")[current_component.id] = size
           input_ev.save
           tmp_prbl << input_ev.send("string_data_#{level}")[current_component.id]
