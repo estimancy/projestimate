@@ -202,8 +202,8 @@ module ViewsWidgetsHelper
           end
         end
 
-        max_value_text = "Max: #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
-        min_value_text = "Min: #{data_low.nil? ? '-' : display_value(data_low, estimation_value, module_project_id)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
+        max_value_text = "Max. #{data_high.nil? ? '-' : display_value(data_high, estimation_value, module_project_id)}" #max_value_text = "Max: #{data_high.nil? ? '-' : data_high.round(user_number_precision)}"
+        min_value_text = "Min. #{data_low.nil? ? '-' : display_value(data_low, estimation_value, module_project_id)}"   #min_value_text = "Min: #{data_low.nil? ? '-' : data_low.round(user_number_precision)}"
 
         #Update the widget data
         #widget_data = { data_low: data_low, data_high: data_high, data_most_likely: data_most_likely, data_probable: data_probable, max_value_text: max_value_text, min_value_text: min_value_text, probable_value_text: probable_value_text }
@@ -249,7 +249,7 @@ module ViewsWidgetsHelper
                                           {name: I18n.t(:high), data: {Time.new => data_high} } ],  #50
                                           {height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, hAxis: {title: "Level", format: 'MMM y'}, vAxis: {title: chart_vAxis}}})
           when "bar_chart"
-            value_to_show = column_chart(chart_level_values, height: "#{chart_height}px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
+            value_to_show = column_chart(chart_level_values, height: "1000px", library: {backgroundColor: "transparent", title: chart_title, vAxis: {title: chart_vAxis}})
 
           when "area_chart"
             value_to_show =  line_chart([ {name: I18n.t(:low), data: {Time.new => data_low} },  #10
@@ -322,9 +322,9 @@ module ViewsWidgetsHelper
           when "histogram_effort_per_phase", "histogram_cost_per_phase"
 
             unless estimation_value.in_out == "input"
-              chart_height = height-90
+              chart_height = height+10
               chart_data = get_chart_data_effort_and_cost(pbs_project_elt, module_project, estimation_value, view_widget)
-              value_to_show = column_chart(chart_data, height: "#{chart_height}px", library: {backgroundColor: "transparent", weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
+              value_to_show = column_chart(chart_data, width: "1px", height: "#{chart_height}px", library: {backgroundColor: "transparent", weight: "normal", title: chart_title, vAxis: {title: chart_vAxis}})
             end
 
           when "pie_chart_effort_per_phase", "pie_chart_cost_per_phase"
@@ -550,8 +550,8 @@ module ViewsWidgetsHelper
       rowspan = 1
     end
 
-    res << " <table class='table table-condensed table-bordered table_effort_per_phase'>
-               <tr><th rowspan=#{rowspan}>Phases</th>"
+    res << "<table class='table table-condensed table-bordered table_effort_per_phase' style='margin-left: 15px;'>
+              <tr><th rowspan=#{rowspan}>Phases</th>"
 
     # Get the module_project probable estimation values for showing element consistency
     probable_est_value_for_consistency = nil
@@ -560,7 +560,7 @@ module ViewsWidgetsHelper
 
     res << "<th colspan='#{colspan}'>
               <span class='attribute_tooltip' title='#{estimation_value.pe_attribute.description} #{display_rule(estimation_value)}'>
-                #{estimation_value.pe_attribute.name} (#{estimation_value.pe_attribute.alias == "cost" ? @project.organization.currency : ''})
+                #{estimation_value.pe_attribute.name} #{estimation_value.pe_attribute.alias == "cost" ? "(#{@project.organization.currency})" : ''}
               </span>
             </th>"
 
@@ -592,7 +592,7 @@ module ViewsWidgetsHelper
       title = ""
       res << "<tr>
                 <td>
-                  <span class='tree_element_in_out' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> #{wbs_activity_elt.name} </span>
+                  <span class='tree_element_in_out' title='#{title}' style='margin-left:#{wbs_activity_elt.depth}em;'> <strong>#{wbs_activity_elt.name}</strong></span>
                 </td>"
 
       levels.each do |level|

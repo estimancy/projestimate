@@ -73,7 +73,7 @@ div.actions-tabs {
 
 .widget-title, .modal-header {
     background-color: #1BA1E2;
-    border-bottom: 1px solid #74CAE3;
+    border-bottom: 1px solid #1BA1E2;
     height: 36px;
 }
 
@@ -121,7 +121,7 @@ div.actions-tabs {
     color: white;
     float: left;
     font-size: 13px;
-    font-weight: inherit;
+    /*font-weight: inherit;*/
     padding: 12px;
     line-height: 12px;
     margin: 0;
@@ -130,7 +130,7 @@ div.actions-tabs {
     color: white;
     float: right;
     font-size: 13px;
-    font-weight: inherit;
+    /*font-weight: inherit;*/
     padding: 12px;
     line-height: 12px;
     margin: 0;
@@ -151,7 +151,7 @@ div.actions-tabs {
     float: right;
     margin: 9px 15px 0 0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.3) inset, 0 1px 0 #ffffff;
-    font-weight: 300;
+    /*font-weight: 300;*/
 }
 .widget-content {
     padding: 12px 15px;
@@ -546,7 +546,7 @@ ul{
 h1, h2, h3, h4, h5, h6 {
     margin: 10px 0;
     font-family: inherit;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1;
     color: inherit;
     text-rendering: optimizelegibility;
@@ -983,11 +983,6 @@ span .min_max {
     min-height: 60px;
     display: block;
     /*white-space: nowrap;*/
-}
-
-h5.view_title{
-    font-size: large;
-    color: #000000;
 }
 
 .widget_icon_edit{
