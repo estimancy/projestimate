@@ -149,9 +149,12 @@ class Ge::GeModelsController < ApplicationController
                   [I18n.t(:p_factors_calculation_method), @ge_model.p_calculation_method],
                   [I18n.t(:c_factors_calculation_method), @ge_model.c_calculation_method],
                   [I18n.t(:s_factors_calculation_method), @ge_model.s_calculation_method],
-                  [I18n.t(:retained_size_unit), @ge_model.size_unit],
-                  [I18n.t(:Wording_of_the_module_unit_effort_2), @ge_model.effort_unit],
-                  [I18n.t(:hour_coefficient_conversion), @ge_model.standard_unit_coefficient],
+                  [I18n.t(:input_size_unit), @ge_model.input_size_unit],
+                  [I18n.t(:output_size_unit), @ge_model.output_size_unit],
+                  [I18n.t(:input_effort_unit), @ge_model.input_effort_unit],
+                  [I18n.t(:output_effort_unit), @ge_model.output_effort_unit],
+                  [I18n.t(:input_effort_standard_unit_coefficient), @ge_model.input_effort_standard_unit_coefficient],
+                  [I18n.t(:output_effort_standard_unit_coefficient), @ge_model.output_effort_standard_unit_coefficient],
                   [I18n.t(:advice_ge), ""]]
 
     first_page.each_with_index do |row, index|
@@ -418,7 +421,7 @@ class Ge::GeModelsController < ApplicationController
           #there is no model, we will create new model from the model attributes data of the file to import
           model_sheet_order = { :"0" => "name", :"1" => "description", :"2" => "three_points_estimation", :"3" => "enabled_input", :"4" => "modify_theorical_effort",
                                 :"5" =>"input_pe_attribute_id", :"6" => "output_pe_attribute_id", :"7" => "coeff_a", :"8" => "coeff_b", :"9" => "p_calculation_method",
-                                :"10" => "c_calculation_method", :"11" => "s_calculation_method", :"12" => "size_unit", :"13" => "effort_unit", :"14" => "standard_unit_coefficient" }
+                                :"10" => "c_calculation_method", :"11" => "s_calculation_method", :"12" => "input_size_unit", :"13" => "output_size_unit", :"14" => "input_effort_unit", :"15" => "output_effort_unit", :"16" => "input_effort_standard_unit_coefficient", :"17" => "output_effort_standard_unit_coefficient" }
           model_worksheet = workbook['Model']
 
           if !model_worksheet.nil?
@@ -828,7 +831,7 @@ class Ge::GeModelsController < ApplicationController
 
           # if input attribute is an effort, we should multiply with the standard_unit_coeff before saving the value in DB
           if input_pe_attribute.alias == "effort"
-            size = size * @ge_model.standard_unit_coefficient.to_f
+            size = size * @ge_model.input_effort_standard_unit_coefficient.to_f
           end
 
           input_ev.send("string_data_#{level}")[current_component.id] = size
@@ -860,14 +863,14 @@ class Ge::GeModelsController < ApplicationController
 
           if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
             taille = @ge_model.coeff_a * size ** @ge_model.coeff_b   #Using "a" and "b" coefficients
-            effort = taille * @ge_model.standard_unit_coefficient.to_f
+            effort = taille * @ge_model.output_effort_standard_unit_coefficient.to_f
             @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
             @ge_input.save
           else
             #The effort value will be calculated as : Effort = p * Taille^s
             # with: s = sum of scale factors and  p = multiply of prod factors
             taille = prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)
-            effort = taille * @ge_model.standard_unit_coefficient.to_f
+            effort = taille * @ge_model.output_effort_standard_unit_coefficient.to_f
           end
 
           output_calculated_value = effort

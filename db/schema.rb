@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160323111858) do
+ActiveRecord::Schema.define(:version => 20160330083459) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -475,14 +475,17 @@ ActiveRecord::Schema.define(:version => 20160323111858) do
     t.float    "coeff_a"
     t.float    "coeff_b"
     t.integer  "organization_id"
-    t.string   "effort_unit"
+    t.string   "input_size_unit"
+    t.string   "output_size_unit"
+    t.string   "input_effort_unit"
+    t.string   "output_effort_unit"
     t.boolean  "three_points_estimation"
-    t.float    "standard_unit_coefficient"
-    t.string   "size_unit"
+    t.float    "output_effort_standard_unit_coefficient"
+    t.float    "input_effort_standard_unit_coefficient"
     t.boolean  "enabled_input"
     t.boolean  "modify_theorical_effort"
     t.integer  "copy_id"
-    t.integer  "copy_number",               :default => 0
+    t.integer  "copy_number",                             :default => 0
     t.string   "p_calculation_method"
     t.string   "s_calculation_method"
     t.string   "c_calculation_method"

@@ -1202,3 +1202,13 @@ tr.conversion_factor, td.conversion_factor {
 #organization_projects{
     margin-top: 10px;
 }
+
+.root_bolder{
+    font-weight: bolder;
+
+}
+.element_position{
+    font-weight: bold;
+    float: left;
+    clear: both;
+}
