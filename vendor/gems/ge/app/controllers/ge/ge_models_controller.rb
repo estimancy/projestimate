@@ -863,14 +863,14 @@ class Ge::GeModelsController < ApplicationController
 
           if !@ge_model.coeff_a.blank? && !@ge_model.coeff_b.blank?
             taille = @ge_model.coeff_a * size ** @ge_model.coeff_b   #Using "a" and "b" coefficients
-            effort = taille * @ge_model.output_effort_standard_unit_coefficient.to_f
+            effort = taille * @ge_model.input_effort_standard_unit_coefficient.to_f
             @ge_input.formula = "#{@ge_model.coeff_a} X ^ #{@ge_model.coeff_b}"
             @ge_input.save
           else
             #The effort value will be calculated as : Effort = p * Taille^s
             # with: s = sum of scale factors and  p = multiply of prod factors
             taille = prod_factor_product * ((size * conversion_factor_product) ** scale_factor_sum)
-            effort = taille * @ge_model.output_effort_standard_unit_coefficient.to_f
+            effort = taille * @ge_model.input_effort_standard_unit_coefficient.to_f
           end
 
           output_calculated_value = effort
