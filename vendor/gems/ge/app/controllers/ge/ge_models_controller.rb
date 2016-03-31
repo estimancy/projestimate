@@ -153,8 +153,8 @@ class Ge::GeModelsController < ApplicationController
                   [I18n.t(:output_size_unit), @ge_model.output_size_unit],
                   [I18n.t(:input_effort_unit), @ge_model.input_effort_unit],
                   [I18n.t(:output_effort_unit), @ge_model.output_effort_unit],
-                  [I18n.t(:input_effort_standard_unit_coefficient), @ge_model.input_effort_standard_unit_coefficient],
-                  [I18n.t(:output_effort_standard_unit_coefficient), @ge_model.output_effort_standard_unit_coefficient],
+                  [I18n.t(:input_effort_standard_coef_conv), @ge_model.input_effort_standard_unit_coefficient],
+                  [I18n.t(:output_effort_standard_coef_conv), @ge_model.output_effort_standard_unit_coefficient],
                   [I18n.t(:advice_ge), ""]]
 
     first_page.each_with_index do |row, index|
