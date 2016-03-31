@@ -42,8 +42,6 @@ module WbsActivityElementsHelper
 
       if element.has_children?
         tree << "<ul class='sortable'>"
-        ###element.children.order("dotted_id ASC").each do |e|
-        #element.children.order("position ASC").each do |e|
         unless activity_tree_hash.nil?
           activity_tree_hash.each do |e, children|
             tree << "
@@ -164,9 +162,9 @@ module WbsActivityElementsHelper
   # Show the wbs_activity_element position in front of the name
   def show_element_position(element)
     if element.position.nil?
-      "-"
+      ""
     else
-      h "%g" % (element.position)
+      "#{  h "%g" % (element.position) }."
     end
   end
 
