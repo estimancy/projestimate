@@ -52,7 +52,7 @@
       <span class="label label-info">
         &nbsp;&nbsp;&nbsp;&nbsp; Nombre d'U.O. H.S. :
         <span class="label label-info off_line_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(off_line: true).map(&:quantity)}.flatten.sum %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where("off_line = ? OR off_line_uo = ?", true, true).map(&:quantity)}.flatten.compact.sum %>
         </span>
       </span>
     </div>
@@ -115,7 +115,7 @@
           <span class="label label-info">
             Nombre d'U.O. H.S. :
             <span class="<%= uowg.id %>_off_line">
-              <%= uowg.guw_unit_of_works.where(off_line: true).map(&:quantity).compact.sum %>
+              <%= uowg.guw_unit_of_works.where("off_line = ? OR off_line_uo = ?", true, true).map(&:quantity).compact.sum %>
             </span>
           </span>
         </div>
