@@ -267,10 +267,10 @@ input::-webkit-inner-spin-button {
 }
 
 .login_wrapper{
-    background: url('/assets/login_bg2.png') no-repeat;
-    margin: 0 auto;
-    height: 148px;
+    background: url('/assets/login_bg22.png') no-repeat;
+    background-size: 568px 148px;
     width: 568px;
+    height: 148px;
 }
 
 .login_information{
