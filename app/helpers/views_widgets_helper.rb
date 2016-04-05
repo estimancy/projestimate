@@ -21,6 +21,54 @@
 
 module ViewsWidgetsHelper
 
+  def get_kpi_widget_data(view_widget_id)
+    view_widget = ViewsWidget.find(view_widget_id)
+    widget_data = {}
+    initial_width = 60;  initial_height = 60
+    value_to_show = nil
+    ft_maxFontSize_without_mm = 50
+    icon_font_size = 1.7
+
+    height = (initial_height*view_widget.height.to_i) + 5*(view_widget.height.to_i - 1)   #margin is now 5 unless of 10
+    width = (initial_width*view_widget.width.to_i) + 5*(view_widget.width.to_i - 1)
+
+    widget_data[:width] = width
+    widget_data[:height] = height
+
+    case view_widget.height.to_i
+      when 1..2
+        icon_font_size = 1.2 ###2
+        if view_widget.height.to_i == 3
+          icon_font_size = 2.6 ###3
+        end
+        ft_maxFontSize_without_mm = 10###20
+        if view_widget.width.to_i <= 1
+          ft_minMax_minFontSize = 3###3.5
+        else
+          ft_minMax_minFontSize = 5###6.5
+        end
+      when 3
+        icon_font_size = 2.5
+        ft_maxFontSize_without_mm = 10###20
+      else
+        icon_font_size = ((height+width)/2) * 0.025
+        if icon_font_size > 3 && icon_font_size < 6
+          icon_font_size = 3
+        elsif icon_font_size > 6
+          icon_font_size = 4
+        end
+    end
+
+    text_size = ((height+width)/2) * 0.006  # 0.015
+    # get the fitText minFontSize and maxFontSize
+    widget_data[:icon_font_size] = icon_font_size
+    widget_data[:text_size] = text_size
+    widget_data[:ft_maxFontSize_without_mm] = ft_maxFontSize_without_mm
+    widget_data[:value_to_show] = simple_format(view_widget.comment.to_s.html_safe) ###view_widget.name
+
+    widget_data
+  end
+
   # Get the label widget data
   def get_label_widget_data(view_widget_id)
     view_widget = ViewsWidget.find(view_widget_id)

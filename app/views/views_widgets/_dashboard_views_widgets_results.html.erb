@@ -21,6 +21,7 @@
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
                       <%= link_to "", edit_module_project_view_config_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog", title: I18n.t(:label_add_new_view_widget), remote: true %>
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id, is_label_widget: true), class: "icon icon-comment", title: I18n.t(:label_add_new_widget_comment), remote: true %>
+                      <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id, is_kpi_widget: true), class: "icon icon-comment", title: I18n.t(:label_add_new_widget_comment), remote: true %>
                     <% end %>
                   </div>
                 </div>
@@ -34,6 +35,8 @@
                           <% module_project_view_widgets.each do |view_widget| %>
                             <% if view_widget.is_label_widget? %>
                               <% view_widget_data = get_label_widget_data(view_widget.id) %>
+                            <% elsif view_widget.is_kpi_widget? %>
+                              <% view_widget_data = get_kpi_widget_data(view_widget.id) %>
                             <% else %>
                               <% if module_project.pemodule.alias == Projestimate::Application::INITIALIZATION %>
                                 <% view_widget_data = get_view_widget_data(view_widget.module_project_id, view_widget.id) %>
