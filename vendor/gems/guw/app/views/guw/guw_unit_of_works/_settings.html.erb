@@ -17,35 +17,35 @@
       <span class="label label-success">
       Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:retained_result) %> :
         <span class="label label-success ajusted_size">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_size.to_f }}.flatten.sum.to_f.round(3) %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).flatten.map{|i| i.ajusted_size.to_f }}.flatten.compact.sum.to_f.round(3) %>
         </span>
       </span>
 
       <span class="label label-success">
         Total <%= @guw_model.retained_size_unit %> <%= I18n.t(:Calculated)%> :
         <span class="label label-success theorical_size">
-            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.size.to_f }}.flatten.sum.to_f.round(3) %>
+            <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map{|i| i.size.to_f }}.flatten.compact.sum.to_f.round(3) %>
         </span>
       </span>
 
       <span class="label label-info">
         &nbsp;&nbsp;&nbsp;&nbsp; <%= I18n.t(:numerber_of_uw) %> :
         <span class="label label-info number_of_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.map(&:quantity)}.flatten.sum %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.map(&:quantity)}.flatten.compact.sum %>
         </span>
       </span>
 
       <span class="label label-info">
         &nbsp;&nbsp;&nbsp;&nbsp; <%= I18n.t(:numerber_of_uw_modifies) %>
         <span class="label label-info modified_of_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true).map(&:quantity)}.flatten.sum %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(flagged: true).map(&:quantity)}.flatten.compact.sum %>
         </span>
       </span>
 
       <span class="label label-info">
         &nbsp;&nbsp;&nbsp;&nbsp; <%= I18n.t(:numerber_of_uw_selected) %> :
         <span class="label label-info selected_of_unit_of_work">
-          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map(&:quantity)}.flatten.sum %>
+          <%= @group_unit_of_works.map{|i| i.guw_unit_of_works.where(selected: true).map(&:quantity)}.flatten.compact.sum %>
         </span>
       </span>
 
