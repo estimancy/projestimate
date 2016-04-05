@@ -703,7 +703,10 @@ class OrganizationsController < ApplicationController
               new_group = new_organization.groups.where(copy_id: group_role.group_id).first
               estimation_status = new_organization.estimation_statuses.where(copy_id: group_role.estimation_status_id).first
               unless estimation_status.nil?
-                group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
+                begin
+                  group_role.update_attributes(organization_id: new_organization.id, estimation_status_id: estimation_status.id, group_id: new_group.id)
+                rescue
+                end
               end
             end
           end
