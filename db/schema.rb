@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160405135730) do
+ActiveRecord::Schema.define(:version => 20160406095038) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20160405135730) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "acquisition_categories", ["record_status_id"], :name => "index_acquisition_categories_on_record_status_id"
@@ -1163,6 +1164,7 @@ ActiveRecord::Schema.define(:version => 20160405135730) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "platform_categories", ["record_status_id"], :name => "index_platform_categories_on_record_status_id"
@@ -1223,6 +1225,7 @@ ActiveRecord::Schema.define(:version => 20160405135730) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "project_areas", ["record_status_id"], :name => "index_project_areas_on_record_status_id"
@@ -1256,6 +1259,7 @@ ActiveRecord::Schema.define(:version => 20160405135730) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "project_categories", ["record_status_id"], :name => "index_project_categories_on_record_status_id"

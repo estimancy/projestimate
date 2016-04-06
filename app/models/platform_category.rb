@@ -34,8 +34,12 @@ class PlatformCategory < ActiveRecord::Base
 
   amoeba do
     enable
-    exclude_association [:projects]
+    include_association []
+    customize(lambda { |original_platform_category, new_platform_category|
+                new_platform_category.copy_id = original_platform_category.id
+              })
   end
+
 
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]

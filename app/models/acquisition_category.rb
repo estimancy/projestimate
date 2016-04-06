@@ -30,7 +30,10 @@ class AcquisitionCategory < ActiveRecord::Base
 
   amoeba do
     enable
-    exclude_association [:projects]
+    include_association []
+    customize(lambda { |original_acquisition_category, new_acquisition_category|
+                new_acquisition_category.copy_id = original_acquisition_category.id
+              })
   end
 
   #Search fields
