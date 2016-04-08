@@ -355,32 +355,35 @@ class ViewsWidgetsController < ApplicationController
         worksheet.add_cell(0, 7, I18n.t(:unit_value))
         attribute = widget.pe_attribute
         activity = widget.module_project.wbs_activity
-        ratio = WbsActivityInput.where(wbs_activity_id: activity.id, module_project_id: widget.module_project.id).first.wbs_activity_ratio
-        activity.wbs_activity_elements.each do |element|
-          my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
-          worksheet.change_column_width(4, my_len_2)
-          element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
-            ware.organization_profiles.each do |profil|
-              worksheet.add_cell(ind_y, 0, @project.title)
-              worksheet.add_cell(ind_y, 1, @project.version)
-              #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
-              tab_date = @project.start_date.to_s.split("-")
-              worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd/mm/yy'
-              worksheet.add_cell(ind_y, 3, current_component)
-              worksheet.add_cell(ind_y, 4, element.name)
-              worksheet.add_cell(ind_y, 5, profil.name)
-              my_len = profil.name.length < my_len ? my_len : profil.name.length
-              worksheet.change_column_width(5, my_len)
+        ratio = WbsActivityInput.where(wbs_activity_id: activity.id,
+                                       module_project_id: widget.module_project.id).first.wbs_activity_ratio
+        unless ratio.nil?
+          activity.wbs_activity_elements.each do |element|
+            my_len_2 = element.name.length < my_len_2 ? my_len_2 : element.name.length
+            worksheet.change_column_width(4, my_len_2)
+            element.wbs_activity_ratio_elements.where(wbs_activity_ratio_id: ratio.id).each do |ware|
+              ware.organization_profiles.each do |profil|
+                worksheet.add_cell(ind_y, 0, @project.title)
+                worksheet.add_cell(ind_y, 1, @project.version)
+                #worksheet.add_cell(ind_y, 2, I18n.l(@project.start_date))
+                tab_date = @project.start_date.to_s.split("-")
+                worksheet.add_cell(ind_y, 2, '', "DATE(#{tab_date[0]},#{tab_date[1]},#{tab_date[2]})").set_number_format 'dd/mm/yy'
+                worksheet.add_cell(ind_y, 3, current_component)
+                worksheet.add_cell(ind_y, 4, element.name)
+                worksheet.add_cell(ind_y, 5, profil.name)
+                my_len = profil.name.length < my_len ? my_len : profil.name.length
+                worksheet.change_column_width(5, my_len)
 
-              begin
-                worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value]).set_number_format('.##')
-                worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
-              rescue
-                worksheet.add_cell(ind_y, 6, "".set_number_format('.##'))
-                worksheet.add_cell(ind_y, 7, "")
-              end
-              ind_y += 1
-           end
+                begin
+                  worksheet.add_cell(ind_y, 6, widget.estimation_value.string_data_probable[current_component.id][element.id]["profiles"]["profile_id_#{profil.id}"]["ratio_id_#{ratio.id}"][:value]).set_number_format('.##')
+                  worksheet.add_cell(ind_y, 7, convert_label(widget.estimation_value.string_data_probable[current_component.id][element.id][:value], @project.organization))
+                rescue
+                  worksheet.add_cell(ind_y, 6, "".set_number_format('.##'))
+                  worksheet.add_cell(ind_y, 7, "")
+                end
+                ind_y += 1
+             end
+            end
           end
         end
       end

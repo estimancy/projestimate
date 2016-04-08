@@ -252,7 +252,7 @@ input::-webkit-inner-spin-button {
 }
 
 .login{
-    /*background: url('/assets/login_bg1.png') repeat-x;*/
+    background-color: #eee;
 }
 
 .login_background{
@@ -260,17 +260,20 @@ input::-webkit-inner-spin-button {
     width: 572px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+    background-color: white;
 }
 
 .login_window{
-    border: 2px solid lightgrey;
+    border: 1px solid lightgrey;
+    height: 360px;
 }
 
 .login_wrapper{
-    background: url('/assets/login_bg2.png') no-repeat;
-    margin: 0 auto;
-    height: 148px;
+    background: url('/assets/login_bg22.png') no-repeat;
+    background-size: 568px 148px;
     width: 568px;
+    height: 148px;
+    margin-left: 22px;
 }
 
 .login_information{
@@ -291,14 +294,6 @@ input::-webkit-inner-spin-button {
 
 .login_username{
     line-height: 40px;
-}
-
-.login_right{
-    float:left;
-}
-
-.login_remember_me{
-    margin-left: 25px;
 }
 
 .login_bottom_other{

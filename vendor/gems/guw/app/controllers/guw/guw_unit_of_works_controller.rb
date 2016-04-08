@@ -510,7 +510,7 @@ class Guw::GuwUnitOfWorksController < ApplicationController
 
       guw_unit_of_work.save
 
-      guw_unit_of_work.effort =  guw_unit_of_work.ajusted_size *
+      guw_unit_of_work.effort = guw_unit_of_work.ajusted_size *
           (effort_array_value.inject(&:*).nil? ? 1 : effort_array_value.inject(&:*)) *
           tcplx_value
 

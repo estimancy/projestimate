@@ -46,6 +46,14 @@ class ProjectCategory < ActiveRecord::Base
   #Search fields
   scoped_search :on => [:name, :description, :created_at, :updated_at]
 
+  amoeba do
+    enable
+    include_association []
+    customize(lambda { |original_project_category, new_project_category|
+                new_project_category.copy_id = original_project_category.id
+              })
+  end
+
   #Override
   def to_s
     self.nil? ? '' : self.name

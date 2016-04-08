@@ -41,6 +41,14 @@ class ProjectArea < ActiveRecord::Base
 
   default_scope order('name ASC')
 
+  amoeba do
+    enable
+    include_association []
+    customize(lambda { |original_project_area, new_project_area|
+                new_project_area.copy_id = original_project_area.id
+              })
+  end
+
   #Override
   def to_s
     self.nil? ? 'N/A' : self.name
