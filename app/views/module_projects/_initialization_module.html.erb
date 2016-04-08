@@ -1,19 +1,17 @@
 <% unless @initialization_module_project.nil? %>
   <% pmod = @initialization_module_project %>
-  <tr>
-    <td class="line_number">
-      <h4 class="text-center">0</h4>
-    </td>
-    <td colspan="<%= @module_positions_x %>" class="module_bloc_size">
-      <div class="<%=  %> module_project <%= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" id="<%= "mp_#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %>" data-module_project_id="<%= pmod.id %>">
+
+    <% left_position = pmod.left_position.nil? ? "30%" : "#{pmod.left_position.to_f}px" %>
+    <% top_position = pmod.top_position.nil? ? "0px" : "#{pmod.top_position.to_f}px" %>
+
+      <div class="module_project <%= "#{@initialization_module.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center"
+           id="<%= "mp_#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %>" data-module_project_id="<%= pmod.id %>"
+           style="top: <%= top_position %>; left: <%= left_position %>" >
+
         <%= link_to pmod, "#", class: "a_white" %>
 
         <% unless @project.locked? %>
-          <%#= link_to '', '#', :title => "#{@initialization_module.title}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
           <%= link_to '', '#', :title => "#{@project}: \n #{@initialization_module.description}", :class => "a_white icon-info attribute_tooltip" %>
-          <%# if can? :alter_estimation_plan, @project %>
-            <%#= link_to '', edit_module_project_path(pmod.id), :class => "icon-pencil a_white" %>
-          <%# end %>
         <% end %>
 
         <% if pmod.show_results_view %>
@@ -22,6 +20,5 @@
             <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-close a_white", :title => I18n.t(:title_show_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>
         <% end %>
       </div>
-    </td>
-  </tr>
+
 <% end %>

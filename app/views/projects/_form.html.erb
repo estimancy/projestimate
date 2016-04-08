@@ -231,6 +231,7 @@
                                                                             "Module d'Effort Génériques (ax^b)" => @ge_models}), :prompt => '' %>
                 <script>
                   $(document).ready(function(){
+
                     $("#select_module").on('change', function() {
                       if ($("#select_module").val() !== "") {
                         return $.ajax({
@@ -245,7 +246,6 @@
                           success: function(data) {
                             //return alert("success");
                             //jsPlumb.repaintEverything();
-                            //jsPlumb.recalculateOffsets($(ui.item).parents(".draggable"));
                           },
                           error: function(XMLHttpRequest, textStatus, errorThrown) {
                             return alert("Error! :" + textStatus + ";" + errorThrown );
@@ -268,7 +268,7 @@
           <% end %>
         <% end %>
         <br>
-        <div class="module_box" style="width: auto; overflow-x:auto;">
+        <div class="module_box">
           <%= render :partial => 'module_projects/estimation_plan', :locals => { :module_projects => @project.module_projects } %>
         </div>
       </div>

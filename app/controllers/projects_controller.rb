@@ -1031,8 +1031,12 @@ class ProjectsController < ApplicationController
       @module_positions = ModuleProject.where(:project_id => @project.id).order(:position_y).all.map(&:position_y).uniq.max || 1
       @module_positions_x = ModuleProject.where(:project_id => @project.id).all.map(&:position_x).uniq.max
 
+      # Get the module_project creation order : for this, we have to count the number of MP with same pemodule in this project
+      mp_creation_order = @project.module_projects.where(pemodule_id: @pemodule.id).all.length
+
       #When adding a module in the "timeline", it creates an entry in the table ModuleProject for the current project, at position 2 (the one being reserved for the input module).
-      my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1)
+      my_module_project = ModuleProject.new(:project_id => @project.id, :pemodule_id => @pemodule.id, :position_y => 1, :position_x => @module_positions_x.to_i + 1,
+                                            :top_position => 100, :left_position => 1400, :creation_order => mp_creation_order+1)
       my_module_project.save
 
       #si le module est un module generic on l'associe le module project

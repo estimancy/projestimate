@@ -1,41 +1,44 @@
 <% module_projects = @project.module_projects %>
 
 <% unless module_projects.empty? %>
-  <table class="table table-estimation">
     <!-- The Initialization module -->
-    <%= render :partial => 'module_projects/initialization_module_min' %>
+    <%#= render :partial => 'module_projects/initialization_module_min' %>
 
-    <% for y in 1..@module_positions do %>
-      <tr>
-        <% for x in 1..@module_positions_x.to_i do %>
-          <td>
-            <% pmod = @project.module_projects.where("position_x = ? AND position_y = ?", x, y).first %>
+    <% module_projects.each do |pmod| %>
+        <%### pmod = @project.module_projects.where("position_x = ? AND position_y = ?", x, y).first %>
 
-            <% unless current_module_project.nil? or pmod.nil? %>
-              <% (current_module_project.id == pmod.id) ? select_pemodule = 'selected_module_project' : 'unselected_module_project' %>
-            <% end %>
-
-            <% unless pmod.nil? %>
-              <div class="<%= select_pemodule %> module_project_min <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center" style="background-color: <%= "#{pmod.color}" %>">
-
-                <%= link_to pmod, activate_module_project_path(pmod) %>
-
-                <% if pmod.show_results_view %>
-                  <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-open a_white blue", :title => I18n.t(:title_hide_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>
-                <% else %>
-                  <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-close a_white blue", :title => I18n.t(:title_show_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>
-                <% end %>
-              </div>
-              <%= render :partial => 'module_projects/estimation_paths', :locals => { :pmod => pmod } %>
-            <% end %>
-
-            <% select_pemodule = '' %>
-
-          </td>
+        <% unless current_module_project.nil? or pmod.nil? %>
+          <% (current_module_project.id == pmod.id) ? select_pemodule = 'selected_module_project' : 'unselected_module_project' %>
         <% end %>
-      </tr>
+
+        <% unless pmod.nil? %>
+          <% if pmod.id == @initialization_module_project.id %>
+            <% left_position = pmod.left_position.nil? ? "32%" : "#{pmod.left_position.to_f}px" %>
+            <% top_position = pmod.top_position.nil? ? "0px" : "#{pmod.top_position.to_f}px" %>
+          <% else %>
+            <% left_position = pmod.left_position.nil? ? "#{pmod.position_x.to_i*30}em" : "#{pmod.left_position.to_f}px" %>
+            <% top_position = pmod.top_position.nil? ? "#{pmod.position_y.to_i*10/2}em" : "#{pmod.top_position.to_f/2}px" %>
+          <% end %>
+
+          <div class="<%= select_pemodule %> module_project_min <%= "#{pmod.pemodule.alias}_#{pmod.position_x}_#{pmod.position_y}" %> text-center"
+               id="<%= "mp_#{pmod.pemodule.alias}_#{pmod.id}" %>" data-module_project_id="<%= pmod.id %>"
+               style="background-color: <%= "#{pmod.color}" %>; top: <%= top_position %>; left: <%= left_position %>" >
+
+            <%= link_to pmod, activate_module_project_path(pmod) %>
+
+            <% if pmod.show_results_view %>
+              <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-open a_white blue", :title => I18n.t(:title_hide_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>
+            <% else %>
+              <%= link_to '', show_module_project_results_view_path(module_project_id: pmod.id), id:"show_results_view", :class => "icon-eye-close a_white blue", :title => I18n.t(:title_show_results_view, :value => "#{pmod.pemodule.title}"), remote: true %>
+            <% end %>
+          </div>
+          <%###= render :partial => 'module_projects/estimation_paths', :locals => { :pmod => pmod } %>
+        <% end %>
+
+        <% select_pemodule = '' %>
     <% end %>
-  </table>
+
+    <%= render :partial => 'module_projects/dynamic_estimation_paths', :locals => { :module_projects => module_projects, estimation_view: "estimation_plan_min" } %>
 <% else %>
   <%= content_tag(:div, I18n.t(:notice_no_estimation_plan_defined), :class => 'alert alert-info') %>
 <% end %>

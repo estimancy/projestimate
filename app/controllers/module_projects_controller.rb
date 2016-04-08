@@ -132,17 +132,38 @@ class ModuleProjectsController < ApplicationController
       target_id = params['target_id'].to_i
 
       module_project = ModuleProject.find(source_id)
-      associated_module_project_ids = module_project.associated_module_project_ids
+      # les successeurs du module_project
+      module_project_successors_ids = module_project.inverse_associated_module_project_ids  #module_project.associated_module_project_ids
 
       case params['connect_or_detach_connection']
         when "connect"
-          associated_module_project_ids << target_id
+          module_project_successors_ids << target_id
         when "detach"
-          associated_module_project_ids.delete(target_id)
+          module_project_successors_ids.delete(target_id)
       end
 
       #update associations
-      module_project.update_attribute('associated_module_project_ids', associated_module_project_ids.uniq)
+      module_project.update_attribute('inverse_associated_module_project_ids', module_project_successors_ids.uniq)
+    end
+  end
+
+
+  #update the module_project top and left position after drag (from estimation_plan)
+  def update_module_project_left_and_top_positions
+    module_projects = params[:module_projects_params]
+    module_projects.each do |mp_params|
+      mp_node = mp_params[1]
+      unless mp_node[:module_project_id].nil?
+        module_project = ModuleProject.find(mp_node[:module_project_id])
+        if module_project
+          # Update the Module-Project positions (left = position_x, top = position_y)
+          module_project.update_attributes(left_position: mp_node[:left_position].to_f, top_position: mp_node[:top_position].to_f)
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.js {}
     end
   end
 
@@ -158,8 +179,12 @@ class ModuleProjectsController < ApplicationController
     @initialization_module_project = @initialization_module.nil? ? nil : @project.module_projects.find_by_pemodule_id(@initialization_module.id)
     position_x = @module_project.position_x
 
-    #...finally, destroy object module_project
+    #...finally, destroy object module_project and its associations
+    associated_module_projects =  @module_project.associated_module_projects
+    inverse_associated_module_projects =  @module_project.inverse_associated_module_projects
     @module_project.destroy
+    associated_module_projects.delete_all
+    inverse_associated_module_projects.delete_all
 
     #Update column module_projects link with initialization module
     unless @initialization_module_project.nil?

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160330083459) do
+ActiveRecord::Schema.define(:version => 20160407160246) do
 
   create_table "abacus_organizations", :force => true do |t|
     t.float    "value"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "acquisition_categories", ["record_status_id"], :name => "index_acquisition_categories_on_record_status_id"
@@ -623,8 +624,8 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.string   "name"
     t.text     "description"
     t.integer  "organization_id"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.boolean  "three_points_estimation"
     t.string   "retained_size_unit"
     t.boolean  "one_level_model"
@@ -637,7 +638,7 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.string   "factors_label"
     t.string   "effort_unit"
     t.string   "cost_unit"
-    t.boolean  "allow_technology"
+    t.boolean  "allow_technology",            :default => true
   end
 
   create_table "guw_guw_scale_module_attributes", :force => true do |t|
@@ -845,6 +846,12 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
   add_index "languages", ["reference_id"], :name => "index_languages_on_parent_id"
   add_index "languages", ["uuid"], :name => "index_languages_on_uuid", :unique => true
 
+  create_table "machine_learnings", :force => true do |t|
+    t.string   "username"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "master_settings", :force => true do |t|
     t.string   "key"
     t.text     "value"
@@ -868,6 +875,9 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.integer  "project_id"
     t.integer  "position_x"
     t.integer  "position_y"
+    t.float    "top_position"
+    t.float    "left_position"
+    t.integer  "creation_order"
     t.integer  "nb_input_attr"
     t.integer  "nb_output_attr"
     t.integer  "copy_id"
@@ -1163,6 +1173,7 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "platform_categories", ["record_status_id"], :name => "index_platform_categories_on_record_status_id"
@@ -1223,6 +1234,7 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "project_areas", ["record_status_id"], :name => "index_project_areas_on_record_status_id"
@@ -1256,6 +1268,7 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.integer  "reference_id"
     t.string   "reference_uuid"
     t.integer  "organization_id"
+    t.integer  "copy_id"
   end
 
   add_index "project_categories", ["record_status_id"], :name => "index_project_categories_on_record_status_id"
@@ -1652,6 +1665,7 @@ ActiveRecord::Schema.define(:version => 20160330083459) do
     t.boolean  "from_initial_view"
     t.boolean  "is_label_widget"
     t.text     "comment"
+    t.boolean  "is_kpi_widget"
   end
 
   create_table "wbs_activities", :force => true do |t|

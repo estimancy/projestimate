@@ -19,38 +19,6 @@
 
 $(document).ready(function() {
 
-    //====================================================
-
-    $(".module_project11").draggable({
-        start: function(event, ui) {}, // console.log(event);console.log(ui)},
-        stop: function(event, ui) {}, // console.log(event);//console.log(ui)},
-        cursor:'move',
-        opacity: 0.5,
-
-        drag: function(){
-            jsPlumb.repaint($(this)); // (or) jsPlumb.repaintEverything(); to repaint the connections and endpoints
-            //followed by your code
-            var offset = $(this).offset();
-            var xPos = offset.left;
-            var yPos = offset.top;
-            console.log('x: ' + xPos);
-            console.log('y: ' + yPos);
-        }
-    });
-
-    $(".window11").draggable({
-        //helper: 'clone',
-        // appendTo: 'body',
-        start: function(event, ui) {}, // console.log(event);console.log(ui)},
-        stop: function(event, ui) {}, // console.log(event);//console.log(ui)},
-        //revert: false,
-        cursor:'move',
-        opacity: 0.5,
-    });
-
-    //====================================================
-
-
     $(".modal").draggable({
         handle: ".modal-header"
     });
@@ -223,8 +191,26 @@ $(document).ready(function() {
     );
 
 
-    $('.tabs').tabs();
-    $('.tabs-project').tabs();
+    //$('.tabs').tabs();
+    //$('.tabs-project').tabs();
+    $('.tabs').tabs({
+        activate: function (event, ui) {
+            var scrollTop = $(window).scrollTop();
+            var active = $('.tabs').tabs('option', 'active');
+            window.location.hash = $(".tabs ul>li a").eq(active).attr("href");
+            $(window).scrollTop(scrollTop);
+        }
+    });
+
+    $('.tabs-project').tabs({
+        activate: function (event, ui) {
+            var scrollTop = $(window).scrollTop();
+            var active = $('.tabs-project').tabs('option', 'active');
+            window.location.hash = $(".tabs-project ul>li a").eq(active).attr("href");
+            $(window).scrollTop(scrollTop);
+        }
+    });
+
 
     $('.attribute_tooltip').tooltip({'html' : true, 'placement' : 'bottom', container: 'body'});
     $('.button_attribute_tooltip').tooltip({'html' : true, 'placement' : 'bottom', container: 'body'});
@@ -744,7 +730,7 @@ $(document).ready(function() {
 
         // if there is no selected project
         if(node_ids[0] == null){
-            console.log("get_function_url 1 : "+ get_function_url);
+            //console.log("get_function_url 1 : "+ get_function_url);
             alert($('#select_at_least_one_project').val()) ;
             return false;
         }

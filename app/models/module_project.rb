@@ -21,7 +21,7 @@
 
 
 class ModuleProject < ActiveRecord::Base
-  attr_accessible  :project_id, :pemodule_id, :pemodule, :position_x, :position_y, :nb_input_attr, :nb_output_attr, :view_id, :color
+  attr_accessible  :project_id, :pemodule_id, :pemodule, :position_x, :position_y, :top_position, :left_position, :creation_order, :nb_input_attr, :nb_output_attr, :view_id, :color
 
   belongs_to :pemodule
   belongs_to :project, :touch => true
@@ -46,10 +46,10 @@ class ModuleProject < ActiveRecord::Base
   has_and_belongs_to_many :pbs_project_elements
 
   has_many :first_module_projects, :class_name => 'AssociatedModuleProject', :foreign_key => 'module_project_id'
-  has_many :associated_module_projects, :through => :first_module_projects
+  has_many :associated_module_projects, :through => :first_module_projects   #predecesseurs
 
   has_many :second_module_projects, :class_name => 'AssociatedModuleProject', :foreign_key => 'associated_module_project_id'
-  has_many :inverse_associated_module_projects, :through => :second_module_projects, :source => :module_project
+  has_many :inverse_associated_module_projects, :through => :second_module_projects, :source => :module_project  # module_project sucesseurs
 
   has_many :wbs_activity_inputs, :dependent => :destroy
 
@@ -68,21 +68,20 @@ class ModuleProject < ActiveRecord::Base
 
   #Return in a array previous modules project include self.
   def preceding
-    mps = ModuleProject.where("position_y < #{self.position_y.to_i} AND project_id = #{self.project.id}")
+    #mps = ModuleProject.where("position_y < #{self.position_y.to_i} AND project_id = #{self.project.id}")
+    mps = self.associated_module_projects
   end
 
   #Return in a array next modules project include self.
   def following
-    ModuleProject.where("position_y >= #{self.position_y.to_i} AND
-                         position_x = #{self.position_x.to_i} AND
-                         project_id = #{self.project.id}").all
+    #ModuleProject.where("position_y >= #{self.position_y.to_i} AND position_x = #{self.position_x.to_i} AND project_id = #{self.project.id}").all
+    self.inverse_associated_module_projects
   end
 
   #Return in a array next modules project without self.
   def nexts
-    ModuleProject.where("position_y > #{self.position_y.to_i} AND
-                         position_x = #{self.position_x.to_i} AND
-                         project_id = #{self.project.id}").all.select{|i| i.id != self.id }
+    #ModuleProject.where("position_y > #{self.position_y.to_i} AND position_x = #{self.position_x.to_i} AND project_id = #{self.project.id}").all.select{|i| i.id != self.id }
+    self.inverse_associated_module_projects
   end
 
   #Return the inputs attributes of a module_projects
@@ -114,26 +113,36 @@ class ModuleProject < ActiveRecord::Base
 
   #Return the next pemodule with link
   def next
-    results = Array.new
-    tmp_results = self.associated_module_projects + self.inverse_associated_module_projects
-    tmp_results.each do |r|
-      if self.nexts.map(&:id).include?(r.id)
-        results << r
-      end
-    end
-    results
+    # results = Array.new
+    # tmp_results = self.associated_module_projects + self.inverse_associated_module_projects
+    # tmp_results.each do |r|
+    #   if self.nexts.map(&:id).include?(r.id)
+    #     results << r
+    #   end
+    # end
+    #results
+
+    self.inverse_associated_module_projects
   end
 
   #Return the previous pemodule with link
   def previous
-    results = Array.new
-    tmp_results = self.associated_module_projects + self.inverse_associated_module_projects
-    tmp_results.each do |r|
-      if self.preceding.map(&:id).include?(r.id)
-        results << r
-      end
-    end
-    results
+    # results = Array.new
+    # tmp_results = self.associated_module_projects + self.inverse_associated_module_projects
+    # tmp_results.each do |r|
+    #   if self.preceding.map(&:id).include?(r.id)
+    #     results << r
+    #   end
+    # end
+    # results
+
+    self.associated_module_projects
+  end
+
+  # Return all the module_project relations links (next and previous)
+  def next_and_previous
+    results = self.associated_module_projects + self.inverse_associated_module_projects
+    results.uniq
   end
 
   #Return the previous module_project where their output attributes can be the input of the current module_project
@@ -158,6 +167,7 @@ class ModuleProject < ActiveRecord::Base
       self.pemodule.compliant_component_type.include?(wet_alias)
     end
   end
+
 
   def to_s
     if self.pemodule.alias == Projestimate::Application::INITIALIZATION

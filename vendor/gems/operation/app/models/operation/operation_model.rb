@@ -45,7 +45,7 @@ module Operation
       if mp.nil?
         self.name
       else
-        "#{self.name} (#{Projestimate::Application::ALPHABETICAL[mp.position_x.to_i-1]};#{mp.position_y.to_i})"
+        "#{self.name} (#{mp.creation_order})"
       end
     end
 

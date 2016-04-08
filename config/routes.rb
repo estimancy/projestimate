@@ -23,9 +23,6 @@ require 'sidekiq/web'
 
 Projestimate::Application.routes.draw do
 
-  resources :machine_learnings
-
-
   resources :applications
   resources :fields
   resources :views_widgets
@@ -175,6 +172,7 @@ Projestimate::Application.routes.draw do
   match 'update_module_project_view_config' => 'module_projects#update_module_project_view_config', as: 'update_module_project_view_config'
   post 'module_projects_reassign' => 'module_projects#module_projects_reassign', as: 'module_projects_reassign'
   get 'update_module_project_dynamic_connections' => 'module_projects#update_module_project_dynamic_connections', as: 'update_module_project_dynamic_connections'
+  get 'update_module_project_left_and_top_positions' => 'module_projects#update_module_project_left_and_top_positions', as: 'update_module_project_left_and_top_positions'
 
   resources :languages
 

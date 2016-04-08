@@ -255,6 +255,7 @@ class ViewsWidgetsController < ApplicationController
   end
 
 
+  #update the view_widget position (x,y)
   def update_view_widget_positions
     views_widgets = params[:views_widgets]
     unless views_widgets.empty?
