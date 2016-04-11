@@ -25,9 +25,9 @@ class PlatformCategory < ActiveRecord::Base
   #include MasterDataHelper #Module master data management (UUID generation, deep clone, ...)
 
   has_many :projects
-  has_and_belongs_to_many :project_areas
+  # has_and_belongs_to_many :project_areas
 
-  belongs_to :record_status
+  # belongs_to :record_status
 
   validates_presence_of :description
   validates :name, :presence => true

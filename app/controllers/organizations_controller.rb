@@ -873,26 +873,24 @@ class OrganizationsController < ApplicationController
             new_project_area = new_organization.project_areas.where(copy_id: project.project_area_id).first
             unless new_project_area.nil?
               project.project_area_id = new_project_area.id
-              project.save
             end
 
             new_project_category = new_organization.project_categories.where(copy_id: project.project_category_id).first
             unless new_project_category.nil?
               project.project_category_id = new_project_category.id
-              project.save
             end
 
             new_platform_category = new_organization.platform_categories.where(copy_id: project.platform_category_id).first
             unless new_platform_category.nil?
               project.platform_category_id = new_platform_category.id
-              project.save
             end
 
             new_acquisition_category = new_organization.acquisition_categories.where(copy_id: project.acquisition_category_id).first
             unless new_acquisition_category.nil?
               project.acquisition_category_id = new_acquisition_category.id
-              project.save
             end
+
+            project.save
 
             unless project.original_model_id.nil?
               new_original_model = new_organization.projects.where(copy_id: project.original_model_id).first

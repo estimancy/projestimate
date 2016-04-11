@@ -1406,7 +1406,7 @@ en:
   no_uo_type: "You havent unit of works types"
   weight: "Weight"
 
-  help_text: "Help text"
+  help_text: "Help   text"
   notice_cannot_view_project_securities_levels: "You don't have the rights to view the securities levels"
   notice_cannot_view_organization_fields: "You don't have the rights to view the organization's fields"
   notice_cannot_view_organization_super_admin_permissions: "You don't have the rights to view the organization's permissions"

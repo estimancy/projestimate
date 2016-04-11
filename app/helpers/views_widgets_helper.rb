@@ -64,7 +64,37 @@ module ViewsWidgetsHelper
     widget_data[:icon_font_size] = icon_font_size
     widget_data[:text_size] = text_size
     widget_data[:ft_maxFontSize_without_mm] = ft_maxFontSize_without_mm
-    widget_data[:value_to_show] = simple_format(view_widget.comment.to_s.html_safe) ###view_widget.name
+
+
+    eq = view_widget.equation
+    tmp_formula = eq["formula"].to_s
+
+    unless eq["A"].nil?
+      a_value = EstimationValue.find(eq["A"].to_i).string_data_probable[current_component.id].to_s
+    end
+
+    unless eq["B"].nil?
+      b_value = EstimationValue.find(eq["B"].to_i).string_data_probable[current_component.id].to_s
+    end
+
+    unless eq["C"].nil?
+      c_value = EstimationValue.find(eq["C"].to_i).string_data_probable[current_component.id].to_s
+    end
+
+    unless eq["D"].nil?
+      d_value = EstimationValue.find(eq["D"].to_i).string_data_probable[current_component.id].to_s
+    end
+
+    unless eq["E"].nil?
+      e_value = EstimationValue.find(eq["E"].to_i).string_data_probable[current_component.id].to_s
+    end
+
+    begin
+      formula = tmp_formula.gsub("A", a_value).gsub("B", b_value).gsub("C", c_value).gsub("D", d_value).gsub("E", e_value)
+      widget_data[:value_to_show] = eval(formula).round(current_user.number_precision)
+    rescue
+      widget_data[:value_to_show] = "-"
+    end
 
     widget_data
   end
