@@ -21,10 +21,118 @@
 
 module ViewsWidgetsHelper
 
+
+  def get_kpi_value(view_widget)
+    eq = view_widget.equation
+    formula = eq["formula"].to_s
+
+    unless eq["A"].nil?
+      a_value = get_ev_value(eq["A"], current_component.id)
+      formula = formula.gsub("A", a_value)
+    end
+
+    unless eq["B"].nil?
+      b_value = get_ev_value(eq["B"], current_component.id)
+      formula = formula.gsub("B", b_value)
+    end
+
+    unless eq["C"].nil?
+      c_value = get_ev_value(eq["C"], current_component.id)
+      formula = formula.gsub("C", c_value)
+    end
+
+    unless eq["D"].nil?
+      d_value = get_ev_value(eq["D"], current_component.id)
+      formula = formula.gsub("D", d_value)
+    end
+
+    unless eq["E"].nil?
+      e_value = get_ev_value(eq["E"], current_component.id)
+      formula = formula.gsub("E", e_value)
+    end
+
+    eval(formula).round(current_user.number_precision)
+  end
+
+  def get_ev_value(ev_id, current_component_id)
+    ev = EstimationValue.find(ev_id.first.to_i)
+    val = ev.string_data_probable[current_component_id]
+    unless ev.nil?
+      if ev.is_a?(Hash)
+        compute_value(val, ev, current_component_id)
+      else
+        ev.to_s
+      end
+    else
+      nil
+    end
+  end
+
+  #Work In Progress
+  private def compute_value(value, est_val, mp_id)
+    module_project = ModuleProject.find(mp_id)
+    est_val_pe_attribute = est_val.pe_attribute
+    precision = est_val_pe_attribute.precision.nil? ? user_number_precision : est_val_pe_attribute.precision
+
+    if est_val_pe_attribute.alias == "retained_size" || est_val_pe_attribute.alias == "theorical_size"
+      if module_project.pemodule.alias == "ge"
+        ge_model = module_project.ge_model
+        effort_standard_unit_coefficient = ge_model.output_effort_standard_unit_coefficient
+        size_unit = ge_model.output_size_unit
+        if est_val.in_out == "input"
+          effort_standard_unit_coefficient = ge_model.input_effort_standard_unit_coefficient
+          size_unit = ge_model.input_size_unit
+        end
+
+        "#{convert_with_standard_unit_coefficient(est_val, value.to_f, effort_standard_unit_coefficient, precision)}"
+      else
+        "#{convert_with_precision(value.to_f, precision, true)}"
+      end
+
+    elsif est_val_pe_attribute.alias == "effort"
+      if module_project.pemodule.alias == "ge"
+        ge_model = module_project.ge_model
+        effort_standard_unit_coefficient = ge_model.output_effort_standard_unit_coefficient
+        effort_unit = ge_model.output_effort_unit
+
+        if est_val.in_out == "input"
+          effort_standard_unit_coefficient = ge_model.input_effort_standard_unit_coefficient
+          effort_unit = ge_model.input_effort_unit
+        end
+
+        "#{convert_with_standard_unit_coefficient(est_val, value, effort_standard_unit_coefficient, precision)}"
+      else
+        "#{convert_with_precision(convert(value, @project.organization), precision, true)}"
+      end
+
+    elsif est_val_pe_attribute.alias == "staffing" || est_val_pe_attribute.alias == "duration"
+      "#{convert_with_precision(value, precision, true)}"
+    elsif est_val_pe_attribute.alias == "cost"
+      unless value.class == Hash
+        "#{convert_with_precision(value, 2, true)} #{get_attribute_unit(est_val_pe_attribute)}"
+      end
+    elsif est_val_pe_attribute.alias == "remaining_defects" || est_val_pe_attribute.alias == "introduced_defects"
+      unless value.class == Hash
+        "#{convert_with_precision(value, 2, true)}"
+      end
+    else
+      case est_val_pe_attribute
+        when 'date'
+          display_date(value)
+        when 'float'
+          "#{ convert_with_precision(convert(value, @project.organization), precision, true) }"
+        when 'integer'
+          "#{convert(value, @project.organization).round(precision)}"
+        else
+          value
+      end
+    end
+  end
+
   def get_kpi_widget_data(view_widget_id)
     view_widget = ViewsWidget.find(view_widget_id)
     widget_data = {}
-    initial_width = 60;  initial_height = 60
+    initial_width = 60; initial_height = 60
     value_to_show = nil
     ft_maxFontSize_without_mm = 50
     icon_font_size = 1.7
@@ -65,33 +173,8 @@ module ViewsWidgetsHelper
     widget_data[:text_size] = text_size
     widget_data[:ft_maxFontSize_without_mm] = ft_maxFontSize_without_mm
 
-
-    eq = view_widget.equation
-    tmp_formula = eq["formula"].to_s
-
-    unless eq["A"].nil?
-      a_value = EstimationValue.find(eq["A"].to_i).string_data_probable[current_component.id].to_s
-    end
-
-    unless eq["B"].nil?
-      b_value = EstimationValue.find(eq["B"].to_i).string_data_probable[current_component.id].to_s
-    end
-
-    unless eq["C"].nil?
-      c_value = EstimationValue.find(eq["C"].to_i).string_data_probable[current_component.id].to_s
-    end
-
-    unless eq["D"].nil?
-      d_value = EstimationValue.find(eq["D"].to_i).string_data_probable[current_component.id].to_s
-    end
-
-    unless eq["E"].nil?
-      e_value = EstimationValue.find(eq["E"].to_i).string_data_probable[current_component.id].to_s
-    end
-
     begin
-      formula = tmp_formula.gsub("A", a_value).gsub("B", b_value).gsub("C", c_value).gsub("D", d_value).gsub("E", e_value)
-      widget_data[:value_to_show] = eval(formula).round(current_user.number_precision)
+      widget_data[:value_to_show] = get_kpi_value(view_widget)
     rescue
       widget_data[:value_to_show] = "-"
     end

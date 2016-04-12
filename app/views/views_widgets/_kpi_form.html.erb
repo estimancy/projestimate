@@ -22,7 +22,6 @@
       <div class="span5">
         <!-- Color is using the JS Spectrum library -->
         <% if @views_widget.new_record? %>
-          <%#= f.input :color, label: I18n.t(:status_color), input_html: {class: "basic", type: 'color', value: '#99ccff'} %>
           <%= f.input :color, label: I18n.t(:status_color), input_html: {value: "blanchedalmond"} %>
         <% else %>
           <%= f.input :color, label: I18n.t(:status_color) %>
@@ -44,10 +43,24 @@
       </div>
       <div class="row-fluid">
         <div class="span5">
-          <%= select_tag "module_project[#{letter}]", options_for_select([@module_project].map{|i| [i, i.id]}, selected: @module_project.id), class: "inline_attr" %>
+          <%
+             unless @views_widget.equation[letter].nil?
+               mp_id = @views_widget.equation[letter].last
+               unless mp_id.nil?
+                 mpl = ModuleProject.find(mp_id)
+               end
+             end
+          %>
+          <%= select_tag "module_project[#{letter}]", options_for_select(@project.module_projects.map{|i| [i, i.id]},
+                                                                         selected: mpl.nil? ? '' : mpl.id),
+                         view_widget_id: @views_widget.id,
+                         letter: letter,
+                         class: "inline_attr module_project_variables" %>
         </div>
         <div class="span5">
-          <%= select_tag "#{letter}", options_for_select(@module_project.estimation_values.map{|i| [i, i.id]}, selected: @views_widget.equation[letter]), class: "inline_attr" %>
+          <%= select_tag "#{letter}", options_for_select(mpl.nil? ? [] : mpl.estimation_values.map{|i| ["#{i} (#{i.in_out.capitalize})", i.id]},
+                                                         selected: @views_widget.equation[letter].nil? ? '' : @views_widget.equation[letter].first),
+                         class: "inline_attr" %>
         </div>
       </div>
     <% end %>
@@ -125,6 +138,17 @@ $("#views_widget_color").spectrum({
                 url: "/update_widget_module_project_data",
                 method: "GET",
                 data: "module_project_id=" + $(this).val()
+            });
+        }
+    });
+
+    // Update the view_widget attribute according to the selected module
+    $(".module_project_variables").change(function() {
+        if ($(this).val() !== ""){
+            return $.ajax({
+                url: "/update_widget_module_project_data",
+                method: "GET",
+                data: "module_project_id=" + $(this).val() + "&view_widget_id=" + $(this).attr("view_widget_id") + "&letter=" + $(this).attr("letter")
             });
         }
     });

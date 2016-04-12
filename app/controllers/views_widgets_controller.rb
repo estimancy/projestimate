@@ -91,7 +91,9 @@ class ViewsWidgetsController < ApplicationController
     @pemodule = @module_project.pemodule
 
     if @module_project.view.nil?
-      current_view = View.create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, name: "#{@project.title} - #{@module_project} view")
+      current_view = View.create(organization_id: @project.organization_id,
+                                 pemodule_id: @pemodule.id,
+                                 name: "#{@project.title} - #{@module_project} view")
       @view_id = current_view.id
       @module_project.update_attribute(:view_id, @view_id)
     else
@@ -123,10 +125,13 @@ class ViewsWidgetsController < ApplicationController
 
     if params[:views_widget][:is_kpi_widget].present?
       @views_widget.is_kpi_widget = true
+      @views_widget.module_project_id = @module_project.id
       equation = Hash.new
       equation["formula"] = params[:formula].upcase
       ["A", "B", "C", "D", "E"].each do |letter|
-        equation[letter] = params[letter.to_sym].upcase
+        unless params[letter.to_sym].nil?
+          equation[letter] = [params[letter.to_sym].upcase, params["module_project"][letter]]
+        end
       end
       @views_widget.equation = equation
     end
@@ -176,7 +181,9 @@ class ViewsWidgetsController < ApplicationController
       equation = Hash.new
       equation["formula"] = params[:formula].upcase
       ["A", "B", "C", "D", "E"].each do |letter|
-        equation[letter] = params[letter.to_sym].upcase
+        unless params[letter.to_sym].nil?
+          equation[letter] = [params[letter.to_sym].upcase, params["module_project"][letter]]
+        end
       end
       @views_widget.equation = equation
     end
@@ -187,7 +194,9 @@ class ViewsWidgetsController < ApplicationController
     else
       pf = ProjectField.where(views_widget_id: @views_widget.id).last
 
-      if @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+      if @views_widget.is_kpi_widget == true
+        @value = get_kpi_value(@views_widget)
+      elsif @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
         begin
           @value = @views_widget.estimation_value.string_data_probable[current_component.id][@views_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
         rescue
@@ -202,7 +211,10 @@ class ViewsWidgetsController < ApplicationController
       end
 
       if pf.nil?
-          ProjectField.create(project_id: project.id, field_id: params["field"].to_i, views_widget_id: @views_widget.id, value: @value)
+          ProjectField.create(project_id: project.id,
+                              field_id: params["field"].to_i,
+                              views_widget_id: @views_widget.id,
+                              value: @value)
       else
         pf.value = @value
         pf.views_widget_id = @views_widget.id
@@ -297,17 +309,19 @@ class ViewsWidgetsController < ApplicationController
     module_project_id = params['module_project_id']
     if !module_project_id.nil? && module_project_id != 'undefined'
       @module_project = ModuleProject.find(module_project_id)
-      #@module_project_attributes = @module_project.pemodule.pe_attributes
-      # Get the possible attribute grouped by type (input, output)
-      #@module_project_attributes = get_module_project_attributes_input_output(@module_project)
-      @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-      @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
-
-      #the widget type
-      if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-        @views_widget_types = Projestimate::Application::BREAKDOWN_WIDGETS_TYPE
+      @letter = params[:letter]
+      if @letter.nil?
+        @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+        @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
       else
-        @views_widget_types = Projestimate::Application::GLOBAL_WIDGETS_TYPE
+        @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+        @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
+        #the widget type
+        if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+          @views_widget_types = Projestimate::Application::BREAKDOWN_WIDGETS_TYPE
+        else
+          @views_widget_types = Projestimate::Application::GLOBAL_WIDGETS_TYPE
+        end
       end
     end
   end
