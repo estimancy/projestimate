@@ -310,7 +310,7 @@ class ViewsWidgetsController < ApplicationController
     if !module_project_id.nil? && module_project_id != 'undefined'
       @module_project = ModuleProject.find(module_project_id)
       @letter = params[:letter]
-      if @letter.nil?
+      if !@letter.nil?
         @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
         @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
       else
