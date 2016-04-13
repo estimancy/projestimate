@@ -267,7 +267,7 @@ class Guw::GuwModelsController < ApplicationController
                     ind3 = ind2
                     if !tab[ind2].nil? && tab[ind2][0] == I18n.t(:organization_technology)
                       @current_organization.organization_technologies.each do |techno|
-                       while !tab[ind2].nil? && tab[ind2][0] != techno.name
+                       while !tab[ind2].nil? && tab[ind2][0].to_s.downcase != techno.name.to_s.downcase
                          ind2 += 1
                        end
                        if !tab[ind2].nil?
