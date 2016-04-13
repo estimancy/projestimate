@@ -38,7 +38,6 @@
             <br>
             <% unless @project.locked? %>
               <% if can_alter_estimation?(@project) && can?(:alter_estimation_plan, @project) %>
-
                 <%#= link_to '', pemodules_left_path(pmod.id), :class => 'icon-arrow-left a_white' %>
                 <%#= link_to '', pemodules_up_path(pmod.id), :class => 'icon-arrow-up a_white' %>
                 <%#= link_to '', pemodules_down_path(pmod.id), :class => 'icon-arrow-down a_white' %>

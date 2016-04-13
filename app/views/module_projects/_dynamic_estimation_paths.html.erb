@@ -225,7 +225,9 @@
                                 nodes.push({
                                     module_project_id: $elem.data('module_project_id'),
                                     left_position: parseInt($elem.css("left"), 10),
-                                    top_position: parseInt($elem.css("top"), 10)
+                                    top_position: parseInt($elem.css("top"), 10),
+                                    top_offset: $elem.offset().top,
+                                    left_offset: $elem.offset().left
                                 });
                             });
 
@@ -233,17 +235,19 @@
                                 method: "GET",
                                 url: "/update_module_project_left_and_top_positions",
                                 data:{
-                                    module_projects_params: nodes
+                                    module_projects_params: nodes,
+                                    initialization_mp_id: $(".initialization_0_0").data('module_project_id')
                                 }
                             })
-
                         }
                     });
 
+                //The initialization module_project won't be draggable
+                //instance.setDraggable("mp_initialization_3337", false);
+                instance.setDraggable($(".initialization_0_0"), false);
+
                 <% end %>
 
-                //The initialization module_project won't be draggable
-                //instance.setDraggable("mp_initialization_0_0", false);
                 jsPlumb.fire("jsPlumbDemoLoaded", instance);
             });
         });
