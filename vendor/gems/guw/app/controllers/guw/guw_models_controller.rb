@@ -98,8 +98,7 @@ class Guw::GuwModelsController < ApplicationController
     ind2 = 10
     ind3 = 0
     save_position = 0
-    if !params[:file].nil? &&
-        (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
       @workbook = RubyXL::Parser.parse(params[:file].path)
       @workbook.each_with_index do |worksheet, index|
        tab = worksheet.extract_data
