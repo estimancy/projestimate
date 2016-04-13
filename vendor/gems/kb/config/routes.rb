@@ -21,6 +21,8 @@
 
 Kb::Engine.routes.draw do
   root :to => 'kb#index'
+  resources :kb_datas
+
   resources :kb_models
   resources :kb_models do
     post "save_efforts"

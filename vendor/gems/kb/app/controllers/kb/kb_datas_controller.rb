@@ -22,4 +22,11 @@
 
 class Kb::KbDatasController < ApplicationController
 
+  def destroy
+    authorize! :manage_modules_instances, ModuleProject
+
+    @kb_data = Kb::KbData.find(params[:id])
+    @kb_data.delete
+    redirect_to :back
+  end
 end
