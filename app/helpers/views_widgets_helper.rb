@@ -61,7 +61,7 @@ module ViewsWidgetsHelper
       if ev.is_a?(Hash)
         compute_value(val, ev, current_component_id)
       else
-        ev.to_s
+        val.to_s
       end
     else
       nil
