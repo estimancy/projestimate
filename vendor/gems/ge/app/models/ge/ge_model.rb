@@ -84,7 +84,6 @@ module Ge
       rescue
         nil
       end
-
     end
   end
 end

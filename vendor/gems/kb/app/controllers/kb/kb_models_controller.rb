@@ -228,7 +228,11 @@ class Kb::KbModelsController < ApplicationController
     @kb_input = @kb_model.kb_inputs.where(module_project_id: current_module_project.id).first_or_create
 
     if @kb_model.date_min.nil? || @kb_model.date_max.nil?
-      @kb_datas = @kb_model.kb_datas
+      if @kb_model.n_max.nil?
+        @kb_datas = @kb_model.kb_datas
+      else
+        @kb_datas = @kb_model.kb_datas.take(@kb_model.n_max.to_i)
+      end
     else
       if @kb_model.n_max.nil?
         @kb_datas = @kb_model.kb_datas.where("project_date >= ? AND project_date <= ?", @kb_model.date_min.to_s, @kb_model.date_max.to_s)
@@ -249,11 +253,16 @@ class Kb::KbModelsController < ApplicationController
     @kb_input.filters = params["filters"]
 
     @kb_datas.each do |i|
-      params["filters"].each do |f|
-        if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
-          @project_list << i
+      unless params["filters"].nil?
+        params["filters"].each do |f|
+          if (params["filters"].values.include?(i.custom_attributes[f.first.to_sym]))
+            @project_list << i
+          end
         end
+      # else
+      #   @project_list = []
       end
+
     end
 
     if @project_list.blank?

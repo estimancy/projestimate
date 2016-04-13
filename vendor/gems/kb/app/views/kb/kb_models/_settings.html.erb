@@ -8,6 +8,7 @@
 <%= form_tag kb.kb_model_save_efforts_path(@kb_model), method: "post" do %>
   <div class="row-fluid">
     <div class="span3">
+
       <div class="row-fluid">
         <div class="span12">
           <h5>
@@ -20,6 +21,37 @@
           </h5>
         </div>
       </div>
+
+      <% if @kb_model.date_min %>
+        <div class="row-fluid">
+          <div class="span12">
+            <h5>
+              <strong>
+                 Date Min:
+                <span class="project_numbers">
+                  <%= @kb_model.date_min %>
+                </span>
+              </strong>
+            </h5>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @kb_model.date_max %>
+        <div class="row-fluid">
+          <div class="span12">
+            <h5>
+              <strong>
+                 Date Max:
+                <span class="project_numbers">
+                  <%= @kb_model.date_max %>
+                </span>
+              </strong>
+            </h5>
+          </div>
+        </div>
+      <% end %>
+
       <div class="row-fluid">
         <div class="span12">
           <% unless @kb_model.kb_datas.empty? %>
@@ -66,7 +98,7 @@
 
             <h5>
               <strong>
-                <%= I18n.t(:size) %>
+                <%= I18n.t(:size) %> (<%= level.humanize %>)
               </strong>
             </h5>
 
@@ -184,7 +216,7 @@
         },
         yAxis: {
           title: {
-            text: 'Effort'
+            text: 'Effort (<%= @kb_model.effort_unit %>)'
           },
           min: 0
         },

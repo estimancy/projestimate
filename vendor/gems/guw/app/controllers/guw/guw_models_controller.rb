@@ -98,8 +98,7 @@ class Guw::GuwModelsController < ApplicationController
     ind2 = 10
     ind3 = 0
     save_position = 0
-    if !params[:file].nil? &&
-        (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
+    if !params[:file].nil? && (File.extname(params[:file].original_filename) == ".xlsx" || File.extname(params[:file].original_filename) == ".Xlsx")
       @workbook = RubyXL::Parser.parse(params[:file].path)
       @workbook.each_with_index do |worksheet, index|
        tab = worksheet.extract_data
@@ -113,7 +112,7 @@ class Guw::GuwModelsController < ApplicationController
               route_flag = 2
               break
             end
-            @guw_model = Guw::GuwModel.find_by_name(tab[0][1])
+            @guw_model = Guw::GuwModel.where(name: tab[0][1], organization_id: @current_organization.id).first
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
@@ -268,7 +267,7 @@ class Guw::GuwModelsController < ApplicationController
                     ind3 = ind2
                     if !tab[ind2].nil? && tab[ind2][0] == I18n.t(:organization_technology)
                       @current_organization.organization_technologies.each do |techno|
-                       while !tab[ind2].nil? && tab[ind2][0] != techno.name
+                       while !tab[ind2].nil? && tab[ind2][0].to_s.downcase != techno.name.to_s.downcase
                          ind2 += 1
                        end
                        if !tab[ind2].nil?

@@ -35,12 +35,6 @@ class ViewsWidgetsController < ApplicationController
     #end
   end
 
-  # Get the module_project attributes grouped by Input and Ouput
-  def get_module_project_attributes_input_output(module_project)
-    estimation_values = module_project.estimation_values.group_by{ |attr| attr.in_out }.sort()
-  end
-
-
   def new
     authorize! :manage_estimation_widgets, @project
 
@@ -54,8 +48,6 @@ class ViewsWidgetsController < ApplicationController
 
     # Get the possible attribute grouped by type (input, output)
     @module_project_attributes = get_module_project_attributes_input_output(@module_project)
-    #@module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-    #@module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
 
     #the view_widget type
     if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
@@ -99,7 +91,9 @@ class ViewsWidgetsController < ApplicationController
     @pemodule = @module_project.pemodule
 
     if @module_project.view.nil?
-      current_view = View.create(organization_id: @project.organization_id, pemodule_id: @pemodule.id, name: "#{@project.title} - #{@module_project} view")
+      current_view = View.create(organization_id: @project.organization_id,
+                                 pemodule_id: @pemodule.id,
+                                 name: "#{@project.title} - #{@module_project} view")
       @view_id = current_view.id
       @module_project.update_attribute(:view_id, @view_id)
     else
@@ -129,15 +123,25 @@ class ViewsWidgetsController < ApplicationController
     #new widget with the default positions
     @views_widget = ViewsWidget.new(params[:views_widget].merge(:view_id => current_view.id, :position_x => position_x, :position_y => position_y, :width => 3, :height => 3))
 
+    if params[:views_widget][:is_kpi_widget].present?
+      @views_widget.is_kpi_widget = true
+      @views_widget.module_project_id = @module_project.id
+      equation = Hash.new
+      equation["formula"] = params[:formula].upcase
+      ["A", "B", "C", "D", "E"].each do |letter|
+        unless params[letter.to_sym].nil?
+          equation[letter] = [params[letter.to_sym].upcase, params["module_project"][letter]]
+        end
+      end
+      @views_widget.equation = equation
+    end
+
     respond_to do |format|
       if @views_widget.save
-
         unless params["field"].blank?
           ProjectField.create( project_id: @project.id, field_id: params["field"], views_widget_id: @views_widget.id,
                                value: get_view_widget_data(@views_widget.module_project, @views_widget.id)[:value_to_show])
         end
-
-        #flash[:notice] = "Widget ajouté avec succès"
         format.js { render :js => "window.location.replace('#{dashboard_path(@project)}');"}
       else
         flash[:error] = "Erreur d'ajout de Vignette"
@@ -166,10 +170,22 @@ class ViewsWidgetsController < ApplicationController
 
     @views_widget = ViewsWidget.find(params[:id])
     @view_id = @views_widget.view_id
-    if @views_widget.is_label_widget?
+    if @views_widget.is_label_widget? || @views_widget.is_kpi_widget?
       project = @project
     else
       project = @views_widget.estimation_value.module_project.project
+    end
+
+    if params[:views_widget][:is_kpi_widget].present?
+      @views_widget.is_kpi_widget = true
+      equation = Hash.new
+      equation["formula"] = params[:formula].upcase
+      ["A", "B", "C", "D", "E"].each do |letter|
+        unless params[letter.to_sym].nil?
+          equation[letter] = [params[letter.to_sym].upcase, params["module_project"][letter]]
+        end
+      end
+      @views_widget.equation = equation
     end
 
     if params["field"].blank?
@@ -178,7 +194,9 @@ class ViewsWidgetsController < ApplicationController
     else
       pf = ProjectField.where(views_widget_id: @views_widget.id).last
 
-      if @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
+      if @views_widget.is_kpi_widget == true
+        @value = get_kpi_value(@views_widget)
+      elsif @views_widget.estimation_value.module_project.pemodule.alias == "effort_breakdown"
         begin
           @value = @views_widget.estimation_value.string_data_probable[current_component.id][@views_widget.estimation_value.module_project.wbs_activity.wbs_activity_elements.first.root.id][:value]
         rescue
@@ -193,7 +211,10 @@ class ViewsWidgetsController < ApplicationController
       end
 
       if pf.nil?
-          ProjectField.create(project_id: project.id, field_id: params["field"].to_i, views_widget_id: @views_widget.id, value: @value)
+          ProjectField.create(project_id: project.id,
+                              field_id: params["field"].to_i,
+                              views_widget_id: @views_widget.id,
+                              value: @value)
       else
         pf.value = @value
         pf.views_widget_id = @views_widget.id
@@ -289,17 +310,19 @@ class ViewsWidgetsController < ApplicationController
     module_project_id = params['module_project_id']
     if !module_project_id.nil? && module_project_id != 'undefined'
       @module_project = ModuleProject.find(module_project_id)
-      #@module_project_attributes = @module_project.pemodule.pe_attributes
-      # Get the possible attribute grouped by type (input, output)
-      #@module_project_attributes = get_module_project_attributes_input_output(@module_project)
-      @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
-      @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
-
-      #the widget type
-      if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
-        @views_widget_types = Projestimate::Application::BREAKDOWN_WIDGETS_TYPE
+      @letter = params[:letter]
+      if !@letter.nil?
+        @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+        @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
       else
-        @views_widget_types = Projestimate::Application::GLOBAL_WIDGETS_TYPE
+        @module_project_attributes_input = @module_project.estimation_values.where(in_out: 'input').map{|i| [i, i.id]}
+        @module_project_attributes_output = @module_project.estimation_values.where(in_out: 'output').map{|i| [i, i.id]}
+        #the widget type
+        if @module_project.pemodule.alias == Projestimate::Application::EFFORT_BREAKDOWN
+          @views_widget_types = Projestimate::Application::BREAKDOWN_WIDGETS_TYPE
+        else
+          @views_widget_types = Projestimate::Application::GLOBAL_WIDGETS_TYPE
+        end
       end
     end
   end
@@ -391,6 +414,11 @@ class ViewsWidgetsController < ApplicationController
 
     send_data(workbook.stream.string, filename: "#{@project.organization.name[0..4]}-#{@project.title}-#{@project.version}(#{("A".."B").to_a[widget.module_project.position_x - 1]},#{widget.module_project.position_y})-Effort-Phases-Profils-#{widget.name.gsub(" ", "_")}-#{Time.now.strftime("%Y-%m-%d_%H-%M")}.xlsx", type: "application/vnd.ms-excel")
 
+  end
+
+  # Get the module_project attributes grouped by Input and Ouput
+  def get_module_project_attributes_input_output(module_project)
+    estimation_values = module_project.estimation_values.group_by{ |attr| attr.in_out }.sort()
   end
 
 end

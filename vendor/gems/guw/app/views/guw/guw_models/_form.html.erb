@@ -39,7 +39,7 @@
               <%= f.input :coefficient_label, label: I18n.t(:work_unit_label), input_html: { class: "input-xxlarge", rows: "5" } %>
               <%= f.input :weightings_label, label: I18n.t(:weightings_label), input_html: { class: "input-xxlarge", rows: "5" } %>
               <%= f.input :factors_label, label: I18n.t(:factors_label), input_html: { class: "input-xxlarge", rows: "5" } %>
-              <%= f.input :allow_technology, label: "Autoriser les technologies" %>
+              <%= f.input :allow_technology, label: I18n.t(:allow_technology) %>
               <%= f.input :default_display, as: :select, collection: [["Liste", "list"], ["Onglet", "tab"]], label: "Affichage par défaut", input_html: { class: "input-xxlarge", rows: "5" } %>
               <%= f.input :three_points_estimation, label: I18n.t(:three_points_estimation) %>
               <%= f.input :retained_size_unit, label: I18n.t(:retained_size_unit) %>
@@ -59,7 +59,7 @@
       <% unless @guw_model.new_record? %>
         <div class="span6">
           <%= link_to I18n.t(:export), guw.guw_model_exportxl_path(@guw_model), :method => 'post', :class => 'btn btn-mini pull-right button_margin_right' %>
-          <%= link_to "Voir le modèle", guw.guw_model_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
+          <%= link_to I18n.t(:see_model), guw.guw_model_path(@guw_model), :class => 'btn btn-mini pull-right button_margin_right' %>
         </div>
       <% else %>
         <a href="#import" role="button" class="btn btn-mini pull-right button_margin_right" title="<%= I18n.t(:import_uo_from_excel)%>" data-toggle="modal">

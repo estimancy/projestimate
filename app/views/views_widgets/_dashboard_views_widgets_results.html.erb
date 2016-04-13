@@ -21,7 +21,7 @@
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-plus", title: I18n.t(:label_add_new_view_widget), remote: true %>
                       <%= link_to "", edit_module_project_view_config_path(module_project_id: module_project.id, view_id: module_project.view_id), class: "icon icon-cog", title: I18n.t(:label_add_new_view_widget), remote: true %>
                       <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id, is_label_widget: true), class: "icon icon-comment", title: I18n.t(:label_add_new_widget_comment), remote: true %>
-                      <%# link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id, is_kpi_widget: true), class: "icon icon-comment", title: I18n.t(:label_add_new_widget_comment), remote: true %>
+                      <%= link_to "", new_views_widget_path(module_project_id: module_project.id, view_id: module_project.view_id, is_kpi_widget: true), class: "icon icon-tasks", title: I18n.t(:label_add_new_widget_comment), remote: true %>
                     <% end %>
                   </div>
                 </div>

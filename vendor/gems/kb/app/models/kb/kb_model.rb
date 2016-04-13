@@ -24,7 +24,6 @@ module Kb
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id, :case_sensitive => false}
     validates :standard_unit_coefficient, :presence => true
     validates :effort_unit, :presence => true
-    # validates :date_max, :presence => true
 
     belongs_to :organization
 
@@ -54,16 +53,19 @@ module Kb
     end
 
     def self.display_size(p, c, level, component_id)
-      if c.send("string_data_#{level}")[component_id].nil?
+      if c.nil?
         begin
           p.send("string_data_#{level}")[component_id]
         rescue
           nil
         end
       else
-        c.send("string_data_#{level}")[component_id]
+        begin
+          c.send("string_data_#{level}")[component_id]
+        rescue
+          nil
+        end
       end
     end
-
   end
 end

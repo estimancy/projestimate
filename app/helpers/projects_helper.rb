@@ -979,7 +979,6 @@ module ProjectsHelper
     end
   end
 
-
   def display_value(value, est_val, mp_id)
     module_project = ModuleProject.find(mp_id)
     est_val_pe_attribute = est_val.pe_attribute
