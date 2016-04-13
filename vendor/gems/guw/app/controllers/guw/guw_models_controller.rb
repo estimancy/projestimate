@@ -113,7 +113,7 @@ class Guw::GuwModelsController < ApplicationController
               route_flag = 2
               break
             end
-            @guw_model = Guw::GuwModel.find_by_name(tab[0][1])
+            @guw_model = Guw::GuwModel.where(name: tab[0][1], organization_id: @current_organization.id).first
             if @guw_model.nil?
               @guw_model = Guw::GuwModel.create(name: tab[0][1],
                                                 description: tab[1][1],
